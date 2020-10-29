@@ -39,11 +39,11 @@
                                                 <a href="{{ route('webmasters.index') }}">
                                                     <div class="panel panel-default" style="border-style: dashed;border-width: 1px;border-color: #2A2A28;">
                                                         <div class="panel-body" style="text-align: center;">
-                                                            <img src="{{ asset('images/webmaster.png') }}" alt="Vender" width="84">
+                                                            <img src="images/webmaster.png" alt="Vender" width="84">
                                                             <p style="margin-top: 10px;font-size: 14pt;color:#C68907;">
                                                                 Usuarios
                                                             </p>
-                                                        </div>
+                                                        </div> 
                                                     </div>
                                                 </a>
                                             </div>
@@ -51,7 +51,7 @@
                                                 <a href="{{ route('ingenieros.index') }}">
                                                     <div class="panel panel-default" style="border-style: dashed;border-width: 1px;border-color: #2A2A28;">
                                                         <div class="panel-body" style="text-align: center;">
-                                                            <img src="{{ asset('images/tutores.png') }}" alt="Vender" width="84">
+                                                            <img src="images/tutores.png" alt="Vender" width="84">
                                                             <p style="margin-top: 10px;font-size: 14pt;color:#C68907;">
                                                                 Ingenieros
                                                             </p>
@@ -63,7 +63,7 @@
                                                 <a href="#">
                                                     <div class="panel panel-default" style="border-style: dashed;border-width: 1px;border-color: #2A2A28;">
                                                         <div class="panel-body" style="text-align: center;">
-                                                            <img src="{{ asset('images/pago.png') }}" alt="Vender" width="85">
+                                                            <img src="images/pago.png" alt="Vender" width="85">
                                                             <p style="margin-top: 10px;font-size: 14pt;color:#C68907;">
                                                                 Cobros
                                                             </p>
@@ -75,7 +75,7 @@
                                                 <a href="#">
                                                     <div class="panel panel-default" style="border-style: dashed;border-width: 1px;border-color: #2A2A28;">
                                                         <div class="panel-body" style="text-align: center;">
-                                                            <img src="{{ asset('images/reporte.png') }}" alt="Vender" width="87">
+                                                            <img src="images/reporte.png" alt="Vender" width="87">
                                                             <p style="margin-top: 10px;font-size: 14pt;color:#C68907;">
                                                                 Reportes
                                                             </p>
@@ -83,9 +83,6 @@
                                                     </div>
                                                 </a>
                                             </div>
-
-
-
 
                                         </div>
                                     </div>
