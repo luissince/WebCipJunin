@@ -48,7 +48,7 @@
                  <a href="#"><i class="fa fa-sort-amount-asc"></i><span>Conceptos</span></a>
              </li>
              <li>
-                 <a href="#"><i class="fa fa-user"></i> <span>Ingenieros</span></a>
+                 <a href="./ingenieros.php"><i class="fa fa-user"></i> <span>Ingenieros</span></a>
              </li>
              <li>
                  <a href="#"><i class="fa fa-money"></i><span>Cobros</span></a>
