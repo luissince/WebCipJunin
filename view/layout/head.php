@@ -40,11 +40,8 @@
 <script src="adminlte/bower_components/jquery-slimscroll/jquery.slimscroll.min.js"></script>
 <!-- ChartJS -->
 <script src="adminlte/bower_components/chart.js/Chart.js"></script>
-<!-- AdminLTE dashboard demo (This is only for demo purposes) -->
-<script src="adminlte/dist/js/pages/dashboard2.js"></script>
 <!-- AdminLTE for demo purposes -->
 <script src="adminlte/dist/js/demo.js"></script>
-<script src="js/moment.min.js"></script>
 
 
 <!-- Incremento -->
@@ -53,13 +50,15 @@
 <script src="adminlte/bower_components/Flot/jquery.flot.pie.js"></script>
 <script src="adminlte/bower_components/Flot/jquery.flot.categories.js"></script>
 
-<!-- Google Font -->
-<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,600,700,300italic,400italic,600italic">
-<style type="text/css">
-    input[type="text"],
-    input[type="email"],
-    input[type="number"],
-    input[type="date"] {
-        border-radius: 5px;
-    }
+<style>
+       @font-face {
+              font-family: "SourceSansPro-SemiBold";
+              src: url("./fonts/SourceSansPro-SemiBold.ttf");
+       }
+
+       body {
+              font-family: 'SourceSansPro-SemiBold';
+              font-style: normal;
+              font-weight: normal;
+       }
 </style>
