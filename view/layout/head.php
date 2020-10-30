@@ -21,6 +21,7 @@
 <!-- AdminLTE Skins. Choose a skin from the css/skins
        folder instead of downloading all of them to reduce the load. -->
 <link rel="stylesheet" href="adminlte/dist/css/skins/_all-skins.min.css">
+<link rel="stylesheet" href="css/toastr.min.css">
 
 <!-- jQuery 3 -->
 <script src="adminlte/bower_components/jquery/dist/jquery.min.js"></script>
@@ -42,7 +43,7 @@
 <script src="adminlte/bower_components/chart.js/Chart.js"></script>
 <!-- AdminLTE for demo purposes -->
 <script src="adminlte/dist/js/demo.js"></script>
-
+<script src="js/toastr.min.js"></script>
 
 <!-- Incremento -->
 <script src="adminlte/bower_components/Flot/jquery.flot.js"></script>

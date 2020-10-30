@@ -36,7 +36,7 @@
                  <a href="#"><i class="fa fa-laptop"></i> <span>Usuarios</span></a>
              </li>
              <li>
-                 <a href="#"><i class="fa fa-sitemap"></i><span>Datos</span></a>
+                 <a href="#"><i class="fa fa-sitemap"></i><span>Ingresos</span></a>
              </li>
              <li>
                  <a href="#"><i class="fa fa-clone"></i><span>Capítulos</span></a>
