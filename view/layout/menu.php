@@ -51,7 +51,7 @@
                  <a href="./ingenieros.php"><i class="fa fa-user"></i> <span>Ingenieros</span></a>
              </li>
              <li>
-                 <a href="#"><i class="fa fa-money"></i><span>Cobros</span></a>
+                 <a href="./cobros.php"><i class="fa fa-money"></i><span>Cobros</span></a>
              </li>
              <li>
                  <a href="#"><i class="fa fa-bar-chart"></i><span>Reportes</span></a>
