@@ -28,7 +28,8 @@
                             
                             <div class="col-lg-2 col-md-2 col-sm-12 col-xs-12" style="text-align: center; padding-top:1em;">
                                 <img width="70" src="images/ayuda.png">
-                                
+                                <!-- <label for="Foto">Subir foto</label>
+                                <input type="file" id="Foto" name="Foto"> -->
                             </div>
                             <div class="col-lg-10 col-md-10 col-sm-12 col-xs-12" style="padding-top:1em;">
                                 <div class="row">
