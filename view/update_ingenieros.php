@@ -151,13 +151,13 @@ if(!isset($_GET["idPersona"])){
                                             </select>
                                         </div>
                                     </div>
-                                    
+
                                 </div>
                             </div>
                             <div class="modal-footer">
                                 <p class="text-left text-danger">Todos los campos marcados con <i
                                         class="fa fa-fw fa-asterisk text-danger"></i> son obligatorios</p>
-                                <button type="submit" class="btn btn-danger" name="btnAceptar" id="btnaceptar">
+                                <button type="button" class="btn btn-danger" name="btnAceptar" id="btnaceptar">
                                     <i class="fa fa-check"></i> Editar</button>
                                 <button type="button" class="btn btn-primary" data-dismiss="modal">
                                     <i class="fa fa-remove"></i> Cancelar</button>
@@ -179,20 +179,27 @@ if(!isset($_GET["idPersona"])){
     <script src="js/tools.js"></script>
     <script>
     let tools = new Tools();
+    let spiner = $("#Load_date");
 
-    let spiner = $("#Load_date")
+    let state = false;
 
     $(document).ready(function() {
-
         loadDataPersona($("#dni").val());
 
+        $("#btnaceptar").click(function(){
+            if(state){
+                updatePersona($("#dni").val(),$("#Nombres").val(),$("#Apellidos").val());
+            }else{
+                AlertWarning("Advertencia", "Nose pudo cargar los datos correctamente, recargue la pantalla.");
+            }            
+        });
     });
 
-
-    $("#checkkBoxId").attr("checked") ? alert("Checked") : alert("Unchecked");
+    function onCheked() {
+        $("#checkkBoxId").attr("checked") ? alert("Checked") : alert("Unchecked");
+    }
 
     function loadDataPersona(idPersona) {
-
         $.ajax({
             url: "../app/controller/PersonaController.php",
             method: "GET",
@@ -202,7 +209,7 @@ if(!isset($_GET["idPersona"])){
             },
             beforeSend: function() {
                 spiner.append(
-                    '<img src="./images/spiner.gif" width="23" height="23" style="padding-left: 7px;"/>'
+                    '<img src="./images/spiner.gif" width="25" height="25" style="margin-left: 10px;"/>'
                 )
             },
             success: function(result) {
@@ -210,7 +217,7 @@ if(!isset($_GET["idPersona"])){
 
                 if (result.estado === 1) {
                     let persona = result.object;
-                    console.log(persona)
+                    
                     $("#Nombres").val(persona.Nombres)
                     $("#Apellidos").val(persona.Apellidos)
 
@@ -273,15 +280,103 @@ if(!isset($_GET["idPersona"])){
                         default:
                             // code block
                     }
-
+                    AlertSuccess("Información", "Se cargo correctamente los datos.");
+                    state=true;
                 } else {
-
+                    AlertWarning("Advertencia", result.message);
+                    state=false;
                 }
+            },
+            error: function(error) {
+                AlertError("Error", error);
+                state=false;
+            }
+        });
+    }
+
+    function updatePersona(idPersona,nombres,apellidos){
+        $.ajax({
+            url: "../app/controller/PersonaController.php",
+            method: "POST",
+            data: {
+                "type": "update",
+                "dni": idPersona,
+                "nombres":nombres,
+                "apellidos":apellidos
+            },
+            beforeSend: function() {
+                
+            },
+            success: function(result) {
+                console.log(result)
             },
             error: function(error) {
                 console.log(error)
             }
         });
+    }
+
+    function AlertSuccess(title, message) {
+        toastr.options = {
+            "closeButton": false,
+            "debug": false,
+            "newestOnTop": false,
+            "progressBar": false,
+            "positionClass": "toast-top-right",
+            "preventDuplicates": false,
+            "onclick": null,
+            "showDuration": "300",
+            "hideDuration": "1000",
+            "timeOut": "5000",
+            "extendedTimeOut": "1000",
+            "showEasing": "swing",
+            "hideEasing": "linear",
+            "showMethod": "fadeIn",
+            "hideMethod": "fadeOut"
+        }
+        toastr["success"](message, title)
+    }
+
+    function AlertWarning(title, message) {
+        toastr.options = {
+            "closeButton": false,
+            "debug": false,
+            "newestOnTop": false,
+            "progressBar": false,
+            "positionClass": "toast-top-right",
+            "preventDuplicates": false,
+            "onclick": null,
+            "showDuration": "300",
+            "hideDuration": "1000",
+            "timeOut": "5000",
+            "extendedTimeOut": "1000",
+            "showEasing": "swing",
+            "hideEasing": "linear",
+            "showMethod": "fadeIn",
+            "hideMethod": "fadeOut"
+        }
+        toastr["warning"](message, title);
+    }
+
+    function AlertError(title, message) {
+        toastr.options = {
+            "closeButton": false,
+            "debug": false,
+            "newestOnTop": false,
+            "progressBar": false,
+            "positionClass": "toast-top-right",
+            "preventDuplicates": false,
+            "onclick": null,
+            "showDuration": "300",
+            "hideDuration": "1000",
+            "timeOut": "5000",
+            "extendedTimeOut": "1000",
+            "showEasing": "swing",
+            "hideEasing": "linear",
+            "showMethod": "fadeIn",
+            "hideMethod": "fadeOut"
+        }
+        toastr["error"]("message", "title")
     }
     </script>
 </body>

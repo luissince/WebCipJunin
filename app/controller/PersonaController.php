@@ -39,7 +39,23 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
         }        
     }    
     
-}elseif ($_SERVER['REQUEST_METHOD'] == 'POST') {
-
+}else if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+    if($_POST["type"] == "update"){
+        $persona["dni"] = $_POST["dni"];
+        $persona["nombres"] = $_POST["nombres"];
+        $persona["apellidos"] = $_POST["apellidos"];
+        $result = PersonaAdo::update($persona);
+        if($result == "updated"){
+            echo json_encode(array(
+                "estado" => 1,
+                "message"=>"Se actualizo correctamente los dotos"
+            ));
+        }else{
+            echo json_encode(array(
+                "estado" => 2,
+                "message"=>$result
+            ));
+        }
+    }
 }
 

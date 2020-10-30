@@ -78,8 +78,23 @@ class PersonaAdo{
 
     }
 
-    public static function update(){
-
+    public static function update($persona){
+        try {
+            Database::getInstance()->getDb()->beginTransaction();
+            $comandoPersona = Database::getInstance()->getDb()->prepare("UPDATE Persona SET 
+                Nombres = ?,
+                Apellidos = ?            
+            WHERE idDNI = ?");
+            $comandoPersona->bindParam(1, $persona["nombres"], PDO::PARAM_STR);
+            $comandoPersona->bindParam(2, $persona["apellidos"], PDO::PARAM_STR);
+            $comandoPersona->bindParam(3, $persona["dni"], PDO::PARAM_STR);
+            $comandoPersona->execute();            
+            Database::getInstance()->getDb()->commit();
+            return "updated";
+        } catch (Exception $ex) {
+            Database::getInstance()->getDb()->rollback();
+            return $ex->getMessage();
+        }
     }
 
     public static function delete(){
