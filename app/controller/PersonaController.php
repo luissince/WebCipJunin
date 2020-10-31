@@ -1,4 +1,6 @@
 <?php
+//error_reporting(0);
+date_default_timezone_set('America/Lima');
 header("Access-Control-Allow-Origin: *");
 header("Access-Control-Allow-Headers: Origin, X-Requested-With, Content-Type, Accept");
 header('Access-Control-Allow-Methods: GET, POST, PUT, DELETE');
@@ -62,7 +64,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
         }else{
             echo json_encode(array(
                 "estado" => 2,
-                "message"=>$result
+                "message"=>$result,
+                "value"=>$persona["nacimiento"]
             ));
         }
     } else if($_POST["type"] == "create"){

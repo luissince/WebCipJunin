@@ -99,10 +99,12 @@ class PersonaAdo{
                 Condicion = ?      
             WHERE idDNI = ?");
 
+            $dateTime = date('Y-d-m H:i:s',strtotime($persona["nacimiento"]));
+
             $comandoPersona->bindParam(1, $persona["nombres"], PDO::PARAM_STR);
             $comandoPersona->bindParam(2, $persona["apellidos"], PDO::PARAM_STR);
             $comandoPersona->bindParam(3, $persona["sexo"], PDO::PARAM_STR);
-            $comandoPersona->bindParam(4, $persona["nacimiento"], PDO::PARAM_STR);
+            $comandoPersona->bindParam(4, $dateTime , PDO::PARAM_STR);
             $comandoPersona->bindParam(5, $persona["estado_civil"], PDO::PARAM_STR);
             $comandoPersona->bindParam(6, $persona["ruc"], PDO::PARAM_STR);
             $comandoPersona->bindParam(7, $persona["rason_social"], PDO::PARAM_STR);
