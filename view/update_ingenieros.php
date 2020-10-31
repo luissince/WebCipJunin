@@ -159,7 +159,8 @@ if(!isset($_GET["idPersona"])){
                                         class="fa fa-fw fa-asterisk text-danger"></i> son obligatorios</p>
                                 <button type="button" class="btn btn-danger" name="btnAceptar" id="btnaceptar">
                                     <i class="fa fa-check"></i> Editar</button>
-                                <button type="button" class="btn btn-primary" data-dismiss="modal">
+                                <button type="button" class="btn btn-primary" data-dismiss="modal" name="btncancelar"
+                                    id="btncancelar">
                                     <i class="fa fa-remove"></i> Cancelar</button>
                             </div>
                         </form>
@@ -186,13 +187,38 @@ if(!isset($_GET["idPersona"])){
     $(document).ready(function() {
         loadDataPersona($("#dni").val());
 
-        $("#btnaceptar").click(function(){
-            if(state){
-                updatePersona($("#dni").val(),$("#Nombres").val(),$("#Apellidos").val());
-            }else{
-                AlertWarning("Advertencia", "Nose pudo cargar los datos correctamente, recargue la pantalla.");
-            }            
+        $("#btnaceptar").click(function() {
+            if (state) {
+                if( $("#dni").val() == '' || $("#dni").val().length < 8 ){
+                    AlertWarning("Advertencia","Ingrese un número de dni correcto por favor.");
+                } else if( $("#Nombres").val() == '' || $("#Nombres").val().length < 3 ){
+                    AlertWarning("Advertencia","Ingrese un nombre de 3 o mas letras por favor");
+                } else if( $("#Apellidos").val() == '' || $("#Apellidos").val().length < 3 ){
+                    AlertWarning("Advertencia","Ingrese un apellido de 3 o mas letras por favor");
+                } else if( $("#Codigo").val() == '' || $("#Codigo").val().length < 4 ){
+                    AlertWarning("Advertencia","Ingrese un codigo de 4 caracteres por favor");
+                } else{
+                    updatePersona($("#dni").val(), $("#Nombres").val(), $("#Apellidos").val(), $("#Genero")
+                    .val(), $("#Nacimiento").val(), $("#Estado_civil").val(), $("#Ruc").val(), $(
+                        "#Razon_social").val(), $("#Codigo").val(), $("#Condicion").val());
+                }
+               
+            } else {
+                AlertWarning("Advertencia",
+                    "Nose pudo cargar los datos correctamente, recargue la pantalla.");
+            }
         });
+
+        $("#btncancelar").click(function() {
+            location.href = "ingenieros.php"
+        });
+
+        $("#btncancelar").on("keyup", function(event) {
+            if (event.keyCode === 13) {
+                location.href = "ingenieros.php"
+            }
+        });
+
     });
 
     function onCheked() {
@@ -217,7 +243,7 @@ if(!isset($_GET["idPersona"])){
 
                 if (result.estado === 1) {
                     let persona = result.object;
-                    
+
                     $("#Nombres").val(persona.Nombres)
                     $("#Apellidos").val(persona.Apellidos)
 
@@ -280,35 +306,67 @@ if(!isset($_GET["idPersona"])){
                         default:
                             // code block
                     }
-                    AlertSuccess("Información", "Se cargo correctamente los datos.");
-                    state=true;
+                    AlertInfo("Información", "Se cargo correctamente los datos.");
+                    state = true;
                 } else {
                     AlertWarning("Advertencia", result.message);
-                    state=false;
+                    state = false;
                 }
             },
             error: function(error) {
                 AlertError("Error", error);
-                state=false;
+                state = false;
             }
         });
     }
 
-    function updatePersona(idPersona,nombres,apellidos){
+    function updatePersona(idPersona, nombres, apellidos, sexo, nacimiento, estado_civil, ruc, rason_social, cip,
+        condicion) {
         $.ajax({
             url: "../app/controller/PersonaController.php",
             method: "POST",
             data: {
                 "type": "update",
                 "dni": idPersona,
-                "nombres":nombres,
-                "apellidos":apellidos
+                "nombres": nombres,
+                "apellidos": apellidos,
+                "sexo": sexo,
+                "nacimiento": nacimiento,
+                "estado_civil": estado_civil,
+                "ruc": ruc,
+                "rason_social": rason_social,
+                "cip": cip,
+                "condicion": condicion,
             },
             beforeSend: function() {
-                
+                $("#btnaceptar").text('')
+                $("#btnaceptar").append('<img src="./images/spiner.gif" width="25" height="25" />')
             },
             success: function(result) {
                 console.log(result)
+                if (result.estado == 1) {
+                    AlertSuccess("Mensaje", "Se actualizaron correctamente los datos")
+                    setTimeout(function() {
+                        location.href = "ingenieros.php"
+                    }, 1000);
+                } else {
+
+                    // let hijo = $("#btnaceptar").clone();     
+
+                    AlertWarning("Mensaje", result.message)
+                    setTimeout(() => {
+                        $("#btnaceptar").text("Editar")
+                        $("#btnaceptar").append('<i class="fa fa-check"></i>')
+                    }, 1000);
+                    
+                }
+                // $("#btnaceptar").children("i:first").remove()
+                // $("#btnaceptar").text('')
+                // $("#btnaceptar").append('<img src="./images/spiner.gif" width="25" height="25" "/>')
+                // setInterval(function(){
+                //AlertSuccess("Mensaje", "Se actualizaron correctamente los datos")
+                // }, 1000);    
+
             },
             error: function(error) {
                 console.log(error)
@@ -334,7 +392,7 @@ if(!isset($_GET["idPersona"])){
             "showMethod": "fadeIn",
             "hideMethod": "fadeOut"
         }
-        toastr["success"](message, title)
+        toastr["success"](message, title);
     }
 
     function AlertWarning(title, message) {
@@ -376,7 +434,28 @@ if(!isset($_GET["idPersona"])){
             "showMethod": "fadeIn",
             "hideMethod": "fadeOut"
         }
-        toastr["error"]("message", "title")
+        toastr["error"](message, title)
+    }
+
+    function AlertInfo(title, message) {
+        toastr.options = {
+            "closeButton": false,
+            "debug": false,
+            "newestOnTop": false,
+            "progressBar": false,
+            "positionClass": "toast-top-right",
+            "preventDuplicates": false,
+            "onclick": null,
+            "showDuration": "300",
+            "hideDuration": "1000",
+            "timeOut": "5000",
+            "extendedTimeOut": "1000",
+            "showEasing": "swing",
+            "hideEasing": "linear",
+            "showMethod": "fadeIn",
+            "hideMethod": "fadeOut"
+        }
+        toastr["info"](message, title)
     }
     </script>
 </body>

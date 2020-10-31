@@ -9,9 +9,10 @@ require '../model/PersonaAdo.php';
 if ($_SERVER['REQUEST_METHOD'] == 'GET') {
 
     if($_GET["type"] === "alldata"){
+        $nombres = $_GET['nombres'];
         $posicionPagina = $_GET['posicionPagina'];
         $filasPorPagina = $_GET['filasPorPagina'];
-        $personas = PersonaAdo::getAll(intval($posicionPagina),intval($filasPorPagina));
+        $personas = PersonaAdo::getAll($nombres,intval($posicionPagina),intval($filasPorPagina));
         if(is_array($personas)){
             echo json_encode(array(
                 "estado" => 1,
@@ -44,16 +45,48 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
         $persona["dni"] = $_POST["dni"];
         $persona["nombres"] = $_POST["nombres"];
         $persona["apellidos"] = $_POST["apellidos"];
+        $persona["sexo"] = $_POST["sexo"];
+        $persona["nacimiento"] = $_POST["nacimiento"];
+        $persona["estado_civil"] = $_POST["estado_civil"];
+        $persona["ruc"] = $_POST["ruc"];
+        $persona["rason_social"] = $_POST["rason_social"];
+        $persona["cip"] = $_POST["cip"];
+        $persona["condicion"] = $_POST["condicion"];
+
         $result = PersonaAdo::update($persona);
         if($result == "updated"){
             echo json_encode(array(
                 "estado" => 1,
-                "message"=>"Se actualizo correctamente los dotos"
+                "message"=>"Se actualizo correctamente los datos"
             ));
         }else{
             echo json_encode(array(
                 "estado" => 2,
                 "message"=>$result
+            ));
+        }
+    } else if($_POST["type"] == "create"){
+        $persona["dni"] = $_POST["dni"];
+        $persona["nombres"] = $_POST["nombres"];
+        $persona["apellidos"] = $_POST["apellidos"];
+        $persona["sexo"] = $_POST["sexo"];
+        $persona["nacimiento"] = $_POST["nacimiento"];
+        $persona["estado_civil"] = $_POST["estado_civil"];
+        $persona["ruc"] = $_POST["ruc"];
+        $persona["rason_social"] = $_POST["rason_social"];
+        $persona["cip"] = $_POST["cip"];
+        $persona["condicion"] = $_POST["condicion"];
+
+        $result = PersonaAdo::insert($persona);
+        if($result == "create"){
+            echo json_encode(array(
+                "estado" => 1,
+                "message" => "Se insertarron correctamente los datos"
+            ));
+        }else{
+            echo json_encode(array(
+                "estado" => 2,
+                "message" => $result
             ));
         }
     }
