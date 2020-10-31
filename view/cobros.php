@@ -214,80 +214,116 @@
 
                 <!-- <div class="row"> -->
                 <div class="row">
-                    <div class="col-md-12">
-                        <div class="panel panel-default">
-                            <div class="panel-heading"> <i class="fa fa-money"></i> Generar cobro</div>
-                            <div class="panel-body">
-                                <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#confirmar">
-                                    <i class="fa fa-plus"></i> Colegiatura
-                                </button>
-                                <button type="button" class="btn btn-primary" data-toggle="modal">
-                                    <i class="fa fa-plus"></i> Cuotas
-                                </button>
-                                <button type="button" class="btn btn-primary" data-toggle="modal">
-                                    <i class="fa fa-plus"></i> Certificado
-                                </button>
-                                <button type="button" class="btn btn-primary" data-toggle="modal">
-                                    <i class="fa fa-plus"></i> Peritaje
-                                </button>
-                                <button type="button" class="btn btn-primary" data-toggle="modal">
-                                    <i class="fa fa-plus"></i> Otros
-                                </button>
-                            </div>
-                        </div>
-                    </div>
-                </div>
 
-                <div class="row">
                     <div class="col-md-8">
-                        <div class="panel panel-default">
+                        <div class="panel panel-primary">
                             <div class="panel-heading">
-                                <h3 class="panel-title">Título del panel con estilo h3</h3>
+                                <h5 class="no-margin"> Generar cobro</h5>
                             </div>
                             <div class="panel-body">
-                                <table class="table">
-                                    <thead style="background-color: #FDB2B1;color: #B72928;">
-                                        <th>#</th>
-                                        <th>Cantidad</th>
-                                        <th>Concepto</th>
-                                        <th>Impuesto</th>
-                                        <th>Monto</th>
-                                        <th>Editar</th>
-                                        <th>Quitar</th>
-                                    </thead>
-                                </table>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-md-4">
-                        <div class="panel panel-default">
-                            <div class="panel-heading">
-                                <h3 class="panel-title">Título del panel con estilo h3</h3>
-                            </div>
-
-                            <div class="panel-body">
-                                <div>
-                                    <div>COBRAR</div>
-                                    <div>IMPORTE TOTAL</div>
-                                    <div>S/ 0.00</div>
-                                </div>
-                                <div>
-                                    <div>Comprobante</div>
-                                    <div>
-                                        <span>B001</span>
-                                        <span>0000000</span>
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <p>
+                                            <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#confirmar">
+                                                <i class="fa fa-plus"></i> Colegiatura
+                                            </button>
+                                            <button type="button" class="btn btn-primary" data-toggle="modal">
+                                                <i class="fa fa-plus"></i> Cuotas
+                                            </button>
+                                            <button type="button" class="btn btn-primary" data-toggle="modal">
+                                                <i class="fa fa-plus"></i> Certificado
+                                            </button>
+                                            <button type="button" class="btn btn-primary" data-toggle="modal">
+                                                <i class="fa fa-plus"></i> Peritaje
+                                            </button>
+                                            <button type="button" class="btn btn-primary" data-toggle="modal">
+                                                <i class="fa fa-plus"></i> Otros
+                                            </button>
+                                        </p>
                                     </div>
                                 </div>
-                                <div>
-                                    <div>Colegiado</div>
-                                    <div>N° Documento</div>
-                                    <div>N° Cip</div>
-                                    <div>Nombre/Razón Social</div>
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <table class="table">
+                                            <thead style="background-color: #FDB2B1;color: #B72928;">
+                                                <th>#</th>
+                                                <th>Cantidad</th>
+                                                <th>Concepto</th>
+                                                <th>Impuesto</th>
+                                                <th>Monto</th>
+                                                <th>Editar</th>
+                                                <th>Quitar</th>
+                                            </thead>
+                                        </table>
+                                    </div>
                                 </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-md-4">
+                        <div class="panel panel-primary">
+                            <div class="panel-heading">
+                                <h5 class="no-margin">Detalle del Ingreso</h5>
+                            </div>
+
+                            <div class="panel-body">
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <button class="btn btn-success btn-block">
+                                            <div class="col-md-6 text-left">
+                                                <h4>COBRAR</h4>
+                                            </div>
+                                            <div class="col-md-6 text-right">
+                                                <h4>S/ 0.00</h4>
+                                        </button>
+                                    </div>
+                                </div>
+
+                                <div class="row">
+                                    <div class="col-md-12 text-left no-margin">
+                                        <h5>Comprobante</h5>
+                                        <select class="form-control">
+                                            <option value="03">Boleta</option>
+                                            <option value="01">Factura</option>
+                                        </select>
+                                    </div>
+                                </div>
+
+                                <div class="row ">
+                                    <div class="col-md-6 text-left no-margin">
+                                        <h5>B001</h5>
+                                    </div>
+
+                                    <div class="col-md-6 text-right no-margin">
+                                        <h5>0000000</h5>
+                                    </div>
+                                </div>
+
+                                <div class="row">
+                                    <div class="col-md-12 text-left">
+                                        <h5>N° Cip</h5>
+                                        <h5>--</h5>
+                                    </div>
+                                    <div class="col-md-12 text-left">
+                                        <h5>N° Documento</h5>
+                                        <h5>--</h5>
+                                    </div>
+                                    <div class="col-md-12 text-left">
+                                        <h5>Nombre/Razón Social</h5>
+                                        <h5>--</h5>
+                                    </div>
+                                    <div class="col-md-12 text-left">
+                                        <h5>Dirección</h5>
+                                        <h5>--</h5>
+                                    </div>
+                                </div>
+
                             </div>
 
                         </div>
                     </div>
+
                 </div>
                 <!-- </div> -->
             </section>
@@ -302,25 +338,6 @@
     <script>
         $(document).ready(function() {
 
-            toastr.options = {
-                "closeButton": false,
-                "debug": false,
-                "newestOnTop": false,
-                "progressBar": false,
-                "positionClass": "toast-top-right",
-                "preventDuplicates": false,
-                "onclick": null,
-                "showDuration": "300",
-                "hideDuration": "1000",
-                "timeOut": "5000",
-                "extendedTimeOut": "1000",
-                "showEasing": "swing",
-                "hideEasing": "linear",
-                "showMethod": "fadeIn",
-                "hideMethod": "fadeOut"
-            }
-
-            toastr["success"]("asd", "asd");
 
         });
     </script>
