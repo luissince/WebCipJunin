@@ -126,11 +126,13 @@ class PersonaAdo{
             $comandoPersona = Database::getInstance()->getDb()->prepare("INSERT INTO Persona (idDNI,idUsuario,Nombres,Apellidos,Sexo,FechaNac,EstadoCivil,RUC,RAZONSOCIAL,CIP,Condicion)
                 VALUES (?,'-1',?,?,?,?,?,?,?,?,?)");
 
+            $dateTime = date('Y-d-m H:i:s',strtotime($persona["nacimiento"]));
+
             $comandoPersona->bindParam(1, $persona["dni"], PDO::PARAM_STR);
             $comandoPersona->bindParam(2, $persona["nombres"], PDO::PARAM_STR);
             $comandoPersona->bindParam(3, $persona["apellidos"], PDO::PARAM_STR);
             $comandoPersona->bindParam(4, $persona["sexo"], PDO::PARAM_STR);
-            $comandoPersona->bindParam(5, $persona["nacimiento"], PDO::PARAM_STR);
+            $comandoPersona->bindParam(5, $dateTime, PDO::PARAM_STR);
             $comandoPersona->bindParam(6, $persona["estado_civil"], PDO::PARAM_STR);
             $comandoPersona->bindParam(7, $persona["ruc"], PDO::PARAM_STR);
             $comandoPersona->bindParam(8, $persona["rason_social"], PDO::PARAM_STR);

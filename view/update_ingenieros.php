@@ -2,7 +2,7 @@
 
 if (!isset($_GET["idPersona"])) {
     echo '<script>location.href = "ingenieros.php";</script>';
-} else {
+} else {}
 ?>
 
     <!DOCTYPE html>
@@ -435,4 +435,4 @@ if (!isset($_GET["idPersona"])) {
 
 <?php
 
-}
+
