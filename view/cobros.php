@@ -20,10 +20,9 @@
             <!-- Main content -->
             <section class="content">
 
-                <!-- modal start -->
-
+                <!-- modal start colegiatura-->
                 <div class="row">
-                    <div class="modal fade" id="confirmar">
+                    <div class="modal fade" id="mdColegiatura">
                         <div class="modal-dialog modal-xl">
                             <div class="modal-content">
                                 <div class="modal-header">
@@ -50,8 +49,8 @@
                                                     </div>
                                                 </div>
                                             </div>
-                                            <div class="box-body no-padding">
-                                                <div class="row">
+                                            <div class="box-body no-padding" id="ctnConceptos">
+                                                <!-- <div class="row">
                                                     <div class="col-md-8 text-left">
                                                         <p>Derecho de Colegiatura CD</p>
                                                     </div>
@@ -82,103 +81,9 @@
                                                     <div class="col-md-4 text-right">
                                                         <p>350.00</p>
                                                     </div>
-                                                </div>
+                                                </div> -->
                                             </div>
                                         </div>
-                                        <!-- <div class="row">
-                                            <div class="col-md-12">
-                                                <div class="form-group">
-                                                    <label for="dni">DNI: <i class="fa fa-fw fa-asterisk text-danger"></i></label>
-                                                    <input id="dni" type="number" name="Dni" class="form-control" placeholder="DNI" required="" maxlength="8" minlength="8">
-                                                </div>
-                                            </div>
-                                        </div> -->
-                                        <!-- <div class="row">
-                                            <div class="col-md-6">
-                                                <div class="form-group">
-                                                    <label for="Nombres">Nombres: <i class="fa fa-fw fa-asterisk text-danger"></i></label>
-                                                    <input id="Nombres" type="text" name="Nombres" class="form-control" placeholder="Nombres" required="">
-                                                </div>
-                                            </div>
-                                            <div class="col-md-6">
-                                                <div class="form-group">
-                                                    <label for="Apellidos">Apellidos: <i class="fa fa-fw fa-asterisk text-danger"></i></label>
-                                                    <input id="Apellidos" type="text" name="Apellidos" class="form-control" placeholder="Apellidos" required="">
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="row">
-                                            <div class="col-md-4">
-                                                <div class="form-group">
-                                                    <label for="Genero">Genero: <i class="fa fa-fw fa-asterisk text-danger"></i></label>
-                                                    <select id="Genero" class="form-control">
-                                                        <option>Maculino</option>
-                                                        <option>Femenino</option>
-                                                        <option>Otros</option>
-                                                    </select>
-                                                </div>
-                                            </div>
-                                            <div class="col-md-4">
-                                                <div class="form-group">
-                                                    <label for="Nacimiento">Nacimiento: <i class="fa fa-fw fa-asterisk text-danger"></i></label>
-                                                    <input id="Nacimiento" type="date" name="Nacimiento" class="form-control" required="">
-                                                </div>
-                                            </div>
-                                            <div class="col-md-4">
-                                                <div class="form-group">
-                                                    <label for="Estado_civil">Estado civil: <i class="fa fa-fw fa-asterisk text-danger"></i></label>
-                                                    <select id="Estado_civil" class="form-control">
-                                                        <option>Soltero/a</option>
-                                                        <option>Casado/a</option>
-                                                        <option>Viudo/a</option>
-                                                        <option>Divorciado/a</option>
-                                                    </select>
-                                                </div>
-                                            </div>
-                                        </div>
-
-                                        <div class="row">
-                                            <div class="col-md-6">
-                                                <div class="form-group">
-                                                    <label for="Ruc">RUC (opcional):</label>
-                                                    <input id="Ruc" type="text" name="Ruc" class="form-control" placeholder="número de RUC" required="">
-                                                </div>
-                                            </div>
-                                            <div class="col-md-6">
-                                                <div class="form-group">
-                                                    <label for="Apellidos">Razon social:</label>
-                                                    <input id="Apellidos" type="text" name="Apellidos" class="form-control" placeholder="Apellidos" required="">
-                                                </div>
-                                            </div>
-                                        </div>
-
-                                        <div class="row">
-                                            <div class="col-md-5">
-                                                <div class="form-group">
-                                                    <label for="Codigo">Codigo CIP: <i class="fa fa-fw fa-asterisk text-danger"></i></label>
-                                                    <input id="Codigo" type="number" name="Codigo" class="form-control" placeholder="Codigo" required="">
-                                                </div>
-                                            </div>
-                                            <div class="col-md-5">
-                                                <div class="form-group">
-                                                    <label for="Condición">Condición: <i class="fa fa-fw fa-asterisk text-danger"></i></label>
-                                                    <select id="Condición" class="form-control">
-                                                        <option>Vitalicio</option>
-                                                        <option>Otros</option>
-                                                    </select>
-                                                </div>
-                                            </div>
-                                            <div class="col-md-2">
-                                                <div class="form-group">
-                                                    <label for="Condición">Nuevo </label>
-                                                    <div class="checkbox">
-                                                        <label>
-                                                            <input type="checkbox"> Tramite
-                                                        </label>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>  -->
                                         <div class="row no-padding">
                                             <div class="col-md-6 text-right">
                                                 <div class="checkbox no-margin">
@@ -192,7 +97,7 @@
                                                     <span>Total:</span>
                                                 </div>
                                                 <div class="col-md-6 text-right">
-                                                    <span>0.00</span>
+                                                    <span id="lblTotal">0.00</span>
                                                 </div>
                                             </div>
                                         </div>
@@ -209,8 +114,47 @@
                         </div>
                     </div>
                 </div>
+                <!-- modal end colegiatura-->
 
-                <!-- modal end -->
+                <!-- modal start cuotas -->
+                <div class="row">
+                    <div class="modal fade" id="mdCuotas">
+                        <div class="modal-dialog modal-xl">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <button type="button" class="close" data-dismiss="modal">
+                                        <i class="fa fa-close"></i>
+                                    </button>
+                                    <h4 class="modal-title">
+                                        <i class="fa fa-plus">
+                                        </i> Pago de Cuotas
+                                    </h4>
+                                </div>
+                                <div class="modal-body">
+                                    <div class="row">
+                                        <button type="button" class="btn btn-success">
+                                            <i class="fa fa-plus"></i> Normal
+                                        </button>
+                                        <button type="button" class="btn btn-success">
+                                            <i class="fa fa-plus"></i> Amnistia
+                                        </button>
+                                        <button type="button" class="btn btn-success">
+                                            <i class="fa fa-plus"></i> Vitalicio
+                                        </button>
+                                    </div>
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-warning" name="btnAceptar" id="btnaceptar">
+                                        <i class="fa fa-check"></i> Aceptar</button>
+                                    <button type="button" class="btn btn-primary" data-dismiss="modal">
+                                        <i class="fa fa-remove"></i> Cancelar</button>
+                                </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- modal end cuotas -->
 
                 <!-- <div class="row"> -->
                 <div class="row">
@@ -224,19 +168,19 @@
                                 <div class="row">
                                     <div class="col-md-12">
                                         <p>
-                                            <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#confirmar">
+                                            <button id="btnColegitura" type="button" class="btn btn-primary" data-toggle="modal">
                                                 <i class="fa fa-plus"></i> Colegiatura
                                             </button>
-                                            <button type="button" class="btn btn-primary" data-toggle="modal">
+                                            <button id="btnCuotas" type="button" class="btn btn-primary" data-toggle="modal">
                                                 <i class="fa fa-plus"></i> Cuotas
                                             </button>
-                                            <button type="button" class="btn btn-primary" data-toggle="modal">
+                                            <button id="btnCertificado" type="button" class="btn btn-primary" data-toggle="modal">
                                                 <i class="fa fa-plus"></i> Certificado
                                             </button>
-                                            <button type="button" class="btn btn-primary" data-toggle="modal">
+                                            <button id="btnPeritaje" type="button" class="btn btn-primary" data-toggle="modal">
                                                 <i class="fa fa-plus"></i> Peritaje
                                             </button>
-                                            <button type="button" class="btn btn-primary" data-toggle="modal">
+                                            <button id="btnOtro" type="button" class="btn btn-primary" data-toggle="modal">
                                                 <i class="fa fa-plus"></i> Otros
                                             </button>
                                         </p>
@@ -335,11 +279,85 @@
         <!-- end footer -->
     </div>
     <!-- ./wrapper -->
+    <script src="js/tools.js"></script>
     <script>
+        let tools = new Tools();
         $(document).ready(function() {
 
+            $("#btnColegitura").click(function() {
+                $('#mdColegiatura').modal('show');
+                loadColegiatura();
+            });
+
+            $("#btnColegitura").on("keyup", function(event) {
+                if (event.keyCode === 13) {
+                    $('#mdColegiatura').modal('show');
+                    loadColegiatura();
+                }
+            });
+
+            $("#btnCuotas").click(function() {
+                $('#mdCuotas').modal('show');
+            });
+
+            $("#btnCuotas").on("keyup", function() {
+                if (event.keyCode === 13) {
+                    $('#mdCuotas').modal('show');
+                }
+            });
 
         });
+
+        function loadColegiatura() {
+            $.ajax({
+                url: "../app/controller/ConceptoController.php",
+                method: "GET",
+                data: {
+                    "type": "typecolegiatura",
+                },
+                beforeEnd: function() {
+                    $("#ctnConceptos").empty();
+
+                },
+                success: function(result) {
+                    if (result.estado === 1) {
+                        let total = 0;
+                        for (let value of result.data) {
+                            $("#ctnConceptos").append('<div id="' + value.idConcepto + '" class="row">' +
+                                '<div class="col-md-8 text-left">' +
+                                '<p>' + value.Concepto + '</p>' +
+                                '</div>' +
+                                '<div class="col-md-4 text-right">' +
+                                '<p>' + value.Precio + '</panel>' +
+                                '</div>');
+                            total += parseFloat(value.Precio);
+                        }
+                        $("#lblTotal").html(tools.formatMoney(total));
+                    } else {
+
+                    }
+                },
+                error: function(error) {
+
+                }
+            });
+        }
+
+        function loadCuotas() {
+
+        }
+
+        function loadCertificado() {
+
+        }
+
+        function loadPeritaje() {
+
+        }
+
+        function loadOtros() {
+
+        }
     </script>
 </body>
 

@@ -5,11 +5,8 @@ header("Access-Control-Allow-Origin: *");
 header("Access-Control-Allow-Headers: Origin, X-Requested-With, Content-Type, Accept");
 header('Access-Control-Allow-Methods: GET, POST, PUT, DELETE');
 header('Content-Type: application/json; charset=UTF-8');
-
 require '../model/PersonaAdo.php';
-
 if ($_SERVER['REQUEST_METHOD'] == 'GET') {
-
     if($_GET["type"] === "alldata"){
         $nombres = $_GET['nombres'];
         $posicionPagina = $_GET['posicionPagina'];
@@ -59,11 +56,16 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
         if($result == "updated"){
             echo json_encode(array(
                 "estado" => 1,
-                "message"=>"Se actualizo correctamente los datos"
+                "message"=>"Se actualizo correctamente los datos."
+            ));
+        }else if($result == "noexists"){
+            echo json_encode(array(
+                "estado" => 2,
+                "message"=>"El dni no existe o fue modificado para poder actualizar los datos."
             ));
         }else{
             echo json_encode(array(
-                "estado" => 2,
+                "estado" => 0,
                 "message"=>$result,
                 "value"=>$persona["nacimiento"]
             ));

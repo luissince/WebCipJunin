@@ -18,8 +18,13 @@
         <!-- Content Wrapper. Contains page content -->
         <div class="content-wrapper" style="background-color: #FFFFFF;">
             <!-- Main content -->
+            <section class="content-header">
+                <h3 class="no-margin"> Conceptos de cobros <small> Lista </small> </h3>
+            </section>
+
             <section class="content">
 
+                <!-- Modal -->
                 <div class="row">
                     <div class="modal fade" id="confirmar">
                         <div class="modal-dialog">
@@ -29,115 +34,113 @@
                                         <i class="fa fa-close"></i>
                                     </button>
                                     <h4 class="modal-title">
-                                        <i class="fa fa-user-plus">
-                                        </i> Registrar Ingeniero
+                                        <i class="fa fa-list-alt">
+                                        </i> Registrar Concepto
                                     </h4>
                                 </div>
                                 <div class="modal-body">
                                     <form role="form">
-                                        <!--<input type="hidden" name="Usuario" value="{{ Auth::user()->id }}"> -->
 
+                                        <div class="row">
+                                            <div class="col-md-8">
+                                                <div class="form-group">
+                                                    <label for="categoria">Categoria: <i class="fa fa-fw fa-asterisk text-danger"></i></label>
+                                                    <select id="cbCategoria" class="form-control">
+                                                        <option value="0">- - Seleccione - -</option>
+                                                        <option value="1">Cuota ordinaria</option>
+                                                        <option value="2">Cuota ordinaria (Admistia)</option>
+                                                        <option value="3">Cuota ordinaria (Vitalicio)</option>
+                                                        <option value="4">Colegiatura</option>
+                                                        <option value="5">Certificado de habilidad</option>
+                                                        <option value="6">Certificado de residencia de obra</option>
+                                                        <option value="7">Certificado de Proyecto</option>
+                                                        <option value="8">Peritaje</option>
+                                                        <option value="100">Otros conceptos</option>
+                                                    </select>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-4">
+                                                <div class="form-group">
+                                                    <label for="codigo">Codigo: </label>
+                                                    <input id="txtCodigo" type="text" name="codigo" class="form-control" placeholder="Codigo del concepto" required="">
+                                                </div>
+                                            </div>
+                                        </div>
                                         <div class="row">
                                             <div class="col-md-12">
                                                 <div class="form-group">
-                                                    <label for="dni">DNI: <i class="fa fa-fw fa-asterisk text-danger"></i></label>
-                                                    <input id="dni" type="text" name="Dni" class="form-control" placeholder="DNI" required="" minlength="8">
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="row">
-                                            <div class="col-md-6">
-                                                <div class="form-group">
-                                                    <label for="Nombres">Nombres: <i class="fa fa-fw fa-asterisk text-danger"></i></label>
-                                                    <input id="Nombres" type="text" name="Nombres" class="form-control" placeholder="Nombres" required="">
-                                                </div>
-                                            </div>
-                                            <div class="col-md-6">
-                                                <div class="form-group">
-                                                    <label for="Apellidos">Apellidos: <i class="fa fa-fw fa-asterisk text-danger"></i></label>
-                                                    <input id="Apellidos" type="text" name="Apellidos" class="form-control" placeholder="Apellidos" required="">
+                                                    <label for="concepto">Concepto: <i class="fa fa-fw fa-asterisk text-danger"></i></label>
+                                                    <input id="txtConcepto" type="text" name="concepto" class="form-control" placeholder="Nombre del concepto" required="">
                                                 </div>
                                             </div>
                                         </div>
                                         <div class="row">
                                             <div class="col-md-4">
                                                 <div class="form-group">
-                                                    <label for="Genero">Genero: <i class="fa fa-fw fa-asterisk text-danger"></i></label>
-                                                    <select id="Genero" class="form-control">
-                                                        <option value="M">Maculino</option>
-                                                        <option value="F">Femenino</option>
-                                                    </select>
+                                                    <label for="precio">Precio: <i class="fa fa-fw fa-asterisk text-danger"></i></label>
+                                                    <input id="txtPrecio" type="number" name="precio" class="form-control" placeholder="Monto del concepto" required="">
                                                 </div>
                                             </div>
                                             <div class="col-md-4">
                                                 <div class="form-group">
-                                                    <label for="Nacimiento">Nacimiento: <i class="fa fa-fw fa-asterisk text-danger"></i></label>
-                                                    <input id="Nacimiento" type="date" name="Nacimiento" class="form-control" required="">
+                                                    <label for="fecha_inicio">Fecha Inicio: <i class="fa fa-fw fa-asterisk text-danger"></i></label>
+                                                    <input id="txtFecha_inicio" type="date" name="fecha_inicio" class="form-control" required="">
                                                 </div>
                                             </div>
                                             <div class="col-md-4">
                                                 <div class="form-group">
-                                                    <label for="Estado_civil">Estado civil: <i class="fa fa-fw fa-asterisk text-danger"></i></label>
-                                                    <select id="Estado_civil" class="form-control">
-                                                        <option value="S">Soltero/a</option>
-                                                        <option value="C">Casado/a</option>
-                                                        <option value="V">Viudo/a</option>
-                                                        <option value="D">Divorciado/a</option>
-                                                    </select>
+                                                    <label for="fecha_fin">Fecha Fin: <i class="fa fa-fw fa-asterisk text-danger"></i></label>
+                                                    <input id="txtFecha_fin" type="date" name="fecha_fin" class="form-control" required="">
                                                 </div>
                                             </div>
                                         </div>
+                                        <hr>
+                                        <div class="row">
+                                            <div class="col-md-12">
+                                                <div class="form-group">
 
-                                        <div class="row">
-                                            <div class="col-md-6">
-                                                <div class="form-group">
-                                                    <label for="Ruc">RUC (opcional):</label>
-                                                    <input id="Ruc" type="text" name="Ruc" class="form-control" placeholder="número de RUC" required="">
-                                                </div>
-                                            </div>
-                                            <div class="col-md-6">
-                                                <div class="form-group">
-                                                    <label for="Razon_social">Razon social (opcional):</label>
-                                                    <input id="Razon_social" type="text" name="Razon_social" class="form-control" placeholder="Razon social" required="">
-                                                </div>
-                                            </div>
-                                        </div>
+                                                    <p>Agrege especificaciones: <i class="fa fa-fw fa-asterisk text-danger"></i></p>
+                                                    <div class="col-md-5">
+                                                        <input type="radio" id="precio_variable" name="espesifico" value="1">
+                                                        <label for="precio_variable">Precio es variable</label><br>
 
-                                        <div class="row">
-                                            <div class="col-md-5">
-                                                <div class="form-group">
-                                                    <label for="Codigo">Codigo CIP: <i class="fa fa-fw fa-asterisk text-danger"></i></label>
-                                                    <input id="Codigo" type="number" name="Codigo" class="form-control" placeholder="Codigo" required="" disabled>
-                                                </div>
-                                            </div>
-                                            <div class="col-md-2">
-                                                <div class="form-group">
-                                                    <label for="Condición">Nuevo </label>
-                                                    <div class="checkbox">
-                                                        <label>
-                                                            <input type="checkbox" id="cbTramite" checked> Tramite
-                                                        </label>
+                                                        <input type="radio" id="deriva" name="espesifico" value="2">
+                                                        <label for="deriva">Se deriva al CIP nacional</label>
+                                                    </div>
+
+                                                    <div class="col-md-7">
+                                                        <input type="radio" id="solo_transeunte" name="espesifico" value="3">
+                                                        <label for="solo_transeunte">Precio solo para
+                                                            transeunte</label><br>
+                                                        <div class="row">
+                                                            <div class="col-md-9">
+                                                                <input type="radio" id="opcional" name="espesifico" value="4">
+                                                                <label for="opcional">Opcional en la categoria</label>
+                                                            </div>
+                                                            <div class="col-md-3">
+                                                                <select id="opcional_2" class="form-control">
+                                                                    <option value="1">1</option>
+                                                                    <option value="2">2</option>
+                                                                    <option value="3">3</option>
+                                                                    <option value="4">4</option>
+                                                                    <option value="5">5</option>
+                                                                    <option value="6">5</option>
+                                                                    <option value="7">7</option>
+                                                                    <option value="8">8</option>
+                                                                    <option value="100">100</option>
+                                                                </select>
+                                                            </div>
+                                                        </div>
                                                     </div>
                                                 </div>
                                             </div>
-                                            <div class="col-md-5">
-                                                <div class="form-group">
-                                                    <label for="Condición">Condición: <i class="fa fa-fw fa-asterisk text-danger"></i></label>
-                                                    <select id="Condicion" class="form-control">
-                                                        <option value="O">ORDINARIO</option>
-                                                        <option value="T">TRANSEUNTE</option>
-                                                        <option value="F">FALLECIDO</option>
-                                                        <option value="R">RETIRADO</option>
-                                                        <option value="V">VITALICIO</option>
-                                                    </select>
-                                                </div>
-                                            </div>
                                         </div>
+
                                     </form>
                                 </div>
                                 <div class="modal-footer">
                                     <p class="text-left text-danger">Todos los campos marcados con <i class="fa fa-fw fa-asterisk text-danger"></i> son obligatorios</p>
-                                    <button type="submit" class="btn btn-warning" name="btnaceptar" id="btnaceptar">
+                                    <button type="button" class="btn btn-warning" name="btnaceptar" id="btnaceptar">
                                         <i class="fa fa-check"></i> Aceptar</button>
                                     <button type="button" class="btn btn-primary" data-dismiss="modal">
                                         <i class="fa fa-remove"></i> Cancelar</button>
@@ -150,9 +153,10 @@
 
 
                 <div class="row">
+
                     <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
                         <button type="button" class="btn btn-warning" style="margin-right: 10px;" data-toggle="modal" data-target="#confirmar">
-                            <i class="fa fa-plus"></i> Nuevo Ingeniero
+                            <i class="fa fa-plus"></i> Nuevo Concepto
                         </button>
                         <button class="btn btn-link" id="btnactualizar">
                             <i class="fa fa-refresh"></i> Actualizar..
@@ -161,7 +165,7 @@
 
                     <div class="col-lg-4 col-md-4 col-sm-12 col-xs-12" style="margin-right: -10px;">
                         <div class="input-group col-lg-12 col-md-12 col-sm-12 col-xs-12">
-                            <input type="search" id="buscar" class="form-control" placeholder="Buscar por nombres o apellidos" aria-describedby="search" value="" style="border-radius: 5px;">
+                            <input type="search" id="buscar" class="form-control" placeholder="Buscar por nombres del concepto" aria-describedby="search" value="" style="border-radius: 5px;">
                         </div>
                     </div>
                     <div class="col-lg-2 col-md-2 col-sm-12 col-xs-12">
@@ -177,13 +181,12 @@
                         <table class="table table-striped" style="border-width: 1px;border-style: dashed;border-color: #E31E25;">
                             <thead style="background-color: #FDB2B1;color: #B72928;">
                                 <th style="text-align: center;">#</th>
-                                <th>DNI</th>
-                                <th>CIP</th>
-                                <th>Apellidos y Nombres</th>
-                                <th>Estado Civil</th>
-                                <th>RUC</th>
-                                <th>Condicion</th>
-                                <th>Colegiaturas</th>
+                                <th>Codigo</th>
+                                <th>Categoria</th>
+                                <th>Concepto</th>
+                                <th>Precio</th>
+                                <th>Inicio</th>
+                                <th>Fin</th>
                                 <th>Opciones</th>
                             </thead>
                             <tbody id="tbTable">
@@ -221,7 +224,7 @@
         </div>
         <!-- /.content-wrapper -->
         <!-- start footer -->
-
+        <?php include('./layout/footer.php'); ?>;
         <!-- end footer -->
     </div>
     <!-- ./wrapper -->
@@ -235,7 +238,7 @@
 
         $(document).ready(function() {
 
-            loadInitVentas();
+            loadInitConceptos();
 
             $("#btnIzquierda").click(function() {
                 if (!state) {
@@ -255,64 +258,73 @@
                 }
             });
 
-            $("#cbTramite").on("change", function() {
-                $("#Codigo").prop("disabled", this.checked);
-            });
-
             $("#btnactualizar").click(function() {
-                loadInitVentas()
+                loadInitConceptos()
             });
 
             $("#buscar").on("keyup", function(event) {
                 if (event.keyCode === 13) {
                     paginacion = 1;
-                    loadTablePersonas($("#buscar").val());
+                    loadTableConceptos($("#buscar").val());
                     opcion = 1;
                 }
             });
 
             $("#btnaceptar").click(function() {
-                if ($("#dni").val() == '' || $("#dni").val().length < 8) {
-                    AlertWarning("Advertencia", "Ingrese un número de dni o ruc correcto por favor.");
-                } else if ($("#Nombres").val() == '' || $("#Nombres").val().length < 2) {
-                    AlertWarning("Advertencia", "Ingrese un nombre de 3 o mas letras por favor.");
-                } else if ($("#Apellidos").val() == '' || $("#Apellidos").val().length < 2) {
-                    AlertWarning("Advertencia", "Ingrese un apellido de 3 o mas letras por favor.");
-                } else if ($("#Nacimiento").val() == '') {
-                    AlertWarning("Advertencia", "Ingrese un fecha de nacimiento por favor.");
-                } else if (!$('#cbTramite').is(":checked") && $("#Codigo").val() == '' || !$('#cbTramite').is(":checked") && $("#Codigo").val().length < 4) {
-                    AlertWarning("Advertencia", "Ingrese el número cip por favor.");
-                } else {
-                    insertPersona($("#dni").val(), $("#Nombres").val(), $("#Apellidos").val(), $("#Genero").val(),
-                        $("#Nacimiento").val(), $("#Estado_civil").val(), $("#Ruc").val(), $("#Razon_social").val(),
-                        $("#Codigo").val(), $("#Condicion").val());
+                validateInsertConcepto();
+            });
+
+            $("#btnaceptar").on("keyup", function(event) {
+                if (event.keyCode === 13) {
+                    validateInsertConcepto();
                 }
             });
+
+            // $("#btnaceptar").click(function() {
+            //     if ($("#dni").val() == '' || $("#dni").val().length < 8) {
+            //         AlertWarning("Advertencia", "Ingrese un número de dni correcto por favor.");
+            //     } else if ($("#Nombres").val() == '' || $("#Nombres").val().length < 2) {
+            //         AlertWarning("Advertencia", "Ingrese un nombre de 3 o mas letras por favor");
+            //     } else if ($("#Apellidos").val() == '' || $("#Apellidos").val().length < 2) {
+            //         AlertWarning("Advertencia", "Ingrese un apellido de 3 o mas letras por favor");
+            //     } else if ($("#Nacimiento").val() == '') {
+            //         AlertWarning("Advertencia", "Ingrese un fecha por favor");
+            //     } else if ($("#Codigo").val() == '' || $("#Codigo").val().length < 4) {
+            //         AlertWarning("Advertencia", "Ingrese un codigo de 4 caracteres por favor");
+            //     } else {
+            //         insertPersona($("#dni").val(), $("#Nombres").val(), $("#Apellidos").val(), $("#Genero")
+            //             .val(),
+            //             $("#Nacimiento").val(), $("#Estado_civil").val(), $("#Ruc").val(), $(
+            //                 "#Razon_social").val(),
+            //             $("#Codigo").val(), $("#Condicion").val());
+
+            //     }
+            // })
 
         });
 
         function onEventPaginacion() {
             switch (opcion) {
                 case 0:
-                    loadTablePersonas("");
+                    loadTableConceptos("");
                     break;
                 case 1:
-                    loadTablePersonas($("#buscar").val());
+                    loadTableConceptos($("#buscar").val());
                     break;
             }
         }
 
-        function loadInitVentas() {
+        function loadInitConceptos() {
             if (!state) {
                 paginacion = 1;
-                loadTablePersonas("");
+                loadTableConceptos("");
                 opcion = 0;
             }
         }
 
-        function loadTablePersonas(nombres) {
+        function loadTableConceptos(nombres) {
             $.ajax({
-                url: "../app/controller/PersonaController.php",
+                url: "../app/controller/ConceptoController.php",
                 method: "GET",
                 data: {
                     "type": "alldata",
@@ -326,40 +338,38 @@
                         '<tr class="text-center"><td colspan="8"><img src="./images/spiner.gif"/><p>cargando información.</p></td></tr>'
                     );
                     state = true;
+
                 },
                 success: function(result) {
-
+                    tbTable.empty();
                     if (result.estado === 1) {
-                        tbTable.empty();
-                        for (let persona of result.personas) {
+                        for (let concepto of result.conceptos) {
 
-                            // let image = '<img src="images/masculino.png" width="30">';
                             let btnUpdate =
-                                '<button class="btn btn-success btn-sm" onclick="loadUpdateIngenieros(\'' +
-                                persona.idDNI + '\')">' +
+                                '<button class="btn btn-success btn-sm" onclick="loadUpdateConceptos(\'' +
+                                concepto.idConcepto + '\')">' +
                                 '<i class="fa fa-wrench"></i> Editar' +
                                 '</button>';
 
-                            let estadoCivil = (persona.EstadoCivil == 'S') ? 'Soltero/a' :
-                                (persona.EstadoCivil == 'C') ? 'Casado/a' :
-                                (persona.EstadoCivil == 'V') ? 'Viudo/a' : 'Divorciado/a'
-
-                            let condicion = (persona.Condicion == 'O') ? 'Ordinario' :
-                                (persona.Condicion == 'T') ? 'Transeunte' :
-                                (persona.Condicion == 'F') ? 'Fallecido' :
-                                (persona.Condicion == 'R') ? 'Retirado' : 'Vitalicio'
+                            let categoria = (concepto.Categoria == '1') ? 'Cuota ordinaria' :
+                                (concepto.Categoria == '2') ? 'Cuota ordinaria (Admistia)' :
+                                (concepto.Categoria == '3') ? 'Cuota ordinaria (Vitalicio)' :
+                                (concepto.Categoria == '4') ? 'Colegiatura' :
+                                (concepto.Categoria == '5') ? 'Certificado de habilidad' :
+                                (concepto.Categoria == '6') ? 'Certificado de residencia de obra' :
+                                (concepto.Categoria == '7') ? 'Certificado de proyecto' :
+                                (concepto.Categoria == '8') ? 'Peritaje' : 'Otros conceptos'
 
                             tbTable.append('<tr>' +
                                 '<td style="text-align: center;color: #2270D1;">' +
-                                '' + persona.Id + '' +
+                                '' + concepto.Id + '' +
                                 '</td>' +
-                                '<td>' + persona.idDNI + '</td>' +
-                                '<td>' + persona.Cip + '</td>' +
-                                '<td>' + persona.Apellidos +' '+persona.Nombres + '</td>' +
-                                '<td>' + estadoCivil + '</td>' +
-                                '<td>' + persona.Ruc + '</td>' +
-                                '<td>' + condicion + '</td>' +
-                                '<td>'+0+'</td>'+
+                                '<td>' + concepto.Codigo + '</td>' +
+                                '<td>' + categoria + '</td>' +
+                                '<td>' + concepto.Concepto + '</td>' +
+                                '<td>' + concepto.Precio + '</td>' +
+                                '<td>' + concepto.Inicio.split(' ')[0] + '</td>' +
+                                '<td>' + concepto.Fin.split(' ')[0] + '</td>' +
                                 '<td>' +
                                 '' + btnUpdate + '' +
                                 '</td>' +
@@ -381,7 +391,6 @@
                     }
                 },
                 error: function(error) {
-                    console.log(error);
                     tbTable.empty();
                     tbTable.append(
                         '<tr class="text-center"><td colspan="8"><p>Se produjo un error, intente nuevamente.</p></td></tr>'
@@ -393,29 +402,49 @@
             });
         }
 
-        function loadUpdateIngenieros(idPersona) {
-            location.href = "update_ingenieros.php?idPersona=" + idPersona;
+        function loadUpdateConceptos(idConcepto) {
+            location.href = "update_conceptos.php?idConcepto=" + idConcepto
         }
 
-        function insertPersona(idPersona, nombres, apellidos, sexo, nacimiento, estado_civil, ruc, rason_social, cip,
-            condicion) {
+        function validateInsertConcepto() {
+            if ($("#cbCategoria").val() == "0") {
+                AlertWarning("Advertencia", "Seleccione la categoría del concepto.");
+            } else if ($("#txtConcepto").val() == '' || $("#txtConcepto").val().length < 2) {
+                AlertWarning("Advertencia", "Ingrese el nombre del concepto.");
+            } else if ($("#txtPrecio").val() == '' || $("#txtPrecio").val().length == 0) {
+                AlertWarning("Advertencia", "Ingrese el precio del concepto.");
+            } else if ($("#txtFecha_inicio").val() == '') {
+                AlertWarning("Advertencia", "Seleccione la fecha de inicio.");
+            } else if ($("#txtFecha_fin").val() == '') {
+                AlertWarning("Advertencia", "Seleccione la fecha de fin.");
+            } else {
+                insertConcepto($("#cbCategoria").val(),
+                    $("#txtConcepto").val(),
+                    $("#txtPrecio").val(),
+                    0,
+                    $("#txtFecha_inicio").val(),
+                    $("#txtFecha_fin").val(),
+                    "",
+                    $("#txtCodigo").val());
+            }
+        }
+
+        function insertConcepto(categoria, concepto, precio, propiedad, inicio, fin, observacion, codigo) {
             $.ajax({
-                url: "../app/controller/PersonaController.php",
+                url: "../app/controller/ConceptoController.php",
                 method: "POST",
                 data: {
                     "type": "create",
-                    "dni": idPersona,
-                    "nombres": nombres.toUpperCase(),
-                    "apellidos": apellidos.toUpperCase(),
-                    "sexo": sexo,
-                    "nacimiento": nacimiento,
-                    "estado_civil": estado_civil,
-                    "ruc": ruc,
-                    "rason_social": rason_social,
-                    "cip": cip,
-                    "condicion": condicion,
+                    "Categoria": categoria,
+                    "Concepto": concepto,
+                    "Precio": precio,
+                    "Propiedad": propiedad,
+                    "Inicio": inicio,
+                    "Fin": fin,
+                    "Observacion": observacion.toUpperCase(),
+                    "Codigo": codigo
                 },
-                beforeSend: function() {
+                beforeEnd: function() {
                     $("#btnaceptar").empty();
                     $("#btnaceptar").append('<img src="./images/spiner.gif" width="25" height="25" />')
                 },
@@ -423,7 +452,7 @@
                     if (result.estado == 1) {
                         AlertSuccess("Mensaje", result.message)
                         setTimeout(function() {
-                            location.href = "ingenieros.php"
+                            location.href = "conceptos.php"
                         }, 1000);
                     } else {
                         AlertWarning("Mensaje", result.message)
@@ -439,7 +468,55 @@
                     $("#btnaceptar").append('<i class="fa fa-check"></i> Aceptar');
                 }
             });
+
+            // function insertPersona(idPersona, nombres, apellidos, sexo, nacimiento, estado_civil, ruc, rason_social, cip,
+            //     condicion) {
+            //     $.ajax({
+            //         url: "../app/controller/PersonaController.php",
+            //         method: "POST",
+            //         data: {
+            //             "type": "create",
+            //             "dni": idPersona,
+            //             "nombres": nombres,
+            //             "apellidos": apellidos,
+            //             "sexo": sexo,
+            //             "nacimiento": nacimiento,
+            //             "estado_civil": estado_civil,
+            //             "ruc": ruc,
+            //             "rason_social": rason_social,
+            //             "cip": cip,
+            //             "condicion": condicion,
+            //         },
+            //         beforeSend: function() {
+            //             $("#btnaceptar").text('')
+            //             $("#btnaceptar").append('<img src="./images/spiner.gif" width="25" height="25" />')
+            //         },
+            //         success: function(result) {
+            //             console.log(result)
+            //             if (result.estado == 1) {
+            //                 AlertSuccess("Mensaje", result.message)
+            //                 setTimeout(function() {
+            //                     location.href = "ingenieros.php"
+            //                 }, 1000);
+            //             } else {
+
+            //                 AlertWarning("Mensaje", result.message)
+            //                 setTimeout(() => {
+            //                     $("#btnaceptar").text("Aceptar")
+            //                     $("#btnaceptar").append('<i class="fa fa-check"></i>')
+            //                 }, 1000);
+
+            //             }
+
+
+            //         },
+            //         error: function(error) {
+            //             console.log(error)
+            //         }
+            //     });
+            // }
         }
+
 
         function AlertSuccess(title, message) {
             toastr.options = {
