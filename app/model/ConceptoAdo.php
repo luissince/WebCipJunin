@@ -15,7 +15,7 @@ class ConceptoAdo
             $array = array();
             $arrayConcepto = array();
             $comandoConcepto = Database::getInstance()->getDb()->prepare("SELECT * FROM Concepto 
-            where Concepto like concat(?,'%') and Inicio <= GETDATE() and Fin >= GETDATE()
+            where Concepto like concat(?,'%') 
             order by Categoria asc,cast(Inicio as date) desc, cast(Fin as date) desc
             offset ? rows fetch next ? rows only");
             $comandoConcepto->bindParam(1, $nombres, PDO::PARAM_STR);
@@ -40,7 +40,7 @@ class ConceptoAdo
             }
 
             $comandoTotal = Database::getInstance()->getDb()->prepare("SELECT COUNT(*) FROM Concepto 
-            where Concepto like concat(?,'%') and Inicio <= GETDATE() and Fin >= GETDATE() ");
+            where Concepto like concat(?,'%') ");
             $comandoTotal->bindParam(1, $nombres, PDO::PARAM_STR);
             $comandoTotal->execute();
             $resultTotal =  $comandoTotal->fetchColumn();
@@ -76,11 +76,13 @@ class ConceptoAdo
         }
     }
 
-    public static function getTipoConcepto(){
+    public static function getColegiatura(){
         try{
             $array = array();
-            $cmdConcepto =Database::getInstance()->getDb()->prepare("SELECT * FROM Concepto 
-            WHERE Categoria = 4 ORDER BY Concepto ASC ");
+            $cmdColegiatura = "SELECT * FROM Concepto 
+            WHERE Categoria = 4 and Fin < GETDATE()  
+            ORDER BY Concepto ASC";
+            $cmdConcepto =Database::getInstance()->getDb()->prepare($cmdColegiatura);
             $cmdConcepto->execute();
             while($row = $cmdConcepto->fetch()){
                 array_push($array,array(
@@ -88,6 +90,27 @@ class ConceptoAdo
                     "Concepto"=>$row["Concepto"],
                     "Precio"=>number_format($row["Precio"],2,".","")
                 ));
+            }
+            return $array;
+        }catch(Exception $ex){
+             return $ex->getMessage();
+        }
+    }
+
+    public static function getCuotas(){
+        try{
+            $array = array();
+            $cmdCuotas = "SELECT 10 as Fechas,SUM(Precio) AS Precio FROM Concepto 
+            WHERE Categoria = 1 and Inicio <= GETDATE() and Fin >= GETDATE()";
+            $cmdConcepto =Database::getInstance()->getDb()->prepare($cmdCuotas);
+            $cmdConcepto->execute();
+            if($row = $cmdConcepto->fetch()){
+               for($i = 0; $i < intval($row["Fechas"]); $i++){
+                    array_push($array,array(
+                        "Fechas"=>($i+1),
+                        "Precio"=>number_format($row["Precio"],2,".","")
+                    ));
+               }                
             }
             return $array;
         }catch(Exception $ex){
