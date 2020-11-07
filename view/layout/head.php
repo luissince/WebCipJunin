@@ -22,6 +22,7 @@
        folder instead of downloading all of them to reduce the load. -->
 <link rel="stylesheet" href="adminlte/dist/css/skins/_all-skins.min.css">
 <link rel="stylesheet" href="css/toastr.min.css">
+<link rel="stylesheet" href="css/main.css">
 
 <!-- jQuery 3 -->
 <script src="adminlte/bower_components/jquery/dist/jquery.min.js"></script>
