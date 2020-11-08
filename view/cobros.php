@@ -83,11 +83,11 @@
 
                 <!-- modal start cuotas -->
                 <div class="row">
-                    <div class="modal fade" id="mdCuotas">
+                    <div class="modal fade" id="mdCuotas" data-backdrop="static">
                         <div class="modal-dialog modal-xl">
                             <div class="modal-content">
                                 <div class="modal-header">
-                                    <button type="button" class="close" data-dismiss="modal">
+                                    <button id="btnCloseCuotas" type="button" class="close">
                                         <i class="fa fa-close"></i>
                                     </button>
                                     <h4 class="modal-title">
@@ -112,17 +112,31 @@
                                             <h4 class="text-info" id="lblCuotasMensaje">
                                                 Cuotas normales
                                             </h4>
+                                            <div class="checkbox">
+                                                <label>
+                                                    <input type="checkbox" id="selectall" checked> Seleccionar todo
+                                                </label>
+                                            </div>
+                                            <button id="btnAddCuota" type="button" class="btn btn-success">
+                                                <i class="fa fa-plus"></i> Add
+                                            </button>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-md-12" style="width:100%; height: 35px;">
+                                            <table class="table table-striped table-hover">
+                                                <thead>
+                                                    <tr>
+                                                        <th style="width: 73%;">Cuota del Mes</th>
+                                                        <th>Monto</th>
+                                                    </tr>
+                                                </thead>
+                                            </table>
                                         </div>
                                     </div>
                                     <div class="row" style="overflow-x: auto; height:280px">
                                         <div class="col-md-12">
                                             <table class="table table-striped table-hover">
-                                                <thead>
-                                                    <tr>
-                                                        <th>Cuota del Mes</th>
-                                                        <th>Monto</th>
-                                                    </tr>
-                                                </thead>
                                                 <tbody id="tbCuotas">
 
                                                 </tbody>
@@ -133,14 +147,13 @@
                                         <div class="col-md-12 text-center">
                                             <h4 id="lblTotalCuotas" class="no-margin margin-5px">TOTAL DE CUOTAS: 0.00</h4>
                                             <h5 id="lblNumeroCuotas" class="no-margin margin-5px">CUOTAS DEL: 01/10/2020 al 10/10/2020</h5>
-
                                         </div>
                                     </div>
                                 </div>
                                 <div class="modal-footer">
                                     <button type="button" class="btn btn-warning" name="btnAceptar" id="btnaceptar">
                                         <i class="fa fa-check"></i> Aceptar</button>
-                                    <button type="button" class="btn btn-primary" data-dismiss="modal">
+                                    <button type="button" class="btn btn-primary" id="btnCancelarCuotas">
                                         <i class="fa fa-remove"></i> Cancelar</button>
                                 </div>
                                 </form>
@@ -574,8 +587,8 @@
                                         <div class="col-md-12">
                                             <div class="form-group">
                                                 <label>Concepto</label>
-                                                <select class="form-control" id="cbEspecialidad">
-                                                    <option>- Seleccione -</option>
+                                                <select class="form-control" id="cbOtrosConcepto">
+                                                    <option value="">- Seleccione -</option>
                                                 </select>
                                             </div>
                                         </div>
@@ -583,20 +596,20 @@
                                     <div class="row">
                                         <div class="col-md-6">
                                             <div class="form-group">
-                                                <label for="txtIngeniero">Cantidad</label>
-                                                <input type="number" class="form-control" id="txtIngeniero" placeholder="0.00">
+                                                <label>Cantidad</label>
+                                                <input type="number" class="form-control" id="txtCantidadOtrosConceptos" placeholder="0.00">
                                             </div>
                                         </div>
                                         <div class="col-md-6">
                                             <div class="form-group">
                                                 <label for="txtIngeniero">Monto</label>
-                                                <input type="number" class="form-control" id="txtIngeniero" placeholder="0.00">
+                                                <input type="number" class="form-control" id="txtMontoOtrosConceptos" placeholder="0.00" required="" disabled>
                                             </div>
                                         </div>
                                     </div>
                                 </div>
                                 <div class="modal-footer">
-                                    <button type="button" class="btn btn-warning" name="btnAceptar" id="btnaceptar">
+                                    <button type="button" class="btn btn-warning" id="btnAceptarOtros">
                                         <i class="fa fa-check"></i> Aceptar</button>
                                     <button type="button" class="btn btn-primary" data-dismiss="modal">
                                         <i class="fa fa-remove"></i> Cancelar</button>
@@ -652,11 +665,14 @@
                                                 <th>#</th>
                                                 <th>Cantidad</th>
                                                 <th>Concepto</th>
-                                                <th>Impuesto</th>
+                                                <th>Precio</th>
                                                 <th>Monto</th>
                                                 <th>Editar</th>
                                                 <th>Quitar</th>
                                             </thead>
+                                            <tbody id="tbIngresos">
+
+                                            </tbody>
                                         </table>
                                     </div>
                                 </div>
@@ -673,12 +689,12 @@
                             <div class="panel-body">
                                 <div class="row">
                                     <div class="col-md-12">
-                                        <button class="btn btn-success btn-block">
+                                        <button id="btnCobrar" class="btn btn-success btn-block">
                                             <div class="col-md-6 text-left">
                                                 <h4>COBRAR</h4>
                                             </div>
                                             <div class="col-md-6 text-right">
-                                                <h4>S/ 0.00</h4>
+                                                <h4 id="lblSumaTotal">0.00</h4>
                                         </button>
                                     </div>
                                 </div>
@@ -741,6 +757,10 @@
     <script src="js/tools.js"></script>
     <script>
         let tools = new Tools();
+        let cuotas = [];
+        let countCurrentDate = 0;
+        let arrayIngresos = [];
+        let sumaTotal = 0;
         $(document).ready(function() {
 
             $("#btnColegitura").click(function() {
@@ -753,49 +773,60 @@
                     $('#mdColegiatura').modal('show');
                     loadColegiatura();
                 }
+                event.preventDefault();
             });
 
             $("#btnCuotas").click(function() {
                 $('#mdCuotas').modal('show');
-                loadCuotas();
+                loadCuotas(1);
             });
 
             $("#btnCuotas").on("keyup", function() {
                 if (event.keyCode === 13) {
                     $('#mdCuotas').modal('show');
-                    loadCuotas();
+                    loadCuotas(1);
                 }
+                event.preventDefault();
             });
 
             //Modal cuotas
             $("#btnCuotaNormal").click(function() {
                 $("#lblCuotasMensaje").html("Cuotas Normales");
+                loadCuotas(1);
             });
-            
+
             $("#btnCuotaNormal").on("keyup", function(event) {
                 if (event.keyCode === 13) {
                     $("#lblCuotasMensaje").html("Cuotas Normales");
+                    loadCuotas(1);
                 }
+                event.preventDefault();
             });
 
             $("#btnCuotaAmnistia").click(function() {
                 $("#lblCuotasMensaje").html("Cuotas de Amnistia");
+                loadCuotas(2);
             });
 
             $("#btnCuotaAmnistia").on("keyup", function(event) {
                 if (event.keyCode === 13) {
                     $("#lblCuotasMensaje").html("Cuotas de Amnistia");
+                    loadCuotas(2);
                 }
+                event.preventDefault();
             });
 
             $("#btnCuotaVitalicio").click(function() {
                 $("#lblCuotasMensaje").html("Cuotas de Vitalicio");
+                loadCuotas(3);
             });
 
             $("#btnCuotaVitalicio").on("keyup", function(event) {
                 if (event.keyCode === 13) {
                     $("#lblCuotasMensaje").html("Cuotas de Vitalicio");
+                    loadCuotas(3);
                 }
+                event.preventDefault();
             });
             //Modal certificado
             $("#btnCertHabilidad").click(function() {
@@ -806,6 +837,7 @@
                 if (event.keyCode === 13) {
                     $('#mdCertHabilidad').modal('show');
                 }
+                event.preventDefault();
             });
 
             $("#btnCertProyecto").click(function() {
@@ -816,6 +848,7 @@
                 if (event.keyCode === 13) {
                     $('#mdCertProyecto').modal('show');
                 }
+                event.preventDefault();
             });
 
             $("#btnCertResidenciaObra").click(function() {
@@ -826,6 +859,7 @@
                 if (event.keyCode === 13) {
                     $('#mdCertResidenciaObra').modal('show');
                 }
+                event.preventDefault();
             });
 
             //Modal peritaje
@@ -837,20 +871,113 @@
                 if (event.keyCode === 13) {
                     $('#mdPeritaje').modal('show');
                 }
+                event.preventDefault();
             });
 
             //Modal otros
             $("#btnOtro").click(function() {
                 $('#mdOtros').modal('show');
+                loadOtros();
             });
 
             $("#btnOtro").on("keyup", function(event) {
                 if (event.keyCode === 13) {
                     $('#mdOtros').modal('show');
+                    loadOtros();
                 }
+                event.preventDefault();
+            });
+
+            //
+            $("#selectall").on("click", function() {
+                $(".cuotasid").attr("checked", this.checked);
+            });
+
+            $("#btnAddCuota").click(function() {
+                cuotas.push({
+                    "mes": "mi pene",
+                    "monto": 20,
+                    "year": "chucha"
+                });
+                addCuotas();
+            });
+
+            $("#btnAddCuota").on("keyup", function(event) {
+                if (event.keyCode === 13) {
+                    cuotas.push({
+                        "mes": "mi pene",
+                        "monto": 20,
+                        "year": "chucha"
+                    });
+                    addCuotas();
+                }
+                event.preventDefault();
+            });
+
+            $("#btnCloseCuotas").click(function() {
+                $('#mdCuotas').modal('hide');
+                countCurrentDate = 0;
+            });
+
+            $("#btnCancelarCuotas").click(function() {
+                $('#mdCuotas').modal('hide');
+                countCurrentDate = 0;
+            });
+
+            //
+            $("#btnAceptarOtros").click(function() {
+                validateIngreso();
+            });
+
+            $("#btnAceptarOtros").keypress(function(event) {
+                var keycode = event.keyCode || event.which;
+                if (keycode == '13') {
+                    validateIngreso();
+                }
+                event.preventDefault();
+            });
+
+            $("#cbOtrosConcepto").change(function(event) {
+                $("#txtMontoOtrosConceptos").val($("#cbOtrosConcepto").find('option:selected').attr('id'))
+            });
+
+            $("#btnCobrar").click(function(){
+                registrarIngreso();
+            });
+
+            $("#btnCobrar").keypress(function(){
+                registrarIngreso();
+                event.preventDefault();
             });
 
         });
+
+        function validateIngreso() {
+            if ($("#cbOtrosConcepto").val() != "") {
+                if ($("#txtCantidadOtrosConceptos").val() !== "") {
+                    if (!validateDuplicate($("#cbOtrosConcepto").val())) {
+                        arrayIngresos.push({
+                            "idConcepto": parseInt($("#cbOtrosConcepto").val()),
+                            "num": (arrayIngresos.length + 1),
+                            "cantidad": parseInt($('#txtCantidadOtrosConceptos').val()),
+                            "concepto": $('#cbOtrosConcepto option:selected').html(),
+                            "precio": parseFloat($("#cbOtrosConcepto").find('option:selected').attr('id')),
+                            "monto": parseInt($("#txtCantidadOtrosConceptos").val()) * parseFloat($("#cbOtrosConcepto").find('option:selected').attr('id'))
+                        });
+                        addIngresos();
+                        $('#mdOtros').modal('hide');
+                        $("#txtCantidadOtrosConceptos").val("");
+                    } else {
+                        AlertWarning("Ingresos Diversos", "Ya existe un concepto con los datos.")
+                    }
+                } else {
+                    AlertWarning("Ingresos Diversos", "Debe ingresar una cantidad mayor a cero")
+                }
+            } else {
+                AlertWarning("Ingresos Diversos", "Debe escoger un concepto")
+            }
+        }
+
 
         function loadColegiatura() {
 
@@ -868,6 +995,7 @@
                     console.log(result)
                     if (result.estado === 1) {
                         let totalColegiatura = 0;
+                        cuotas = result.data;
                         for (let value of result.data) {
                             $("#ctnConceptos").append('<div id="' + value.idConcepto + '" class="row">' +
                                 '<div class="col-md-8 text-left">' +
@@ -889,32 +1017,36 @@
             });
         }
 
-        function loadCuotas() {
+        function loadCuotas(categoria) {
             $.ajax({
                 url: "../app/controller/ConceptoController.php",
                 method: "GET",
                 data: {
                     "type": "typecolegiatura",
-                    "categoria": 1
+                    "categoria": categoria,
+                    "dni": "20707246",
+                    "mes": countCurrentDate
                 },
                 beforeSend: function() {
                     $("#tbCuotas").empty();
+                    cuotas.splice(0, cuotas.length);
+
                 },
                 success: function(result) {
                     console.log(result)
                     if (result.estado === 1) {
+                        cuotas = result.data;
                         let totalCuotas = 0;
-                        for (let value of result.data) {
+                        for (let value of cuotas) {
                             $("#tbCuotas").append('<tr >' +
-                                '<td class="no-padding"><div><label><input type="checkbox"> ' + value.Fechas + '</label></div></td>' +
-                                '<td class="no-padding">' + tools.formatMoney(value.Precio) + '</td>' +
+                                '<td class="no-padding"><div><label><input type="checkbox" class="cuotasid" checked> ' + value.mes + ' - ' + value.year + '</label></div></td>' +
+                                '<td class="no-padding">' + tools.formatMoney(value.monto) + '</td>' +
                                 +'</tr>');
-                            totalCuotas += parseFloat(value.Precio);
+                            totalCuotas += parseFloat(value.monto);
                         }
                         $("#lblTotalCuotas").html("TOTAL DE " + (result.data.length) + " CUOTAS: " + tools.formatMoney(totalCuotas));
-                    } else {
 
-                    }
+                    } else {}
                 },
                 error: function(error) {
                     console.log(error);
@@ -931,7 +1063,185 @@
         }
 
         function loadOtros() {
+            $.ajax({
+                url: "../app/controller/ConceptoController.php",
+                method: "GET",
+                data: {
+                    "type": "typecolegiatura",
+                    "categoria": 100,
+                    "dni": "20707246",
+                },
+                beforeSend: function() {
+                    $("#cbOtrosConcepto").empty();
+                },
+                success: function(result) {
+                    if (result.estado === 1) {
+                        $("#cbOtrosConcepto").append(' <option id="" value="">- Seleccione -</option>');
+                        for (let value of result.data) {
+                            $("#cbOtrosConcepto").append('<option id="' + value.Precio + '" value="' + value.IdConcepto + '">' + value.Concepto + ' (' + value.Precio + ')</option>');
+                        }
+                    } else {
 
+                    }
+                },
+                error: function(error) {
+                    console.log(error);
+                }
+            });
+        }
+
+        function addCuotas() {
+            countCurrentDate++;
+            loadCuotas(1);
+        }
+
+        function registrarIngreso() {
+            $.ajax({
+                url: "../app/controller/IngresosController.php",
+                method: "POST",
+                accepts: "application/json",
+                contentType: "application/json",
+                data: JSON.stringify({
+                    "idTipoDocumento": "01",
+                    "idCliente": "00000001",
+                    "numRecibo": "1212121202",
+                    "idUsuario":1,
+                    "estado":'C',
+                    "ingresos":arrayIngresos
+                }),
+                beforeSend: function() {
+                    $("#cbOtrosConcepto").empty();
+                },
+                success: function(result) {
+                    console.log(result)
+                },
+                error: function(error) {
+                    console.log(error);
+                }
+            });
+        }
+
+        function addIngresos() {
+            $("#tbIngresos").empty();
+            sumaTotal = 0;
+            for (let value of arrayIngresos) {
+                $("#tbIngresos").append('<tr>' +
+                    '<td>' + value.num + '</td>' +
+                    '<td>' + value.cantidad + '</td>' +
+                    '<td>' + value.concepto + '</td>' +
+                    '<td>' + value.precio + '</td>' +
+                    '<td>' + value.monto + '</td>' +
+                    '<td><button>Edit</button></td>' +
+                    '<td><button onClick="removeIngresos(\'' + value.idConcepto + '\')">Edit</button></td>' +
+                    '</tr>');
+                sumaTotal += parseFloat(value.monto);
+            }
+            $("#lblSumaTotal").html(sumaTotal);
+        }
+
+        function removeIngresos(idConcepto) {
+            for (let i = 0; i < arrayIngresos.length; i++) {
+                if (arrayIngresos[i].idConcepto === parseInt(idConcepto)) {
+                    arrayIngresos.splice(i, 1);
+                    break;
+                }
+            }
+            addIngresos();
+        }
+
+        function validateDuplicate(idConcepto) {
+            let ret = false;
+            for (let i = 0; i < arrayIngresos.length; i++) {
+                if (arrayIngresos[i].idConcepto === parseInt(idConcepto)) {
+                    ret = true;
+                    break;
+                }
+            }
+            return ret;
+        }
+
+        function AlertSuccess(title, message) {
+            toastr.options = {
+                "closeButton": false,
+                "debug": false,
+                "newestOnTop": false,
+                "progressBar": false,
+                "positionClass": "toast-top-right",
+                "preventDuplicates": false,
+                "onclick": null,
+                "showDuration": "300",
+                "hideDuration": "1000",
+                "timeOut": "5000",
+                "extendedTimeOut": "1000",
+                "showEasing": "swing",
+                "hideEasing": "linear",
+                "showMethod": "fadeIn",
+                "hideMethod": "fadeOut"
+            }
+            toastr["success"](message, title);
+        }
+
+        function AlertWarning(title, message) {
+            toastr.options = {
+                "closeButton": false,
+                "debug": false,
+                "newestOnTop": false,
+                "progressBar": false,
+                "positionClass": "toast-top-right",
+                "preventDuplicates": false,
+                "onclick": null,
+                "showDuration": "300",
+                "hideDuration": "1000",
+                "timeOut": "5000",
+                "extendedTimeOut": "1000",
+                "showEasing": "swing",
+                "hideEasing": "linear",
+                "showMethod": "fadeIn",
+                "hideMethod": "fadeOut"
+            }
+            toastr["warning"](message, title);
+        }
+
+        function AlertError(title, message) {
+            toastr.options = {
+                "closeButton": false,
+                "debug": false,
+                "newestOnTop": false,
+                "progressBar": false,
+                "positionClass": "toast-top-right",
+                "preventDuplicates": false,
+                "onclick": null,
+                "showDuration": "300",
+                "hideDuration": "1000",
+                "timeOut": "5000",
+                "extendedTimeOut": "1000",
+                "showEasing": "swing",
+                "hideEasing": "linear",
+                "showMethod": "fadeIn",
+                "hideMethod": "fadeOut"
+            }
+            toastr["error"](message, title)
+        }
+
+        function AlertInfo(title, message) {
+            toastr.options = {
+                "closeButton": false,
+                "debug": false,
+                "newestOnTop": false,
+                "progressBar": false,
+                "positionClass": "toast-top-right",
+                "preventDuplicates": false,
+                "onclick": null,
+                "showDuration": "300",
+                "hideDuration": "1000",
+                "timeOut": "5000",
+                "extendedTimeOut": "1000",
+                "showEasing": "swing",
+                "hideEasing": "linear",
+                "showMethod": "fadeIn",
+                "hideMethod": "fadeOut"
+            }
+            toastr["info"](message, title)
         }
     </script>
 </body>

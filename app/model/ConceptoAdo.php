@@ -76,46 +76,87 @@ class ConceptoAdo
         }
     }
 
-    public static function getColegiatura(){
-        try{
+    public static function getColegiatura()
+    {
+        try {
             $array = array();
             $cmdColegiatura = "SELECT * FROM Concepto 
             WHERE Categoria = 4 and Fin < GETDATE()  
             ORDER BY Concepto ASC";
-            $cmdConcepto =Database::getInstance()->getDb()->prepare($cmdColegiatura);
+            $cmdConcepto = Database::getInstance()->getDb()->prepare($cmdColegiatura);
             $cmdConcepto->execute();
-            while($row = $cmdConcepto->fetch()){
-                array_push($array,array(
-                    "idConcepto"=>$row["idConcepto"],
-                    "Concepto"=>$row["Concepto"],
-                    "Precio"=>number_format($row["Precio"],2,".","")
+            while ($row = $cmdConcepto->fetch()) {
+                array_push($array, array(
+                    "idConcepto" => $row["idConcepto"],
+                    "Concepto" => $row["Concepto"],
+                    "Precio" => number_format($row["Precio"], 2, ".", "")
                 ));
             }
             return $array;
-        }catch(Exception $ex){
-             return $ex->getMessage();
+        } catch (Exception $ex) {
+            return $ex->getMessage();
         }
     }
 
-    public static function getCuotas(){
-        try{
+    public static function getCuotas($valor,$categoria,$mes)
+    {
+        try {
             $array = array();
-            $cmdCuotas = "SELECT 10 as Fechas,SUM(Precio) AS Precio FROM Concepto 
-            WHERE Categoria = 1 and Inicio <= GETDATE() and Fin >= GETDATE()";
-            $cmdConcepto =Database::getInstance()->getDb()->prepare($cmdCuotas);
+            $cmdCuotas = "SELECT cast(ISNULL(ul.FechaUltimaCuota, c.FechaColegiado)as date) as UltimoPago,
+            (SELECT SUM(Precio) FROM Concepto 
+            WHERE Categoria = ? and Inicio <= GETDATE() and Fin >= GETDATE()) as Monto
+            from Persona as p inner join Colegiatura as c
+            on p.idDNI = c.idDNI and c.Principal = 1
+            left outer join ULTIMACuota as ul
+            on p.idDNI = ul.idDNI
+            WHERE p.idDNI = '20707246'";
+            $cmdConcepto = Database::getInstance()->getDb()->prepare($cmdCuotas);
+            $cmdConcepto->bindParam(1,$categoria,PDO::PARAM_STR);
             $cmdConcepto->execute();
-            if($row = $cmdConcepto->fetch()){
-               for($i = 0; $i < intval($row["Fechas"]); $i++){
-                    array_push($array,array(
-                        "Fechas"=>($i+1),
-                        "Precio"=>number_format($row["Precio"],2,".","")
+            if ($row = $cmdConcepto->fetch()) {
+                $fechaactual = new DateTime();
+                $fechaactual->modify('+'.$mes.' month');
+                $fecharegistro = new DateTime($row["UltimoPago"]);
+                $inicio = $fecharegistro->modify('+ 1 month');      
+
+                while ($inicio <= $fechaactual) {
+                    array_push($array, array(
+                        "mes" => ConceptoAdo::nombreMes(intval($inicio->format('m'))) /*$inicio->format('m')*/,
+                        "monto" => $row["Monto"],
+                        "year" => $inicio->format('Y')
                     ));
-               }                
+                    $inicio->modify('+ 1 month');
+                }               
             }
             return $array;
-        }catch(Exception $ex){
-             return $ex->getMessage();
+        } catch (Exception $ex) {
+            return $ex->getMessage();
         }
+    }
+
+    public static function getOtrosConceptos(){
+        try{
+            $array = array();
+            $cmdOtrosConceptos = "select idConcepto ,Concepto, Precio from Concepto where Categoria = 100";
+            $cmdConcepto = Database::getInstance()->getDb()->prepare($cmdOtrosConceptos);
+            $cmdConcepto->execute();
+            while ($row = $cmdConcepto->fetch()) {
+                array_push($array, array(
+                    "IdConcepto"=>$row["idConcepto"],
+                    "Concepto" => $row["Concepto"],
+                    "Precio" => number_format($row["Precio"], 2, ".", "")
+                ));
+            }
+            return $array;
+        } catch (Exception $ex) {
+            return $ex->getMessage();
+        }   
+    }
+
+    public static function nombreMes($mes){
+        $array = array("Enero","Febrero","Marzo","Abril","Mayo","Junio",
+        "Julio","Agosto","Setiembre","Octubre","Noviembre","Diciembre");
+        return $array[$mes-1];
     }
 
     public static function insert($data)
@@ -192,5 +233,4 @@ class ConceptoAdo
             return $ex->getMessage();
         }
     }
-
 }
