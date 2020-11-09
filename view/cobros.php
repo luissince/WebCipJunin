@@ -62,14 +62,14 @@
                                                     <span>Total:</span>
                                                 </div>
                                                 <div class="col-md-6 text-right">
-                                                    <span id="lblTotal">0.00</span>
+                                                    <span id="lblTotalColegiatura">0.00</span>
                                                 </div>
                                             </div>
                                         </div>
                                     </form>
                                 </div>
                                 <div class="modal-footer">
-                                    <button type="button" class="btn btn-warning" name="btnAceptar" id="btnaceptar">
+                                    <button type="button" class="btn btn-warning" id="btnAceptarColegiatura">
                                         <i class="fa fa-check"></i> Aceptar</button>
                                     <button type="button" class="btn btn-primary" data-dismiss="modal">
                                         <i class="fa fa-remove"></i> Cancelar</button>
@@ -181,14 +181,14 @@
                                     <div class="row">
                                         <div class="col-md-12">
                                             <div class="form-group">
-                                                <label for="txtIngeniero">Ingeniero(a)</label>
-                                                <input type="text" class="form-control" id="txtIngeniero" placeholder="Datos completos del ingeniero">
+                                                <label for="txtIngenieroCertificado">Ingeniero(a)</label>
+                                                <input type="text" class="form-control" id="txtIngenieroCertificado" placeholder="Datos completos del ingeniero">
                                             </div>
                                         </div>
                                         <div class="col-md-12">
                                             <div class="form-group">
                                                 <label>Especialidad(es)</label>
-                                                <select class="form-control" id="cbEspecialidad">
+                                                <select class="form-control" id="cbEspecialidadCertificado">
                                                     <option>- Seleccione -</option>
                                                 </select>
                                             </div>
@@ -197,42 +197,42 @@
                                     <div class="row">
                                         <div class="col-md-6">
                                             <div class="form-group">
-                                                <label for="txtFecha">Fecha</label>
-                                                <input type="date" class="form-control" id="txtFecha">
+                                                <label for="txtFechaCertificado">Fecha</label>
+                                                <input type="date" class="form-control" id="txtFechaCertificado">
                                             </div>
                                         </div>
                                         <div class="col-md-6">
                                             <div class="form-group">
-                                                <label for="txtCorrelativo">Correlativo</label>
-                                                <input type="text" class="form-control" id="txtCorrelativo" placeholder="0">
+                                                <label for="txtCorrelativoCertificado">Correlativo</label>
+                                                <input type="text" class="form-control" id="txtCorrelativoCertificado" placeholder="0">
                                             </div>
                                         </div>
                                     </div>
                                     <div class="row">
                                         <div class="col-md-6">
                                             <div class="form-group">
-                                                <label for="txtAsunto">Asunto</label>
-                                                <input type="text" class="form-control" id="txtAsunto" placeholder="Ingrese el asunto">
+                                                <label for="txtAsuntoCertificado">Asunto</label>
+                                                <input type="text" class="form-control" id="txtAsuntoCertificado" placeholder="Ingrese el asunto">
                                             </div>
                                         </div>
                                         <div class="col-md-6">
                                             <div class="form-group">
-                                                <label for="txtEntidad">Entidad o Propietario</label>
-                                                <input type="text" class="form-control" id="txtEntidad" placeholder="Ingrese la entidad o el propietario">
+                                                <label for="txtEntidadCertificado">Entidad o Propietario</label>
+                                                <input type="text" class="form-control" id="txtEntidadCertificado" placeholder="Ingrese la entidad o el propietario">
                                             </div>
                                         </div>
                                     </div>
                                     <div class="row">
                                         <div class="col-md-12">
                                             <div class="form-group">
-                                                <label for="txtLugar">Lugar</label>
-                                                <input type="text" class="form-control" id="txtLugar" placeholder="Ingrese el lugar">
+                                                <label for="txtLugarCertificado">Lugar</label>
+                                                <input type="text" class="form-control" id="txtLugarCertificado" placeholder="Ingrese el lugar">
                                             </div>
                                         </div>
                                     </div>
                                 </div>
                                 <div class="modal-footer">
-                                    <button type="button" class="btn btn-warning" name="btnAceptar" id="btnaceptar">
+                                    <button type="button" class="btn btn-warning" id="btnAceptarCertificado">
                                         <i class="fa fa-check"></i> Aceptar</button>
                                     <button type="button" class="btn btn-primary" data-dismiss="modal">
                                         <i class="fa fa-remove"></i> Cancelar</button>
@@ -262,8 +262,8 @@
                                     <div class="row">
                                         <div class="col-md-12">
                                             <div class="form-group">
-                                                <label for="txtIngeniero">Ingeniero(a)</label>
-                                                <input type="text" class="form-control" id="txtIngeniero" placeholder="Datos completos del ingeniero">
+                                                <label for="txtIngenieroProyecto">Ingeniero(a)</label>
+                                                <input type="text" class="form-control" id="txtIngenieroProyecto" placeholder="Datos completos del ingeniero">
                                             </div>
                                         </div>
                                     </div>
@@ -271,7 +271,7 @@
                                         <div class="col-md-12">
                                             <div class="form-group">
                                                 <label>Especialidad(es)</label>
-                                                <select class="form-control" id="cbEspecialidad">
+                                                <select class="form-control" id="cbEspecialidadProyecto">
                                                     <option>- Seleccione -</option>
                                                 </select>
                                             </div>
@@ -280,44 +280,44 @@
                                     <div class="row">
                                         <div class="col-md-6">
                                             <div class="form-group">
-                                                <label for="txtFecha">Hábil Hasta</label>
-                                                <input type="date" class="form-control" id="txtFecha">
+                                                <label for="txtFechaProyecto">Hábil Hasta</label>
+                                                <input type="date" class="form-control" id="txtFechaProyecto">
                                             </div>
                                         </div>
                                         <div class="col-md-6">
                                             <div class="form-group">
-                                                <label for="txtAsunto">Certificado N°</label>
-                                                <input type="text" class="form-control" id="txtAsunto" placeholder="Número del certificado">
+                                                <label for="txtNumeroCertificadoProyecto">Certificado N°</label>
+                                                <input type="text" class="form-control" id="txtNumeroCertificadoProyecto" placeholder="Número del certificado">
                                             </div>
                                         </div>
                                     </div>
                                     <div class="row">
                                         <div class="col-md-6">
                                             <div class="form-group">
-                                                <label for="txtAsunto">Modalidad</label>
-                                                <input type="text" class="form-control" id="txtAsunto" placeholder="Ingrese la modalidad">
+                                                <label for="txtModalidadProyecto">Modalidad</label>
+                                                <input type="text" class="form-control" id="txtModalidadProyecto" placeholder="Ingrese la modalidad">
                                             </div>
                                         </div>
                                         <div class="col-md-6">
                                             <div class="form-group">
-                                                <label for="txtAsunto">Propietario</label>
-                                                <input type="text" class="form-control" id="txtAsunto" placeholder="Ingrese el propietario">
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="row">
-                                        <div class="col-md-12">
-                                            <div class="form-group">
-                                                <label for="txtAsunto">Proyecto</label>
-                                                <input type="text" class="form-control" id="txtAsunto" placeholder="Ingrese el nombre del proyecto">
+                                                <label for="txtPropietarioProyecto">Propietario</label>
+                                                <input type="text" class="form-control" id="txtPropietarioProyecto" placeholder="Ingrese el propietario">
                                             </div>
                                         </div>
                                     </div>
                                     <div class="row">
                                         <div class="col-md-12">
                                             <div class="form-group">
-                                                <label for="txtAsunto">Monto de Contrato</label>
-                                                <input type="number" class="form-control" id="txtAsunto" placeholder="0.00">
+                                                <label for="txtProyectoProyecto">Proyecto</label>
+                                                <input type="text" class="form-control" id="txtProyectoProyecto" placeholder="Ingrese el nombre del proyecto">
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-md-12">
+                                            <div class="form-group">
+                                                <label for="txtMontoContratoProyecto">Monto de Contrato</label>
+                                                <input type="number" class="form-control" id="txtMontoContratoProyecto" placeholder="0.00">
                                             </div>
                                         </div>
                                     </div>
@@ -325,7 +325,7 @@
                                         <div class="col-md-12">
                                             <div class="form-group">
                                                 <label>Departamento:</label>
-                                                <select class="form-control" id="cbEspecialidad">
+                                                <select class="form-control" id="cbDepartamentoProyecto">
                                                     <option>- Seleccione -</option>
                                                 </select>
                                             </div>
@@ -335,7 +335,7 @@
                                         <div class="col-md-12">
                                             <div class="form-group">
                                                 <label>Provincia:</label>
-                                                <select class="form-control" id="cbEspecialidad">
+                                                <select class="form-control" id="cbProvinciaProyecto">
                                                     <option>- Seleccione -</option>
                                                 </select>
                                             </div>
@@ -345,7 +345,7 @@
                                         <div class="col-md-12">
                                             <div class="form-group">
                                                 <label>Distrito:</label>
-                                                <select class="form-control" id="cbEspecialidad">
+                                                <select class="form-control" id="cbDistritoProyecto">
                                                     <option>- Seleccione -</option>
                                                 </select>
                                             </div>
@@ -354,30 +354,30 @@
                                     <div class="row">
                                         <div class="col-md-12">
                                             <div class="form-group">
-                                                <label for="txtAsunto">Urb./A.A.H.H./PP.JJ/Asoc</label>
-                                                <input type="text" class="form-control" id="txtAsunto" placeholder="0.00">
+                                                <label for="txtUrbProyecto">Urb./A.A.H.H./PP.JJ/Asoc</label>
+                                                <input type="text" class="form-control" id="txtUrbProyecto" placeholder="">
                                             </div>
                                         </div>
                                     </div>
                                     <div class="row">
                                         <div class="col-md-12">
                                             <div class="form-group">
-                                                <label for="txtAsunto">Jr./Av./Calle/Pasaje</label>
-                                                <input type="text" class="form-control" id="txtAsunto" placeholder="0.00">
+                                                <label for="txtCalleProyecto">Jr./Av./Calle/Pasaje</label>
+                                                <input type="text" class="form-control" id="txtCalleProyecto" placeholder="">
                                             </div>
                                         </div>
                                     </div>
                                     <div class="row">
                                         <div class="col-md-12">
                                             <div class="form-group">
-                                                <label for="txtAsunto">Monto a Cobrar</label>
-                                                <input type="number" class="form-control" id="txtAsunto" placeholder="0.00">
+                                                <label for="txtMontoCobrarProyecto">Monto a Cobrar</label>
+                                                <input type="number" class="form-control" id="txtMontoCobrarProyecto" placeholder="0.00">
                                             </div>
                                         </div>
                                     </div>
                                 </div>
                                 <div class="modal-footer">
-                                    <button type="button" class="btn btn-warning" name="btnAceptar" id="btnaceptar">
+                                    <button type="button" class="btn btn-warning" id="btnAceptarProyecto">
                                         <i class="fa fa-check"></i> Aceptar</button>
                                     <button type="button" class="btn btn-primary" data-dismiss="modal">
                                         <i class="fa fa-remove"></i> Cancelar</button>
@@ -390,7 +390,6 @@
                 <!-- modal end certificado de proyecto -->
 
                 <!-- modal start certificado de residencia de obra -->
-
                 <div class="row">
                     <div class="modal fade" id="mdCertResidenciaObra">
                         <div class="modal-dialog modal-xl">
@@ -408,8 +407,8 @@
                                     <div class="row">
                                         <div class="col-md-12">
                                             <div class="form-group">
-                                                <label for="txtIngeniero">Ingeniero(a)</label>
-                                                <input type="text" class="form-control" id="txtIngeniero" placeholder="Datos completos del ingeniero">
+                                                <label for="txtIngenieroObra">Ingeniero(a)</label>
+                                                <input type="text" class="form-control" id="txtIngenieroObra" placeholder="Datos completos del ingeniero">
                                             </div>
                                         </div>
                                     </div>
@@ -417,7 +416,7 @@
                                         <div class="col-md-12">
                                             <div class="form-group">
                                                 <label>Especialidad(es)</label>
-                                                <select class="form-control" id="cbEspecialidad">
+                                                <select class="form-control" id="cbEspecialidadObra">
                                                     <option>- Seleccione -</option>
                                                 </select>
                                             </div>
@@ -426,48 +425,48 @@
                                     <div class="row">
                                         <div class="col-md-12">
                                             <div class="form-group">
-                                                <label for="txtFecha">Hábil Hasta</label>
-                                                <input type="date" class="form-control" id="txtFecha">
+                                                <label for="txtFechaObra">Hábil Hasta</label>
+                                                <input type="date" class="form-control" id="txtFechaObra">
                                             </div>
                                         </div>
                                     </div>
                                     <div class="row">
                                         <div class="col-md-12">
                                             <div class="form-group">
-                                                <label for="txtFecha">Certificado N°</label>
-                                                <input type="text" class="form-control" id="txtFecha">
+                                                <label for="txtCertificadoNumeroObra">Certificado N°</label>
+                                                <input type="text" class="form-control" id="txtCertificadoNumeroObra">
                                             </div>
                                         </div>
                                     </div>
                                     <div class="row">
                                         <div class="col-md-12">
                                             <div class="form-group">
-                                                <label for="txtFecha">Modalidad</label>
-                                                <input type="text" class="form-control" id="txtFecha">
+                                                <label for="txtModalidadObra">Modalidad</label>
+                                                <input type="text" class="form-control" id="txtModalidadObra">
                                             </div>
                                         </div>
                                     </div>
                                     <div class="row">
                                         <div class="col-md-12">
                                             <div class="form-group">
-                                                <label for="txtFecha">Proyecto</label>
-                                                <input type="text" class="form-control" id="txtFecha">
+                                                <label for="txtProyectoObra">Proyecto</label>
+                                                <input type="text" class="form-control" id="txtProyectoObra">
                                             </div>
                                         </div>
                                     </div>
                                     <div class="row">
                                         <div class="col-md-12">
                                             <div class="form-group">
-                                                <label for="txtFecha">Propietario</label>
-                                                <input type="text" class="form-control" id="txtFecha">
+                                                <label for="txtPropietarioObra">Propietario</label>
+                                                <input type="text" class="form-control" id="txtPropietarioObra">
                                             </div>
                                         </div>
                                     </div>
                                     <div class="row">
                                         <div class="col-md-12">
                                             <div class="form-group">
-                                                <label for="txtFecha">Monto de Contrato:</label>
-                                                <input type="number" class="form-control" id="txtFecha">
+                                                <label for="txtMontoContratoObra">Monto de Contrato:</label>
+                                                <input type="number" class="form-control" id="txtMontoContratoObra">
                                             </div>
                                         </div>
                                     </div>
@@ -475,7 +474,7 @@
                                         <div class="col-md-12">
                                             <div class="form-group">
                                                 <label>Departamento:</label>
-                                                <select class="form-control" id="cbEspecialidad">
+                                                <select class="form-control" id="cbDepartamentoObra">
                                                     <option>- Seleccione -</option>
                                                 </select>
                                             </div>
@@ -485,7 +484,7 @@
                                         <div class="col-md-12">
                                             <div class="form-group">
                                                 <label>Pronvincia:</label>
-                                                <select class="form-control" id="cbEspecialidad">
+                                                <select class="form-control" id="cbProvinciaObra">
                                                     <option>- Seleccione -</option>
                                                 </select>
                                             </div>
@@ -495,7 +494,7 @@
                                         <div class="col-md-12">
                                             <div class="form-group">
                                                 <label>Distrito:</label>
-                                                <select class="form-control" id="cbEspecialidad">
+                                                <select class="form-control" id="cbDistritoObra">
                                                     <option>- Seleccione -</option>
                                                 </select>
                                             </div>
@@ -504,14 +503,14 @@
                                     <div class="row">
                                         <div class="col-md-12">
                                             <div class="form-group">
-                                                <label for="txtFecha">Monto a Cobrar:</label>
-                                                <input type="number" class="form-control" id="txtFecha">
+                                                <label for="txtMontoCobrarObra">Monto a Cobrar:</label>
+                                                <input type="number" class="form-control" id="txtMontoCobrarObra">
                                             </div>
                                         </div>
                                     </div>
                                 </div>
                                 <div class="modal-footer">
-                                    <button type="button" class="btn btn-warning" name="btnAceptar" id="btnaceptar">
+                                    <button type="button" class="btn btn-warning" id="btnAceptarObra">
                                         <i class="fa fa-check"></i> Aceptar</button>
                                     <button type="button" class="btn btn-primary" data-dismiss="modal">
                                         <i class="fa fa-remove"></i> Cancelar</button>
@@ -541,22 +540,22 @@
                                     <div class="row">
                                         <div class="col-md-12">
                                             <div class="form-group">
-                                                <label for="txtIngeniero">Descripción</label>
-                                                <input type="text" class="form-control" id="txtIngeniero" placeholder="Ingrese la descripción">
+                                                <label for="txtDescripcionPeritaje">Descripción</label>
+                                                <input type="text" class="form-control" id="txtDescripcionPeritaje" placeholder="Ingrese la descripción">
                                             </div>
                                         </div>
                                     </div>
                                     <div class="row">
                                         <div class="col-md-12">
                                             <div class="form-group">
-                                                <label for="txtIngeniero">Monto</label>
-                                                <input type="number" class="form-control" id="txtIngeniero" placeholder="0.00">
+                                                <label for="txtMontoPeritaje">Monto</label>
+                                                <input type="number" class="form-control" id="txtMontoPeritaje" placeholder="0.00">
                                             </div>
                                         </div>
                                     </div>
                                 </div>
                                 <div class="modal-footer">
-                                    <button type="button" class="btn btn-warning" name="btnAceptar" id="btnaceptar">
+                                    <button type="button" class="btn btn-warning" id="btnAceptarPeritaje">
                                         <i class="fa fa-check"></i> Aceptar</button>
                                     <button type="button" class="btn btn-primary" data-dismiss="modal">
                                         <i class="fa fa-remove"></i> Cancelar</button>
@@ -784,7 +783,7 @@
                                     </div>
                                 </div>
 
-                                <div class="row ">
+                                <!-- <div class="row ">
                                     <div class="col-md-6 text-left no-margin">
                                         <h5>B001</h5>
                                     </div>
@@ -792,7 +791,7 @@
                                     <div class="col-md-6 text-right no-margin">
                                         <h5>0000000</h5>
                                     </div>
-                                </div>
+                                </div> -->
 
                                 <div class="row">
                                     <div class="col-md-12 text-left">
@@ -834,8 +833,12 @@
         let tools = new Tools();
         let cuotas = [];
         let countCurrentDate = 0;
+        //ingresos totales
         let arrayIngresos = [];
         let sumaTotal = 0;
+
+        //colegiatura
+        let colegiaturas = [];
 
         //paginacion ingenieros
         let state = false;
@@ -849,6 +852,30 @@
 
             loadComprobantes();
 
+            //colegiatura
+            componentesColegiatura();
+
+            //coutas
+            componentesCuotas();
+
+            //certificado
+            componentesCertificado();
+
+            //peritaje
+            componentesPeritaje();
+
+            //otros
+            componentesOtros();
+
+            //ingenieros
+            componentesIngenieros();
+
+            //cobro
+            componentesRegistrarIngreso();
+
+        });
+
+        function componentesColegiatura() {
             $("#btnColegitura").click(function() {
                 $('#mdColegiatura').modal('show');
                 loadColegiatura();
@@ -862,6 +889,20 @@
                 event.preventDefault();
             });
 
+            $("#btnAceptarColegiatura").click(function() {
+                validateIngresoColegiatura();
+            });
+
+            $("#btnAceptarColegiatura").keypress(function(event) {
+                var keycode = event.keyCode || event.which;
+                if (keycode == '13') {
+                    validateIngresoColegiatura();
+                }
+                event.preventDefault();
+            });
+        }
+
+        function componentesCuotas() {
             $("#btnCuotas").click(function() {
                 $('#mdCuotas').modal('show');
                 loadCuotas(1);
@@ -874,8 +915,6 @@
                 }
                 event.preventDefault();
             });
-
-            //Modal cuotas
             $("#btnCuotaNormal").click(function() {
                 $("#lblCuotasMensaje").html("Cuotas Normales");
                 loadCuotas(1);
@@ -914,67 +953,7 @@
                 }
                 event.preventDefault();
             });
-            //Modal certificado
-            $("#btnCertHabilidad").click(function() {
-                $('#mdCertHabilidad').modal('show');
-            });
 
-            $("#btnCertHabilidad").keypress(function(event) {
-                if (event.keyCode === 13) {
-                    $('#mdCertHabilidad').modal('show');
-                }
-                event.preventDefault();
-            });
-
-            $("#btnCertProyecto").click(function() {
-                $('#mdCertProyecto').modal('show');
-            });
-
-            $("#btnCertProyecto").keypress(function(event) {
-                if (event.keyCode === 13) {
-                    $('#mdCertProyecto').modal('show');
-                }
-                event.preventDefault();
-            });
-
-            $("#btnCertResidenciaObra").click(function() {
-                $('#mdCertResidenciaObra').modal('show');
-            });
-
-            $("#btnCertResidenciaObra").keypress(function(event) {
-                if (event.keyCode === 13) {
-                    $('#mdCertResidenciaObra').modal('show');
-                }
-                event.preventDefault();
-            });
-
-            //Modal peritaje
-            $("#btnPeritaje").click(function() {
-                $('#mdPeritaje').modal('show');
-            });
-
-            $("#btnPeritaje").keypress(function(event) {
-                if (event.keyCode === 13) {
-                    $('#mdPeritaje').modal('show');
-                }
-                event.preventDefault();
-            });
-
-            //Modal otros
-            $("#btnOtro").click(function() {
-                $('#mdOtros').modal('show');
-                loadOtros();
-            });
-
-            $("#btnOtro").keypress(function(event) {
-                if (event.keyCode === 13) {
-                    $('#mdOtros').modal('show');
-                    loadOtros();
-                }
-                event.preventDefault();
-            });
-
-            //
             $("#selectall").on("click", function() {
                 $(".cuotasid").attr("checked", this.checked);
             });
@@ -1009,26 +988,86 @@
                 $('#mdCuotas').modal('hide');
                 countCurrentDate = 0;
             });
+        }
 
-            //
+        function componentesCertificado() {
+            $("#btnCertHabilidad").click(function() {
+                $('#mdCertHabilidad').modal('show');
+            });
+
+            $("#btnCertHabilidad").keypress(function(event) {
+                if (event.keyCode === 13) {
+                    $('#mdCertHabilidad').modal('show');
+                }
+                event.preventDefault();
+            });
+
+            $("#btnCertProyecto").click(function() {
+                $('#mdCertProyecto').modal('show');
+            });
+
+            $("#btnCertProyecto").keypress(function(event) {
+                if (event.keyCode === 13) {
+                    $('#mdCertProyecto').modal('show');
+                }
+                event.preventDefault();
+            });
+
+            $("#btnCertResidenciaObra").click(function() {
+                $('#mdCertResidenciaObra').modal('show');
+            });
+
+            $("#btnCertResidenciaObra").keypress(function(event) {
+                if (event.keyCode === 13) {
+                    $('#mdCertResidenciaObra').modal('show');
+                }
+                event.preventDefault();
+            });
+        }
+
+        function componentesPeritaje() {
+            $("#btnPeritaje").click(function() {
+                $('#mdPeritaje').modal('show');
+            });
+
+            $("#btnPeritaje").keypress(function(event) {
+                if (event.keyCode === 13) {
+                    $('#mdPeritaje').modal('show');
+                }
+                event.preventDefault();
+            });
+        }
+
+        function componentesOtros() {
+            $("#btnOtro").click(function() {
+                $('#mdOtros').modal('show');
+                loadOtros();
+            });
+
+            $("#btnOtro").keypress(function(event) {
+                if (event.keyCode === 13) {
+                    $('#mdOtros').modal('show');
+                    loadOtros();
+                }
+                event.preventDefault();
+            });
             $("#btnAceptarOtros").click(function() {
-                validateIngreso();
+                validateIngresoOtros();
             });
 
             $("#btnAceptarOtros").keypress(function(event) {
                 var keycode = event.keyCode || event.which;
                 if (keycode == '13') {
-                    validateIngreso();
+                    validateIngresoOtros();
                 }
                 event.preventDefault();
             });
-
             $("#cbOtrosConcepto").change(function(event) {
                 $("#txtMontoOtrosConceptos").val($("#cbOtrosConcepto").find('option:selected').attr('id'))
             });
+        }
 
-            //ingenieros
-            //----------------------------------------
+        function componentesIngenieros() {
             $("#btnIngenieros").click(function(event) {
                 $('#mdIngenieros').modal('show');
                 loadInitIngenieros();
@@ -1084,8 +1123,9 @@
                 }
                 event.preventDefault();
             });
-            //----------------------------------------
+        }
 
+        function componentesRegistrarIngreso() {
             $("#btnCobrar").click(function() {
                 if ($("#cbComprobante").val() == '') {
                     tools.AlertWarning("Ingreso", "Seleccione un comprobante para continuar.");
@@ -1100,27 +1140,60 @@
 
                     });
                 }
-
             });
 
             $("#btnCobrar").keypress(function() {
-                if ($("#cbComprobante").val() != '') {
-                    registrarIngreso();
+                if ($("#cbComprobante").val() == '') {
+                    tools.AlertWarning("Ingreso", "Seleccione un comprobante para continuar.");
+                } else if (arrayIngresos.length == 0) {
+                    tools.AlertWarning("Ingreso", "No hay conceptos para continuar.");
+                } else if (idDNI == 0) {
+                    tools.AlertWarning("Ingreso", "No selecciono ningún ingeneniero para continuar.");
                 } else {
-                    tools.AlertWarning("", "Seleccione un comprobante para continuar.");
+                    alertify.confirm('Ingreso', '¿Está seguro de continuar?', function() {
+                        registrarIngreso();
+                    }, function() {
+
+                    });
                 }
                 event.preventDefault();
             });
+        }
 
-        });
+        function validateIngresoColegiatura() {
 
-        function validateIngreso() {
+            //if (!validateDuplicate($("#cbOtrosConcepto").val())) {
+            for (let value of colegiaturas) {
+                arrayIngresos.push({
+                    "idConcepto": parseInt(value.idConcepto),
+                    "num": (arrayIngresos.length + 1),
+                    "categoria": value.Categoria,
+                    "cantidad": 1,
+                    "concepto": value.Concepto,
+                    "precio": parseFloat(value.Precio),
+                    "monto": parseInt(value.Precio) * 1
+                });
+            }
+            addIngresos();
+            $('#mdColegiatura').modal('hide');
+
+            //     addIngresos();
+            //     $('#mdOtros').modal('hide');
+            //     $("#txtCantidadOtrosConceptos").val("1");
+            //     $("#txtMontoOtrosConceptos").val("");
+            // } else {
+            //     tools.AlertWarning("Ingresos Diversos", "Ya existe un concepto con los datos.")
+            // }
+        }
+
+        function validateIngresoOtros() {
             if ($("#cbOtrosConcepto").val() != "") {
                 if ($("#txtCantidadOtrosConceptos").val() !== "") {
                     if (!validateDuplicate($("#cbOtrosConcepto").val())) {
                         arrayIngresos.push({
                             "idConcepto": parseInt($("#cbOtrosConcepto").val()),
                             "num": (arrayIngresos.length + 1),
+                            "categoria": 0,
                             "cantidad": parseInt($('#txtCantidadOtrosConceptos').val()),
                             "concepto": $('#cbOtrosConcepto option:selected').html(),
                             "precio": parseFloat($("#cbOtrosConcepto").find('option:selected').attr('id')),
@@ -1151,13 +1224,14 @@
                 },
                 beforeSend: function() {
                     $("#ctnConceptos").empty();
+                    colegiaturas.splice(0, colegiaturas.length);
                 },
                 success: function(result) {
-                    console.log(result)
+
                     if (result.estado === 1) {
                         let totalColegiatura = 0;
-                        cuotas = result.data;
-                        for (let value of result.data) {
+                        colegiaturas = result.data;
+                        for (let value of colegiaturas) {
                             $("#ctnConceptos").append('<div id="' + value.idConcepto + '" class="row">' +
                                 '<div class="col-md-8 text-left">' +
                                 '<p>' + value.Concepto + '</p>' +
@@ -1167,7 +1241,8 @@
                                 '</div>');
                             totalColegiatura += parseFloat(value.Precio);
                         }
-                        $("#lblTotal").html(tools.formatMoney(totalColegiatura));
+                        $("#lblTotalColegiatura").html(tools.formatMoney(totalColegiatura));
+
                     } else {
 
                     }
@@ -1431,15 +1506,15 @@
         function addIngresos() {
             $("#tbIngresos").empty();
             sumaTotal = 0;
-            for (let value of arrayIngresos) {
-                $("#tbIngresos").append('<tr>' +
-                    '<td>' + value.num + '</td>' +
-                    '<td>' + value.cantidad + '</td>' +
-                    '<td>' + value.concepto + '</td>' +
-                    '<td>' + tools.formatMoney(value.precio) + '</td>' +
-                    '<td>' + tools.formatMoney(value.monto) + '</td>' +
-                    '<td><button class="btn btn-warning" onClick="removeIngresos(\'' + value.idConcepto + '\')"><i class="fa fa-trash"></i></button></td>' +
-                    '</tr>');
+            for (let value of arrayIngresos) {                
+                    $("#tbIngresos").append('<tr>' +
+                        '<td>' + value.num + '</td>' +
+                        '<td>' + value.cantidad + '</td>' +
+                        '<td>' + value.concepto + '</td>' +
+                        '<td>' + tools.formatMoney(value.precio) + '</td>' +
+                        '<td>' + tools.formatMoney(value.monto) + '</td>' +
+                        '<td><button class="btn btn-warning" onClick="removeIngresos(\'' + value.idConcepto + '\')"><i class="fa fa-trash"></i></button></td>' +
+                        '</tr>');                
                 sumaTotal += parseFloat(value.monto);
             }
             $("#lblSumaTotal").html(tools.formatMoney(sumaTotal));

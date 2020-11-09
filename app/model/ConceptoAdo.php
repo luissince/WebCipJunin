@@ -16,7 +16,7 @@ class ConceptoAdo
             $arrayConcepto = array();
             $comandoConcepto = Database::getInstance()->getDb()->prepare("SELECT * FROM Concepto 
             where Concepto like concat(?,'%') 
-            order by Categoria asc,cast(Inicio as date) desc, cast(Fin as date) desc
+            order by Categoria asc,Concepto asc,cast(Inicio as date) desc, cast(Fin as date) desc
             offset ? rows fetch next ? rows only");
             $comandoConcepto->bindParam(1, $nombres, PDO::PARAM_STR);
             $comandoConcepto->bindParam(2, $posicionPagina, PDO::PARAM_INT);
@@ -88,6 +88,7 @@ class ConceptoAdo
             while ($row = $cmdConcepto->fetch()) {
                 array_push($array, array(
                     "idConcepto" => $row["idConcepto"],
+                    "Categoria" => $row["Categoria"],
                     "Concepto" => $row["Concepto"],
                     "Precio" => number_format($row["Precio"], 2, ".", "")
                 ));
@@ -137,12 +138,13 @@ class ConceptoAdo
     public static function getOtrosConceptos(){
         try{
             $array = array();
-            $cmdOtrosConceptos = "select idConcepto ,Concepto, Precio from Concepto where Categoria = 100";
+            $cmdOtrosConceptos = "select idConcepto ,Categoria,Concepto, Precio from Concepto where Categoria = 100";
             $cmdConcepto = Database::getInstance()->getDb()->prepare($cmdOtrosConceptos);
             $cmdConcepto->execute();
             while ($row = $cmdConcepto->fetch()) {
                 array_push($array, array(
                     "IdConcepto"=>$row["idConcepto"],
+                    "Categoria" => $row["Categoria"],
                     "Concepto" => $row["Concepto"],
                     "Precio" => number_format($row["Precio"], 2, ".", "")
                 ));
