@@ -148,6 +148,73 @@
                     </div>
                 </div>
 
+                <div class="row">
+                    <div class="modal fade" id="mostrarHistorial">
+                        <div class="modal-dialog">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <button type="button" class="close" data-dismiss="modal">
+                                        <i class="fa fa-close"></i>
+                                    </button>
+                                    <h4 class="modal-title">
+                                        <i class="fa fa-user-plus">
+                                        </i> Historial del ingeniero
+                                    </h4>
+                                </div>
+                                <div class="modal-body">
+                                    <div class="box-body">
+                                        <div id="example2_wrapper" class="dataTables_wrapper form-inline dt-bootstrap">
+                                            <div class="row">
+                                                <div class="col-sm-6"></div>
+                                                <div class="col-sm-6"></div>
+                                            </div>
+                                            <div class="row">
+                                                <div class="col-sm-12">
+                                                    <table id="example2" class="table table-bordered table-hover dataTable" role="grid" aria-describedby="example2_info">
+                                                        <thead style="background-color: #FDB2B1;color: #B72928;">
+                                                            <th style="text-align: center;">#</th>
+                                                            <th>Documento</th>
+                                                            <th>Fecha</th>
+                                                            <th>Estado</th>
+                                                            <th>Monto</th>
+                                                        </thead>
+                                                        <tbody>
+
+                                                        </tbody>
+                                                    </table>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <!-- <div class="modal-footer">
+                                    <div class="col-md-12" style="text-align:center;">
+                                        <ul class="pagination">
+                                            <li>
+                                                <button class="btn btn-primary" id="btnIzquierda">
+                                                    <i class="fa fa-toggle-left"></i>
+                                                </button>
+                                            </li>
+                                            <li>
+                                                <span id="lblPaginaActual" class="font-weight-bold">0</span>
+                                            </li>
+                                            <li><span>a</span></li>
+                                            <li>
+                                                <span id="lblPaginaSiguiente" class="font-weight-bold">0</span>
+                                            </li>
+                                            <li>
+                                                <button class="btn btn-primary" id="btnDerecha">
+                                                    <i class="fa fa-toggle-right"></i>
+                                                </button>
+                                            </li>
+                                        </ul>
+                                    </div>
+                                </div> -->
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
 
                 <div class="row">
                     <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
@@ -184,6 +251,7 @@
                                 <th>RUC</th>
                                 <th>Condicion</th>
                                 <th>Colegiaturas</th>
+                                <th>Historial</th>
                                 <th>Opciones</th>
                             </thead>
                             <tbody id="tbTable">
@@ -334,6 +402,10 @@
                         for (let persona of result.personas) {
 
                             // let image = '<img src="images/masculino.png" width="30">';
+                            let btnHistorial = '<button class="btn btn-warning btn-sm"  data-toggle="modal" data-target="#mostrarHistorial">' +
+                                '<i class="fa fa-eye"></i> Ver' +
+                                '</button>';
+
                             let btnUpdate =
                                 '<button class="btn btn-success btn-sm" onclick="loadUpdateIngenieros(\'' +
                                 persona.idDNI + '\')">' +
@@ -355,11 +427,12 @@
                                 '</td>' +
                                 '<td>' + persona.idDNI + '</td>' +
                                 '<td>' + persona.Cip + '</td>' +
-                                '<td>' + persona.Apellidos +' '+persona.Nombres + '</td>' +
+                                '<td>' + persona.Apellidos + ' ' + persona.Nombres + '</td>' +
                                 '<td>' + estadoCivil + '</td>' +
                                 '<td>' + persona.Ruc + '</td>' +
                                 '<td>' + condicion + '</td>' +
-                                '<td>'+0+'</td>'+
+                                '<td>' + 0 + '</td>' +
+                                '<td>' + btnHistorial + '</td>' +
                                 '<td>' +
                                 '' + btnUpdate + '' +
                                 '</td>' +
@@ -391,6 +464,10 @@
                     state = false;
                 }
             });
+        }
+
+        function showHistorialIngenieros(idPersona) {
+            location.href = "update_ingenieros.php?idPersona=" + idPersona;
         }
 
         function loadUpdateIngenieros(idPersona) {
