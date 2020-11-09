@@ -381,7 +381,6 @@
                     }
                 },
                 error: function(error) {
-                    console.log(error);
                     tbTable.empty();
                     tbTable.append(
                         '<tr class="text-center"><td colspan="8"><p>Se produjo un error, intente nuevamente.</p></td></tr>'

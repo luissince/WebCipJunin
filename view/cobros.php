@@ -597,7 +597,7 @@
                                         <div class="col-md-6">
                                             <div class="form-group">
                                                 <label>Cantidad</label>
-                                                <input type="number" class="form-control" id="txtCantidadOtrosConceptos" placeholder="0.00">
+                                                <input type="number" class="form-control" id="txtCantidadOtrosConceptos" placeholder="0.00" value="1" min="1">
                                             </div>
                                         </div>
                                         <div class="col-md-6">
@@ -621,6 +621,80 @@
                 </div>
                 <!-- modal end otros -->
 
+                <!-- modal start ingenieros -->
+                <div class="row">
+                    <div class="modal fade" id="mdIngenieros">
+                        <div class="modal-dialog modal-lg">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <button type="button" class="close" data-dismiss="modal">
+                                        <i class="fa fa-close"></i>
+                                    </button>
+                                    <h4 class="modal-title">
+                                        <i class="fa fa-group">
+                                        </i> Lista de Ingenieros
+                                    </h4>
+                                </div>
+                                <div class="modal-body">
+                                    <div class="row">
+                                        <div class="col-md-4 col-sm-12 col-xs-12">
+                                            <button class="btn btn-primary" id="btnIzquierda">
+                                                <i class="fa fa-toggle-left"></i>
+                                            </button>
+                                            <span id="lblPaginaActual" class="font-weight-bold">0</span>
+                                            <span>&nbsp;</span>
+                                            <span>a</span>
+                                            <span>&nbsp;</span>
+                                            <span id="lblPaginaSiguiente" class="font-weight-bold">0</span>
+                                            <button class="btn btn-primary" id="btnDerecha">
+                                                <i class="fa fa-toggle-right"></i>
+                                            </button>
+                                        </div>
+                                        <div class="col-md-6 col-sm-12 col-xs-12">
+                                            <div class="input-group col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                                                <input type="search" id="txtBuscarIngeniero" class="form-control" placeholder="Buscar por información, n° cip o dni" aria-describedby="search">
+                                            </div>
+                                        </div>
+                                        <div class="col-md-2 col-sm-12 col-xs-12">
+                                            <button id="btnBuscarIngeniero" class="btn btn-default col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                                                <i class="fa fa-search"></i> Buscar
+                                            </button>
+                                        </div>
+                                    </div>
+                                    <div class="row" style="overflow-x: auto; height:280px">
+                                        <div class="col-md-12">
+                                            <table class="table table-striped table-hover table-sm">
+                                                <thead>
+                                                    <tr>
+                                                        <th>#</th>
+                                                        <th>Cip</th>
+                                                        <th>Dni</th>
+                                                        <th>Ingeniero</th>
+                                                        <th>Condición</th>
+                                                        <th>Ultima Cuota</th>
+                                                        <th>Debe</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody id="tbIngenieros">
+
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-warning" id="btnAceptarIngenieros">
+                                        <i class="fa fa-check"></i> Aceptar</button>
+                                    <button type="button" class="btn btn-primary" data-dismiss="modal">
+                                        <i class="fa fa-remove"></i> Cancelar</button>
+                                </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- modal end ingenieros -->
+
                 <!-- <div class="row"> -->
                 <div class="row">
 
@@ -633,14 +707,17 @@
                                 <div class="row">
                                     <div class="col-md-12">
                                         <div class="btn-group" role="group">
-                                            <button id="btnColegitura" type="button" class="btn btn-primary" data-toggle="modal">
+                                            <button id="btnIngenieros" type="button" class="btn btn-primary" data-toggle="modal">
+                                                <i class="fa fa-group"></i> Ingenieros
+                                            </button>
+                                            <button id="btnColegitura" type="button" class="btn btn-default" data-toggle="modal">
                                                 <i class="fa fa-plus"></i> Colegiatura
                                             </button>
-                                            <button id="btnCuotas" type="button" class="btn btn-primary" data-toggle="modal">
+                                            <button id="btnCuotas" type="button" class="btn btn-default" data-toggle="modal">
                                                 <i class="fa fa-plus"></i> Cuotas
                                             </button>
                                             <div class="btn-group" role="group">
-                                                <button id="btnCertificado" type="button" class="btn btn-primary dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+                                                <button id="btnCertificado" type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
                                                     <i class="fa fa-plus"></i> Certificado <span class="caret"></span>
                                                 </button>
                                                 <ul class="dropdown-menu" aria-labelledby="dropdownMenu1">
@@ -649,10 +726,10 @@
                                                     <li><button id="btnCertResidenciaObra" type="button" class="btn btn-default">Certificado de Residencia de Obra</button></li>
                                                 </ul>
                                             </div>
-                                            <button id="btnPeritaje" type="button" class="btn btn-primary" data-toggle="modal">
+                                            <button id="btnPeritaje" type="button" class="btn btn-default" data-toggle="modal">
                                                 <i class="fa fa-plus"></i> Peritaje
                                             </button>
-                                            <button id="btnOtro" type="button" class="btn btn-primary" data-toggle="modal">
+                                            <button id="btnOtro" type="button" class="btn btn-default" data-toggle="modal">
                                                 <i class="fa fa-plus"></i> Otros
                                             </button>
                                         </div>
@@ -667,7 +744,6 @@
                                                 <th>Concepto</th>
                                                 <th>Precio</th>
                                                 <th>Monto</th>
-                                                <th>Editar</th>
                                                 <th>Quitar</th>
                                             </thead>
                                             <tbody id="tbIngresos">
@@ -683,7 +759,7 @@
                     <div class="col-md-4">
                         <div class="panel panel-primary">
                             <div class="panel-heading">
-                                <h5 class="no-margin">Detalle del Ingreso</h5>
+                                <h5 class="no-margin">Detalle del Cobro</h5>
                             </div>
 
                             <div class="panel-body">
@@ -702,9 +778,8 @@
                                 <div class="row">
                                     <div class="col-md-12 text-left no-margin">
                                         <h5>Comprobante</h5>
-                                        <select class="form-control">
-                                            <option value="03">Boleta</option>
-                                            <option value="01">Factura</option>
+                                        <select class="form-control" id="cbComprobante">
+
                                         </select>
                                     </div>
                                 </div>
@@ -722,19 +797,19 @@
                                 <div class="row">
                                     <div class="col-md-12 text-left">
                                         <h5>N° Cip</h5>
-                                        <h5>--</h5>
+                                        <h5 id="lblCipSeleccionado">--</h5>
                                     </div>
                                     <div class="col-md-12 text-left">
                                         <h5>N° Documento</h5>
-                                        <h5>--</h5>
+                                        <h5 id="lblDocumentSeleccionado">--</h5>
                                     </div>
                                     <div class="col-md-12 text-left">
-                                        <h5>Nombre/Razón Social</h5>
-                                        <h5>--</h5>
+                                        <h5>Nombres/Razón Social</h5>
+                                        <h5 id="lblDatosSeleccionado">--</h5>
                                     </div>
                                     <div class="col-md-12 text-left">
                                         <h5>Dirección</h5>
-                                        <h5>--</h5>
+                                        <h5 id="lblDireccionSeleccionado">--</h5>
                                     </div>
                                 </div>
 
@@ -761,14 +836,25 @@
         let countCurrentDate = 0;
         let arrayIngresos = [];
         let sumaTotal = 0;
+
+        //paginacion ingenieros
+        let state = false;
+        let opcion = 0;
+        let totalPaginacion = 0;
+        let paginacion = 0;
+        let filasPorPagina = 10;
+        let idDNI = 0;
+
         $(document).ready(function() {
+
+            loadComprobantes();
 
             $("#btnColegitura").click(function() {
                 $('#mdColegiatura').modal('show');
                 loadColegiatura();
             });
 
-            $("#btnColegitura").on("keyup", function(event) {
+            $("#btnColegitura").keypress(function(event) {
                 if (event.keyCode === 13) {
                     $('#mdColegiatura').modal('show');
                     loadColegiatura();
@@ -781,7 +867,7 @@
                 loadCuotas(1);
             });
 
-            $("#btnCuotas").on("keyup", function() {
+            $("#btnCuotas").keypress(function() {
                 if (event.keyCode === 13) {
                     $('#mdCuotas').modal('show');
                     loadCuotas(1);
@@ -795,7 +881,7 @@
                 loadCuotas(1);
             });
 
-            $("#btnCuotaNormal").on("keyup", function(event) {
+            $("#btnCuotaNormal").keypress(function(event) {
                 if (event.keyCode === 13) {
                     $("#lblCuotasMensaje").html("Cuotas Normales");
                     loadCuotas(1);
@@ -808,7 +894,7 @@
                 loadCuotas(2);
             });
 
-            $("#btnCuotaAmnistia").on("keyup", function(event) {
+            $("#btnCuotaAmnistia").keypress(function(event) {
                 if (event.keyCode === 13) {
                     $("#lblCuotasMensaje").html("Cuotas de Amnistia");
                     loadCuotas(2);
@@ -821,7 +907,7 @@
                 loadCuotas(3);
             });
 
-            $("#btnCuotaVitalicio").on("keyup", function(event) {
+            $("#btnCuotaVitalicio").keypress(function(event) {
                 if (event.keyCode === 13) {
                     $("#lblCuotasMensaje").html("Cuotas de Vitalicio");
                     loadCuotas(3);
@@ -833,7 +919,7 @@
                 $('#mdCertHabilidad').modal('show');
             });
 
-            $("#btnCertHabilidad").on("keyup", function(event) {
+            $("#btnCertHabilidad").keypress(function(event) {
                 if (event.keyCode === 13) {
                     $('#mdCertHabilidad').modal('show');
                 }
@@ -844,7 +930,7 @@
                 $('#mdCertProyecto').modal('show');
             });
 
-            $("#btnCertProyecto").on("keyup", function(event) {
+            $("#btnCertProyecto").keypress(function(event) {
                 if (event.keyCode === 13) {
                     $('#mdCertProyecto').modal('show');
                 }
@@ -855,7 +941,7 @@
                 $('#mdCertResidenciaObra').modal('show');
             });
 
-            $("#btnCertResidenciaObra").on("keyup", function(event) {
+            $("#btnCertResidenciaObra").keypress(function(event) {
                 if (event.keyCode === 13) {
                     $('#mdCertResidenciaObra').modal('show');
                 }
@@ -867,7 +953,7 @@
                 $('#mdPeritaje').modal('show');
             });
 
-            $("#btnPeritaje").on("keyup", function(event) {
+            $("#btnPeritaje").keypress(function(event) {
                 if (event.keyCode === 13) {
                     $('#mdPeritaje').modal('show');
                 }
@@ -880,7 +966,7 @@
                 loadOtros();
             });
 
-            $("#btnOtro").on("keyup", function(event) {
+            $("#btnOtro").keypress(function(event) {
                 if (event.keyCode === 13) {
                     $('#mdOtros').modal('show');
                     loadOtros();
@@ -902,7 +988,7 @@
                 addCuotas();
             });
 
-            $("#btnAddCuota").on("keyup", function(event) {
+            $("#btnAddCuota").keypress(function(event) {
                 if (event.keyCode === 13) {
                     cuotas.push({
                         "mes": "mi pene",
@@ -941,12 +1027,88 @@
                 $("#txtMontoOtrosConceptos").val($("#cbOtrosConcepto").find('option:selected').attr('id'))
             });
 
-            $("#btnCobrar").click(function(){
-                registrarIngreso();
+            //ingenieros
+            //----------------------------------------
+            $("#btnIngenieros").click(function(event) {
+                $('#mdIngenieros').modal('show');
+                loadInitIngenieros();
             });
 
-            $("#btnCobrar").keypress(function(){
-                registrarIngreso();
+            $("#btnIngenieros").keypress(function(event) {
+                if (event.keyCode === 13) {
+                    $('#mdIngenieros').modal('show');
+                    loadInitIngenieros();
+                }
+                event.preventDefault();
+            });
+
+            $('#mdIngenieros').on('shown.bs.modal', function() {
+                $('#txtBuscarIngeniero').focus();
+            });
+
+            $("#txtBuscarIngeniero").on("keyup", function(event) {
+                if (event.keyCode === 13) {
+                    if (!state) {
+                        paginacion = 1;
+                        loadIngenieros($("#txtBuscarIngeniero").val());
+                        opcion = 1;
+                    }
+                }
+            });
+
+            $("#btnIzquierda").click(function() {
+                if (!state) {
+                    if (paginacion > 1) {
+                        paginacion--;
+                        onEventPaginacion();
+                    }
+                }
+            });
+
+            $("#btnDerecha").click(function() {
+                if (!state) {
+                    if (paginacion < totalPaginacion) {
+                        paginacion++;
+                        onEventPaginacion();
+                    }
+                }
+            });
+
+            $("#btnAceptarIngenieros").click(function(event) {
+
+            });
+
+            $("#btnAceptarIngenieros").keypress(function(event) {
+                if (event.keyCode === 13) {
+
+                }
+                event.preventDefault();
+            });
+            //----------------------------------------
+
+            $("#btnCobrar").click(function() {
+                if ($("#cbComprobante").val() == '') {
+                    tools.AlertWarning("Ingreso", "Seleccione un comprobante para continuar.");
+                } else if (arrayIngresos.length == 0) {
+                    tools.AlertWarning("Ingreso", "No hay conceptos para continuar.");
+                } else if (idDNI == 0) {
+                    tools.AlertWarning("Ingreso", "No selecciono ningún ingeneniero para continuar.");
+                } else {
+                    alertify.confirm('Ingreso', '¿Está seguro de continuar?', function() {
+                        registrarIngreso();
+                    }, function() {
+
+                    });
+                }
+
+            });
+
+            $("#btnCobrar").keypress(function() {
+                if ($("#cbComprobante").val() != '') {
+                    registrarIngreso();
+                } else {
+                    tools.AlertWarning("", "Seleccione un comprobante para continuar.");
+                }
                 event.preventDefault();
             });
 
@@ -966,21 +1128,20 @@
                         });
                         addIngresos();
                         $('#mdOtros').modal('hide');
-                        $("#txtCantidadOtrosConceptos").val("");
+                        $("#txtCantidadOtrosConceptos").val("1");
+                        $("#txtMontoOtrosConceptos").val("");
                     } else {
-                        AlertWarning("Ingresos Diversos", "Ya existe un concepto con los datos.")
+                        tools.AlertWarning("Ingresos Diversos", "Ya existe un concepto con los datos.")
                     }
                 } else {
-                    AlertWarning("Ingresos Diversos", "Debe ingresar una cantidad mayor a cero")
+                    tools.AlertWarning("Ingresos Diversos", "Debe ingresar una cantidad mayor a cero")
                 }
             } else {
-                AlertWarning("Ingresos Diversos", "Debe escoger un concepto")
+                tools.AlertWarning("Ingresos Diversos", "Debe escoger un concepto")
             }
         }
 
-
         function loadColegiatura() {
-
             $.ajax({
                 url: "../app/controller/ConceptoController.php",
                 method: "GET",
@@ -1090,6 +1251,142 @@
             });
         }
 
+        function onEventPaginacion() {
+            switch (opcion) {
+                case 0:
+                    loadIngenieros("");
+                    break;
+                case 1:
+                    loadIngenieros($("#txtBuscarIngeniero").val());
+                    break;
+            }
+        }
+
+        function loadInitIngenieros() {
+            if (!state) {
+                paginacion = 1;
+                loadIngenieros("");
+                opcion = 0;
+            }
+        }
+
+        function loadIngenieros(search) {
+            let tbIngenieros = $("#tbIngenieros");
+            $.ajax({
+                url: "../app/controller/PersonaController.php",
+                method: "GET",
+                data: {
+                    "type": "listdata",
+                    "search": search,
+                    "posicionPagina": ((paginacion - 1) * filasPorPagina),
+                    "filasPorPagina": filasPorPagina
+                },
+                beforeSend: function() {
+                    tbIngenieros.empty();
+                    tbIngenieros.append(
+                        '<tr class="text-center"><td colspan="8"><img src="./images/spiner.gif"/><p>cargando información.</p></td></tr>'
+                    );
+                    state = true;
+                },
+                success: function(result) {
+                    if (result.estado === 1) {
+                        tbIngenieros.empty();
+                        for (let value of result.personas) {
+                            tbIngenieros.append('<tr ondblclick=onSelectedIngeniero(\'' + value.Dni + '\')>' +
+                                '<td>' + value.Id + '</td>' +
+                                '<td>' + value.Cip + '</td>' +
+                                '<td>' + value.Dni + '</td>' +
+                                '<td>' + value.Ingeniero + '</td>' +
+                                '<td>' + value.Condicion + '</td>' +
+                                '<td>' + value.FechaUltimaCuota + '</td>' +
+                                '<td>' + (value.Deuda <= 0 ? '0 Cuotas' : value.Deuda + ' Cuota(s)') + '</td>' +
+                                '</tr>');
+                        }
+                        totalPaginacion = parseInt(Math.ceil((parseFloat(result.total) / parseInt(
+                            filasPorPagina))));
+                        $("#lblPaginaActual").html(paginacion);
+                        $("#lblPaginaSiguiente").html(totalPaginacion);
+                        state = false;
+                    } else {
+                        tbIngenieros.empty();
+                        tbIngenieros.append(
+                            '<tr class="text-center"><td colspan="8"><p>No se pudo cargar la información.</p></td></tr>'
+                        );
+                        $("#lblPaginaActual").html("0");
+                        $("#lblPaginaSiguiente").html("0");
+                        state = false;
+                    }
+                },
+                error: function(error) {
+                    tbIngenieros.empty();
+                    tbIngenieros.append(
+                        '<tr class="text-center"><td colspan="8"><p>Se produjo un error, intente nuevamente.</p></td></tr>'
+                    );
+                    $("#lblPaginaActual").html("0");
+                    $("#lblPaginaSiguiente").html("0");
+                    state = false;
+                }
+            });
+        }
+
+        function onSelectedIngeniero(idIngeniero) {
+            $.ajax({
+                url: "../app/controller/PersonaController.php",
+                method: "GET",
+                data: {
+                    "type": "data",
+                    "dni": idIngeniero
+                },
+                beforeSend: function() {
+                    $('#mdIngenieros').modal('hide');
+                    tools.AlertInfo("Ingeniero", "En proceso de busqueda.");
+                },
+                success: function(data) {
+                    if (data.estado === 1) {
+                        idDNI = data.object.idDNI;
+                        $("#lblCipSeleccionado").html(data.object.CIP);
+                        $("#lblDocumentSeleccionado").html(data.object.idDNI);
+                        $("#lblDatosSeleccionado").html(data.object.Apellidos + " " + data.object.Nombres);
+                        $("#lblDireccionSeleccionado").html("");
+                        tools.AlertSuccess("Ingeniero", "Los obtuvo los datos correctamente.");
+                    } else {
+                        $("#lblCipSeleccionado").html("--");
+                        $("#lblDocumentSeleccionado").html("--");
+                        $("#lblDatosSeleccionado").html("--");
+                        $("#lblDireccionSeleccionado").html("--");
+                        tools.AlertWarning("Ingeniero", "Se produjo un problema en obtener los datos, intente nuevamente.");
+                    }
+                },
+                error: function(error) {
+                    tools.AlertError("Ingeniero", "Error en obtener los datos, comuníquese con su proveedor o intente nuevamente.");
+                }
+            });
+        }
+
+        function loadComprobantes() {
+            $.ajax({
+                url: "../app/controller/ComprobanteController.php",
+                method: "GET",
+                data: {},
+                beforeSend: function() {
+                    $("#cbComprobante").empty();
+                },
+                success: function(result) {
+                    if (result.estado === 1) {
+                        $("#cbComprobante").append('<option value="">- Seleccione -</option>');
+                        for (let value of result.data) {
+                            $("#cbComprobante").append('<option value="' + value.IdTipoComprobante + '">' + value.Nombre + '</option>')
+                        }
+                    } else {
+                        $("#cbComprobante").append('<option value="">- Seleccione -</option>');
+                    }
+                },
+                error: function(error) {
+                    $("#cbComprobante").append('<option value="">- Seleccione -</option>');
+                }
+            });
+        }
+
         function addCuotas() {
             countCurrentDate++;
             loadCuotas(1);
@@ -1102,21 +1399,31 @@
                 accepts: "application/json",
                 contentType: "application/json",
                 data: JSON.stringify({
-                    "idTipoDocumento": "01",
-                    "idCliente": "00000001",
-                    "numRecibo": "1212121202",
-                    "idUsuario":1,
-                    "estado":'C',
-                    "ingresos":arrayIngresos
+                    "idTipoDocumento": parseInt($("#cbComprobante").val()),
+                    "idCliente": idDNI,
+                    "idUsuario": 1,
+                    "estado": 'C',
+                    "ingresos": arrayIngresos
                 }),
                 beforeSend: function() {
                     $("#cbOtrosConcepto").empty();
                 },
                 success: function(result) {
-                    console.log(result)
+                    if (result.estado === 1) {
+                        arrayIngresos.splice(0, arrayIngresos.length);
+                        addIngresos();
+                        $("#lblCipSeleccionado").html("--");
+                        $("#lblDocumentSeleccionado").html("--");
+                        $("#lblDatosSeleccionado").html("--");
+                        $("#lblDireccionSeleccionado").html("--");
+                        idDNI = 0;
+                        tools.AlertSuccess("Información", result.mensaje);
+                    } else {
+                        tools.AlertWarning("Mensaje", result.mensaje);
+                    }
                 },
                 error: function(error) {
-                    console.log(error);
+                    tools.AlertError("Error", error.responseText);
                 }
             });
         }
@@ -1129,14 +1436,13 @@
                     '<td>' + value.num + '</td>' +
                     '<td>' + value.cantidad + '</td>' +
                     '<td>' + value.concepto + '</td>' +
-                    '<td>' + value.precio + '</td>' +
-                    '<td>' + value.monto + '</td>' +
-                    '<td><button>Edit</button></td>' +
-                    '<td><button onClick="removeIngresos(\'' + value.idConcepto + '\')">Edit</button></td>' +
+                    '<td>' + tools.formatMoney(value.precio) + '</td>' +
+                    '<td>' + tools.formatMoney(value.monto) + '</td>' +
+                    '<td><button class="btn btn-warning" onClick="removeIngresos(\'' + value.idConcepto + '\')"><i class="fa fa-trash"></i></button></td>' +
                     '</tr>');
                 sumaTotal += parseFloat(value.monto);
             }
-            $("#lblSumaTotal").html(sumaTotal);
+            $("#lblSumaTotal").html(tools.formatMoney(sumaTotal));
         }
 
         function removeIngresos(idConcepto) {
@@ -1158,90 +1464,6 @@
                 }
             }
             return ret;
-        }
-
-        function AlertSuccess(title, message) {
-            toastr.options = {
-                "closeButton": false,
-                "debug": false,
-                "newestOnTop": false,
-                "progressBar": false,
-                "positionClass": "toast-top-right",
-                "preventDuplicates": false,
-                "onclick": null,
-                "showDuration": "300",
-                "hideDuration": "1000",
-                "timeOut": "5000",
-                "extendedTimeOut": "1000",
-                "showEasing": "swing",
-                "hideEasing": "linear",
-                "showMethod": "fadeIn",
-                "hideMethod": "fadeOut"
-            }
-            toastr["success"](message, title);
-        }
-
-        function AlertWarning(title, message) {
-            toastr.options = {
-                "closeButton": false,
-                "debug": false,
-                "newestOnTop": false,
-                "progressBar": false,
-                "positionClass": "toast-top-right",
-                "preventDuplicates": false,
-                "onclick": null,
-                "showDuration": "300",
-                "hideDuration": "1000",
-                "timeOut": "5000",
-                "extendedTimeOut": "1000",
-                "showEasing": "swing",
-                "hideEasing": "linear",
-                "showMethod": "fadeIn",
-                "hideMethod": "fadeOut"
-            }
-            toastr["warning"](message, title);
-        }
-
-        function AlertError(title, message) {
-            toastr.options = {
-                "closeButton": false,
-                "debug": false,
-                "newestOnTop": false,
-                "progressBar": false,
-                "positionClass": "toast-top-right",
-                "preventDuplicates": false,
-                "onclick": null,
-                "showDuration": "300",
-                "hideDuration": "1000",
-                "timeOut": "5000",
-                "extendedTimeOut": "1000",
-                "showEasing": "swing",
-                "hideEasing": "linear",
-                "showMethod": "fadeIn",
-                "hideMethod": "fadeOut"
-            }
-            toastr["error"](message, title)
-        }
-
-        function AlertInfo(title, message) {
-            toastr.options = {
-                "closeButton": false,
-                "debug": false,
-                "newestOnTop": false,
-                "progressBar": false,
-                "positionClass": "toast-top-right",
-                "preventDuplicates": false,
-                "onclick": null,
-                "showDuration": "300",
-                "hideDuration": "1000",
-                "timeOut": "5000",
-                "extendedTimeOut": "1000",
-                "showEasing": "swing",
-                "hideEasing": "linear",
-                "showMethod": "fadeIn",
-                "hideMethod": "fadeOut"
-            }
-            toastr["info"](message, title)
         }
     </script>
 </body>
