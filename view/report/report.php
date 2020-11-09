@@ -3,13 +3,29 @@
 define('_MPDF_PATH', '/lib');
 require_once('lib/mpdf/vendor/autoload.php');
 require_once("lib/phpqrcode/qrlib.php");
+require_once '../../app/database/DataBaseConexion.php';
+
+$cmdConcepto = Database::getInstance()->getDb()->prepare("SELECT i.idIngreso,convert(VARCHAR, CAST(i.Fecha AS DATE),103) AS Fecha,i.Serie,i.NumRecibo,
+            p.CIP,p.idDNI,p.Apellidos,p.Nombres,sum(d.Monto) AS Total
+            FROM Ingreso AS i INNER JOIN Persona AS p
+            ON i.idDNI = p.idDNI
+            INNER JOIN Detalle AS d 
+            ON d.idIngreso = i.idIngreso
+            GROUP BY i.idIngreso,i.Fecha,i.Serie,i.NumRecibo,
+            p.CIP,p.idDNI,p.Apellidos,p.Nombres
+            ORDER BY CAST(Fecha AS DATE) ASC
+            offset 0 ROWS FETCH NEXT 10 ROWS only");
+$cmdConcepto->execute();
+
+
 
 $rutaImage = __DIR__ . "/../images/logologin.png";
-$title = "RESUMEN DE INGRESOS";
+$title = "INGRESOS";
 $fechaIngreso = "DE LA FECHA: 11/02/2020";
 $recibos = "RECIBOS DEL : B001-000001 al B001-000002";
+$sumaTotal = 0;
 
-$html = '
+    $html = '
 <html>
 <head>
 <style>
@@ -91,53 +107,74 @@ mpdf-->
         </td>
         <td width="85%" style="border: 0mm solid #888888;text-align: center;vertical-align: middle;">
             <span style="font-size: 15pt; color: black; font-family: sans;">
-                <b>'.$title.' </b>
+                <b>' . $title . ' </b>
             </span>
             <br>
             <span style="font-size: 10pt; color: black; font-family: sans;">
-                '.$fechaIngreso.' 
+               
         </span>
         </td>
     </tr>
 </table>
 <div style="text-align: right">
-    '.$recibos .'
+    
 </div>
 <br />
 <table class="items" width="100%" style="font-size: 11pt; border-collapse: collapse; " cellpadding="8">
     <thead>
         <tr>
             <th width="5%">N°</th>
-            <th width="10%">Codigo</th>
-            <th width="35%">Concepto</th>
-            <th width="10%">Cant.</th>
-            <th width="20%" colspan="2">Cip Junin</th>
-            <th width="20%" colspan="2">Cip Nacional</th>
+            <th width="10%">Fecha</th>
+            <th width="13%">Comprobante</th>
+            <th width="25%">RUC/ Dni</th>
+            <th width="35%">Cliente</th>
+            <th width="10%" >Total</th>
         </tr>
     </thead>
     <tbody>
 <!-- ITEMS HERE -->
-        <tr>
-            <td align="center">1</td>
-            <td align="center">101010</td>
-            <td>Large pack Hoover bags</td>
-            <td align="center">1</td>
-            <td align="right">0.00</td>
-            <td align="right">0.00</td>
-            <td align="right">0.00</td>
-            <td align="right">0.00</td>
-        </tr>
+' ?>
+
+<?php
+$count = 0;
+while ($row = $cmdConcepto->fetch()) {
+    // $count++;
+    // array_push($arrayIngresos, array(
+    //     "id"=>$count+$posicionPagina,
+    //     "idIngreso" => $row["idIngreso"],
+    //     "fecha" => $row["Fecha"],
+    //     "serie" => $row["Serie"],
+    //     "numRecibo" => $row["NumRecibo"],
+    //     "cip" => $row["CIP"],
+    //     "idDNI" => $row["idDNI"],
+    //     "apellidos" => $row["Apellidos"],
+    //     "nombres" => $row["Nombres"],
+    //     "total" => $row["Total"],
+    // ));
+    $count++;
+    $html .= '<tr>
+    <td align="center">'.$count.'</td>
+    <td align="center">'.$row["Fecha"].'</td>
+    <td>'.$row["Serie"].'-'.$row["NumRecibo"].'</td>
+    <td align="center">'.$row["idDNI"].'</td>
+    <td align="center">'.$row["Nombres"].' '.$row["Apellidos"].'</td>
+    <td align="right">'.number_format($row["Total"],2,".","").'</td>
+</tr>';
+$sumaTota+=$row["Total"];
+}
+
+$html .= '  
 <!-- END ITEMS HERE -->
     </tbody>
-    <tfoot>
+    <!-- <tfoot>
         <tr>
-            <td align="center" colspan="4"></td>
+            <td align="center"></td>
             <td align="right">0.00</td>
             <td align="right">0.00</td>
             <td align="right">0.00</td>
             <td align="right">0.00</td>
         </tr>
-    </tfoot>
+    </tfoot>!-->
 </table>
 <br>
 <div>
@@ -155,7 +192,7 @@ mpdf-->
         </tr>
         <tr>
             <th align="left">TOTAL</th>
-            <th align="right">0.00</th>
+            <th align="right">'.number_format($sumaTota,2,".","").'</th>
         </tr>
     </thead>
 </table>
@@ -165,12 +202,12 @@ mpdf-->
 
 
 $mpdf = new \Mpdf\Mpdf([
-	'margin_left' => 10,
-	'margin_right' => 10,
-	'margin_top' => 18,
-	'margin_bottom' => 25,
-	'margin_header' => 10,
-	'margin_footer' => 10
+    'margin_left' => 10,
+    'margin_right' => 10,
+    'margin_top' => 18,
+    'margin_bottom' => 25,
+    'margin_header' => 10,
+    'margin_footer' => 10
 ]);
 
 $mpdf->SetProtection(array('print'));
