@@ -15,9 +15,16 @@ class IngresosAdo2
         try {
             $array = array();
             $arrayIngresos = array();
-            $cmdConcepto = Database::getInstance()->getDb()->prepare("SELECT * FROM Ingreso
-            order by CAST(Fecha as date) asc
-            offset ? rows fetch next ? rows only");
+            $cmdConcepto = Database::getInstance()->getDb()->prepare("SELECT i.idIngreso,convert(VARCHAR, CAST(i.Fecha AS DATE),103) AS Fecha,i.Serie,i.NumRecibo,
+            p.CIP,p.idDNI,p.Apellidos,p.Nombres,sum(d.Monto) AS Total
+            FROM Ingreso AS i INNER JOIN Persona AS p
+            ON i.idDNI = p.idDNI
+            INNER JOIN Detalle AS d 
+            ON d.idIngreso = i.idIngreso
+            GROUP BY i.idIngreso,i.Fecha,i.Serie,i.NumRecibo,
+            p.CIP,p.idDNI,p.Apellidos,p.Nombres
+            ORDER BY CAST(Fecha AS DATE) ASC
+            offset ? ROWS FETCH NEXT ? ROWS only");
             $cmdConcepto->bindParam(1, $posicionPagina, PDO::PARAM_INT);
             $cmdConcepto->bindParam(2, $filasPorPagina, PDO::PARAM_INT);
             $cmdConcepto->execute();
@@ -28,14 +35,14 @@ class IngresosAdo2
                 array_push($arrayIngresos, array(
                     "id"=>$count+$posicionPagina,
                     "idIngreso" => $row["idIngreso"],
-                    "idDNI" => $row["idDNI"],
-                    "numRecibo" => $row["NumRecibo"],
                     "fecha" => $row["Fecha"],
-                    "idUsuario" => $row["idUsuario"],
-                    "estado" => $row["Estado"],
-                    "deposito" => $row["Deposito"],
-                    "observacion" => $row["Observacion"],
-                    "onlyFecha" => $row["OnlyFecha"]
+                    "serie" => $row["Serie"],
+                    "numRecibo" => $row["NumRecibo"],
+                    "cip" => $row["CIP"],
+                    "idDNI" => $row["idDNI"],
+                    "apellidos" => $row["Apellidos"],
+                    "nombres" => $row["Nombres"],
+                    "total" => $row["Total"],
                 ));
             }
 

@@ -111,7 +111,10 @@
         <!-- end footer -->
     </div>
     <!-- ./wrapper -->
+    <script src="js/tools.js"></script>
     <script>
+        let tools = new Tools();
+
         let state = false;
         let totalPaginacion = 0;
         let paginacion = 0;
@@ -183,9 +186,9 @@
                                 '</td>' +
                                 '<td>' + btnOpcion1+' '+btnOpcion2+ '</td>' +
                                 '<td>' + ingresos.fecha + '</td>' +
-                                '<td>' + ingresos.numRecibo + '</td>' +
-                                '<td>' + ingresos.idUsuario + '</td>' +
-                                '<td>' + '' + '</td>' +
+                                '<td>' + ingresos.serie+'-'+ingresos.numRecibo + '</td>' +
+                                '<td>' + ingresos.idDNI+'</br>'+ingresos.nombres+' '+ingresos.apellidos + '</td>' +
+                                '<td>' + tools.formatMoney(ingresos.total )+ '</td>' +
                                 '<td>' + btnEstadoSunat + '</td>' +
                                 '<td>' + '' + '</td>' +
                                 '</tr>'
