@@ -20,8 +20,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             "estado" => 2,
             "mensaje" => $result
         ));
-    }
-        
-       
+    }        
     exit();
 }

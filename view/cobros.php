@@ -97,9 +97,9 @@
                                 </div>
                                 <div class="modal-body">
                                     <div class="row">
-                                        <div class="col-md-8">
+                                        <div class="col-md-7">
                                             <button id="btnCuotaNormal" type="button" class="btn btn-success">
-                                                <i class="fa fa-plus"></i> Normal
+                                                <i class="fa fa-plus"></i> Ordinaria
                                             </button>
                                             <button id="btnCuotaAmnistia" type="button" class="btn btn-success">
                                                 <i class="fa fa-plus"></i> Amnistia
@@ -108,16 +108,22 @@
                                                 <i class="fa fa-plus"></i> Vitalicio
                                             </button>
                                         </div>
-                                        <div class="col-md-4">
+                                        <div class="col-md-5">
                                             <h4 class="text-info" id="lblCuotasMensaje">
-                                                Cuotas normales
+                                                Cuotas Ordinarias
                                             </h4>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-md-6">
                                             <div class="checkbox">
                                                 <label>
                                                     <input type="checkbox" id="selectall" checked> Seleccionar todo
                                                 </label>
                                             </div>
-                                            <button id="btnAddCuota" type="button" class="btn btn-success">
+                                        </div>
+                                        <div class="col-md-6 text-right">
+                                            <button id="btnAddCuota" type="button" class="btn btn-danger">
                                                 <i class="fa fa-plus"></i> Add
                                             </button>
                                         </div>
@@ -134,7 +140,7 @@
                                             </table>
                                         </div>
                                     </div>
-                                    <div class="row" style="overflow-x: auto; height:280px">
+                                    <div class="row" style="overflow-x: auto; height:260px">
                                         <div class="col-md-12">
                                             <table class="table table-striped table-hover">
                                                 <tbody id="tbCuotas">
@@ -146,12 +152,12 @@
                                     <div class="row no-padding border" style="background-color: #337ab7;color:white;">
                                         <div class="col-md-12 text-center">
                                             <h4 id="lblTotalCuotas" class="no-margin margin-5px">TOTAL DE CUOTAS: 0.00</h4>
-                                            <h5 id="lblNumeroCuotas" class="no-margin margin-5px">CUOTAS DEL: 01/10/2020 al 10/10/2020</h5>
+                                            <h5 id="lblNumeroCuotas" class="no-margin margin-5px">CUOTAS DEL: 0/0000 al 00/0000</h5>
                                         </div>
                                     </div>
                                 </div>
                                 <div class="modal-footer">
-                                    <button type="button" class="btn btn-warning" name="btnAceptar" id="btnaceptar">
+                                    <button type="button" class="btn btn-warning" id="btnAceptarCuotas">
                                         <i class="fa fa-check"></i> Aceptar</button>
                                     <button type="button" class="btn btn-primary" id="btnCancelarCuotas">
                                         <i class="fa fa-remove"></i> Cancelar</button>
@@ -662,7 +668,7 @@
                                     </div>
                                     <div class="row" style="overflow-x: auto; height:280px">
                                         <div class="col-md-12">
-                                            <table class="table table-striped table-hover table-sm">
+                                            <table class="table table-striped table-hover table-bordered table-sm">
                                                 <thead>
                                                     <tr>
                                                         <th>#</th>
@@ -831,8 +837,14 @@
     <script src="js/tools.js"></script>
     <script>
         let tools = new Tools();
+
+        //cuotas
         let cuotas = [];
         let countCurrentDate = 0;
+        let cuotasEstate = false;
+        let cuotasInicio = "";
+        let cuotasFin = "";
+
         //ingresos totales
         let arrayIngresos = [];
         let sumaTotal = 0;
@@ -904,25 +916,32 @@
 
         function componentesCuotas() {
             $("#btnCuotas").click(function() {
-                $('#mdCuotas').modal('show');
-                loadCuotas(1);
+                if (idDNI == 0) {
+                    tools.AlertWarning("Cuotas", "No selecciono ningún ingeniero para obtener sus cuotas.")
+                } else {
+                    $('#mdCuotas').modal('show');
+                    loadCuotas(1);
+                }
+
             });
 
             $("#btnCuotas").keypress(function() {
-                if (event.keyCode === 13) {
+                if (idDNI == 0) {
+                    tools.AlertWarning("Cuotas", "No selecciono ningún ingeniero para obtener sus cuotas.")
+                } else {
                     $('#mdCuotas').modal('show');
                     loadCuotas(1);
                 }
                 event.preventDefault();
             });
             $("#btnCuotaNormal").click(function() {
-                $("#lblCuotasMensaje").html("Cuotas Normales");
+                $("#lblCuotasMensaje").html("Cuotas Ordinarias");
                 loadCuotas(1);
             });
 
             $("#btnCuotaNormal").keypress(function(event) {
                 if (event.keyCode === 13) {
-                    $("#lblCuotasMensaje").html("Cuotas Normales");
+                    $("#lblCuotasMensaje").html("Cuotas Ordinarias");
                     loadCuotas(1);
                 }
                 event.preventDefault();
@@ -959,21 +978,11 @@
             });
 
             $("#btnAddCuota").click(function() {
-                cuotas.push({
-                    "mes": "mi pene",
-                    "monto": 20,
-                    "year": "chucha"
-                });
                 addCuotas();
             });
 
             $("#btnAddCuota").keypress(function(event) {
                 if (event.keyCode === 13) {
-                    cuotas.push({
-                        "mes": "mi pene",
-                        "monto": 20,
-                        "year": "chucha"
-                    });
                     addCuotas();
                 }
                 event.preventDefault();
@@ -987,6 +996,17 @@
             $("#btnCancelarCuotas").click(function() {
                 $('#mdCuotas').modal('hide');
                 countCurrentDate = 0;
+            });
+
+            $("#btnAceptarCuotas").click(function() {
+                validateIngresoCuotas();
+            });
+
+            $("#btnAceptarCuotas").keypress(function(event) {
+                if (event.keyCode === 13) {
+                    validateIngresoCuotas();
+                }
+                event.preventDefault();
             });
         }
 
@@ -1160,183 +1180,6 @@
             });
         }
 
-        function validateIngresoColegiatura() {
-
-            //if (!validateDuplicate($("#cbOtrosConcepto").val())) {
-            for (let value of colegiaturas) {
-                arrayIngresos.push({
-                    "idConcepto": parseInt(value.idConcepto),
-                    "num": (arrayIngresos.length + 1),
-                    "categoria": value.Categoria,
-                    "cantidad": 1,
-                    "concepto": value.Concepto,
-                    "precio": parseFloat(value.Precio),
-                    "monto": parseInt(value.Precio) * 1
-                });
-            }
-            addIngresos();
-            $('#mdColegiatura').modal('hide');
-
-            //     addIngresos();
-            //     $('#mdOtros').modal('hide');
-            //     $("#txtCantidadOtrosConceptos").val("1");
-            //     $("#txtMontoOtrosConceptos").val("");
-            // } else {
-            //     tools.AlertWarning("Ingresos Diversos", "Ya existe un concepto con los datos.")
-            // }
-        }
-
-        function validateIngresoOtros() {
-            if ($("#cbOtrosConcepto").val() != "") {
-                if ($("#txtCantidadOtrosConceptos").val() !== "") {
-                    if (!validateDuplicate($("#cbOtrosConcepto").val())) {
-                        arrayIngresos.push({
-                            "idConcepto": parseInt($("#cbOtrosConcepto").val()),
-                            "num": (arrayIngresos.length + 1),
-                            "categoria": 0,
-                            "cantidad": parseInt($('#txtCantidadOtrosConceptos').val()),
-                            "concepto": $('#cbOtrosConcepto option:selected').html(),
-                            "precio": parseFloat($("#cbOtrosConcepto").find('option:selected').attr('id')),
-                            "monto": parseInt($("#txtCantidadOtrosConceptos").val()) * parseFloat($("#cbOtrosConcepto").find('option:selected').attr('id'))
-                        });
-                        addIngresos();
-                        $('#mdOtros').modal('hide');
-                        $("#txtCantidadOtrosConceptos").val("1");
-                        $("#txtMontoOtrosConceptos").val("");
-                    } else {
-                        tools.AlertWarning("Ingresos Diversos", "Ya existe un concepto con los datos.")
-                    }
-                } else {
-                    tools.AlertWarning("Ingresos Diversos", "Debe ingresar una cantidad mayor a cero")
-                }
-            } else {
-                tools.AlertWarning("Ingresos Diversos", "Debe escoger un concepto")
-            }
-        }
-
-        function loadColegiatura() {
-            $.ajax({
-                url: "../app/controller/ConceptoController.php",
-                method: "GET",
-                data: {
-                    "type": "typecolegiatura",
-                    "categoria": 4
-                },
-                beforeSend: function() {
-                    $("#ctnConceptos").empty();
-                    colegiaturas.splice(0, colegiaturas.length);
-                },
-                success: function(result) {
-
-                    if (result.estado === 1) {
-                        let totalColegiatura = 0;
-                        colegiaturas = result.data;
-                        for (let value of colegiaturas) {
-                            $("#ctnConceptos").append('<div id="' + value.idConcepto + '" class="row">' +
-                                '<div class="col-md-8 text-left">' +
-                                '<p>' + value.Concepto + '</p>' +
-                                '</div>' +
-                                '<div class="col-md-4 text-right">' +
-                                '<p>' + value.Precio + '</panel>' +
-                                '</div>');
-                            totalColegiatura += parseFloat(value.Precio);
-                        }
-                        $("#lblTotalColegiatura").html(tools.formatMoney(totalColegiatura));
-
-                    } else {
-
-                    }
-                },
-                error: function(error) {
-                    console.log(error);
-                }
-            });
-        }
-
-        function loadCuotas(categoria) {
-            $.ajax({
-                url: "../app/controller/ConceptoController.php",
-                method: "GET",
-                data: {
-                    "type": "typecolegiatura",
-                    "categoria": categoria,
-                    "dni": "20707246",
-                    "mes": countCurrentDate
-                },
-                beforeSend: function() {
-                    $("#tbCuotas").empty();
-                    cuotas.splice(0, cuotas.length);
-
-                },
-                success: function(result) {
-                    console.log(result)
-                    if (result.estado === 1) {
-                        cuotas = result.data;
-                        let totalCuotas = 0;
-                        for (let value of cuotas) {
-                            $("#tbCuotas").append('<tr >' +
-                                '<td class="no-padding"><div><label><input type="checkbox" class="cuotasid" checked> ' + value.mes + ' - ' + value.year + '</label></div></td>' +
-                                '<td class="no-padding">' + tools.formatMoney(value.monto) + '</td>' +
-                                +'</tr>');
-                            totalCuotas += parseFloat(value.monto);
-                        }
-                        $("#lblTotalCuotas").html("TOTAL DE " + (result.data.length) + " CUOTAS: " + tools.formatMoney(totalCuotas));
-
-                    } else {}
-                },
-                error: function(error) {
-                    console.log(error);
-                }
-            });
-        }
-
-        function loadCertificado() {
-
-        }
-
-        function loadPeritaje() {
-
-        }
-
-        function loadOtros() {
-            $.ajax({
-                url: "../app/controller/ConceptoController.php",
-                method: "GET",
-                data: {
-                    "type": "typecolegiatura",
-                    "categoria": 100,
-                    "dni": "20707246",
-                },
-                beforeSend: function() {
-                    $("#cbOtrosConcepto").empty();
-                },
-                success: function(result) {
-                    if (result.estado === 1) {
-                        $("#cbOtrosConcepto").append(' <option id="" value="">- Seleccione -</option>');
-                        for (let value of result.data) {
-                            $("#cbOtrosConcepto").append('<option id="' + value.Precio + '" value="' + value.IdConcepto + '">' + value.Concepto + ' (' + value.Precio + ')</option>');
-                        }
-                    } else {
-
-                    }
-                },
-                error: function(error) {
-                    console.log(error);
-                }
-            });
-        }
-
-        function onEventPaginacion() {
-            switch (opcion) {
-                case 0:
-                    loadIngenieros("");
-                    break;
-                case 1:
-                    loadIngenieros($("#txtBuscarIngeniero").val());
-                    break;
-            }
-        }
-
         function loadInitIngenieros() {
             if (!state) {
                 paginacion = 1;
@@ -1404,6 +1247,271 @@
             });
         }
 
+        function loadColegiatura() {
+            $.ajax({
+                url: "../app/controller/ConceptoController.php",
+                method: "GET",
+                data: {
+                    "type": "typecolegiatura",
+                    "categoria": 4
+                },
+                beforeSend: function() {
+                    $("#ctnConceptos").empty();
+                    colegiaturas.splice(0, colegiaturas.length);
+                },
+                success: function(result) {
+                    if (result.estado === 1) {
+                        let totalColegiatura = 0;
+                        colegiaturas = result.data;
+                        for (let value of colegiaturas) {
+                            $("#ctnConceptos").append('<div id="' + value.idConcepto + '" class="row">' +
+                                '<div class="col-md-8 text-left">' +
+                                '<p>' + value.Concepto + '</p>' +
+                                '</div>' +
+                                '<div class="col-md-4 text-right">' +
+                                '<p>' + tools.formatMoney(value.Precio) + '</panel>' +
+                                '</div>');
+                            totalColegiatura += parseFloat(value.Precio);
+                        }
+                        $("#lblTotalColegiatura").html(tools.formatMoney(totalColegiatura));
+
+                    } else {
+
+                    }
+                },
+                error: function(error) {
+                    console.log(error);
+                }
+            });
+        }
+
+        function loadCuotas(categoria) {
+            $.ajax({
+                url: "../app/controller/ConceptoController.php",
+                method: "GET",
+                data: {
+                    "type": "typecolegiatura",
+                    "categoria": categoria,
+                    "dni": idDNI,
+                    "mes": countCurrentDate
+                },
+                beforeSend: function() {
+                    $("#tbCuotas").empty();
+                    $("#tbCuotas").append('<tr class="text-center"><td colspan="2"><img src="./images/spiner.gif"/><p>cargando información.</p></td></tr>');
+                    cuotas.splice(0, cuotas.length);
+                },
+                success: function(result) {
+                    //console.log(result)
+                    if (result.estado === 1) {
+                        $("#tbCuotas").empty();
+                        cuotas = result.data;
+                        if (cuotas.length > 0) {
+                            let totalCuotas = 0;
+                            for (let value of cuotas) {
+                                let monto = 0;
+                                for (let c of value.concepto) {
+                                    monto += parseFloat(c.Precio);
+                                }
+                                $("#tbCuotas").append('<tr >' +
+                                    '<td class="no-padding"><div><label><input type="checkbox" class="cuotasid" checked> ' + nombreMes(value.mes) + ' - ' + value.year + '</label></div></td>' +
+                                    '<td class="no-padding">' + tools.formatMoney(monto) + '</td>' +
+                                    +'</tr>');
+                                totalCuotas += parseFloat(monto);
+                            }
+                            $("#lblTotalCuotas").html("TOTAL DE " + (cuotas.length) + " CUOTAS: " + tools.formatMoney(totalCuotas));
+                            if (cuotas.length > 0) {
+                                $("#lblNumeroCuotas").html("CUOTAS DEL: " + cuotas[0].mes + "/" + cuotas[0].year + " al " + cuotas[cuotas.length - 1].mes + "/" + cuotas[cuotas.length - 1].year);
+                            }
+                        } else {
+                            $("#tbCuotas").append('<tr class="text-center"><td colspan="2"><img src="./images/ayuda.png" width="80"/><p>Cuotas al Día has click en boton (+add) para más cuotas.</p></td></tr>');
+                            $("#lblTotalCuotas").html("TOTAL DE 0 CUOTAS: 0.00");
+                            $("#lblNumeroCuotas").html("CUOTAS DEL: 00/0000 al 00/0000");
+                        }
+                    } else {
+                        $("#tbCuotas").empty();
+                        $("#tbCuotas").append('<tr class="text-center"><p>No se pudo cargar la información, intente nuevamente.</p></td></tr>');
+                        $("#lblTotalCuotas").html("TOTAL DE 0 CUOTAS: 0.00");
+                        $("#lblNumeroCuotas").html("CUOTAS DEL: 00/0000 al 00/0000");
+                    }
+                },
+                error: function(error) {
+                    //  console.log(error);
+                    $("#tbCuotas").empty();
+                    $("#tbCuotas").append('<tr class="text-center"><p>Se produjo un error intente nuevamente o comuníquese con su proveedor.</p></td></tr>');
+                }
+            });
+        }
+
+        function loadCertificado() {
+
+        }
+
+        function loadPeritaje() {
+
+        }
+
+        function loadOtros() {
+            $.ajax({
+                url: "../app/controller/ConceptoController.php",
+                method: "GET",
+                data: {
+                    "type": "typecolegiatura",
+                    "categoria": 100,
+                    "dni": "20707246",
+                },
+                beforeSend: function() {
+                    $("#cbOtrosConcepto").empty();
+                },
+                success: function(result) {
+                    if (result.estado === 1) {
+                        $("#cbOtrosConcepto").append(' <option id="" value="">- Seleccione -</option>');
+                        for (let value of result.data) {
+                            $("#cbOtrosConcepto").append('<option id="' + value.Precio + '" value="' + value.IdConcepto + '">' + value.Concepto + ' (' + value.Precio + ')</option>');
+                        }
+                    } else {
+
+                    }
+                },
+                error: function(error) {
+                    console.log(error);
+                }
+            });
+        }
+
+        function loadComprobantes() {
+            $.ajax({
+                url: "../app/controller/ComprobanteController.php",
+                method: "GET",
+                data: {},
+                beforeSend: function() {
+                    $("#cbComprobante").empty();
+                },
+                success: function(result) {
+                    if (result.estado === 1) {
+                        $("#cbComprobante").append('<option value="">- Seleccione -</option>');
+                        for (let value of result.data) {
+                            $("#cbComprobante").append('<option value="' + value.IdTipoComprobante + '">' + value.Nombre + '</option>')
+                        }
+                    } else {
+                        $("#cbComprobante").append('<option value="">- Seleccione -</option>');
+                    }
+                },
+                error: function(error) {
+                    $("#cbComprobante").append('<option value="">- Seleccione -</option>');
+                }
+            });
+        }
+
+        function validateIngresoColegiatura() {
+            for (let value of colegiaturas) {
+                if (!validateDuplicate(value.IdConcepto)) {
+                    arrayIngresos.push({
+                        "idConcepto": parseInt(value.IdConcepto),
+                        "categoria": parseInt(value.Categoria),
+                        "cantidad": 1,
+                        "concepto": value.Concepto,
+                        "precio": parseFloat(value.Precio),
+                        "monto": parseFloat(value.Precio)
+                    });
+                } else {
+                    for (let i = 0; i < arrayIngresos.length; i++) {
+                        if (arrayIngresos[i].idConcepto == value.IdConcepto) {
+                            let newConcepto = arrayIngresos[i];
+                            newConcepto.cantidad = newConcepto.cantidad + 1;
+                            newConcepto.precio = value.Precio;
+                            newConcepto.monto = parseFloat(newConcepto.precio) * parseFloat(newConcepto.cantidad)
+                            arrayIngresos[i] = newConcepto;
+                            break;
+                        }
+                    }
+                }
+            }
+            addIngresos();
+            $('#mdColegiatura').modal('hide');
+        }
+
+        function validateIngresoCuotas() {
+            if (cuotas.length > 0) {
+                removeIngresos(0, 1);
+                removeIngresos(0, 2);
+                removeIngresos(0, 3);
+            }
+            for (let value of cuotas) {
+                for (let c of value.concepto) {
+                    if (!validateDuplicate(c.IdConcepto)) {
+                        arrayIngresos.push({
+                            "idConcepto": parseInt(c.IdConcepto),
+                            "categoria": parseInt(c.Categoria),
+                            "cantidad": 1,
+                            "concepto": c.Concepto,
+                            "precio": parseFloat(c.Precio),
+                            "monto": parseFloat(c.Precio)
+                        });
+                    } else {
+                        for (let i = 0; i < arrayIngresos.length; i++) {
+                            if (arrayIngresos[i].idConcepto == c.IdConcepto) {
+                                let newConcepto = arrayIngresos[i];
+                                newConcepto.categoria = parseInt(c.Categoria);
+                                newConcepto.cantidad = newConcepto.cantidad + 1;
+                                newConcepto.precio = c.Precio;
+                                newConcepto.monto = parseFloat(newConcepto.precio) * parseFloat(newConcepto.cantidad)
+                                arrayIngresos[i] = newConcepto;
+                                break;
+                            }
+                        }
+                    }
+                }
+            }
+            if (cuotas.length > 0) {
+                cuotasEstate = true;
+                cuotasInicio = cuotas[0].day + "/" + cuotas[0].mes + "/" + cuotas[0].year;
+                cuotasFin = cuotas[cuotas.length - 1].day + "/" + cuotas[cuotas.length - 1].mes + "/" + cuotas[cuotas.length - 1].year;
+            }
+            console.log(cuotasInicio)
+            console.log(cuotasFin)
+            addIngresos();
+            $('#mdCuotas').modal('hide');
+            countCurrentDate = 0;
+        }
+
+        function validateIngresoOtros() {
+            if ($("#cbOtrosConcepto").val() != "") {
+                if ($("#txtCantidadOtrosConceptos").val() !== "") {
+                    if (!validateDuplicate($("#cbOtrosConcepto").val())) {
+                        arrayIngresos.push({
+                            "idConcepto": parseInt($("#cbOtrosConcepto").val()),
+                            "categoria": 100,
+                            "cantidad": parseFloat($('#txtCantidadOtrosConceptos').val()),
+                            "concepto": $('#cbOtrosConcepto option:selected').html(),
+                            "precio": parseFloat($("#cbOtrosConcepto").find('option:selected').attr('id')),
+                            "monto": parseFloat($("#txtCantidadOtrosConceptos").val()) * parseFloat($("#cbOtrosConcepto").find('option:selected').attr('id'))
+                        });
+                        addIngresos();
+                        $('#mdOtros').modal('hide');
+                        $("#txtCantidadOtrosConceptos").val("1");
+                        $("#txtMontoOtrosConceptos").val("");
+                    } else {
+                        tools.AlertWarning("Ingresos Diversos", "Ya existe un concepto con los datos.")
+                    }
+                } else {
+                    tools.AlertWarning("Ingresos Diversos", "Debe ingresar una cantidad mayor a cero")
+                }
+            } else {
+                tools.AlertWarning("Ingresos Diversos", "Debe escoger un concepto")
+            }
+        }
+
+        function onEventPaginacion() {
+            switch (opcion) {
+                case 0:
+                    loadIngenieros("");
+                    break;
+                case 1:
+                    loadIngenieros($("#txtBuscarIngeniero").val());
+                    break;
+            }
+        }
+
         function onSelectedIngeniero(idIngeniero) {
             $.ajax({
                 url: "../app/controller/PersonaController.php",
@@ -1438,30 +1546,6 @@
             });
         }
 
-        function loadComprobantes() {
-            $.ajax({
-                url: "../app/controller/ComprobanteController.php",
-                method: "GET",
-                data: {},
-                beforeSend: function() {
-                    $("#cbComprobante").empty();
-                },
-                success: function(result) {
-                    if (result.estado === 1) {
-                        $("#cbComprobante").append('<option value="">- Seleccione -</option>');
-                        for (let value of result.data) {
-                            $("#cbComprobante").append('<option value="' + value.IdTipoComprobante + '">' + value.Nombre + '</option>')
-                        }
-                    } else {
-                        $("#cbComprobante").append('<option value="">- Seleccione -</option>');
-                    }
-                },
-                error: function(error) {
-                    $("#cbComprobante").append('<option value="">- Seleccione -</option>');
-                }
-            });
-        }
-
         function addCuotas() {
             countCurrentDate++;
             loadCuotas(1);
@@ -1478,10 +1562,12 @@
                     "idCliente": idDNI,
                     "idUsuario": 1,
                     "estado": 'C',
-                    "ingresos": arrayIngresos
+                    "ingresos": arrayIngresos,
+                    "cuotasInicio": cuotasInicio,
+                    "cuotasFin": cuotasFin
                 }),
                 beforeSend: function() {
-                    $("#cbOtrosConcepto").empty();
+                    tools.AlertInfo("Ingreso", "Se está procesando el registro.");
                 },
                 success: function(result) {
                     if (result.estado === 1) {
@@ -1492,13 +1578,13 @@
                         $("#lblDatosSeleccionado").html("--");
                         $("#lblDireccionSeleccionado").html("--");
                         idDNI = 0;
-                        tools.AlertSuccess("Información", result.mensaje);
+                        tools.AlertSuccess("Ingreso", result.mensaje);
                     } else {
-                        tools.AlertWarning("Mensaje", result.mensaje);
+                        tools.AlertWarning("Ingreso", result.mensaje);
                     }
                 },
                 error: function(error) {
-                    tools.AlertError("Error", error.responseText);
+                    tools.AlertError("Ingreso", "Se produjo un error: " + error.responseText);
                 }
             });
         }
@@ -1506,25 +1592,91 @@
         function addIngresos() {
             $("#tbIngresos").empty();
             sumaTotal = 0;
-            for (let value of arrayIngresos) {                
-                    $("#tbIngresos").append('<tr>' +
-                        '<td>' + value.num + '</td>' +
-                        '<td>' + value.cantidad + '</td>' +
-                        '<td>' + value.concepto + '</td>' +
-                        '<td>' + tools.formatMoney(value.precio) + '</td>' +
-                        '<td>' + tools.formatMoney(value.monto) + '</td>' +
-                        '<td><button class="btn btn-warning" onClick="removeIngresos(\'' + value.idConcepto + '\')"><i class="fa fa-trash"></i></button></td>' +
-                        '</tr>');                
+            let arrayRenderTable = [];
+
+            for (let value of arrayIngresos) {
+                if (!arrayRenderTable.find(ar => ar.categoria == value.categoria && value.categoria == 1 ||
+                        ar.categoria == value.categoria && value.categoria == 2 ||
+                        ar.categoria == value.categoria && value.categoria == 3 ||
+                        ar.categoria == value.categoria && value.categoria == 4)) {
+                    arrayRenderTable.push({
+                        "idConcepto": parseInt(value.idConcepto),
+                        "categoria": value.categoria,
+                        "cantidad": value.cantidad,
+                        "concepto": value.categoria == 1 ? "Cuotas Ordinarias" : value.categoria == 4 ? "Colegiatura" : value.categoria == 2 ? "Cuotas de Administia" : value.categoria == 3 ? "Cuotas de Vitalicio" : value.concepto,
+                        "precio": parseFloat(value.precio),
+                        "monto": parseFloat(value.precio) * parseFloat(value.cantidad)
+                    });
+                } else {
+                    for (let i = 0; i < arrayRenderTable.length; i++) {
+                        if (arrayRenderTable[i].categoria == value.categoria) {
+                            let newConcepto = arrayRenderTable[i];
+                            newConcepto.idConcepto = parseInt(value.idConcepto);
+                            newConcepto.categoria = parseInt(value.categoria);
+                            newConcepto.cantidad = newConcepto.cantidad;
+                            newConcepto.concepto = value.categoria == 1 ? "Cuotas Ordinarias" : value.categoria == 4 ? "Colegiatura" : value.categoria == 2 ? "Cuotas de Administia" : value.categoria == 3 ? "Cuotas de Vitalicio" : value.concepto;
+                            newConcepto.precio += parseFloat(value.precio);
+                            newConcepto.monto = newConcepto.precio * newConcepto.cantidad;
+                            arrayRenderTable[i] = newConcepto;
+                        }
+                    }
+                }
+            }
+
+            let count = 0;
+            for (let value of arrayRenderTable) {
+                count++;
+                $("#tbIngresos").append('<tr>' +
+                    '<td>' + count + '</td>' +
+                    '<td>' + value.cantidad + '</td>' +
+                    '<td>' + value.concepto + '</td>' +
+                    '<td>' + tools.formatMoney(value.precio) + '</td>' +
+                    '<td>' + tools.formatMoney(value.monto) + '</td>' +
+                    '<td><button class="btn btn-warning" onClick="removeIngresos(\'' + value.idConcepto + '\',\'' + value.categoria + '\')"><i class="fa fa-trash"></i></button></td>' +
+                    '</tr>');
                 sumaTotal += parseFloat(value.monto);
             }
+
             $("#lblSumaTotal").html(tools.formatMoney(sumaTotal));
         }
 
-        function removeIngresos(idConcepto) {
+        function removeIngresos(idConcepto, categoria) {
             for (let i = 0; i < arrayIngresos.length; i++) {
-                if (arrayIngresos[i].idConcepto === parseInt(idConcepto)) {
-                    arrayIngresos.splice(i, 1);
-                    break;
+                if (arrayIngresos[i].categoria == 100) {
+                    if (arrayIngresos[i].idConcepto === parseInt(idConcepto)) {
+                        arrayIngresos.splice(i, 1);
+                        i--;
+                        break;
+                    }
+                } else if (arrayIngresos[i].categoria == 5) {
+                    if (arrayIngresos[i].idConcepto === parseInt(idConcepto)) {
+                        arrayIngresos.splice(i, 1);
+                        i--;
+                        break;
+                    }
+                } else if (arrayIngresos[i].categoria == 6) {
+                    if (arrayIngresos[i].idConcepto === parseInt(idConcepto)) {
+                        arrayIngresos.splice(i, 1);
+                        i--;
+                        break;
+                    }
+                } else if (arrayIngresos[i].categoria == 7) {
+                    if (arrayIngresos[i].idConcepto === parseInt(idConcepto)) {
+                        arrayIngresos.splice(i, 1);
+                        i--;
+                        break;
+                    }
+                } else if (arrayIngresos[i].categoria == 8) {
+                    if (arrayIngresos[i].idConcepto === parseInt(idConcepto)) {
+                        arrayIngresos.splice(i, 1);
+                        i--;
+                        break;
+                    }
+                } else {
+                    if (arrayIngresos[i].categoria == categoria) {
+                        arrayIngresos.splice(i, 1);
+                        i--;
+                    }
                 }
             }
             addIngresos();
@@ -1539,6 +1691,25 @@
                 }
             }
             return ret;
+        }
+
+        function nombreMes(mes) {
+            let array = [
+                "Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio",
+                "Julio", "Agosto", "Setiembre", "Octubre", "Noviembre", "Diciembre"
+            ];
+            return array[mes - 1];
+        }
+
+        function cancelarIngreso() {
+            arrayIngresos.splice(0, arrayIngresos.length);
+            addIngresos();
+            $("#lblCipSeleccionado").html("--");
+            $("#lblDocumentSeleccionado").html("--");
+            $("#lblDatosSeleccionado").html("--");
+            $("#lblDireccionSeleccionado").html("--");
+            idDNI = 0;
+            tools.AlertInfo("Ingreso", "Se cancelo el ingreso.");
         }
     </script>
 </body>

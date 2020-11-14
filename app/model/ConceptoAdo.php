@@ -1,6 +1,7 @@
 <?php
 
 require_once '../database/DataBaseConexion.php';
+date_default_timezone_set('America/Lima');
 
 class ConceptoAdo
 {
@@ -87,10 +88,10 @@ class ConceptoAdo
             $cmdConcepto->execute();
             while ($row = $cmdConcepto->fetch()) {
                 array_push($array, array(
-                    "idConcepto" => $row["idConcepto"],
+                    "IdConcepto" => $row["idConcepto"],
                     "Categoria" => $row["Categoria"],
                     "Concepto" => $row["Concepto"],
-                    "Precio" => number_format($row["Precio"], 2, ".", "")
+                    "Precio" => $row["Precio"]
                 ));
             }
             return $array;
@@ -99,66 +100,103 @@ class ConceptoAdo
         }
     }
 
-    public static function getCuotas($valor,$categoria,$mes)
+    public static function getCuotas($ingeniero, $categoria, $mes)
     {
         try {
-            $array = array();
-            $cmdCuotas = "SELECT cast(ISNULL(ul.FechaUltimaCuota, c.FechaColegiado)as date) as UltimoPago,
-            (SELECT SUM(Precio) FROM Concepto 
-            WHERE Categoria = ? and Inicio <= GETDATE() and Fin >= GETDATE()) as Monto
-            from Persona as p inner join Colegiatura as c
-            on p.idDNI = c.idDNI and c.Principal = 1
-            left outer join ULTIMACuota as ul
-            on p.idDNI = ul.idDNI
-            WHERE p.idDNI = '20707246'";
-            $cmdConcepto = Database::getInstance()->getDb()->prepare($cmdCuotas);
-            $cmdConcepto->bindParam(1,$categoria,PDO::PARAM_STR);
-            $cmdConcepto->execute();
-            if ($row = $cmdConcepto->fetch()) {
-                $fechaactual = new DateTime();
-                $fechaactual->modify('+'.$mes.' month');
-                $fecharegistro = new DateTime($row["UltimoPago"]);
-                $inicio = $fecharegistro->modify('+ 1 month');      
 
-                while ($inicio <= $fechaactual) {
-                    array_push($array, array(
-                        "mes" => ConceptoAdo::nombreMes(intval($inicio->format('m'))) /*$inicio->format('m')*/,
-                        "monto" => $row["Monto"],
-                        "year" => $inicio->format('Y')
+            $array = array();
+            $cmdCuota = Database::getInstance()->getDb()->prepare("SELECT 
+                cast(ISNULL(ul.FechaUltimaCuota, c.FechaColegiado)as date) as UltimoPago     
+                from Persona as p inner join Colegiatura as c
+                on p.idDNI = c.idDNI and c.Principal = 1
+                left outer join ULTIMACuota as ul
+                on p.idDNI = ul.idDNI
+                WHERE p.idDNI = ?");
+            $cmdCuota->bindParam(1, $ingeniero, PDO::PARAM_INT);
+            $cmdCuota->execute();
+
+            if ($row = $cmdCuota->fetch()) {
+
+                $cmdConceptos = "SELECT co.idConcepto,co.Concepto,co.Categoria,co.Precio       
+                from Concepto as co
+                WHERE  Categoria = ? and Inicio <= GETDATE() and Fin >= GETDATE() ";
+                $cmdConceptos = Database::getInstance()->getDb()->prepare($cmdConceptos);
+                $cmdConceptos->bindParam(1, $categoria, PDO::PARAM_INT);
+                $cmdConceptos->execute();
+
+                $arryConcepto = array();
+                while ($rowc = $cmdConceptos->fetch()) {
+                    array_push($arryConcepto, array(
+                        "IdConcepto" => $rowc["idConcepto"],
+                        "Categoria" => $rowc["Categoria"],
+                        "Concepto" => $rowc["Concepto"],
+                        "Precio" => $rowc["Precio"],
                     ));
-                    $inicio->modify('+ 1 month');
-                }               
+                }
+
+                $date = new DateTime($row["UltimoPago"]);
+                $date->setDate($date->format("Y"), $date->format("m"), 1);
+
+                $fechaactual = new DateTime('now');                
+                if ($fechaactual < $date) {
+                    $fechaactual = new DateTime($row["UltimoPago"]);
+                    $fechaactual->setDate($fechaactual->format("Y"), $fechaactual->format("m"), 1);
+                    $fechaactual->modify('+ ' . $mes  . ' month');
+                }else{
+                    $fechaactual->setDate($fechaactual->format("Y"), $fechaactual->format("m"), 1);
+                    $fechaactual->modify('+ ' . $mes  . ' month');
+                }
+
+                if ($fechaactual >= $date) {
+                    $inicio = $date->modify('+ 1 month');
+                    if ($inicio <= $fechaactual) {
+                        while ($inicio <= $fechaactual) {
+                            array_push($array, array(
+                                "day" => $inicio->format('d'),
+                                "mes" => $inicio->format('m'),
+                                "year" => $inicio->format('Y'),
+                                "concepto" => $arryConcepto
+                            ));
+                            $inicio->modify('+ 1 month');
+                        }
+                    }
+                }
             }
+
             return $array;
         } catch (Exception $ex) {
             return $ex->getMessage();
         }
     }
 
-    public static function getOtrosConceptos(){
-        try{
+    public static function getOtrosConceptos()
+    {
+        try {
             $array = array();
             $cmdOtrosConceptos = "select idConcepto ,Categoria,Concepto, Precio from Concepto where Categoria = 100";
             $cmdConcepto = Database::getInstance()->getDb()->prepare($cmdOtrosConceptos);
             $cmdConcepto->execute();
             while ($row = $cmdConcepto->fetch()) {
                 array_push($array, array(
-                    "IdConcepto"=>$row["idConcepto"],
+                    "IdConcepto" => $row["idConcepto"],
                     "Categoria" => $row["Categoria"],
                     "Concepto" => $row["Concepto"],
-                    "Precio" => number_format($row["Precio"], 2, ".", "")
+                    "Precio" => $row["Precio"]
                 ));
             }
             return $array;
         } catch (Exception $ex) {
             return $ex->getMessage();
-        }   
+        }
     }
 
-    public static function nombreMes($mes){
-        $array = array("Enero","Febrero","Marzo","Abril","Mayo","Junio",
-        "Julio","Agosto","Setiembre","Octubre","Noviembre","Diciembre");
-        return $array[$mes-1];
+    public static function nombreMes($mes)
+    {
+        $array = array(
+            "Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio",
+            "Julio", "Agosto", "Setiembre", "Octubre", "Noviembre", "Diciembre"
+        );
+        return $array[$mes - 1];
     }
 
     public static function insert($data)
