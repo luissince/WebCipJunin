@@ -16,11 +16,10 @@ use Greenter\Model\Sale\SaleDetail;
 use Greenter\Model\Sale\Legend;
 use Greenter\Ws\Services\SunatEndpoints;
 
-require __DIR__.'./../vendor/autoload.php';
-include_once __DIR__.'./../model/IngresosAdo.php';
+require './../vendor/autoload.php';
+include_once '../model/IngresosAdo.php';
 
 $util = Util::getInstance();
-$idIngreso = $_GET['idIngreso'];
 
 $detalleventa = IngresosAdo::ObtenerIngresoXML($idIngreso);
 if (!is_array($detalleventa)) {

@@ -1,6 +1,6 @@
 <?php
 
-require_once '../database/DataBaseConexion.php';
+require_once __DIR__.'./../database/DataBaseConexion.php';
 
 class IngresosAdo
 {
@@ -258,6 +258,51 @@ class IngresosAdo
             return "updated";
         } catch (Exception $ex) {
             Database::getInstance()->getDb()->rollback();
+            return $ex->getMessage();
+        }
+    }
+
+    public static function ListarIngresosPorFecha()
+    {
+        try {
+           
+            $arrayIngresos = array();
+            $cmdConcepto = Database::getInstance()->getDb()->prepare("SELECT i.idIngreso,
+            convert(VARCHAR, CAST(i.Fecha AS DATE),103) AS Fecha,i.Serie,i.NumRecibo,
+            i.Estado,p.CIP,p.idDNI,p.Apellidos,p.Nombres,sum(d.Monto) AS Total,
+            isnull(i.Xmlsunat,'') as Xmlsunat,isnull(i.Xmldescripcion,'') as Xmldescripcion
+            FROM Ingreso AS i INNER JOIN Persona AS p
+            ON i.idDNI = p.idDNI
+            INNER JOIN Detalle AS d 
+            ON d.idIngreso = i.idIngreso
+            WHERE CAST(i.Fecha AS DATE) = CAST(GETDATE() AS DATE)
+            GROUP BY i.idIngreso,i.Fecha,i.Serie,i.NumRecibo,i.Estado,
+            p.CIP,p.idDNI,p.Apellidos,p.Nombres,i.Xmlsunat,i.Xmldescripcion
+            ORDER BY CAST(Fecha AS DATE) ASC");
+            $cmdConcepto->execute();
+            $count = 0;
+
+            while ($row = $cmdConcepto->fetch()) {
+                $count++;
+                array_push($arrayIngresos, array(
+                    "id" => $count,
+                    "idIngreso" => $row["idIngreso"],
+                    "fecha" => $row["Fecha"],
+                    "serie" => $row["Serie"],
+                    "numRecibo" => $row["NumRecibo"],
+                    "estado" => $row["Estado"],
+                    "cip" => $row["CIP"],
+                    "idDNI" => $row["idDNI"],
+                    "apellidos" => $row["Apellidos"],
+                    "nombres" => $row["Nombres"],
+                    "total" => $row["Total"],
+                    "xmlsunat" => $row["Xmlsunat"],
+                    "xmldescripcion" => IngresosAdo::limitar_cadena($row["Xmldescripcion"], 100, "..."),
+                ));
+            }
+
+            return $arrayIngresos;
+        } catch (PDOException $ex) {
             return $ex->getMessage();
         }
     }

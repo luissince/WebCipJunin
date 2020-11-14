@@ -378,6 +378,7 @@
                             }
                         },
                         error: function(error) {
+                            console.log(error.responseText)
                             $("#alertIcon").empty();
                             $("#alertIcon").append('<i class="fa fa-times-circle fa-3x text-danger "></i>');
                             $("#alertText").html("Error en el momento de firmar el xml, intente nuevamente o comuníquese con su proveedor del sistema.");
