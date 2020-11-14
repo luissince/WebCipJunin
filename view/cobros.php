@@ -851,6 +851,7 @@
 
         //colegiatura
         let colegiaturas = [];
+        let colegiaturaEstado = false;
 
         //paginacion ingenieros
         let state = false;
@@ -1147,13 +1148,15 @@
 
         function componentesRegistrarIngreso() {
             $("#btnCobrar").click(function() {
+                console.log(cuotasEstate)
+                    console.log(colegiaturaEstado)
                 if ($("#cbComprobante").val() == '') {
                     tools.AlertWarning("Ingreso", "Seleccione un comprobante para continuar.");
                 } else if (arrayIngresos.length == 0) {
                     tools.AlertWarning("Ingreso", "No hay conceptos para continuar.");
                 } else if (idDNI == 0) {
                     tools.AlertWarning("Ingreso", "No selecciono ningún ingeneniero para continuar.");
-                } else {
+                } else {                    
                     alertify.confirm('Ingreso', '¿Está seguro de continuar?', function() {
                         registrarIngreso();
                     }, function() {
@@ -1426,6 +1429,9 @@
                     }
                 }
             }
+            if(colegiaturas.length>0){
+                colegiaturaEstado=true;
+            }
             addIngresos();
             $('#mdColegiatura').modal('hide');
         }
@@ -1562,6 +1568,8 @@
                     "idCliente": idDNI,
                     "idUsuario": 1,
                     "estado": 'C',
+                    "estadoCuotas":cuotasEstate,
+                    "estadoColegiatura":colegiaturaEstado,
                     "ingresos": arrayIngresos,
                     "cuotasInicio": cuotasInicio,
                     "cuotasFin": cuotasFin
@@ -1571,13 +1579,7 @@
                 },
                 success: function(result) {
                     if (result.estado === 1) {
-                        arrayIngresos.splice(0, arrayIngresos.length);
-                        addIngresos();
-                        $("#lblCipSeleccionado").html("--");
-                        $("#lblDocumentSeleccionado").html("--");
-                        $("#lblDatosSeleccionado").html("--");
-                        $("#lblDireccionSeleccionado").html("--");
-                        idDNI = 0;
+                        cancelarIngreso();
                         tools.AlertSuccess("Ingreso", result.mensaje);
                     } else {
                         tools.AlertWarning("Ingreso", result.mensaje);
@@ -1673,9 +1675,22 @@
                         break;
                     }
                 } else {
-                    if (arrayIngresos[i].categoria == categoria) {
+                    if (arrayIngresos[i].categoria == categoria && categoria == 1) {
                         arrayIngresos.splice(i, 1);
                         i--;
+                        cuotasEstate = false;
+                    } else if (arrayIngresos[i].categoria == categoria && categoria == 2) {
+                        arrayIngresos.splice(i, 1);
+                        i--;
+                        cuotasEstate = false;
+                    } else if (arrayIngresos[i].categoria == categoria && categoria == 3) {
+                        arrayIngresos.splice(i, 1);
+                        i--;
+                        cuotasEstate = false;
+                    } else if (arrayIngresos[i].categoria == categoria && categoria == 4) {
+                        arrayIngresos.splice(i, 1);
+                        i--;
+                        colegiaturaEstado = false;
                     }
                 }
             }
@@ -1709,7 +1724,8 @@
             $("#lblDatosSeleccionado").html("--");
             $("#lblDireccionSeleccionado").html("--");
             idDNI = 0;
-            tools.AlertInfo("Ingreso", "Se cancelo el ingreso.");
+            cuotasEstate=false;
+            colegiaturaEstado=false;
         }
     </script>
 </body>

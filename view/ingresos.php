@@ -41,7 +41,7 @@
                         <label><img src="./images/error.svg" width="28" /> Comunicación de Baja (Anulado)</label>
                     </div>
                 </div>
-                
+
 
                 <div class="row">
                     <div class="col-md-3 col-sm-12 col-xs-12">
@@ -70,11 +70,11 @@
                         <div class="form-group">
                             <label>Opción</label>
                             <div class="input-group">
-                                <button class="btn btn-primary">Envío masivo a sunat</button>
+                                <button class="btn btn-primary" id="btnEnvioMasivo">Envío masivo a sunat</button>
                             </div>
                         </div>
                     </div>
-                </div>                
+                </div>
 
                 <div class="row">
                     <div class="col-md-6">
@@ -178,6 +178,8 @@
         let filasPorPagina = 10;
         let tbTable = $("#tbTable");
 
+        let arrayIngresos = [];
+
         $(document).ready(function() {
             loadInitIngresos();
 
@@ -207,6 +209,37 @@
                 $("#modalAlert").modal('hide');
             });
 
+            $("#btnEnvioMasivo").click(function() {
+                alertify.confirm('Ingreso', "¿Está seguro de continuar con el envío?", function() {
+                    for (let ingresos of arrayIngresos) {
+                        if (ingresos.estado == "C") {
+                            if (ingresos.xmlsunat !== "0") {
+                                firmaMasivaXml(ingresos.idIngreso);
+                            }
+                        }
+                    }
+                }, function() {
+
+                });
+            });
+
+            $("#btnEnvioMasivo").keypress(function(event) {
+                if (event.keyCode === 13) {
+                    alertify.confirm('Ingreso', "¿Está seguro de continuar con el envío?", function() {
+                        for (let ingresos of arrayIngresos) {
+                            if (ingresos.estado == "C") {
+                                if (ingresos.xmlsunat !== "0") {
+                                    firmaMasivaXml(ingresos.idIngreso);
+                                }
+                            }
+                        }
+                    }, function() {
+
+                    });
+                }
+                event.preventDefault();
+            })
+
         });
 
         function loadInitIngresos() {
@@ -229,12 +262,14 @@
                     tbTable.append(
                         '<tr class="text-center"><td colspan="9"><img src="./images/spiner.gif"/><p>cargando información.</p></td></tr>'
                     );
+                    arrayIngresos.splice(0, arrayIngresos.length);
                     state = true;
                 },
                 success: function(result) {
                     if (result.estado == 1) {
                         tbTable.empty();
-                        for (let ingresos of result.data) {
+                        arrayIngresos = result.data;
+                        for (let ingresos of arrayIngresos) {
 
                             let btnAnular = '<button class="btn btn-danger btn-xs" onclick="">' +
                                 '<i class="fa fa-ban"></i></br>Anular' +
@@ -301,9 +336,66 @@
         }
 
         function facturarXml(idIngreso, estado) {
-            if (estado === "C") {
+            alertify.confirm('Ingreso', "¿Está seguro de continuar con el envío?", function() {
+                if (estado === "C") {
+                    $.ajax({
+                        url: "../app/examples/boleta.php",
+                        method: "GET",
+                        data: {
+                            "idIngreso": idIngreso
+                        },
+                        beforeSend: function() {
+                            $("#alertIcon").empty();
+                            $("#alertIcon").append('<i class="fa fa-refresh fa-3x text-primary"></i>');
+                            $("#alertText").html("Firmando xml y enviando a la sunat.");
+                            $("#btnIconCloseModal").addClass('disabled pointer-events');
+                            $("#btnButtonAcceptModal").addClass('disabled pointer-events');
+                            $("#modalAlert").modal('show');
+                        },
+                        success: function(result) {
+                            let object = result;
+                            if (object.state === true) {
+                                if (object.accept === true) {
+                                    $("#alertIcon").empty();
+                                    $("#alertIcon").append('<i class="fa fa-exclamation-circle fa-3x text-success"></i>');
+                                    $("#alertText").html("Resultado: Código " + object.code + " " + object.description);
+                                    $("#btnIconCloseModal").removeClass('disabled pointer-events');
+                                    $("#btnButtonAcceptModal").removeClass('disabled pointer-events');
+                                    //loadInitIngresos();
+                                } else {
+                                    $("#alertIcon").empty();
+                                    $("#alertIcon").append('<i class="fa fa-warning fa-3x text-warning"></i>');
+                                    $("#alertText").html("Resultado: Código " + object.code + " " + object.description);
+                                    $("#btnIconCloseModal").removeClass('disabled pointer-events');
+                                    $("#btnButtonAcceptModal").removeClass('disabled pointer-events');
+                                }
+                            } else {
+                                $("#alertIcon").empty();
+                                $("#alertIcon").append('<i class="fa fa-warning fa-3x text-warning"></i>');
+                                $("#alertText").html("Resultado: Código " + object.code + " " + object.description);
+                                $("#btnIconCloseModal").removeClass('disabled pointer-events');
+                                $("#btnButtonAcceptModal").removeClass('disabled pointer-events');
+                            }
+                        },
+                        error: function(error) {
+                            $("#alertIcon").empty();
+                            $("#alertIcon").append('<i class="fa fa-times-circle fa-3x text-danger "></i>');
+                            $("#alertText").html("Error en el momento de firmar el xml, intente nuevamente o comuníquese con su proveedor del sistema.");
+                            $("#btnIconCloseModal").removeClass('disabled pointer-events');
+                            $("#btnButtonAcceptModal").removeClass('disabled pointer-events');
+                        }
+                    });
+                }
+            }, function() {
+                //console.log("hjhj");
+            });
+
+        }
+
+        function resumenDiarioXml(idIngreso, comprobante, resumen) {
+            alertify.confirm('Ingreso', "¿Realmente Deseas Anular el Documento?", "Se anulará el documento: " + comprobante + ", y se creará el siguiente resumen individual: RC-" + resumen + "-1, estás seguro de anular el documento? los cambios no se podrán revertir!", function() {
                 $.ajax({
-                    url: "../app/examples/boleta.php",
+                    url: "./examples/resumen.php",
                     method: "GET",
                     data: {
                         "idIngreso": idIngreso
@@ -325,7 +417,6 @@
                                 $("#alertText").html("Resultado: Código " + object.code + " " + object.description);
                                 $("#btnIconCloseModal").removeClass('disabled pointer-events');
                                 $("#btnButtonAcceptModal").removeClass('disabled pointer-events');
-                                //loadInitIngresos();
                             } else {
                                 $("#alertIcon").empty();
                                 $("#alertIcon").append('<i class="fa fa-warning fa-3x text-warning"></i>');
@@ -342,7 +433,6 @@
                         }
                     },
                     error: function(error) {
-                        console.log(error.responseText);
                         $("#alertIcon").empty();
                         $("#alertIcon").append('<i class="fa fa-times-circle fa-3x text-danger "></i>');
                         $("#alertText").html("Error en el momento de firmar el xml, intente nuevamente o comuníquese con su proveedor del sistema.");
@@ -350,42 +440,58 @@
                         $("#btnButtonAcceptModal").removeClass('disabled pointer-events');
                     }
                 });
-            }
+
+            }, function() {
+
+            });
+            //alert.alertConfirmation("Ventas", "¿Realmente Deseas Anular el Documento?", "Se anulará el documento: " + comprobante + ", y se creará el siguiente resumen individual: RC-" + resumen + "-1, estás seguro de anular el documento? los cambios no se podrán revertir!", function(result) {
         }
 
-        function resumenDiarioXml(idventa, comprobante, resumen) {
-            alert.alertConfirmation("Ventas", "¿Realmente Deseas Anular el Documento?", "Se anulará el documento: " + comprobante + ", y se creará el siguiente resumen individual: RC-" + resumen + "-1, estás seguro de anular el documento? los cambios no se podrán revertir!", function(result) {
-                if (result === "close") {
-                    $("#idModal").css("display", "none");
-                } else {
-                    $.ajax({
-                        url: "./examples/resumen.php",
-                        method: "GET",
-                        data: {
-                            idventa: idventa
-                        },
-                        beforeSend: function() {
-                            alert.alertLoad("Ventas", "Firmando xml y enviando a la sunat.");
-                        },
-                        success: function(result) {
-                            let object = result;
-                            if (object.state === true) {
-                                if (object.accept === true) {
-                                    alert.alertInformation("Ventas", "Resultado: Código " + object.code + " " + object.description);
-                                    //onEventPaginacion();
-                                } else {
-                                    alert.alertWarning("Ventas", "Resultado: Código " + object.code + " " + object.description);
-                                }
-                            } else {
-                                alert.alertWarning("Ventas", "Resultado: Código " + object.code + " " + object.description);
-                            }
-                        },
-                        error: function(error) {
-                            alert.alertError("Ventas",
-                                "Error en el momento de firmar el xml, intente nuevamente o comuníquese con su proveedor del sistema."
-                            );
+        function firmaMasivaXml(idIngreso) {
+            $.ajax({
+                url: "../app/examples/boleta.php",
+                method: "GET",
+                data: {
+                    "idIngreso": idIngreso
+                },
+                beforeSend: function() {
+                    $("#alertIcon").empty();
+                    $("#alertIcon").append('<i class="fa fa-refresh fa-3x text-primary"></i>');
+                    $("#alertText").html("Firmando xml y enviando a la sunat.");
+                    $("#btnIconCloseModal").addClass('disabled pointer-events');
+                    $("#btnButtonAcceptModal").addClass('disabled pointer-events');
+                    $("#modalAlert").modal('show');
+                },
+                success: function(result) {
+                    let object = result;
+                    if (object.state === true) {
+                        if (object.accept === true) {
+                            $("#alertIcon").empty();
+                            $("#alertIcon").append('<i class="fa fa-exclamation-circle fa-3x text-success"></i>');
+                            $("#alertText").html("Resultado: Código " + object.code + " " + object.description);
+                            $("#btnIconCloseModal").removeClass('disabled pointer-events');
+                            $("#btnButtonAcceptModal").removeClass('disabled pointer-events');
+                        } else {
+                            $("#alertIcon").empty();
+                            $("#alertIcon").append('<i class="fa fa-warning fa-3x text-warning"></i>');
+                            $("#alertText").html("Resultado: Código " + object.code + " " + object.description);
+                            $("#btnIconCloseModal").removeClass('disabled pointer-events');
+                            $("#btnButtonAcceptModal").removeClass('disabled pointer-events');
                         }
-                    });
+                    } else {
+                        $("#alertIcon").empty();
+                        $("#alertIcon").append('<i class="fa fa-warning fa-3x text-warning"></i>');
+                        $("#alertText").html("Resultado: Código " + object.code + " " + object.description);
+                        $("#btnIconCloseModal").removeClass('disabled pointer-events');
+                        $("#btnButtonAcceptModal").removeClass('disabled pointer-events');
+                    }
+                },
+                error: function(error) {
+                    $("#alertIcon").empty();
+                    $("#alertIcon").append('<i class="fa fa-times-circle fa-3x text-danger "></i>');
+                    $("#alertText").html("Error en el momento de firmar el xml, intente nuevamente o comuníquese con su proveedor del sistema.");
+                    $("#btnIconCloseModal").removeClass('disabled pointer-events');
+                    $("#btnButtonAcceptModal").removeClass('disabled pointer-events');
                 }
             });
         }

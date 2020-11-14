@@ -19,13 +19,12 @@ use Greenter\Model\Summary\SummaryPerception;
 use Greenter\Ws\Services\SunatEndpoints;
 
 require __DIR__ . '/../vendor/autoload.php';
-require_once '../sunat/database/DataBaseConexion.php';
-require "../sunat/ventas/VentasADO.php";
+include_once '../model/IngresosAdo.php';
 
 $util = Util::getInstance();
 
-$idventa = $_GET['idventa'];
-$detalleventa = VentasADO::ObtenerIngresoXML($idventa);
+$idventa = $_GET['idIngreso'];
+$detalleventa = IngresosAdo::ObtenerIngresoXML($idIngreso);
 $cliente = $detalleventa[1];
 $empresa = $detalleventa[2];
 $totales = $detalleventa[3];

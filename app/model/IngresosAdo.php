@@ -100,11 +100,13 @@ class IngresosAdo
 
             $idIngreso = Database::getInstance()->getDb()->lastInsertId();
 
-            $cmdCuota = Database::getInstance()->getDb()->prepare("INSERT INTO Cuota(idIngreso,FechaIni,FechaFin) VALUES(?,?,?)");
-            $cmdCuota->bindParam(1, $idIngreso, PDO::PARAM_INT);
-            $cmdCuota->bindParam(2, $body["cuotasInicio"], PDO::PARAM_STR);
-            $cmdCuota->bindParam(3, $body["cuotasFin"], PDO::PARAM_STR);
-            $cmdCuota->execute();
+            if($body["estadoCuotas"]==true){
+                $cmdCuota = Database::getInstance()->getDb()->prepare("INSERT INTO Cuota(idIngreso,FechaIni,FechaFin) VALUES(?,?,?)");
+                $cmdCuota->bindParam(1, $idIngreso, PDO::PARAM_INT);
+                $cmdCuota->bindParam(2, $body["cuotasInicio"], PDO::PARAM_STR);
+                $cmdCuota->bindParam(3, $body["cuotasFin"], PDO::PARAM_STR);
+                $cmdCuota->execute();
+            }            
 
             foreach ($body["ingresos"] as $value) {
                 $cmdDetalle = Database::getInstance()->getDb()->prepare("INSERT INTO Detalle(
