@@ -259,4 +259,320 @@ class PersonaAdo
     public static function delete()
     {
     }
+
+    public static function getColegiatura($idDni){
+        try {
+            $cmdColegiatura = Database::getInstance()->getDb()->prepare("SELECT s.Consejo,ISNULL(e.Capitulo,'CAPITULO NO REGISTRAD0') AS Capitulo,UPPER(ISNULL(e.Especialidad,'ESPECIALIDAD NO REGISTRADA')) AS Especialidad, 
+			convert(VARCHAR,cast(c.FechaColegiado AS DATE),103) AS FechaColegiado, ISNULL(u.Universidad,'UNIVERSIDAD NO REGISTRADA') AS UnivesidadEgreso, convert(VARCHAR,cast(c.FechaEgreso AS DATE),103) AS FechaEgreso, 
+			ISNULL(u.Universidad,'UNIVERSIDAD NO REGISTRADA') AS Universidad, convert(VARCHAR,cast(c.FechaTitulacion AS DATE),103) AS FechaTitulacion, 
+            c.Resolucion, c.Principal FROM Colegiatura  AS c
+			LEFT JOIN Sede AS s ON c.idSede = s.idConsejo
+			LEFT JOIN Especialidad AS e ON e.idEspecialidad = c.idEspecialidad
+			LEFT JOIN Universidad AS u ON u.idUniversidad = c.idUniversidad
+			where idDNI = ? ");
+            $cmdColegiatura->bindParam(1, $idDni, PDO::PARAM_STR);
+            $cmdColegiatura->execute();
+
+            $arrayColegiaturas = array();
+
+            $count = 0;
+            while ($row = $cmdColegiatura->fetch()) {
+                $count++;
+                array_push($arrayColegiaturas, array(
+                    'Id' => $count,
+                    'sede' => $row['Consejo'],
+                    'capitulo' => 'Capitulo',
+                    'especialidad' => $row['Especialidad'],
+                    'fechaColegiado' => $row['FechaColegiado'],
+                    'universidadEgreso' => $row['UnivesidadEgreso'],
+                    'fechaEgreso' => $row['FechaEgreso'],
+                    'universidadTitulacion' => $row['Universidad'],
+                    'fechaTitulacion' => $row['FechaTitulacion'],
+                    'resolucion' => $row['Resolucion'],
+                    'principal' => $row['Principal']
+                ));
+            }
+
+            return $arrayColegiaturas;
+        } catch (Exception $ex) {
+            return $ex->getMessage();
+        }
+    }
+
+    public static function getDomicilio($idDni){
+        try{
+            $cmdDomicilio = Database::getInstance()->getDb()->prepare("SELECT ISNULL (t.Descripcion, 'TIPO NO REGISTRADO') AS Tipo, UPPER(d.Direccion) AS Direccion, 
+            ISNULL (u.Departamento,'DEPARTAMENTO NO REGISTRADA') AS Ubigeo FROM Direccion AS d 
+            LEFT JOIN Tipos AS t ON t.idTipo = d.Tipo 
+            LEFT JOIN Ubigeo AS u ON u.idUbigeo = d.Ubigeo
+            WHERE d.idDNI = ?");
+            $cmdDomicilio->bindParam(1, $idDni, PDO::PARAM_STR);
+            $cmdDomicilio->execute();
+
+            $arrayDomicilios = array();
+
+            $count = 0;
+            while($row = $cmdDomicilio->fetch()){
+                $count ++;
+                array_push($arrayDomicilios, array(
+                    'Id' => $count,
+                    'tipo' => $row['Tipo'],
+                    'direccion' => $row['Direccion'],
+                    'ubigeo' => $row['Ubigeo'],
+                ));
+            }
+            return $arrayDomicilios;
+        } catch(Exception $ex){
+            return $ex->getMessage();
+        }
+    }
+
+    public static function getTelefono($idDni){
+        try{
+            $cmdTelefono = Database::getInstance()->getDb()->prepare("SELECT ISNULL (t.Descripcion, 'TIPO NO REGISTRADO') AS Tipo , a.Telefono FROM Telefono AS a 
+            LEFT JOIN Tipos AS t ON t.idTipo = a.Tipo WHERE a.idDNI = ?");
+            $cmdTelefono ->bindParam(1, $idDni, PDO::PARAM_STR);
+            $cmdTelefono->execute();
+
+            $arrayTelefonos = array();
+
+            $count=0;
+            while($row = $cmdTelefono->fetch()){
+                $count++;
+                array_push($arrayTelefonos, array(
+                    'Id' => $count,
+                    'tipo' => $row['Tipo'],
+                    'numero' => $row['Telefono'],
+                ));
+            }
+            return$arrayTelefonos;
+        } catch(Exception $ex){
+            return $ex->getMessage();
+        }
+    }
+
+    public static function getConyuge($idDni){
+        try{
+            $cmdConyuge = Database::getInstance()->getDb()->prepare("SELECT UPPER(FullName) AS NombreCompleto, NumHijos FROM Conyuge WHERE idDNI = ?");
+            $cmdConyuge ->bindParam(1, $idDni, PDO::PARAM_STR);
+            $cmdConyuge->execute();
+
+            $arrayConyuge = array();
+
+            $count=0;
+            while($row = $cmdConyuge->fetch()){
+                $count++;
+                array_push($arrayConyuge, array(
+                    'Id' => $count,
+                    'NombreCompleto' => $row['NombreCompleto'],
+                    'Hijos' => $row['NumHijos'],
+                ));
+            }
+            return $arrayConyuge;
+        } catch(Exception $ex){
+            return $ex->getMessage();
+        }
+    }
+
+    public static function getExperiencia($idDni){
+        try{
+            $cmdExperiencia = Database::getInstance()->getDb()->prepare("SELECT UPPER(Entidad) AS Entidad, UPPER(ExpericienciaEn) AS  Experiencia,  
+            CONVERT(VARCHAR,cast(FechaInicio AS DATE),103) AS FechaInicio, CONVERT(VARCHAR,cast(FechaFin AS DATE),103) AS FechaFin
+             FROM Experiencia WHERE idPersona = ?");
+            $cmdExperiencia ->bindParam(1, $idDni, PDO::PARAM_STR);
+            $cmdExperiencia->execute();
+
+            $arrayExperiencia = array();
+
+            $count=0;
+            while($row = $cmdExperiencia->fetch()){
+                $count++;
+                array_push($arrayExperiencia, array(
+                    'Id' => $count,
+                    'Entidad' => $row['Entidad'],
+                    'Experiencia' => $row['Experiencia'],
+                    'FechaInicio' => $row['FechaInicio'],
+                    'FechaFin' => $row['FechaFin'],
+                ));
+            }
+            return $arrayExperiencia;
+        } catch(Exception $ex){
+            return $ex->getMessage();
+        }
+    }
+
+    public static function getGradosyEstudios($idDni){
+        try{
+            $cmdgradosyestudios = Database::getInstance()->getDb()->prepare("SELECT UPPER(t.Descripcion) AS Grado, UPPER(Materia) AS Materia, ISNULL(u.Universidad, 'UNIVERSIDAD NO REGISTRADA') AS Universidad, 
+            CONVERT(VARCHAR, cast(g.FechaGrado AS DATE), 103) AS Fecha FROM Grados AS g LEFT JOIN Universidad AS u ON u.idUniversidad = g.idUniversidad
+            LEFT JOIN Tipos AS t ON t.idTipo = g.Grado AND t.Categoria = 'D'
+            WHERE g.idDNI = ?");
+            $cmdgradosyestudios ->bindParam(1, $idDni, PDO::PARAM_STR);
+            $cmdgradosyestudios->execute();
+
+            $arraygradosyestudios = array();
+
+            $count=0;
+            while($row = $cmdgradosyestudios->fetch()){
+                $count++;
+                array_push($arraygradosyestudios, array(
+                    'Id' => $count,
+                    'Grado' => $row['Grado'],
+                    'Materia' => $row['Materia'],
+                    'Universidad' => $row['Universidad'],
+                    'Fecha' => $row['Fecha'],
+                ));
+            }
+            return $arraygradosyestudios;
+        } catch(Exception $ex){
+            return $ex->getMessage();
+        }
+    }
+
+    public static function getCorreoyWeb($idDni){
+        try{
+            $cmdcorreoyweb = Database::getInstance()->getDb()->prepare("SELECT ISNULL(t.Descripcion, 'TIPO NO REGISTRADO') AS Tipo, UPPER(w.Direccion) AS Direccion from Web AS w 
+            INNER JOIN Tipos AS t ON t.idTipo = w.Tipo WHERE idDNI = ?");
+            $cmdcorreoyweb ->bindParam(1, $idDni, PDO::PARAM_STR);
+            $cmdcorreoyweb->execute();
+
+            $arraycorreoyweb = array();
+
+            $count=0;
+            while($row = $cmdcorreoyweb->fetch()){
+                $count++;
+                array_push($arraycorreoyweb, array(
+                    'Id' => $count,
+                    'Tipo' => $row['Tipo'],
+                    'Direccion' => $row['Direccion'],
+                ));
+            }
+            
+            return $arraycorreoyweb;
+        } catch(Exception $ex){
+            return $ex->getMessage();
+        }
+    }
+
+    public static function getaddcolegiatura(){
+        try{
+            $arrayAddColegiatura = array();
+
+            $cmdsede = Database::getInstance()->getDb()->prepare("SELECT idConsejo ,UPPER(Consejo) AS Consejo from Sede");
+            $cmdsede->execute();
+            $arraySede = array();
+            while($row = $cmdsede->fetch()){
+                array_push($arraySede, array(
+                    'IdConsejo' => $row['idConsejo'],
+                    'Sede' => $row['Consejo'],
+                ));
+            }
+
+            $cmdEspecialidad = Database::getInstance()->getDb()->prepare("SELECT idEspecialidad, UPPER (Especialidad) AS Especialidad from Especialidad");
+            $cmdEspecialidad->execute();
+            $arrayEspecialidad = array();
+            while($row = $cmdEspecialidad->fetch()){
+                array_push($arrayEspecialidad, array(
+                    'IdEspecialidad' => $row['idEspecialidad'],
+                    'Especialidad' => $row['Especialidad'],
+                ));
+            }
+
+            $cmdUniversidad = Database::getInstance()->getDb()->prepare("SELECT idUniversidad, CONCAT(UPPER (Universidad),'  (',UPPER (siglas),')') AS Universidad from Universidad");
+            $cmdUniversidad->execute();
+            $arrayUniversidad = array();
+            while($row = $cmdUniversidad->fetch()){
+                array_push($arrayUniversidad, array(
+                    'IdUniversidad' => $row['idUniversidad'],
+                    'Universidad' => $row['Universidad'],
+                ));
+            }
+            
+            array_push($arrayAddColegiatura,$arraySede, $arrayEspecialidad, $arrayUniversidad);
+            return $arrayAddColegiatura;
+
+        } catch(Exception $ex){
+            return $ex->getMessage();
+        }
+    }
+
+    public static function getAddDomicilio(){
+        try{
+            $arrayAddDomicilio = array();
+
+            $cmdTipo = Database::getInstance()->getDb()->prepare("SELECT idTipo, Descripcion FROM tipos WHERE Categoria = 'A'");
+            $cmdTipo->execute();
+            $arrayTipoDomicilio = array();
+            while($row = $cmdTipo->fetch()){
+                array_push($arrayTipoDomicilio, array(
+                    'IdTipo' => $row['idTipo'],
+                    'Descripcion' => $row['Descripcion']
+                ));
+            }
+
+            $cmdUbicacion = Database::getInstance()->getDb()->prepare(" SELECT idUbigeo, CONCAT(Departamento, ' - ', Provincia, ' - ', 
+            Distrito) AS Ubicacion FROM Ubigeo ");
+            $cmdUbicacion->execute();
+            $arrayUbicación = array();
+            while($row = $cmdUbicacion->fetch()){
+                array_push($arrayUbicación, array(
+                    'IdUbicación' => $row['idUbigeo'],
+                    'Ubicacion' => $row['Ubicacion'],
+                ));
+            }
+            
+            array_push($arrayAddDomicilio,$arrayTipoDomicilio, $arrayUbicación);
+            return $arrayAddDomicilio;
+        }catch(Exception $ex){
+            return $ex->getMessage();
+        }
+    }
+
+    public static function getAddCelular(){
+        try{
+            $cmdCelular = Database::getInstance()->getDb()->prepare("SELECT idTipo, Descripcion FROM tipos WHERE Categoria = 'B'");
+            $cmdCelular->execute();
+            $arrayCelular = array();
+            while($row = $cmdCelular->fetch()){
+                array_push($arrayCelular, array(
+                    'IdTipo' => $row['idTipo'],
+                    'Tipo' => $row['Descripcion'],
+                ));
+            }
+            return $arrayCelular;
+        }catch(Exception $ex){
+            return $ex->getMessage();
+        }
+    }
+
+    public static function getAddEstudios(){
+        try{
+            $arrayEstudios = array();
+
+            $cmdgrado = Database::getInstance()->getDb()->prepare("SELECT idTipo, UPPER(Descripcion) AS Descripcion FROM tipos WHERE Categoria = 'D'");
+            $cmdgrado->execute();
+            $arrayGrado = array();
+            while($row = $cmdgrado->fetch()){
+                array_push($arrayGrado, array(
+                    'IdGrado' => $row['idTipo'],
+                    'Grado' => $row['Descripcion'],
+                ));
+            }
+
+            $cmdUniversidad = Database::getInstance()->getDb()->prepare("SELECT idUniversidad, CONCAT(UPPER (Universidad),'  (',UPPER (siglas),')') AS Universidad from Universidad");
+            $cmdUniversidad->execute();
+            $arrayUniversidad = array();
+            while($row = $cmdUniversidad->fetch()){
+                array_push($arrayUniversidad, array(
+                    'IdUniversidad' => $row['idUniversidad'],
+                    'Universidad' => $row['Universidad'],
+                ));
+            }
+            array_push($arrayEstudios,$arrayGrado,$arrayUniversidad);
+
+            return $arrayEstudios;
+        }catch(Exception $ex){
+            return $ex->getMessage();
+        }
+    }
 }
