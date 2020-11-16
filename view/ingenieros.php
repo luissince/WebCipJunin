@@ -20,6 +20,7 @@
             <!-- Main content -->
             <section class="content">
 
+                <!-- modal nuevo ingeniero  -->
                 <div class="row">
                     <div class="modal fade" id="confirmar">
                         <div class="modal-dialog">
@@ -147,7 +148,81 @@
                         </div>
                     </div>
                 </div>
+                <!-- end modal new enginner -->
 
+                <!-- modal historial de un ingeniero -->
+                <div class="row">
+                    <div class="modal fade" id="mostrarHistorial">
+                        <div class="modal-dialog modal-xs">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <button type="button" class="close" data-dismiss="modal">
+                                        <i class="fa fa-close"></i>
+                                    </button>
+                                    <h4 class="modal-title">
+                                        <i class="fa fa-group">
+                                        </i> Lista de Ingenieros
+                                    </h4>
+                                </div>
+                                <div class="modal-body">
+                                    <div class="row">
+                                        <div class="col-md-4 col-sm-12 col-xs-12">
+                                            <button class="btn btn-primary" id="btnIzquierda">
+                                                <i class="fa fa-toggle-left"></i>
+                                            </button>
+                                            <span id="lblPaginaActual" class="font-weight-bold">0</span>
+                                            <span>&nbsp;</span>
+                                            <span>a</span>
+                                            <span>&nbsp;</span>
+                                            <span id="lblPaginaSiguiente" class="font-weight-bold">0</span>
+                                            <button class="btn btn-primary" id="btnDerecha">
+                                                <i class="fa fa-toggle-right"></i>
+                                            </button>
+                                        </div>
+                                        <div class="col-md-6 col-sm-12 col-xs-12">
+                                            <div class="input-group col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                                                <input type="search" id="txtBuscarIngeniero" class="form-control" placeholder="Buscar por información, n° cip o dni" aria-describedby="search">
+                                            </div>
+                                        </div>
+                                        <div class="col-md-2 col-sm-12 col-xs-12">
+                                            <button id="btnBuscarIngeniero" class="btn btn-default col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                                                <i class="fa fa-search"></i> Buscar
+                                            </button>
+                                        </div>
+                                    </div>
+                                    <div class="row" style="overflow-x: auto; height:280px">
+                                        <div class="col-md-12">
+                                            <table class="table table-striped table-hover table-sm">
+                                                <thead>
+                                                    <tr>
+                                                        <th>#</th>
+                                                        <th>Cip</th>
+                                                        <th>Dni</th>
+                                                        <th>Ingeniero</th>
+                                                        <th>Condición</th>
+                                                        <th>Ultima Cuota</th>
+                                                        <th>Debe</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody id="tbIngenieros">
+
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-warning" id="btnAceptarIngenieros">
+                                        <i class="fa fa-check"></i> Aceptar</button>
+                                    <button type="button" class="btn btn-primary" data-dismiss="modal">
+                                        <i class="fa fa-remove"></i> Cancelar</button>
+                                </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!--end modal history enginner  -->
 
                 <div class="row">
                     <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
@@ -184,6 +259,7 @@
                                 <th>RUC</th>
                                 <th>Condicion</th>
                                 <th>Colegiaturas</th>
+                                <th>Historial</th>
                                 <th>Opciones</th>
                             </thead>
                             <tbody id="tbTable">
@@ -323,7 +399,7 @@
                 beforeSend: function() {
                     tbTable.empty();
                     tbTable.append(
-                        '<tr class="text-center"><td colspan="8"><img src="./images/spiner.gif"/><p>cargando información.</p></td></tr>'
+                        '<tr class="text-center"><td colspan="10"><img src="./images/spiner.gif"/><p>cargando información.</p></td></tr>'
                     );
                     state = true;
                 },
@@ -334,6 +410,10 @@
                         for (let persona of result.personas) {
 
                             // let image = '<img src="images/masculino.png" width="30">';
+                            let btnHistorial = '<button class="btn btn-warning btn-sm"  data-toggle="modal" data-target="#mostrarHistorial">' +
+                                '<i class="fa fa-eye"></i> Ver' +
+                                '</button>';
+
                             let btnUpdate =
                                 '<button class="btn btn-success btn-sm" onclick="loadUpdateIngenieros(\'' +
                                 persona.idDNI + '\')">' +
@@ -355,11 +435,12 @@
                                 '</td>' +
                                 '<td>' + persona.idDNI + '</td>' +
                                 '<td>' + persona.Cip + '</td>' +
-                                '<td>' + persona.Apellidos +' '+persona.Nombres + '</td>' +
+                                '<td>' + persona.Apellidos + ' ' + persona.Nombres + '</td>' +
                                 '<td>' + estadoCivil + '</td>' +
                                 '<td>' + persona.Ruc + '</td>' +
                                 '<td>' + condicion + '</td>' +
-                                '<td>'+0+'</td>'+
+                                '<td>' + 0 + '</td>' +
+                                '<td>' + btnHistorial + '</td>' +
                                 '<td>' +
                                 '' + btnUpdate + '' +
                                 '</td>' +
@@ -373,7 +454,7 @@
                     } else {
                         tbTable.empty();
                         tbTable.append(
-                            '<tr class="text-center"><td colspan="8"><p>No se pudo cargar la información.</p></td></tr>'
+                            '<tr class="text-center"><td colspan="10"><p>No se pudo cargar la información.</p></td></tr>'
                         );
                         $("#lblPaginaActual").html(0);
                         $("#lblPaginaSiguiente").html(0);
@@ -381,16 +462,19 @@
                     }
                 },
                 error: function(error) {
-                    console.log(error);
                     tbTable.empty();
                     tbTable.append(
-                        '<tr class="text-center"><td colspan="8"><p>Se produjo un error, intente nuevamente.</p></td></tr>'
+                        '<tr class="text-center"><td colspan="10"><p>Se produjo un error, intente nuevamente.</p></td></tr>'
                     );
                     $("#lblPaginaActual").html(0);
                     $("#lblPaginaSiguiente").html(0);
                     state = false;
                 }
             });
+        }
+
+        function showHistorialIngenieros(idPersona) {
+            location.href = "update_ingenieros.php?idPersona=" + idPersona;
         }
 
         function loadUpdateIngenieros(idPersona) {

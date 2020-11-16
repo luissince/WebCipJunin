@@ -36,7 +36,6 @@ class PersonaAdo
                     "Ruc" => $row["RUC"],
                     "Cip" => $row["CIP"],
                     "Condicion" => $row["Condicion"]
-
                 ));
             }
 
@@ -44,6 +43,104 @@ class PersonaAdo
             where Nombres like concat(?,'%') or Apellidos like concat(?,'%')");
             $comandoTotal->bindParam(1, $nombres, PDO::PARAM_STR);
             $comandoTotal->bindParam(2, $nombres, PDO::PARAM_STR);
+            $comandoTotal->execute();
+            $resultTotal =  $comandoTotal->fetchColumn();
+
+            array_push($array, $arrayPersonas, $resultTotal);
+            return $array;
+        } catch (Exception $ex) {
+            return $ex->getMessage();
+        }
+    }
+
+    public static function getAllModal($search, $posicionPagina, $filasPorPagina)
+    {
+        try {
+            $array = array();
+            $arrayPersonas = array();
+            $comandoPersona = Database::getInstance()->getDb()->prepare("SELECT  
+            dbo.Especialidad.Capitulo,
+            dbo.Especialidad.Especialidad,
+            CASE CIP
+            WHEN 'T' THEN 'Tramite'
+            ELSE CIP END
+            AS Cip,
+            dbo.Persona.idDNI as Dni,
+            dbo.Persona.Apellidos + ', ' + dbo.Persona.Nombres AS Ingeniero,
+            convert(varchar,cast(dbo.Colegiatura.FechaColegiado as date), 103) as FechaColegiado,
+            case dbo.Persona.Condicion
+            when 'T' then 'Transeunte'
+            when 'F' then 'Fallecido'
+            when 'R' then 'Retirado'
+            when 'V' then 'Vitalicio'
+            else 'Ordinario' 
+            end as Condicion,
+            convert(varchar,cast(ISNULL(dbo.ULTIMACuota.FechaUltimaCuota,dbo.Colegiatura.FechaColegiado) as date), 103) AS FechaUltimaCuota,
+            CASE dbo.Persona.Condicion
+            WHEN 'T' THEN 0
+            ELSE DATEDIFF(M, ISNULL(dbo.ULTIMACuota.FechaUltimaCuota, dbo.Colegiatura.FechaColegiado), GETDATE())
+            END
+            AS Deuda,
+            case
+            when CAST (DATEDIFF(M,ISNULL(dbo.ULTIMACuota.FechaUltimaCuota, dbo.Colegiatura.FechaColegiado) , GETDATE()) as int) <=0 then 'Habilitado'
+            else 'No Habilitado'
+            end as Habilidad
+            FROM dbo.Persona
+            LEFT OUTER JOIN
+                 dbo.Colegiatura ON dbo.Colegiatura.idDNI = dbo.Persona.idDNI
+                 AND dbo.Colegiatura.Principal = 1
+                 INNER JOIN
+                 dbo.Especialidad ON dbo.Especialidad.idEspecialidad = dbo.Colegiatura.idEspecialidad
+                 LEFT OUTER JOIN
+                 dbo.ULTIMACuota ON dbo.ULTIMACuota.idDNI = dbo.Persona.idDNI
+            where 
+            dbo.Persona.idDNI = ? 
+            or dbo.Persona.CIP = ? 
+            or dbo.Persona.Apellidos like concat(?,'%')
+            or dbo.Persona.Nombres like concat(?,'%')
+            order by dbo.Persona.Apellidos asc
+            offset ? rows fetch next ? rows only");
+            $comandoPersona->bindParam(1, $search, PDO::PARAM_INT);
+            $comandoPersona->bindParam(2, $search, PDO::PARAM_STR);
+            $comandoPersona->bindParam(3, $search, PDO::PARAM_STR);
+            $comandoPersona->bindParam(4, $search, PDO::PARAM_STR);
+            $comandoPersona->bindParam(5, $posicionPagina, PDO::PARAM_INT);
+            $comandoPersona->bindParam(6, $filasPorPagina, PDO::PARAM_INT);
+            $comandoPersona->execute();
+            $count = 0;
+            while ($row = $comandoPersona->fetch()) {
+                $count++;
+                array_push($arrayPersonas, array(
+                    "Id" => $count + $posicionPagina,
+                    "Capitulo" => $row["Capitulo"],
+                    "Especialidad" => $row["Especialidad"],
+                    "Cip" => $row["Cip"],
+                    "Dni" => $row["Dni"],
+                    "Ingeniero" => $row["Ingeniero"],
+                    "FechaColegiado" => $row["FechaColegiado"],
+                    "Condicion" => $row["Condicion"],
+                    "FechaUltimaCuota" => $row["FechaUltimaCuota"],
+                    "Deuda" => $row["Deuda"],
+                    "Habilidad" => $row["Habilidad"]
+                ));
+            }
+
+            $comandoTotal = Database::getInstance()->getDb()->prepare("SELECT COUNT(*) FROM dbo.Persona
+             LEFT OUTER JOIN
+                  dbo.Colegiatura ON dbo.Colegiatura.idDNI = dbo.Persona.idDNI
+                  AND dbo.Colegiatura.Principal = 1
+                  INNER JOIN
+                  dbo.Especialidad ON dbo.Especialidad.idEspecialidad = dbo.Colegiatura.idEspecialidad
+                  LEFT OUTER JOIN
+                  dbo.ULTIMACuota ON dbo.ULTIMACuota.idDNI = dbo.Persona.idDNI
+                  WHERE dbo.Persona.idDNI = ? 
+                  or dbo.Persona.CIP = ? 
+                  or dbo.Persona.Apellidos like concat(?,'%')
+                  or dbo.Persona.Nombres like concat(?,'%')");
+            $comandoTotal->bindParam(1, $search, PDO::PARAM_INT);
+            $comandoTotal->bindParam(2, $search, PDO::PARAM_STR);
+            $comandoTotal->bindParam(3, $search, PDO::PARAM_STR);
+            $comandoTotal->bindParam(4, $search, PDO::PARAM_STR);
             $comandoTotal->execute();
             $resultTotal =  $comandoTotal->fetchColumn();
 
@@ -81,10 +178,6 @@ class PersonaAdo
             return $ex->getMessage();
         }
     }
-
-    // public static function insert(){
-
-    // }
 
     public static function update($persona)
     {
@@ -124,10 +217,10 @@ class PersonaAdo
                 $comandoPersona->execute();
                 Database::getInstance()->getDb()->commit();
                 return "updated";
-            }else{
+            } else {
                 Database::getInstance()->getDb()->rollback();
                 return "noexists";
-            }            
+            }
         } catch (Exception $ex) {
             Database::getInstance()->getDb()->rollback();
             return $ex->getMessage();

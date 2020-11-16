@@ -9,20 +9,19 @@ function Tools() {
         return parts[0] + parts[1] + parts[2];
     }
 
-    this.getDateForma = function(value,format="dd/mm/yyyy") {
+    this.getDateForma = function(value, format = "dd/mm/yyyy") {
         var parts = value.split("-");
         let today = new Date(parts[0], parts[1] - 1, parts[2]);
         return (
-            format == "dd/mm/yyyy"?(
-            (today.getDate() > 9 ? today.getDate() : "0" + today.getDate()) +
-            "/" +
-            (today.getMonth() + 1 > 9 ?
-                today.getMonth() + 1 :
-                "0" + (today.getMonth() + 1)) +
-            "/" +
-            today.getFullYear())
-            :
-            today.getFullYear()+"-"+(today.getMonth() + 1 > 9 ?today.getMonth() + 1 :"0" + (today.getMonth() + 1))+"-"+(today.getDate() > 9 ? today.getDate() : "0" + today.getDate())
+            format == "dd/mm/yyyy" ? (
+                (today.getDate() > 9 ? today.getDate() : "0" + today.getDate()) +
+                "/" +
+                (today.getMonth() + 1 > 9 ?
+                    today.getMonth() + 1 :
+                    "0" + (today.getMonth() + 1)) +
+                "/" +
+                today.getFullYear()) :
+            today.getFullYear() + "-" + (today.getMonth() + 1 > 9 ? today.getMonth() + 1 : "0" + (today.getMonth() + 1)) + "-" + (today.getDate() > 9 ? today.getDate() : "0" + today.getDate())
         );
     }
 
@@ -86,5 +85,95 @@ function Tools() {
         let formatted_date = today.getFullYear() + "-" + ((today.getMonth() + 1) > 9 ? (today.getMonth() + 1) : '0' + (
             today.getMonth() + 1)) + "-" + (today.getDate() > 9 ? today.getDate() : '0' + today.getDate());
         return formatted_date;
+    }
+
+    this.diasEnUnMes = function(mes, year) {
+        mes = mes.toUpperCase();
+        var meses = ["ENERO", "FEBRERO", "MARZO", "ABRIL", "MAYO", "JUNIO", "JULIO", "AGOSTO", "SEPTIEMBRE", "OCTUBRE", "NOVIEMBRE", "DICIEMBRE"];
+        return new Date(year, meses.indexOf(mes) + 1, 0).getDate();
+    }
+
+    this.AlertSuccess = function(title, message) {
+        toastr.options = {
+            "closeButton": false,
+            "debug": false,
+            "newestOnTop": false,
+            "progressBar": false,
+            "positionClass": "toast-top-right",
+            "preventDuplicates": false,
+            "onclick": null,
+            "showDuration": "300",
+            "hideDuration": "1000",
+            "timeOut": "5000",
+            "extendedTimeOut": "1000",
+            "showEasing": "swing",
+            "hideEasing": "linear",
+            "showMethod": "fadeIn",
+            "hideMethod": "fadeOut"
+        }
+        toastr["success"](message, title);
+    }
+
+    this.AlertWarning = function(title, message) {
+        toastr.options = {
+            "closeButton": false,
+            "debug": false,
+            "newestOnTop": false,
+            "progressBar": false,
+            "positionClass": "toast-top-right",
+            "preventDuplicates": false,
+            "onclick": null,
+            "showDuration": "300",
+            "hideDuration": "1000",
+            "timeOut": "5000",
+            "extendedTimeOut": "1000",
+            "showEasing": "swing",
+            "hideEasing": "linear",
+            "showMethod": "fadeIn",
+            "hideMethod": "fadeOut"
+        }
+        toastr["warning"](message, title);
+    }
+
+    this.AlertError = function(title, message) {
+        toastr.options = {
+            "closeButton": false,
+            "debug": false,
+            "newestOnTop": false,
+            "progressBar": false,
+            "positionClass": "toast-top-right",
+            "preventDuplicates": false,
+            "onclick": null,
+            "showDuration": "300",
+            "hideDuration": "1000",
+            "timeOut": "5000",
+            "extendedTimeOut": "1000",
+            "showEasing": "swing",
+            "hideEasing": "linear",
+            "showMethod": "fadeIn",
+            "hideMethod": "fadeOut"
+        }
+        toastr["error"](message, title)
+    }
+
+    this.AlertInfo = function(title, message) {
+        toastr.options = {
+            "closeButton": false,
+            "debug": false,
+            "newestOnTop": false,
+            "progressBar": false,
+            "positionClass": "toast-top-right",
+            "preventDuplicates": false,
+            "onclick": null,
+            "showDuration": "300",
+            "hideDuration": "1000",
+            "timeOut": "5000",
+            "extendedTimeOut": "1000",
+            "showEasing": "swing",
+            "hideEasing": "linear",
+            "showMethod": "fadeIn",
+            "hideMethod": "fadeOut"
+        }
+        toastr["info"](message, title)
     }
 }
