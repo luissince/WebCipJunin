@@ -641,9 +641,9 @@
                                     </h4>
                                 </div>
                                 <div class="modal-body">
-                                    <div class="row">
+                                    <div class="row" style="margin-bottom: 15px;">
                                         <div class="col-md-4 col-sm-12 col-xs-12">
-                                            <button class="btn btn-primary" id="btnIzquierda">
+                                            <button class="btn btn-danger" id="btnIzquierda">
                                                 <i class="fa fa-toggle-left"></i>
                                             </button>
                                             <span id="lblPaginaActual" class="font-weight-bold">0</span>
@@ -651,7 +651,7 @@
                                             <span>a</span>
                                             <span>&nbsp;</span>
                                             <span id="lblPaginaSiguiente" class="font-weight-bold">0</span>
-                                            <button class="btn btn-primary" id="btnDerecha">
+                                            <button class="btn btn-danger" id="btnDerecha">
                                                 <i class="fa fa-toggle-right"></i>
                                             </button>
                                         </div>
@@ -688,12 +688,18 @@
                                     </div>
                                 </div>
                                 <div class="modal-footer">
-                                    <button type="button" class="btn btn-warning" id="btnAceptarIngenieros">
-                                        <i class="fa fa-check"></i> Aceptar</button>
-                                    <button type="button" class="btn btn-primary" data-dismiss="modal">
-                                        <i class="fa fa-remove"></i> Cancelar</button>
+                                    <div class="row">
+                                        <div class="col-lg-6 col-md-6 text-left">
+                                            <h5>
+                                                <i class="fa fa-info text-danger"></i> <b class="text-success">Para seleccionar un ingeniero has doble click sobre la fila</b>
+                                            </h5>
+                                        </div>
+                                        <div class="col-lg-6 col-md-6">
+                                            <button type="button" class="btn btn-primary" data-dismiss="modal">
+                                                <i class="fa fa-remove"></i> Cancelar</button>
+                                        </div>
+                                    </div>
                                 </div>
-                                </form>
                             </div>
                         </div>
                     </div>
@@ -801,8 +807,16 @@
 
                                 <div class="row">
                                     <div class="col-md-12 text-left">
-                                        <h5>N° Cip</h5>
-                                        <h5 id="lblCipSeleccionado">--</h5>
+                                        <div class="row">
+                                            <div class="col-md-6">
+                                                <h5>N° Cip</h5>
+                                                <h5 id="lblCipSeleccionado">--</h5>
+                                            </div>
+                                            <div class="col-md-6">
+                                                <h5>Tipo</h5>
+                                                <h5 id="lblTipoIngeniero">--</h5>
+                                            </div>
+                                        </div>
                                     </div>
                                     <div class="col-md-12 text-left">
                                         <h5>N° Documento</h5>
@@ -835,9 +849,12 @@
     </div>
     <!-- ./wrapper -->
     <script src="js/tools.js"></script>
+    <script src="js/cobros/cobrosingenieros.js"></script>
+    <script src="js/cobros/colegiatura.js"></script>
+    <script src="js/cobros/cuotas.js"></script>
+    <script src="js/cobros/otros.js"></script>
     <script>
-        let tools = new Tools();
-
+        let tools = new Tools();        
         //cuotas
         let cuotas = [];
         let countCurrentDate = 0;
@@ -860,526 +877,40 @@
         let paginacion = 0;
         let filasPorPagina = 10;
         let idDNI = 0;
+        let modelCobrosIngenieros = new CobroIngenieros();
+
+        let modelColegiatura = new Colegiatura();
+
+        let modelCuotas = new Cuotas();        
+
+        let modelOtros = new Otros();   
 
         $(document).ready(function() {
-
+            // comprobantes
             loadComprobantes();
 
+            //ingenieros
+            modelCobrosIngenieros.componentesIngenieros();
+
             //colegiatura
-            componentesColegiatura();
+            modelColegiatura.componentesColegiatura();
 
             //coutas
-            componentesCuotas();
+            modelCuotas.componentesCuotas();
 
-            //certificado
-            componentesCertificado();
+            // //certificado
+            // componentesCertificado();
 
-            //peritaje
-            componentesPeritaje();
+            // //peritaje
+            // componentesPeritaje();
 
-            //otros
-            componentesOtros();
-
-            //ingenieros
-            componentesIngenieros();
+            // //otros
+            modelOtros.componentesOtros();
 
             //cobro
-            componentesRegistrarIngreso();
+            // componentesRegistrarIngreso();
 
         });
-
-        function componentesColegiatura() {
-            $("#btnColegitura").click(function() {
-                $('#mdColegiatura').modal('show');
-                loadColegiatura();
-            });
-
-            $("#btnColegitura").keypress(function(event) {
-                if (event.keyCode === 13) {
-                    $('#mdColegiatura').modal('show');
-                    loadColegiatura();
-                }
-                event.preventDefault();
-            });
-
-            $("#btnAceptarColegiatura").click(function() {
-                validateIngresoColegiatura();
-            });
-
-            $("#btnAceptarColegiatura").keypress(function(event) {
-                var keycode = event.keyCode || event.which;
-                if (keycode == '13') {
-                    validateIngresoColegiatura();
-                }
-                event.preventDefault();
-            });
-        }
-
-        function componentesCuotas() {
-            $("#btnCuotas").click(function() {
-                if (idDNI == 0) {
-                    tools.AlertWarning("Cuotas", "No selecciono ningún ingeniero para obtener sus cuotas.")
-                } else {
-                    $('#mdCuotas').modal('show');
-                    loadCuotas(1);
-                }
-
-            });
-
-            $("#btnCuotas").keypress(function() {
-                if (idDNI == 0) {
-                    tools.AlertWarning("Cuotas", "No selecciono ningún ingeniero para obtener sus cuotas.")
-                } else {
-                    $('#mdCuotas').modal('show');
-                    loadCuotas(1);
-                }
-                event.preventDefault();
-            });
-            $("#btnCuotaNormal").click(function() {
-                $("#lblCuotasMensaje").html("Cuotas Ordinarias");
-                loadCuotas(1);
-            });
-
-            $("#btnCuotaNormal").keypress(function(event) {
-                if (event.keyCode === 13) {
-                    $("#lblCuotasMensaje").html("Cuotas Ordinarias");
-                    loadCuotas(1);
-                }
-                event.preventDefault();
-            });
-
-            $("#btnCuotaAmnistia").click(function() {
-                $("#lblCuotasMensaje").html("Cuotas de Amnistia");
-                loadCuotas(2);
-            });
-
-            $("#btnCuotaAmnistia").keypress(function(event) {
-                if (event.keyCode === 13) {
-                    $("#lblCuotasMensaje").html("Cuotas de Amnistia");
-                    loadCuotas(2);
-                }
-                event.preventDefault();
-            });
-
-            $("#btnCuotaVitalicio").click(function() {
-                $("#lblCuotasMensaje").html("Cuotas de Vitalicio");
-                loadCuotas(3);
-            });
-
-            $("#btnCuotaVitalicio").keypress(function(event) {
-                if (event.keyCode === 13) {
-                    $("#lblCuotasMensaje").html("Cuotas de Vitalicio");
-                    loadCuotas(3);
-                }
-                event.preventDefault();
-            });
-
-            $("#selectall").on("click", function() {
-                $(".cuotasid").attr("checked", this.checked);
-            });
-
-            $("#btnAddCuota").click(function() {
-                addCuotas();
-            });
-
-            $("#btnAddCuota").keypress(function(event) {
-                if (event.keyCode === 13) {
-                    addCuotas();
-                }
-                event.preventDefault();
-            });
-
-            $("#btnCloseCuotas").click(function() {
-                $('#mdCuotas').modal('hide');
-                countCurrentDate = 0;
-            });
-
-            $("#btnCancelarCuotas").click(function() {
-                $('#mdCuotas').modal('hide');
-                countCurrentDate = 0;
-            });
-
-            $("#btnAceptarCuotas").click(function() {
-                validateIngresoCuotas();
-            });
-
-            $("#btnAceptarCuotas").keypress(function(event) {
-                if (event.keyCode === 13) {
-                    validateIngresoCuotas();
-                }
-                event.preventDefault();
-            });
-        }
-
-        function componentesCertificado() {
-            $("#btnCertHabilidad").click(function() {
-                $('#mdCertHabilidad').modal('show');
-            });
-
-            $("#btnCertHabilidad").keypress(function(event) {
-                if (event.keyCode === 13) {
-                    $('#mdCertHabilidad').modal('show');
-                }
-                event.preventDefault();
-            });
-
-            $("#btnCertProyecto").click(function() {
-                $('#mdCertProyecto').modal('show');
-            });
-
-            $("#btnCertProyecto").keypress(function(event) {
-                if (event.keyCode === 13) {
-                    $('#mdCertProyecto').modal('show');
-                }
-                event.preventDefault();
-            });
-
-            $("#btnCertResidenciaObra").click(function() {
-                $('#mdCertResidenciaObra').modal('show');
-            });
-
-            $("#btnCertResidenciaObra").keypress(function(event) {
-                if (event.keyCode === 13) {
-                    $('#mdCertResidenciaObra').modal('show');
-                }
-                event.preventDefault();
-            });
-        }
-
-        function componentesPeritaje() {
-            $("#btnPeritaje").click(function() {
-                $('#mdPeritaje').modal('show');
-            });
-
-            $("#btnPeritaje").keypress(function(event) {
-                if (event.keyCode === 13) {
-                    $('#mdPeritaje').modal('show');
-                }
-                event.preventDefault();
-            });
-        }
-
-        function componentesOtros() {
-            $("#btnOtro").click(function() {
-                $('#mdOtros').modal('show');
-                loadOtros();
-            });
-
-            $("#btnOtro").keypress(function(event) {
-                if (event.keyCode === 13) {
-                    $('#mdOtros').modal('show');
-                    loadOtros();
-                }
-                event.preventDefault();
-            });
-            $("#btnAceptarOtros").click(function() {
-                validateIngresoOtros();
-            });
-
-            $("#btnAceptarOtros").keypress(function(event) {
-                var keycode = event.keyCode || event.which;
-                if (keycode == '13') {
-                    validateIngresoOtros();
-                }
-                event.preventDefault();
-            });
-            $("#cbOtrosConcepto").change(function(event) {
-                $("#txtMontoOtrosConceptos").val($("#cbOtrosConcepto").find('option:selected').attr('id'))
-            });
-        }
-
-        function componentesIngenieros() {
-            $("#btnIngenieros").click(function(event) {
-                $('#mdIngenieros').modal('show');
-                loadInitIngenieros();
-            });
-
-            $("#btnIngenieros").keypress(function(event) {
-                if (event.keyCode === 13) {
-                    $('#mdIngenieros').modal('show');
-                    loadInitIngenieros();
-                }
-                event.preventDefault();
-            });
-
-            $('#mdIngenieros').on('shown.bs.modal', function() {
-                $('#txtBuscarIngeniero').focus();
-            });
-
-            $("#txtBuscarIngeniero").on("keyup", function(event) {
-                if (event.keyCode === 13) {
-                    if (!state) {
-                        paginacion = 1;
-                        loadIngenieros($("#txtBuscarIngeniero").val());
-                        opcion = 1;
-                    }
-                }
-            });
-
-            $("#btnIzquierda").click(function() {
-                if (!state) {
-                    if (paginacion > 1) {
-                        paginacion--;
-                        onEventPaginacion();
-                    }
-                }
-            });
-
-            $("#btnDerecha").click(function() {
-                if (!state) {
-                    if (paginacion < totalPaginacion) {
-                        paginacion++;
-                        onEventPaginacion();
-                    }
-                }
-            });
-
-            $("#btnAceptarIngenieros").click(function(event) {
-
-            });
-
-            $("#btnAceptarIngenieros").keypress(function(event) {
-                if (event.keyCode === 13) {
-
-                }
-                event.preventDefault();
-            });
-        }
-
-        function componentesRegistrarIngreso() {
-            $("#btnCobrar").click(function() {
-                console.log(cuotasEstate)
-                    console.log(colegiaturaEstado)
-                if ($("#cbComprobante").val() == '') {
-                    tools.AlertWarning("Ingreso", "Seleccione un comprobante para continuar.");
-                } else if (arrayIngresos.length == 0) {
-                    tools.AlertWarning("Ingreso", "No hay conceptos para continuar.");
-                } else if (idDNI == 0) {
-                    tools.AlertWarning("Ingreso", "No selecciono ningún ingeneniero para continuar.");
-                } else {                    
-                    alertify.confirm('Ingreso', '¿Está seguro de continuar?', function() {
-                        registrarIngreso();
-                    }, function() {
-
-                    });
-                }
-            });
-
-            $("#btnCobrar").keypress(function() {
-                if ($("#cbComprobante").val() == '') {
-                    tools.AlertWarning("Ingreso", "Seleccione un comprobante para continuar.");
-                } else if (arrayIngresos.length == 0) {
-                    tools.AlertWarning("Ingreso", "No hay conceptos para continuar.");
-                } else if (idDNI == 0) {
-                    tools.AlertWarning("Ingreso", "No selecciono ningún ingeneniero para continuar.");
-                } else {
-                    alertify.confirm('Ingreso', '¿Está seguro de continuar?', function() {
-                        registrarIngreso();
-                    }, function() {
-
-                    });
-                }
-                event.preventDefault();
-            });
-        }
-
-        function loadInitIngenieros() {
-            if (!state) {
-                paginacion = 1;
-                loadIngenieros("");
-                opcion = 0;
-            }
-        }
-
-        function loadIngenieros(search) {
-            let tbIngenieros = $("#tbIngenieros");
-            $.ajax({
-                url: "../app/controller/PersonaController.php",
-                method: "GET",
-                data: {
-                    "type": "listdata",
-                    "search": search,
-                    "posicionPagina": ((paginacion - 1) * filasPorPagina),
-                    "filasPorPagina": filasPorPagina
-                },
-                beforeSend: function() {
-                    tbIngenieros.empty();
-                    tbIngenieros.append(
-                        '<tr class="text-center"><td colspan="8"><img src="./images/spiner.gif"/><p>cargando información.</p></td></tr>'
-                    );
-                    state = true;
-                },
-                success: function(result) {
-                    if (result.estado === 1) {
-                        tbIngenieros.empty();
-                        for (let value of result.personas) {
-                            tbIngenieros.append('<tr ondblclick=onSelectedIngeniero(\'' + value.Dni + '\')>' +
-                                '<td>' + value.Id + '</td>' +
-                                '<td>' + value.Cip + '</td>' +
-                                '<td>' + value.Dni + '</td>' +
-                                '<td>' + value.Ingeniero + '</td>' +
-                                '<td>' + value.Condicion + '</td>' +
-                                '<td>' + value.FechaUltimaCuota + '</td>' +
-                                '<td>' + (value.Deuda <= 0 ? '0 Cuotas' : value.Deuda + ' Cuota(s)') + '</td>' +
-                                '</tr>');
-                        }
-                        totalPaginacion = parseInt(Math.ceil((parseFloat(result.total) / parseInt(
-                            filasPorPagina))));
-                        $("#lblPaginaActual").html(paginacion);
-                        $("#lblPaginaSiguiente").html(totalPaginacion);
-                        state = false;
-                    } else {
-                        tbIngenieros.empty();
-                        tbIngenieros.append(
-                            '<tr class="text-center"><td colspan="8"><p>No se pudo cargar la información.</p></td></tr>'
-                        );
-                        $("#lblPaginaActual").html("0");
-                        $("#lblPaginaSiguiente").html("0");
-                        state = false;
-                    }
-                },
-                error: function(error) {
-                    tbIngenieros.empty();
-                    tbIngenieros.append(
-                        '<tr class="text-center"><td colspan="8"><p>Se produjo un error, intente nuevamente.</p></td></tr>'
-                    );
-                    $("#lblPaginaActual").html("0");
-                    $("#lblPaginaSiguiente").html("0");
-                    state = false;
-                }
-            });
-        }
-
-        function loadColegiatura() {
-            $.ajax({
-                url: "../app/controller/ConceptoController.php",
-                method: "GET",
-                data: {
-                    "type": "typecolegiatura",
-                    "categoria": 4
-                },
-                beforeSend: function() {
-                    $("#ctnConceptos").empty();
-                    colegiaturas.splice(0, colegiaturas.length);
-                },
-                success: function(result) {
-                    if (result.estado === 1) {
-                        let totalColegiatura = 0;
-                        colegiaturas = result.data;
-                        for (let value of colegiaturas) {
-                            $("#ctnConceptos").append('<div id="' + value.idConcepto + '" class="row">' +
-                                '<div class="col-md-8 text-left">' +
-                                '<p>' + value.Concepto + '</p>' +
-                                '</div>' +
-                                '<div class="col-md-4 text-right">' +
-                                '<p>' + tools.formatMoney(value.Precio) + '</panel>' +
-                                '</div>');
-                            totalColegiatura += parseFloat(value.Precio);
-                        }
-                        $("#lblTotalColegiatura").html(tools.formatMoney(totalColegiatura));
-
-                    } else {
-
-                    }
-                },
-                error: function(error) {
-                    console.log(error);
-                }
-            });
-        }
-
-        function loadCuotas(categoria) {
-            $.ajax({
-                url: "../app/controller/ConceptoController.php",
-                method: "GET",
-                data: {
-                    "type": "typecolegiatura",
-                    "categoria": categoria,
-                    "dni": idDNI,
-                    "mes": countCurrentDate
-                },
-                beforeSend: function() {
-                    $("#tbCuotas").empty();
-                    $("#tbCuotas").append('<tr class="text-center"><td colspan="2"><img src="./images/spiner.gif"/><p>cargando información.</p></td></tr>');
-                    cuotas.splice(0, cuotas.length);
-                },
-                success: function(result) {
-                    //console.log(result)
-                    if (result.estado === 1) {
-                        $("#tbCuotas").empty();
-                        cuotas = result.data;
-                        if (cuotas.length > 0) {
-                            let totalCuotas = 0;
-                            for (let value of cuotas) {
-                                let monto = 0;
-                                for (let c of value.concepto) {
-                                    monto += parseFloat(c.Precio);
-                                }
-                                $("#tbCuotas").append('<tr >' +
-                                    '<td class="no-padding"><div><label><input type="checkbox" class="cuotasid" checked> ' + nombreMes(value.mes) + ' - ' + value.year + '</label></div></td>' +
-                                    '<td class="no-padding">' + tools.formatMoney(monto) + '</td>' +
-                                    +'</tr>');
-                                totalCuotas += parseFloat(monto);
-                            }
-                            $("#lblTotalCuotas").html("TOTAL DE " + (cuotas.length) + " CUOTAS: " + tools.formatMoney(totalCuotas));
-                            if (cuotas.length > 0) {
-                                $("#lblNumeroCuotas").html("CUOTAS DEL: " + cuotas[0].mes + "/" + cuotas[0].year + " al " + cuotas[cuotas.length - 1].mes + "/" + cuotas[cuotas.length - 1].year);
-                            }
-                        } else {
-                            $("#tbCuotas").append('<tr class="text-center"><td colspan="2"><img src="./images/ayuda.png" width="80"/><p>Cuotas al Día has click en boton (+add) para más cuotas.</p></td></tr>');
-                            $("#lblTotalCuotas").html("TOTAL DE 0 CUOTAS: 0.00");
-                            $("#lblNumeroCuotas").html("CUOTAS DEL: 00/0000 al 00/0000");
-                        }
-                    } else {
-                        $("#tbCuotas").empty();
-                        $("#tbCuotas").append('<tr class="text-center"><p>No se pudo cargar la información, intente nuevamente.</p></td></tr>');
-                        $("#lblTotalCuotas").html("TOTAL DE 0 CUOTAS: 0.00");
-                        $("#lblNumeroCuotas").html("CUOTAS DEL: 00/0000 al 00/0000");
-                    }
-                },
-                error: function(error) {
-                    //  console.log(error);
-                    $("#tbCuotas").empty();
-                    $("#tbCuotas").append('<tr class="text-center"><p>Se produjo un error intente nuevamente o comuníquese con su proveedor.</p></td></tr>');
-                }
-            });
-        }
-
-        function loadCertificado() {
-
-        }
-
-        function loadPeritaje() {
-
-        }
-
-        function loadOtros() {
-            $.ajax({
-                url: "../app/controller/ConceptoController.php",
-                method: "GET",
-                data: {
-                    "type": "typecolegiatura",
-                    "categoria": 100,
-                    "dni": "20707246",
-                },
-                beforeSend: function() {
-                    $("#cbOtrosConcepto").empty();
-                },
-                success: function(result) {
-                    if (result.estado === 1) {
-                        $("#cbOtrosConcepto").append(' <option id="" value="">- Seleccione -</option>');
-                        for (let value of result.data) {
-                            $("#cbOtrosConcepto").append('<option id="' + value.Precio + '" value="' + value.IdConcepto + '">' + value.Concepto + ' (' + value.Precio + ')</option>');
-                        }
-                    } else {
-
-                    }
-                },
-                error: function(error) {
-                    console.log(error);
-                }
-            });
-        }
 
         function loadComprobantes() {
             $.ajax({
@@ -1405,328 +936,282 @@
             });
         }
 
-        function validateIngresoColegiatura() {
-            for (let value of colegiaturas) {
-                if (!validateDuplicate(value.IdConcepto)) {
-                    arrayIngresos.push({
-                        "idConcepto": parseInt(value.IdConcepto),
-                        "categoria": parseInt(value.Categoria),
-                        "cantidad": 1,
-                        "concepto": value.Concepto,
-                        "precio": parseFloat(value.Precio),
-                        "monto": parseFloat(value.Precio)
-                    });
-                } else {
-                    for (let i = 0; i < arrayIngresos.length; i++) {
-                        if (arrayIngresos[i].idConcepto == value.IdConcepto) {
-                            let newConcepto = arrayIngresos[i];
-                            newConcepto.cantidad = newConcepto.cantidad + 1;
-                            newConcepto.precio = value.Precio;
-                            newConcepto.monto = parseFloat(newConcepto.precio) * parseFloat(newConcepto.cantidad)
-                            arrayIngresos[i] = newConcepto;
-                            break;
-                        }
-                    }
-                }
-            }
-            if(colegiaturas.length>0){
-                colegiaturaEstado=true;
-            }
-            addIngresos();
-            $('#mdColegiatura').modal('hide');
-        }
 
-        function validateIngresoCuotas() {
-            if (cuotas.length > 0) {
-                removeIngresos(0, 1);
-                removeIngresos(0, 2);
-                removeIngresos(0, 3);
-            }
-            for (let value of cuotas) {
-                for (let c of value.concepto) {
-                    if (!validateDuplicate(c.IdConcepto)) {
-                        arrayIngresos.push({
-                            "idConcepto": parseInt(c.IdConcepto),
-                            "categoria": parseInt(c.Categoria),
-                            "cantidad": 1,
-                            "concepto": c.Concepto,
-                            "precio": parseFloat(c.Precio),
-                            "monto": parseFloat(c.Precio)
-                        });
-                    } else {
-                        for (let i = 0; i < arrayIngresos.length; i++) {
-                            if (arrayIngresos[i].idConcepto == c.IdConcepto) {
-                                let newConcepto = arrayIngresos[i];
-                                newConcepto.categoria = parseInt(c.Categoria);
-                                newConcepto.cantidad = newConcepto.cantidad + 1;
-                                newConcepto.precio = c.Precio;
-                                newConcepto.monto = parseFloat(newConcepto.precio) * parseFloat(newConcepto.cantidad)
-                                arrayIngresos[i] = newConcepto;
-                                break;
-                            }
-                        }
-                    }
-                }
-            }
-            if (cuotas.length > 0) {
-                cuotasEstate = true;
-                cuotasInicio = cuotas[0].day + "/" + cuotas[0].mes + "/" + cuotas[0].year;
-                cuotasFin = cuotas[cuotas.length - 1].day + "/" + cuotas[cuotas.length - 1].mes + "/" + cuotas[cuotas.length - 1].year;
-            }
-            console.log(cuotasInicio)
-            console.log(cuotasFin)
-            addIngresos();
-            $('#mdCuotas').modal('hide');
-            countCurrentDate = 0;
-        }
+        // function componentesCertificado() {
+        //     $("#btnCertHabilidad").click(function() {
+        //         $('#mdCertHabilidad').modal('show');
+        //     });
 
-        function validateIngresoOtros() {
-            if ($("#cbOtrosConcepto").val() != "") {
-                if ($("#txtCantidadOtrosConceptos").val() !== "") {
-                    if (!validateDuplicate($("#cbOtrosConcepto").val())) {
-                        arrayIngresos.push({
-                            "idConcepto": parseInt($("#cbOtrosConcepto").val()),
-                            "categoria": 100,
-                            "cantidad": parseFloat($('#txtCantidadOtrosConceptos').val()),
-                            "concepto": $('#cbOtrosConcepto option:selected').html(),
-                            "precio": parseFloat($("#cbOtrosConcepto").find('option:selected').attr('id')),
-                            "monto": parseFloat($("#txtCantidadOtrosConceptos").val()) * parseFloat($("#cbOtrosConcepto").find('option:selected').attr('id'))
-                        });
-                        addIngresos();
-                        $('#mdOtros').modal('hide');
-                        $("#txtCantidadOtrosConceptos").val("1");
-                        $("#txtMontoOtrosConceptos").val("");
-                    } else {
-                        tools.AlertWarning("Ingresos Diversos", "Ya existe un concepto con los datos.")
-                    }
-                } else {
-                    tools.AlertWarning("Ingresos Diversos", "Debe ingresar una cantidad mayor a cero")
-                }
-            } else {
-                tools.AlertWarning("Ingresos Diversos", "Debe escoger un concepto")
-            }
-        }
+        //     $("#btnCertHabilidad").keypress(function(event) {
+        //         if (event.keyCode === 13) {
+        //             $('#mdCertHabilidad').modal('show');
+        //         }
+        //         event.preventDefault();
+        //     });
 
-        function onEventPaginacion() {
-            switch (opcion) {
-                case 0:
-                    loadIngenieros("");
-                    break;
-                case 1:
-                    loadIngenieros($("#txtBuscarIngeniero").val());
-                    break;
-            }
-        }
+        //     $("#btnCertProyecto").click(function() {
+        //         $('#mdCertProyecto').modal('show');
+        //     });
 
-        function onSelectedIngeniero(idIngeniero) {
-            $.ajax({
-                url: "../app/controller/PersonaController.php",
-                method: "GET",
-                data: {
-                    "type": "data",
-                    "dni": idIngeniero
-                },
-                beforeSend: function() {
-                    $('#mdIngenieros').modal('hide');
-                    tools.AlertInfo("Ingeniero", "En proceso de busqueda.");
-                },
-                success: function(data) {
-                    if (data.estado === 1) {
-                        idDNI = data.object.idDNI;
-                        $("#lblCipSeleccionado").html(data.object.CIP);
-                        $("#lblDocumentSeleccionado").html(data.object.idDNI);
-                        $("#lblDatosSeleccionado").html(data.object.Apellidos + " " + data.object.Nombres);
-                        $("#lblDireccionSeleccionado").html("");
-                        tools.AlertSuccess("Ingeniero", "Los obtuvo los datos correctamente.");
-                    } else {
-                        $("#lblCipSeleccionado").html("--");
-                        $("#lblDocumentSeleccionado").html("--");
-                        $("#lblDatosSeleccionado").html("--");
-                        $("#lblDireccionSeleccionado").html("--");
-                        tools.AlertWarning("Ingeniero", "Se produjo un problema en obtener los datos, intente nuevamente.");
-                    }
-                },
-                error: function(error) {
-                    tools.AlertError("Ingeniero", "Error en obtener los datos, comuníquese con su proveedor o intente nuevamente.");
-                }
-            });
-        }
+        //     $("#btnCertProyecto").keypress(function(event) {
+        //         if (event.keyCode === 13) {
+        //             $('#mdCertProyecto').modal('show');
+        //         }
+        //         event.preventDefault();
+        //     });
 
-        function addCuotas() {
-            countCurrentDate++;
-            loadCuotas(1);
-        }
+        //     $("#btnCertResidenciaObra").click(function() {
+        //         $('#mdCertResidenciaObra').modal('show');
+        //     });
 
-        function registrarIngreso() {
-            $.ajax({
-                url: "../app/controller/IngresosController.php",
-                method: "POST",
-                accepts: "application/json",
-                contentType: "application/json",
-                data: JSON.stringify({
-                    "idTipoDocumento": parseInt($("#cbComprobante").val()),
-                    "idCliente": idDNI,
-                    "idUsuario": 1,
-                    "estado": 'C',
-                    "estadoCuotas":cuotasEstate,
-                    "estadoColegiatura":colegiaturaEstado,
-                    "ingresos": arrayIngresos,
-                    "cuotasInicio": cuotasInicio,
-                    "cuotasFin": cuotasFin
-                }),
-                beforeSend: function() {
-                    tools.AlertInfo("Ingreso", "Se está procesando el registro.");
-                },
-                success: function(result) {
-                    if (result.estado === 1) {
-                        cancelarIngreso();
-                        tools.AlertSuccess("Ingreso", result.mensaje);
-                    } else {
-                        tools.AlertWarning("Ingreso", result.mensaje);
-                    }
-                },
-                error: function(error) {
-                    tools.AlertError("Ingreso", "Se produjo un error: " + error.responseText);
-                }
-            });
-        }
+        //     $("#btnCertResidenciaObra").keypress(function(event) {
+        //         if (event.keyCode === 13) {
+        //             $('#mdCertResidenciaObra').modal('show');
+        //         }
+        //         event.preventDefault();
+        //     });
+        // }
 
-        function addIngresos() {
-            $("#tbIngresos").empty();
-            sumaTotal = 0;
-            let arrayRenderTable = [];
+        // function componentesPeritaje() {
+        //     $("#btnPeritaje").click(function() {
+        //         $('#mdPeritaje').modal('show');
+        //     });
 
-            for (let value of arrayIngresos) {
-                if (!arrayRenderTable.find(ar => ar.categoria == value.categoria && value.categoria == 1 ||
-                        ar.categoria == value.categoria && value.categoria == 2 ||
-                        ar.categoria == value.categoria && value.categoria == 3 ||
-                        ar.categoria == value.categoria && value.categoria == 4)) {
-                    arrayRenderTable.push({
-                        "idConcepto": parseInt(value.idConcepto),
-                        "categoria": value.categoria,
-                        "cantidad": value.cantidad,
-                        "concepto": value.categoria == 1 ? "Cuotas Ordinarias" : value.categoria == 4 ? "Colegiatura" : value.categoria == 2 ? "Cuotas de Administia" : value.categoria == 3 ? "Cuotas de Vitalicio" : value.concepto,
-                        "precio": parseFloat(value.precio),
-                        "monto": parseFloat(value.precio) * parseFloat(value.cantidad)
-                    });
-                } else {
-                    for (let i = 0; i < arrayRenderTable.length; i++) {
-                        if (arrayRenderTable[i].categoria == value.categoria) {
-                            let newConcepto = arrayRenderTable[i];
-                            newConcepto.idConcepto = parseInt(value.idConcepto);
-                            newConcepto.categoria = parseInt(value.categoria);
-                            newConcepto.cantidad = newConcepto.cantidad;
-                            newConcepto.concepto = value.categoria == 1 ? "Cuotas Ordinarias" : value.categoria == 4 ? "Colegiatura" : value.categoria == 2 ? "Cuotas de Administia" : value.categoria == 3 ? "Cuotas de Vitalicio" : value.concepto;
-                            newConcepto.precio += parseFloat(value.precio);
-                            newConcepto.monto = newConcepto.precio * newConcepto.cantidad;
-                            arrayRenderTable[i] = newConcepto;
-                        }
-                    }
-                }
-            }
+        //     $("#btnPeritaje").keypress(function(event) {
+        //         if (event.keyCode === 13) {
+        //             $('#mdPeritaje').modal('show');
+        //         }
+        //         event.preventDefault();
+        //     });
+        // }
 
-            let count = 0;
-            for (let value of arrayRenderTable) {
-                count++;
-                $("#tbIngresos").append('<tr>' +
-                    '<td>' + count + '</td>' +
-                    '<td>' + value.cantidad + '</td>' +
-                    '<td>' + value.concepto + '</td>' +
-                    '<td>' + tools.formatMoney(value.precio) + '</td>' +
-                    '<td>' + tools.formatMoney(value.monto) + '</td>' +
-                    '<td><button class="btn btn-warning" onClick="removeIngresos(\'' + value.idConcepto + '\',\'' + value.categoria + '\')"><i class="fa fa-trash"></i></button></td>' +
-                    '</tr>');
-                sumaTotal += parseFloat(value.monto);
-            }
+        // function componentesRegistrarIngreso() {
+        //     $("#btnCobrar").click(function() {
+        //         console.log(cuotasEstate)
+        //             console.log(colegiaturaEstado)
+        //         if ($("#cbComprobante").val() == '') {
+        //             tools.AlertWarning("Ingreso", "Seleccione un comprobante para continuar.");
+        //         } else if (arrayIngresos.length == 0) {
+        //             tools.AlertWarning("Ingreso", "No hay conceptos para continuar.");
+        //         } else if (idDNI == 0) {
+        //             tools.AlertWarning("Ingreso", "No selecciono ningún ingeneniero para continuar.");
+        //         } else {                    
+        //             alertify.confirm('Ingreso', '¿Está seguro de continuar?', function() {
+        //                 registrarIngreso();
+        //             }, function() {
 
-            $("#lblSumaTotal").html(tools.formatMoney(sumaTotal));
-        }
+        //             });
+        //         }
+        //     });
 
-        function removeIngresos(idConcepto, categoria) {
-            for (let i = 0; i < arrayIngresos.length; i++) {
-                if (arrayIngresos[i].categoria == 100) {
-                    if (arrayIngresos[i].idConcepto === parseInt(idConcepto)) {
-                        arrayIngresos.splice(i, 1);
-                        i--;
-                        break;
-                    }
-                } else if (arrayIngresos[i].categoria == 5) {
-                    if (arrayIngresos[i].idConcepto === parseInt(idConcepto)) {
-                        arrayIngresos.splice(i, 1);
-                        i--;
-                        break;
-                    }
-                } else if (arrayIngresos[i].categoria == 6) {
-                    if (arrayIngresos[i].idConcepto === parseInt(idConcepto)) {
-                        arrayIngresos.splice(i, 1);
-                        i--;
-                        break;
-                    }
-                } else if (arrayIngresos[i].categoria == 7) {
-                    if (arrayIngresos[i].idConcepto === parseInt(idConcepto)) {
-                        arrayIngresos.splice(i, 1);
-                        i--;
-                        break;
-                    }
-                } else if (arrayIngresos[i].categoria == 8) {
-                    if (arrayIngresos[i].idConcepto === parseInt(idConcepto)) {
-                        arrayIngresos.splice(i, 1);
-                        i--;
-                        break;
-                    }
-                } else {
-                    if (arrayIngresos[i].categoria == categoria && categoria == 1) {
-                        arrayIngresos.splice(i, 1);
-                        i--;
-                        cuotasEstate = false;
-                    } else if (arrayIngresos[i].categoria == categoria && categoria == 2) {
-                        arrayIngresos.splice(i, 1);
-                        i--;
-                        cuotasEstate = false;
-                    } else if (arrayIngresos[i].categoria == categoria && categoria == 3) {
-                        arrayIngresos.splice(i, 1);
-                        i--;
-                        cuotasEstate = false;
-                    } else if (arrayIngresos[i].categoria == categoria && categoria == 4) {
-                        arrayIngresos.splice(i, 1);
-                        i--;
-                        colegiaturaEstado = false;
-                    }
-                }
-            }
-            addIngresos();
-        }
+        //     $("#btnCobrar").keypress(function() {
+        //         if ($("#cbComprobante").val() == '') {
+        //             tools.AlertWarning("Ingreso", "Seleccione un comprobante para continuar.");
+        //         } else if (arrayIngresos.length == 0) {
+        //             tools.AlertWarning("Ingreso", "No hay conceptos para continuar.");
+        //         } else if (idDNI == 0) {
+        //             tools.AlertWarning("Ingreso", "No selecciono ningún ingeneniero para continuar.");
+        //         } else {
+        //             alertify.confirm('Ingreso', '¿Está seguro de continuar?', function() {
+        //                 registrarIngreso();
+        //             }, function() {
 
-        function validateDuplicate(idConcepto) {
-            let ret = false;
-            for (let i = 0; i < arrayIngresos.length; i++) {
-                if (arrayIngresos[i].idConcepto === parseInt(idConcepto)) {
-                    ret = true;
-                    break;
-                }
-            }
-            return ret;
-        }
+        //             });
+        //         }
+        //         event.preventDefault();
+        //     });
+        // }
 
-        function nombreMes(mes) {
-            let array = [
-                "Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio",
-                "Julio", "Agosto", "Setiembre", "Octubre", "Noviembre", "Diciembre"
-            ];
-            return array[mes - 1];
-        }
+        // function loadCertificado() {
 
-        function cancelarIngreso() {
-            arrayIngresos.splice(0, arrayIngresos.length);
-            addIngresos();
-            $("#lblCipSeleccionado").html("--");
-            $("#lblDocumentSeleccionado").html("--");
-            $("#lblDatosSeleccionado").html("--");
-            $("#lblDireccionSeleccionado").html("--");
-            idDNI = 0;
-            cuotasEstate=false;
-            colegiaturaEstado=false;
-        }
+        // }
+
+        // function loadPeritaje() {
+
+        // }
+
+
+        // function onEventPaginacion() {
+        //     switch (opcion) {
+        //         case 0:
+        //             loadIngenieros("");
+        //             break;
+        //         case 1:
+        //             loadIngenieros($("#txtBuscarIngeniero").val());
+        //             break;
+        //     }
+        // }
+
+        // function registrarIngreso() {
+        //     $.ajax({
+        //         url: "../app/controller/IngresosController.php",
+        //         method: "POST",
+        //         accepts: "application/json",
+        //         contentType: "application/json",
+        //         data: JSON.stringify({
+        //             "idTipoDocumento": parseInt($("#cbComprobante").val()),
+        //             "idCliente": idDNI,
+        //             "idUsuario": 1,
+        //             "estado": 'C',
+        //             "estadoCuotas":cuotasEstate,
+        //             "estadoColegiatura":colegiaturaEstado,
+        //             "ingresos": arrayIngresos,
+        //             "cuotasInicio": cuotasInicio,
+        //             "cuotasFin": cuotasFin
+        //         }),
+        //         beforeSend: function() {
+        //             tools.AlertInfo("Ingreso", "Se está procesando el registro.");
+        //         },
+        //         success: function(result) {
+        //             if (result.estado === 1) {
+        //                 cancelarIngreso();
+        //                 tools.AlertSuccess("Ingreso", result.mensaje);
+        //             } else {
+        //                 tools.AlertWarning("Ingreso", result.mensaje);
+        //             }
+        //         },
+        //         error: function(error) {
+        //             tools.AlertError("Ingreso", "Se produjo un error: " + error.responseText);
+        //         }
+        //     });
+        // }
+
+        // function addIngresos() {
+        //     $("#tbIngresos").empty();
+        //     sumaTotal = 0;
+        //     let arrayRenderTable = [];
+
+        //     for (let value of arrayIngresos) {
+        //         if (!arrayRenderTable.find(ar => ar.categoria == value.categoria && value.categoria == 1 ||
+        //                 ar.categoria == value.categoria && value.categoria == 2 ||
+        //                 ar.categoria == value.categoria && value.categoria == 3 ||
+        //                 ar.categoria == value.categoria && value.categoria == 4)) {
+        //             arrayRenderTable.push({
+        //                 "idConcepto": parseInt(value.idConcepto),
+        //                 "categoria": value.categoria,
+        //                 "cantidad": value.cantidad,
+        //                 "concepto": value.categoria == 1 ? "Cuotas Ordinarias" : value.categoria == 4 ? "Colegiatura" : value.categoria == 2 ? "Cuotas de Administia" : value.categoria == 3 ? "Cuotas de Vitalicio" : value.concepto,
+        //                 "precio": parseFloat(value.precio),
+        //                 "monto": parseFloat(value.precio) * parseFloat(value.cantidad)
+        //             });
+        //         } else {
+        //             for (let i = 0; i < arrayRenderTable.length; i++) {
+        //                 if (arrayRenderTable[i].categoria == value.categoria) {
+        //                     let newConcepto = arrayRenderTable[i];
+        //                     newConcepto.idConcepto = parseInt(value.idConcepto);
+        //                     newConcepto.categoria = parseInt(value.categoria);
+        //                     newConcepto.cantidad = newConcepto.cantidad;
+        //                     newConcepto.concepto = value.categoria == 1 ? "Cuotas Ordinarias" : value.categoria == 4 ? "Colegiatura" : value.categoria == 2 ? "Cuotas de Administia" : value.categoria == 3 ? "Cuotas de Vitalicio" : value.concepto;
+        //                     newConcepto.precio += parseFloat(value.precio);
+        //                     newConcepto.monto = newConcepto.precio * newConcepto.cantidad;
+        //                     arrayRenderTable[i] = newConcepto;
+        //                 }
+        //             }
+        //         }
+        //     }
+
+        //     let count = 0;
+        //     for (let value of arrayRenderTable) {
+        //         count++;
+        //         $("#tbIngresos").append('<tr>' +
+        //             '<td>' + count + '</td>' +
+        //             '<td>' + value.cantidad + '</td>' +
+        //             '<td>' + value.concepto + '</td>' +
+        //             '<td>' + tools.formatMoney(value.precio) + '</td>' +
+        //             '<td>' + tools.formatMoney(value.monto) + '</td>' +
+        //             '<td><button class="btn btn-warning" onClick="removeIngresos(\'' + value.idConcepto + '\',\'' + value.categoria + '\')"><i class="fa fa-trash"></i></button></td>' +
+        //             '</tr>');
+        //         sumaTotal += parseFloat(value.monto);
+        //     }
+
+        //     $("#lblSumaTotal").html(tools.formatMoney(sumaTotal));
+        // }
+
+        // function removeIngresos(idConcepto, categoria) {
+        //     for (let i = 0; i < arrayIngresos.length; i++) {
+        //         if (arrayIngresos[i].categoria == 100) {
+        //             if (arrayIngresos[i].idConcepto === parseInt(idConcepto)) {
+        //                 arrayIngresos.splice(i, 1);
+        //                 i--;
+        //                 break;
+        //             }
+        //         } else if (arrayIngresos[i].categoria == 5) {
+        //             if (arrayIngresos[i].idConcepto === parseInt(idConcepto)) {
+        //                 arrayIngresos.splice(i, 1);
+        //                 i--;
+        //                 break;
+        //             }
+        //         } else if (arrayIngresos[i].categoria == 6) {
+        //             if (arrayIngresos[i].idConcepto === parseInt(idConcepto)) {
+        //                 arrayIngresos.splice(i, 1);
+        //                 i--;
+        //                 break;
+        //             }
+        //         } else if (arrayIngresos[i].categoria == 7) {
+        //             if (arrayIngresos[i].idConcepto === parseInt(idConcepto)) {
+        //                 arrayIngresos.splice(i, 1);
+        //                 i--;
+        //                 break;
+        //             }
+        //         } else if (arrayIngresos[i].categoria == 8) {
+        //             if (arrayIngresos[i].idConcepto === parseInt(idConcepto)) {
+        //                 arrayIngresos.splice(i, 1);
+        //                 i--;
+        //                 break;
+        //             }
+        //         } else {
+        //             if (arrayIngresos[i].categoria == categoria && categoria == 1) {
+        //                 arrayIngresos.splice(i, 1);
+        //                 i--;
+        //                 cuotasEstate = false;
+        //             } else if (arrayIngresos[i].categoria == categoria && categoria == 2) {
+        //                 arrayIngresos.splice(i, 1);
+        //                 i--;
+        //                 cuotasEstate = false;
+        //             } else if (arrayIngresos[i].categoria == categoria && categoria == 3) {
+        //                 arrayIngresos.splice(i, 1);
+        //                 i--;
+        //                 cuotasEstate = false;
+        //             } else if (arrayIngresos[i].categoria == categoria && categoria == 4) {
+        //                 arrayIngresos.splice(i, 1);
+        //                 i--;
+        //                 colegiaturaEstado = false;
+        //             }
+        //         }
+        //     }
+        //     addIngresos();
+        // }
+
+        // function validateDuplicate(idConcepto) {
+        //     let ret = false;
+        //     for (let i = 0; i < arrayIngresos.length; i++) {
+        //         if (arrayIngresos[i].idConcepto === parseInt(idConcepto)) {
+        //             ret = true;
+        //             break;
+        //         }
+        //     }
+        //     return ret;
+        // }
+
+        // function nombreMes(mes) {
+        //     let array = [
+        //         "Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio",
+        //         "Julio", "Agosto", "Setiembre", "Octubre", "Noviembre", "Diciembre"
+        //     ];
+        //     return array[mes - 1];
+        // }
+
+        // function cancelarIngreso() {
+        //     arrayIngresos.splice(0, arrayIngresos.length);
+        //     addIngresos();
+        //     $("#lblCipSeleccionado").html("--");
+        //     $("#lblDocumentSeleccionado").html("--");
+        //     $("#lblDatosSeleccionado").html("--");
+        //     $("#lblDireccionSeleccionado").html("--");
+        //     idDNI = 0;
+        //     cuotasEstate=false;
+        //     colegiaturaEstado=false;
+        // }
     </script>
 </body>
 

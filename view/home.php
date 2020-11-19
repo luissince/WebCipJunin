@@ -35,20 +35,8 @@
                                     <div class="col-lg-10 col-md-10 col-sm-12 col-xs-12">
                                         <div class="row">
 
-                                            <div class="col-lg-3 col-md-3 col-sm-12 col-xs-12">
-                                                <a href="{{ route('webmasters.index') }}">
-                                                    <div class="panel panel-default" style="border-style: dashed;border-width: 1px;border-color: #2A2A28;">
-                                                        <div class="panel-body" style="text-align: center;">
-                                                            <img src="images/webmaster.png" alt="Vender" width="84">
-                                                            <p style="margin-top: 10px;font-size: 14pt;color:#C68907;">
-                                                                Usuarios
-                                                            </p>
-                                                        </div> 
-                                                    </div>
-                                                </a>
-                                            </div>
-                                            <div class="col-lg-3 col-md-3 col-sm-12 col-xs-12">
-                                                <a href="{{ route('ingenieros.index') }}">
+                                            <div class="col-lg-4 col-md-4 col-sm-12 col-xs-12">
+                                                <a href="./ingenieros.php">
                                                     <div class="panel panel-default" style="border-style: dashed;border-width: 1px;border-color: #2A2A28;">
                                                         <div class="panel-body" style="text-align: center;">
                                                             <img src="images/tutores.png" alt="Vender" width="84">
@@ -59,8 +47,8 @@
                                                     </div>
                                                 </a>
                                             </div>
-                                            <div class="col-lg-3 col-md-3 col-sm-12 col-xs-12">
-                                                <a href="#">
+                                            <div class="col-lg-4 col-md-4 col-sm-12 col-xs-12">
+                                                <a href="./cobros.php">
                                                     <div class="panel panel-default" style="border-style: dashed;border-width: 1px;border-color: #2A2A28;">
                                                         <div class="panel-body" style="text-align: center;">
                                                             <img src="images/pago.png" alt="Vender" width="85">
@@ -71,8 +59,8 @@
                                                     </div>
                                                 </a>
                                             </div>
-                                            <div class="col-lg-3 col-md-3 col-sm-12 col-xs-12">
-                                                <a href="#">
+                                            <div class="col-lg-4 col-md-4 col-sm-12 col-xs-12">
+                                                <a href="./reportes.php">
                                                     <div class="panel panel-default" style="border-style: dashed;border-width: 1px;border-color: #2A2A28;">
                                                         <div class="panel-body" style="text-align: center;">
                                                             <img src="images/reporte.png" alt="Vender" width="87">
