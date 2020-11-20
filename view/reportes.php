@@ -23,12 +23,8 @@
                 <div class="row">
                     <div class="col-lg-12 col-md-12">
                         <div class="panel panel-default">
-                            <div class="panel-heading"> <i class="fa fa-user"></i> Bienvenido al Sistema</div>
+                            <div class="panel-heading"> <i class="fa fa-user"></i> Reportes</div>
                             <div class="panel-body">
-                                <div class="alert alert-success">
-                                    Correctamente
-                                </div>
-                                <br><br>
 
                                 <div class="row">
                                     <div class="col-lg-1 col-md-1 col-sm-12 col-xs-12"></div>
@@ -36,42 +32,58 @@
                                         <div class="row">
 
                                             <div class="col-lg-4 col-md-4 col-sm-12 col-xs-12">
-                                                <a href="./ingenieros.php">
+                                                <a href="" id="linkListaIngresos">
                                                     <div class="panel panel-default" style="border-style: dashed;border-width: 1px;border-color: #2A2A28;">
                                                         <div class="panel-body" style="text-align: center;">
-                                                            <img src="images/tutores.png" alt="Vender" width="84">
+                                                            <img src="images/portapapeles.png" alt="Vender" width="87">
                                                             <p style="margin-top: 10px;font-size: 14pt;color:#C68907;">
-                                                                Ingenieros
-                                                            </p>
-                                                        </div>
-                                                    </div>
-                                                </a>
-                                            </div>
-                                            <div class="col-lg-4 col-md-4 col-sm-12 col-xs-12">
-                                                <a href="./cobros.php">
-                                                    <div class="panel panel-default" style="border-style: dashed;border-width: 1px;border-color: #2A2A28;">
-                                                        <div class="panel-body" style="text-align: center;">
-                                                            <img src="images/pago.png" alt="Vender" width="85">
-                                                            <p style="margin-top: 10px;font-size: 14pt;color:#C68907;">
-                                                                Cobros
-                                                            </p>
-                                                        </div>
-                                                    </div>
-                                                </a>
-                                            </div>
-                                            <div class="col-lg-4 col-md-4 col-sm-12 col-xs-12">
-                                                <a href="./reportes.php">
-                                                    <div class="panel panel-default" style="border-style: dashed;border-width: 1px;border-color: #2A2A28;">
-                                                        <div class="panel-body" style="text-align: center;">
-                                                            <img src="images/reporte.png" alt="Vender" width="87">
-                                                            <p style="margin-top: 10px;font-size: 14pt;color:#C68907;">
-                                                                Reportes
+                                                                Resumen de Ingresos
                                                             </p>
                                                         </div>
                                                     </div>
                                                 </a>
                                             </div>
 
+                                            <div class="col-lg-4 col-md-4 col-sm-12 col-xs-12">
+                                                <a href="" id="linkListaColegiados">
+                                                    <div class="panel panel-default" style="border-style: dashed;border-width: 1px;border-color: #2A2A28;">
+                                                        <div class="panel-body" style="text-align: center;">
+                                                            <img src="images/informe-medico.png" alt="Vender" width="87">
+                                                            <p style="margin-top: 10px;font-size: 14pt;color:#C68907;">
+                                                                Lista de Colegiados
+                                                            </p>
+                                                        </div>
+                                                    </div>
+                                                </a>
+                                            </div>
+
+                                            <div class="col-lg-4 col-md-4 col-sm-12 col-xs-12">
+                                                <a href="" id="linkListaResumenCIN">
+                                                    <div class="panel panel-default" style="border-style: dashed;border-width: 1px;border-color: #2A2A28;">
+                                                        <div class="panel-body" style="text-align: center;">
+                                                            <img src="images/sitio-web.png" alt="Vender" width="87">
+                                                            <p style="margin-top: 10px;font-size: 14pt;color:#C68907;">
+                                                                Resumen de Aportes al CIN
+                                                            </p>
+                                                        </div>
+                                                    </div>
+                                                </a>
+                                            </div>
+
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-lg-4 col-md-4 col-sm-12 col-xs-12">
+                                                <a href="" id="linkListaIngresos">
+                                                    <div class="panel panel-default" style="border-style: dashed;border-width: 1px;border-color: #2A2A28;">
+                                                        <div class="panel-body" style="text-align: center;">
+                                                            <img src="images/reportglobal.png" alt="Vender" width="87">
+                                                            <p style="margin-top: 10px;font-size: 14pt;color:#C68907;">
+                                                                Reporte Global
+                                                            </p>
+                                                        </div>
+                                                    </div>
+                                                </a>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
@@ -90,6 +102,23 @@
         <!-- end footer -->
     </div>
     <!-- ./wrapper -->
+    <script>
+        $(document).ready(function() {
+
+            $("#linkListaIngresos").click(function() {
+                window.open("../app/sunat/resumeningresos.php", "_blank");
+            });
+
+            $("#linkListaColegiados").click(function() {
+
+            });
+
+            $("#linkListaResumenCIN").click(function() {
+
+            });
+
+        });
+    </script>
 </body>
 
 </html>

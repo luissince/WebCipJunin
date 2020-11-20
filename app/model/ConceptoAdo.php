@@ -173,7 +173,8 @@ class ConceptoAdo
     {
         try {
             $array = array();
-            $cmdOtrosConceptos = "select idConcepto ,Categoria,Concepto, Precio from Concepto where Categoria = 100";
+            $cmdOtrosConceptos = "SELECT idConcepto ,Categoria,Concepto, Precio FROM Concepto WHERE Categoria = 100 
+            ORDER BY Concepto ASC";
             $cmdConcepto = Database::getInstance()->getDb()->prepare($cmdOtrosConceptos);
             $cmdConcepto->execute();
             while ($row = $cmdConcepto->fetch()) {
@@ -188,15 +189,6 @@ class ConceptoAdo
         } catch (Exception $ex) {
             return $ex->getMessage();
         }
-    }
-
-    public static function nombreMes($mes)
-    {
-        $array = array(
-            "Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio",
-            "Julio", "Agosto", "Setiembre", "Octubre", "Noviembre", "Diciembre"
-        );
-        return $array[$mes - 1];
     }
 
     public static function insert($data)
