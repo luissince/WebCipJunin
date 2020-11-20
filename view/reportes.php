@@ -114,7 +114,7 @@
             });
 
             $("#linkListaResumenCIN").click(function() {
-
+                window.open("../app/sunat/resumenaportecin.php", "_blank");
             });
 
         });
