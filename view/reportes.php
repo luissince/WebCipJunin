@@ -37,7 +37,7 @@
                                                         <div class="panel-body" style="text-align: center;">
                                                             <img src="images/portapapeles.png" alt="Vender" width="87">
                                                             <p style="margin-top: 10px;font-size: 14pt;color:#C68907;">
-                                                                Lista de Ingresos
+                                                                Resumen de Ingresos
                                                             </p>
                                                         </div>
                                                     </div>
@@ -56,19 +56,34 @@
                                                     </div>
                                                 </a>
                                             </div>
+
                                             <div class="col-lg-4 col-md-4 col-sm-12 col-xs-12">
                                                 <a href="" id="linkListaResumenCIN">
                                                     <div class="panel panel-default" style="border-style: dashed;border-width: 1px;border-color: #2A2A28;">
                                                         <div class="panel-body" style="text-align: center;">
                                                             <img src="images/sitio-web.png" alt="Vender" width="87">
                                                             <p style="margin-top: 10px;font-size: 14pt;color:#C68907;">
-                                                                Resumene de Aportes al CIN
+                                                                Resumen de Aportes al CIN
                                                             </p>
                                                         </div>
                                                     </div>
                                                 </a>
                                             </div>
 
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-lg-4 col-md-4 col-sm-12 col-xs-12">
+                                                <a href="" id="linkListaIngresos">
+                                                    <div class="panel panel-default" style="border-style: dashed;border-width: 1px;border-color: #2A2A28;">
+                                                        <div class="panel-body" style="text-align: center;">
+                                                            <img src="images/reportglobal.png" alt="Vender" width="87">
+                                                            <p style="margin-top: 10px;font-size: 14pt;color:#C68907;">
+                                                                Reporte Global
+                                                            </p>
+                                                        </div>
+                                                    </div>
+                                                </a>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
@@ -91,7 +106,7 @@
         $(document).ready(function() {
 
             $("#linkListaIngresos").click(function() {
-
+                window.open("../app/sunat/resumeningresos.php", "_blank");
             });
 
             $("#linkListaColegiados").click(function() {

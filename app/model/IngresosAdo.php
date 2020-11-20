@@ -1,6 +1,6 @@
 <?php
 
-require_once __DIR__.'./../database/DataBaseConexion.php';
+require_once __DIR__ . './../database/DataBaseConexion.php';
 
 class IngresosAdo
 {
@@ -100,13 +100,19 @@ class IngresosAdo
 
             $idIngreso = Database::getInstance()->getDb()->lastInsertId();
 
-            if($body["estadoCuotas"]==true){
+            if ($body["estadoCuotas"] == true) {
                 $cmdCuota = Database::getInstance()->getDb()->prepare("INSERT INTO Cuota(idIngreso,FechaIni,FechaFin) VALUES(?,?,?)");
                 $cmdCuota->bindParam(1, $idIngreso, PDO::PARAM_INT);
                 $cmdCuota->bindParam(2, $body["cuotasInicio"], PDO::PARAM_STR);
                 $cmdCuota->bindParam(3, $body["cuotasFin"], PDO::PARAM_STR);
                 $cmdCuota->execute();
-            }            
+            }
+
+            if ($body["estadoColegiatura"] == true) {
+                $cmdCuota = Database::getInstance()->getDb()->prepare("INSERT INTO AltaColegio(idIngreso) VALUES(?)");
+                $cmdCuota->bindParam(1, $idIngreso, PDO::PARAM_INT);
+                $cmdCuota->execute();
+            }
 
             foreach ($body["ingresos"] as $value) {
                 $cmdDetalle = Database::getInstance()->getDb()->prepare("INSERT INTO Detalle(
@@ -262,42 +268,42 @@ class IngresosAdo
         }
     }
 
-    public static function ListarIngresosPorFecha()
+    public static function ResumenIngresosPorFecha()
     {
         try {
-           
+
             $arrayIngresos = array();
-            $cmdConcepto = Database::getInstance()->getDb()->prepare("SELECT i.idIngreso,
-            convert(VARCHAR, CAST(i.Fecha AS DATE),103) AS Fecha,i.Serie,i.NumRecibo,
-            i.Estado,p.CIP,p.idDNI,p.Apellidos,p.Nombres,sum(d.Monto) AS Total,
-            isnull(i.Xmlsunat,'') as Xmlsunat,isnull(i.Xmldescripcion,'') as Xmldescripcion
-            FROM Ingreso AS i INNER JOIN Persona AS p
-            ON i.idDNI = p.idDNI
-            INNER JOIN Detalle AS d 
-            ON d.idIngreso = i.idIngreso
-            WHERE CAST(i.Fecha AS DATE) = CAST(GETDATE() AS DATE)
-            GROUP BY i.idIngreso,i.Fecha,i.Serie,i.NumRecibo,i.Estado,
-            p.CIP,p.idDNI,p.Apellidos,p.Nombres,i.Xmlsunat,i.Xmldescripcion
-            ORDER BY CAST(Fecha AS DATE) ASC");
+            $cmdConcepto = Database::getInstance()->getDb()->prepare("SELECT 
+            c.Codigo,
+            c.Concepto,
+            sum(d.Cantidad) AS 'Cantidad',
+            CASE c.Propiedad 
+            WHEN 16 then 0
+            WHEN 48 then 0
+            ELSE sum(d.Monto) END AS 'CIPJunin',
+            CASE c.Propiedad 
+            WHEN 16 then sum(d.Monto)
+            WHEN 48 then sum(d.Monto)
+            ELSE 0 END AS 'CIPNacional'
+            FROM Ingreso AS i 
+            INNER JOIN Detalle AS d
+            ON i.idIngreso = d.idIngreso
+            INNER JOIN Concepto AS c
+            ON d.idConcepto = c.idConcepto
+            GROUP BY c.Codigo,c.Concepto,c.Propiedad
+            ORDER BY c.Concepto ASC");
             $cmdConcepto->execute();
             $count = 0;
 
             while ($row = $cmdConcepto->fetch()) {
                 $count++;
                 array_push($arrayIngresos, array(
-                    "id" => $count,
-                    "idIngreso" => $row["idIngreso"],
-                    "fecha" => $row["Fecha"],
-                    "serie" => $row["Serie"],
-                    "numRecibo" => $row["NumRecibo"],
-                    "estado" => $row["Estado"],
-                    "cip" => $row["CIP"],
-                    "idDNI" => $row["idDNI"],
-                    "apellidos" => $row["Apellidos"],
-                    "nombres" => $row["Nombres"],
-                    "total" => $row["Total"],
-                    "xmlsunat" => $row["Xmlsunat"],
-                    "xmldescripcion" => IngresosAdo::limitar_cadena($row["Xmldescripcion"], 100, "..."),
+                    "Id" => $count,
+                    "Codigo" => $row["Codigo"],
+                    "Concepto" => $row["Concepto"],
+                    "Cantidad" => $row["Cantidad"],
+                    "CIPJunin" => $row["CIPJunin"],
+                    "CIPNacional" => $row["CIPNacional"]
                 ));
             }
 
@@ -306,5 +312,4 @@ class IngresosAdo
             return $ex->getMessage();
         }
     }
-
 }

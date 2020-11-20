@@ -19,6 +19,86 @@
             <!-- Main content -->
             <section class="content">
 
+                <!-- modal start ingenieros -->
+                <div class="row">
+                    <div class="modal fade" id="mdIngenieros">
+                        <div class="modal-dialog modal-lg">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <button type="button" class="close" data-dismiss="modal">
+                                        <i class="fa fa-close"></i>
+                                    </button>
+                                    <h4 class="modal-title">
+                                        <i class="fa fa-group">
+                                        </i> Lista de Ingenieros
+                                    </h4>
+                                </div>
+                                <div class="modal-body">
+                                    <div class="row" style="margin-bottom: 15px;">
+                                        <div class="col-md-4 col-sm-12 col-xs-12">
+                                            <button class="btn btn-danger" id="btnIzquierda">
+                                                <i class="fa fa-toggle-left"></i>
+                                            </button>
+                                            <span id="lblPaginaActual" class="font-weight-bold">0</span>
+                                            <span>&nbsp;</span>
+                                            <span>a</span>
+                                            <span>&nbsp;</span>
+                                            <span id="lblPaginaSiguiente" class="font-weight-bold">0</span>
+                                            <button class="btn btn-danger" id="btnDerecha">
+                                                <i class="fa fa-toggle-right"></i>
+                                            </button>
+                                        </div>
+                                        <div class="col-md-6 col-sm-12 col-xs-12">
+                                            <div class="input-group col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                                                <input type="search" id="txtBuscarIngeniero" class="form-control" placeholder="Buscar por información, n° cip o dni" aria-describedby="search">
+                                            </div>
+                                        </div>
+                                        <div class="col-md-2 col-sm-12 col-xs-12">
+                                            <button id="btnBuscarIngeniero" class="btn btn-default col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                                                <i class="fa fa-search"></i> Buscar
+                                            </button>
+                                        </div>
+                                    </div>
+                                    <div class="row" style="overflow-x: auto; height:280px">
+                                        <div class="col-md-12">
+                                            <table class="table table-striped table-hover table-bordered table-sm">
+                                                <thead>
+                                                    <tr>
+                                                        <th>#</th>
+                                                        <th>Cip</th>
+                                                        <th>Dni</th>
+                                                        <th>Ingeniero</th>
+                                                        <th>Condición</th>
+                                                        <th>Ultima Cuota</th>
+                                                        <th>Debe</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody id="tbIngenieros">
+
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="modal-footer">
+                                    <div class="row">
+                                        <div class="col-lg-6 col-md-6 text-left">
+                                            <h5>
+                                                <i class="fa fa-info text-danger"></i> <b class="text-success">Para seleccionar un ingeniero has doble click sobre la fila</b>
+                                            </h5>
+                                        </div>
+                                        <div class="col-lg-6 col-md-6">
+                                            <button type="button" class="btn btn-primary" data-dismiss="modal">
+                                                <i class="fa fa-remove"></i> Cancelar</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- modal end ingenieros -->
+
                 <!-- modal start colegiatura-->
                 <div class="row">
                     <div class="modal fade" id="mdColegiatura">
@@ -46,7 +126,7 @@
                                                     </div>
                                                 </div>
                                             </div>
-                                            <div class="box-body no-padding" id="ctnConceptos">
+                                            <div class="box-body no-padding text-center" id="ctnConceptos">
                                             </div>
                                         </div>
                                         <div class="row no-padding">
@@ -575,7 +655,7 @@
 
                 <!-- modal start otros -->
                 <div class="row">
-                    <div class="modal fade" id="mdOtros">
+                    <div class="modal fade" id="mdOtros" data-backdrop="static">
                         <div class="modal-dialog modal-xl">
                             <div class="modal-content">
                                 <div class="modal-header">
@@ -591,7 +671,7 @@
                                     <div class="row">
                                         <div class="col-md-12">
                                             <div class="form-group">
-                                                <label>Concepto</label>
+                                                <label id="lblConceptos">Conceptos </label>
                                                 <select class="form-control" id="cbOtrosConcepto">
                                                     <option value="">- Seleccione -</option>
                                                 </select>
@@ -625,86 +705,6 @@
                     </div>
                 </div>
                 <!-- modal end otros -->
-
-                <!-- modal start ingenieros -->
-                <div class="row">
-                    <div class="modal fade" id="mdIngenieros">
-                        <div class="modal-dialog modal-lg">
-                            <div class="modal-content">
-                                <div class="modal-header">
-                                    <button type="button" class="close" data-dismiss="modal">
-                                        <i class="fa fa-close"></i>
-                                    </button>
-                                    <h4 class="modal-title">
-                                        <i class="fa fa-group">
-                                        </i> Lista de Ingenieros
-                                    </h4>
-                                </div>
-                                <div class="modal-body">
-                                    <div class="row" style="margin-bottom: 15px;">
-                                        <div class="col-md-4 col-sm-12 col-xs-12">
-                                            <button class="btn btn-danger" id="btnIzquierda">
-                                                <i class="fa fa-toggle-left"></i>
-                                            </button>
-                                            <span id="lblPaginaActual" class="font-weight-bold">0</span>
-                                            <span>&nbsp;</span>
-                                            <span>a</span>
-                                            <span>&nbsp;</span>
-                                            <span id="lblPaginaSiguiente" class="font-weight-bold">0</span>
-                                            <button class="btn btn-danger" id="btnDerecha">
-                                                <i class="fa fa-toggle-right"></i>
-                                            </button>
-                                        </div>
-                                        <div class="col-md-6 col-sm-12 col-xs-12">
-                                            <div class="input-group col-lg-12 col-md-12 col-sm-12 col-xs-12">
-                                                <input type="search" id="txtBuscarIngeniero" class="form-control" placeholder="Buscar por información, n° cip o dni" aria-describedby="search">
-                                            </div>
-                                        </div>
-                                        <div class="col-md-2 col-sm-12 col-xs-12">
-                                            <button id="btnBuscarIngeniero" class="btn btn-default col-lg-12 col-md-12 col-sm-12 col-xs-12">
-                                                <i class="fa fa-search"></i> Buscar
-                                            </button>
-                                        </div>
-                                    </div>
-                                    <div class="row" style="overflow-x: auto; height:280px">
-                                        <div class="col-md-12">
-                                            <table class="table table-striped table-hover table-bordered table-sm">
-                                                <thead>
-                                                    <tr>
-                                                        <th>#</th>
-                                                        <th>Cip</th>
-                                                        <th>Dni</th>
-                                                        <th>Ingeniero</th>
-                                                        <th>Condición</th>
-                                                        <th>Ultima Cuota</th>
-                                                        <th>Debe</th>
-                                                    </tr>
-                                                </thead>
-                                                <tbody id="tbIngenieros">
-
-                                                </tbody>
-                                            </table>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="modal-footer">
-                                    <div class="row">
-                                        <div class="col-lg-6 col-md-6 text-left">
-                                            <h5>
-                                                <i class="fa fa-info text-danger"></i> <b class="text-success">Para seleccionar un ingeniero has doble click sobre la fila</b>
-                                            </h5>
-                                        </div>
-                                        <div class="col-lg-6 col-md-6">
-                                            <button type="button" class="btn btn-primary" data-dismiss="modal">
-                                                <i class="fa fa-remove"></i> Cancelar</button>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <!-- modal end ingenieros -->
 
                 <!-- <div class="row"> -->
                 <div class="row">
@@ -814,7 +814,7 @@
                                             </div>
                                             <div class="col-md-6">
                                                 <h5>Tipo</h5>
-                                                <h5 id="lblTipoIngeniero">--</h5>
+                                                <h5 id="lblTipoIngenieroSeleccionado">--</h5>
                                             </div>
                                         </div>
                                     </div>
@@ -852,9 +852,11 @@
     <script src="js/cobros/cobrosingenieros.js"></script>
     <script src="js/cobros/colegiatura.js"></script>
     <script src="js/cobros/cuotas.js"></script>
+    <script src="js/cobros/certificados.js"></script>
+    <script src="js/cobros/peritaje.js"></script>
     <script src="js/cobros/otros.js"></script>
     <script>
-        let tools = new Tools();        
+        let tools = new Tools();
         //cuotas
         let cuotas = [];
         let countCurrentDate = 0;
@@ -862,13 +864,13 @@
         let cuotasInicio = "";
         let cuotasFin = "";
 
-        //ingresos totales
-        let arrayIngresos = [];
-        let sumaTotal = 0;
-
         //colegiatura
         let colegiaturas = [];
         let colegiaturaEstado = false;
+
+        //ingresos totales
+        let arrayIngresos = [];
+        let sumaTotal = 0;
 
         //paginacion ingenieros
         let state = false;
@@ -881,9 +883,13 @@
 
         let modelColegiatura = new Colegiatura();
 
-        let modelCuotas = new Cuotas();        
+        let modelCuotas = new Cuotas();
 
-        let modelOtros = new Otros();   
+        let modelCertificado = new Certificado();
+
+        let modelPeritaje = new Peritaje();
+
+        let modelOtros = new Otros();
 
         $(document).ready(function() {
             // comprobantes
@@ -893,22 +899,22 @@
             modelCobrosIngenieros.componentesIngenieros();
 
             //colegiatura
-            modelColegiatura.componentesColegiatura();
+            modelColegiatura.componentesColegiatura(addIngresos,validateDuplicate);
 
             //coutas
             modelCuotas.componentesCuotas();
 
-            // //certificado
-            // componentesCertificado();
+            //certificado
+            modelCertificado.componentesCertificado();
 
-            // //peritaje
-            // componentesPeritaje();
+            //peritaje
+            modelPeritaje.componentesPeritaje();
 
-            // //otros
-            modelOtros.componentesOtros();
+            //otros
+            modelOtros.componentesOtros(addIngresos, validateDuplicate);
 
             //cobro
-            // componentesRegistrarIngreso();
+            componentesRegistrarIngreso();
 
         });
 
@@ -937,281 +943,203 @@
         }
 
 
-        // function componentesCertificado() {
-        //     $("#btnCertHabilidad").click(function() {
-        //         $('#mdCertHabilidad').modal('show');
-        //     });
+        function componentesRegistrarIngreso() {
+            $("#btnCobrar").click(function() {
+                registrarIngreso();
+            });
 
-        //     $("#btnCertHabilidad").keypress(function(event) {
-        //         if (event.keyCode === 13) {
-        //             $('#mdCertHabilidad').modal('show');
-        //         }
-        //         event.preventDefault();
-        //     });
+            $("#btnCobrar").keypress(function(event) {
+                if (event.keyCode === 13) {
+                    registrarIngreso();
+                }
+                event.preventDefault();
+            });
+        }
 
-        //     $("#btnCertProyecto").click(function() {
-        //         $('#mdCertProyecto').modal('show');
-        //     });
+        function registrarIngreso() {
+            if ($("#cbComprobante").val() == '') {
+                tools.AlertWarning("Ingreso", "Seleccione un comprobante para continuar.");
+            } else if (arrayIngresos.length == 0) {
+                tools.AlertWarning("Ingreso", "No hay conceptos para continuar.");
+            } else if (idDNI == 0) {
+                tools.AlertWarning("Ingreso", "No selecciono ningún ingeneniero para continuar.");
+            } else {
+                alertify.confirm('Ingreso', '¿Está seguro de continuar?', function() {
+                    $.ajax({
+                        url: "../app/controller/IngresosController.php",
+                        method: "POST",
+                        accepts: "application/json",
+                        contentType: "application/json",
+                        data: JSON.stringify({
+                            "idTipoDocumento": parseInt($("#cbComprobante").val()),
+                            "idCliente": idDNI,
+                            "idUsuario": 1,
+                            "estado": 'C',
+                            "estadoCuotas": cuotasEstate,
+                            "estadoColegiatura": colegiaturaEstado,
+                            "ingresos": arrayIngresos,
+                            "cuotasInicio": cuotasInicio,
+                            "cuotasFin": cuotasFin
+                        }),
+                        beforeSend: function() {
+                            tools.AlertInfo("Ingreso", "Se está procesando el registro.");
+                        },
+                        success: function(result) {
+                            if (result.estado === 1) {
+                                cancelarIngreso();
+                                tools.AlertSuccess("Ingreso", result.mensaje);
+                            } else {
+                                tools.AlertWarning("Ingreso", result.mensaje);
+                            }
+                        },
+                        error: function(error) {
+                            tools.AlertError("Ingreso", "Se produjo un error: " + error.responseText);
+                        }
+                    });
+                }, function() {
 
-        //     $("#btnCertProyecto").keypress(function(event) {
-        //         if (event.keyCode === 13) {
-        //             $('#mdCertProyecto').modal('show');
-        //         }
-        //         event.preventDefault();
-        //     });
+                });
+            }
+        }
 
-        //     $("#btnCertResidenciaObra").click(function() {
-        //         $('#mdCertResidenciaObra').modal('show');
-        //     });
+        function addIngresos() {
+            $("#tbIngresos").empty();
+            sumaTotal = 0;
+            let arrayRenderTable = [];
 
-        //     $("#btnCertResidenciaObra").keypress(function(event) {
-        //         if (event.keyCode === 13) {
-        //             $('#mdCertResidenciaObra').modal('show');
-        //         }
-        //         event.preventDefault();
-        //     });
-        // }
+            for (let value of arrayIngresos) {
+                if (!arrayRenderTable.find(ar => ar.categoria == value.categoria && value.categoria == 1 ||
+                        ar.categoria == value.categoria && value.categoria == 2 ||
+                        ar.categoria == value.categoria && value.categoria == 3 ||
+                        ar.categoria == value.categoria && value.categoria == 4)) {
+                    arrayRenderTable.push({
+                        "idConcepto": parseInt(value.idConcepto),
+                        "categoria": value.categoria,
+                        "cantidad": value.cantidad,
+                        "concepto": value.categoria == 1 ? "Cuotas Ordinarias" : value.categoria == 4 ? "Colegiatura" : value.categoria == 2 ? "Cuotas de Administia" : value.categoria == 3 ? "Cuotas de Vitalicio" : value.concepto,
+                        "precio": parseFloat(value.precio),
+                        "monto": parseFloat(value.precio) * parseFloat(value.cantidad)
+                    });
+                } else {
+                    for (let i = 0; i < arrayRenderTable.length; i++) {
+                        if (arrayRenderTable[i].categoria == value.categoria) {
+                            let newConcepto = arrayRenderTable[i];
+                            newConcepto.idConcepto = parseInt(value.idConcepto);
+                            newConcepto.categoria = parseInt(value.categoria);
+                            newConcepto.cantidad = newConcepto.cantidad;
+                            newConcepto.concepto = value.categoria == 1 ? "Cuotas Ordinarias" : value.categoria == 4 ? "Colegiatura" : value.categoria == 2 ? "Cuotas de Administia" : value.categoria == 3 ? "Cuotas de Vitalicio" : value.concepto;
+                            newConcepto.precio += parseFloat(value.precio);
+                            newConcepto.monto = newConcepto.precio * newConcepto.cantidad;
+                            arrayRenderTable[i] = newConcepto;
+                        }
+                    }
+                }
+            }
 
-        // function componentesPeritaje() {
-        //     $("#btnPeritaje").click(function() {
-        //         $('#mdPeritaje').modal('show');
-        //     });
+            let count = 0;
+            for (let value of arrayRenderTable) {
+                count++;
+                $("#tbIngresos").append('<tr>' +
+                    '<td>' + count + '</td>' +
+                    '<td>' + value.cantidad + '</td>' +
+                    '<td>' + value.concepto + '</td>' +
+                    '<td>' + tools.formatMoney(value.precio) + '</td>' +
+                    '<td>' + tools.formatMoney(value.monto) + '</td>' +
+                    '<td><button class="btn btn-warning" onClick="removeIngresos(\'' + value.idConcepto + '\',\'' + value.categoria + '\')"><i class="fa fa-trash"></i></button></td>' +
+                    '</tr>');
+                sumaTotal += parseFloat(value.monto);
+            }
 
-        //     $("#btnPeritaje").keypress(function(event) {
-        //         if (event.keyCode === 13) {
-        //             $('#mdPeritaje').modal('show');
-        //         }
-        //         event.preventDefault();
-        //     });
-        // }
+            $("#lblSumaTotal").html(tools.formatMoney(sumaTotal));
+        }
 
-        // function componentesRegistrarIngreso() {
-        //     $("#btnCobrar").click(function() {
-        //         console.log(cuotasEstate)
-        //             console.log(colegiaturaEstado)
-        //         if ($("#cbComprobante").val() == '') {
-        //             tools.AlertWarning("Ingreso", "Seleccione un comprobante para continuar.");
-        //         } else if (arrayIngresos.length == 0) {
-        //             tools.AlertWarning("Ingreso", "No hay conceptos para continuar.");
-        //         } else if (idDNI == 0) {
-        //             tools.AlertWarning("Ingreso", "No selecciono ningún ingeneniero para continuar.");
-        //         } else {                    
-        //             alertify.confirm('Ingreso', '¿Está seguro de continuar?', function() {
-        //                 registrarIngreso();
-        //             }, function() {
+        function removeIngresos(idConcepto, categoria) {
+            for (let i = 0; i < arrayIngresos.length; i++) {
+                if (arrayIngresos[i].categoria == 100) {
+                    if (arrayIngresos[i].idConcepto === parseInt(idConcepto)) {
+                        arrayIngresos.splice(i, 1);
+                        i--;
+                        break;
+                    }
+                } else if (arrayIngresos[i].categoria == 5) {
+                    if (arrayIngresos[i].idConcepto === parseInt(idConcepto)) {
+                        arrayIngresos.splice(i, 1);
+                        i--;
+                        break;
+                    }
+                } else if (arrayIngresos[i].categoria == 6) {
+                    if (arrayIngresos[i].idConcepto === parseInt(idConcepto)) {
+                        arrayIngresos.splice(i, 1);
+                        i--;
+                        break;
+                    }
+                } else if (arrayIngresos[i].categoria == 7) {
+                    if (arrayIngresos[i].idConcepto === parseInt(idConcepto)) {
+                        arrayIngresos.splice(i, 1);
+                        i--;
+                        break;
+                    }
+                } else if (arrayIngresos[i].categoria == 8) {
+                    if (arrayIngresos[i].idConcepto === parseInt(idConcepto)) {
+                        arrayIngresos.splice(i, 1);
+                        i--;
+                        break;
+                    }
+                } else {
+                    if (arrayIngresos[i].categoria == categoria && categoria == 1) {
+                        arrayIngresos.splice(i, 1);
+                        i--;
+                        cuotasEstate = false;
+                    } else if (arrayIngresos[i].categoria == categoria && categoria == 2) {
+                        arrayIngresos.splice(i, 1);
+                        i--;
+                        cuotasEstate = false;
+                    } else if (arrayIngresos[i].categoria == categoria && categoria == 3) {
+                        arrayIngresos.splice(i, 1);
+                        i--;
+                        cuotasEstate = false;
+                    } else if (arrayIngresos[i].categoria == categoria && categoria == 4) {
+                        arrayIngresos.splice(i, 1);
+                        i--;
+                        colegiaturaEstado = false;
+                    }
+                }
+            }
+            addIngresos();
+        }
 
-        //             });
-        //         }
-        //     });
+        function cancelarIngreso() {
+            arrayIngresos.splice(0, arrayIngresos.length);
+            addIngresos();
+            $("#lblCipSeleccionado").html("--");
+            $("#lblTipoIngenieroSeleccionado").html("--");
+            $("#lblDocumentSeleccionado").html("--");
+            $("#lblDatosSeleccionado").html("--");
+            $("#lblDireccionSeleccionado").html("--");
+            idDNI = 0;
+            cuotasEstate = false;
+            colegiaturaEstado = false;
+        }
 
-        //     $("#btnCobrar").keypress(function() {
-        //         if ($("#cbComprobante").val() == '') {
-        //             tools.AlertWarning("Ingreso", "Seleccione un comprobante para continuar.");
-        //         } else if (arrayIngresos.length == 0) {
-        //             tools.AlertWarning("Ingreso", "No hay conceptos para continuar.");
-        //         } else if (idDNI == 0) {
-        //             tools.AlertWarning("Ingreso", "No selecciono ningún ingeneniero para continuar.");
-        //         } else {
-        //             alertify.confirm('Ingreso', '¿Está seguro de continuar?', function() {
-        //                 registrarIngreso();
-        //             }, function() {
+        function validateDuplicate(idConcepto) {
+            let ret = false;
+            for (let i = 0; i < arrayIngresos.length; i++) {
+                if (arrayIngresos[i].idConcepto === parseInt(idConcepto)) {
+                    ret = true;
+                    break;
+                }
+            }
+            return ret;
+        }
 
-        //             });
-        //         }
-        //         event.preventDefault();
-        //     });
-        // }
-
-        // function loadCertificado() {
-
-        // }
-
-        // function loadPeritaje() {
-
-        // }
-
-
-        // function onEventPaginacion() {
-        //     switch (opcion) {
-        //         case 0:
-        //             loadIngenieros("");
-        //             break;
-        //         case 1:
-        //             loadIngenieros($("#txtBuscarIngeniero").val());
-        //             break;
-        //     }
-        // }
-
-        // function registrarIngreso() {
-        //     $.ajax({
-        //         url: "../app/controller/IngresosController.php",
-        //         method: "POST",
-        //         accepts: "application/json",
-        //         contentType: "application/json",
-        //         data: JSON.stringify({
-        //             "idTipoDocumento": parseInt($("#cbComprobante").val()),
-        //             "idCliente": idDNI,
-        //             "idUsuario": 1,
-        //             "estado": 'C',
-        //             "estadoCuotas":cuotasEstate,
-        //             "estadoColegiatura":colegiaturaEstado,
-        //             "ingresos": arrayIngresos,
-        //             "cuotasInicio": cuotasInicio,
-        //             "cuotasFin": cuotasFin
-        //         }),
-        //         beforeSend: function() {
-        //             tools.AlertInfo("Ingreso", "Se está procesando el registro.");
-        //         },
-        //         success: function(result) {
-        //             if (result.estado === 1) {
-        //                 cancelarIngreso();
-        //                 tools.AlertSuccess("Ingreso", result.mensaje);
-        //             } else {
-        //                 tools.AlertWarning("Ingreso", result.mensaje);
-        //             }
-        //         },
-        //         error: function(error) {
-        //             tools.AlertError("Ingreso", "Se produjo un error: " + error.responseText);
-        //         }
-        //     });
-        // }
-
-        // function addIngresos() {
-        //     $("#tbIngresos").empty();
-        //     sumaTotal = 0;
-        //     let arrayRenderTable = [];
-
-        //     for (let value of arrayIngresos) {
-        //         if (!arrayRenderTable.find(ar => ar.categoria == value.categoria && value.categoria == 1 ||
-        //                 ar.categoria == value.categoria && value.categoria == 2 ||
-        //                 ar.categoria == value.categoria && value.categoria == 3 ||
-        //                 ar.categoria == value.categoria && value.categoria == 4)) {
-        //             arrayRenderTable.push({
-        //                 "idConcepto": parseInt(value.idConcepto),
-        //                 "categoria": value.categoria,
-        //                 "cantidad": value.cantidad,
-        //                 "concepto": value.categoria == 1 ? "Cuotas Ordinarias" : value.categoria == 4 ? "Colegiatura" : value.categoria == 2 ? "Cuotas de Administia" : value.categoria == 3 ? "Cuotas de Vitalicio" : value.concepto,
-        //                 "precio": parseFloat(value.precio),
-        //                 "monto": parseFloat(value.precio) * parseFloat(value.cantidad)
-        //             });
-        //         } else {
-        //             for (let i = 0; i < arrayRenderTable.length; i++) {
-        //                 if (arrayRenderTable[i].categoria == value.categoria) {
-        //                     let newConcepto = arrayRenderTable[i];
-        //                     newConcepto.idConcepto = parseInt(value.idConcepto);
-        //                     newConcepto.categoria = parseInt(value.categoria);
-        //                     newConcepto.cantidad = newConcepto.cantidad;
-        //                     newConcepto.concepto = value.categoria == 1 ? "Cuotas Ordinarias" : value.categoria == 4 ? "Colegiatura" : value.categoria == 2 ? "Cuotas de Administia" : value.categoria == 3 ? "Cuotas de Vitalicio" : value.concepto;
-        //                     newConcepto.precio += parseFloat(value.precio);
-        //                     newConcepto.monto = newConcepto.precio * newConcepto.cantidad;
-        //                     arrayRenderTable[i] = newConcepto;
-        //                 }
-        //             }
-        //         }
-        //     }
-
-        //     let count = 0;
-        //     for (let value of arrayRenderTable) {
-        //         count++;
-        //         $("#tbIngresos").append('<tr>' +
-        //             '<td>' + count + '</td>' +
-        //             '<td>' + value.cantidad + '</td>' +
-        //             '<td>' + value.concepto + '</td>' +
-        //             '<td>' + tools.formatMoney(value.precio) + '</td>' +
-        //             '<td>' + tools.formatMoney(value.monto) + '</td>' +
-        //             '<td><button class="btn btn-warning" onClick="removeIngresos(\'' + value.idConcepto + '\',\'' + value.categoria + '\')"><i class="fa fa-trash"></i></button></td>' +
-        //             '</tr>');
-        //         sumaTotal += parseFloat(value.monto);
-        //     }
-
-        //     $("#lblSumaTotal").html(tools.formatMoney(sumaTotal));
-        // }
-
-        // function removeIngresos(idConcepto, categoria) {
-        //     for (let i = 0; i < arrayIngresos.length; i++) {
-        //         if (arrayIngresos[i].categoria == 100) {
-        //             if (arrayIngresos[i].idConcepto === parseInt(idConcepto)) {
-        //                 arrayIngresos.splice(i, 1);
-        //                 i--;
-        //                 break;
-        //             }
-        //         } else if (arrayIngresos[i].categoria == 5) {
-        //             if (arrayIngresos[i].idConcepto === parseInt(idConcepto)) {
-        //                 arrayIngresos.splice(i, 1);
-        //                 i--;
-        //                 break;
-        //             }
-        //         } else if (arrayIngresos[i].categoria == 6) {
-        //             if (arrayIngresos[i].idConcepto === parseInt(idConcepto)) {
-        //                 arrayIngresos.splice(i, 1);
-        //                 i--;
-        //                 break;
-        //             }
-        //         } else if (arrayIngresos[i].categoria == 7) {
-        //             if (arrayIngresos[i].idConcepto === parseInt(idConcepto)) {
-        //                 arrayIngresos.splice(i, 1);
-        //                 i--;
-        //                 break;
-        //             }
-        //         } else if (arrayIngresos[i].categoria == 8) {
-        //             if (arrayIngresos[i].idConcepto === parseInt(idConcepto)) {
-        //                 arrayIngresos.splice(i, 1);
-        //                 i--;
-        //                 break;
-        //             }
-        //         } else {
-        //             if (arrayIngresos[i].categoria == categoria && categoria == 1) {
-        //                 arrayIngresos.splice(i, 1);
-        //                 i--;
-        //                 cuotasEstate = false;
-        //             } else if (arrayIngresos[i].categoria == categoria && categoria == 2) {
-        //                 arrayIngresos.splice(i, 1);
-        //                 i--;
-        //                 cuotasEstate = false;
-        //             } else if (arrayIngresos[i].categoria == categoria && categoria == 3) {
-        //                 arrayIngresos.splice(i, 1);
-        //                 i--;
-        //                 cuotasEstate = false;
-        //             } else if (arrayIngresos[i].categoria == categoria && categoria == 4) {
-        //                 arrayIngresos.splice(i, 1);
-        //                 i--;
-        //                 colegiaturaEstado = false;
-        //             }
-        //         }
-        //     }
-        //     addIngresos();
-        // }
-
-        // function validateDuplicate(idConcepto) {
-        //     let ret = false;
-        //     for (let i = 0; i < arrayIngresos.length; i++) {
-        //         if (arrayIngresos[i].idConcepto === parseInt(idConcepto)) {
-        //             ret = true;
-        //             break;
-        //         }
-        //     }
-        //     return ret;
-        // }
-
-        // function nombreMes(mes) {
-        //     let array = [
-        //         "Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio",
-        //         "Julio", "Agosto", "Setiembre", "Octubre", "Noviembre", "Diciembre"
-        //     ];
-        //     return array[mes - 1];
-        // }
-
-        // function cancelarIngreso() {
-        //     arrayIngresos.splice(0, arrayIngresos.length);
-        //     addIngresos();
-        //     $("#lblCipSeleccionado").html("--");
-        //     $("#lblDocumentSeleccionado").html("--");
-        //     $("#lblDatosSeleccionado").html("--");
-        //     $("#lblDireccionSeleccionado").html("--");
-        //     idDNI = 0;
-        //     cuotasEstate=false;
-        //     colegiaturaEstado=false;
-        // }
+        function nombreMes(mes) {
+            let array = [
+                "Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio",
+                "Julio", "Agosto", "Setiembre", "Octubre", "Noviembre", "Diciembre"
+            ];
+            return array[mes - 1];
+        }
+        
     </script>
 </body>
 

@@ -47,6 +47,17 @@ function CobroIngenieros() {
 
     }
 
+    function onEventPaginacion() {
+        switch (opcion) {
+            case 0:
+                loadIngenieros("");
+                break;
+            case 1:
+                loadIngenieros($("#txtBuscarIngeniero").val());
+                break;
+        }
+    }
+
     function loadInitIngenieros() {
         if (!state) {
             paginacion = 1;
@@ -136,7 +147,7 @@ function CobroIngenieros() {
                         data.object.Condicion == 'R' ? 'Retirado' :
                         data.object.Condicion == 'V' ? 'Vitalicio' : 'Ordinario';
                     $("#lblCipSeleccionado").html(data.object.CIP);
-                    $("#lblTipoIngeniero").html(Condicion);
+                    $("#lblTipoIngenieroSeleccionado").html(Condicion);
                     $("#lblDocumentSeleccionado").html(data.object.idDNI);
                     $("#lblDatosSeleccionado").html(data.object.Apellidos + " " + data.object.Nombres);
                     $("#lblDireccionSeleccionado").html("");
@@ -144,6 +155,7 @@ function CobroIngenieros() {
                 } else {
                     idDNI = 0;
                     $("#lblCipSeleccionado").html("--");
+                    $("#lblTipoIngenieroSeleccionado").html("--");
                     $("#lblDocumentSeleccionado").html("--");
                     $("#lblDatosSeleccionado").html("--");
                     $("#lblDireccionSeleccionado").html("--");

@@ -1,5 +1,8 @@
 function Colegiatura() {
-    this.componentesColegiatura = function() {
+
+    this.componentesColegiatura = function(addIngresos, validateDuplicate) {
+        this.addIngresos = addIngresos;
+        this.validateDuplicate = validateDuplicate;
         $("#btnColegitura").click(function() {
             $('#mdColegiatura').modal('show');
             loadColegiatura();
@@ -36,36 +39,44 @@ function Colegiatura() {
             },
             beforeSend: function() {
                 $("#ctnConceptos").empty();
+                $("#ctnConceptos").append('<img src="./images/spiner.gif"/><p>Cargando información.</p>');
                 colegiaturas.splice(0, colegiaturas.length);
             },
             success: function(result) {
                 if (result.estado === 1) {
+                    $("#ctnConceptos").empty();
                     let totalColegiatura = 0;
                     colegiaturas = result.data;
-                    for (let value of colegiaturas) {
-                        $("#ctnConceptos").append('<div id="' + value.idConcepto + '" class="row">' +
-                            '<div class="col-md-8 text-left">' +
-                            '<p>' + value.Concepto + '</p>' +
-                            '</div>' +
-                            '<div class="col-md-4 text-right">' +
-                            '<p>' + tools.formatMoney(value.Precio) + '</panel>' +
-                            '</div>');
-                        totalColegiatura += parseFloat(value.Precio);
+                    if (colegiaturas.length == 0) {
+                        $("#ctnConceptos").append('<p>No hay concepto para mostrar.</p>');
+                    } else {
+                        for (let value of colegiaturas) {
+                            $("#ctnConceptos").append('<div id="' + value.idConcepto + '" class="row">' +
+                                '<div class="col-md-8 text-left">' +
+                                '<p>' + value.Concepto + '</p>' +
+                                '</div>' +
+                                '<div class="col-md-4 text-right">' +
+                                '<p>' + tools.formatMoney(value.Precio) + '</panel>' +
+                                '</div>');
+                            totalColegiatura += parseFloat(value.Precio);
+                        }
+                        $("#lblTotalColegiatura").html(tools.formatMoney(totalColegiatura));
                     }
-                    $("#lblTotalColegiatura").html(tools.formatMoney(totalColegiatura));
                 } else {
-
+                    $("#ctnConceptos").empty();
+                    $("#ctnConceptos").append('<p>' + result.message + '</p>');
                 }
             },
             error: function(error) {
-                console.log(error);
+                $("#ctnConceptos").empty();
+                $("#ctnConceptos").append('<p>Se produjo un error interno, intente nuevamente o comuníquese con el administrador.</p>');
             }
         });
     }
 
     function validateIngresoColegiatura() {
         for (let value of colegiaturas) {
-            if (!validateDuplicate(value.IdConcepto)) {
+            if (!this.validateDuplicate(value.IdConcepto)) {
                 arrayIngresos.push({
                     "idConcepto": parseInt(value.IdConcepto),
                     "categoria": parseInt(value.Categoria),
@@ -90,7 +101,7 @@ function Colegiatura() {
         if (colegiaturas.length > 0) {
             colegiaturaEstado = true;
         }
-        addIngresos();
+        this.addIngresos();
         $('#mdColegiatura').modal('hide');
     }
 }

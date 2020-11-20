@@ -113,7 +113,7 @@ function Cuotas() {
             },
             beforeSend: function() {
                 $("#tbCuotas").empty();
-                $("#tbCuotas").append('<tr class="text-center"><td colspan="2"><img src="./images/spiner.gif"/><p>cargando información.</p></td></tr>');
+                $("#tbCuotas").append('<tr class="text-center"><td colspan="2"><img src="./images/spiner.gif"/><p>Cargando información.</p></td></tr>');
                 cuotas.splice(0, cuotas.length);
             },
             success: function(result) {

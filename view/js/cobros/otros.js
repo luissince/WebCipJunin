@@ -1,5 +1,8 @@
 function Otros() {
-    this.componentesOtros = function() {
+
+    this.componentesOtros = function(addIngresos, validateDuplicate) {
+        this.addIngresos = addIngresos;
+        this.validateDuplicate = validateDuplicate;
         $("#btnOtro").click(function() {
             $('#mdOtros').modal('show');
             loadOtros();
@@ -17,8 +20,7 @@ function Otros() {
         });
 
         $("#btnAceptarOtros").keypress(function(event) {
-            var keycode = event.keyCode || event.which;
-            if (keycode == '13') {
+            if (event.keyCode === 13) {
                 validateIngresoOtros();
             }
             event.preventDefault();
@@ -35,23 +37,31 @@ function Otros() {
             data: {
                 "type": "typecolegiatura",
                 "categoria": 100,
-                "dni": "20707246",
             },
             beforeSend: function() {
                 $("#cbOtrosConcepto").empty();
+                $("#lblConceptos").empty();
+                $("#lblConceptos").append('Conceptos <img src="./images/spiner.gif" width="20"/>');
             },
             success: function(result) {
                 if (result.estado === 1) {
+                    $("#lblConceptos").empty();
+                    $("#lblConceptos").css("color", "#333");
+                    $("#lblConceptos").append('Conceptos');
                     $("#cbOtrosConcepto").append(' <option id="" value="">- Seleccione -</option>');
                     for (let value of result.data) {
                         $("#cbOtrosConcepto").append('<option id="' + value.Precio + '" value="' + value.IdConcepto + '">' + value.Concepto + ' (' + value.Precio + ')</option>');
                     }
                 } else {
-
+                    $("#lblConceptos").empty();
+                    $("#lblConceptos").css("color", "red");
+                    $("#lblConceptos").append(result.message);
                 }
             },
             error: function(error) {
-                console.log(error);
+                $("#lblConceptos").empty();
+                $("#lblConceptos").css("color", "red");
+                $("#lblConceptos").append("Se produjo un error del servidor intente nuevamente.");
             }
         });
     }
@@ -59,7 +69,7 @@ function Otros() {
     function validateIngresoOtros() {
         if ($("#cbOtrosConcepto").val() != "") {
             if ($("#txtCantidadOtrosConceptos").val() !== "") {
-                if (!validateDuplicate($("#cbOtrosConcepto").val())) {
+                if (!this.validateDuplicate($("#cbOtrosConcepto").val())) {
                     arrayIngresos.push({
                         "idConcepto": parseInt($("#cbOtrosConcepto").val()),
                         "categoria": 100,
@@ -68,12 +78,13 @@ function Otros() {
                         "precio": parseFloat($("#cbOtrosConcepto").find('option:selected').attr('id')),
                         "monto": parseFloat($("#txtCantidadOtrosConceptos").val()) * parseFloat($("#cbOtrosConcepto").find('option:selected').attr('id'))
                     });
-                    addIngresos();
+                    this.addIngresos();
                     $('#mdOtros').modal('hide');
                     $("#txtCantidadOtrosConceptos").val("1");
                     $("#txtMontoOtrosConceptos").val("");
                 } else {
-                    tools.AlertWarning("Ingresos Diversos", "Ya existe un concepto con los datos.")
+                    tools.AlertWarning("Ingresos Diversos", "Ya existe un concepto con los mismo datos.");
+                    $("#cbOtrosConcepto").focus().select();
                 }
             } else {
                 tools.AlertWarning("Ingresos Diversos", "Debe ingresar una cantidad mayor a cero")
@@ -81,17 +92,6 @@ function Otros() {
         } else {
             tools.AlertWarning("Ingresos Diversos", "Debe escoger un concepto")
         }
-    }
-
-    function validateDuplicate(idConcepto) {
-        let ret = false;
-        for (let i = 0; i < arrayIngresos.length; i++) {
-            if (arrayIngresos[i].idConcepto === parseInt(idConcepto)) {
-                ret = true;
-                break;
-            }
-        }
-        return ret;
     }
 
 }
