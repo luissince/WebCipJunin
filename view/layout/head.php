@@ -15,6 +15,7 @@
 <!-- jvectormap -->
 <link rel="stylesheet" href="adminlte/bower_components/jvectormap/jquery-jvectormap.css">
 <link rel="stylesheet" href="recursoselect/dist/css/bootstrap-select.css">
+<link rel="stylesheet" href="adminlte/bower_components/select2/dist/css/select2.min.css">
 
 <!-- Theme style -->
 <link rel="stylesheet" href="adminlte/dist/css/AdminLTE.min.css">
@@ -30,6 +31,7 @@
 <!-- jQuery 3 -->
 <script src="adminlte/bower_components/jquery/dist/jquery.min.js"></script>
 <script src="recursoselect/dist/js/bootstrap-select.js" defer></script>
+<script src="adminlte/bower_components/select2/dist/js/select2.min.js"></script>
 <!-- Bootstrap 3.3.7 -->
 <script src="adminlte/bower_components/bootstrap/dist/js/bootstrap.js"></script>
 <!-- FastClick -->
