@@ -29,10 +29,11 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
         }
     } else if ($_GET["type"] === "data") {
         $persona = PersonaAdo::getId($_GET["dni"]);
-        if (is_object($persona)) {
+        if (is_array($persona)) {
             echo json_encode(array(
                 "estado" => 1,
-                "object" => $persona
+                "persona" => $persona[0],
+                "imagen" => $persona[1]
             ));
         } else {
             echo json_encode(array(
@@ -203,16 +204,44 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
     } else if ($_GET["type"] === 'getaddestudios') {
         $arrayEstudios = PersonaAdo::getAddEstudios();
 
-        if (is_array($arrayEstudiosqw       wwwwwq  1)) {
+        if (is_array($arrayEstudios)) {
             echo json_encode(array(
                 "estado" => 1,
-                "tipodomicilio" => $arrayAddDomicilio[0],
-                "ubicacion" => $arrayAddDomicilio[1],
+                "grados" => $arrayEstudios[0],
+                "universidades" => $arrayEstudios[1],
             ));
         } else {
             echo json_encode(array(
                 "estado" => 2,
-                "message" => $arrayAddDomicilio
+                "message" => $arrayEstudios
+            ));
+        }
+    } else if ($_GET["type"] === 'getaddcorreo') {
+        $arrayCorreos = PersonaAdo::getCorreo();
+
+        if (is_array($arrayCorreos)) {
+            echo json_encode(array(
+                "estado" => 1,
+                "correos" => $arrayCorreos,
+            ));
+        } else {
+            echo json_encode(array(
+                "estado" => 2,
+                "message" => $arrayCorreos
+            ));
+        }
+    } else if ($_GET["type"] === 'getpicture') {
+        $arrayPicture = PersonaAdo::getPicture($_GET['idDni']);
+
+        if (is_array($arrayPicture)) {
+            echo json_encode(array(
+                "estado" => 1,
+                "foto" => $arrayPicture,
+            ));
+        } else {
+            echo json_encode(array(
+                "estado" => 2,
+                "message" => $arrayPicture
             ));
         }
     }
@@ -264,6 +293,144 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
             echo json_encode(array(
                 "estado" => 1,
                 "message" => "Se insertarron correctamente los datos"
+            ));
+        } else {
+            echo json_encode(array(
+                "estado" => 2,
+                "message" => $result
+            ));
+        }
+    } else if ($_POST["type"] == "insertColegiatura") {
+        $colegiatura["dni"] = $_POST["dni"];
+        $colegiatura["sede"] = $_POST["sede"];
+        $colegiatura["principal"] = $_POST["principal"];
+        $colegiatura["especialidad"] = $_POST["especialidad"];
+        $colegiatura["fechacolegiacion"] = $_POST["fechacolegiacion"];
+        $colegiatura["universidadegreso"] = $_POST["universidadegreso"];
+        $colegiatura["fechaegreso"] = $_POST["fechaegreso"];
+        $colegiatura["universidadtitulacion"] = $_POST["universidadtitulacion"];
+        $colegiatura["fechatitulo"] = $_POST["fechatitulo"];
+        $colegiatura["resolucion"] = $_POST["resolucion"];
+
+        $result = PersonaAdo::insertColegiatura($colegiatura);
+
+        if ($result == "Insertado") {
+            echo json_encode(array(
+                "estado" => 1,
+                "message" => "Se insertaron correctamente los datos"
+            ));
+        } else {
+            echo json_encode(array(
+                "estado" => 2,
+                "message" => $result
+            ));
+        }
+    } else if ($_POST["type"] == "insertDomicilio") {
+        $domicilio["dni"] = $_POST["dni"];
+        $domicilio["tipo"] = $_POST["tipo"];
+        $domicilio["departamento"] = $_POST["departamento"];
+        $domicilio["direccion"] = $_POST["direccion"];
+
+        $result = PersonaAdo::insertDomicilio($domicilio);
+
+        if ($result == "Insertado") {
+            echo json_encode(array(
+                "estado" => 1,
+                "message" => "Se insertaron correctamente los datos"
+            ));
+        } else {
+            echo json_encode(array(
+                "estado" => 2,
+                "message" => $result
+            ));
+        }
+    } else if ($_POST["type"] == "insertCelular") {
+        $celular["dni"] = $_POST["dni"];
+        $celular["tipo"] = $_POST["tipo"];
+        $celular["numero"] = $_POST["numero"];
+
+        $result = PersonaAdo::insertCelular($celular);
+
+        if ($result == "Insertado") {
+            echo json_encode(array(
+                "estado" => 1,
+                "message" => "Se insertaron correctamente los datos"
+            ));
+        } else {
+            echo json_encode(array(
+                "estado" => 2,
+                "message" => $result
+            ));
+        }
+    } else if ($_POST["type"] == "insertConyuge") {
+        $conyuge["dni"] = $_POST["dni"];
+        $conyuge["conyuge"] = $_POST["conyuge"];
+        $conyuge["hijos"] = $_POST["hijos"];
+
+        $result = PersonaAdo::insertConyuge($conyuge);
+
+        if ($result == "Insertado") {
+            echo json_encode(array(
+                "estado" => 1,
+                "message" => "Se insertaron correctamente los datos"
+            ));
+        } else {
+            echo json_encode(array(
+                "estado" => 2,
+                "message" => $result
+            ));
+        }
+    } else if ($_POST["type"] == "insertExperiencia") {
+        $experiencia["dni"] = $_POST["dni"];
+        $experiencia["entidad"] = $_POST["entidad"];
+        $experiencia["experiencia"] = $_POST["experiencia"];
+        $experiencia["fechaInicio"] = $_POST["fechaInicio"];
+        $experiencia["fechaFin"] = $_POST["fechaFin"];
+
+        $result = PersonaAdo::insertExperiencia($experiencia);
+
+        if ($result == "Insertado") {
+            echo json_encode(array(
+                "estado" => 1,
+                "message" => "Se insertaron correctamente los datos"
+            ));
+        } else {
+            echo json_encode(array(
+                "estado" => 2,
+                "message" => $result
+            ));
+        }
+    } else if ($_POST["type"] == "insertEstudios") {
+        $estudios["dni"] = $_POST["dni"];
+        $estudios["grado"] = $_POST["grado"];
+        $estudios["materia"] = $_POST["materia"];
+        $estudios["universidad"] = $_POST["universidad"];
+        $estudios["fechaEstudios"] = $_POST["fechaEstudios"];
+
+        $result = PersonaAdo::insertEstudios($estudios);
+
+        if ($result == "Insertado") {
+            echo json_encode(array(
+                "estado" => 1,
+                "message" => "Se insertaron correctamente los datos"
+            ));
+        } else {
+            echo json_encode(array(
+                "estado" => 2,
+                "message" => $result
+            ));
+        }
+    } else if ($_POST["type"] == "insertCorreo") {
+        $correo["dni"] = $_POST["dni"];
+        $correo["tipo"] = $_POST["tipo"];
+        $correo["correo"] = $_POST["correo"];
+
+        $result = PersonaAdo::insertCorreo($correo);
+
+        if ($result == "Insertado") {
+            echo json_encode(array(
+                "estado" => 1,
+                "message" => "Se insertaron correctamente los datos"
             ));
         } else {
             echo json_encode(array(

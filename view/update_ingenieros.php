@@ -38,7 +38,7 @@ if (!isset($_GET["idPersona"])) {
                                         <i class="fa fa-close"></i>
                                     </button>
                                     <h4 class="modal-title">
-                                        <i class="fa fa-archive">
+                                        <i class="fa fa-university">
                                         </i> Añadir Colegiatura
                                     </h4>
                                 </div>
@@ -46,14 +46,14 @@ if (!isset($_GET["idPersona"])) {
                                     <div class="row">
                                         <div class="col-md-12">
                                             <div class="form-group">
-                                                <label for="Sede" class="col-sm-4 control-label">Sede</label>
+                                                <label class="col-sm-4 control-label">Sede</label>
                                                 <div class="col-sm-4">
                                                     <select id="Sede" class="form-control">
                                                     </select>
                                                 </div>
                                                 <div class="checkbox col-sm-4">
                                                     <label>
-                                                        <input type="checkbox">
+                                                        <input type="checkbox" id="Principal">
                                                         Principal
                                                     </label>
                                                 </div>
@@ -63,7 +63,7 @@ if (!isset($_GET["idPersona"])) {
                                     <div class="row">
                                         <div class="col-md-12">
                                             <div class="form-group">
-                                                <label for="Especialidad" class="col-sm-4 control-label">Especialidad</label>
+                                                <label class="col-sm-4 control-label">Especialidad</label>
                                                 <div class="col-sm-8">
                                                     <select id="Especialidad" class="form-control">
                                                     </select>
@@ -71,17 +71,17 @@ if (!isset($_GET["idPersona"])) {
                                             </div>
                                         </div>
                                     </div>
-                                    <div class="row">
+                                    <div class="row" style="padding-top: 0.5em;">
                                         <div class="col-md-12">
                                             <div class="form-group">
-                                                <label for="FechaColegiacion" class="col-sm-4 control-label">Fecha de Colegiación</label>
-                                                <div class="col-sm-4">
+                                                <label class="col-sm-4 control-label">Fecha de Colegiación</label>
+                                                <div class="col-sm-8">
                                                     <input id="FechaColegiacion" type="date" name="Nacimiento" class="form-control" required="">
                                                 </div>
                                             </div>
                                         </div>
                                     </div>
-                                    <div class="row">
+                                    <div class="row" style="padding-top: 0.5em;">
                                         <div class="col-md-12">
                                             <div class="form-group">
                                                 <label for="Egreso" class="col-sm-4 control-label">Universidad de Egreso</label>
@@ -92,17 +92,17 @@ if (!isset($_GET["idPersona"])) {
                                             </div>
                                         </div>
                                     </div>
-                                    <div class="row">
+                                    <div class="row" style="padding-top: 0.5em;">
                                         <div class="col-md-12">
                                             <div class="form-group">
                                                 <label for="FechaEgreso" class="col-sm-4 control-label">Fecha de Egreso</label>
-                                                <div class="col-sm-4">
+                                                <div class="col-sm-8">
                                                     <input id="FechaEgreso" type="date" name="Nacimiento" class="form-control" required="">
                                                 </div>
                                             </div>
                                         </div>
                                     </div>
-                                    <div class="row">
+                                    <div class="row" style="padding-top: 0.5em;">
                                         <div class="col-md-12">
                                             <div class="form-group">
                                                 <label for="Titulacion" class="col-sm-4 control-label">Universidad de Titulacion</label>
@@ -113,17 +113,17 @@ if (!isset($_GET["idPersona"])) {
                                             </div>
                                         </div>
                                     </div>
-                                    <div class="row">
+                                    <div class="row" style="padding-top: 0.5em;">
                                         <div class="col-md-12">
                                             <div class="form-group">
                                                 <label for="FechaTitulo" class="col-sm-4 control-label">Fecha de Titulo</label>
-                                                <div class="col-sm-4">
+                                                <div class="col-sm-8">
                                                     <input id="FechaTitulo" type="date" name="Nacimiento" class="form-control" required="">
                                                 </div>
                                             </div>
                                         </div>
                                     </div>
-                                    <div class="row">
+                                    <div class="row" style="padding-top: 0.5em;">
                                         <div class="col-md-12">
                                             <div class="form-group">
                                                 <label for="txtResolucion" class="col-sm-4 control-label">Resolución</label>
@@ -135,7 +135,7 @@ if (!isset($_GET["idPersona"])) {
                                     </div>
                                 </div>
                                 <div class="modal-footer">
-                                    <button type="button" class="btn btn-warning" id="btnAceptarIngenieros">
+                                    <button type="button" class="btn btn-warning" id="btnAceptarColegiatura">
                                         <i class="fa fa-check"></i> Aceptar</button>
                                     <button type="button" class="btn btn-primary" data-dismiss="modal">
                                         <i class="fa fa-remove"></i> Cancelar</button>
@@ -150,14 +150,14 @@ if (!isset($_GET["idPersona"])) {
                 <!-- modal añadir domicilio -->
                 <div class="row">
                     <div class="modal fade" id="addDomicilio">
-                        <div class="modal-dialog modal-xs">
+                        <div class="modal-dialog modal-xs" style="width: 500px;">
                             <div class="modal-content">
                                 <div class="modal-header">
                                     <button type="button" class="close" data-dismiss="modal">
                                         <i class="fa fa-close"></i>
                                     </button>
                                     <h4 class="modal-title">
-                                        <i class="fa fa-group">
+                                        <i class="fa fa-home">
                                         </i> Añadir Domicilio
                                     </h4>
                                 </div>
@@ -165,40 +165,38 @@ if (!isset($_GET["idPersona"])) {
                                     <div class="row">
                                         <div class="col-md-12">
                                             <div class="form-group">
-                                                <label for="Tipo" class="col-sm-2 control-label">Tipo</label>
-                                                <div class="col-sm-6">
-                                                    <select id="Tipo" class="form-control">
+                                                <label class="col-sm-4 control-label">Tipo</label>
+                                                <div class="col-sm-8">
+                                                    <select id="tipoDomicilio" class="form-control">
                                                     </select>
                                                 </div>
                                             </div>
                                         </div>
                                     </div>
-                                    <div class="row">
+                                    <div class="row" style="padding-top: 0.5em;">
                                         <div class="col-md-12">
                                             <div class="form-group">
-                                                <label for="Direccion" class="col-sm-2 control-label">Dep/Prov/Dist</label>
-                                                <div class="col-sm-6">
-                                                    <select id="Departamento" class="form-control selectpicker" data-live-search="true" title="- Seleccione -">
-                                                        <!-- <option value="">vallor1</option>
-                                                    <option value="">vallor1</option> -->
-                                                    </select>
+                                                <label class="col-sm-4 control-label">Dep/Prov/Dist</label>
+                                                <div class="col-sm-8">
+                                                    <select id="Departamento" name="selValue" class="form-control selectpicker" data-live-search="true" title="- Seleccione -">
+                                                    <select>
                                                 </div>
                                             </div>
                                         </div>
                                     </div>
-                                    <div class="row">
+                                    <div class="row" style="padding-top: 0.5em;">
                                         <div class="col-md-12">
                                             <div class="form-group">
-                                                <label for="Direccion" class="col-sm-2 control-label">Direccion</label>
-                                                <div class="col-sm-6">
-                                                    <input id="Direccion" type="text" class="form-control" placeholder="Resolución" required="">
+                                                <label class="col-sm-4 control-label">Direccion</label>
+                                                <div class="col-sm-8">
+                                                    <input id="Direccion" type="text" class="form-control" placeholder="Ingrese una dirección válida" required="">
                                                 </div>
                                             </div>
                                         </div>
                                     </div>
                                 </div>
                                 <div class="modal-footer">
-                                    <button type="button" class="btn btn-warning" id="btnAceptarIngenieros">
+                                    <button type="button" class="btn btn-warning" id="btnAceptarDomicilio">
                                         <i class="fa fa-check"></i> Aceptar</button>
                                     <button type="button" class="btn btn-primary" data-dismiss="modal">
                                         <i class="fa fa-remove"></i> Cancelar</button>
@@ -213,14 +211,14 @@ if (!isset($_GET["idPersona"])) {
                 <!-- modal añadir telefono -->
                 <div class="row">
                     <div class="modal fade" id="addTelefono">
-                        <div class="modal-dialog modal-xs">
+                        <div class="modal-dialog modal-sm">
                             <div class="modal-content">
                                 <div class="modal-header">
                                     <button type="button" class="close" data-dismiss="modal">
                                         <i class="fa fa-close"></i>
                                     </button>
                                     <h4 class="modal-title">
-                                        <i class="fa fa-group">
+                                        <i class="fa fa-phone">
                                         </i> Añadir Telefono
                                     </h4>
                                 </div>
@@ -228,21 +226,20 @@ if (!isset($_GET["idPersona"])) {
                                     <div class="row">
                                         <div class="col-md-12">
                                             <div class="form-group">
-                                                <label for="Tipo" class="col-sm-2 control-label">Tipo</label>
-                                                <div class="col-sm-4">
+                                                <label class="col-sm-4 control-label">Tipo</label>
+                                                <div class="col-sm-8">
                                                     <select id="TipoCelular" class="form-control">
                                                     </select>
                                                 </div>
                                             </div>
                                         </div>
                                     </div>
-                                    </br>
-                                    <div class="row">
+                                    <div class="row" style="padding-top: 0.5em;">
                                         <div class="col-md-12">
                                             <div class="form-group">
-                                                <label for="Direccion" class="col-sm-2 control-label">Numero</label>
-                                                <div class="col-sm-4">
-                                                    <input id="Direccion" type="text" class="form-control" placeholder="Ingrese su numero" required="">
+                                                <label class="col-sm-4 control-label">Numero</label>
+                                                <div class="col-sm-8">
+                                                    <input id="txtNumero" type="text" class="form-control" placeholder="Ingrese su numero" required="">
                                                 </div>
                                             </div>
                                         </div>
@@ -250,7 +247,7 @@ if (!isset($_GET["idPersona"])) {
                                 </div>
 
                                 <div class="modal-footer">
-                                    <button type="button" class="btn btn-warning" id="btnAceptarIngenieros">
+                                    <button type="button" class="btn btn-warning" id="btnAceptarCelular">
                                         <i class="fa fa-check"></i> Aceptar</button>
                                     <button type="button" class="btn btn-primary" data-dismiss="modal">
                                         <i class="fa fa-remove"></i> Cancelar</button>
@@ -265,14 +262,14 @@ if (!isset($_GET["idPersona"])) {
                 <!-- modal añadir conyuge -->
                 <div class="row">
                     <div class="modal fade" id="addConyuge">
-                        <div class="modal-dialog modal-xs">
+                        <div class="modal-dialog modal-xs" style="width: 500px;">
                             <div class="modal-content">
                                 <div class="modal-header">
                                     <button type="button" class="close" data-dismiss="modal">
                                         <i class="fa fa-close"></i>
                                     </button>
                                     <h4 class="modal-title">
-                                        <i class="fa fa-group">
+                                        <i class="fa fa-user-plus">
                                         </i> Añadir Conyuge
                                     </h4>
                                 </div>
@@ -280,28 +277,26 @@ if (!isset($_GET["idPersona"])) {
                                     <div class="row">
                                         <div class="col-md-12">
                                             <div class="form-group">
-                                                <label for="Conyuge" class="col-sm-3 control-label">Conyuge</label>
-                                                <div class="col-sm-6">
-                                                    <input id="Conyuge" type="text" class="form-control" placeholder="Nombre Conyuge" required="">
+                                                <label for="Conyuge" class="col-sm-4 control-label">Conyuge</label>
+                                                <div class="col-sm-8">
+                                                    <input id="txtConyuge" type="text" class="form-control" placeholder="Nombre Conyuge" required="">
                                                 </div>
                                             </div>
                                         </div>
                                     </div>
-                                    </br>
-                                    <div class="row">
+                                    <div class="row" style="padding-top: 0.5em;">
                                         <div class="col-md-12">
                                             <div class="form-group">
-                                                <label for="Hijos" class="col-sm-3 control-label">Numero de hijos</label>
-                                                <div class="col-sm-4">
-                                                    <select id="Hijos" class="form-control">
-                                                    </select>
+                                                <label for="Conyuge" class="col-sm-4 control-label">Numero de hijos</label>
+                                                <div class="col-sm-8">
+                                                    <input id="txtHijos" type="number" class="form-control" placeholder="Ingrese numero de hijos" required="">
                                                 </div>
                                             </div>
                                         </div>
                                     </div>
                                 </div>
                                 <div class="modal-footer">
-                                    <button type="button" class="btn btn-warning" id="btnAceptarIngenieros">
+                                    <button type="button" class="btn btn-warning" id="btnAceptarConyuge">
                                         <i class="fa fa-check"></i> Aceptar</button>
                                     <button type="button" class="btn btn-primary" data-dismiss="modal">
                                         <i class="fa fa-remove"></i> Cancelar</button>
@@ -316,14 +311,14 @@ if (!isset($_GET["idPersona"])) {
                 <!-- modal añadir experiencia -->
                 <div class="row">
                     <div class="modal fade" id="addExperiencia">
-                        <div class="modal-dialog modal-xs">
+                        <div class="modal-dialog modal-xs" style="width: 550px;">
                             <div class="modal-content">
                                 <div class="modal-header">
                                     <button type="button" class="close" data-dismiss="modal">
                                         <i class="fa fa-close"></i>
                                     </button>
                                     <h4 class="modal-title">
-                                        <i class="fa fa-group">
+                                        <i class="fa fa-suitcase">
                                         </i> Añadir Experiencia
                                     </h4>
                                 </div>
@@ -331,38 +326,38 @@ if (!isset($_GET["idPersona"])) {
                                     <div class="row">
                                         <div class="col-md-12">
                                             <div class="form-group">
-                                                <label for="Entidad" class="col-sm-4 control-label">Entidad</label>
-                                                <div class="col-sm-6">
-                                                    <input id="Entidad" type="text" class="form-control" placeholder="Entidad" required="">
+                                                <label class="col-sm-4 control-label">Entidad</label>
+                                                <div class="col-sm-8">
+                                                    <input id="txtEntidad" type="text" class="form-control" placeholder="Entidad" required="">
                                                 </div>
                                             </div>
                                         </div>
                                     </div>
                                     <div class="row">
-                                        <div class="col-md-12">
+                                        <div class="col-md-12" style="padding-top: 0.5em;">
                                             <div class="form-group">
-                                                <label for="Experiencia" class="col-sm-4 control-label">Experiencia profesional</label>
-                                                <div class="col-sm-6">
-                                                    <input id="Experiencia" type="text" class="form-control" placeholder="Experiencia" required="">
+                                                <label class="col-sm-4 control-label">Experiencia profesional</label>
+                                                <div class="col-sm-8">
+                                                    <input id="txtExperiencia" type="text" class="form-control" placeholder="Experiencia" required="">
                                                 </div>
                                             </div>
                                         </div>
                                     </div>
-                                    <div class="row">
+                                    <div class="row" style="padding-top: 0.5em;">
                                         <div class="col-md-12">
                                             <div class="form-group">
                                                 <label for="FechaInicio" class="col-sm-4 control-label">Fecha de Inicio</label>
-                                                <div class="col-sm-4">
+                                                <div class="col-sm-8">
                                                     <input id="FechaInicio" type="date" name="Nacimiento" class="form-control" required="">
                                                 </div>
                                             </div>
                                         </div>
                                     </div>
-                                    <div class="row">
+                                    <div class="row" style="padding-top: 0.5em;">
                                         <div class="col-md-12">
                                             <div class="form-group">
                                                 <label for="FechaFin" class="col-sm-4 control-label">Fecha de Termino</label>
-                                                <div class="col-sm-4">
+                                                <div class="col-sm-8">
                                                     <input id="FechaFin" type="date" name="Nacimiento" class="form-control" required="">
                                                 </div>
                                             </div>
@@ -370,7 +365,7 @@ if (!isset($_GET["idPersona"])) {
                                     </div>
                                 </div>
                                 <div class="modal-footer">
-                                    <button type="button" class="btn btn-warning" id="btnAceptarIngenieros">
+                                    <button type="button" class="btn btn-warning" id="btnAceptarExperiencia">
                                         <i class="fa fa-check"></i> Aceptar</button>
                                     <button type="button" class="btn btn-primary" data-dismiss="modal">
                                         <i class="fa fa-remove"></i> Cancelar</button>
@@ -385,14 +380,14 @@ if (!isset($_GET["idPersona"])) {
                 <!-- modal añadir grados y estudios -->
                 <div class="row">
                     <div class="modal fade" id="addGradosyEstudios">
-                        <div class="modal-dialog modal-xs">
+                        <div class="modal-dialog modal-xs" style="width: 500px;">
                             <div class="modal-content">
                                 <div class="modal-header">
                                     <button type="button" class="close" data-dismiss="modal">
                                         <i class="fa fa-close"></i>
                                     </button>
                                     <h4 class="modal-title">
-                                        <i class="fa fa-group">
+                                        <i class="fa fa-mortar-board">
                                         </i> Añadir Grados y Estudios
                                     </h4>
                                 </div>
@@ -401,63 +396,47 @@ if (!isset($_GET["idPersona"])) {
                                         <div class="col-md-12">
                                             <div class="form-group">
                                                 <label for="Grado" class="col-sm-3 control-label">Grado</label>
-                                                <div class="col-sm-3">
-                                                    <select id="Grado" class="form-control">
-                                                        <option value="J">Bachiller</option>
-                                                        <option value="A">Certificación</option>
-                                                        <option value="A">Diplomado</option>
+                                                <div class="col-sm-9">
+                                                    <select id="selectGrado" class="form-control">
                                                     </select>
                                                 </div>
                                             </div>
                                         </div>
                                     </div>
-                                    <div class="row">
+                                    <div class="row" style="padding-top: 0.5em;">
                                         <div class="col-md-12">
                                             <div class="form-group">
                                                 <label for="Materia" class="col-sm-3 control-label">Materia</label>
-                                                <div class="col-sm-6">
-                                                    <input id="Materia" type="text" class="form-control" placeholder="Materia" required="">
+                                                <div class="col-sm-9">
+                                                    <input id="txtMateria" type="text" class="form-control" placeholder="Materia" required="">
                                                 </div>
                                             </div>
                                         </div>
                                     </div>
-                                    <div class="row">
+                                    <div class="row" style="padding-top: 0.5em;">
                                         <div class="col-md-12">
                                             <div class="form-group">
                                                 <label for="Universidad" class="col-sm-3 control-label">Universidad</label>
-                                                <div class="col-sm-6">
-                                                    <select id="Universidad" class="form-control">
-                                                        <option value="J">Pontifica Universidad La Catolica</option>
-                                                        <option value="A">Univerisad Alas Peruana</option>
-                                                        <option value="A">Universidad Cesar Vallejo</option>
+                                                <div class="col-sm-9">
+                                                    <select id="selectUniversidad" class="form-control">
                                                     </select>
                                                 </div>
                                             </div>
                                         </div>
                                     </div>
-                                    <div class="row">
+                                    <div class="row" style="padding-top: 0.5em;">
                                         <div class="col-md-12">
                                             <div class="form-group">
                                                 <label for="Fecha" class="col-sm-3 control-label">Fecha </label>
-                                                <div class="col-sm-4">
-                                                    <input id="Fecha" type="date" name="Nacimiento" class="form-control" required="">
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="row">
-                                        <div class="col-md-12">
-                                            <div class="form-group">
-                                                <label for="Direccion" class="col-sm-3 control-label">Direccion</label>
-                                                <div class="col-sm-6">
-                                                    <input id="Direccion" type="text" class="form-control" placeholder="Materia" required="">
+                                                <div class="col-sm-9">
+                                                    <input id="fechaEstudios" type="date" name="Nacimiento" class="form-control" required="">
                                                 </div>
                                             </div>
                                         </div>
                                     </div>
                                 </div>
                                 <div class="modal-footer">
-                                    <button type="button" class="btn btn-warning" id="btnAceptarIngenieros">
+                                    <button type="button" class="btn btn-warning" id="btnAceptarEstudios">
                                         <i class="fa fa-check"></i> Aceptar</button>
                                     <button type="button" class="btn btn-primary" data-dismiss="modal">
                                         <i class="fa fa-remove"></i> Cancelar</button>
@@ -472,14 +451,14 @@ if (!isset($_GET["idPersona"])) {
                 <!-- modal añadir correo y web -->
                 <div class="row">
                     <div class="modal fade" id="addCorreoyWeb">
-                        <div class="modal-dialog modal-xs">
+                        <div class="modal-dialog modal-xs" style="width: 500px;">
                             <div class="modal-content">
                                 <div class="modal-header">
                                     <button type="button" class="close" data-dismiss="modal">
                                         <i class="fa fa-close"></i>
                                     </button>
                                     <h4 class="modal-title">
-                                        <i class="fa fa-group">
+                                        <i class="fa fa-at">
                                         </i> Añadir Correo y Web
                                     </h4>
                                 </div>
@@ -487,20 +466,27 @@ if (!isset($_GET["idPersona"])) {
                                     <div class="row">
                                         <div class="col-md-12">
                                             <div class="form-group">
-                                                <label for="Tipo" class="col-sm-3 control-label">Tipo</label>
-                                                <div class="col-sm-6">
-                                                    <select id="Tipo" class="form-control">
-                                                        <option value="J">Correo Electronico</option>
-                                                        <option value="A">Pagina Web</option>
-                                                        <option value="A">Otros</option>
+                                                <label class="col-sm-3 control-label">Tipo</label>
+                                                <div class="col-sm-9">
+                                                    <select id="TipoCorreo" class="form-control">
                                                     </select>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="row" style="padding-top: 0.5em;">
+                                        <div class="col-md-12">
+                                            <div class="form-group">
+                                                <label class="col-sm-3 control-label">Correo / Web</label>
+                                                <div class="col-sm-9">
+                                                    <input id="txtCorreo" type="text" class="form-control" placeholder="Ingrese un Correo o web" required="">
                                                 </div>
                                             </div>
                                         </div>
                                     </div>
                                 </div>
                                 <div class="modal-footer">
-                                    <button type="button" class="btn btn-warning" id="btnAceptarIngenieros">
+                                    <button type="button" class="btn btn-warning" id="btnAceptarCorreo">
                                         <i class="fa fa-check"></i> Aceptar</button>
                                     <button type="button" class="btn btn-primary" data-dismiss="modal">
                                         <i class="fa fa-remove"></i> Cancelar</button>
@@ -512,143 +498,162 @@ if (!isset($_GET["idPersona"])) {
                 </div>
                 <!--end modal add correo y web  -->
 
+                <!-- actualizacion del ingeniero-->
                 <div class="row">
-
-                    <h4 style="padding-left:1em;"><i class="fa fa-user"></i> Actualizar Datos del Ingeniero(a) <span id="Load_date"></span></h4>
-                    <div>
-                        <form action="">
-
-                            <div class="col-lg-2 col-md-2 col-sm-12 col-xs-12" style="text-align: center; padding-top:1em;">
-                                <img width="70" src="images/ayuda.png">
-                                <!-- <label for="Foto">Subir foto</label>
-                                <input type="file" id="Foto" name="Foto"> -->
-                            </div>
-                            <div class="col-lg-10 col-md-10 col-sm-12 col-xs-12" style="padding-top:1em;">
-                                <div class="row">
-                                    <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-                                        <div class="form-group">
-                                            <label for="dni">DNI: <i class="fa fa-fw fa-asterisk text-danger"></i></label>
-                                            <input id="dni" type="text" name="Dni" class="form-control" placeholder="DNI" required="" minlength="8" value="<?php echo  $_GET["idPersona"]; ?>">
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="row">
-                                    <div class="col-lg-6 col-md-6 col-sm-6 col-xs-6">
-                                        <div class="form-group">
-                                            <label for="Nombres">Nombres: <i class="fa fa-fw fa-asterisk text-danger"></i></label>
-                                            <input id="Nombres" type="text" name="Nombres" class="form-control" placeholder="Nombres" required="">
-                                        </div>
-                                    </div>
-                                    <div class="col-lg-6 col-md-6 col-sm-6 col-xs-6">
-                                        <div class="form-group">
-                                            <label for="Apellidos">Apellidos: <i class="fa fa-fw fa-asterisk text-danger"></i></label>
-                                            <input id="Apellidos" type="text" name="Apellidos" class="form-control" placeholder="Apellidos" required="">
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="row">
-                                    <div class="col-lg-4 col-md-4 col-sm-4 col-xs-4">
-                                        <div class="form-group">
-                                            <label for="Genero">Genero: <i class="fa fa-fw fa-asterisk text-danger"></i></label>
-                                            <select id="Genero" class="form-control">
-                                                <option value="M">Maculino</option>
-                                                <option value="F">Femenino</option>
-                                            </select>
-                                        </div>
-                                    </div>
-                                    <div class="col-lg-4 col-md-4 col-sm-4 col-xs-4">
-                                        <div class="form-group">
-                                            <label for="Nacimiento">Nacimiento: <i class="fa fa-fw fa-asterisk text-danger"></i></label>
-                                            <input id="Nacimiento" type="date" name="Nacimiento" class="form-control" required="">
-                                        </div>
-                                    </div>
-                                    <div class="col-lg-4 col-md-4 col-sm-4 col-xs-4">
-                                        <div class="form-group">
-                                            <label for="Estado_civil">Estado civil: <i class="fa fa-fw fa-asterisk text-danger"></i></label>
-                                            <select id="Estado_civil" class="form-control">
-                                                <option value="S">Soltero/a</option>
-                                                <option value="C">Casado/a</option>
-                                                <option value="V">Viudo/a</option>
-                                                <option value="D">Divorciado/a</option>
-                                            </select>
-                                        </div>
-                                    </div>
-                                </div>
-
-                                <div class="row">
-                                    <div class="col-lg-6 col-md-6 col-sm-6 col-xs-6">
-                                        <div class="form-group">
-                                            <label for="Ruc">RUC (opcional):</label>
-                                            <input id="Ruc" type="text" name="Ruc" class="form-control" placeholder="número de RUC">
-                                        </div>
-                                    </div>
-                                    <div class="col-lg-6 col-md-6 col-sm-6 col-xs-6">
-                                        <div class="form-group">
-                                            <label for="Razon_social">Razon social (opcional):</label>
-                                            <input id="Razon_social" type="text" name="Razon_social" class="form-control" placeholder="Razon social">
-                                        </div>
-                                    </div>
-                                </div>
-
-                                <div class="row">
-                                    <div class="col-lg-5 col-md-5 col-sm-5 col-xs-5">
-                                        <div class="form-group">
-                                            <label for="Codigo">Codigo CIP: <i class="fa fa-fw fa-asterisk text-danger"></i></label>
-                                            <input id="Codigo" type="number" name="Codigo" class="form-control" placeholder="Codigo" required="">
-                                        </div>
-                                    </div>
-                                    <div class="col-lg-2 col-md-2 col-sm-2 col-xs-2">
-                                        <div class="form-group">
-                                            <label for="Tramite">Nuevo:</label>
-                                            <div class="checkbox">
-                                                <label>
-                                                    <input type="checkbox" id="Tramite"> Tramite
-                                                </label>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="col-lg-5 col-md-5 col-sm-5 col-xs-5">
-                                        <div class="form-group">
-                                            <label for="Condicion">Condición: <i class="fa fa-fw fa-asterisk text-danger"></i></label>
-                                            <select id="Condicion" class="form-control">
-                                                <option value="O">ORDINARIO</option>
-                                                <option value="T">TRANSEUNTE</option>
-                                                <option value="F">FALLECIDO</option>
-                                                <option value="R">RETIRADO</option>
-                                                <option value="V">VITALICIO</option>
-                                            </select>
-                                        </div>
-                                    </div>
-
-                                </div>
-                            </div>
-                            <div class="modal-footer">
-                                <p class="text-left text-danger">Todos los campos marcados con <i class="fa fa-fw fa-asterisk text-danger"></i> son obligatorios</p>
-                                <button type="button" class="btn btn-danger" name="btnAceptar" id="btnaceptar">
-                                    <i class="fa fa-check"></i> Editar</button>
-                                <button type="button" class="btn btn-primary" data-dismiss="modal" name="btncancelar" id="btncancelar">
-                                    <i class="fa fa-remove"></i> Cancelar</button>
-                            </div>
-                        </form>
-
+                    <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                        <h4 ><i class="fa fa-user"></i> Actualizar Datos del Ingeniero(a) <span id="Load_date"></span></h4>
                     </div>
+                </div>
 
-                    <div class="nav-tabs-custom">
-                        <ul class="nav nav-tabs">
-                            <li class="active"><a href="#tab_1" data-toggle="tab" aria-expanded="true">Colegiatura</a></li>
-                            <li class=""><a href="#tab_2" data-toggle="tab" aria-expanded="false">Domicilios</a></li>
-                            <li class=""><a href="#tab_3" data-toggle="tab" aria-expanded="false">Telefonos</a></li>
-                            <li class=""><a href="#tab_4" data-toggle="tab" aria-expanded="false">Conyuge</a></li>
-                            <li class=""><a href="#tab_5" data-toggle="tab" aria-expanded="false">Experiencia</a></li>
-                            <li class=""><a href="#tab_6" data-toggle="tab" aria-expanded="false">Grados y Estudios</a></li>
-                            <li class=""><a href="#tab_7" data-toggle="tab" aria-expanded="false">Correo y Web</a></li>
-                            <li class=""><a href="#tab_8" data-toggle="tab" aria-expanded="false">Foto</a></li>
-                            <li class="pull-right"><button class="btn btn-success btn-sm" id="btnNuevo"><i class="fa fa-plus"></i> Nuevo</button></li>
-                        </ul>
-                        <div class="tab-content">
-                            <div class="tab-pane active" id="tab_1">
-                                <div class="col-md-12">
-                                    <table class="table table-striped table-hover table-sm" style="border-width: 1px; border-style: dashed; border-color: #E31E25;">
+                <div class="row">
+                    <div class="col-lg-4 col-md-3 col-sm-12 col-xs-12 text-center">
+                        <div class="row">
+                            <img class="img-responsive img-thumbnail" style="max-width: 140px;" id="lblImagen">
+                        </div>
+                        <div class="row">
+                            <div class="file-field">
+                                <label for="SubirImagen" class="btn btn-warning">Subir imagen</label>
+                                <input type="file" id="SubirImagen" style="display:none" accept="image/png, image/jpeg, image/gif, image/svg">
+                            </div>
+                            <div class="file-field">
+                                <label class="btn btn-dark">Quitar imagen</label>
+                            </div>
+                            <div>
+                                <button class="btn  btn-success" id="guardarImagen">Guardar</button>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-8 col-md-9 col-sm-12 col-xs-12">
+                        <div class="row">
+                            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                                <div class="form-group">
+                                    <label for="dni">DNI: <i class="fa fa-fw fa-asterisk text-danger"></i></label>
+                                    <input id="dni" type="text" name="Dni" class="form-control" placeholder="DNI" required="" minlength="8" value="<?php echo  $_GET["idPersona"]; ?>">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-lg-6 col-md-6 col-sm-6 col-xs-6">
+                                <div class="form-group">
+                                    <label for="Nombres">Nombres: <i class="fa fa-fw fa-asterisk text-danger"></i></label>
+                                    <input id="Nombres" type="text" name="Nombres" class="form-control" placeholder="Nombres" required="">
+                                </div>
+                            </div>
+                            <div class="col-lg-6 col-md-6 col-sm-6 col-xs-6">
+                                <div class="form-group">
+                                    <label for="Apellidos">Apellidos: <i class="fa fa-fw fa-asterisk text-danger"></i></label>
+                                    <input id="Apellidos" type="text" name="Apellidos" class="form-control" placeholder="Apellidos" required="">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-lg-4 col-md-4 col-sm-4 col-xs-4">
+                                <div class="form-group">
+                                    <label for="Genero">Genero: <i class="fa fa-fw fa-asterisk text-danger"></i></label>
+                                    <select id="Genero" class="form-control">
+                                        <option value="M">Maculino</option>
+                                        <option value="F">Femenino</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="col-lg-4 col-md-4 col-sm-4 col-xs-4">
+                                <div class="form-group">
+                                    <label for="Nacimiento">Nacimiento: <i class="fa fa-fw fa-asterisk text-danger"></i></label>
+                                    <input id="Nacimiento" type="date" name="Nacimiento" class="form-control" required="">
+                                </div>
+                            </div>
+                            <div class="col-lg-4 col-md-4 col-sm-4 col-xs-4">
+                                <div class="form-group">
+                                    <label for="Estado_civil">Estado civil: <i class="fa fa-fw fa-asterisk text-danger"></i></label>
+                                    <select id="Estado_civil" class="form-control">
+                                        <option value="S">Soltero/a</option>
+                                        <option value="C">Casado/a</option>
+                                        <option value="V">Viudo/a</option>
+                                        <option value="D">Divorciado/a</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-lg-6 col-md-6 col-sm-6 col-xs-6">
+                                <div class="form-group">
+                                    <label for="Ruc">RUC (opcional):</label>
+                                    <input id="Ruc" type="text" name="Ruc" class="form-control" placeholder="número de RUC">
+                                </div>
+                            </div>
+                            <div class="col-lg-6 col-md-6 col-sm-6 col-xs-6">
+                                <div class="form-group">
+                                    <label for="Razon_social">Razon social (opcional):</label>
+                                    <input id="Razon_social" type="text" name="Razon_social" class="form-control" placeholder="Razon social">
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-lg-5 col-md-5 col-sm-5 col-xs-5">
+                                <div class="form-group">
+                                    <label for="Codigo">Codigo CIP: <i class="fa fa-fw fa-asterisk text-danger"></i></label>
+                                    <input id="Codigo" type="number" name="Codigo" class="form-control" placeholder="Codigo" required="">
+                                </div>
+                            </div>
+                            <div class="col-lg-2 col-md-2 col-sm-2 col-xs-2">
+                                <div class="form-group">
+                                    <label for="Tramite">Nuevo:</label>
+                                    <div class="checkbox">
+                                        <label>
+                                            <input type="checkbox" id="Tramite"> Tramite
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-lg-5 col-md-5 col-sm-5 col-xs-5">
+                                <div class="form-group">
+                                    <label for="Condicion">Condición: <i class="fa fa-fw fa-asterisk text-danger"></i></label>
+                                    <select id="Condicion" class="form-control">
+                                        <option value="O">ORDINARIO</option>
+                                        <option value="T">TRANSEUNTE</option>
+                                        <option value="F">FALLECIDO</option>
+                                        <option value="R">RETIRADO</option>
+                                        <option value="V">VITALICIO</option>
+                                    </select>
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
+                        <p class="text-left text-danger">Todos los campos marcados con <i class="fa fa-fw fa-asterisk text-danger"></i> son obligatorios</p>
+                    </div>
+                    <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12 text-right">
+                        <button type="button" class="btn btn-danger" name="btnAceptar" id="btnaceptar">
+                            <i class="fa fa-check"></i> Editar</button>
+                        <button type="button" class="btn btn-primary" data-dismiss="modal" name="btncancelar" id="btncancelar">
+                            <i class="fa fa-remove"></i> Cancelar</button>
+                    </div>
+                </div>
+
+                <div class="row" style="margin-top: 15px;">
+                    <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                        <!--FORMULARIOS INFERIORES-->
+                        <div class="nav-tabs-custom">
+                            <ul class="nav nav-tabs">
+                                <li class="active"><a href="#tab_1" data-toggle="tab" aria-expanded="true">Colegiatura</a></li>
+                                <li class=""><a href="#tab_2" data-toggle="tab" aria-expanded="false">Domicilios</a></li>
+                                <li class=""><a href="#tab_3" data-toggle="tab" aria-expanded="false">Telefonos</a></li>
+                                <li class=""><a href="#tab_4" data-toggle="tab" aria-expanded="false">Conyuge</a></li>
+                                <li class=""><a href="#tab_5" data-toggle="tab" aria-expanded="false">Experiencia</a></li>
+                                <li class=""><a href="#tab_6" data-toggle="tab" aria-expanded="false">Grados y Estudios</a></li>
+                                <li class=""><a href="#tab_7" data-toggle="tab" aria-expanded="false">Correo y Web</a></li>
+                                <li class="pull-right"><button class="btn btn-success btn-sm" id="btnNuevo"><i class="fa fa-plus"></i> Nuevo</button></li>
+                            </ul>
+                            <div class="tab-content">
+                                <div class="tab-pane active" id="tab_1">
+
+                                    <table class="table table-striped table-hover" style="border-width: 1px; border-style: dashed; border-color: #E31E25;">
                                         <thead style="background-color: #FDB2B1; color: #B72928;">
                                             <tr>
                                                 <th>#</th>
@@ -668,11 +673,10 @@ if (!isset($_GET["idPersona"])) {
 
                                         </tbody>
                                     </table>
+
                                 </div>
-                            </div>
-                            <!-- /.tab-pane -->
-                            <div class="tab-pane" id="tab_2">
-                                <div class="col-md-8">
+                                <!-- /.tab-pane -->
+                                <div class="tab-pane" id="tab_2">
                                     <table class="table table-striped table-hover table-sm" style="border-width: 1px; border-style: dashed; border-color: #E31E25;">
                                         <thead style="background-color: #FDB2B1; color: #B72928;">
                                             <tr>
@@ -687,10 +691,8 @@ if (!isset($_GET["idPersona"])) {
                                         </tbody>
                                     </table>
                                 </div>
-                            </div>
-                            <!-- /.tab-pane -->
-                            <div class="tab-pane" id="tab_3">
-                                <div class="col-md-4">
+                                <!-- /.tab-pane -->
+                                <div class="tab-pane" id="tab_3">
                                     <table class="table table-striped table-hover table-sm" style="border-width: 1px; border-style: dashed; border-color: #E31E25;">
                                         <thead style="background-color: #FDB2B1; color: #B72928;">
                                             <tr>
@@ -704,10 +706,8 @@ if (!isset($_GET["idPersona"])) {
                                         </tbody>
                                     </table>
                                 </div>
-                            </div>
-                            <!-- /.tab-pane -->
-                            <div class="tab-pane" id="tab_4">
-                                <div class="col-md-8">
+                                <!-- /.tab-pane -->
+                                <div class="tab-pane" id="tab_4">
                                     <table class="table table-striped table-hover table-sm" style="border-width: 1px; border-style: dashed; border-color: #E31E25;">
                                         <thead style="background-color: #FDB2B1; color: #B72928;">
                                             <tr>
@@ -721,10 +721,8 @@ if (!isset($_GET["idPersona"])) {
                                         </tbody>
                                     </table>
                                 </div>
-                            </div>
-                            <!-- /.tab-pane -->
-                            <div class="tab-pane" id="tab_5">
-                                <div class="col-md-8">
+                                <!-- /.tab-pane -->
+                                <div class="tab-pane" id="tab_5">
                                     <table class="table table-striped table-hover table-sm" style="border-width: 1px; border-style: dashed; border-color: #E31E25;">
                                         <thead style="background-color: #FDB2B1; color: #B72928;">
                                             <tr>
@@ -740,10 +738,8 @@ if (!isset($_GET["idPersona"])) {
                                         </tbody>
                                     </table>
                                 </div>
-                            </div>
-                            <!-- /.tab-pane -->
-                            <div class="tab-pane" id="tab_6">
-                                <div class="col-md-8">
+                                <!-- /.tab-pane -->
+                                <div class="tab-pane" id="tab_6">
                                     <table class="table table-striped table-hover table-sm" style="border-width: 1px; border-style: dashed; border-color: #E31E25;">
                                         <thead style="background-color: #FDB2B1; color: #B72928;">
                                             <tr>
@@ -759,10 +755,8 @@ if (!isset($_GET["idPersona"])) {
                                         </tbody>
                                     </table>
                                 </div>
-                            </div>
-                            <!-- /.tab-pane -->
-                            <div class="tab-pane" id="tab_7">
-                                <div class="col-md-8">
+                                <!-- /.tab-pane -->
+                                <div class="tab-pane" id="tab_7">
                                     <table class="table table-striped table-hover table-sm" style="border-width: 1px; border-style: dashed; border-color: #E31E25;">
                                         <thead style="background-color: #FDB2B1; color: #B72928;">
                                             <tr>
@@ -777,30 +771,48 @@ if (!isset($_GET["idPersona"])) {
                                     </table>
                                 </div>
                             </div>
+                            <!-- /.tab-content -->
                         </div>
-                        <!-- /.tab-content -->
                     </div>
-
                 </div>
-
             </section>
-            <!-- /.content -->
         </div>
-        <!-- /.content-wrapper -->
-        <!-- start footer -->
-        <?php include('./layout/footer.php'); ?>;
-        <!-- end footer -->
+        <!-- Fin de la actualizacion del ingeniero-->
+
+        <!-- /.content -->
     </div>
+    <!-- /.content-wrapper -->
+    <!-- start footer -->
+
+    <!-- end footer -->
+
     <!-- ./wrapper -->
     <script src="js/tools.js"></script>
+    <script src="js/actualizaringeniero/colegiatura.js"></script>
+    <script src="js/actualizaringeniero/domicilio.js"></script>
+    <script src="js/actualizaringeniero/telefono.js"></script>
+    <script src="js/actualizaringeniero/conyuge.js"></script>
+    <script src="js/actualizaringeniero/experiencia.js"></script>
+    <script src="js/actualizaringeniero/estudios.js"></script>
+    <script src="js/actualizaringeniero/correoyweb.js"></script>
     <script>
-        let tools = new Tools();
         let spiner = $("#Load_date");
+        let lblImagen = $("#lblImagen");
+        let fileImage = $("#SubirImagen");
 
         let state = false;
 
+        let tools = new Tools();
+        let modelColegiatura = new Colegiatura();
+        let modelDomicilio = new Domicilio();
+        let modelTelefono = new Celular();
+        let modelConyuge = new Conyuge();
+        let modelExperiencia = new Experiencia();
+        let modelEstudios = new Estudios();
+        let modelCorreoyWeb = new CorreoyWeb();
+
         $(document).ready(function() {
-            loadDataPersona($("#dni").val());
+             loadDataPersona($("#dni").val());
 
             $("#btnaceptar").click(function() {
                 if (state) {
@@ -813,9 +825,19 @@ if (!isset($_GET["idPersona"])) {
                     } else if (!$('#Tramite').is(":checked") && $("#Codigo").val() == '' || !$('#Tramite').is(":checked") && $("#Codigo").val().length < 4) {
                         tools.AlertWarning("Advertencia", "Ingrese el número cip por favor.");
                     } else {
-                        updatePersona($("#dni").val(), $("#Nombres").val(), $("#Apellidos").val(), $("#Genero")
-                            .val(), $("#Nacimiento").val(), $("#Estado_civil").val(), $("#Ruc").val(), $(
-                                "#Razon_social").val(), $("#Codigo").val(), $("#Condicion").val());
+                        let formData = new FormData();
+                        formData.append("type", "update");
+                        formData.append("dni", $("#dni").val());
+                        formData.append("nombres", $("#Nombres").val());
+                        formData.append("apellidos", $("#Apellidos").val());
+                        formData.append("sexo", $("#Genero").val());
+                        formData.append("nacimiento", $("#Nacimiento").val());
+                        formData.append("estado_civil", $("#Estado_civil").val());
+                        formData.append("ruc", $("#Ruc").val());
+                        formData.append("rason_social", $("#Razon_social").val());
+                        formData.append("cip", $("#Codigo").val());
+                        formData.append("condicion", $("#Condicion").val());
+                        updatePersona(formData);
                     }
                 } else {
                     tools.AlertWarning("Advertencia",
@@ -848,23 +870,95 @@ if (!isset($_GET["idPersona"])) {
                 event.preventDefault();
             });
 
+            // $("#SubirImagen").on('change', function(event) {
+            //     lblImagen.attr("src", URL.createObjectURL(event.target.files[0]));
+            // });
 
+            // //carga las tablas inferiores
+            modelColegiatura.loadColegiatura($("#dni").val());
+            modelDomicilio.loadDomicilio($("#dni").val());
+            modelTelefono.loadTelefono($("#dni").val());
+            modelConyuge.loadConyuge($("#dni").val());
+            modelExperiencia.loadExperiencia($("#dni").val());
+            modelEstudios.loadGradosyEstudios($("#dni").val());
+            modelCorreoyWeb.loadCorreoyWeb($("#dni").val());
+            
+            
 
-            $("#Departamento").change(function() {
-                console.log($("#Departamento").val());
+            $("#guardarImagen").click(function() {
+                updateImage();
             });
 
-            //carga las tablas inferiores
-            loadColegiatura($("#dni").val());
-            loadDomicilio($("#dni").val());
-            loadTelefono($("#dni").val());
-            loadConyuge($("#dni").val());
-            loadExperiencia($("#dni").val());
-            loadGradosyEstudios($("#dni").val());
-            loadCorreoyWeb($("#dni").val());
+            $("#guardarImagen").keypress(function(event) {
+                if (event.keyCode === 13) {
+                    updateImage();
+                }
+                event.preventDefault();
+            });
 
-
-
+            $("#btnAceptarColegiatura").click(function() {
+                modelColegiatura.crudColegiatura();
+            });
+            $("#btnAceptarColegiatura").keypress(function(event) {
+                if (event.keyCode === 13) {
+                    modelColegiatura.crudColegiatura();
+                }
+                event.preventDefault();
+            });
+            $("#btnAceptarDomicilio").click(function() {
+                modelDomicilio.crudDomicilio();
+            })
+            $("#btnAceptarDomicilio").keypress(function(event) {
+                if (event.keyCode === 13) {
+                    modelDomicilio.crudDomicilio();
+                }
+                event.preventDefault();
+            });
+            $("#btnAceptarCelular").click(function() {
+                modelTelefono.crudCelular();
+            })
+            $("#btnAceptarCelular").keypress(function(event) {
+                if (event.keyCode === 13) {
+                    modelTelefono.crudCelular();
+                }
+                event.preventDefault();
+            });
+            $("#btnAceptarConyuge").click(function() {
+                modelConyuge.crudConyuge();
+            })
+            $("#btnAceptarConyuge").keypress(function(event) {
+                if (event.keyCode === 13) {
+                    modelConyuge.crudConyuge();
+                }
+                event.preventDefault();
+            });
+            $("#btnAceptarExperiencia").click(function() {
+                modelExperiencia.crudExperiencia();
+            })
+            $("#btnAceptarExperiencia").keypress(function(event) {
+                if (event.keyCode === 13) {
+                    modelExperiencia.crudExperiencia();
+                }
+                event.preventDefault();
+            });
+            $("#btnAceptarEstudios").click(function() {
+                modelEstudios.crudEstudios();
+            })
+            $("#btnAceptarEstudios").keypress(function(event) {
+                if (event.keyCode === 13) {
+                    modelEstudios.crudEstudios();
+                }
+                event.preventDefault();
+            });
+            $("#btnAceptarCorreo").click(function() {
+                modelCorreoyWeb.crudCorreo();
+            })
+            $("#btnAceptarCorreo").keypress(function(event) {
+                if (event.keyCode === 13) {
+                    modelCorreoyWeb.crudCorreo();
+                }
+                event.preventDefault();
+            });
         });
 
         function onCheked() {
@@ -872,29 +966,28 @@ if (!isset($_GET["idPersona"])) {
         }
 
         function selectModal() {
-
             if ($("#tab_1").hasClass('active')) {
                 $("#addColegiatura").modal("show");
-                loadAddColegiatura();
+                modelColegiatura.loadAddColegiatura();
             } else if ($("#tab_2").hasClass('active')) {
                 $("#addDomicilio").modal("show");
-                loadAddDomicilio();
+                modelDomicilio.loadAddDomicilio();
             } else if ($("#tab_3").hasClass('active')) {
                 $("#addTelefono").modal("show");
-                loadAddCelular();
+                modelTelefono.loadAddCelular();
             } else if ($("#tab_4").hasClass('active')) {
                 $("#addConyuge").modal("show");
-                loadAddHijos();
             } else if ($("#tab_5").hasClass('active')) {
                 $("#addExperiencia").modal("show");
             } else if ($("#tab_6").hasClass('active')) {
                 $("#addGradosyEstudios").modal("show");
+                modelEstudios.loadAddEstudios();
             } else if ($("#tab_7").hasClass('active')) {
                 $("#addCorreoyWeb").modal("show");
+                modelCorreoyWeb.loadAddCorreoyWeb();
             } else {
 
             }
-            // data-toggle="modal" data-target="#mostrarHistorial"
         }
 
         function loadDataPersona(idPersona) {
@@ -908,12 +1001,18 @@ if (!isset($_GET["idPersona"])) {
                 beforeSend: function() {
                     spiner.append(
                         '<img src="./images/spiner.gif" width="25" height="25" style="margin-left: 10px;"/>'
-                    )
+                    );
                 },
                 success: function(result) {
                     spiner.remove();
                     if (result.estado === 1) {
-                        let persona = result.object;
+                        let persona = result.persona;
+
+                        if (result.imagen == null) {
+                            lblImagen.attr("src", "images/ayuda.png");
+                        } else {
+                            lblImagen.attr("src", "data:image/png;base64," + result.imagen[1]);
+                        }
 
                         $("#Nombres").val(persona.Nombres)
                         $("#Apellidos").val(persona.Apellidos)
@@ -991,24 +1090,13 @@ if (!isset($_GET["idPersona"])) {
             });
         }
 
-        function updatePersona(idPersona, nombres, apellidos, sexo, nacimiento, estado_civil, ruc, rason_social, cip,
-            condicion) {
+        function updatePersona(formData) {
             $.ajax({
                 url: "../app/controller/PersonaController.php",
                 method: "POST",
-                data: {
-                    "type": "update",
-                    "dni": idPersona,
-                    "nombres": nombres.toUpperCase(),
-                    "apellidos": apellidos.toUpperCase(),
-                    "sexo": sexo,
-                    "nacimiento": nacimiento,
-                    "estado_civil": estado_civil,
-                    "ruc": ruc,
-                    "rason_social": rason_social,
-                    "cip": cip,
-                    "condicion": condicion,
-                },
+                data: formData,
+                contentType: false,
+                processData: false,
                 beforeSend: function() {
                     $("#btnaceptar").empty();
                     $("#btnaceptar").append('<img src="./images/spiner.gif" width="25" height="25" />')
@@ -1041,327 +1129,44 @@ if (!isset($_GET["idPersona"])) {
             });
         }
 
-        function loadColegiatura(idDni) {
-            $.ajax({
-                url: "../app/controller/PersonaController.php",
-                method: "GET",
-                data: {
-                    type: "getcolegiatura",
-                    idDni: idDni
-                },
-                beforeSend: function() {},
-                success: function(result) {
-                    for (let cv of result.data) {
-                        $("#tbColegiaturas").append('<tr>' +
-                            '<td>' + cv.Id + '</td>' +
-                            '<td>' + cv.sede + '</td>' +
-                            '<td>' + cv.capitulo + '</td>' +
-                            '<td>' + cv.especialidad + '</td>' +
-                            '<td>' + cv.fechaColegiado + '</td>' +
-                            '<td>' + cv.universidadEgreso + '</td>' +
-                            '<td>' + cv.fechaEgreso + '</td>' +
-                            '<td>' + cv.universidadTitulacion + '</td>' +
-                            '<td>' + cv.fechaTitulacion + '</td>' +
-                            '<td>' + cv.resolucion + '</td>' +
-                            '<td>' + cv.principal + '</td>' +
-                            '</tr>');
+        function updateImage() {
+            let files = document.getElementById('SubirImagen').files;
+            if (files.length == 0) {
+                tools.AlertWarning("Imagen", "Seleccione una imagen antes de");
+            } else {
+                let file = files[0];
+                let blob = file.slice();
+                let reader = new FileReader();
+
+                reader.onloadend = function(evt) {
+                    if (evt.target.readyState == FileReader.DONE) {
+                        let base64String = evt.target.result.replace(/^data:.+;base64,/, '');
+                        $.ajax({
+                            url: "../app/controller/UpdateImagePersona.php",
+                            type: 'POST',
+                            accepts: "application/json",
+                            contentType: "application/json; charset=utf-8",
+                            data: JSON.stringify({
+                                "dni": $("#dni").val(),
+                                "image": base64String,
+                            }),
+                            success: function(result) {
+
+                                if (result.estado == 1) {
+                                    tools.AlertSuccess("Imagen", "Se registro correctamente.");
+                                } else {
+                                    tools.AlertWarning("Imagen", result.message);
+                                }
+                            },
+                            error: function(response) {
+                                tools.AlertError("Imagen", "Se produjo un error, contactese con el administrador del sistema");
+                            }
+                        });
                     }
-                },
-                error: function(error) {
-                    console.log(error);
-                }
-            });
-        }
-
-        function loadDomicilio(idDni) {
-            $.ajax({
-                url: "../app/controller/PersonaController.php",
-                method: "GET",
-                data: {
-                    type: "getdomicilio",
-                    idDni: idDni
-                },
-                beforeSend: function() {},
-                success: function(result) {
-                    for (let domicilio of result.data) {
-                        $("#tbDomicilio").append('<tr>' +
-                            '<td>' + domicilio.Id + '</td>' +
-                            '<td>' + domicilio.tipo + '</td>' +
-                            '<td>' + domicilio.direccion + '</td>' +
-                            '<td>' + domicilio.ubigeo + '</td>' +
-                            '</tr>');
-                    }
-                },
-                error: function(error) {
-                    console.log(error);
-                }
-            })
-        }
-
-        function loadTelefono(idDni) {
-            $.ajax({
-                url: "../app/controller/PersonaController.php",
-                method: "GET",
-                data: {
-                    type: "gettelefono",
-                    idDni: idDni
-                },
-                beforeSend: function() {},
-                success: function(result) {
-                    for (let telefono of result.data) {
-                        $("#tbTelefono").append('<tr>' +
-                            '<td>' + telefono.Id + '</td>' +
-                            '<td>' + telefono.tipo + '</td>' +
-                            '<td>' + telefono.numero + '</td>' +
-                            '</tr>');
-                    }
-                },
-                error: function(error) {
-                    console.log(error);
-                }
-            });
-        }
-
-        function loadConyuge(idDni) {
-            $.ajax({
-                url: "../app/controller/PersonaController.php",
-                method: "GET",
-                data: {
-                    type: "getconyuge",
-                    idDni: idDni
-                },
-                beforeSend: function() {},
-                success: function(result) {
-                    for (let conyuge of result.data) {
-                        $("#tbConyuge").append('<tr>' +
-                            '<td>' + conyuge.Id + '</td>' +
-                            '<td>' + conyuge.NombreCompleto + '</td>' +
-                            '<td>' + conyuge.Hijos + '</td>' +
-                            '</tr>');
-                    }
-                },
-                error: function(error) {
-                    console.log(error);
-                }
-            });
-        }
-
-        function loadExperiencia(idDni) {
-            $.ajax({
-                url: "../app/controller/PersonaController.php",
-                method: "GET",
-                data: {
-                    type: "getexperiencia",
-                    idDni: idDni
-                },
-                beforeSend: function() {},
-                success: function(result) {
-                    for (let experiencia of result.data) {
-                        $("#tbExperiencia").append('<tr>' +
-                            '<td>' + experiencia.Id + '</td>' +
-                            '<td>' + experiencia.Entidad + '</td>' +
-                            '<td>' + experiencia.Experiencia + '</td>' +
-                            '<td>' + experiencia.FechaInicio + '</td>' +
-                            '<td>' + experiencia.FechaFin + '</td>' +
-                            '</tr>');
-                    }
-                },
-                error: function(error) {
-                    console.log(error);
-                }
-            });
-        }
-
-        function loadGradosyEstudios(idDni) {
-            $.ajax({
-                url: "../app/controller/PersonaController.php",
-                method: "GET",
-                data: {
-                    type: "getgradosyestudios",
-                    idDni: idDni
-                },
-                beforeSend: function() {},
-                success: function(result) {
-                    for (let gradosyestudios of result.data) {
-                        $("#tbGradosyExperiencia").append('<tr>' +
-                            '<td>' + gradosyestudios.Id + '</td>' +
-                            '<td>' + gradosyestudios.Grado + '</td>' +
-                            '<td>' + gradosyestudios.Materia + '</td>' +
-                            '<td>' + gradosyestudios.Universidad + '</td>' +
-                            '<td>' + gradosyestudios.Fecha + '</td>' +
-                            '</tr>');
-                    }
-                },
-                error: function(error) {
-                    console.log(error);
-                }
-            });
-        }
-
-        function loadCorreoyWeb(idDni) {
-            $.ajax({
-                url: "../app/controller/PersonaController.php",
-                method: "GET",
-                data: {
-                    type: "getcorreoyweb",
-                    idDni: idDni
-                },
-                beforeSend: function() {},
-                success: function(result) {
-                    for (let correoyweb of result.data) {
-                        $("#tbGradosyWeb").append('<tr>' +
-                            '<td>' + correoyweb.Id + '</td>' +
-                            '<td>' + correoyweb.Tipo + '</td>' +
-                            '<td>' + correoyweb.Direccion + '</td>' +
-                            '</tr>');
-                    }
-                },
-                error: function(error) {
-                    console.log(error);
-                }
-            });
-        }
-
-        function loadAddColegiatura() {
-            $.ajax({
-                url: "../app/controller/PersonaController.php",
-                method: "GET",
-                data: {
-                    type: "getaddcolegiatura",
-                },
-                beforeSend: function() {
-                    $("#Sede").empty();
-                    $("#Especialidad").empty();
-                },
-                success: function(result) {
-                    if (result.estado == 1) {
-
-                        $("#Sede").append('<option value="">- Seleccione -</option>');
-                        for (let sede of result.sedes) {
-                            $("#Sede").append('<option value="' + sede.IdConsejo + '">' + sede.Sede + '</option>');
-                        }
-                        $("#Especialidad").append('<option value="">- Seleccione -</option>');
-                        for (let especialidad of result.espacialidades) {
-                            $("#Especialidad").append('<option value="' + especialidad.IdEspecialidad + '">' + especialidad.Especialidad + '</option>');
-                        }
-                        $("#UniversidadEgreso").append('<option value="">- Seleccione -</option>');
-                        for (let universidadegreso of result.universidades) {
-                            $("#UniversidadEgreso").append('<option value="' + universidadegreso.IdUniversidad + '">' + universidadegreso.Universidad + '</option>');
-                        }
-                        $("#UniversidadTitulacion").append('<option value="">- Seleccione -</option>');
-                        for (let universidadtitulacion of result.universidades) {
-                            $("#UniversidadTitulacion").append('<option value="' + universidadtitulacion.IdUniversidad + '">' + universidadtitulacion.Universidad + '</option>');
-                        }
-                    } else {
-
-                    }
-                    console.log(result);
-                },
-                error: function(error) {
-                    console.log(error);
-                }
-            });
-        }
-
-        function loadAddDomicilio() {
-            $.ajax({
-                url: "../app/controller/PersonaController.php",
-                method: "GET",
-                data: {
-                    type: "getadddomicilio",
-                },
-                beforeSend: function() {
-                    $("#Tipo").empty();
-                    $("#Departamento").empty();
-                },
-                success: function(result) {
-
-
-                    if (result.estado == 1) {
-                        $("#Tipo").append('<option value="">- Seleccione -</option>');
-                        for (let tipoDomicilio of result.tipodomicilio) {
-                            $("#Tipo").append('<option value="' + tipoDomicilio.IdTipo + '">' + tipoDomicilio.Descripcion + '</option>');
-                        }
-
-                        let ubigeos = '';
-                        for (let Departamento of result.ubicacion) {
-                            ubigeos += '<option value="' + Departamento.IdUbicacion + '">' + Departamento.Ubicacion + '</option>';
-                        }
-                        $("#Departamento").html(ubigeos).selectpicker('refresh');
-                    } else {
-
-                    }
-                },
-                error: function(error) {
-                    console.log(error.responseText);
-                }
-            });
-        }
-
-        function loadAddCelular() {
-            $.ajax({
-                url: "../app/controller/PersonaController.php",
-                method: "GET",
-                data: {
-                    type: "getaddcelular",
-                },
-                beforeSend: function() {
-                    $("#TipoCelular").empty();
-                },
-                success: function(result) {
-                    console.log(result);
-                    if (result.estado == 1) {
-                        $("#TipoCelular").append('<option value="">- Seleccione -</option>');
-                        for (let tipoCelular of result.tipo) {
-                            $("#TipoCelular").append('<option value="' + tipoCelular.IdTipo + '">' + tipoCelular.Tipo + '</option>');
-                        }
-                    } else {
-
-                    }
-                },
-                error: function(error) {
-                    console.log(error);
-                }
-            });
-        }
-
-        function loadAddHijos() {
-            $("#Hijos").append('<option value="">- Seleccione -</option>');
-            for (let i = 1; i <= 7; i++) {
-                if (i == 1) {
-                    $("#Hijos").append('<option value="' + i + '">' + i + ' Hijo(a)' + '</option>');
-                } else {
-                    $("#Hijos").append('<option value="' + i + '">' + i + ' Hijos(as)' + '</option>');
-                }
+                };
+                reader.readAsDataURL(blob);
             }
-        }
-
-        function loadAddEstudios() {
-            $.ajax({
-                url: "../app/controller/PersonaController.php",
-                method: "GET",
-                data: {
-                    type: "getaddestudios",
-                },
-                beforeSend: function() {
-                    $("#TipoCelular").empty();
-                },
-                success: function(result) {
-                    console.log(result);
-                    if (result.estado == 1) {
-                        $("#TipoCelular").append('<option value="">- Seleccione -</option>');
-                        for (let tipoCelular of result.tipo) {
-                            $("#TipoCelular").append('<option value="' + tipoCelular.IdTipo + '">' + tipoCelular.Tipo + '</option>');
-                        }
-                    } else {
-
-                    }
-                },
-                error: function(error) {
-                    console.log(error);
-                }
-            });
-        }
+        } 
     </script>
 </body>
 

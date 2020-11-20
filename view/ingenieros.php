@@ -404,7 +404,7 @@
                     state = true;
                 },
                 success: function(result) {
-
+             
                     if (result.estado === 1) {
                         tbTable.empty();
                         for (let persona of result.personas) {
@@ -462,6 +462,7 @@
                     }
                 },
                 error: function(error) {
+                    
                     tbTable.empty();
                     tbTable.append(
                         '<tr class="text-center"><td colspan="10"><p>Se produjo un error, intente nuevamente.</p></td></tr>'
