@@ -696,7 +696,7 @@ class PersonaAdo
             $comandoInsert->bindParam(1, $domicilio["dni"], PDO::PARAM_STR);
             $comandoInsert->bindParam(2, $domicilio["tipo"], PDO::PARAM_INT);
             $comandoInsert->bindParam(3, $domicilio["departamento"], PDO::PARAM_INT);
-            $comandoInsert->bindParam(4, $domicilio["direccion"], PDO::PARAM_STR);
+            $comandoInsert->bindParam(4, $domicilio["direccion"], PDO::PARAM_INT);
 
             $comandoInsert->execute();
             Database::getInstance()->getDb()->commit();
