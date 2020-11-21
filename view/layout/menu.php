@@ -39,7 +39,7 @@
                  <a href="./ingresos.php"><i class="fa fa-sitemap"></i><span>Ingresos</span></a>
              </li>
              <li>
-                 <a href="#"><i class="fa fa-clone"></i><span>Capítulos</span></a>
+                 <a href="./capitulos.php"><i class="fa fa-clone"></i><span>Capítulos</span></a>
              </li>
              <li>
                  <a href="#"><i class="fa fa-bank"></i><span>Universidades</span></a>
