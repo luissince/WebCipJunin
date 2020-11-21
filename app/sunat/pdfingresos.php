@@ -4,9 +4,9 @@ if (!isset($_GET["idIngreso"])) {
 } else {
     define('_MPDF_PATH', '/lib');
     require('./lib/mpdf/vendor/autoload.php');
-    include '../src/GenerateCoinToLetters.php';
+    include('../src/GenerateCoinToLetters.php');
     require_once("./lib/phpqrcode/qrlib.php");
-    include_once '../model/IngresosAdo.php';
+    include_once('../model/IngresosAdo.php');
 
     $detalleventa = IngresosAdo::ObtenerIngresoXML($_GET["idIngreso"]);
     if (!is_array($detalleventa)) {

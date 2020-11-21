@@ -49,7 +49,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
             } else {
                 echo json_encode(array(
                     "estado" => 0,
-                    "messaje" => $result
+                    "message" => $result
                 ));
             }
         }else if(intval($_GET["categoria"]) === 2){
@@ -62,7 +62,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
             } else {
                 echo json_encode(array(
                     "estado" => 0,
-                    "messaje" => $result
+                    "message" => $result
                 ));
             }
         }else if(intval($_GET["categoria"]) === 3){
@@ -75,7 +75,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
             } else {
                 echo json_encode(array(
                     "estado" => 0,
-                    "messaje" => $result
+                    "message" => $result
                 ));
             }
         } 
@@ -89,7 +89,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
             } else {
                 echo json_encode(array(
                     "estado" => 0,
-                    "messaje" => $result
+                    "message" => $result
                 ));
             }
         }else if(intval($_GET["categoria"]) === 100){
@@ -102,7 +102,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
             } else {
                 echo json_encode(array(
                     "estado" => 0,
-                    "messaje" => $result
+                    "message" => $result
                 ));
             }
         }   

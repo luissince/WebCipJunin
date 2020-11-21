@@ -54,7 +54,7 @@
                  <a href="./cobros.php"><i class="fa fa-money"></i><span>Cobros</span></a>
              </li>
              <li>
-                 <a href="#"><i class="fa fa-bar-chart"></i><span>Reportes</span></a>
+                 <a href="./reportes.php"><i class="fa fa-bar-chart"></i><span>Reportes</span></a>
              </li>
 
 
