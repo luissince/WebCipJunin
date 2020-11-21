@@ -137,7 +137,6 @@ class IngresosAdo
 
     public static function ObtenerIngresoXML($idIngreso)
     {
-
         try {
             $array = array();
             $totalsinimpuesto = 0;

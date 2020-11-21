@@ -324,7 +324,8 @@ class PersonaAdo
     public static function getDomicilio($idDni)
     {
         try {
-            $cmdDomicilio = Database::getInstance()->getDb()->prepare("SELECT ISNULL (t.Descripcion, 'TIPO NO REGISTRADO') AS Tipo, UPPER(d.Direccion) AS Direccion, 
+            $cmdDomicilio = Database::getInstance()->getDb()->prepare("SELECT ISNULL (t.Descripcion, 'TIPO NO REGISTRADO') AS Tipo,
+            UPPER(d.Direccion) AS Direccion, 
             ISNULL (u.Departamento,'DEPARTAMENTO NO REGISTRADA') AS Ubigeo FROM Direccion AS d 
             LEFT JOIN Tipos AS t ON t.idTipo = d.Tipo 
             LEFT JOIN Ubigeo AS u ON u.idUbigeo = d.Ubigeo
@@ -333,7 +334,6 @@ class PersonaAdo
             $cmdDomicilio->execute();
 
             $arrayDomicilios = array();
-
             $count = 0;
             while ($row = $cmdDomicilio->fetch()) {
                 $count++;

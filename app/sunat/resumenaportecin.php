@@ -111,12 +111,12 @@ mpdf-->
             <th width="3%" rowspan="2">N°</th>  
             <th width="10%" rowspan="2">Capítulo</th>        
             <th width="6%" rowspan="2">N° Cip</th>
-            <th width="6%" rowspan="2">Condición</th>
+            <th width="7%" rowspan="2">Condición</th>
             <th width="20%" rowspan="2">Ingeniero</th>
             <th width="4%" rowspan="2">Año</th>
 
-            <th width="15%" colspan="13">Cuotas al ISS CIP</th>
-            <th width="15%" colspan="13">Cuotas Sociales CIP</th>
+            <th width="18%" colspan="13">Cuotas al ISS CIP</th>
+            <th width="18%" colspan="13">Cuotas Sociales CIP</th>
             <th width="4%" rowspan="2">T.</th>
         </tr>
         <tr>

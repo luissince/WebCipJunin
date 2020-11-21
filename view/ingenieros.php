@@ -408,7 +408,6 @@
                     if (result.estado === 1) {
                         tbTable.empty();
                         for (let persona of result.personas) {
-
                             // let image = '<img src="images/masculino.png" width="30">';
                             let btnHistorial = '<button class="btn btn-warning btn-sm"  data-toggle="modal" data-target="#mostrarHistorial">' +
                                 '<i class="fa fa-eye"></i> Ver' +
@@ -461,8 +460,7 @@
                         state = false;
                     }
                 },
-                error: function(error) {
-                    
+                error: function(error) {                    
                     tbTable.empty();
                     tbTable.append(
                         '<tr class="text-center"><td colspan="10"><p>Se produjo un error, intente nuevamente.</p></td></tr>'
