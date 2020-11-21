@@ -795,16 +795,6 @@
                                     </div>
                                 </div>
 
-                                <!-- <div class="row ">
-                                    <div class="col-md-6 text-left no-margin">
-                                        <h5>B001</h5>
-                                    </div>
-
-                                    <div class="col-md-6 text-right no-margin">
-                                        <h5>0000000</h5>
-                                    </div>
-                                </div> -->
-
                                 <div class="row">
                                     <div class="col-md-12 text-left">
                                         <div class="row">

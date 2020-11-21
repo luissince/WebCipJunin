@@ -1,4 +1,5 @@
 function CobroIngenieros() {
+
     this.componentesIngenieros = function() {
         $("#btnIngenieros").click(function(event) {
             $('#mdIngenieros').modal('show');
@@ -140,16 +141,16 @@ function CobroIngenieros() {
             },
             success: function(data) {
                 if (data.estado === 1) {
-                    idDNI = data.object.idDNI;
-                    let Condicion = data.object.Condicion ==
+                    idDNI = data.persona.idDNI;
+                    let Condicion = data.persona.Condicion ==
                         'T' ? 'Transeunte' :
-                        data.object.Condicion == 'F' ? 'Fallecido' :
-                        data.object.Condicion == 'R' ? 'Retirado' :
-                        data.object.Condicion == 'V' ? 'Vitalicio' : 'Ordinario';
-                    $("#lblCipSeleccionado").html(data.object.CIP);
+                        data.persona.Condicion == 'F' ? 'Fallecido' :
+                        data.persona.Condicion == 'R' ? 'Retirado' :
+                        data.persona.Condicion == 'V' ? 'Vitalicio' : 'Ordinario';
+                    $("#lblCipSeleccionado").html(data.persona.CIP);
                     $("#lblTipoIngenieroSeleccionado").html(Condicion);
-                    $("#lblDocumentSeleccionado").html(data.object.idDNI);
-                    $("#lblDatosSeleccionado").html(data.object.Apellidos + " " + data.object.Nombres);
+                    $("#lblDocumentSeleccionado").html(data.persona.idDNI);
+                    $("#lblDatosSeleccionado").html(data.persona.Apellidos + " " + data.persona.Nombres);
                     $("#lblDireccionSeleccionado").html("");
                     tools.AlertSuccess("Ingeniero", "Los obtuvo los datos correctamente.");
                 } else {
@@ -161,9 +162,9 @@ function CobroIngenieros() {
                     $("#lblDireccionSeleccionado").html("--");
                     tools.AlertWarning("Ingeniero", "Se produjo un problema en obtener los datos, intente nuevamente.");
                 }
+                console.log(idDNI)
             },
             error: function(error) {
-                idDNI = 0;
                 tools.AlertError("Ingeniero", "Error en obtener los datos, comuníquese con su proveedor o intente nuevamente.");
             }
         });
