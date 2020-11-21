@@ -646,7 +646,7 @@ if (!isset($_GET["idPersona"])) {
                 <div class="row">
                     <div class="col-lg-4 col-md-3 col-sm-12 col-xs-12 text-center">
                         <div class="row">
-                            <img class="img-responsive img-thumbnail" style="max-width: 140px;" id="lblImagen">
+                            <img class="img-responsive img-thumbnail" style="width: 160px;height:140px;" id="lblImagen">
                         </div>
                         <div class="row">
                             <div class="file-field">
@@ -685,6 +685,7 @@ if (!isset($_GET["idPersona"])) {
                                 </div>
                             </div>
                         </div>
+                        
                         <div class="row">
                             <div class="col-lg-4 col-md-4 col-sm-4 col-xs-4">
                                 <div class="form-group">
@@ -758,7 +759,6 @@ if (!isset($_GET["idPersona"])) {
                                     </select>
                                 </div>
                             </div>
-
                         </div>
                     </div>
                 </div>
@@ -1080,9 +1080,9 @@ if (!isset($_GET["idPersona"])) {
                 event.preventDefault();
             });
 
-            // $("#SubirImagen").on('change', function(event) {
-            //     lblImagen.attr("src", URL.createObjectURL(event.target.files[0]));
-            // });
+            $("#SubirImagen").on('change', function(event) {
+                lblImagen.attr("src", URL.createObjectURL(event.target.files[0]));
+            });
 
             // //carga las tablas inferiores
             modelColegiatura.loadColegiatura($("#dni").val());
@@ -1091,10 +1091,8 @@ if (!isset($_GET["idPersona"])) {
             modelConyuge.loadConyuge($("#dni").val());
             modelExperiencia.loadExperiencia($("#dni").val());
             modelEstudios.loadGradosyEstudios($("#dni").val());
-            modelCorreoyWeb.loadCorreoyWeb($("#dni").val());
+            modelCorreoyWeb.loadCorreoyWeb($("#dni").val());           
             
-            
-
             $("#guardarImagen").click(function() {
                 updateImage();
             });

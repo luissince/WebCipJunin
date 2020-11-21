@@ -137,7 +137,6 @@ class IngresosAdo
 
     public static function ObtenerIngresoXML($idIngreso)
     {
-
         try {
             $array = array();
             $totalsinimpuesto = 0;
@@ -312,4 +311,60 @@ class IngresosAdo
             return $ex->getMessage();
         }
     }
+
+    public static function ResumenAporteCIN($fechaInicio,$fechaFinal)
+    {
+        try {
+            $arrayIngresos = array();
+            $cmdConcepto = Database::getInstance()->getDb()->prepare("{CALL ResumenCobrosCIN(?,?)}");
+            $cmdConcepto->bindParam(1,$fechaInicio,PDO::PARAM_STR);
+            $cmdConcepto->bindParam(2,$fechaFinal,PDO::PARAM_STR);
+            $cmdConcepto->execute();
+            $count = 0;
+
+            while ($row = $cmdConcepto->fetch()) {
+                $count++;
+                array_push($arrayIngresos, array(
+                    "Id" => $count,
+                    "Capitulo" => $row["Capitulo"],
+                    "CIP" => $row["CIP"],
+                    "Condicion" => ($row["Condicion"] == "F" ? "FALLECIDO" : $row["Condicion"] == "R" ? "RETIRADO" : $row["Condicion"] == "V" ? "VITALICIO" : "ORDINARIO"),
+                    "Ingeniero" => $row["Ingeniero"],
+                    "Anno" => $row["Anno"],
+                    "X1" => $row["X1"],
+                    "X2" => $row["X2"],
+                    "X3" => $row["X3"],
+                    "X4" => $row["X4"],
+                    "X5" => $row["X5"],
+                    "X6" => $row["X6"],
+                    "X7" => $row["X7"],
+                    "X8" => $row["X8"],
+                    "X9" => $row["X9"],
+                    "X10" => $row["X10"],
+                    "X11" => $row["X11"],
+                    "X12" => $row["X12"],
+                    "XZ" => $row["XZ"],
+                    "Y1" => $row["Y1"],
+                    "Y2" => $row["Y2"],
+                    "Y3" => $row["Y3"],
+                    "Y4" => $row["Y4"],
+                    "Y5" => $row["Y5"],
+                    "Y6" => $row["Y6"],
+                    "Y7" => $row["Y7"],
+                    "Y8" => $row["Y8"],
+                    "Y9" => $row["Y9"],
+                    "Y10" => $row["Y10"],
+                    "Y11" => $row["Y11"],
+                    "Y12" => $row["Y12"],
+                    "YZ" => $row["YZ"],
+                    "XYZ" => $row["XYZ"]
+                ));
+            }
+
+            return $arrayIngresos;
+        } catch (PDOException $ex) {
+            return $ex->getMessage();
+        }
+    }
+
 }

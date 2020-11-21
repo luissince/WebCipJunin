@@ -97,9 +97,6 @@
             <!-- /.content -->
         </div>
         <!-- /.content-wrapper -->
-        <!-- start footer -->
-        <?php include('./layout/footer.php'); ?>;
-        <!-- end footer -->
     </div>
     <!-- ./wrapper -->
     <script>
@@ -114,7 +111,7 @@
             });
 
             $("#linkListaResumenCIN").click(function() {
-
+                window.open("../app/sunat/resumenaportecin.php", "_blank");
             });
 
         });
