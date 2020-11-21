@@ -610,11 +610,11 @@
 
                 <!-- modal start peritaje -->
                 <div class="row">
-                    <div class="modal fade" id="mdPeritaje">
+                    <div class="modal fade" id="mdPeritaje" data-backdrop="static">
                         <div class="modal-dialog modal-xl">
                             <div class="modal-content">
                                 <div class="modal-header">
-                                    <button type="button" class="close" data-dismiss="modal">
+                                    <button type="button" class="close" id="btnClosePeritaje">
                                         <i class="fa fa-close"></i>
                                     </button>
                                     <h4 class="modal-title">
@@ -627,7 +627,7 @@
                                         <div class="col-md-12">
                                             <div class="form-group">
                                                 <label for="txtDescripcionPeritaje">Descripción</label>
-                                                <input type="text" class="form-control" id="txtDescripcionPeritaje" placeholder="Ingrese la descripción">
+                                                <input type="text" class="form-control" id="txtDescripcionPeritaje" placeholder="Ingrese una descripción sobre el peritaje.">
                                             </div>
                                         </div>
                                     </div>
@@ -643,7 +643,7 @@
                                 <div class="modal-footer">
                                     <button type="button" class="btn btn-warning" id="btnAceptarPeritaje">
                                         <i class="fa fa-check"></i> Aceptar</button>
-                                    <button type="button" class="btn btn-primary" data-dismiss="modal">
+                                    <button type="button" class="btn btn-primary" id="btnCancelarPeritaje">
                                         <i class="fa fa-remove"></i> Cancelar</button>
                                 </div>
                                 </form>
@@ -750,12 +750,12 @@
                                     <div class="col-md-12">
                                         <table class="table">
                                             <thead style="background-color: #FDB2B1;color: #B72928;">
-                                                <th>#</th>
-                                                <th>Cantidad</th>
-                                                <th>Concepto</th>
-                                                <th>Precio</th>
-                                                <th>Monto</th>
-                                                <th>Quitar</th>
+                                                <th width="5%">#</th>
+                                                <th width="15%">Cantidad</th>
+                                                <th width="35%">Concepto</th>
+                                                <th width="15%">Precio</th>
+                                                <th width="20%">Monto</th>
+                                                <th width="10%">Quitar</th>
                                             </thead>
                                             <tbody id="tbIngresos">
 
@@ -895,7 +895,7 @@
             modelCertificado.componentesCertificado();
 
             //peritaje
-            modelPeritaje.componentesPeritaje();
+            modelPeritaje.componentesPeritaje(addIngresos);
 
             //otros
             modelOtros.componentesOtros(addIngresos, validateDuplicate);
@@ -1117,14 +1117,6 @@
                 }
             }
             return ret;
-        }
-
-        function nombreMes(mes) {
-            let array = [
-                "Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio",
-                "Julio", "Agosto", "Setiembre", "Octubre", "Noviembre", "Diciembre"
-            ];
-            return array[mes - 1];
         }
         
     </script>

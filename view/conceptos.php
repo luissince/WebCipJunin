@@ -39,104 +39,79 @@
                                     </h4>
                                 </div>
                                 <div class="modal-body">
-                                    <form role="form">
 
-                                        <div class="row">
-                                            <div class="col-md-8">
-                                                <div class="form-group">
-                                                    <label for="categoria">Categoria: <i class="fa fa-fw fa-asterisk text-danger"></i></label>
-                                                    <select id="cbCategoria" class="form-control">
-                                                        <option value="0">- - Seleccione - -</option>
-                                                        <option value="1">Cuota ordinaria</option>
-                                                        <option value="2">Cuota ordinaria (Admistia)</option>
-                                                        <option value="3">Cuota ordinaria (Vitalicio)</option>
-                                                        <option value="4">Colegiatura</option>
-                                                        <option value="5">Certificado de habilidad</option>
-                                                        <option value="6">Certificado de residencia de obra</option>
-                                                        <option value="7">Certificado de Proyecto</option>
-                                                        <option value="8">Peritaje</option>
-                                                        <option value="100">Otros conceptos</option>
-                                                    </select>
-                                                </div>
+                                    <div class="row">
+                                        <div class="col-md-8">
+                                            <div class="form-group">
+                                                <label for="categoria">Categoria: <i class="fa fa-fw fa-asterisk text-danger"></i></label>
+                                                <select id="cbCategoria" class="form-control">
+                                                    <option value="0">- - Seleccione - -</option>
+                                                    <option value="1">Cuota ordinaria</option>
+                                                    <option value="2">Cuota ordinaria (Admistia)</option>
+                                                    <option value="3">Cuota ordinaria (Vitalicio)</option>
+                                                    <option value="4">Colegiatura</option>
+                                                    <option value="5">Certificado de habilidad</option>
+                                                    <option value="6">Certificado de residencia de obra</option>
+                                                    <option value="7">Certificado de Proyecto</option>
+                                                    <option value="8">Peritaje</option>
+                                                    <option value="100">Otros conceptos</option>
+                                                </select>
                                             </div>
-                                            <div class="col-md-4">
-                                                <div class="form-group">
-                                                    <label for="codigo">Codigo: </label>
-                                                    <input id="txtCodigo" type="text" name="codigo" class="form-control" placeholder="Codigo del concepto" required="">
+                                        </div>
+                                        <div class="col-md-4">
+                                            <div class="form-group">
+                                                <label for="codigo">Codigo: </label>
+                                                <input id="txtCodigo" type="text" name="codigo" class="form-control" placeholder="Codigo del concepto" required="">
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-md-12">
+                                            <div class="form-group">
+                                                <label for="concepto">Concepto: <i class="fa fa-fw fa-asterisk text-danger"></i></label>
+                                                <input id="txtConcepto" type="text" name="concepto" class="form-control" placeholder="Nombre del concepto" required="">
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-md-4">
+                                            <div class="form-group">
+                                                <label for="precio">Precio: <i class="fa fa-fw fa-asterisk text-danger"></i></label>
+                                                <input id="txtPrecio" type="number" name="precio" class="form-control" placeholder="Monto del concepto" required="">
+                                            </div>
+                                        </div>
+                                        <div class="col-md-4">
+                                            <div class="form-group">
+                                                <label for="fecha_inicio">Fecha Inicio: <i class="fa fa-fw fa-asterisk text-danger"></i></label>
+                                                <input id="txtFecha_inicio" type="date" name="fecha_inicio" class="form-control" required="">
+                                            </div>
+                                        </div>
+                                        <div class="col-md-4">
+                                            <div class="form-group">
+                                                <label for="fecha_fin">Fecha Fin: <i class="fa fa-fw fa-asterisk text-danger"></i></label>
+                                                <input id="txtFecha_fin" type="date" name="fecha_fin" class="form-control" required="">
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <hr>
+                                    <div class="row">
+                                        <div class="col-md-12">
+                                            <div class="form-group">
+
+                                                <p>Agrege especificaciones: <i class="fa fa-fw fa-asterisk text-danger"></i></p>
+                                                <div class="col-md-6">
+                                                    <input type="radio" id="precio_variable" name="espesifico" value="1" checked="checked">
+                                                    <label for="precio_variable">Precip</label>
+                                                </div>
+
+                                                <div class="col-md-6">
+                                                    <input type="radio" id="deriva" name="espesifico" value="2">
+                                                    <label for="deriva">Se deriva al CIP nacional</label>
                                                 </div>
                                             </div>
                                         </div>
-                                        <div class="row">
-                                            <div class="col-md-12">
-                                                <div class="form-group">
-                                                    <label for="concepto">Concepto: <i class="fa fa-fw fa-asterisk text-danger"></i></label>
-                                                    <input id="txtConcepto" type="text" name="concepto" class="form-control" placeholder="Nombre del concepto" required="">
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="row">
-                                            <div class="col-md-4">
-                                                <div class="form-group">
-                                                    <label for="precio">Precio: <i class="fa fa-fw fa-asterisk text-danger"></i></label>
-                                                    <input id="txtPrecio" type="number" name="precio" class="form-control" placeholder="Monto del concepto" required="">
-                                                </div>
-                                            </div>
-                                            <div class="col-md-4">
-                                                <div class="form-group">
-                                                    <label for="fecha_inicio">Fecha Inicio: <i class="fa fa-fw fa-asterisk text-danger"></i></label>
-                                                    <input id="txtFecha_inicio" type="date" name="fecha_inicio" class="form-control" required="">
-                                                </div>
-                                            </div>
-                                            <div class="col-md-4">
-                                                <div class="form-group">
-                                                    <label for="fecha_fin">Fecha Fin: <i class="fa fa-fw fa-asterisk text-danger"></i></label>
-                                                    <input id="txtFecha_fin" type="date" name="fecha_fin" class="form-control" required="">
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <hr>
-                                        <div class="row">
-                                            <div class="col-md-12">
-                                                <div class="form-group">
+                                    </div>
 
-                                                    <p>Agrege especificaciones: <i class="fa fa-fw fa-asterisk text-danger"></i></p>
-                                                    <div class="col-md-5">
-                                                        <input type="radio" id="precio_variable" name="espesifico" value="1">
-                                                        <label for="precio_variable">Precio es variable</label><br>
-
-                                                        <input type="radio" id="deriva" name="espesifico" value="2">
-                                                        <label for="deriva">Se deriva al CIP nacional</label>
-                                                    </div>
-
-                                                    <div class="col-md-7">
-                                                        <input type="radio" id="solo_transeunte" name="espesifico" value="3">
-                                                        <label for="solo_transeunte">Precio solo para
-                                                            transeunte</label><br>
-                                                        <div class="row">
-                                                            <div class="col-md-9">
-                                                                <input type="radio" id="opcional" name="espesifico" value="4">
-                                                                <label for="opcional">Opcional en la categoria</label>
-                                                            </div>
-                                                            <div class="col-md-3">
-                                                                <select id="opcional_2" class="form-control">
-                                                                    <option value="1">1</option>
-                                                                    <option value="2">2</option>
-                                                                    <option value="3">3</option>
-                                                                    <option value="4">4</option>
-                                                                    <option value="5">5</option>
-                                                                    <option value="6">5</option>
-                                                                    <option value="7">7</option>
-                                                                    <option value="8">8</option>
-                                                                    <option value="100">100</option>
-                                                                </select>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-
-                                    </form>
                                 </div>
                                 <div class="modal-footer">
                                     <p class="text-left text-danger">Todos los campos marcados con <i class="fa fa-fw fa-asterisk text-danger"></i> son obligatorios</p>
@@ -223,9 +198,6 @@
             <!-- /.content -->
         </div>
         <!-- /.content-wrapper -->
-        <!-- start footer -->
-        <?php include('./layout/footer.php'); ?>;
-        <!-- end footer -->
     </div>
     <!-- ./wrapper -->
     <script>

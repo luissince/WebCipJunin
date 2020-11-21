@@ -137,7 +137,7 @@ function CobroIngenieros() {
             beforeSend: function() {
                 $('#mdIngenieros').modal('hide');
                 idDNI = 0;
-                tools.AlertInfo("Ingeniero", "En proceso de busqueda.");
+                tools.AlertInfo("Ingeniero", "En proceso de busqueda.", "toast-bottom-right");
             },
             success: function(data) {
                 if (data.estado === 1) {
@@ -152,7 +152,7 @@ function CobroIngenieros() {
                     $("#lblDocumentSeleccionado").html(data.persona.idDNI);
                     $("#lblDatosSeleccionado").html(data.persona.Apellidos + " " + data.persona.Nombres);
                     $("#lblDireccionSeleccionado").html("");
-                    tools.AlertSuccess("Ingeniero", "Los obtuvo los datos correctamente.");
+                    tools.AlertSuccess("Ingeniero", "Los obtuvo los datos correctamente.", "toast-bottom-right");
                 } else {
                     idDNI = 0;
                     $("#lblCipSeleccionado").html("--");
@@ -160,12 +160,11 @@ function CobroIngenieros() {
                     $("#lblDocumentSeleccionado").html("--");
                     $("#lblDatosSeleccionado").html("--");
                     $("#lblDireccionSeleccionado").html("--");
-                    tools.AlertWarning("Ingeniero", "Se produjo un problema en obtener los datos, intente nuevamente.");
+                    tools.AlertWarning("Ingeniero", "Se produjo un problema en obtener los datos, intente nuevamente.", "toast-bottom-right");
                 }
-                console.log(idDNI)
             },
             error: function(error) {
-                tools.AlertError("Ingeniero", "Error en obtener los datos, comuníquese con su proveedor o intente nuevamente.");
+                tools.AlertError("Ingeniero", "Error en obtener los datos, comuníquese con su proveedor o intente nuevamente.", "toast-bottom-right");
             }
         });
     }

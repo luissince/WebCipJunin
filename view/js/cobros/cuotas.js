@@ -129,7 +129,7 @@ function Cuotas() {
                                 monto += parseFloat(c.Precio);
                             }
                             $("#tbCuotas").append('<tr >' +
-                                '<td class="no-padding"><div><label><input type="checkbox" class="cuotasid" checked> ' + nombreMes(value.mes) + ' - ' + value.year + '</label></div></td>' +
+                                '<td class="no-padding"><div><label><input type="checkbox" class="cuotasid" checked> ' + tools.nombreMes(value.mes) + ' - ' + value.year + '</label></div></td>' +
                                 '<td class="no-padding">' + tools.formatMoney(monto) + '</td>' +
                                 +'</tr>');
                             totalCuotas += parseFloat(monto);

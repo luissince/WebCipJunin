@@ -16,7 +16,7 @@ function Experiencia() {
                 if (result.estado == 1) {
                     $("#tbExperiencia").empty();
                     if (result.data.length == 0) {
-                        $("#tbExperiencia").append('<tr class="text-center"><td colspan="5"><p>No tiene registrado ningun conyuge.</p></td></tr>');
+                        $("#tbExperiencia").append('<tr class="text-center"><td colspan="5"><p>No tiene registrado ninguna experiencia.</p></td></tr>');
                     } else {
                         for (let experiencia of result.data) {
                             $("#tbExperiencia").append('<tr>' +

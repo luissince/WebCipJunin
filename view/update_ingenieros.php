@@ -508,7 +508,7 @@ if (!isset($_GET["idPersona"])) {
                 <div class="row">
                     <div class="col-lg-4 col-md-3 col-sm-12 col-xs-12 text-center">
                         <div class="row">
-                            <img class="img-responsive img-thumbnail" style="width: 160px;height:140px;" id="lblImagen">
+                            <img class="img-responsive img-thumbnail" style="width: 160px;height:150px;" id="lblImagen">
                         </div>
                         <div class="row">
                             <div class="file-field">
@@ -533,13 +533,13 @@ if (!isset($_GET["idPersona"])) {
                             </div>
                         </div>
                         <div class="row">
-                            <div class="col-lg-6 col-md-6 col-sm-6 col-xs-6">
+                            <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
                                 <div class="form-group">
                                     <label for="Nombres">Nombres: <i class="fa fa-fw fa-asterisk text-danger"></i></label>
                                     <input id="Nombres" type="text" name="Nombres" class="form-control" placeholder="Nombres" required="">
                                 </div>
                             </div>
-                            <div class="col-lg-6 col-md-6 col-sm-6 col-xs-6">
+                            <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
                                 <div class="form-group">
                                     <label for="Apellidos">Apellidos: <i class="fa fa-fw fa-asterisk text-danger"></i></label>
                                     <input id="Apellidos" type="text" name="Apellidos" class="form-control" placeholder="Apellidos" required="">
@@ -548,7 +548,7 @@ if (!isset($_GET["idPersona"])) {
                         </div>
                         
                         <div class="row">
-                            <div class="col-lg-4 col-md-4 col-sm-4 col-xs-4">
+                            <div class="col-lg-4 col-md-4 col-sm-12 col-xs-12">
                                 <div class="form-group">
                                     <label for="Genero">Genero: <i class="fa fa-fw fa-asterisk text-danger"></i></label>
                                     <select id="Genero" class="form-control">
@@ -557,13 +557,13 @@ if (!isset($_GET["idPersona"])) {
                                     </select>
                                 </div>
                             </div>
-                            <div class="col-lg-4 col-md-4 col-sm-4 col-xs-4">
+                            <div class="col-lg-4 col-md-4 col-sm-12 col-xs-12">
                                 <div class="form-group">
                                     <label for="Nacimiento">Nacimiento: <i class="fa fa-fw fa-asterisk text-danger"></i></label>
                                     <input id="Nacimiento" type="date" name="Nacimiento" class="form-control" required="">
                                 </div>
                             </div>
-                            <div class="col-lg-4 col-md-4 col-sm-4 col-xs-4">
+                            <div class="col-lg-4 col-md-4 col-sm-12 col-xs-12">
                                 <div class="form-group">
                                     <label for="Estado_civil">Estado civil: <i class="fa fa-fw fa-asterisk text-danger"></i></label>
                                     <select id="Estado_civil" class="form-control">
@@ -577,13 +577,13 @@ if (!isset($_GET["idPersona"])) {
                         </div>
 
                         <div class="row">
-                            <div class="col-lg-6 col-md-6 col-sm-6 col-xs-6">
+                            <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
                                 <div class="form-group">
                                     <label for="Ruc">RUC (opcional):</label>
                                     <input id="Ruc" type="text" name="Ruc" class="form-control" placeholder="número de RUC">
                                 </div>
                             </div>
-                            <div class="col-lg-6 col-md-6 col-sm-6 col-xs-6">
+                            <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
                                 <div class="form-group">
                                     <label for="Razon_social">Razon social (opcional):</label>
                                     <input id="Razon_social" type="text" name="Razon_social" class="form-control" placeholder="Razon social">
@@ -608,7 +608,7 @@ if (!isset($_GET["idPersona"])) {
                                     </div>
                                 </div>
                             </div>
-                            <div class="col-lg-5 col-md-5 col-sm-5 col-xs-5">
+                            <div class="col-lg-5 col-md-5 col-sm-12 col-xs-12">
                                 <div class="form-group">
                                     <label for="Condicion">Condición: <i class="fa fa-fw fa-asterisk text-danger"></i></label>
                                     <select id="Condicion" class="form-control">
@@ -855,7 +855,7 @@ if (!isset($_GET["idPersona"])) {
                 }
             });
 
-            $("#cbTramite").on("change", function() {
+            $("#Tramite").on("change", function() {
                 $("#Codigo").prop("disabled", this.checked);
             });
 
@@ -957,11 +957,9 @@ if (!isset($_GET["idPersona"])) {
                 }
                 event.preventDefault();
             });
+           
         });
-
-        function onCheked() {
-            $("#checkkBoxId").attr("checked") ? alert("Checked") : alert("Unchecked");
-        }
+        
 
         function selectModal() {
             if ($("#tab_1").hasClass('active')) {

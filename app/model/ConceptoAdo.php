@@ -137,12 +137,12 @@ class ConceptoAdo
                 $date = new DateTime($row["UltimoPago"]);
                 $date->setDate($date->format("Y"), $date->format("m"), 1);
 
-                $fechaactual = new DateTime('now');                
+                $fechaactual = new DateTime('now');
                 if ($fechaactual < $date) {
                     $fechaactual = new DateTime($row["UltimoPago"]);
                     $fechaactual->setDate($fechaactual->format("Y"), $fechaactual->format("m"), 1);
                     $fechaactual->modify('+ ' . $mes  . ' month');
-                }else{
+                } else {
                     $fechaactual->setDate($fechaactual->format("Y"), $fechaactual->format("m"), 1);
                     $fechaactual->modify('+ ' . $mes  . ' month');
                 }
@@ -169,23 +169,15 @@ class ConceptoAdo
         }
     }
 
-    public static function getOtrosConceptos()
+    public static function getPeritaje()
     {
         try {
-            $array = array();
-            $cmdOtrosConceptos = "SELECT idConcepto ,Categoria,Concepto, Precio FROM Concepto WHERE Categoria = 100 
+            $cmdOtrosConceptos = "SELECT idConcepto ,Categoria,Concepto, Precio FROM Concepto WHERE Categoria = 8 
             ORDER BY Concepto ASC";
             $cmdConcepto = Database::getInstance()->getDb()->prepare($cmdOtrosConceptos);
             $cmdConcepto->execute();
-            while ($row = $cmdConcepto->fetch()) {
-                array_push($array, array(
-                    "IdConcepto" => $row["idConcepto"],
-                    "Categoria" => $row["Categoria"],
-                    "Concepto" => $row["Concepto"],
-                    "Precio" => $row["Precio"]
-                ));
-            }
-            return $array;
+            $resultConcepto = $cmdConcepto->fetchObject();
+            return $resultConcepto;
         } catch (Exception $ex) {
             return $ex->getMessage();
         }

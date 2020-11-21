@@ -40,7 +40,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
         }
     } else if ($_GET["type"] === "typecolegiatura") {
         if (intval($_GET["categoria"]) === 1) {
-            $result = ConceptoAdo::getCuotas($_GET["dni"],intval($_GET["categoria"]),intval($_GET["mes"]));
+            $result = ConceptoAdo::getCuotas($_GET["dni"], intval($_GET["categoria"]), intval($_GET["mes"]));
             if (is_array($result)) {
                 echo json_encode(array(
                     "estado" => 1,
@@ -52,8 +52,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
                     "message" => $result
                 ));
             }
-        }else if(intval($_GET["categoria"]) === 2){
-            $result = ConceptoAdo::getCuotas($_GET["dni"],intval($_GET["categoria"]),intval($_GET["mes"]));
+        } else if (intval($_GET["categoria"]) === 2) {
+            $result = ConceptoAdo::getCuotas($_GET["dni"], intval($_GET["categoria"]), intval($_GET["mes"]));
             if (is_array($result)) {
                 echo json_encode(array(
                     "estado" => 1,
@@ -65,8 +65,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
                     "message" => $result
                 ));
             }
-        }else if(intval($_GET["categoria"]) === 3){
-            $result = ConceptoAdo::getCuotas($_GET["dni"],intval($_GET["categoria"]),intval($_GET["mes"]));
+        } else if (intval($_GET["categoria"]) === 3) {
+            $result = ConceptoAdo::getCuotas($_GET["dni"], intval($_GET["categoria"]), intval($_GET["mes"]));
             if (is_array($result)) {
                 echo json_encode(array(
                     "estado" => 1,
@@ -78,8 +78,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
                     "message" => $result
                 ));
             }
-        } 
-        else if (intval($_GET["categoria"]) === 4) {
+        } else if (intval($_GET["categoria"]) === 4) {
             $result = ConceptoAdo::getColegiatura();
             if (is_array($result)) {
                 echo json_encode(array(
@@ -92,7 +91,20 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
                     "message" => $result
                 ));
             }
-        }else if(intval($_GET["categoria"]) === 100){
+        } else if (intval($_GET["categoria"]) === 8) {
+            $result = ConceptoAdo::getColegiatura();
+            if (is_array($result)) {
+                echo json_encode(array(
+                    "estado" => 1,
+                    "data" => $result
+                ));
+            } else {
+                echo json_encode(array(
+                    "estado" => 0,
+                    "message" => $result
+                ));
+            }
+        } else if (intval($_GET["categoria"]) === 100) {
             $result = ConceptoAdo::getOtrosConceptos();
             if (is_array($result)) {
                 echo json_encode(array(
@@ -105,7 +117,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
                     "message" => $result
                 ));
             }
-        }   
+        }
     }
 } else if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     if ($_POST["type"] === "create") {

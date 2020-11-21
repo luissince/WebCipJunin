@@ -1,4 +1,5 @@
 function Tools() {
+
     this.validateDate = function(date) {
         var regex = new RegExp("([0-9]{4}[-](0[1-9]|1[0-2])[-]([0-2]{1}[0-9]{1}|3[0-1]{1})|([0-2]{1}[0-9]{1}|3[0-1]{1})[-](0[1-9]|1[0-2])[-][0-9]{4})");
         return regex.test(date);
@@ -93,13 +94,34 @@ function Tools() {
         return new Date(year, meses.indexOf(mes) + 1, 0).getDate();
     }
 
-    this.AlertSuccess = function(title, message) {
+    this.nombreMes = function(mes) {
+        let array = [
+            "Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio",
+            "Julio", "Agosto", "Setiembre", "Octubre", "Noviembre", "Diciembre"
+        ];
+        return array[mes - 1];
+    }
+
+    this.isNumeric = function(value) {
+        let number = String(value);
+        if (number.trim().length === 0 || number === 'undefined')
+            return false;
+
+        if (isNaN(number.trim())) {
+            return false;
+        } else {
+            return true;
+        }
+    };
+
+
+    this.AlertSuccess = function(title, message, position = "toast-top-right") {
         toastr.options = {
             "closeButton": false,
             "debug": false,
             "newestOnTop": false,
             "progressBar": false,
-            "positionClass": "toast-top-right",
+            "positionClass": position,
             "preventDuplicates": false,
             "onclick": null,
             "showDuration": "300",
@@ -114,13 +136,13 @@ function Tools() {
         toastr["success"](message, title);
     }
 
-    this.AlertWarning = function(title, message) {
+    this.AlertWarning = function(title, message, position = "toast-top-right") {
         toastr.options = {
             "closeButton": false,
             "debug": false,
             "newestOnTop": false,
             "progressBar": false,
-            "positionClass": "toast-top-right",
+            "positionClass": position,
             "preventDuplicates": false,
             "onclick": null,
             "showDuration": "300",
@@ -135,13 +157,13 @@ function Tools() {
         toastr["warning"](message, title);
     }
 
-    this.AlertError = function(title, message) {
+    this.AlertError = function(title, message, position = "toast-top-right") {
         toastr.options = {
             "closeButton": false,
             "debug": false,
             "newestOnTop": false,
             "progressBar": false,
-            "positionClass": "toast-top-right",
+            "positionClass": position,
             "preventDuplicates": false,
             "onclick": null,
             "showDuration": "300",
@@ -156,13 +178,13 @@ function Tools() {
         toastr["error"](message, title)
     }
 
-    this.AlertInfo = function(title, message) {
+    this.AlertInfo = function(title, message, position = "toast-top-right") {
         toastr.options = {
             "closeButton": false,
             "debug": false,
             "newestOnTop": false,
             "progressBar": false,
-            "positionClass": "toast-top-right",
+            "positionClass": position,
             "preventDuplicates": false,
             "onclick": null,
             "showDuration": "300",
