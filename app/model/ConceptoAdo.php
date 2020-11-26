@@ -15,7 +15,18 @@ class ConceptoAdo
         try {
             $array = array();
             $arrayConcepto = array();
-            $comandoConcepto = Database::getInstance()->getDb()->prepare("SELECT * FROM Concepto 
+            $comandoConcepto = Database::getInstance()->getDb()->prepare("SELECT 
+            idConcepto,
+            Categoria,
+            Concepto,
+            Precio,
+            Propiedad,
+            convert(varchar,cast(Inicio as date), 103) as Inicio,
+            convert(varchar,cast(Fin as date), 103) as Fin,
+            Observacion,
+            Codigo,
+            Estado
+            FROM Concepto 
             where Concepto like concat(?,'%') 
             order by Categoria asc,Concepto asc,cast(Inicio as date) desc, cast(Fin as date) desc
             offset ? rows fetch next ? rows only");
@@ -36,7 +47,8 @@ class ConceptoAdo
                     "Inicio" => $row["Inicio"],
                     "Fin" => $row["Fin"],
                     "Observacion" => $row["Observacion"],
-                    "Codigo" => $row["Codigo"]
+                    "Codigo" => $row["Codigo"],
+                    "Estado" => $row["Estado"],
                 ));
             }
 
@@ -66,35 +78,13 @@ class ConceptoAdo
                 cast(Inicio as date) as Inicio,
                 cast(Fin as date) as Fin,
                 Observacion,
-                Codigo              
+                Codigo,
+                Estado              
             FROM Concepto WHERE idConcepto = ?");
             $comandoConcepto->bindParam(1, $idConcepto, PDO::PARAM_STR);
             $comandoConcepto->execute();
             $object = $comandoConcepto->fetchObject();
             return $object;
-        } catch (Exception $ex) {
-            return $ex->getMessage();
-        }
-    }
-
-    public static function getColegiatura()
-    {
-        try {
-            $array = array();
-            $cmdColegiatura = "SELECT * FROM Concepto 
-            WHERE Categoria = 4 and Fin < GETDATE()  
-            ORDER BY Concepto ASC";
-            $cmdConcepto = Database::getInstance()->getDb()->prepare($cmdColegiatura);
-            $cmdConcepto->execute();
-            while ($row = $cmdConcepto->fetch()) {
-                array_push($array, array(
-                    "IdConcepto" => $row["idConcepto"],
-                    "Categoria" => $row["Categoria"],
-                    "Concepto" => $row["Concepto"],
-                    "Precio" => $row["Precio"]
-                ));
-            }
-            return $array;
         } catch (Exception $ex) {
             return $ex->getMessage();
         }
@@ -119,7 +109,7 @@ class ConceptoAdo
 
                 $cmdConceptos = "SELECT co.idConcepto,co.Concepto,co.Categoria,co.Precio       
                 from Concepto as co
-                WHERE  Categoria = ? and Inicio <= GETDATE() and Fin >= GETDATE() ";
+                WHERE  Categoria = ? and Estado = 1 ";
                 $cmdConceptos = Database::getInstance()->getDb()->prepare($cmdConceptos);
                 $cmdConceptos->bindParam(1, $categoria, PDO::PARAM_INT);
                 $cmdConceptos->execute();
@@ -169,15 +159,98 @@ class ConceptoAdo
         }
     }
 
-    public static function getPeritaje()
+    public static function getColegiatura()
     {
         try {
-            $cmdOtrosConceptos = "SELECT idConcepto ,Categoria,Concepto, Precio FROM Concepto WHERE Categoria = 8 
+            $array = array();
+            $cmdColegiatura = "SELECT idConcepto,Categoria,Concepto,Precio FROM Concepto WHERE Categoria = 4 and Estado = 1 
             ORDER BY Concepto ASC";
-            $cmdConcepto = Database::getInstance()->getDb()->prepare($cmdOtrosConceptos);
+            $cmdConcepto = Database::getInstance()->getDb()->prepare($cmdColegiatura);
+            $cmdConcepto->execute();
+            while ($row = $cmdConcepto->fetch()) {
+                array_push($array, array(
+                    "IdConcepto" => $row["idConcepto"],
+                    "Categoria" => $row["Categoria"],
+                    "Concepto" => $row["Concepto"],
+                    "Precio" => $row["Precio"]
+                ));
+            }
+            return $array;
+        } catch (Exception $ex) {
+            return $ex->getMessage();
+        }
+    }
+
+    public static function getCertificadoHabilidad()
+    {
+        try {
+            $cmdHabilidad = "SELECT idConcepto,Categoria,Concepto,Precio FROM Concepto WHERE Categoria = 5 AND Estado = 1";
+            $cmdConcepto = Database::getInstance()->getDb()->prepare($cmdHabilidad);
+            $cmdConcepto->execute();
+            $resultConcepto = $cmdConcepto->fetchAll();
+            return $resultConcepto;
+        } catch (Exception $ex) {
+            return $ex->getMessage();
+        }
+    }
+
+    public static function getCertificadoHabilidadObraPublica()
+    {
+        try {
+            $cmdHabilidad = "SELECT idConcepto,Categoria,Concepto, Precio FROM Concepto WHERE Categoria = 6 AND Estado = 1";
+            $cmdConcepto = Database::getInstance()->getDb()->prepare($cmdHabilidad);
             $cmdConcepto->execute();
             $resultConcepto = $cmdConcepto->fetchObject();
             return $resultConcepto;
+        } catch (Exception $ex) {
+            return $ex->getMessage();
+        }
+    }
+
+    public static function getCertificadoHabilidadProyecto()
+    {
+        try {
+            $cmdHabilidad = "SELECT idConcepto,Categoria,Concepto, Precio FROM Concepto WHERE Categoria = 7 AND Estado = 1";
+            $cmdConcepto = Database::getInstance()->getDb()->prepare($cmdHabilidad);
+            $cmdConcepto->execute();
+            $resultConcepto = $cmdConcepto->fetchObject();
+            return $resultConcepto;
+        } catch (Exception $ex) {
+            return $ex->getMessage();
+        }
+    }
+
+    public static function getPeritaje()
+    {
+        try {
+            $cmdPeritaje = "SELECT idConcepto,Categoria,Concepto, Precio FROM Concepto WHERE Categoria = 8 AND Estado = 1";
+            $cmdConcepto = Database::getInstance()->getDb()->prepare($cmdPeritaje);
+            $cmdConcepto->execute();
+            $resultConcepto = $cmdConcepto->fetchObject();
+            return $resultConcepto;
+        } catch (Exception $ex) {
+            return $ex->getMessage();
+        }
+    }
+
+
+    public static function getOtrosConceptos()
+    {
+        try {
+            $array = array();
+            $cmdOtrosConceptos = "SELECT idConcepto ,Categoria,Concepto, Precio FROM Concepto WHERE Categoria = 100 AND Estado = 1
+            ORDER BY Concepto ASC";
+            $cmdConcepto = Database::getInstance()->getDb()->prepare($cmdOtrosConceptos);
+            $cmdConcepto->execute();
+            while ($row = $cmdConcepto->fetch()) {
+                array_push($array, array(
+                    "IdConcepto" => $row["idConcepto"],
+                    "Categoria" => $row["Categoria"],
+                    "Concepto" => $row["Concepto"],
+                    "Precio" => $row["Precio"]
+                ));
+            }
+            return $array;
         } catch (Exception $ex) {
             return $ex->getMessage();
         }
@@ -196,11 +269,11 @@ class ConceptoAdo
             Inicio,
             Fin,
             Observacion,
-            Codigo
-            )VALUES(?,?,?,?,?,?,?,?)");
+            Codigo,
+            Estado
+            )VALUES(?,?,?,?,?,?,?,?,?)");
 
             $dateTimeInicio = date('Y-d-m H:i:s', strtotime($data["Inicio"]));
-
             $dateTimeFin = date('Y-d-m H:i:s', strtotime($data["Fin"]));
 
             $cmdConcepto->bindParam(1, $data["Categoria"], PDO::PARAM_INT);
@@ -211,6 +284,7 @@ class ConceptoAdo
             $cmdConcepto->bindParam(6, $dateTimeFin, PDO::PARAM_STR);
             $cmdConcepto->bindParam(7, $data["Observacion"], PDO::PARAM_STR);
             $cmdConcepto->bindParam(8, $data["Codigo"], PDO::PARAM_INT);
+            $cmdConcepto->bindParam(9, $data["Estado"], PDO::PARAM_BOOL);
             $cmdConcepto->execute();
             Database::getInstance()->getDb()->commit();
             return "inserted";
@@ -233,7 +307,8 @@ class ConceptoAdo
             Inicio = ?,
             Fin = ?,
             Observacion = ?,
-            Codigo = ?
+            Codigo = ?,
+            Estado = ?
             WHERE idConcepto = ?");
 
             $dateTimeInicio = date('Y-d-m H:i:s', strtotime($data["Inicio"]));
@@ -248,7 +323,8 @@ class ConceptoAdo
             $cmdConcepto->bindParam(6, $dateTimeFin, PDO::PARAM_STR);
             $cmdConcepto->bindParam(7, $data["Observacion"], PDO::PARAM_STR);
             $cmdConcepto->bindParam(8, $data["Codigo"], PDO::PARAM_INT);
-            $cmdConcepto->bindParam(9, $data["IdConcepto"], PDO::PARAM_INT);
+            $cmdConcepto->bindParam(9, $data["Estado"], PDO::PARAM_STR);
+            $cmdConcepto->bindParam(10, $data["IdConcepto"], PDO::PARAM_INT);
             $cmdConcepto->execute();
             Database::getInstance()->getDb()->commit();
             return "updated";

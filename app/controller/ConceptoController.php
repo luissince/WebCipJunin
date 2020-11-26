@@ -91,9 +91,22 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
                     "message" => $result
                 ));
             }
-        } else if (intval($_GET["categoria"]) === 8) {
-            $result = ConceptoAdo::getColegiatura();
+        } else if (intval($_GET["categoria"]) === 5) {
+            $result = ConceptoAdo::getCertificadoHabilidad();
             if (is_array($result)) {
+                echo json_encode(array(
+                    "estado" => 1,
+                    "data" => $result
+                ));
+            } else {
+                echo json_encode(array(
+                    "estado" => 0,
+                    "message" => $result
+                ));
+            }
+        } else if (intval($_GET["categoria"]) === 8) {
+            $result = ConceptoAdo::getPeritaje();
+            if (is_object($result)) {
                 echo json_encode(array(
                     "estado" => 1,
                     "data" => $result
@@ -151,6 +164,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
         $data["Fin"] = $_POST["Fin"];
         $data["Observacion"] = $_POST["Observacion"];
         $data["Codigo"] = $_POST["Codigo"];
+        $data["Estado"] = $_POST["Estado"];
         $result = ConceptoAdo::update($data);
         if ($result == "updated") {
             echo json_encode(array(
@@ -160,7 +174,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
         } else {
             echo json_encode(array(
                 "estado" => 0,
-                "message" => $result
+                "message" => $result,
+                "result" => $data
             ));
         }
     }

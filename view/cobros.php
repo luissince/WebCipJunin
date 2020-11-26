@@ -149,7 +149,7 @@
                                     </form>
                                 </div>
                                 <div class="modal-footer">
-                                    <button type="button" class="btn btn-warning" id="btnAceptarColegiatura">
+                                    <button type="button" class="btn btn-danger" id="btnAceptarColegiatura">
                                         <i class="fa fa-check"></i> Aceptar</button>
                                     <button type="button" class="btn btn-primary" data-dismiss="modal">
                                         <i class="fa fa-remove"></i> Cancelar</button>
@@ -237,7 +237,7 @@
                                     </div>
                                 </div>
                                 <div class="modal-footer">
-                                    <button type="button" class="btn btn-warning" id="btnAceptarCuotas">
+                                    <button type="button" class="btn btn-danger" id="btnAceptarCuotas">
                                         <i class="fa fa-check"></i> Aceptar</button>
                                     <button type="button" class="btn btn-primary" id="btnCancelarCuotas">
                                         <i class="fa fa-remove"></i> Cancelar</button>
@@ -318,7 +318,7 @@
                                     </div>
                                 </div>
                                 <div class="modal-footer">
-                                    <button type="button" class="btn btn-warning" id="btnAceptarCertificado">
+                                    <button type="button" class="btn btn-danger" id="btnAceptarCertificado">
                                         <i class="fa fa-check"></i> Aceptar</button>
                                     <button type="button" class="btn btn-primary" data-dismiss="modal">
                                         <i class="fa fa-remove"></i> Cancelar</button>
@@ -463,7 +463,7 @@
                                     </div>
                                 </div>
                                 <div class="modal-footer">
-                                    <button type="button" class="btn btn-warning" id="btnAceptarProyecto">
+                                    <button type="button" class="btn btn-danger" id="btnAceptarProyecto">
                                         <i class="fa fa-check"></i> Aceptar</button>
                                     <button type="button" class="btn btn-primary" data-dismiss="modal">
                                         <i class="fa fa-remove"></i> Cancelar</button>
@@ -596,7 +596,7 @@
                                     </div>
                                 </div>
                                 <div class="modal-footer">
-                                    <button type="button" class="btn btn-warning" id="btnAceptarObra">
+                                    <button type="button" class="btn btn-danger" id="btnAceptarObra">
                                         <i class="fa fa-check"></i> Aceptar</button>
                                     <button type="button" class="btn btn-primary" data-dismiss="modal">
                                         <i class="fa fa-remove"></i> Cancelar</button>
@@ -625,6 +625,13 @@
                                 <div class="modal-body">
                                     <div class="row">
                                         <div class="col-md-12">
+                                            <div class="alert alert-danger">
+                                                Correctamente
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-md-12">
                                             <div class="form-group">
                                                 <label for="txtDescripcionPeritaje">Descripción</label>
                                                 <input type="text" class="form-control" id="txtDescripcionPeritaje" placeholder="Ingrese una descripción sobre el peritaje.">
@@ -641,7 +648,7 @@
                                     </div>
                                 </div>
                                 <div class="modal-footer">
-                                    <button type="button" class="btn btn-warning" id="btnAceptarPeritaje">
+                                    <button type="button" class="btn btn-danger" id="btnAceptarPeritaje">
                                         <i class="fa fa-check"></i> Aceptar</button>
                                     <button type="button" class="btn btn-primary" id="btnCancelarPeritaje">
                                         <i class="fa fa-remove"></i> Cancelar</button>
@@ -694,7 +701,7 @@
                                     </div>
                                 </div>
                                 <div class="modal-footer">
-                                    <button type="button" class="btn btn-warning" id="btnAceptarOtros">
+                                    <button type="button" class="btn btn-danger" id="btnAceptarOtros">
                                         <i class="fa fa-check"></i> Aceptar</button>
                                     <button type="button" class="btn btn-primary" data-dismiss="modal">
                                         <i class="fa fa-remove"></i> Cancelar</button>
@@ -886,7 +893,7 @@
             modelCobrosIngenieros.componentesIngenieros();
 
             //colegiatura
-            modelColegiatura.componentesColegiatura(addIngresos,validateDuplicate);
+            modelColegiatura.componentesColegiatura(addIngresos, validateDuplicate);
 
             //coutas
             modelCuotas.componentesCuotas();
@@ -1118,7 +1125,6 @@
             }
             return ret;
         }
-        
     </script>
 </body>
 

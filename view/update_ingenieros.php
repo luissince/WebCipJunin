@@ -26,6 +26,10 @@ if (!isset($_GET["idPersona"])) {
         <!-- Content Wrapper. Contains page content -->
         <div class="content-wrapper" style="background-color: #FFFFFF;">
             <!-- Main content -->
+            <section class="content-header">
+                <h4><i class="fa fa-user"></i> Actualizar Datos del Ingeniero(a) <span id="Load_date"></span></h4>
+            </section>
+
             <section class="content">
 
                 <!-- modal añadir colegiatura -->
@@ -179,7 +183,7 @@ if (!isset($_GET["idPersona"])) {
                                                 <label class="col-sm-4 control-label">Dep/Prov/Dist</label>
                                                 <div class="col-sm-8">
                                                     <select id="Departamento" name="selValue" class="form-control selectpicker" data-live-search="true" title="- Seleccione -">
-                                                    <select>
+                                                        <select>
                                                 </div>
                                             </div>
                                         </div>
@@ -500,26 +504,24 @@ if (!isset($_GET["idPersona"])) {
 
                 <!-- actualizacion del ingeniero-->
                 <div class="row">
-                    <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-                        <h4 ><i class="fa fa-user"></i> Actualizar Datos del Ingeniero(a) <span id="Load_date"></span></h4>
-                    </div>
-                </div>
-
-                <div class="row">
                     <div class="col-lg-4 col-md-3 col-sm-12 col-xs-12 text-center">
                         <div class="row">
-                            <img class="img-responsive img-thumbnail" style="width: 160px;height:150px;" id="lblImagen">
+                            <div class="form-group">
+                                <img class="img-responsive img-thumbnail" style="width: 160px;height:150px;" id="lblImagen">
+                            </div>
                         </div>
                         <div class="row">
-                            <div class="file-field">
+                            <div class="form-group">
                                 <label for="SubirImagen" class="btn btn-warning">Subir imagen</label>
                                 <input type="file" id="SubirImagen" style="display:none" accept="image/png, image/jpeg, image/gif, image/svg">
                             </div>
-                            <div class="file-field">
+                            <div class="form-group">
                                 <label class="btn btn-dark">Quitar imagen</label>
                             </div>
                             <div>
-                                <button class="btn  btn-success" id="guardarImagen">Guardar</button>
+                                <div class="form-group">
+                                    <button class="btn btn-success" id="guardarImagen">Guardar</button>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -546,7 +548,7 @@ if (!isset($_GET["idPersona"])) {
                                 </div>
                             </div>
                         </div>
-                        
+
                         <div class="row">
                             <div class="col-lg-4 col-md-4 col-sm-12 col-xs-12">
                                 <div class="form-group">
@@ -782,9 +784,6 @@ if (!isset($_GET["idPersona"])) {
         <!-- /.content -->
     </div>
     <!-- /.content-wrapper -->
-    <!-- start footer -->
-
-    <!-- end footer -->
 
     <!-- ./wrapper -->
     <script src="js/tools.js"></script>
@@ -812,7 +811,7 @@ if (!isset($_GET["idPersona"])) {
         let modelCorreoyWeb = new CorreoyWeb();
 
         $(document).ready(function() {
-             loadDataPersona($("#dni").val());
+            loadDataPersona($("#dni").val());
 
             $("#btnaceptar").click(function() {
                 if (state) {
@@ -881,8 +880,8 @@ if (!isset($_GET["idPersona"])) {
             modelConyuge.loadConyuge($("#dni").val());
             modelExperiencia.loadExperiencia($("#dni").val());
             modelEstudios.loadGradosyEstudios($("#dni").val());
-            modelCorreoyWeb.loadCorreoyWeb($("#dni").val());           
-            
+            modelCorreoyWeb.loadCorreoyWeb($("#dni").val());
+
             $("#guardarImagen").click(function() {
                 updateImage();
             });
@@ -897,33 +896,40 @@ if (!isset($_GET["idPersona"])) {
             $("#btnAceptarColegiatura").click(function() {
                 modelColegiatura.crudColegiatura();
             });
+
             $("#btnAceptarColegiatura").keypress(function(event) {
                 if (event.keyCode === 13) {
                     modelColegiatura.crudColegiatura();
                 }
                 event.preventDefault();
             });
+
             $("#btnAceptarDomicilio").click(function() {
                 modelDomicilio.crudDomicilio();
-            })
+            });
+
             $("#btnAceptarDomicilio").keypress(function(event) {
                 if (event.keyCode === 13) {
                     modelDomicilio.crudDomicilio();
                 }
                 event.preventDefault();
             });
+
             $("#btnAceptarCelular").click(function() {
                 modelTelefono.crudCelular();
-            })
+            });
+
             $("#btnAceptarCelular").keypress(function(event) {
                 if (event.keyCode === 13) {
                     modelTelefono.crudCelular();
                 }
                 event.preventDefault();
             });
+
             $("#btnAceptarConyuge").click(function() {
                 modelConyuge.crudConyuge();
-            })
+            });
+
             $("#btnAceptarConyuge").keypress(function(event) {
                 if (event.keyCode === 13) {
                     modelConyuge.crudConyuge();
@@ -932,34 +938,39 @@ if (!isset($_GET["idPersona"])) {
             });
             $("#btnAceptarExperiencia").click(function() {
                 modelExperiencia.crudExperiencia();
-            })
+            });
+
             $("#btnAceptarExperiencia").keypress(function(event) {
                 if (event.keyCode === 13) {
                     modelExperiencia.crudExperiencia();
                 }
                 event.preventDefault();
             });
+
             $("#btnAceptarEstudios").click(function() {
                 modelEstudios.crudEstudios();
-            })
+            });
+
             $("#btnAceptarEstudios").keypress(function(event) {
                 if (event.keyCode === 13) {
                     modelEstudios.crudEstudios();
                 }
                 event.preventDefault();
             });
+
             $("#btnAceptarCorreo").click(function() {
                 modelCorreoyWeb.crudCorreo();
-            })
+            });
+
             $("#btnAceptarCorreo").keypress(function(event) {
                 if (event.keyCode === 13) {
                     modelCorreoyWeb.crudCorreo();
                 }
                 event.preventDefault();
             });
-           
+
         });
-        
+
 
         function selectModal() {
             if ($("#tab_1").hasClass('active')) {
@@ -981,8 +992,6 @@ if (!isset($_GET["idPersona"])) {
             } else if ($("#tab_7").hasClass('active')) {
                 $("#addCorreoyWeb").modal("show");
                 modelCorreoyWeb.loadAddCorreoyWeb();
-            } else {
-
             }
         }
 
@@ -1162,7 +1171,7 @@ if (!isset($_GET["idPersona"])) {
                 };
                 reader.readAsDataURL(blob);
             }
-        } 
+        }
     </script>
 </body>
 

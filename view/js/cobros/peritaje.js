@@ -3,11 +3,13 @@ function Peritaje() {
         this.addIngresos = addIngresos;
         $("#btnPeritaje").click(function() {
             $('#mdPeritaje').modal('show');
+            loadPeritaje();
         });
 
         $("#btnPeritaje").keypress(function(event) {
             if (event.keyCode === 13) {
                 $('#mdPeritaje').modal('show');
+                loadPeritaje();
             }
             event.preventDefault();
         });
@@ -58,6 +60,26 @@ function Peritaje() {
         $("#txtMontoPeritaje").keydown(function(event) {
             if (event.keyCode === 13) {
                 validateIngresoPeritaje();
+            }
+        });
+    }
+
+    function loadPeritaje() {
+        $.ajax({
+            url: "../app/controller/ConceptoController.php",
+            method: "GET",
+            data: {
+                "type": "typecolegiatura",
+                "categoria": 8,
+            },
+            beforeSend: function() {
+
+            },
+            success: function(result) {
+                console.log(result);
+            },
+            error: function(error) {
+                console.log(error);
             }
         });
     }

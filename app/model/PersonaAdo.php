@@ -9,7 +9,6 @@ class PersonaAdo
     {
     }
 
-
     public static function getAll($nombres, $posicionPagina, $filasPorPagina)
     {
         try {

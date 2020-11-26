@@ -117,8 +117,7 @@ function Cuotas() {
                 cuotas.splice(0, cuotas.length);
             },
             success: function(result) {
-                //console.log(result)
-                if (result.estado === 1) {
+                if (result.estado == 1) {
                     $("#tbCuotas").empty();
                     cuotas = result.data;
                     if (cuotas.length > 0) {
@@ -144,8 +143,9 @@ function Cuotas() {
                         $("#lblNumeroCuotas").html("CUOTAS DEL: 00/0000 al 00/0000");
                     }
                 } else {
+                    console.log(result)
                     $("#tbCuotas").empty();
-                    $("#tbCuotas").append('<tr class="text-center"><p>No se pudo cargar la información, intente nuevamente.</p></td></tr>');
+                    $("#tbCuotas").append('<tr class="text-center"><td colspan="2"><p>' + result.message + '</p></td></tr>');
                     $("#lblTotalCuotas").html("TOTAL DE 0 CUOTAS: 0.00");
                     $("#lblNumeroCuotas").html("CUOTAS DEL: 00/0000 al 00/0000");
                 }
