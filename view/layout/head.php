@@ -14,7 +14,6 @@
 <link rel="stylesheet" href="adminlte/bower_components/Ionicons/css/ionicons.min.css">
 <!-- jvectormap -->
 <link rel="stylesheet" href="adminlte/bower_components/jvectormap/jquery-jvectormap.css">
-<link rel="stylesheet" href="recursoselect/dist/css/bootstrap-select.css">
 <link rel="stylesheet" href="adminlte/bower_components/select2/dist/css/select2.min.css">
 
 <!-- Theme style -->
@@ -30,33 +29,21 @@
 
 <!-- jQuery 3 -->
 <script src="adminlte/bower_components/jquery/dist/jquery.min.js"></script>
-<script src="recursoselect/dist/js/bootstrap-select.js" defer></script>
 <script src="adminlte/bower_components/select2/dist/js/select2.min.js"></script>
 <!-- Bootstrap 3.3.7 -->
 <script src="adminlte/bower_components/bootstrap/dist/js/bootstrap.js"></script>
+<!-- Slimscroll -->
+<script src="adminlte/bower_components/jquery-slimscroll/jquery.slimscroll.min.js"></script>
 <!-- FastClick -->
 <script src="adminlte/bower_components/fastclick/lib/fastclick.js"></script>
 <!-- AdminLTE App -->
 <script src="adminlte/dist/js/adminlte.min.js"></script>
-<!-- Sparkline -->
-<script src="adminlte/bower_components/jquery-sparkline/dist/jquery.sparkline.min.js"></script>
-<!-- jvectormap  -->
-<script src="adminlte/plugins/jvectormap/jquery-jvectormap-1.2.2.min.js"></script>
-<script src="adminlte/plugins/jvectormap/jquery-jvectormap-world-mill-en.js"></script>
-<!-- SlimScroll -->
-<script src="adminlte/bower_components/jquery-slimscroll/jquery.slimscroll.min.js"></script>
 <!-- ChartJS -->
 <script src="adminlte/bower_components/chart.js/Chart.js"></script>
 <!-- AdminLTE for demo purposes -->
 <script src="adminlte/dist/js/demo.js"></script>
 <script src="js/alertify.min.js"></script>
 <script src="js/toastr.min.js"></script>
-
-<!-- Incremento -->
-<script src="adminlte/bower_components/Flot/jquery.flot.js"></script>
-<script src="adminlte/bower_components/Flot/jquery.flot.resize.js"></script>
-<script src="adminlte/bower_components/Flot/jquery.flot.pie.js"></script>
-<script src="adminlte/bower_components/Flot/jquery.flot.categories.js"></script>
 
 <style>
        @font-face {

@@ -373,7 +373,7 @@
                     "type": "allEspecialidades"
                 },
                 beforeSend: function() {
-                    state = true;
+                    state = true
                 },
                 success: function(result) {
                     console.log(result)
