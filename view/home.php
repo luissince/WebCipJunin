@@ -25,9 +25,7 @@
                         <div class="panel panel-default">
                             <div class="panel-heading"> <i class="fa fa-user"></i> Bienvenido al Sistema</div>
                             <div class="panel-body">
-                                <div class="alert alert-success">
-                                    Correctamente
-                                </div>
+                               
                                 <br><br>
 
                                 <div class="row">
@@ -86,7 +84,7 @@
         </div>
         <!-- /.content-wrapper -->
         <!-- start footer -->
-        <?php include('./layout/footer.php'); ?>;
+        <?php include('./layout/footer.php') ?>
         <!-- end footer -->
     </div>
     <!-- ./wrapper -->

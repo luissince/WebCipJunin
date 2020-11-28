@@ -32,129 +32,130 @@ if (!isset($_GET["idConcepto"])) {
 
                     <h4 style="padding-left:1em;"><i class="fa fa-list-alt"></i> Actualizar Datos del Concepto <span id="Load_date"></span></h4>
                     <div>
-                        <form action="">
-                            <div class="col-lg-2 col-md-2 col-sm-12 col-xs-12" style="text-align: center; padding-top:1em;">
-                                <img width="70" src="images/ayuda.png">
-                                <!-- <label for="Foto">Subir foto</label>
-                                <input type="file" id="Foto" name="Foto"> -->
+                        <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12" style="padding-top:1em;">
+
+                            <div class="row">
+                                <div class="col-md-8">
+                                    <div class="form-group">
+                                        <label for="categoria">Categoria: <i class="fa fa-fw fa-asterisk text-danger"></i></label>
+                                        <select id="categoria" class="form-control">
+                                            <option value="0">- - Seleccione - -</option>
+                                            <option value="1">Cuota ordinaria</option>
+                                            <option value="2">Cuota ordinaria (Admistia)</option>
+                                            <option value="3">Cuota ordinaria (Vitalicio)</option>
+                                            <option value="4">Colegiatura</option>
+                                            <option value="5">Certificado de habilidad</option>
+                                            <option value="6">Certificado de residencia de obra</option>
+                                            <option value="7">Certificado de Proyecto</option>
+                                            <option value="8">Peritaje</option>
+                                            <option value="100">Ingresos Diversos</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="col-md-4">
+                                    <div class="form-group">
+                                        <label for="codigo">Codigo: <i class="fa fa-fw fa-asterisk text-danger"></i></label>
+                                        <input id="codigo" type="text" name="codigo" class="form-control" placeholder="Codigo del concepto" required="">
+                                    </div>
+                                </div>
                             </div>
-                            <div class="col-lg-10 col-md-10 col-sm-12 col-xs-12" style="padding-top:1em;">
 
-                                <div class="row">
-                                    <div class="col-md-8">
-                                        <div class="form-group">
-                                            <label for="categoria">Categoria: <i class="fa fa-fw fa-asterisk text-danger"></i></label>
-                                            <select id="categoria" class="form-control">
-                                                <option value="0">- - Seleccione - -</option>
-                                                <option value="1">Cuota ordinaria</option>
-                                                <option value="2">Cuota ordinaria (Admistia)</option>
-                                                <option value="3">Cuota ordinaria (Vitalicio)</option>
-                                                <option value="4">Colegiatura</option>
-                                                <option value="5">Certificado de habilidad</option>
-                                                <option value="6">Certificado de residencia de obra</option>
-                                                <option value="7">Certificado de Proyecto</option>
-                                                <option value="8">Peritaje</option>
-                                                <option value="100">Otros conceptos</option>
-                                            </select>
-                                        </div>
-                                    </div>
-                                    <div class="col-md-4">
-                                        <div class="form-group">
-                                            <label for="codigo">Codigo: <i class="fa fa-fw fa-asterisk text-danger"></i></label>
-                                            <input id="codigo" type="text" name="codigo" class="form-control" placeholder="Codigo del concepto" required="">
-                                        </div>
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <div class="form-group">
+                                        <label for="concepto">Concepto: <i class="fa fa-fw fa-asterisk text-danger"></i></label>
+                                        <input id="concepto" type="text" name="concepto" class="form-control" placeholder="Nombre del concepto" required="">
                                     </div>
                                 </div>
-                                <div class="row">
-                                    <div class="col-md-12">
-                                        <div class="form-group">
-                                            <label for="concepto">Concepto: <i class="fa fa-fw fa-asterisk text-danger"></i></label>
-                                            <input id="concepto" type="text" name="concepto" class="form-control" placeholder="Nombre del concepto" required="">
-                                        </div>
+                            </div>
+
+                            <div class="row">
+                                <div class="col-md-4">
+                                    <div class="form-group">
+                                        <label for="precio">Precio: <i class="fa fa-fw fa-asterisk text-danger"></i></label>
+                                        <input id="precio" type="number" name="precio" class="form-control" placeholder="Monto del concepto" required="">
                                     </div>
                                 </div>
-                                <div class="row">
-                                    <div class="col-md-4">
-                                        <div class="form-group">
-                                            <label for="precio">Precio: <i class="fa fa-fw fa-asterisk text-danger"></i></label>
-                                            <input id="precio" type="number" name="precio" class="form-control" placeholder="Monto del concepto" required="">
-                                        </div>
-                                    </div>
-                                    <div class="col-md-4">
-                                        <div class="form-group">
-                                            <label for="fecha_inicio">Fecha Inicio: <i class="fa fa-fw fa-asterisk text-danger"></i></label>
-                                            <input id="fecha_inicio" type="date" name="fecha_inicio" class="form-control" required="">
-                                        </div>
-                                    </div>
-                                    <div class="col-md-4">
-                                        <div class="form-group">
-                                            <label for="fecha_fin">Fecha Fin: <i class="fa fa-fw fa-asterisk text-danger"></i></label>
-                                            <input id="fecha_fin" type="date" name="fecha_fin" class="form-control" required="">
-                                        </div>
+                                <div class="col-md-4">
+                                    <div class="form-group">
+                                        <label for="fecha_inicio">Fecha Inicio: <i class="fa fa-fw fa-asterisk text-danger"></i></label>
+                                        <input id="fecha_inicio" type="date" name="fecha_inicio" class="form-control" required="">
                                     </div>
                                 </div>
-                                <hr>
-                                <div class="row">
-                                    <div class="col-md-12">
-                                        <div class="form-group">
-
-                                            <p>Agrege especificaciones: <i class="fa fa-fw fa-asterisk text-danger"></i>
-                                            </p>
-                                            <div class="col-md-5">
-                                                <input type="radio" id="precio_variable" name="espesifico" value="1">
-                                                <label for="precio_variable">Precio es variable</label><br>
-
-                                                <input type="radio" id="deriva" name="espesifico" value="2">
-                                                <label for="deriva">Se deriva al CIP nacional</label>
-                                            </div>
-
-                                            <div class="col-md-7">
-                                                <input type="radio" id="solo_transeunte" name="espesifico" value="3">
-                                                <label for="solo_transeunte">Precio solo para
-                                                    transeunte</label><br>
-                                                <div class="row">
-                                                    <div class="col-md-9">
-                                                        <input type="radio" id="opcional" name="espesifico" value="4">
-                                                        <label for="opcional">Opcional en la categoria</label>
-                                                    </div>
-                                                    <div class="col-md-3">
-                                                        <select id="opcional_2" class="form-control">
-                                                            <option value="1">1</option>
-                                                            <option value="2">2</option>
-                                                            <option value="3">3</option>
-                                                            <option value="4">4</option>
-                                                            <option value="5">5</option>
-                                                            <option value="6">5</option>
-                                                            <option value="7">7</option>
-                                                            <option value="8">8</option>
-                                                            <option value="100">100</option>
-                                                        </select>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
+                                <div class="col-md-4">
+                                    <div class="form-group">
+                                        <label for="fecha_fin">Fecha Fin: <i class="fa fa-fw fa-asterisk text-danger"></i></label>
+                                        <input id="fecha_fin" type="date" name="fecha_fin" class="form-control" required="">
                                     </div>
                                 </div>
+                            </div>
 
-                                <div class="modal-footer">
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <p>Agrege especificaciones: <i class="fa fa-fw fa-asterisk text-danger"></i></p>
+                                </div>
+                                <div class="col-md-6 col-sm-12 col-xs-12">
+                                    <div class="form-group">
+                                        <input type="radio" id="precio_ordinario" name="espesifico" value="0" checked="checked">
+                                        <label for="precio_ordinario">Precio Ordinario</label>
+                                    </div>
+                                </div>
+                                <div class="col-md-6 col-sm-12 col-xs-12">
+                                    <div class="form-group">
+                                        <input type="radio" id="precio_transeunte" name="espesifico" value="1">
+                                        <label for="precio_transeunte">Precio para Transeunte</label>
+                                    </div>
+                                </div>
+                                <div class="col-md-6 col-sm-12 col-xs-12">
+                                    <div class="form-group">
+                                        <input type="radio" id="precio_vitalicio" name="espesifico" value="2">
+                                        <label for="precio_vitalicio">Precio para Vitalicio</label>
+                                    </div>
+                                </div>
+                                <div class="col-md-6 col-sm-12 col-xs-12">
+                                    <div class="form-group">
+                                        <input type="radio" id="precio_deriva" name="espesifico" value="48">
+                                        <label for="precio_deriva">Se deriva al CIP NACIONAL</label>
+                                    </div>
+                                </div>
+                                <div class="col-md-6 col-sm-12 col-xs-12">
+                                    <div class="form-group">
+                                        <input type="radio" id="precio_variable" name="espesifico" value="128">
+                                        <label for="precio_variable">Precio Variable</label>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <p>Estado: <i class="fa fa-fw fa-asterisk text-danger"></i></p>
+                                </div>
+                                <div class="col-md-12">
+                                    <div class="form-group">
+                                        <input type="checkbox" id="estado">
+                                        <label for="estado" id="lblEstado">Inactivo</label>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="row">
+                                <div class="col-md-6 col-sm-6 col-xs-12">
                                     <p class="text-left text-danger">Todos los campos marcados con <i class="fa fa-fw fa-asterisk text-danger"></i> son obligatorios</p>
+                                </div>
+                                <div class="col-md-6 col-sm-6 col-xs-12 text-right">
                                     <button type="button" class="btn btn-danger" name="btnAceptar" id="btnaceptar">
                                         <i class="fa fa-check"></i> Editar</button>
                                     <button type="button" class="btn btn-primary" data-dismiss="modal" name="btncancelar" id="btncancelar">
                                         <i class="fa fa-remove"></i> Cancelar</button>
                                 </div>
-                        </form>
+                            </div>
+
+                        </div>
                     </div>
-
-                </div>
-
             </section>
             <!-- /.content -->
         </div>
         <!-- /.content-wrapper -->
-        <!-- start footer -->
-        <?php include('./layout/footer.php'); ?>;
-        <!-- end footer -->
     </div>
     <!-- ./wrapper -->
     <script src="js/tools.js"></script>
@@ -169,13 +170,16 @@ if (!isset($_GET["idConcepto"])) {
 
             loadDataConcepto(idConcepto)
 
-            
+
             $("#btnaceptar").click(function() {
                 validateUpdateConcepto();
             });
 
             $("#btnaceptar").on("keyup", function(event) {
-                validateUpdateConcepto();
+                if (event.keyCode === 13) {
+                    validateUpdateConcepto();
+                }
+                event.preventDefault();
             });
 
             $("#btncancelar").click(function() {
@@ -186,6 +190,11 @@ if (!isset($_GET["idConcepto"])) {
                 if (event.keyCode === 13) {
                     location.href = "conceptos.php"
                 }
+                event.preventDefault();
+            });
+
+            $("#estado").change(function() {
+                $("#lblEstado").html($("#estado").is(":checked") ? "Activo" : "Inactivo");
             });
 
         });
@@ -205,12 +214,8 @@ if (!isset($_GET["idConcepto"])) {
                 },
                 success: function(result) {
                     spiner.remove()
-
                     if (result.estado === 1) {
-                        console.log(result.object)
-
                         let concepto = result.object;
-
                         switch (concepto.Categoria) {
                             case "1":
                                 $("#categoria").val("1")
@@ -245,22 +250,34 @@ if (!isset($_GET["idConcepto"])) {
                         $("#codigo").val(concepto.Codigo)
                         $("#concepto").val(concepto.Concepto)
                         $("#precio").val(concepto.Precio)
-                        document.getElementById("fecha_inicio").value = tools.getDateForma(concepto
-                            .Inicio, 'yyyy-mm-dd');
+                        document.getElementById("fecha_inicio").value = tools.getDateForma(concepto.Inicio, 'yyyy-mm-dd');
+                        document.getElementById("fecha_fin").value = tools.getDateForma(concepto.Fin, 'yyyy-mm-dd');
 
-                        document.getElementById("fecha_fin").value = tools.getDateForma(concepto
-                            .Fin, 'yyyy-mm-dd');
+                        if (concepto.Propiedad == 0) {
+                            $("#precio_ordinario").prop("checked", true);
+                        } else if (concepto.Propiedad == 1) {
+                            $("#precio_transeunte").prop("checked", true);
+                        } else if (concepto.Propiedad == 2) {
+                            $("#precio_vitalicio").prop("checked", true);
+                        } else if (concepto.Propiedad == 16 || concepto.Propiedad == 48) {
+                            $("#precio_deriva").prop("checked", true);
+                        } else if (concepto.Propiedad == 128) {
+                            $("#precio_variable").prop("checked", true);
+                        } else {
+                            $("#precio_ordinario").prop("checked", true);
+                        }
 
-
-                        AlertInfo("Información", "Se cargo correctamente los datos.");
+                        $("#estado").prop("checked", concepto.Estado == 0 ? false : true);
+                        $("#lblEstado").html($("#estado").is(":checked") ? "Activo" : "Inactivo");
+                        tools.AlertInfo("Información", "Se cargo correctamente los datos.");
                         state = true;
                     } else {
-                        AlertWarning("Advertencia", result.message);
+                        tools.AlertWarning("Advertencia", result.message);
                         state = false;
                     }
                 },
                 error: function(error) {
-                    AlertError("Error", error);
+                    tools.AlertError("Error", error);
                     state = false;
                 }
             });
@@ -269,39 +286,40 @@ if (!isset($_GET["idConcepto"])) {
         function validateUpdateConcepto() {
             if (state) {
                 if ($("#categoria").val() == "0") {
-                    AlertWarning("Advertencia", "Seleccione la categoría del concepto.");
+                    tools.AlertWarning("Advertencia", "Seleccione la categoría del concepto.");
                 } else if ($("#concepto").val() == '' || $("#concepto").val().length < 2) {
-                    AlertWarning("Advertencia", "Ingrese el nombre del concepto.");
+                    tools.AlertWarning("Advertencia", "Ingrese el nombre del concepto.");
                 } else if ($("#precio").val() == '' || $("#precio").val().length == 0) {
-                    AlertWarning("Advertencia", "Ingrese el precio del concepto.");
+                    tools.AlertWarning("Advertencia", "Ingrese el precio del concepto.");
                 } else if ($("#fecha_inicio").val() == '') {
-                    AlertWarning("Advertencia", "Seleccione la fecha de inicio.");
+                    tools.AlertWarning("Advertencia", "Seleccione la fecha de inicio.");
                 } else if ($("#fecha_inicio").val() == '') {
-                    AlertWarning("Advertencia", "Seleccione la fecha de fin.");
+                    tools.AlertWarning("Advertencia", "Seleccione la fecha de fin.");
                 } else {
                     updateConcepto(idConcepto,
-                    $("#categoria").val(),
-                    $("#concepto").val(),
-                    $("#precio").val(),
-                    0,
-                    $("#fecha_inicio").val(),
-                    $("#fecha_fin").val(),
-                    "",
-                    $("#codigo").val());
+                        $("#categoria").val(),
+                        $("#concepto").val(),
+                        $("#precio").val(),
+                        $("#precio_ordinario").is(":checked") ? 0 : $("#precio_transeunte").is(":checked") ? 1 : $("#precio_vitalicio").is(":checked") ? 2 : $("#precio_deriva").is(":checked") ? 48 : 128,
+                        $("#fecha_inicio").val(),
+                        $("#fecha_fin").val(),
+                        "",
+                        $("#codigo").val(),
+                        $("#estado").is(":checked"));
                 }
             } else {
-                AlertWarning("Advertencia",
+                tools.AlertWarning("Advertencia",
                     "Nose pudo cargar los datos correctamente, recargue la pantalla por favor.");
             }
         }
 
-        function updateConcepto(IdConcepto,categoria,concepto,precio,propiedad,inicio,fin,observacion,codigo) {
+        function updateConcepto(IdConcepto, categoria, concepto, precio, propiedad, inicio, fin, observacion, codigo, estado) {
             $.ajax({
                 url: "../app/controller/ConceptoController.php",
                 method: "POST",
                 data: {
                     "type": "update",
-                    "IdConcepto":IdConcepto,
+                    "IdConcepto": IdConcepto,
                     "Categoria": categoria,
                     "Concepto": concepto,
                     "Precio": precio,
@@ -309,7 +327,8 @@ if (!isset($_GET["idConcepto"])) {
                     "Inicio": inicio,
                     "Fin": fin,
                     "Observacion": observacion.toUpperCase(),
-                    "Codigo": codigo
+                    "Codigo": codigo,
+                    "Estado": estado
                 },
                 beforeEnd: function() {
                     $("#btnaceptar").empty();
@@ -317,12 +336,12 @@ if (!isset($_GET["idConcepto"])) {
                 },
                 success: function(result) {
                     if (result.estado == 1) {
-                        AlertSuccess("Mensaje", result.message)
+                        tools.AlertSuccess("Mensaje", result.message)
                         setTimeout(function() {
                             location.href = "conceptos.php"
                         }, 1000);
                     } else {
-                        AlertWarning("Mensaje", result.message)
+                        tools.AlertWarning("Mensaje", result.message)
                         setTimeout(function() {
                             $("#btnaceptar").empty();
                             $("#btnaceptar").append('<i class="fa fa-check"></i> Editar');
@@ -330,95 +349,11 @@ if (!isset($_GET["idConcepto"])) {
                     }
                 },
                 error: function(error) {
-                    AlertError("Error", error.responseText);
+                    tools.AlertError("Error", error.responseText);
                     $("#btnaceptar").empty();
                     $("#btnaceptar").append('<i class="fa fa-check"></i> Editar');
                 }
             });
-        }
-
-        function AlertSuccess(title, message) {
-            toastr.options = {
-                "closeButton": false,
-                "debug": false,
-                "newestOnTop": false,
-                "progressBar": false,
-                "positionClass": "toast-top-right",
-                "preventDuplicates": false,
-                "onclick": null,
-                "showDuration": "300",
-                "hideDuration": "1000",
-                "timeOut": "5000",
-                "extendedTimeOut": "1000",
-                "showEasing": "swing",
-                "hideEasing": "linear",
-                "showMethod": "fadeIn",
-                "hideMethod": "fadeOut"
-            }
-            toastr["success"](message, title);
-        }
-
-        function AlertWarning(title, message) {
-            toastr.options = {
-                "closeButton": false,
-                "debug": false,
-                "newestOnTop": false,
-                "progressBar": false,
-                "positionClass": "toast-top-right",
-                "preventDuplicates": false,
-                "onclick": null,
-                "showDuration": "300",
-                "hideDuration": "1000",
-                "timeOut": "5000",
-                "extendedTimeOut": "1000",
-                "showEasing": "swing",
-                "hideEasing": "linear",
-                "showMethod": "fadeIn",
-                "hideMethod": "fadeOut"
-            }
-            toastr["warning"](message, title);
-        }
-
-        function AlertError(title, message) {
-            toastr.options = {
-                "closeButton": false,
-                "debug": false,
-                "newestOnTop": false,
-                "progressBar": false,
-                "positionClass": "toast-top-right",
-                "preventDuplicates": false,
-                "onclick": null,
-                "showDuration": "300",
-                "hideDuration": "1000",
-                "timeOut": "5000",
-                "extendedTimeOut": "1000",
-                "showEasing": "swing",
-                "hideEasing": "linear",
-                "showMethod": "fadeIn",
-                "hideMethod": "fadeOut"
-            }
-            toastr["error"](message, title)
-        }
-
-        function AlertInfo(title, message) {
-            toastr.options = {
-                "closeButton": false,
-                "debug": false,
-                "newestOnTop": false,
-                "progressBar": false,
-                "positionClass": "toast-top-right",
-                "preventDuplicates": false,
-                "onclick": null,
-                "showDuration": "300",
-                "hideDuration": "1000",
-                "timeOut": "5000",
-                "extendedTimeOut": "1000",
-                "showEasing": "swing",
-                "hideEasing": "linear",
-                "showMethod": "fadeIn",
-                "hideMethod": "fadeOut"
-            }
-            toastr["info"](message, title)
         }
     </script>
 </body>

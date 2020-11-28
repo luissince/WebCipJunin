@@ -9,7 +9,6 @@ class PersonaAdo
     {
     }
 
-
     public static function getAll($nombres, $posicionPagina, $filasPorPagina)
     {
         try {
@@ -59,8 +58,6 @@ class PersonaAdo
             $array = array();
             $arrayPersonas = array();
             $comandoPersona = Database::getInstance()->getDb()->prepare("SELECT  
-            dbo.Especialidad.Capitulo,
-            dbo.Especialidad.Especialidad,
             CASE CIP
             WHEN 'T' THEN 'Tramite'
             ELSE CIP END
@@ -112,8 +109,6 @@ class PersonaAdo
                 $count++;
                 array_push($arrayPersonas, array(
                     "Id" => $count + $posicionPagina,
-                    "Capitulo" => $row["Capitulo"],
-                    "Especialidad" => $row["Especialidad"],
                     "Cip" => $row["Cip"],
                     "Dni" => $row["Dni"],
                     "Ingeniero" => $row["Ingeniero"],
