@@ -24,6 +24,22 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
                 "message" => $usuario
             ));
         }
+    } else if($_GET["type"] === "login") {
+        $usuario = $_GET['usuario'];
+        $clave = $_GET['clave'];
+
+        $datos = UsuarioAdo::login($usuario, $clave);
+        if(is_array($datos)) {
+            echo json_encode(array(
+                "estado" => 1,
+                "datos" => $datos
+            ));
+        } else{
+            echo json_encode(array(
+                "estado" => 2,
+                "datos" => $datos
+            ));
+        }
     }
 } else if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     if($_POST["type"] === "insertUsuario"){
