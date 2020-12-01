@@ -65,6 +65,35 @@ class CapituloAdo
         }
     }
 
+    public static function getAllDistinctEspecialidades(){
+        try{ 
+            $comandoEspecialidad = Database::getInstance()->getDb()->prepare("SELECT DISTINCT Especialidad from Especialidad");
+            $comandoEspecialidad->execute();
+            $resultado = $comandoEspecialidad->fetchAll();
+            return $resultado;
+        }
+        catch(Exception $ex){
+            return $ex->getMessage();
+        }
+    }
+    
+    public static function getAllCountCapAndEsp(){
+        try {
+            $comandoEsp = Database::getInstance()->getDb()->prepare("SELECT count(1) FROM Especialidad");
+            $comandoCap = Database::getInstance()->getDb()->prepare("SELECT count(1) FROM Capitulo");
+            $comandoEsp->execute();
+            $comandoCap->execute();
+
+            $resulCountCapAndEsp = [
+                "Especialidad" => $comandoEsp->fetchColumn(),
+                "Capitulo" => $comandoCap->fetchColumn()
+            ];
+            return $resulCountCapAndEsp;
+        } catch (Exception $ex) {
+            return $ex->getMessage();
+        }
+    }
+
     public static function insertCapitulo($capitulos)
     {
         try {
