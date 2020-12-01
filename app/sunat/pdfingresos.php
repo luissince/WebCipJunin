@@ -348,4 +348,4 @@ if (!isset($_GET["idIngreso"])) {
             // Output a PDF file directly to the browser
             $mpdf->Output($ingreso->Comprobante . " " . $ingreso->Serie . '-' . $ingreso->Numeracion . " CIP-JUNIN.pdf", 'I');
         }
-    }
+}
