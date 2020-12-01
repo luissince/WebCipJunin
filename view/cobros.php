@@ -39,11 +39,9 @@
                                             <button class="btn btn-danger" id="btnIzquierda">
                                                 <i class="fa fa-toggle-left"></i>
                                             </button>
-                                            <span id="lblPaginaActual" class="font-weight-bold">0</span>
-                                            <span>&nbsp;</span>
-                                            <span>a</span>
-                                            <span>&nbsp;</span>
-                                            <span id="lblPaginaSiguiente" class="font-weight-bold">0</span>
+                                            <span id="lblPaginaActual" class="font-weight-bold margin">0</span>                                            
+                                            <span class="margin">a</span>
+                                            <span id="lblPaginaSiguiente" class="font-weight-bold margin">0</span>
                                             <button class="btn btn-danger" id="btnDerecha">
                                                 <i class="fa fa-toggle-right"></i>
                                             </button>
@@ -154,7 +152,6 @@
                                     <button type="button" class="btn btn-primary" data-dismiss="modal">
                                         <i class="fa fa-remove"></i> Cancelar</button>
                                 </div>
-                                </form>
                             </div>
                         </div>
                     </div>
@@ -242,7 +239,6 @@
                                     <button type="button" class="btn btn-primary" id="btnCancelarCuotas">
                                         <i class="fa fa-remove"></i> Cancelar</button>
                                 </div>
-                                </form>
                             </div>
                         </div>
                     </div>
@@ -323,7 +319,6 @@
                                     <button type="button" class="btn btn-primary" data-dismiss="modal">
                                         <i class="fa fa-remove"></i> Cancelar</button>
                                 </div>
-                                </form>
                             </div>
                         </div>
                     </div>
@@ -468,7 +463,6 @@
                                     <button type="button" class="btn btn-primary" data-dismiss="modal">
                                         <i class="fa fa-remove"></i> Cancelar</button>
                                 </div>
-                                </form>
                             </div>
                         </div>
                     </div>
@@ -601,7 +595,6 @@
                                     <button type="button" class="btn btn-primary" data-dismiss="modal">
                                         <i class="fa fa-remove"></i> Cancelar</button>
                                 </div>
-                                </form>
                             </div>
                         </div>
                     </div>
@@ -652,8 +645,7 @@
                                         <i class="fa fa-check"></i> Aceptar</button>
                                     <button type="button" class="btn btn-primary" id="btnCancelarPeritaje">
                                         <i class="fa fa-remove"></i> Cancelar</button>
-                                </div>
-                                </form>
+                                </div>                               
                             </div>
                         </div>
                     </div>
@@ -705,8 +697,7 @@
                                         <i class="fa fa-check"></i> Aceptar</button>
                                     <button type="button" class="btn btn-primary" data-dismiss="modal">
                                         <i class="fa fa-remove"></i> Cancelar</button>
-                                </div>
-                                </form>
+                                </div>                           
                             </div>
                         </div>
                     </div>
