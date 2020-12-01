@@ -7,11 +7,11 @@ include_once('../model/IngresosAdo.php');
 
 $rutaImage = __DIR__ . "/../../view/images/logologin.png";
 $title = "RESUMEN DE INGRESOS";
-$fechaIngreso = "DE LA FECHA: 11/02/2020";
+$fechaIngreso = "FECHA: ".$_GET["fechaInicial"]." al ".$_GET["fechaFinal"];
 $recibos = "RECIBOS DEL : B001-000001 al B001-000002";
 $totalCipJunin = 0;
 $totalCipNacional = 0;
-$resumen = IngresosAdo::ResumenIngresosPorFecha();
+$resumen = IngresosAdo::ResumenIngresosPorFecha($_GET["fechaInicial"],$_GET["fechaFinal"]);
 if (!is_array($resumen)) {
     echo $resumen;
 } else {

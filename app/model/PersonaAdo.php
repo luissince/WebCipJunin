@@ -806,4 +806,47 @@ class PersonaAdo
             return $ex->getMessage();
         }
     }
+
+
+    //Funciones Ruber
+
+    public static function getCountConditionPerson(){
+
+        try {
+            $cmdOrdinario = Database::getInstance()->getDb()->prepare("SELECT count(1) FROM Persona WHERE Condicion='O'");
+            $cmdTranseunte = Database::getInstance()->getDb()->prepare("SELECT count(1) FROM Persona WHERE Condicion='T'");
+            $cmdFallecido = Database::getInstance()->getDb()->prepare("SELECT count(1) FROM Persona WHERE Condicion='F'");
+            $cmdRetirado = Database::getInstance()->getDb()->prepare("SELECT count(1) FROM Persona WHERE Condicion='R'");
+            $cmdVitalicio = Database::getInstance()->getDb()->prepare("SELECT count(1) FROM Persona WHERE Condicion='V'");
+            $cmdTotalPersonas = Database::getInstance()->getDb()->prepare("SELECT count(1) FROM Persona");
+            $cmdTotalHabilitados = Database::getInstance()->getDb()->prepare("SELECT  count(1) FROM ULTIMACuota WHERE DATEDIFF(M,GETDATE(), FechaUltimaCuota) >= 0");
+            $cmdTotalInhabilitados = Database::getInstance()->getDb()->prepare("SELECT  count(1) FROM ULTIMACuota WHERE DATEDIFF(M,GETDATE(), FechaUltimaCuota) < 0");
+
+            $cmdOrdinario->execute();
+            $cmdTranseunte->execute();
+            $cmdFallecido->execute();
+            $cmdRetirado->execute();
+            $cmdVitalicio->execute();
+            $cmdTotalPersonas->execute();
+            $cmdTotalHabilitados->execute();
+            $cmdTotalInhabilitados->execute();
+
+            $resultCondicion = [
+                "Ordinario" => $cmdOrdinario->fetchColumn(),
+                "Transeunte" => $cmdTranseunte->fetchColumn(),
+                "Fallecido" => $cmdFallecido->fetchColumn(),
+                "Retirado" => $cmdRetirado->fetchColumn(),
+                "Vitalicio" => $cmdVitalicio->fetchColumn(),
+                "Personas" => $cmdTotalPersonas->fetchColumn(),
+                "Habilitados" => $cmdTotalHabilitados->fetchColumn(),
+                "Inhabilitados" => $cmdTotalInhabilitados->fetchColumn()
+            ];
+
+            return $resultCondicion;
+        } catch (Exception $ex) {
+            return $ex->getMessage();
+        }
+        
+    }
+
 }

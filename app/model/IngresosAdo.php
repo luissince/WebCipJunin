@@ -267,10 +267,9 @@ class IngresosAdo
         }
     }
 
-    public static function ResumenIngresosPorFecha()
+    public static function ResumenIngresosPorFecha($fechaInicio,$fechaFinal)
     {
         try {
-
             $arrayIngresos = array();
             $cmdConcepto = Database::getInstance()->getDb()->prepare("SELECT 
             c.Codigo,
@@ -289,8 +288,11 @@ class IngresosAdo
             ON i.idIngreso = d.idIngreso
             INNER JOIN Concepto AS c
             ON d.idConcepto = c.idConcepto
+            WHERE CAST(i.Fecha AS DATE) >= ? and CAST(i.Fecha AS DATE) <= ?
             GROUP BY c.Codigo,c.Concepto,c.Propiedad
             ORDER BY c.Concepto ASC");
+            $cmdConcepto->bindParam(1,$fechaInicio,PDO::PARAM_STR);
+            $cmdConcepto->bindParam(2,$fechaFinal,PDO::PARAM_STR);
             $cmdConcepto->execute();
             $count = 0;
 
