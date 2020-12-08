@@ -10,7 +10,7 @@ $title = "RESUMEN DE APORTACIONES AL CIP NACIONAL";
 $fechaIngreso = "DE LA FECHA: 11/02/2020";
 $totalISSCIP = 0;
 $totalSOCIALCIP = 0;
-$resumen = IngresosAdo::ResumenAporteCIN("20-11-2020", "20-11-2020");
+$resumen = IngresosAdo::ResumenAporteCIN($_GET["fechaInicial"],$_GET["fechaFinal"]);
 if (!is_array($resumen)) {
     echo $resumen;
 } else {

@@ -279,14 +279,15 @@ class PersonaAdo
     public static function getColegiatura($idDni)
     {
         try {
-            $cmdColegiatura = Database::getInstance()->getDb()->prepare("SELECT s.Consejo,ISNULL(e.Capitulo,'CAPITULO NO REGISTRAD0') AS Capitulo,UPPER(ISNULL(e.Especialidad,'ESPECIALIDAD NO REGISTRADA')) AS Especialidad, 
+            $cmdColegiatura = Database::getInstance()->getDb()->prepare("SELECT s.Consejo,ISNULL(ca.Capitulo,'CAPITULO NO REGISTRAD0') AS Capitulo,UPPER(ISNULL(e.Especialidad,'ESPECIALIDAD NO REGISTRADA')) AS Especialidad, 
 			convert(VARCHAR,cast(c.FechaColegiado AS DATE),103) AS FechaColegiado, ISNULL(u.Universidad,'UNIVERSIDAD NO REGISTRADA') AS UnivesidadEgreso, convert(VARCHAR,cast(c.FechaEgreso AS DATE),103) AS FechaEgreso, 
 			ISNULL(u.Universidad,'UNIVERSIDAD NO REGISTRADA') AS Universidad, convert(VARCHAR,cast(c.FechaTitulacion AS DATE),103) AS FechaTitulacion, 
             c.Resolucion, c.Principal FROM Colegiatura  AS c
 			LEFT JOIN Sede AS s ON c.idSede = s.idConsejo
-			LEFT JOIN Especialidad AS e ON e.idEspecialidad = c.idEspecialidad
+			LEFT JOIN Capitulo AS ca ON ca.idCapitulo = c.idEspecialidad
+			LEFT JOIN Especialidad AS e ON e.idCapitulo = ca.idCapitulo
 			LEFT JOIN Universidad AS u ON u.idUniversidad = c.idUniversidad
-			where idDNI = ? ");
+			where idDNI = ?");
             $cmdColegiatura->bindParam(1, $idDni, PDO::PARAM_STR);
             $cmdColegiatura->execute();
 
