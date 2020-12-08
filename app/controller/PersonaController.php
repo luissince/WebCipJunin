@@ -64,7 +64,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
         if (is_array($arrayColegiaturas)) {
             echo json_encode(array(
                 "estado" => 1,
-                "data" => PersonaAdo::getColegiatura($_GET['idDni']),
+                "data" => $arrayColegiaturas,
             ));
         } else {
             echo json_encode(array(
@@ -78,7 +78,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
         if (is_array($arrayDomicilio)) {
             echo json_encode(array(
                 "estado" => 1,
-                "data" => PersonaAdo::getDomicilio($_GET['idDni']),
+                "data" =>  $arrayDomicilio ,
             ));
         } else {
             echo json_encode(array(
@@ -92,7 +92,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
         if (is_array($arrayTelefono)) {
             echo json_encode(array(
                 "estado" => 1,
-                "data" => PersonaAdo::getTelefono($_GET['idDni']),
+                "data" =>  $arrayTelefono,
             ));
         } else {
             echo json_encode(array(
@@ -106,7 +106,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
         if (is_array($arrayConyuge)) {
             echo json_encode(array(
                 "estado" => 1,
-                "data" => PersonaAdo::getConyuge($_GET['idDni']),
+                "data" =>  $arrayConyuge
             ));
         } else {
             echo json_encode(array(
@@ -134,7 +134,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
         if (is_array($arraygradosyestudios)) {
             echo json_encode(array(
                 "estado" => 1,
-                "data" => PersonaAdo::getGradosyEstudios($_GET['idDni']),
+                "data" => $arraygradosyestudios,
             ));
         } else {
             echo json_encode(array(
@@ -148,7 +148,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
         if (is_array($arrayCorreoyWeb)) {
             echo json_encode(array(
                 "estado" => 1,
-                "data" => PersonaAdo::getCorreoyWeb($_GET['idDni']),
+                "data" =>$arrayCorreoyWeb,
             ));
         } else {
             echo json_encode(array(

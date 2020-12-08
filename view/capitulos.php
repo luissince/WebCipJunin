@@ -468,7 +468,6 @@
             });
         }
 
-<<<<<<< HEAD
         function crudCapitulo() {
             if ($("#txtCapitulo").val() == '') {
                 tools.AlertWarning("Advertencia", "Digite un capitulo.");
@@ -493,23 +492,6 @@
                             tools.AlertWarning("Capitulo", result.message);
                         } else {
                             tools.AlertWarning("Capitulo", result.message);
-=======
-        function loadEspecialidades(){
-            $.ajax({
-                url: "../app/controller/CapituloController.php",
-                method: "GET",
-                data: {
-                    "type": "allEspecialidades"
-                },
-                beforeSend: function() {
-                    state = true
-                },
-                success: function(result) {
-                    console.log(result)
-                    if (result.estado === 1) {
-                        for(let especialidad of result.especialidades){
-                            cbxEspecialidad.append('<option value='+especialidad.Especialidad+'> '+especialidad.Especialidad+'</option>')
->>>>>>> cc2ead0103e2fa576b96025b01868602687fd121
                         }
                     },
                     error: function(error) {

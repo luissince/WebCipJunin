@@ -1,12 +1,12 @@
 function CobroIngenieros() {
 
-    this.componentesIngenieros = function() {
-        $("#btnIngenieros").click(function(event) {
+    this.componentesIngenieros = function () {
+        $("#btnIngenieros").click(function (event) {
             $('#mdIngenieros').modal('show');
             loadInitIngenieros();
         });
 
-        $("#btnIngenieros").keypress(function(event) {
+        $("#btnIngenieros").keypress(function (event) {
             if (event.keyCode === 13) {
                 $('#mdIngenieros').modal('show');
                 loadInitIngenieros();
@@ -14,11 +14,11 @@ function CobroIngenieros() {
             event.preventDefault();
         });
 
-        $('#mdIngenieros').on('shown.bs.modal', function() {
+        $('#mdIngenieros').on('shown.bs.modal', function () {
             $('#txtBuscarIngeniero').focus();
         });
 
-        $("#txtBuscarIngeniero").on("keyup", function(event) {
+        $("#txtBuscarIngeniero").on("keyup", function (event) {
             if (event.keyCode === 13) {
                 if (!state) {
                     paginacion = 1;
@@ -28,7 +28,7 @@ function CobroIngenieros() {
             }
         });
 
-        $("#btnIzquierda").click(function() {
+        $("#btnIzquierda").click(function () {
             if (!state) {
                 if (paginacion > 1) {
                     paginacion--;
@@ -37,7 +37,7 @@ function CobroIngenieros() {
             }
         });
 
-        $("#btnDerecha").click(function() {
+        $("#btnDerecha").click(function () {
             if (!state) {
                 if (paginacion < totalPaginacion) {
                     paginacion++;
@@ -78,32 +78,43 @@ function CobroIngenieros() {
                 "posicionPagina": ((paginacion - 1) * filasPorPagina),
                 "filasPorPagina": filasPorPagina
             },
-            beforeSend: function() {
+            beforeSend: function () {               
+                totalPaginacion = 0;
                 tbIngenieros.empty();
                 tbIngenieros.append(
                     '<tr class="text-center"><td colspan="8"><img src="./images/spiner.gif"/><p>cargando información.</p></td></tr>'
                 );
                 state = true;
             },
-            success: function(result) {
+            success: function (result) {             
                 if (result.estado === 1) {
                     tbIngenieros.empty();
-                    for (let value of result.personas) {
-                        tbIngenieros.append('<tr ondblclick="onSelectedIngeniero(\'' + value.Dni + '\')">' +
-                            '<td>' + value.Id + '</td>' +
-                            '<td>' + value.Cip + '</td>' +
-                            '<td>' + value.Dni + '</td>' +
-                            '<td>' + value.Ingeniero + '</td>' +
-                            '<td>' + value.Condicion + '</td>' +
-                            '<td>' + value.FechaUltimaCuota + '</td>' +
-                            '<td>' + (value.Deuda <= 0 ? '0 Cuotas' : value.Deuda + ' Cuota(s)') + '</td>' +
-                            '</tr>');
+                    if (result.personas.length == 0) {
+                        tbIngenieros.append(
+                            '<tr class="text-center"><td colspan="8"><p>No hay datos para mostrar.</p></td></tr>'
+                        );
+                        $("#lblPaginaActual").html(paginacion);
+                        $("#lblPaginaSiguiente").html(totalPaginacion);
+                        state = false;
+                    } else {
+                        for (let value of result.personas) {
+                            tbIngenieros.append('<tr ondblclick="onSelectedIngeniero(\'' + value.Dni + '\')">' +
+                                '<td>' + value.Id + '</td>' +
+                                '<td>' + value.Cip + '</td>' +
+                                '<td>' + value.Dni + '</td>' +
+                                '<td>' + value.Ingeniero + '</td>' +
+                                '<td>' + value.Condicion + '</td>' +
+                                '<td>' + value.FechaUltimaCuota + '</td>' +
+                                '<td>' + (value.Deuda <= 0 ? '0 Cuotas' : value.Deuda + ' Cuota(s)') + '</td>' +
+                                '</tr>');
+                        }
+                        totalPaginacion = parseInt(Math.ceil((parseFloat(result.total) / parseInt(
+                            filasPorPagina))));
+                        $("#lblPaginaActual").html(paginacion);
+                        $("#lblPaginaSiguiente").html(totalPaginacion);
+                        state = false;
                     }
-                    totalPaginacion = parseInt(Math.ceil((parseFloat(result.total) / parseInt(
-                        filasPorPagina))));
-                    $("#lblPaginaActual").html(paginacion);
-                    $("#lblPaginaSiguiente").html(totalPaginacion);
-                    state = false;
+
                 } else {
                     tbIngenieros.empty();
                     tbIngenieros.append(
@@ -114,7 +125,7 @@ function CobroIngenieros() {
                     state = false;
                 }
             },
-            error: function(error) {
+            error: function (error) {
                 tbIngenieros.empty();
                 tbIngenieros.append(
                     '<tr class="text-center"><td colspan="8"><p>Se produjo un error, intente nuevamente.</p></td></tr>'
@@ -126,7 +137,7 @@ function CobroIngenieros() {
         });
     }
 
-    onSelectedIngeniero = function(idIngeniero) {
+    onSelectedIngeniero = function (idIngeniero) {
         $.ajax({
             url: "../app/controller/PersonaController.php",
             method: "GET",
@@ -134,19 +145,19 @@ function CobroIngenieros() {
                 "type": "data",
                 "dni": idIngeniero
             },
-            beforeSend: function() {
+            beforeSend: function () {
                 $('#mdIngenieros').modal('hide');
                 idDNI = 0;
                 tools.AlertInfo("Ingeniero", "En proceso de busqueda.", "toast-bottom-right");
             },
-            success: function(data) {
+            success: function (data) {
                 if (data.estado === 1) {
                     idDNI = data.persona.idDNI;
                     let Condicion = data.persona.Condicion ==
                         'T' ? 'Transeunte' :
                         data.persona.Condicion == 'F' ? 'Fallecido' :
-                        data.persona.Condicion == 'R' ? 'Retirado' :
-                        data.persona.Condicion == 'V' ? 'Vitalicio' : 'Ordinario';
+                            data.persona.Condicion == 'R' ? 'Retirado' :
+                                data.persona.Condicion == 'V' ? 'Vitalicio' : 'Ordinario';
                     $("#lblCipSeleccionado").html(data.persona.CIP);
                     $("#lblTipoIngenieroSeleccionado").html(Condicion);
                     $("#lblDocumentSeleccionado").html(data.persona.idDNI);
@@ -163,7 +174,7 @@ function CobroIngenieros() {
                     tools.AlertWarning("Ingeniero", "Se produjo un problema en obtener los datos, intente nuevamente.", "toast-bottom-right");
                 }
             },
-            error: function(error) {
+            error: function (error) {
                 tools.AlertError("Ingeniero", "Error en obtener los datos, comuníquese con su proveedor o intente nuevamente.", "toast-bottom-right");
             }
         });
