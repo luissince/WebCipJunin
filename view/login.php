@@ -1,3 +1,10 @@
+<?php
+session_start();
+
+if (isset($_SESSION['IdUsuario'])) {
+    echo '<script>location.href = "./home.php";</script>';
+} else {
+    ?>
 <!DOCTYPE html>
 <html lang="en">
 
@@ -102,6 +109,12 @@
         $("#btnIngresar").click(function() {
             login()
         })
+
+        $("#txtClave").keydown(function(e) {
+            if (e.keyCode === 13) {
+                login()
+            }
+        });
     })
 
     function login() {
@@ -112,14 +125,14 @@
             tools.AlertWarning('Mensaje', "Ingrese una contraseña por favor");
             $("#txtClave").focus();
         } else {
-            
+
             $.ajax({
                 url: "../app/controller/UsuarioController.php",
                 method: "GET",
                 data: {
                     "type": "login",
                     "usuario": $("#txtUsuario").val(),
-                    "clave": $("#txtClave").val() 
+                    "clave": $("#txtClave").val()
                 },
                 beforeSend: function() {
                     state = true;
@@ -127,16 +140,21 @@
                 success: function(result) {
                     // console.log(result)
                     if (result.estado === 1) {
-                        let dato = result.datos
-
-                         // window.open("../view/home.php")
-                        tools.AlertSuccess('Mensaje', 'Bienvenido al Sistema '+dato.Apellidos+' '+dato.Nombres)
-                        state = false;                        
+                        let dato = result.datos;
+                        tools.AlertSuccess('Mensaje', 'Bienvenido al Sistema ' + dato.Apellidos + ' ' + dato
+                            .Nombres)
+                        state = false;
                         setTimeout(function() {
                             location.href = "../view/home.php"
-                        }, 1000);             
+                        }, 1000);
+                    } else if (result.estado === 2) {
+                        tools.AlertWarning('Mensaje', result.message);
+                        $("#txtUsuario").val('')
+                        $("#txtClave").val('')
+                        $("#txtUsuario").focus();
+                        state = false;
                     } else {
-                        tools.AlertInfo('Mensaje', 'Usuario o contraseña incorrecto(s)')
+                        tools.AlertError('Mensaje', result.message);
                         $("#txtUsuario").val('')
                         $("#txtClave").val('')
                         $("#txtUsuario").focus();
@@ -144,9 +162,10 @@
                     }
                 },
                 error: function(error) {
-                    
-                    // $("#lblPaginaActual").html(0);
-                    // $("#lblPaginaSiguiente").html(0);
+
+                    $("#txtUsuario").val('')
+                    $("#txtClave").val('')
+                    $("#txtUsuario").focus();
                     state = false;
                 }
             });
@@ -156,3 +175,5 @@
 </body>
 
 </html>
+<?php
+}

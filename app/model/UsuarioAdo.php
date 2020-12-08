@@ -149,7 +149,7 @@ class UsuarioAdo
             $cmdLogin->bindParam(2, $clave, PDO::PARAM_STR);
             $cmdLogin->execute();
 
-            $result = $cmdLogin->fetch(PDO::FETCH_ASSOC);
+            $result = $cmdLogin->fetchObject();
             // $result = $cmdLogin->fetch();
             return $result;
         } catch (Exception $ex) {

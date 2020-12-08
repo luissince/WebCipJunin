@@ -1,3 +1,11 @@
+<?php
+session_start();
+
+if (!isset($_SESSION['IdUsuario'])) {
+    echo '<script>location.href = "./login.php";</script>';
+} else {
+    ?>
+
 <!DOCTYPE html>
 <html lang="en">
 
@@ -91,3 +99,5 @@
 </body>
 
 </html>
+<?php
+}
