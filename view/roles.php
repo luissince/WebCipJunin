@@ -1,10 +1,3 @@
-<?php
-session_start();
-
-if (!isset($_SESSION['IdUsuario'])) {
-    echo '<script>location.href = "./login.php";</script>';
-} else {
-    ?>
 
 <!DOCTYPE html>
 <html lang="en">
@@ -491,5 +484,3 @@ if (!isset($_SESSION['IdUsuario'])) {
 </body>
 
 </html>
-<?php
-}

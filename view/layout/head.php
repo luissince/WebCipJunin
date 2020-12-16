@@ -6,9 +6,6 @@
 <title>CIPJUNIN</title>
 <!-- Tell the browser to be responsive to screen width -->
 <meta conMPVirtualtent="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
-<!-- eliminar en caso falle-->
-<!-- <link rel='stylesheet prefetch' href='https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css'>
-<link rel='stylesheet prefetch' href='https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.11.2/css/bootstrap-select.min.css'> -->
 <!-- -->
 <!-- Bootstrap 3.3.7 -->
 <link rel="stylesheet" href="adminlte/bower_components/bootstrap/dist/css/bootstrap.css">
@@ -19,8 +16,6 @@
 <!-- jvectormap -->
 <link rel="stylesheet" href="adminlte/bower_components/jvectormap/jquery-jvectormap.css">
 <link rel="stylesheet" href="adminlte/bower_components/select2/dist/css/select2.min.css">
-<!-- Select2 -->
-<link rel="stylesheet" href="../../bower_components/select2/dist/css/select2.min.css">
 
 <!-- Theme style -->
 <link rel="stylesheet" href="adminlte/dist/css/AdminLTE.min.css">
@@ -33,10 +28,6 @@
 <link rel="stylesheet" href="css/main.css">
 
 <!-- eliminar en caso falle-->
-<!-- <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
-<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/js/bootstrap.min.js"></script>
-<script src="//cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.6.3/js/bootstrap-select.min.js"></script> -->
-<!-- -->
 <!-- jQuery 3 -->
 <script src="adminlte/bower_components/jquery/dist/jquery.min.js"></script>
 <script src="adminlte/bower_components/select2/dist/js/select2.min.js"></script>
