@@ -834,8 +834,6 @@
     <!-- ./wrapper -->
 
     <!-- Select2 -->
-    <script src="../../bower_components/select2/dist/js/select2.full.min.js"></script>
-
     <script src="js/tools.js"></script>
     <script src="js/cobros/cobrosingenieros.js"></script>
     <script src="js/cobros/colegiatura.js"></script>

@@ -79,7 +79,7 @@ function CobroIngenieros() {
                 "posicionPagina": ((paginacion - 1) * filasPorPagina),
                 "filasPorPagina": filasPorPagina
             },
-            beforeSend: function () {               
+            beforeSend: function () {
                 totalPaginacion = 0;
                 tbIngenieros.empty();
                 tbIngenieros.append(
@@ -87,7 +87,7 @@ function CobroIngenieros() {
                 );
                 state = true;
             },
-            success: function (result) {             
+            success: function (result) {
                 if (result.estado === 1) {
                     tbIngenieros.empty();
                     if (result.personas.length == 0) {
@@ -156,7 +156,7 @@ function CobroIngenieros() {
             success: function (data) {
                 if (data.estado === 1) {
                     $("#tbHistorial").empty();
-                    idDNI = data.persona.idDNI;                    
+                    idDNI = data.persona.idDNI;
                     let Condicion = data.persona.Condicion ==
                         'T' ? 'Transeunte' :
                         data.persona.Condicion == 'F' ? 'Fallecido' :
@@ -168,15 +168,37 @@ function CobroIngenieros() {
                     $("#lblDatosSeleccionado").html(data.persona.Apellidos + " " + data.persona.Nombres);
                     $("#lblDireccionSeleccionado").html("");
 
+                    
                     for (let Historial of data.historial) {
+                        let Concepto;
+                        if(Historial.Concepto = 1){
+                            Concepto = "Cuota Ordinaria";
+                        } else if(Historial.Concepto = 2){
+                            Concepto = "Cuota Ordinaria (Amnistia)";
+                        } else if(Historial.Concepto = 3){
+                            Concepto = "Cuota Ordinaria (Vitalicio)";
+                        } else if(Historial.Concepto = 4){
+                            Concepto = "Colegiatura";
+                        } else if(Historial.Concepto = 5){
+                            Concepto = "Certificado de habilidad";
+                        } else if(Historial.Concepto = 6){
+                            Concepto = "Cuota de residencia de obra";
+                        } else if(Historial.Concepto = 7){
+                            Concepto = "Certificado de proyecto";
+                        } else if(Historial.Concepto = 8){
+                            Concepto = "Peritaje";
+                        } else if(Historial.Concepto = 100){
+                            Concepto = "Ingresos Diversos";
+                        }
+
                         $("#tbHistorial").append('<tr>' +
-                                '<td>' + Historial.Id + '</td>' +
-                                '<td>' + Historial.Recibo + '</td>' +
-                                '<td>' + Historial.Fecha + '</td>' +
-                                '<td>' + Historial.Concepto + '</td>' +
-                                '<td>' + Historial.Monto+ '</td>' +
-                                '<td>' + Historial.Observacion + '</td>' +
-                                '</tr>');
+                            '<td>' + Historial.Id + '</td>' +
+                            '<td>' + Historial.Recibo + '</td>' +
+                            '<td>' + Historial.Fecha + '</td>' +
+                            '<td>' + Concepto + '</td>' +
+                            '<td>' + Historial.Monto + '</td>' +
+                            '<td>' + Historial.Observacion + '</td>' +
+                            '</tr>');
                     }
 
                     tools.AlertSuccess("Ingeniero", "Los obtuvo los datos correctamente.", "toast-bottom-right");
