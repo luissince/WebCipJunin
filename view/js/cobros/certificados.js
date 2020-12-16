@@ -4,51 +4,53 @@ function Certificado() {
             if (idDNI == 0) {
                 tools.AlertWarning("Certificado", "No selecciono ningún ingeniero para obtener sus cuotas.")
             } else {
-                $("#btnCertHabilidad").click(function() {
-                    $('#mdCertHabilidad').modal('show');
-                    loadCertificadoHabilidad(idDNI);
-                });
-        
-                $("#btnCertHabilidad").keypress(function(event) {
-                    if (event.keyCode === 13) {
-                        $('#mdCertHabilidad').modal('show');
-                        loadCertificadoHabilidad(idDNI);
-                    }
-                    event.preventDefault();
-                });
-
-                $("#btnCertProyecto").click(function() {
-                    $('#mdCertProyecto').modal('show');
-                    loadCertificadoProyecto(idDNI);
-                    loadUbigeoProyecto();
-                });
-        
-                $("#btnCertProyecto").keypress(function(event) {
-                    if (event.keyCode === 13) {
-                        $('#mdCertProyecto').modal('show');
-                        loadCertificadoProyecto(idDNI);
-                        loadUbigeoProyecto();
-                    }
-                    event.preventDefault();
-                });
-
-                $("#btnCertResidenciaObra").click(function() {
-                    $('#mdCertResidenciaObra').modal('show');
-                    loadCertificadoObra(idDNI);
-                    loadUbigeoObras();
-                });
-        
-                $("#btnCertResidenciaObra").keypress(function(event) {
-                    if (event.keyCode === 13) {
-                        $('#mdCertResidenciaObra').modal('show');
-                        loadCertificadoObra(idDNI);
-                        loadUbigeoObras();
-                    }
-                    event.preventDefault();
-                });                
-            }
-            
+                $("#btnCertificado").attr('data-toggle','dropdown');
+                $("#btnCertificado").attr('aria-expanded','true');         
+            }            
         });
+
+        $("#btnCertHabilidad").click(function() {
+            $('#mdCertHabilidad').modal('show');
+            loadCertificadoHabilidad(idDNI);
+        });
+
+        $("#btnCertHabilidad").keypress(function(event) {
+            if (event.keyCode === 13) {
+                $('#mdCertHabilidad').modal('show');
+                // loadCertificadoHabilidad(idDNI);
+            }
+            event.preventDefault();
+        });
+
+        $("#btnCertProyecto").click(function() {
+            $('#mdCertProyecto').modal('show');
+            loadCertificadoProyecto(idDNI);
+            loadUbigeoProyecto();
+        });
+
+        $("#btnCertProyecto").keypress(function(event) {
+            if (event.keyCode === 13) {
+                $('#mdCertProyecto').modal('show');
+                loadCertificadoProyecto(idDNI);
+                loadUbigeoProyecto();
+            }
+            event.preventDefault();
+        });
+
+        $("#btnCertResidenciaObra").click(function() {
+            $('#mdCertResidenciaObra').modal('show');
+            loadCertificadoObra(idDNI);
+            loadUbigeoObras();
+        });
+
+        $("#btnCertResidenciaObra").keypress(function(event) {
+            if (event.keyCode === 13) {
+                $('#mdCertResidenciaObra').modal('show');
+                loadCertificadoObra(idDNI);
+                loadUbigeoObras();
+            }
+            event.preventDefault();
+        });  
         
         $("#btnAceptarProyecto").click(function() {
             console.log($('#cbDepartamentoProyecto').val());
@@ -73,6 +75,8 @@ function Certificado() {
                 "Dni": $dni,
             },
             beforeSend: function() {
+                $("#cbEspecialidadCertificado").empty();
+                console.log("dentro..")
             },
             success: function(result) {
                 if (result.estado == 1) {

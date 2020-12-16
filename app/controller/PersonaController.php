@@ -33,7 +33,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
             echo json_encode(array(
                 "estado" => 1,
                 "persona" => $persona[0],
-                "imagen" => $persona[1]
+                "imagen" => $persona[1],
+                "historial" => $persona[2]
             ));
         } else {
             echo json_encode(array(

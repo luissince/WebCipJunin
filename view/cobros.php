@@ -536,7 +536,7 @@
                                                 <input type="number" class="form-control" id="txtMontoContratoObra">
                                             </div>
                                         </div>
-                                    </div>                                    
+                                    </div>
                                     <div class="row">
                                         <div class="col-md-12">
                                             <div class="form-group">
@@ -630,7 +630,7 @@
                                     </button>
                                     <h4 class="modal-title">
                                         <i class="fa fa-plus">
-                                        </i> Peritaje
+                                        </i> Otros
                                     </h4>
                                 </div>
                                 <div class="modal-body">
@@ -732,6 +732,8 @@
                             </div>
                         </div>
                         <!-- panel derecho inferior-->
+
+                        <!-- HISTORIAL DE COBROS-->
                         <div class="panel panel-primary">
                             <div class="panel-heading">
                                 <h5 class="no-margin"> Historial de cobro</h5>
@@ -739,16 +741,21 @@
                             <div class="panel-body">
                                 <div class="row">
                                     <div class="col-md-12">
-                                        <table class="table">
+                                        <table class="table table-striped table-hover" style="border-width: 1px; border-style: dashed; border-color: #E31E25;">
                                             <thead style="background-color: #FDB2B1;color: #B72928;">
                                                 <th style="text-align: center;" width="5%">#</th>
+                                                <th style="text-align: center;" width="10%">Recibo</th>
                                                 <th style="text-align: center;" width="15%">Fecha de Cobro</th>
                                                 <th style="text-align: center;" width="25%">Concepto</th>
                                                 <th style="text-align: center;" width="15%">Monto</th>
-                                                <th style="text-align: center;" width="40%">Observacion</th>
+                                                <th style="text-align: center;" width="30%">Observacion</th>
                                             </thead>
-                                            <tbody id="tbIngresos">
-
+                                            <tbody id="tbHistorial">
+                                                <tr class="text-center">
+                                                    <td colspan="6">
+                                                        <p>No se ha seleccionado ningún ingeniero.</p>
+                                                    </td>
+                                                </tr>
                                             </tbody>
                                         </table>
                                     </div>
@@ -860,16 +867,12 @@
         let paginacion = 0;
         let filasPorPagina = 10;
         let idDNI = 0;
+
         let modelCobrosIngenieros = new CobroIngenieros();
-
         let modelColegiatura = new Colegiatura();
-
         let modelCuotas = new Cuotas();
-
         let modelCertificado = new Certificado();
-
         let modelPeritaje = new Peritaje();
-
         let modelOtros = new Otros();
 
         $(document).ready(function() {
@@ -896,6 +899,7 @@
 
             //cobro
             componentesRegistrarIngreso();
+
 
         });
 
