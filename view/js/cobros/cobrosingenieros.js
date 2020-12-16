@@ -164,6 +164,9 @@ function CobroIngenieros() {
                     $("#lblDatosSeleccionado").html(data.persona.Apellidos + " " + data.persona.Nombres);
                     $("#lblDireccionSeleccionado").html("");
                     tools.AlertSuccess("Ingeniero", "Los obtuvo los datos correctamente.", "toast-bottom-right");
+
+                    $("#btnCertificado").attr('data-toggle','dropdown');
+                    $("#btnCertificado").attr('aria-expanded','true');
                 } else {
                     idDNI = 0;
                     $("#lblCipSeleccionado").html("--");

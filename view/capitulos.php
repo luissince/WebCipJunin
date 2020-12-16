@@ -595,7 +595,6 @@
                     tools.AlertWarning("Advertencia", "Ingrese un capitulo.");
                     $("#txtCapitulo1").focus();
                 } else {
-                    console.log('entro');
                     $.ajax({
                         url: "../app/controller/CapituloController.php",
                         method: "POST",

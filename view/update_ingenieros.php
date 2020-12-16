@@ -31,7 +31,7 @@ if (!isset($_GET["idPersona"])) {
             </section>
 
             <section class="content">
-
+                <!-- *******************************************************-->
                 <!-- modal añadir colegiatura -->
                 <div class="row">
                     <div class="modal fade" id="addColegiatura">
@@ -141,7 +141,7 @@ if (!isset($_GET["idPersona"])) {
                                 <div class="modal-footer">
                                     <button type="button" class="btn btn-warning" id="btnAceptarColegiatura">
                                         <i class="fa fa-check"></i> Aceptar</button>
-                                    <button type="button" class="btn btn-primary" data-dismiss="modal">
+                                    <button type="button" class="btn btn-primary" data-dismiss="modal" id="btnAddCancel">
                                         <i class="fa fa-remove"></i> Cancelar</button>
                                 </div>
                                 </form>
@@ -151,6 +151,163 @@ if (!isset($_GET["idPersona"])) {
                 </div>
                 <!--end modal add colegiatura  -->
 
+                <!-- modal editar colegiatura -->
+                <div class="row">
+                    <div class="modal fade" id="editColegiatura">
+                        <div class="modal-dialog modal-xs">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <button type="button" class="close" data-dismiss="modal">
+                                        <i class="fa fa-close"></i>
+                                    </button>
+                                    <h4 class="modal-title">
+                                        <i class="fa fa-university">
+                                        </i> Editar Colegiatura
+                                    </h4>
+                                </div>
+                                <div class="modal-body">
+                                    <div class="row">
+                                        <div class="col-md-12">
+                                            <div class="form-group">
+                                                <label class="col-sm-4 control-label">Sede</label>
+                                                <div class="col-sm-4">
+                                                    <select id="ESede" class="form-control">
+                                                    </select>
+                                                </div>
+                                                <div class="checkbox col-sm-4">
+                                                    <label>
+                                                        <input type="checkbox" id="EPrincipal">
+                                                        Principal
+                                                    </label>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-md-12">
+                                            <div class="form-group">
+                                                <label class="col-sm-4 control-label">Especialidad</label>
+                                                <div class="col-sm-8">
+                                                    <select id="EEspecialidad" class="form-control">
+                                                    </select>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="row" style="padding-top: 0.5em;">
+                                        <div class="col-md-12">
+                                            <div class="form-group">
+                                                <label class="col-sm-4 control-label">Fecha de Colegiación</label>
+                                                <div class="col-sm-8">
+                                                    <input id="EFechaColegiacion" type="date" name="Nacimiento" class="form-control" required="">
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="row" style="padding-top: 0.5em;">
+                                        <div class="col-md-12">
+                                            <div class="form-group">
+                                                <label for="Egreso" class="col-sm-4 control-label">Universidad de Egreso</label>
+                                                <div class="col-sm-8">
+                                                    <select id="EUniversidadEgreso" class="form-control">
+                                                    </select>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="row" style="padding-top: 0.5em;">
+                                        <div class="col-md-12">
+                                            <div class="form-group">
+                                                <label for="EFechaEgreso" class="col-sm-4 control-label">Fecha de Egreso</label>
+                                                <div class="col-sm-8">
+                                                    <input id="EFechaEgreso" type="date" name="Nacimiento" class="form-control" required="">
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="row" style="padding-top: 0.5em;">
+                                        <div class="col-md-12">
+                                            <div class="form-group">
+                                                <label for="Titulacion" class="col-sm-4 control-label">Universidad de Titulacion</label>
+                                                <div class="col-sm-8">
+                                                    <select id="EUniversidadTitulacion" class="form-control">
+                                                    </select>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="row" style="padding-top: 0.5em;">
+                                        <div class="col-md-12">
+                                            <div class="form-group">
+                                                <label for="EFechaTitulo" class="col-sm-4 control-label">Fecha de Titulo</label>
+                                                <div class="col-sm-8">
+                                                    <input id="EFechaTitulo" type="date" name="Nacimiento" class="form-control" required="">
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="row" style="padding-top: 0.5em;">
+                                        <div class="col-md-12">
+                                            <div class="form-group">
+                                                <label for="txtResolucion" class="col-sm-4 control-label">Resolución</label>
+                                                <div class="col-sm-8">
+                                                    <input id="EtxtResolucion" type="text" class="form-control" placeholder="Resolución" required="">
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-warning" id="EbtnAceptarColegiatura">
+                                        <i class="fa fa-check"></i> Aceptar</button>
+                                    <button type="button" class="btn btn-primary" data-dismiss="modal">
+                                        <i class="fa fa-remove"></i> Cancelar</button>
+                                </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!--end modal editar colegiatura  -->
+
+                <!-- modal eliminar colegiatura  -->
+                <div class="row">
+                    <div class="modal fade" id="deleteColegiatura">
+                        <div class="modal-dialog modal-xs" style="width: 500px;">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <button type="button" class="close" data-dismiss="modal">
+                                        <i class="fa fa-close"></i>
+                                    </button>
+                                    <h4 class="modal-title">
+                                        <i class="fa fa-university">
+                                        </i> Eliminar Colegiatura
+                                    </h4>
+                                </div>
+                                <div class="modal-body">
+                                    <div class="row">
+                                        <div class="col-md-12">
+                                            <div class="form-group">
+                                                <label for="Universidad" class="col-sm-12 control-label">¿Estas seguro que deseas elimininar esta colegiatura?</label>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="modal-footer">
+                                        <button type="button" class="btn btn-warning" id="btnDeleteColegiatura">
+                                            <i class="fa fa-check"></i> Aceptar</button>
+                                        <button type="button" class="btn btn-primary" data-dismiss="modal" id="cancel-delete">
+                                            <i class="fa fa-remove"></i> Cancelar</button>
+                                    </div>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- end modal eliminar colegiatura -->
+                <!-- *******************************************************-->
+
+                <!-- *******************************************************-->
                 <!-- modal añadir domicilio -->
                 <div class="row">
                     <div class="modal fade" id="addDomicilio">
@@ -202,7 +359,7 @@ if (!isset($_GET["idPersona"])) {
                                 <div class="modal-footer">
                                     <button type="button" class="btn btn-warning" id="btnAceptarDomicilio">
                                         <i class="fa fa-check"></i> Aceptar</button>
-                                    <button type="button" class="btn btn-primary" data-dismiss="modal">
+                                    <button type="button" class="btn btn-primary" data-dismiss="modal" id="btnAddCancel">
                                         <i class="fa fa-remove"></i> Cancelar</button>
                                 </div>
                                 </form>
@@ -212,6 +369,105 @@ if (!isset($_GET["idPersona"])) {
                 </div>
                 <!--end modal add domicilio  -->
 
+                <!-- modal editar domicilio -->
+                <div class="row">
+                    <div class="modal fade" id="editDomicilio">
+                        <div class="modal-dialog modal-xs" style="width: 500px;">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <button type="button" class="close" data-dismiss="modal">
+                                        <i class="fa fa-close"></i>
+                                    </button>
+                                    <h4 class="modal-title">
+                                        <i class="fa fa-home">
+                                        </i> Editar Domicilio
+                                    </h4>
+                                </div>
+                                <div class="modal-body">
+                                    <div class="row">
+                                        <div class="col-md-12">
+                                            <div class="form-group">
+                                                <label class="col-sm-4 control-label">Tipo</label>
+                                                <div class="col-sm-8">
+                                                    <select id="EtipoDomicilio" class="form-control">
+                                                    </select>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="row" style="padding-top: 0.5em;">
+                                        <div class="col-md-12">
+                                            <div class="form-group">
+                                                <label class="col-sm-4 control-label">Dep/Prov/Dist</label>
+                                                <div class="col-sm-8">
+                                                    <select id="EDepartamento" name="selValue" class="form-control selectpicker" data-live-search="true" title="- Seleccione -">
+                                                    <select>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="row" style="padding-top: 0.5em;">
+                                        <div class="col-md-12">
+                                            <div class="form-group">
+                                                <label class="col-sm-4 control-label">Direccion</label>
+                                                <div class="col-sm-8">
+                                                    <input id="EDireccion" type="text" class="form-control" placeholder="Ingrese una dirección válida" required="">
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-warning" id="EbtnAceptarDomicilio">
+                                        <i class="fa fa-check"></i> Aceptar</button>
+                                    <button type="button" class="btn btn-primary" data-dismiss="modal">
+                                        <i class="fa fa-remove"></i> Cancelar</button>
+                                </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!--end modal editar domicilio  -->
+
+                <!-- modal eliminar domicilio  -->
+                <div class="row">
+                    <div class="modal fade" id="deleteDomicilio">
+                        <div class="modal-dialog modal-xs" style="width: 500px;">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <button type="button" class="close" data-dismiss="modal">
+                                        <i class="fa fa-close"></i>
+                                    </button>
+                                    <h4 class="modal-title">
+                                        <i class="fa fa-home">
+                                        </i> Eliminar Domicilio
+                                    </h4>
+                                </div>
+                                <div class="modal-body">
+                                    <div class="row">
+                                        <div class="col-md-12">
+                                            <div class="form-group">
+                                                <label for="Universidad" class="col-sm-12 control-label">¿Estas seguro que deseas elimininar este domicilio?</label>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="modal-footer">
+                                        <button type="button" class="btn btn-warning" id="btnDeleteDomicilio">
+                                            <i class="fa fa-check"></i> Aceptar</button>
+                                        <button type="button" class="btn btn-primary" data-dismiss="modal" id="cancel-delete">
+                                            <i class="fa fa-remove"></i> Cancelar</button>
+                                    </div>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- end modal eliminar domicilio -->
+                <!-- *******************************************************-->
+
+                <!-- *******************************************************-->
                 <!-- modal añadir telefono -->
                 <div class="row">
                     <div class="modal fade" id="addTelefono">
@@ -253,7 +509,7 @@ if (!isset($_GET["idPersona"])) {
                                 <div class="modal-footer">
                                     <button type="button" class="btn btn-warning" id="btnAceptarCelular">
                                         <i class="fa fa-check"></i> Aceptar</button>
-                                    <button type="button" class="btn btn-primary" data-dismiss="modal">
+                                    <button type="button" class="btn btn-primary" data-dismiss="modal" id="btnAddCancel">
                                         <i class="fa fa-remove"></i> Cancelar</button>
                                 </div>
                                 </form>
@@ -263,6 +519,95 @@ if (!isset($_GET["idPersona"])) {
                 </div>
                 <!--end modal add telefono  -->
 
+                <!-- modal editar telefono -->
+                <div class="row">
+                    <div class="modal fade" id="editTelefono">
+                        <div class="modal-dialog modal-sm">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <button type="button" class="close" data-dismiss="modal">
+                                        <i class="fa fa-close"></i>
+                                    </button>
+                                    <h4 class="modal-title">
+                                        <i class="fa fa-phone">
+                                        </i> Editar Telefono
+                                    </h4>
+                                </div>
+                                <div class="modal-body">
+                                    <div class="row">
+                                        <div class="col-md-12">
+                                            <div class="form-group">
+                                                <label class="col-sm-4 control-label">Tipo</label>
+                                                <div class="col-sm-8">
+                                                    <select id="ETipoCelular" class="form-control">
+                                                    </select>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="row" style="padding-top: 0.5em;">
+                                        <div class="col-md-12">
+                                            <div class="form-group">
+                                                <label class="col-sm-4 control-label">Numero</label>
+                                                <div class="col-sm-8">
+                                                    <input id="EtxtNumero" type="text" class="form-control" placeholder="Ingrese su numero" required="">
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-warning" id="EbtnAceptarCelular">
+                                        <i class="fa fa-check"></i> Aceptar</button>
+                                    <button type="button" class="btn btn-primary" data-dismiss="modal">
+                                        <i class="fa fa-remove"></i> Cancelar</button>
+                                </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!--end modal editar telefono  -->
+
+                <!-- modal eliminar telefono  -->
+                <div class="row">
+                    <div class="modal fade" id="deleteTelefono">
+                        <div class="modal-dialog modal-xs" style="width: 500px;">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <button type="button" class="close" data-dismiss="modal">
+                                        <i class="fa fa-close"></i>
+                                    </button>
+                                    <h4 class="modal-title">
+                                        <i class="fa fa-phone">
+                                        </i> Eliminar Telefono
+                                    </h4>
+                                </div>
+                                <div class="modal-body">
+                                    <div class="row">
+                                        <div class="col-md-12">
+                                            <div class="form-group">
+                                                <label for="Universidad" class="col-sm-12 control-label">¿Estas seguro que deseas elimininar este telefono/celular?</label>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="modal-footer">
+                                        <button type="button" class="btn btn-warning" id="btnDeleteTelefono">
+                                            <i class="fa fa-check"></i> Aceptar</button>
+                                        <button type="button" class="btn btn-primary" data-dismiss="modal">
+                                            <i class="fa fa-remove"></i> Cancelar</button>
+                                    </div>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- end modal eliminar telefono -->
+                <!-- *******************************************************-->
+
+                <!-- *******************************************************-->
                 <!-- modal añadir conyuge -->
                 <div class="row">
                     <div class="modal fade" id="addConyuge">
@@ -312,6 +657,93 @@ if (!isset($_GET["idPersona"])) {
                 </div>
                 <!--end modal add conyuge  -->
 
+                <!-- modal editar conyuge -->
+                <div class="row">
+                    <div class="modal fade" id="editConyuge">
+                        <div class="modal-dialog modal-xs" style="width: 500px;">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <button type="button" class="close" data-dismiss="modal">
+                                        <i class="fa fa-close"></i>
+                                    </button>
+                                    <h4 class="modal-title">
+                                        <i class="fa fa-user-plus">
+                                        </i> Editar Conyuge
+                                    </h4>
+                                </div>
+                                <div class="modal-body">
+                                    <div class="row">
+                                        <div class="col-md-12">
+                                            <div class="form-group">
+                                                <label for="Conyuge" class="col-sm-4 control-label">Conyuge</label>
+                                                <div class="col-sm-8">
+                                                    <input id="EtxtConyuge" type="text" class="form-control" placeholder="Nombre Conyuge" required="">
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="row" style="padding-top: 0.5em;">
+                                        <div class="col-md-12">
+                                            <div class="form-group">
+                                                <label for="Conyuge" class="col-sm-4 control-label">Numero de hijos</label>
+                                                <div class="col-sm-8">
+                                                    <input id="EtxtHijos" type="number" class="form-control" placeholder="Ingrese numero de hijos" required="">
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-warning" id="EbtnAceptarConyuge">
+                                        <i class="fa fa-check"></i> Aceptar</button>
+                                    <button type="button" class="btn btn-primary" data-dismiss="modal">
+                                        <i class="fa fa-remove"></i> Cancelar</button>
+                                </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!--end modal editar conyuge  -->
+
+                <!-- modal eliminar conyuge  -->
+                <div class="row">
+                    <div class="modal fade" id="deleteConyuge">
+                        <div class="modal-dialog modal-xs" style="width: 500px;">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <button type="button" class="close" data-dismiss="modal">
+                                        <i class="fa fa-close"></i>
+                                    </button>
+                                    <h4 class="modal-title">
+                                        <i class="fa fa-user-plus">
+                                        </i> Eliminar Conyuge
+                                    </h4>
+                                </div>
+                                <div class="modal-body">
+                                    <div class="row">
+                                        <div class="col-md-12">
+                                            <div class="form-group">
+                                                <label for="Universidad" class="col-sm-12 control-label">¿Estas seguro que deseas elimininar conyuge?</label>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="modal-footer">
+                                        <button type="button" class="btn btn-warning" id="btnDeleteConyuge">
+                                            <i class="fa fa-check"></i> Aceptar</button>
+                                        <button type="button" class="btn btn-primary" data-dismiss="modal">
+                                            <i class="fa fa-remove"></i> Cancelar</button>
+                                    </div>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- end modal eliminar conyuge -->
+                <!-- *******************************************************-->
+
+                <!-- *******************************************************-->
                 <!-- modal añadir experiencia -->
                 <div class="row">
                     <div class="modal fade" id="addExperiencia">
@@ -381,6 +813,113 @@ if (!isset($_GET["idPersona"])) {
                 </div>
                 <!--end modal add experiencia  -->
 
+                <!-- modal editar experiencia -->
+                <div class="row">
+                    <div class="modal fade" id="editExperiencia">
+                        <div class="modal-dialog modal-xs" style="width: 550px;">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <button type="button" class="close" data-dismiss="modal">
+                                        <i class="fa fa-close"></i>
+                                    </button>
+                                    <h4 class="modal-title">
+                                        <i class="fa fa-suitcase">
+                                        </i> Editar Experiencia
+                                    </h4>
+                                </div>
+                                <div class="modal-body">
+                                    <div class="row">
+                                        <div class="col-md-12">
+                                            <div class="form-group">
+                                                <label class="col-sm-4 control-label">Entidad</label>
+                                                <div class="col-sm-8">
+                                                    <input id="EtxtEntidad" type="text" class="form-control" placeholder="Entidad" required="">
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-md-12" style="padding-top: 0.5em;">
+                                            <div class="form-group">
+                                                <label class="col-sm-4 control-label">Experiencia profesional</label>
+                                                <div class="col-sm-8">
+                                                    <input id="EtxtExperiencia" type="text" class="form-control" placeholder="Experiencia" required="">
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="row" style="padding-top: 0.5em;">
+                                        <div class="col-md-12">
+                                            <div class="form-group">
+                                                <label for="FechaInicio" class="col-sm-4 control-label">Fecha de Inicio</label>
+                                                <div class="col-sm-8">
+                                                    <input id="EFechaInicio" type="date" name="Nacimiento" class="form-control" required="">
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="row" style="padding-top: 0.5em;">
+                                        <div class="col-md-12">
+                                            <div class="form-group">
+                                                <label for="FechaFin" class="col-sm-4 control-label">Fecha de Termino</label>
+                                                <div class="col-sm-8">
+                                                    <input id="EFechaFin" type="date" name="Nacimiento" class="form-control" required="">
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-warning" id="EbtnAceptarExperiencia">
+                                        <i class="fa fa-check"></i> Aceptar</button>
+                                    <button type="button" class="btn btn-primary" data-dismiss="modal">
+                                        <i class="fa fa-remove"></i> Cancelar</button>
+                                </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!--end modal editar experiencia  -->
+
+                <!-- modal eliminar experiencia  -->
+                <div class="row">
+                    <div class="modal fade" id="deleteExperiencia">
+                        <div class="modal-dialog modal-xs" style="width: 500px;">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <button type="button" class="close" data-dismiss="modal">
+                                        <i class="fa fa-close"></i>
+                                    </button>
+                                    <h4 class="modal-title">
+                                        <i class="fa fa-suitcase">
+                                        </i> Eliminar Experiencia
+                                    </h4>
+                                </div>
+                                <div class="modal-body">
+                                    <div class="row">
+                                        <div class="col-md-12">
+                                            <div class="form-group">
+                                                <label for="Universidad" class="col-sm-12 control-label">¿Estas seguro que deseas elimininar la experiencia?</label>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="modal-footer">
+                                        <button type="button" class="btn btn-warning" id="btnDeleteExperiencia">
+                                            <i class="fa fa-check"></i> Aceptar</button>
+                                        <button type="button" class="btn btn-primary" data-dismiss="modal">
+                                            <i class="fa fa-remove"></i> Cancelar</button>
+                                    </div>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- end modal eliminar experiencia -->
+                <!-- *******************************************************-->
+
+                <!-- *******************************************************-->
                 <!-- modal añadir grados y estudios -->
                 <div class="row">
                     <div class="modal fade" id="addGradosyEstudios">
@@ -452,6 +991,115 @@ if (!isset($_GET["idPersona"])) {
                 </div>
                 <!--end modal add grados y estudios  -->
 
+                <!-- modal editar grados y estudios -->
+                <div class="row">
+                    <div class="modal fade" id="editarGradosyEstudios">
+                        <div class="modal-dialog modal-xs" style="width: 500px;">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <button type="button" class="close" data-dismiss="modal">
+                                        <i class="fa fa-close"></i>
+                                    </button>
+                                    <h4 class="modal-title">
+                                        <i class="fa fa-mortar-board">
+                                        </i> Editar Grados y Estudios
+                                    </h4>
+                                </div>
+                                <div class="modal-body">
+                                    <div class="row">
+                                        <div class="col-md-12">
+                                            <div class="form-group">
+                                                <label for="Grado" class="col-sm-3 control-label">Grado</label>
+                                                <div class="col-sm-9">
+                                                    <select id="EselectGrado" class="form-control">
+                                                    </select>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="row" style="padding-top: 0.5em;">
+                                        <div class="col-md-12">
+                                            <div class="form-group">
+                                                <label for="Materia" class="col-sm-3 control-label">Materia</label>
+                                                <div class="col-sm-9">
+                                                    <input id="EtxtMateria" type="text" class="form-control" placeholder="Materia" required="">
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="row" style="padding-top: 0.5em;">
+                                        <div class="col-md-12">
+                                            <div class="form-group">
+                                                <label for="Universidad" class="col-sm-3 control-label">Universidad</label>
+                                                <div class="col-sm-9">
+                                                    <select id="EselectUniversidad" class="form-control">
+                                                    </select>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="row" style="padding-top: 0.5em;">
+                                        <div class="col-md-12">
+                                            <div class="form-group">
+                                                <label for="Fecha" class="col-sm-3 control-label">Fecha </label>
+                                                <div class="col-sm-9">
+                                                    <input id="EfechaEstudios" type="date" name="Nacimiento" class="form-control" required="">
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-warning" id="EbtnAceptarEstudios">
+                                        <i class="fa fa-check"></i> Aceptar</button>
+                                    <button type="button" class="btn btn-primary" data-dismiss="modal">
+                                        <i class="fa fa-remove"></i> Cancelar</button>
+                                </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!--end modal editar grados y estudios  -->
+
+                <!-- modal eliminar estudio  -->
+                <div class="row">
+                    <div class="modal fade" id="deleteEstudio">
+                        <div class="modal-dialog modal-xs" style="width: 500px;">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <button type="button" class="close" data-dismiss="modal">
+                                        <i class="fa fa-mortar-board"></i>
+                                    </button>
+                                    <h4 class="modal-title">
+                                        <i class="fa fa-suitcase">
+                                        </i> Eliminar Estudioa
+                                    </h4>
+                                </div>
+                                <div class="modal-body">
+                                    <div class="row">
+                                        <div class="col-md-12">
+                                            <div class="form-group">
+                                                <label for="Universidad" class="col-sm-12 control-label">¿Estas seguro que deseas elimininar el estudio?</label>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="modal-footer">
+                                        <button type="button" class="btn btn-warning" id="btnDeleteEstudio">
+                                            <i class="fa fa-check"></i> Aceptar</button>
+                                        <button type="button" class="btn btn-primary" data-dismiss="modal">
+                                            <i class="fa fa-remove"></i> Cancelar</button>
+                                    </div>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- end modal eliminar estudio -->
+                <!-- *******************************************************-->
+
+                <!-- *******************************************************-->
                 <!-- modal añadir correo y web -->
                 <div class="row">
                     <div class="modal fade" id="addCorreoyWeb">
@@ -502,6 +1150,94 @@ if (!isset($_GET["idPersona"])) {
                 </div>
                 <!--end modal add correo y web  -->
 
+                <!-- modal editar correo y web -->
+                <div class="row">
+                    <div class="modal fade" id="editCorreoyWeb">
+                        <div class="modal-dialog modal-xs" style="width: 500px;">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <button type="button" class="close" data-dismiss="modal">
+                                        <i class="fa fa-close"></i>
+                                    </button>
+                                    <h4 class="modal-title">
+                                        <i class="fa fa-at">
+                                        </i> Editar Correo y Web
+                                    </h4>
+                                </div>
+                                <div class="modal-body">
+                                    <div class="row">
+                                        <div class="col-md-12">
+                                            <div class="form-group">
+                                                <label class="col-sm-3 control-label">Tipo</label>
+                                                <div class="col-sm-9">
+                                                    <select id="ETipoCorreo" class="form-control">
+                                                    </select>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="row" style="padding-top: 0.5em;">
+                                        <div class="col-md-12">
+                                            <div class="form-group">
+                                                <label class="col-sm-3 control-label">Correo / Web</label>
+                                                <div class="col-sm-9">
+                                                    <input id="EtxtCorreo" type="text" class="form-control" placeholder="Ingrese un Correo o web" required="">
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-warning" id="EbtnAceptarCorreo">
+                                        <i class="fa fa-check"></i> Aceptar</button>
+                                    <button type="button" class="btn btn-primary" data-dismiss="modal">
+                                        <i class="fa fa-remove"></i> Cancelar</button>
+                                </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!--end modal editar correo y web  -->
+
+                <!-- modal eliminar correo y web  -->
+                <div class="row">
+                    <div class="modal fade" id="deleteCorreo">
+                        <div class="modal-dialog modal-xs" style="width: 500px;">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <button type="button" class="close" data-dismiss="modal">
+                                        <i class="fa fa-mortar-board"></i>
+                                    </button>
+                                    <h4 class="modal-title">
+                                        <i class="fa fa-at">
+                                        </i> Eliminar Correo/Web
+                                    </h4>
+                                </div>
+                                <div class="modal-body">
+                                    <div class="row">
+                                        <div class="col-md-12">
+                                            <div class="form-group">
+                                                <label for="Universidad" class="col-sm-12 control-label">¿Estas seguro que deseas elimininar tal dirección?</label>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="modal-footer">
+                                        <button type="button" class="btn btn-warning" id="btnDeleteCorreo">
+                                            <i class="fa fa-check"></i> Aceptar</button>
+                                        <button type="button" class="btn btn-primary" data-dismiss="modal">
+                                            <i class="fa fa-remove"></i> Cancelar</button>
+                                    </div>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- end modal eliminar correo y web -->
+                <!-- *******************************************************-->
+
+                <!-- *******************************************************-->
                 <!-- actualizacion del ingeniero-->
                 <div class="row">
                     <div class="col-lg-4 col-md-3 col-sm-12 col-xs-12 text-center">
@@ -653,6 +1389,7 @@ if (!isset($_GET["idPersona"])) {
                                 <li class="pull-right"><button class="btn btn-success btn-sm" id="btnNuevo"><i class="fa fa-plus"></i> Nuevo</button></li>
                             </ul>
                             <div class="tab-content">
+                                <!-- /.tab-pane -->
                                 <div class="tab-pane active" id="tab_1">
 
                                     <table class="table table-striped table-hover" style="border-width: 1px; border-style: dashed; border-color: #E31E25;">
@@ -669,6 +1406,7 @@ if (!isset($_GET["idPersona"])) {
                                                 <th>F. Titulacion</th>
                                                 <th>Resolución</th>
                                                 <th>Principal</th>
+                                                <th colspan="2" style="text-align: center;">Opciones</th>
                                             </tr>
                                         </thead>
                                         <tbody id="tbColegiaturas">
@@ -686,6 +1424,7 @@ if (!isset($_GET["idPersona"])) {
                                                 <th>Tipo</th>
                                                 <th>Direccion</th>
                                                 <th>Ubigeo</th>
+                                                <th style="text-align: center;">Opciones</th>
                                             </tr>
                                         </thead>
                                         <tbody id="tbDomicilio">
@@ -701,6 +1440,7 @@ if (!isset($_GET["idPersona"])) {
                                                 <th>#</th>
                                                 <th>Tipo</th>
                                                 <th>Numero</th>
+                                                <th style="text-align: center;">Opciones</th>
                                             </tr>
                                         </thead>
                                         <tbody id="tbTelefono">
@@ -716,6 +1456,7 @@ if (!isset($_GET["idPersona"])) {
                                                 <th>#</th>
                                                 <th>Nombre Completo</th>
                                                 <th>Hijos</th>
+                                                <th style="text-align: center;">Opciones</th>
                                             </tr>
                                         </thead>
                                         <tbody id="tbConyuge">
@@ -733,6 +1474,7 @@ if (!isset($_GET["idPersona"])) {
                                                 <th>Experiencia Profesional</th>
                                                 <th>Fecha Inicio</th>
                                                 <th>Fecha Fin</th>
+                                                <th style="text-align: center;">Opciones</th>
                                             </tr>
                                         </thead>
                                         <tbody id="tbExperiencia">
@@ -750,6 +1492,7 @@ if (!isset($_GET["idPersona"])) {
                                                 <th>Materia</th>
                                                 <th>Universidad</th>
                                                 <th>Fecha</th>
+                                                <th style="text-align: center;">Opciones</th>
                                             </tr>
                                         </thead>
                                         <tbody id="tbGradosyExperiencia">
@@ -765,6 +1508,7 @@ if (!isset($_GET["idPersona"])) {
                                                 <th>#</th>
                                                 <th>Tipo</th>
                                                 <th>Direccion</th>
+                                                <th style="text-align: center;">Opciones</th>
                                             </tr>
                                         </thead>
                                         <tbody id="tbGradosyWeb">
@@ -904,6 +1648,17 @@ if (!isset($_GET["idPersona"])) {
                 event.preventDefault();
             });
 
+            // $("#EbtnAceptarColegiatura").click(function() {
+            //     colegiatura.AceptarUpdate();
+            // });
+
+            // $("#EbtnAceptarColegiatura").keypress(function(event) {
+            //     if (event.keyCode === 13) {
+            //         colegiatura.AceptarUpdate();
+            //     }
+            //     event.preventDefault();
+            // });
+
             $("#btnAceptarDomicilio").click(function() {
                 modelDomicilio.crudDomicilio();
             });
@@ -969,6 +1724,18 @@ if (!isset($_GET["idPersona"])) {
                 event.preventDefault();
             });
 
+            // $("#EbtnCancelar").click(function() {
+            //     $("#editColegiatura").modal("hide");
+            //     clearModal();
+            // });
+
+            // $("#EbtnCancelar").keypress(function(event) {
+            //     if (event.keyCode === 13) {
+            //         $("#editColegiatura").modal("hide");
+            //         clearModal();
+            //     }
+            //     event.preventDefault();
+            // });
         });
 
 
@@ -984,8 +1751,10 @@ if (!isset($_GET["idPersona"])) {
                 modelTelefono.loadAddCelular();
             } else if ($("#tab_4").hasClass('active')) {
                 $("#addConyuge").modal("show");
+                modelConyuge.loadAddConyuge();
             } else if ($("#tab_5").hasClass('active')) {
                 $("#addExperiencia").modal("show");
+                modelExperiencia.loadAddExperiencia();
             } else if ($("#tab_6").hasClass('active')) {
                 $("#addGradosyEstudios").modal("show");
                 modelEstudios.loadAddEstudios();
@@ -1080,7 +1849,9 @@ if (!isset($_GET["idPersona"])) {
                                 break;
                             default:
                                 // code block
+
                         }
+
                         tools.AlertInfo("Información", "Se cargo correctamente los datos.");
                         state = true;
                     } else {

@@ -39,7 +39,7 @@
                                             <button class="btn btn-danger" id="btnIzquierda">
                                                 <i class="fa fa-toggle-left"></i>
                                             </button>
-                                            <span id="lblPaginaActual" class="font-weight-bold margin">0</span>                                            
+                                            <span id="lblPaginaActual" class="font-weight-bold margin">0</span>
                                             <span class="margin">a</span>
                                             <span id="lblPaginaSiguiente" class="font-weight-bold margin">0</span>
                                             <button class="btn btn-danger" id="btnDerecha">
@@ -271,7 +271,6 @@
                                             <div class="form-group">
                                                 <label>Especialidad(es)</label>
                                                 <select class="form-control" id="cbEspecialidadCertificado">
-                                                    <option>- Seleccione -</option>
                                                 </select>
                                             </div>
                                         </div>
@@ -353,7 +352,6 @@
                                             <div class="form-group">
                                                 <label>Especialidad(es)</label>
                                                 <select class="form-control" id="cbEspecialidadProyecto">
-                                                    <option>- Seleccione -</option>
                                                 </select>
                                             </div>
                                         </div>
@@ -402,32 +400,22 @@
                                             </div>
                                         </div>
                                     </div>
-                                    <div class="row">
+                                    <!-- <div class="row">
                                         <div class="col-md-12">
                                             <div class="form-group">
-                                                <label>Departamento:</label>
-                                                <select class="form-control" id="cbDepartamentoProyecto">
-                                                    <option>- Seleccione -</option>
+                                                <label>Dep/Prov/Dist:</label>
+                                                <select class="form-control" id="cbDepartamentoProyecto" search="true">
                                                 </select>
                                             </div>
+                                            
                                         </div>
-                                    </div>
+                                    </div> -->
                                     <div class="row">
                                         <div class="col-md-12">
                                             <div class="form-group">
-                                                <label>Provincia:</label>
-                                                <select class="form-control" id="cbProvinciaProyecto">
-                                                    <option>- Seleccione -</option>
-                                                </select>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="row">
-                                        <div class="col-md-12">
-                                            <div class="form-group">
-                                                <label>Distrito:</label>
-                                                <select class="form-control" id="cbDistritoProyecto">
-                                                    <option>- Seleccione -</option>
+                                                <label>Departamento/Provincia/Distrito</label>
+                                                <select class="form-control select2" style="width: 100%;" id="cbDepartamentoProyecto">
+                                                    <!-- <option >Alabama</option>-->
                                                 </select>
                                             </div>
                                         </div>
@@ -497,7 +485,6 @@
                                             <div class="form-group">
                                                 <label>Especialidad(es)</label>
                                                 <select class="form-control" id="cbEspecialidadObra">
-                                                    <option>- Seleccione -</option>
                                                 </select>
                                             </div>
                                         </div>
@@ -549,33 +536,13 @@
                                                 <input type="number" class="form-control" id="txtMontoContratoObra">
                                             </div>
                                         </div>
-                                    </div>
+                                    </div>                                    
                                     <div class="row">
                                         <div class="col-md-12">
                                             <div class="form-group">
-                                                <label>Departamento:</label>
-                                                <select class="form-control" id="cbDepartamentoObra">
-                                                    <option>- Seleccione -</option>
-                                                </select>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="row">
-                                        <div class="col-md-12">
-                                            <div class="form-group">
-                                                <label>Pronvincia:</label>
-                                                <select class="form-control" id="cbProvinciaObra">
-                                                    <option>- Seleccione -</option>
-                                                </select>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="row">
-                                        <div class="col-md-12">
-                                            <div class="form-group">
-                                                <label>Distrito:</label>
-                                                <select class="form-control" id="cbDistritoObra">
-                                                    <option>- Seleccione -</option>
+                                                <label>Departamento/Provincia/Distrito</label>
+                                                <select class="form-control select2" style="width: 100%;" id="cbDepartamentoObra">
+                                                    <!-- <option >Alabama</option>-->
                                                 </select>
                                             </div>
                                         </div>
@@ -645,7 +612,7 @@
                                         <i class="fa fa-check"></i> Aceptar</button>
                                     <button type="button" class="btn btn-primary" id="btnCancelarPeritaje">
                                         <i class="fa fa-remove"></i> Cancelar</button>
-                                </div>                               
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -697,7 +664,7 @@
                                         <i class="fa fa-check"></i> Aceptar</button>
                                     <button type="button" class="btn btn-primary" data-dismiss="modal">
                                         <i class="fa fa-remove"></i> Cancelar</button>
-                                </div>                           
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -708,6 +675,7 @@
                 <div class="row">
 
                     <div class="col-md-8">
+                        <!-- panel derecho superior-->
                         <div class="panel panel-primary">
                             <div class="panel-heading">
                                 <h5 class="no-margin"> Generar cobro</h5>
@@ -726,7 +694,7 @@
                                                 <i class="fa fa-plus"></i> Cuotas
                                             </button>
                                             <div class="btn-group" role="group">
-                                                <button id="btnCertificado" type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+                                                <button id="btnCertificado" type="button" class="btn btn-default dropdown-toggle" aria-haspopup="true" aria-expanded="false">
                                                     <i class="fa fa-plus"></i> Certificado <span class="caret"></span>
                                                 </button>
                                                 <ul class="dropdown-menu" aria-labelledby="dropdownMenu1">
@@ -754,6 +722,30 @@
                                                 <th width="15%">Precio</th>
                                                 <th width="20%">Monto</th>
                                                 <th width="10%">Quitar</th>
+                                            </thead>
+                                            <tbody id="tbIngresos">
+
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- panel derecho inferior-->
+                        <div class="panel panel-primary">
+                            <div class="panel-heading">
+                                <h5 class="no-margin"> Historial de cobro</h5>
+                            </div>
+                            <div class="panel-body">
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <table class="table">
+                                            <thead style="background-color: #FDB2B1;color: #B72928;">
+                                                <th style="text-align: center;" width="5%">#</th>
+                                                <th style="text-align: center;" width="15%">Fecha de Cobro</th>
+                                                <th style="text-align: center;" width="25%">Concepto</th>
+                                                <th style="text-align: center;" width="15%">Monto</th>
+                                                <th style="text-align: center;" width="40%">Observacion</th>
                                             </thead>
                                             <tbody id="tbIngresos">
 
@@ -833,6 +825,10 @@
         <!-- /.content-wrapper -->
     </div>
     <!-- ./wrapper -->
+
+    <!-- Select2 -->
+    <script src="../../bower_components/select2/dist/js/select2.full.min.js"></script>
+
     <script src="js/tools.js"></script>
     <script src="js/cobros/cobrosingenieros.js"></script>
     <script src="js/cobros/colegiatura.js"></script>

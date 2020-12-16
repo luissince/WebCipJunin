@@ -2,16 +2,22 @@ function Peritaje() {
     this.componentesPeritaje = function(addIngresos) {
         this.addIngresos = addIngresos;
         $("#btnPeritaje").click(function() {
-            $('#mdPeritaje').modal('show');
-            loadPeritaje();
-        });
-
-        $("#btnPeritaje").keypress(function(event) {
-            if (event.keyCode === 13) {
+            if (idDNI == 0) {
+                tools.AlertWarning("Cuotas", "No selecciono ningún ingeniero para obtener peritajes.")
+            } else {
                 $('#mdPeritaje').modal('show');
                 loadPeritaje();
             }
-            event.preventDefault();
+        });
+
+        $("#btnPeritaje").keypress(function() {
+            if (idDNI == 0) {
+                tools.AlertWarning("Cuotas", "No selecciono ningún ingeniero para obtener peritajes.")
+            } else {
+                $('#mdPeritaje').modal('show');
+                loadPeritaje();
+            }
+
         });
 
         $('#mdPeritaje').on('shown.bs.modal', function() {
@@ -106,5 +112,4 @@ function Peritaje() {
             $('#mdPeritaje').modal('hide');
         }
     }
-
 }

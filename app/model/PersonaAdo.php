@@ -27,14 +27,14 @@ class PersonaAdo
             while ($row = $comandoPersona->fetch()) {
                 $count++;
                 array_push($arrayPersonas, array(
-                    "Id" => $count + $posicionPagina,
-                    "idDNI" => $row["idDNI"],
-                    "Nombres" => $row["Nombres"],
-                    "Apellidos" => $row["Apellidos"],
-                    "EstadoCivil" => $row["EstadoCivil"],
-                    "Ruc" => $row["RUC"],
-                    "Cip" => $row["CIP"],
-                    "Condicion" => $row["Condicion"]
+                    'Id' => $count + $posicionPagina,
+                    'idDNI' => $row['idDNI'],
+                    'Nombres' => $row['Nombres'],
+                    'Apellidos' => $row['Apellidos'],
+                    'EstadoCivil' => $row['EstadoCivil'],
+                    'Ruc' => $row['RUC'],
+                    'Cip' => $row['CIP'],
+                    'Condicion' => $row['Condicion']
                 ));
             }
 
@@ -108,15 +108,15 @@ class PersonaAdo
             while ($row = $comandoPersona->fetch()) {
                 $count++;
                 array_push($arrayPersonas, array(
-                    "Id" => $count + $posicionPagina,
-                    "Cip" => $row["Cip"],
-                    "Dni" => $row["Dni"],
-                    "Ingeniero" => $row["Ingeniero"],
-                    "FechaColegiado" => $row["FechaColegiado"],
-                    "Condicion" => $row["Condicion"],
-                    "FechaUltimaCuota" => $row["FechaUltimaCuota"],
-                    "Deuda" => $row["Deuda"],
-                    "Habilidad" => $row["Habilidad"]
+                    'Id' => $count + $posicionPagina,
+                    'Cip' => $row['Cip'],
+                    'Dni' => $row['Dni'],
+                    'Ingeniero' => $row['Ingeniero'],
+                    'FechaColegiado' => $row['FechaColegiado'],
+                    'Condicion' => $row['Condicion'],
+                    'FechaUltimaCuota' => $row['FechaUltimaCuota'],
+                    'Deuda' => $row['Deuda'],
+                    'Habilidad' => $row['Habilidad']
                 ));
             }
 
@@ -161,13 +161,15 @@ class PersonaAdo
             idDNI,Foto
             FROM PersonaImagen WHERE idDNI = ?");
             $cmdImage->bindParam(1, $idPersona, PDO::PARAM_STR);
-            $cmdImage->execute();       
-            $image = null;    
-            if($row = $cmdImage->fetch()){
-                $image= (object)array($row["idDNI"],base64_encode($row["Foto"]));
+            $cmdImage->execute();
+
+            $image = null;
+
+            if ($row = $cmdImage->fetch()) {
+                $image = (object)array($row['idDNI'], base64_encode($row['Foto']));
             }
 
-            array_push($array,$object,$image);
+            array_push($array, $object, $image);
             return $array;
         } catch (Exception $ex) {
             return $ex->getMessage();
@@ -181,7 +183,7 @@ class PersonaAdo
 
             $comandoValidate = Database::getInstance()->getDb()->prepare("SELECT * FROM Persona
             WHERE idDNI = ?");
-            $comandoValidate->bindParam(1, $persona["dni"], PDO::PARAM_STR);
+            $comandoValidate->bindParam(1, $persona['dni'], PDO::PARAM_STR);
             $comandoValidate->execute();
             $resultValue = $comandoValidate->fetchColumn();
             if ($resultValue > 0) {
@@ -197,25 +199,25 @@ class PersonaAdo
                 Condicion = ?
                 WHERE idDNI = ?");
 
-                $dateTime = date('Y-d-m H:i:s', strtotime($persona["nacimiento"]));
+                $dateTime = date('Y-d-m H:i:s', strtotime($persona['nacimiento']));
 
-                $comandoPersona->bindParam(1, $persona["nombres"], PDO::PARAM_STR);
-                $comandoPersona->bindParam(2, $persona["apellidos"], PDO::PARAM_STR);
-                $comandoPersona->bindParam(3, $persona["sexo"], PDO::PARAM_STR);
+                $comandoPersona->bindParam(1, $persona['nombres'], PDO::PARAM_STR);
+                $comandoPersona->bindParam(2, $persona['apellidos'], PDO::PARAM_STR);
+                $comandoPersona->bindParam(3, $persona['sexo'], PDO::PARAM_STR);
                 $comandoPersona->bindParam(4, $dateTime, PDO::PARAM_STR);
-                $comandoPersona->bindParam(5, $persona["estado_civil"], PDO::PARAM_STR);
-                $comandoPersona->bindParam(6, $persona["ruc"], PDO::PARAM_STR);
-                $comandoPersona->bindParam(7, $persona["rason_social"], PDO::PARAM_STR);
-                $comandoPersona->bindParam(8, $persona["cip"], PDO::PARAM_STR);
-                $comandoPersona->bindParam(9, $persona["condicion"], PDO::PARAM_STR);
-                $comandoPersona->bindParam(10, $persona["dni"], PDO::PARAM_STR);
+                $comandoPersona->bindParam(5, $persona['estado_civil'], PDO::PARAM_STR);
+                $comandoPersona->bindParam(6, $persona['ruc'], PDO::PARAM_STR);
+                $comandoPersona->bindParam(7, $persona['rason_social'], PDO::PARAM_STR);
+                $comandoPersona->bindParam(8, $persona['cip'], PDO::PARAM_STR);
+                $comandoPersona->bindParam(9, $persona['condicion'], PDO::PARAM_STR);
+                $comandoPersona->bindParam(10, $persona['dni'], PDO::PARAM_STR);
                 $comandoPersona->execute();
 
                 Database::getInstance()->getDb()->commit();
-                return "updated";
+                return 'updated';
             } else {
                 Database::getInstance()->getDb()->rollback();
-                return "noexists";
+                return 'noexists';
             }
         } catch (Exception $ex) {
             Database::getInstance()->getDb()->rollback();
@@ -227,16 +229,16 @@ class PersonaAdo
     {
         try {
             Database::getInstance()->getDb()->beginTransaction();
-                                                        
+
             $image = $body['image'] == null ? null : base64_decode($body['image']);
 
-            $cmdImage = Database::getInstance()->getDb()->prepare("INSERT INTO PersonaImagen(idDNI,Foto)VALUES(?,?)");
-            $cmdImage->bindParam(1, $body["dni"], PDO::PARAM_STR);
+            $cmdImage = Database::getInstance()->getDb()->prepare('INSERT INTO PersonaImagen(idDNI,Foto)VALUES(?,?)');
+            $cmdImage->bindParam(1, $body['dni'], PDO::PARAM_STR);
             $cmdImage->bindParam(2, $image,  PDO::PARAM_LOB, 0, PDO::SQLSRV_ENCODING_BINARY);
             $cmdImage->execute();
 
             Database::getInstance()->getDb()->commit();
-            return "updated";
+            return 'updated';
         } catch (Exception $ex) {
             Database::getInstance()->getDb()->rollback();
             return $ex->getMessage();
@@ -250,22 +252,22 @@ class PersonaAdo
             $comandoPersona = Database::getInstance()->getDb()->prepare("INSERT INTO Persona (idDNI,idUsuario,Nombres,Apellidos,Sexo,FechaNac,EstadoCivil,RUC,RAZONSOCIAL,CIP,Condicion)
                 VALUES (?,'-1',?,?,?,?,?,?,?,?,?)");
 
-            $dateTime = date('Y-d-m H:i:s', strtotime($persona["nacimiento"]));
+            $dateTime = date('Y-d-m H:i:s', strtotime($persona['nacimiento']));
 
-            $comandoPersona->bindParam(1, $persona["dni"], PDO::PARAM_STR);
-            $comandoPersona->bindParam(2, strtoupper($persona["nombres"]), PDO::PARAM_STR);
-            $comandoPersona->bindParam(3, strtoupper($persona["apellidos"]), PDO::PARAM_STR);
-            $comandoPersona->bindParam(4, $persona["sexo"], PDO::PARAM_STR);
+            $comandoPersona->bindParam(1, $persona['dni'], PDO::PARAM_STR);
+            $comandoPersona->bindParam(2, strtoupper($persona['nombres']), PDO::PARAM_STR);
+            $comandoPersona->bindParam(3, strtoupper($persona['apellidos']), PDO::PARAM_STR);
+            $comandoPersona->bindParam(4, $persona['sexo'], PDO::PARAM_STR);
             $comandoPersona->bindParam(5, $dateTime, PDO::PARAM_STR);
-            $comandoPersona->bindParam(6, $persona["estado_civil"], PDO::PARAM_STR);
-            $comandoPersona->bindParam(7, $persona["ruc"], PDO::PARAM_STR);
-            $comandoPersona->bindParam(8, $persona["rason_social"], PDO::PARAM_STR);
-            $comandoPersona->bindParam(9, $persona["cip"], PDO::PARAM_STR);
-            $comandoPersona->bindParam(10, $persona["condicion"], PDO::PARAM_STR);
+            $comandoPersona->bindParam(6, $persona['estado_civil'], PDO::PARAM_STR);
+            $comandoPersona->bindParam(7, $persona['ruc'], PDO::PARAM_STR);
+            $comandoPersona->bindParam(8, $persona['rason_social'], PDO::PARAM_STR);
+            $comandoPersona->bindParam(9, $persona['cip'], PDO::PARAM_STR);
+            $comandoPersona->bindParam(10, $persona['condicion'], PDO::PARAM_STR);
 
             $comandoPersona->execute();
             Database::getInstance()->getDb()->commit();
-            return "create";
+            return 'create';
         } catch (Exception $ex) {
             Database::getInstance()->getDb()->rollback();
             return $ex->getMessage();
@@ -279,15 +281,15 @@ class PersonaAdo
     public static function getColegiatura($idDni)
     {
         try {
-            $cmdColegiatura = Database::getInstance()->getDb()->prepare("SELECT s.Consejo,ISNULL(ca.Capitulo,'CAPITULO NO REGISTRAD0') AS Capitulo,UPPER(ISNULL(e.Especialidad,'ESPECIALIDAD NO REGISTRADA')) AS Especialidad, 
-			convert(VARCHAR,cast(c.FechaColegiado AS DATE),103) AS FechaColegiado, ISNULL(u.Universidad,'UNIVERSIDAD NO REGISTRADA') AS UnivesidadEgreso, convert(VARCHAR,cast(c.FechaEgreso AS DATE),103) AS FechaEgreso, 
-			ISNULL(u.Universidad,'UNIVERSIDAD NO REGISTRADA') AS Universidad, convert(VARCHAR,cast(c.FechaTitulacion AS DATE),103) AS FechaTitulacion, 
+            $cmdColegiatura = Database::getInstance()->getDb()->prepare("SELECT c.idColegiado, s.idConsejo, s.Consejo, ca.idCapitulo ,ISNULL(ca.Capitulo,'CAPITULO NO REGISTRAD0') AS Capitulo, e.idEspecialidad ,UPPER(ISNULL(e.Especialidad,'ESPECIALIDAD NO REGISTRADA')) AS Especialidad,
+            convert(VARCHAR,cast(c.FechaColegiado AS DATE),103) AS FechaColegiado, c.idUnivesidadEgreso AS idUnivEgreso,ISNULL(ue.Universidad,'UNIVERSIDAD NO REGISTRADA') AS UnivesidadEgreso, convert(VARCHAR,cast(c.FechaEgreso AS DATE),103) AS FechaEgreso, 
+            u.idUniversidad, ISNULL(u.Universidad,'UNIVERSIDAD NO REGISTRADA') AS Universidad, Convert(VARCHAR,cast(c.FechaTitulacion AS DATE),103) AS FechaTitulacion, 
             c.Resolucion, c.Principal FROM Colegiatura  AS c
-			LEFT JOIN Sede AS s ON c.idSede = s.idConsejo
-			LEFT JOIN Capitulo AS ca ON ca.idCapitulo = c.idEspecialidad
-			LEFT JOIN Especialidad AS e ON e.idCapitulo = ca.idCapitulo
-			LEFT JOIN Universidad AS u ON u.idUniversidad = c.idUniversidad
-			where idDNI = ?");
+                LEFT JOIN Sede AS s ON s.idConsejo = c.idSede
+                LEFT JOIN Especialidad AS e ON e.idEspecialidad = c.idEspecialidad
+                LEFT JOIN Capitulo AS ca ON ca.idCapitulo = e.idCapitulo
+				LEFT JOIN Universidad as ue ON ue.idUniversidad = c.idUnivesidadEgreso 
+                LEFT JOIN Universidad AS u ON u.idUniversidad = c.idUniversidad where idDNI = ?");
             $cmdColegiatura->bindParam(1, $idDni, PDO::PARAM_STR);
             $cmdColegiatura->execute();
 
@@ -298,12 +300,18 @@ class PersonaAdo
                 $count++;
                 array_push($arrayColegiaturas, array(
                     'Id' => $count,
+                    'IdColegiatura' => $row['idColegiado'],
+                    'IdSede' => $row['idConsejo'],
                     'sede' => $row['Consejo'],
-                    'capitulo' => 'Capitulo',
+                    'IdCapitulo' => $row['idCapitulo'],
+                    'capitulo' => $row['Capitulo'],
+                    'IdEspecialidad' => $row['idEspecialidad'],
                     'especialidad' => $row['Especialidad'],
                     'fechaColegiado' => $row['FechaColegiado'],
+                    'IdUnivEgreso' => $row['idUnivEgreso'],
                     'universidadEgreso' => $row['UnivesidadEgreso'],
                     'fechaEgreso' => $row['FechaEgreso'],
+                    'IdUnivTitulacion' => $row['idUniversidad'],
                     'universidadTitulacion' => $row['Universidad'],
                     'fechaTitulacion' => $row['FechaTitulacion'],
                     'resolucion' => $row['Resolucion'],
@@ -320,9 +328,9 @@ class PersonaAdo
     public static function getDomicilio($idDni)
     {
         try {
-            $cmdDomicilio = Database::getInstance()->getDb()->prepare("SELECT ISNULL (t.Descripcion, 'TIPO NO REGISTRADO') AS Tipo,
-            UPPER(d.Direccion) AS Direccion, 
-            ISNULL (u.Departamento,'DEPARTAMENTO NO REGISTRADA') AS Ubigeo FROM Direccion AS d 
+            $cmdDomicilio = Database::getInstance()->getDb()->prepare("SELECT d.idDireccion,t.idTipo, ISNULL (t.Descripcion, 'TIPO NO REGISTRADO') AS Tipo,
+            UPPER(d.Direccion) AS Direccion, u.IdUbigeo, CONCAT((ISNULL (u.Departamento,'DEPARTAMENTO NO REGISTRADA')),' - ',
+			(ISNULL (u.Provincia,'DEPARTAMENTO NO REGISTRADA')),' - ',(ISNULL (u.Distrito,'DEPARTAMENTO NO REGISTRADA')  )) AS Ubigeo FROM Direccion AS d
             LEFT JOIN Tipos AS t ON t.idTipo = d.Tipo 
             LEFT JOIN Ubigeo AS u ON u.idUbigeo = d.Ubigeo
             WHERE d.idDNI = ?");
@@ -335,9 +343,12 @@ class PersonaAdo
                 $count++;
                 array_push($arrayDomicilios, array(
                     'Id' => $count,
+                    'IdDireccion' => $row['idDireccion'],
+                    'IdTipo' => $row['idTipo'],
                     'tipo' => $row['Tipo'],
                     'direccion' => $row['Direccion'],
-                    'ubigeo' => $row['Ubigeo'],
+                    'IdUbigeo' => $row['IdUbigeo'],
+                    'ubigeo' => $row['Ubigeo']
                 ));
             }
             return $arrayDomicilios;
@@ -349,7 +360,7 @@ class PersonaAdo
     public static function getTelefono($idDni)
     {
         try {
-            $cmdTelefono = Database::getInstance()->getDb()->prepare("SELECT ISNULL (t.Descripcion, 'TIPO NO REGISTRADO') AS Tipo , a.Telefono FROM Telefono AS a 
+            $cmdTelefono = Database::getInstance()->getDb()->prepare("SELECT a.idTelefono, t.idTipo, ISNULL (t.Descripcion, 'TIPO NO REGISTRADO') AS Tipo , a.Telefono FROM Telefono AS a 
             LEFT JOIN Tipos AS t ON t.idTipo = a.Tipo WHERE a.idDNI = ?");
             $cmdTelefono->bindParam(1, $idDni, PDO::PARAM_STR);
             $cmdTelefono->execute();
@@ -361,6 +372,8 @@ class PersonaAdo
                 $count++;
                 array_push($arrayTelefonos, array(
                     'Id' => $count,
+                    'IdTelefono' => $row['idTelefono'],
+                    'IdTipo' => $row['idTipo'],
                     'tipo' => $row['Tipo'],
                     'numero' => $row['Telefono'],
                 ));
@@ -374,7 +387,7 @@ class PersonaAdo
     public static function getConyuge($idDni)
     {
         try {
-            $cmdConyuge = Database::getInstance()->getDb()->prepare("SELECT UPPER(FullName) AS NombreCompleto, NumHijos FROM Conyuge WHERE idDNI = ?");
+            $cmdConyuge = Database::getInstance()->getDb()->prepare('SELECT IdConyugue, UPPER(FullName) AS NombreCompleto, NumHijos FROM Conyuge WHERE idDNI = ?');
             $cmdConyuge->bindParam(1, $idDni, PDO::PARAM_STR);
             $cmdConyuge->execute();
 
@@ -385,6 +398,7 @@ class PersonaAdo
                 $count++;
                 array_push($arrayConyuge, array(
                     'Id' => $count,
+                    'IdConyuge' => $row['IdConyugue'],
                     'NombreCompleto' => $row['NombreCompleto'],
                     'Hijos' => $row['NumHijos'],
                 ));
@@ -398,7 +412,7 @@ class PersonaAdo
     public static function getExperiencia($idDni)
     {
         try {
-            $cmdExperiencia = Database::getInstance()->getDb()->prepare("SELECT UPPER(Entidad) AS Entidad, UPPER(ExpericienciaEn) AS  Experiencia,  
+            $cmdExperiencia = Database::getInstance()->getDb()->prepare("SELECT idExperiencia, UPPER(Entidad) AS Entidad, UPPER(ExpericienciaEn) AS  Experiencia,  
             CONVERT(VARCHAR,cast(FechaInicio AS DATE),103) AS FechaInicio, CONVERT(VARCHAR,cast(FechaFin AS DATE),103) AS FechaFin
              FROM Experiencia WHERE idPersona = ?");
             $cmdExperiencia->bindParam(1, $idDni, PDO::PARAM_STR);
@@ -411,6 +425,7 @@ class PersonaAdo
                 $count++;
                 array_push($arrayExperiencia, array(
                     'Id' => $count,
+                    'IdExperiencia' => $row['idExperiencia'],
                     'Entidad' => $row['Entidad'],
                     'Experiencia' => $row['Experiencia'],
                     'FechaInicio' => $row['FechaInicio'],
@@ -426,7 +441,7 @@ class PersonaAdo
     public static function getGradosyEstudios($idDni)
     {
         try {
-            $cmdgradosyestudios = Database::getInstance()->getDb()->prepare("SELECT UPPER(t.Descripcion) AS Grado, UPPER(Materia) AS Materia, ISNULL(u.Universidad, 'UNIVERSIDAD NO REGISTRADA') AS Universidad, 
+            $cmdgradosyestudios = Database::getInstance()->getDb()->prepare("SELECT g.idEstudio, t.idTipo, UPPER(t.Descripcion) AS Grado, UPPER(Materia) AS Materia, u.idUniversidad, ISNULL(u.Universidad, 'UNIVERSIDAD NO REGISTRADA') AS Universidad, 
             CONVERT(VARCHAR, cast(g.FechaGrado AS DATE), 103) AS Fecha FROM Grados AS g LEFT JOIN Universidad AS u ON u.idUniversidad = g.idUniversidad
             LEFT JOIN Tipos AS t ON t.idTipo = g.Grado AND t.Categoria = 'D'
             WHERE g.idDNI = ?");
@@ -440,8 +455,11 @@ class PersonaAdo
                 $count++;
                 array_push($arraygradosyestudios, array(
                     'Id' => $count,
+                    'IdEstudio' => $row['idEstudio'],
+                    'IdTipo' => $row['idTipo'],
                     'Grado' => $row['Grado'],
                     'Materia' => $row['Materia'],
+                    'IdUniversidad' => $row['idUniversidad'],
                     'Universidad' => $row['Universidad'],
                     'Fecha' => $row['Fecha'],
                 ));
@@ -455,7 +473,7 @@ class PersonaAdo
     public static function getCorreoyWeb($idDni)
     {
         try {
-            $cmdcorreoyweb = Database::getInstance()->getDb()->prepare("SELECT ISNULL(t.Descripcion, 'TIPO NO REGISTRADO') AS Tipo, UPPER(w.Direccion) AS Direccion from Web AS w 
+            $cmdcorreoyweb = Database::getInstance()->getDb()->prepare("SELECT w.idWeb, t.idTipo, ISNULL(t.Descripcion, 'TIPO NO REGISTRADO') AS Tipo, UPPER(w.Direccion) AS Direccion from Web AS w 
             INNER JOIN Tipos AS t ON t.idTipo = w.Tipo WHERE idDNI = ?");
             $cmdcorreoyweb->bindParam(1, $idDni, PDO::PARAM_STR);
             $cmdcorreoyweb->execute();
@@ -467,6 +485,8 @@ class PersonaAdo
                 $count++;
                 array_push($arraycorreoyweb, array(
                     'Id' => $count,
+                    'IdWeb' => $row['idWeb'],
+                    'IdTipo' => $row['idTipo'],
                     'Tipo' => $row['Tipo'],
                     'Direccion' => $row['Direccion'],
                 ));
@@ -483,7 +503,7 @@ class PersonaAdo
         try {
             $arrayAddColegiatura = array();
 
-            $cmdsede = Database::getInstance()->getDb()->prepare("SELECT idConsejo ,UPPER(Consejo) AS Consejo from Sede");
+            $cmdsede = Database::getInstance()->getDb()->prepare('SELECT idConsejo ,UPPER(Consejo) AS Consejo from Sede');
             $cmdsede->execute();
             $arraySede = array();
             while ($row = $cmdsede->fetch()) {
@@ -493,7 +513,7 @@ class PersonaAdo
                 ));
             }
 
-            $cmdEspecialidad = Database::getInstance()->getDb()->prepare("SELECT idEspecialidad, UPPER (Especialidad) AS Especialidad from Especialidad");
+            $cmdEspecialidad = Database::getInstance()->getDb()->prepare('SELECT idEspecialidad, UPPER (Especialidad) AS Especialidad from Especialidad');
             $cmdEspecialidad->execute();
             $arrayEspecialidad = array();
             while ($row = $cmdEspecialidad->fetch()) {
@@ -647,56 +667,66 @@ class PersonaAdo
     {
         try {
             Database::getInstance()->getDb()->beginTransaction();
-            $comandoInsert = Database::getInstance()->getDb()->prepare("INSERT INTO Colegiatura (
-                idDNI,
-                 idSede,
-                  idEspecialidad, 
-                  FechaColegiado,
-                  idUnivesidadEgreso, 
-                  FechaEgreso,
-                  idUniversidad,
-                  FechaTitulacion,
-                  Resolucion, 
-                  Principal)
-            VALUES(?,?,?,?,?,?,?,?,?,?)");
+            $cmdSelect = Database::getInstance()->getDb()->prepare('SELECT * FROM Colegiatura WHERE UPPER(Resolucion) = UPPER(?)');
+            $cmdSelect->bindParam(1, $colegiatura['resolucion'], PDO::PARAM_STR);
+            $cmdSelect->execute();
 
-            $dateColegiacion = date('Y-d-m H:i:s', strtotime($colegiatura["fechacolegiacion"]));
-            $dateEgreso = date('Y-d-m H:i:s', strtotime($colegiatura["fechaegreso"]));
-            $dateTitulo = date('Y-d-m H:i:s', strtotime($colegiatura["fechatitulo"]));
+            if ($cmdSelect->fetch()) {
+                Database::getInstance()->getDb()->rollback();
+                return 'Duplicado';
+            } else {
+                $comandoInsert = Database::getInstance()->getDb()->prepare("INSERT INTO Colegiatura (
+                    idDNI,
+                     idSede,
+                      idEspecialidad, 
+                      FechaColegiado,
+                      idUnivesidadEgreso, 
+                      FechaEgreso,
+                      idUniversidad,
+                      FechaTitulacion,
+                      Resolucion, 
+                      Principal)
+                VALUES(?,?,?,?,?,?,?,?,?,?)");
 
-            $comandoInsert->bindParam(1, $colegiatura["dni"], PDO::PARAM_STR);
-            $comandoInsert->bindParam(2, $colegiatura["sede"], PDO::PARAM_INT);
-            $comandoInsert->bindParam(3, $colegiatura["especialidad"], PDO::PARAM_INT);
-            $comandoInsert->bindParam(4, $dateColegiacion, PDO::PARAM_STR);
-            $comandoInsert->bindParam(5, $colegiatura["universidadegreso"], PDO::PARAM_INT);
-            $comandoInsert->bindParam(6, $dateEgreso, PDO::PARAM_STR);
-            $comandoInsert->bindParam(7, $colegiatura["universidadtitulacion"], PDO::PARAM_INT);
-            $comandoInsert->bindParam(8, $dateTitulo, PDO::PARAM_STR);
-            $comandoInsert->bindParam(9, $colegiatura["resolucion"], PDO::PARAM_STR);
-            $comandoInsert->bindParam(10, $colegiatura["principal"], PDO::PARAM_BOOL);
+                // $dateColegiacion = date('Y-d-m', strtotime($colegiatura['fechacolegiacion']));
+                // $dateEgreso = date('Y-d-m', strtotime($colegiatura['fechaegreso']));
+                // $dateTitulo = date('Y-d-m', strtotime($colegiatura['fechatitulo']));
 
-            $comandoInsert->execute();
-            Database::getInstance()->getDb()->commit();
-            return "Insertado";
+                $comandoInsert->bindParam(1, $colegiatura['dni'], PDO::PARAM_STR);
+                $comandoInsert->bindParam(2, $colegiatura['sede'], PDO::PARAM_INT);
+                $comandoInsert->bindParam(3, $colegiatura['especialidad'], PDO::PARAM_INT);
+                $comandoInsert->bindParam(4, $colegiatura['fechacolegiacion'], PDO::PARAM_STR);
+                $comandoInsert->bindParam(5, $colegiatura['universidadegreso'], PDO::PARAM_INT);
+                $comandoInsert->bindParam(6, $colegiatura['fechaegreso'], PDO::PARAM_STR);
+                $comandoInsert->bindParam(7, $colegiatura['universidadtitulacion'], PDO::PARAM_INT);
+                $comandoInsert->bindParam(8, $colegiatura['fechatitulo'], PDO::PARAM_STR);
+                $comandoInsert->bindParam(9, $colegiatura['resolucion'], PDO::PARAM_STR);
+                $comandoInsert->bindParam(10, $colegiatura['principal'], PDO::PARAM_BOOL);
+
+                $comandoInsert->execute();
+                Database::getInstance()->getDb()->commit();
+                return 'Insertado';
+            }
         } catch (Exception $ex) {
             Database::getInstance()->getDb()->rollback();
             return $ex->getMessage();
         }
     }
 
-    public static function insertDomicilio($domicilio){
+    public static function insertDomicilio($domicilio)
+    {
         try {
             Database::getInstance()->getDb()->beginTransaction();
-            $comandoInsert = Database::getInstance()->getDb()->prepare("INSERT INTO Direccion (idDNI, Tipo, Ubigeo, Direccion) VALUES (?,?,?,?)");
+            $comandoInsert = Database::getInstance()->getDb()->prepare('INSERT INTO Direccion (idDNI, Tipo, Ubigeo, Direccion) VALUES (?,?,?,?)');
 
-            $comandoInsert->bindParam(1, $domicilio["dni"], PDO::PARAM_STR);
-            $comandoInsert->bindParam(2, $domicilio["tipo"], PDO::PARAM_INT);
-            $comandoInsert->bindParam(3, $domicilio["departamento"], PDO::PARAM_INT);
-            $comandoInsert->bindParam(4, $domicilio["direccion"], PDO::PARAM_INT);
+            $comandoInsert->bindParam(1, $domicilio['dni'], PDO::PARAM_STR);
+            $comandoInsert->bindParam(2, $domicilio['tipo'], PDO::PARAM_INT);
+            $comandoInsert->bindParam(3, $domicilio['departamento'], PDO::PARAM_INT);
+            $comandoInsert->bindParam(4, $domicilio['direccion'], PDO::PARAM_INT);
 
             $comandoInsert->execute();
             Database::getInstance()->getDb()->commit();
-            return "Insertado";
+            return 'Insertado';
         } catch (Exception $ex) {
             Database::getInstance()->getDb()->rollback();
             return $ex->getMessage();
@@ -707,15 +737,24 @@ class PersonaAdo
     {
         try {
             Database::getInstance()->getDb()->beginTransaction();
-            $comandoInsert = Database::getInstance()->getDb()->prepare("INSERT INTO Telefono (idDNI, Tipo, Telefono) VALUES (?,?,?)");
+            $cmdSelect = Database::getInstance()->getDb()->prepare('SELECT * FROM Telefono WHERE Telefono = ?');
+            $cmdSelect->bindParam(1, $celular['numero'], PDO::PARAM_STR);
+            $cmdSelect->execute();
 
-            $comandoInsert->bindParam(1, $celular["dni"], PDO::PARAM_STR);
-            $comandoInsert->bindParam(2, $celular["tipo"], PDO::PARAM_INT);
-            $comandoInsert->bindParam(3, $celular["numero"], PDO::PARAM_INT);
+            if ($cmdSelect->fetch()) {
+                Database::getInstance()->getDb()->rollback();
+                return 'Duplicado';
+            } else {
+                $comandoInsert = Database::getInstance()->getDb()->prepare('INSERT INTO Telefono (idDNI, Tipo, Telefono) VALUES (?,?,?)');
 
-            $comandoInsert->execute();
-            Database::getInstance()->getDb()->commit();
-            return "Insertado";
+                $comandoInsert->bindParam(1, $celular['dni'], PDO::PARAM_STR);
+                $comandoInsert->bindParam(2, $celular['tipo'], PDO::PARAM_INT);
+                $comandoInsert->bindParam(3, $celular['numero'], PDO::PARAM_INT);
+
+                $comandoInsert->execute();
+                Database::getInstance()->getDb()->commit();
+                return 'Insertado';
+            }
         } catch (Exception $ex) {
             Database::getInstance()->getDb()->rollback();
             return $ex->getMessage();
@@ -726,15 +765,24 @@ class PersonaAdo
     {
         try {
             Database::getInstance()->getDb()->beginTransaction();
-            $comandoInsert = Database::getInstance()->getDb()->prepare("INSERT INTO Conyuge (idDNI, FullName, NumHijos) VALUES (?,UPPER(?),?)");
+            $cmdSelect = Database::getInstance()->getDb()->prepare('SELECT * FROM Conyuge WHERE UPPER(FullName) = UPPER(?)');
+            $cmdSelect->bindParam(1, $conyuge['conyuge'], PDO::PARAM_STR);
+            $cmdSelect->execute();
 
-            $comandoInsert->bindParam(1, $conyuge["dni"], PDO::PARAM_STR);
-            $comandoInsert->bindParam(2, $conyuge["conyuge"], PDO::PARAM_INT);
-            $comandoInsert->bindParam(3, $conyuge["hijos"], PDO::PARAM_INT);
+            if ($cmdSelect->fetch()) {
+                Database::getInstance()->getDb()->rollback();
+                return 'Duplicado';
+            } else {
+                $comandoInsert = Database::getInstance()->getDb()->prepare('INSERT INTO Conyuge (idDNI, FullName, NumHijos) VALUES (?,UPPER(?),?)');
 
-            $comandoInsert->execute();
-            Database::getInstance()->getDb()->commit();
-            return "Insertado";
+                $comandoInsert->bindParam(1, $conyuge['dni'], PDO::PARAM_STR);
+                $comandoInsert->bindParam(2, $conyuge['conyuge'], PDO::PARAM_INT);
+                $comandoInsert->bindParam(3, $conyuge['hijos'], PDO::PARAM_INT);
+
+                $comandoInsert->execute();
+                Database::getInstance()->getDb()->commit();
+                return 'Insertado';
+            }
         } catch (Exception $ex) {
             Database::getInstance()->getDb()->rollback();
             return $ex->getMessage();
@@ -745,21 +793,31 @@ class PersonaAdo
     {
         try {
             Database::getInstance()->getDb()->beginTransaction();
-            $comandoInsert = Database::getInstance()->getDb()->prepare("INSERT INTO Experiencia (idPersona, Entidad, ExpericienciaEn, FechaInicio, FechaFin) 
+            $cmdSelect = Database::getInstance()->getDb()->prepare('SELECT * FROM Experiencia WHERE UPPER(Entidad) = UPPER(?) AND UPPER(ExpericienciaEn) = UPPER(?)');
+            $cmdSelect->bindParam(1, $experiencia['entidad'], PDO::PARAM_STR);
+            $cmdSelect->bindParam(2, $experiencia['experiencia'], PDO::PARAM_STR);
+            $cmdSelect->execute();
+
+            if ($cmdSelect->fetch()) {
+                Database::getInstance()->getDb()->rollback();
+                return 'Duplicado';
+            } else {
+                $comandoInsert = Database::getInstance()->getDb()->prepare("INSERT INTO Experiencia (idPersona, Entidad, ExpericienciaEn, FechaInicio, FechaFin) 
             VALUES (?,UPPER(?),UPPER(?),?,?);");
 
-            $dateInicio = date('Y-d-m H:i:s', strtotime($experiencia["fechaInicio"]));
-            $dateFin = date('Y-d-m H:i:s', strtotime($experiencia["fechaFin"]));
+                // $dateInicio = date('Y-d-m H:i:s', strtotime($experiencia['fechaInicio']));
+                // $dateFin = date('Y-d-m H:i:s', strtotime($experiencia['fechaFin']));
 
-            $comandoInsert->bindParam(1, $experiencia["dni"], PDO::PARAM_STR);
-            $comandoInsert->bindParam(2, $experiencia["entidad"], PDO::PARAM_INT);
-            $comandoInsert->bindParam(3, $experiencia["experiencia"], PDO::PARAM_INT);
-            $comandoInsert->bindParam(4, $dateInicio, PDO::PARAM_INT);
-            $comandoInsert->bindParam(5, $dateFin, PDO::PARAM_INT);
+                $comandoInsert->bindParam(1, $experiencia['dni'], PDO::PARAM_STR);
+                $comandoInsert->bindParam(2, $experiencia['entidad'], PDO::PARAM_STR);
+                $comandoInsert->bindParam(3, $experiencia['experiencia'], PDO::PARAM_STR);
+                $comandoInsert->bindParam(4, $experiencia["fechaInicio"], PDO::PARAM_STR);
+                $comandoInsert->bindParam(5, $experiencia["fechaFin"], PDO::PARAM_STR);
 
-            $comandoInsert->execute();
-            Database::getInstance()->getDb()->commit();
-            return "Insertado";
+                $comandoInsert->execute();
+                Database::getInstance()->getDb()->commit();
+                return 'Insertado';
+            }
         } catch (Exception $ex) {
             Database::getInstance()->getDb()->rollback();
             return $ex->getMessage();
@@ -770,19 +828,30 @@ class PersonaAdo
     {
         try {
             Database::getInstance()->getDb()->beginTransaction();
-            $comandoInsert = Database::getInstance()->getDb()->prepare("INSERT INTO Grados (idDNI, Materia, Grado, idUniversidad, FechaGrado) VALUES (?,UPPER(?),?,?,?);");
+            $cmdSelect = Database::getInstance()->getDb()->prepare('SELECT * FROM Grados WHERE Grado = ? AND UPPER(Materia) = UPPER(?) AND idUniversidad = ?');
+            $cmdSelect->bindParam(1, $estudios['grado'], PDO::PARAM_INT);
+            $cmdSelect->bindParam(2, $estudios['materia'], PDO::PARAM_STR);
+            $cmdSelect->bindParam(3, $estudios['universidad'], PDO::PARAM_INT);
+            $cmdSelect->execute();
 
-            $dateEstudios = date('Y-d-m H:i:s', strtotime($estudios["fechaEstudios"]));
+            if ($cmdSelect->fetch()) {
+                Database::getInstance()->getDb()->rollback();
+                return 'Duplicado';
+            } else {
+                $comandoInsert = Database::getInstance()->getDb()->prepare('INSERT INTO Grados (idDNI, Materia, Grado, idUniversidad, FechaGrado) VALUES (?,UPPER(?),?,?,?);');
 
-            $comandoInsert->bindParam(1, $estudios["dni"], PDO::PARAM_STR);
-            $comandoInsert->bindParam(2, $estudios["materia"], PDO::PARAM_STR);
-            $comandoInsert->bindParam(3, $estudios["grado"], PDO::PARAM_INT);
-            $comandoInsert->bindParam(4, $estudios["universidad"], PDO::PARAM_INT);
-            $comandoInsert->bindParam(5, $dateEstudios, PDO::PARAM_STR);
+                // $dateEstudios = date('Y-d-m H:i:s', strtotime($estudios['fechaEstudios']));
 
-            $comandoInsert->execute();
-            Database::getInstance()->getDb()->commit();
-            return "Insertado";
+                $comandoInsert->bindParam(1, $estudios['dni'], PDO::PARAM_STR);
+                $comandoInsert->bindParam(2, $estudios['materia'], PDO::PARAM_STR);
+                $comandoInsert->bindParam(3, $estudios['grado'], PDO::PARAM_INT);
+                $comandoInsert->bindParam(4, $estudios['universidad'], PDO::PARAM_INT);
+                $comandoInsert->bindParam(5, $estudios["fechaEstudios"], PDO::PARAM_STR);
+
+                $comandoInsert->execute();
+                Database::getInstance()->getDb()->commit();
+                return 'Insertado';
+            }
         } catch (Exception $ex) {
             Database::getInstance()->getDb()->rollback();
             return $ex->getMessage();
@@ -793,25 +862,397 @@ class PersonaAdo
     {
         try {
             Database::getInstance()->getDb()->beginTransaction();
-            $comandoInsert = Database::getInstance()->getDb()->prepare("INSERT INTO Web (idDNI, Tipo, Direccion) VALUES (?,?,LOWER(?));");
+            $cmdSelect = Database::getInstance()->getDb()->prepare('SELECT * FROM Web WHERE LOWER(Direccion) = ? AND Tipo = ?');
+            $cmdSelect->bindParam(1, $correo['correo'], PDO::PARAM_STR);
+            $cmdSelect->bindParam(2, $correo['tipo'], PDO::PARAM_INT);
+            $cmdSelect->execute();
 
-            $comandoInsert->bindParam(1, $correo["dni"], PDO::PARAM_STR);
-            $comandoInsert->bindParam(2, $correo["tipo"], PDO::PARAM_INT);
-            $comandoInsert->bindParam(3, $correo["correo"], PDO::PARAM_STR);
+            if ($cmdSelect->fetch()) {
+                Database::getInstance()->getDb()->rollback();
+                return 'Duplicado';
+            } else {
+                $comandoInsert = Database::getInstance()->getDb()->prepare('INSERT INTO Web (idDNI, Tipo, Direccion) VALUES (?,?,LOWER(?));');
+
+            $comandoInsert->bindParam(1, $correo['dni'], PDO::PARAM_STR);
+            $comandoInsert->bindParam(2, $correo['tipo'], PDO::PARAM_INT);
+            $comandoInsert->bindParam(3, $correo['correo'], PDO::PARAM_STR);
 
             $comandoInsert->execute();
             Database::getInstance()->getDb()->commit();
-            return "Insertado";
+            return 'Insertado';
+            }            
         } catch (Exception $ex) {
             Database::getInstance()->getDb()->rollback();
             return $ex->getMessage();
         }
     }
 
+    public static function updateColegiatura($colegiatura)
+    {
+        try {
+            Database::getInstance()->getDb()->beginTransaction();
+            $cmdSelect = Database::getInstance()->getDb()->prepare('SELECT * FROM Colegiatura WHERE idColegiado <> ? AND UPPER(Resolucion) = UPPER(?)');
+            $cmdSelect->bindParam(1, $colegiatura['idcolegiatura'], PDO::PARAM_INT);
+            $cmdSelect->bindParam(2, $colegiatura['resolucion'], PDO::PARAM_STR);
+            $cmdSelect->execute();
+
+            if ($cmdSelect->fetch()) {
+                Database::getInstance()->getDb()->rollback();
+                return 'Duplicado';
+            } else {
+                $cmdUpdate = Database::getInstance()->getDb()->prepare("UPDATE Colegiatura SET
+                idSede = ?,
+                idEspecialidad = ?, 
+                FechaColegiado = ?,
+                idUnivesidadEgreso = ?, 
+                FechaEgreso = ?,
+                idUniversidad = ?,
+                FechaTitulacion = ?,
+                Resolucion = ?, 
+                Principal = ?
+                WHERE idColegiado = ?");
+
+                // $dateColegiacion = date( 'Y-d-m H:i:s', strtotime( $colegiatura['fechacolegiacion'] ) );
+                // $dateEgreso = date( 'Y-d-m H:i:s', strtotime( $colegiatura['fechaegreso'] ) );
+                // $dateTitulo = date( 'Y-d-m H:i:s', strtotime( $colegiatura['fechatitulo'] ) );
+
+                $cmdUpdate->bindParam(1, $colegiatura['sede'], PDO::PARAM_INT);
+                $cmdUpdate->bindParam(2, $colegiatura['especialidad'], PDO::PARAM_INT);
+                $cmdUpdate->bindParam(3, $colegiatura['fechacolegiacion'], PDO::PARAM_STR);
+                $cmdUpdate->bindParam(4, $colegiatura['universidadegreso'], PDO::PARAM_INT);
+                $cmdUpdate->bindParam(5, $colegiatura['fechaegreso'], PDO::PARAM_STR);
+                $cmdUpdate->bindParam(6, $colegiatura['universidadtitulacion'], PDO::PARAM_INT);
+                $cmdUpdate->bindParam(7, $colegiatura['fechatitulo'], PDO::PARAM_STR);
+                $cmdUpdate->bindParam(8, $colegiatura['resolucion'], PDO::PARAM_STR);
+                $cmdUpdate->bindParam(9, $colegiatura['principal'], PDO::PARAM_BOOL);
+                $cmdUpdate->bindParam(10, $colegiatura['idcolegiatura'], PDO::PARAM_INT);
+
+                $cmdUpdate->execute();
+                Database::getInstance()->getDb()->commit();
+                return 'Actualizado';
+            }
+        } catch (Exception $ex) {
+            Database::getInstance()->getDb()->rollback();
+            return $ex->getMessage();
+        }
+    }
+
+    public static function deleteColegiatura($colegiatura)
+    {
+        try {
+            Database::getInstance()->getDb()->beginTransaction();
+            $comandSelect = Database::getInstance()->getDb()->prepare("DELETE FROM Colegiatura WHERE idColegiado = ?");
+            $comandSelect->bindParam(1, $colegiatura["idcolegiatura"], PDO::PARAM_INT);
+            $comandSelect->execute();
+            Database::getInstance()->getDb()->commit();
+            return "eliminado";
+        } catch (Exception $ex) {
+            Database::getInstance()->getDb()->rollback();
+            return $ex->getMessage();
+        }
+    }
+
+    public static function updateDomicilio($domicilio)
+    {
+        try {
+            Database::getInstance()->getDb()->beginTransaction();
+            $cmdSelect = Database::getInstance()->getDb()->prepare('SELECT * FROM Direccion WHERE idDireccion <> ? AND UPPER(Direccion) = UPPER(?) AND Ubigeo = ?');
+            $cmdSelect->bindParam(1, $domicilio['idDireccion'], PDO::PARAM_INT);
+            $cmdSelect->bindParam(2, $domicilio['direccion'], PDO::PARAM_STR);
+            $cmdSelect->bindParam(3, $domicilio['departamento'], PDO::PARAM_INT);
+            $cmdSelect->execute();
+
+            if ($cmdSelect->fetch()) {
+                Database::getInstance()->getDb()->rollback();
+                return 'Duplicado';
+            } else {
+                $cmdUpdate = Database::getInstance()->getDb()->prepare("UPDATE Direccion SET
+                Tipo = ?,
+                Ubigeo = ?, 
+                Direccion = ?
+                WHERE idDireccion = ?");
+
+                $cmdUpdate->bindParam(1, $domicilio['tipo'], PDO::PARAM_INT);
+                $cmdUpdate->bindParam(2, $domicilio['departamento'], PDO::PARAM_INT);
+                $cmdUpdate->bindParam(3, $domicilio['direccion'], PDO::PARAM_STR);
+                $cmdUpdate->bindParam(4, $domicilio['idDireccion'], PDO::PARAM_INT);
+
+                $cmdUpdate->execute();
+                Database::getInstance()->getDb()->commit();
+                return 'Actualizado';
+            }
+        } catch (Exception $ex) {
+            Database::getInstance()->getDb()->rollback();
+            return $ex->getMessage();
+        }
+    }
+
+    public static function deleteDomicilio($domicilio)
+    {
+        try {
+            Database::getInstance()->getDb()->beginTransaction();
+            $comandSelect = Database::getInstance()->getDb()->prepare("DELETE FROM Direccion WHERE idDireccion = ?");
+            $comandSelect->bindParam(1, $domicilio["iddomicilio"], PDO::PARAM_INT);
+            $comandSelect->execute();
+            Database::getInstance()->getDb()->commit();
+            return "eliminado";
+        } catch (Exception $ex) {
+            Database::getInstance()->getDb()->rollback();
+            return $ex->getMessage();
+        }
+    }
+
+    public static function updateTelefono($telefono)
+    {
+        try {
+            Database::getInstance()->getDb()->beginTransaction();
+            $cmdSelect = Database::getInstance()->getDb()->prepare('SELECT * FROM Telefono WHERE idTelefono <> ? AND Telefono = ?');
+            $cmdSelect->bindParam(1, $telefono['idTelefono'], PDO::PARAM_INT);
+            $cmdSelect->bindParam(2, $telefono['numero'], PDO::PARAM_STR);
+            $cmdSelect->execute();
+
+            if ($cmdSelect->fetch()) {
+                Database::getInstance()->getDb()->rollback();
+                return 'Duplicado';
+            } else {
+                $cmdUpdate = Database::getInstance()->getDb()->prepare("UPDATE Telefono SET
+                Tipo = ?,
+                Telefono = ?
+                WHERE idTelefono = ?");
+
+                $cmdUpdate->bindParam(1, $telefono['tipo'], PDO::PARAM_INT);
+                $cmdUpdate->bindParam(2, $telefono['numero'], PDO::PARAM_STR);
+                $cmdUpdate->bindParam(3, $telefono['idTelefono'], PDO::PARAM_INT);
+
+                $cmdUpdate->execute();
+                Database::getInstance()->getDb()->commit();
+                return 'Actualizado';
+            }
+        } catch (Exception $ex) {
+            Database::getInstance()->getDb()->rollback();
+            return $ex->getMessage();
+        }
+    }
+
+    public static function deleteTelefono($telefono)
+    {
+        try {
+            Database::getInstance()->getDb()->beginTransaction();
+            $comandSelect = Database::getInstance()->getDb()->prepare("DELETE FROM Telefono WHERE idTelefono = ?");
+            $comandSelect->bindParam(1, $telefono["idtelefono"], PDO::PARAM_INT);
+            $comandSelect->execute();
+            Database::getInstance()->getDb()->commit();
+            return "eliminado";
+        } catch (Exception $ex) {
+            Database::getInstance()->getDb()->rollback();
+            return $ex->getMessage();
+        }
+    }
+
+    public static function updateConyuge($conyuge)
+    {
+        try {
+            Database::getInstance()->getDb()->beginTransaction();
+            $cmdSelect = Database::getInstance()->getDb()->prepare('SELECT * FROM Conyuge WHERE idConyugue <> ? AND FullName = ?');
+            $cmdSelect->bindParam(1, $conyuge['idConyuge'], PDO::PARAM_INT);
+            $cmdSelect->bindParam(2, $conyuge['Conyuge'], PDO::PARAM_STR);
+            $cmdSelect->execute();
+
+            if ($cmdSelect->fetch()) {
+                Database::getInstance()->getDb()->rollback();
+                return 'Duplicado';
+            } else {
+                $cmdUpdate = Database::getInstance()->getDb()->prepare("UPDATE Conyuge SET
+                FullName = ?,
+                NumHijos = ?
+                WHERE idConyugue = ?");
+
+                $cmdUpdate->bindParam(1, $conyuge['Conyuge'], PDO::PARAM_STR);
+                $cmdUpdate->bindParam(2, $conyuge['hijos'], PDO::PARAM_INT);
+                $cmdUpdate->bindParam(3, $conyuge['idConyuge'], PDO::PARAM_INT);
+
+                $cmdUpdate->execute();
+                Database::getInstance()->getDb()->commit();
+                return 'Actualizado';
+            }
+        } catch (Exception $ex) {
+            Database::getInstance()->getDb()->rollback();
+            return $ex->getMessage();
+        }
+    }
+
+    public static function deleteConyuge($conyuge)
+    {
+        try {
+            Database::getInstance()->getDb()->beginTransaction();
+            $comandSelect = Database::getInstance()->getDb()->prepare("DELETE FROM Conyuge WHERE IdConyugue = ?");
+            $comandSelect->bindParam(1, $conyuge["idconyuge"], PDO::PARAM_INT);
+            $comandSelect->execute();
+            Database::getInstance()->getDb()->commit();
+            return "eliminado";
+        } catch (Exception $ex) {
+            Database::getInstance()->getDb()->rollback();
+            return $ex->getMessage();
+        }
+    }
+
+    public static function updateExperiencia($experiencia)
+    {
+        try {
+            Database::getInstance()->getDb()->beginTransaction();
+            $cmdSelect = Database::getInstance()->getDb()->prepare('SELECT * FROM Experiencia WHERE idExperiencia <> ? AND UPPER(Entidad) = UPPER(?) AND UPPER(ExpericienciaEn) = UPPER(?)');
+            $cmdSelect->bindParam(1, $experiencia['idexperiencia'], PDO::PARAM_INT);
+            $cmdSelect->bindParam(2, $experiencia['entidad'], PDO::PARAM_STR);
+            $cmdSelect->bindParam(3, $experiencia['experiencia'], PDO::PARAM_STR);
+            $cmdSelect->execute();
+
+            if ($cmdSelect->fetch()) {
+                Database::getInstance()->getDb()->rollback();
+                return 'Duplicado';
+            } else {
+                $cmdUpdate = Database::getInstance()->getDb()->prepare("UPDATE Experiencia SET
+                Entidad = UPPER(?),
+                ExpericienciaEn = UPPER(?),
+                FechaInicio = ?,
+                FechaFin = ?
+                WHERE idExperiencia = ?");
+
+                $cmdUpdate->bindParam(1, $experiencia['entidad'], PDO::PARAM_STR);
+                $cmdUpdate->bindParam(2, $experiencia['experiencia'], PDO::PARAM_STR);
+                $cmdUpdate->bindParam(3, $experiencia['inicio'], PDO::PARAM_STR);
+                $cmdUpdate->bindParam(4, $experiencia['fin'], PDO::PARAM_STR);
+                $cmdUpdate->bindParam(5, $experiencia['idexperiencia'], PDO::PARAM_INT);
+
+                $cmdUpdate->execute();
+                Database::getInstance()->getDb()->commit();
+                return 'Actualizado';
+            }
+        } catch (Exception $ex) {
+            Database::getInstance()->getDb()->rollback();
+            return $ex->getMessage();
+        }
+    }
+
+    public static function deleteExperiencia($experiencia)
+    {
+        try {
+            Database::getInstance()->getDb()->beginTransaction();
+            $comandSelect = Database::getInstance()->getDb()->prepare("DELETE FROM Experiencia WHERE idExperiencia = ?");
+            $comandSelect->bindParam(1, $experiencia["idexperiencia"], PDO::PARAM_INT);
+            $comandSelect->execute();
+            Database::getInstance()->getDb()->commit();
+            return "eliminado";
+        } catch (Exception $ex) {
+            Database::getInstance()->getDb()->rollback();
+            return $ex->getMessage();
+        }
+    }
+
+    public static function updateEstudios($estudios)
+    {
+        try {
+            Database::getInstance()->getDb()->beginTransaction();
+            $cmdSelect = Database::getInstance()->getDb()->prepare('SELECT * FROM Grados WHERE idEstudio <> ? AND Grado = ? AND UPPER(Materia) = UPPER(?) AND idUniversidad = ?');
+            $cmdSelect->bindParam(1, $estudios['IdEstudio'], PDO::PARAM_INT);
+            $cmdSelect->bindParam(2, $estudios['Grado'], PDO::PARAM_INT);
+            $cmdSelect->bindParam(3, $estudios['Materia'], PDO::PARAM_STR);
+            $cmdSelect->bindParam(4, $estudios['Universidad'], PDO::PARAM_INT);
+            $cmdSelect->execute();
+
+            if ($cmdSelect->fetch()) {
+                Database::getInstance()->getDb()->rollback();
+                return 'Duplicado';
+            } else {
+                $cmdUpdate = Database::getInstance()->getDb()->prepare("UPDATE Grados SET
+                Grado = ?,
+                Materia = UPPER(?),
+                idUniversidad = ?,
+                FechaGrado = ?
+                WHERE idEstudio = ?");
+
+                $cmdUpdate->bindParam(1, $estudios['Grado'], PDO::PARAM_INT);
+                $cmdUpdate->bindParam(2, $estudios['Materia'], PDO::PARAM_STR);
+                $cmdUpdate->bindParam(3, $estudios['Universidad'], PDO::PARAM_INT);
+                $cmdUpdate->bindParam(4, $estudios['Fecha'], PDO::PARAM_STR);
+                $cmdUpdate->bindParam(5, $estudios['IdEstudio'], PDO::PARAM_INT);
+
+                $cmdUpdate->execute();
+                Database::getInstance()->getDb()->commit();
+                return 'Actualizado';
+            }
+        } catch (Exception $ex) {
+            Database::getInstance()->getDb()->rollback();
+            return $ex->getMessage();
+        }
+    }
+
+    public static function deleteEstudio($estudio)
+    {
+        try {
+            Database::getInstance()->getDb()->beginTransaction();
+            $comandSelect = Database::getInstance()->getDb()->prepare("DELETE FROM Grados WHERE idEstudio = ?");
+            $comandSelect->bindParam(1, $estudio["idestudio"], PDO::PARAM_INT);
+            $comandSelect->execute();
+            Database::getInstance()->getDb()->commit();
+            return "eliminado";
+        } catch (Exception $ex) {
+            Database::getInstance()->getDb()->rollback();
+            return $ex->getMessage();
+        }
+    }
+
+    public static function updateCorreo($correo)
+    {
+        try {
+            Database::getInstance()->getDb()->beginTransaction();
+            $cmdSelect = Database::getInstance()->getDb()->prepare('SELECT * FROM Web WHERE idWeb <> ? AND Tipo = ? AND LOWER(Direccion) = LOWER(?)');
+            $cmdSelect->bindParam(1, $correo['IdCorreo'], PDO::PARAM_INT);
+            $cmdSelect->bindParam(2, $correo['Tipo'], PDO::PARAM_INT);
+            $cmdSelect->bindParam(3, $correo['Direccion'], PDO::PARAM_STR);
+            $cmdSelect->execute();
+
+            if ($cmdSelect->fetch()) {
+                Database::getInstance()->getDb()->rollback();
+                return 'Duplicado';
+            } else {
+                $cmdUpdate = Database::getInstance()->getDb()->prepare("UPDATE Web SET
+                Tipo = ?,
+                Direccion = LOWER(?)
+                WHERE idWeb = ?");
+
+                $cmdUpdate->bindParam(1, $correo['Tipo'], PDO::PARAM_INT);
+                $cmdUpdate->bindParam(2, $correo['Direccion'], PDO::PARAM_STR);
+                $cmdUpdate->bindParam(3, $correo['IdCorreo'], PDO::PARAM_INT);
+
+                $cmdUpdate->execute();
+                Database::getInstance()->getDb()->commit();
+                return 'Actualizado';
+            }
+        } catch (Exception $ex) {
+            Database::getInstance()->getDb()->rollback();
+            return $ex->getMessage();
+        }
+    }
+
+    public static function deleteCorreo($correo)
+    {
+        try {
+            Database::getInstance()->getDb()->beginTransaction();
+            $comandSelect = Database::getInstance()->getDb()->prepare("DELETE FROM Web WHERE idWeb = ?");
+            $comandSelect->bindParam(1, $correo["IdCorreo"], PDO::PARAM_INT);
+            $comandSelect->execute();
+            Database::getInstance()->getDb()->commit();
+            return "eliminado";
+        } catch (Exception $ex) {
+            Database::getInstance()->getDb()->rollback();
+            return $ex->getMessage();
+        }
+    }
 
     //Funciones Ruber
 
-    public static function getCountConditionPerson(){
+    public static function getCountConditionPerson()
+    {
 
         try {
             $cmdOrdinario = Database::getInstance()->getDb()->prepare("SELECT count(1) FROM Persona WHERE Condicion='O'");
@@ -819,9 +1260,9 @@ class PersonaAdo
             $cmdFallecido = Database::getInstance()->getDb()->prepare("SELECT count(1) FROM Persona WHERE Condicion='F'");
             $cmdRetirado = Database::getInstance()->getDb()->prepare("SELECT count(1) FROM Persona WHERE Condicion='R'");
             $cmdVitalicio = Database::getInstance()->getDb()->prepare("SELECT count(1) FROM Persona WHERE Condicion='V'");
-            $cmdTotalPersonas = Database::getInstance()->getDb()->prepare("SELECT count(1) FROM Persona");
-            $cmdTotalHabilitados = Database::getInstance()->getDb()->prepare("SELECT  count(1) FROM ULTIMACuota WHERE DATEDIFF(M,GETDATE(), FechaUltimaCuota) >= 0");
-            $cmdTotalInhabilitados = Database::getInstance()->getDb()->prepare("SELECT  count(1) FROM ULTIMACuota WHERE DATEDIFF(M,GETDATE(), FechaUltimaCuota) < 0");
+            $cmdTotalPersonas = Database::getInstance()->getDb()->prepare('SELECT count(1) FROM Persona');
+            $cmdTotalHabilitados = Database::getInstance()->getDb()->prepare('SELECT  count(1) FROM ULTIMACuota WHERE DATEDIFF(M,GETDATE(), FechaUltimaCuota) >= 0');
+            $cmdTotalInhabilitados = Database::getInstance()->getDb()->prepare('SELECT  count(1) FROM ULTIMACuota WHERE DATEDIFF(M,GETDATE(), FechaUltimaCuota) < 0');
 
             $cmdOrdinario->execute();
             $cmdTranseunte->execute();
@@ -833,21 +1274,19 @@ class PersonaAdo
             $cmdTotalInhabilitados->execute();
 
             $resultCondicion = [
-                "Ordinario" => $cmdOrdinario->fetchColumn(),
-                "Transeunte" => $cmdTranseunte->fetchColumn(),
-                "Fallecido" => $cmdFallecido->fetchColumn(),
-                "Retirado" => $cmdRetirado->fetchColumn(),
-                "Vitalicio" => $cmdVitalicio->fetchColumn(),
-                "Personas" => $cmdTotalPersonas->fetchColumn(),
-                "Habilitados" => $cmdTotalHabilitados->fetchColumn(),
-                "Inhabilitados" => $cmdTotalInhabilitados->fetchColumn()
+                'Ordinario' => $cmdOrdinario->fetchColumn(),
+                'Transeunte' => $cmdTranseunte->fetchColumn(),
+                'Fallecido' => $cmdFallecido->fetchColumn(),
+                'Retirado' => $cmdRetirado->fetchColumn(),
+                'Vitalicio' => $cmdVitalicio->fetchColumn(),
+                'Personas' => $cmdTotalPersonas->fetchColumn(),
+                'Habilitados' => $cmdTotalHabilitados->fetchColumn(),
+                'Inhabilitados' => $cmdTotalInhabilitados->fetchColumn()
             ];
 
             return $resultCondicion;
         } catch (Exception $ex) {
             return $ex->getMessage();
         }
-        
     }
-
 }

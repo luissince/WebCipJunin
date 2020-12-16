@@ -78,7 +78,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
         if (is_array($arrayDomicilio)) {
             echo json_encode(array(
                 "estado" => 1,
-                "data" =>  $arrayDomicilio ,
+                "data" =>  $arrayDomicilio,
             ));
         } else {
             echo json_encode(array(
@@ -148,7 +148,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
         if (is_array($arrayCorreoyWeb)) {
             echo json_encode(array(
                 "estado" => 1,
-                "data" =>$arrayCorreoyWeb,
+                "data" => $arrayCorreoyWeb,
             ));
         } else {
             echo json_encode(array(
@@ -319,6 +319,11 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
                 "estado" => 1,
                 "message" => "Se insertaron correctamente los datos"
             ));
+        } else if ($result == "Duplicado") {
+            echo json_encode(array(
+                "estado" => 3,
+                "message" => "La colegiatura con resolución " . $colegiatura["resolucion"] . " ya se encuentra registrada"
+            ));
         } else {
             echo json_encode(array(
                 "estado" => 2,
@@ -356,6 +361,11 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
                 "estado" => 1,
                 "message" => "Se insertaron correctamente los datos"
             ));
+        } else if ($result == "Duplicado") {
+            echo json_encode(array(
+                "estado" => 3,
+                "message" => "el telefono/celular " . $celular["numero"] . " ya se encuentra registrado."
+            ));
         } else {
             echo json_encode(array(
                 "estado" => 2,
@@ -373,6 +383,11 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
             echo json_encode(array(
                 "estado" => 1,
                 "message" => "Se insertaron correctamente los datos"
+            ));
+        } else if ($result == "Duplicado") {
+            echo json_encode(array(
+                "estado" => 3,
+                "message" => "el conyuge " . $conyuge["conyuge"] . " ya se encuentra registrado."
             ));
         } else {
             echo json_encode(array(
@@ -394,6 +409,11 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
                 "estado" => 1,
                 "message" => "Se insertaron correctamente los datos"
             ));
+        } else if ($result == "Duplicado") {
+            echo json_encode(array(
+                "estado" => 3,
+                "message" => "experiencia " . $experiencia["experiencia"] . " ya se encuentra registrado."
+            ));
         } else {
             echo json_encode(array(
                 "estado" => 2,
@@ -414,6 +434,11 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
                 "estado" => 1,
                 "message" => "Se insertaron correctamente los datos"
             ));
+        } else if ($result == "Duplicado") {
+            echo json_encode(array(
+                "estado" => 3,
+                "message" => "Ya existe una materia " . $estudios["materia"] . " en una misma universidad y con el mismo grado"
+            ));
         } else {
             echo json_encode(array(
                 "estado" => 2,
@@ -431,6 +456,296 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
             echo json_encode(array(
                 "estado" => 1,
                 "message" => "Se insertaron correctamente los datos"
+            ));
+        } else if ($result == "Duplicado") {
+            echo json_encode(array(
+                "estado" => 3,
+                "message" =>  " La dirección: ". $correo["correo"] ." ya se encuentra registrado(a)"
+            ));
+        } else {
+            echo json_encode(array(
+                "estado" => 2,
+                "message" => $result
+            ));
+        }
+    } else if ($_POST["type"] == "updateColegiatura") {
+        $colegiatura["idcolegiatura"] = $_POST["idColegiatura"];
+        $colegiatura["sede"] = $_POST["sede"];
+        $colegiatura["principal"] = $_POST["principal"];
+        $colegiatura["especialidad"] = $_POST["especialidad"];
+        $colegiatura["fechacolegiacion"] = $_POST["fechacolegiacion"];
+        $colegiatura["universidadegreso"] = $_POST["universidadegreso"];
+        $colegiatura["fechaegreso"] = $_POST["fechaegreso"];
+        $colegiatura["universidadtitulacion"] = $_POST["universidadtitulacion"];
+        $colegiatura["fechatitulo"] = $_POST["fechatitulo"];
+        $colegiatura["resolucion"] = $_POST["resolucion"];
+
+        $result = PersonaAdo::updateColegiatura($colegiatura);
+
+        if ($result == "Actualizado") {
+            echo json_encode(array(
+                "estado" => 1,
+                "message" => "Se actualizaron correctamente los datos"
+            ));
+        } else if ($result == "Duplicado") {
+            echo json_encode(array(
+                "estado" => 2,
+                "message" => "La Colegiatura con resolucion " . $colegiatura["resolucion"] . " ya se encuentra registrado."
+            ));
+        } else {
+            echo json_encode(array(
+                "estado" => 3,
+                "message" => $result
+            ));
+        }
+    } else if ($_POST["type"] == "deleteColegiatura") {
+        $colegiatura["idcolegiatura"] = $_POST["idcolegiatura"];
+
+        $result = PersonaAdo::deleteColegiatura($colegiatura);
+
+        if ($result == "eliminado") {
+            echo json_encode(array(
+                "estado" => 1,
+                "message" => "Se eliminaron correctamente los datos"
+            ));
+        } else {
+            echo json_encode(array(
+                "estado" => 2,
+                "message" => $result
+            ));
+        }
+    } else if ($_POST["type"] == "updateDomicilio") {
+        $domicilio["idDireccion"] = $_POST["idDomicilio"];
+        $domicilio["tipo"] = $_POST["tipo"];
+        $domicilio["departamento"] = $_POST["departamento"];
+        $domicilio["direccion"] = $_POST["direccion"];
+
+        $result = PersonaAdo::updateDomicilio($domicilio);
+
+        if ($result == "Actualizado") {
+            echo json_encode(array(
+                "estado" => 1,
+                "message" => "Se actualizaron correctamente los datos"
+            ));
+        } else if ($result == "Duplicado") {
+            echo json_encode(array(
+                "estado" => 2,
+                "message" => "el domicilio " . $domicilio["direccion"] . " ya se encuentra registrado."
+            ));
+        } else {
+            echo json_encode(array(
+                "estado" => 3,
+                "message" => $result
+            ));
+        }
+    } else if ($_POST["type"] == "deleteDomicilio") {
+        $domicilio["iddomicilio"] = $_POST["iddomicilio"];
+
+        $result = PersonaAdo::deleteDomicilio($domicilio);
+
+        if ($result == "eliminado") {
+            echo json_encode(array(
+                "estado" => 1,
+                "message" => "Se eliminaron correctamente los datos"
+            ));
+        } else {
+            echo json_encode(array(
+                "estado" => 2,
+                "message" => $result
+            ));
+        }
+    } else if ($_POST["type"] == "updateTelefono") {
+        $telefono["idTelefono"] = $_POST["idTelefono"];
+        $telefono["tipo"] = $_POST["tipo"];
+        $telefono["numero"] = $_POST["numero"];
+
+        $result = PersonaAdo::updateTelefono($telefono);
+
+        if ($result == "Actualizado") {
+            echo json_encode(array(
+                "estado" => 1,
+                "message" => "Se actualizaron correctamente los datos"
+            ));
+        } else if ($result == "Duplicado") {
+            echo json_encode(array(
+                "estado" => 2,
+                "message" => "el telefono/celular " . $telefono["numero"] . " ya se encuentra registrado."
+            ));
+        } else {
+            echo json_encode(array(
+                "estado" => 3,
+                "message" => $result
+            ));
+        }
+    } else if ($_POST["type"] == "deleteTelefono") {
+        $telefono["idtelefono"] = $_POST["idtelefono"];
+
+        $result = PersonaAdo::deleteTelefono($telefono);
+
+        if ($result == "eliminado") {
+            echo json_encode(array(
+                "estado" => 1,
+                "message" => "Se eliminaron correctamente los datos"
+            ));
+        } else {
+            echo json_encode(array(
+                "estado" => 2,
+                "message" => $result
+            ));
+        }
+    } else if ($_POST["type"] == "updateConyuge") {
+        $conyuge["idConyuge"] = $_POST["idConyuge"];
+        $conyuge["Conyuge"] = $_POST["Conyuge"];
+        $conyuge["hijos"] = $_POST["Hijos"];
+
+        $result = PersonaAdo::updateConyuge($conyuge);
+
+        if ($result == "Actualizado") {
+            echo json_encode(array(
+                "estado" => 1,
+                "message" => "Se actualizaron correctamente los datos"
+            ));
+        } else if ($result == "Duplicado") {
+            echo json_encode(array(
+                "estado" => 2,
+                "message" => "el(la) conyuge " . $conyuge["Conyuge"] . " ya se encuentra registrado."
+            ));
+        } else {
+            echo json_encode(array(
+                "estado" => 3,
+                "message" => $result
+            ));
+        }
+    } else if ($_POST["type"] == "deleteConyuge") {
+        $conyuge["idconyuge"] = $_POST["idconyuge"];
+
+        $result = PersonaAdo::deleteConyuge($conyuge);
+
+        if ($result == "eliminado") {
+            echo json_encode(array(
+                "estado" => 1,
+                "message" => "Se eliminaron correctamente los datos"
+            ));
+        } else {
+            echo json_encode(array(
+                "estado" => 2,
+                "message" => $result
+            ));
+        }
+    } else if ($_POST["type"] == "updateExperiencia") {
+        $experiencia["idexperiencia"] = $_POST["idExperiencia"];
+        $experiencia["entidad"] = $_POST["Entidad"];
+        $experiencia["experiencia"] = $_POST["Experiencia"];
+        $experiencia["inicio"] = $_POST["Inicio"];
+        $experiencia["fin"] = $_POST["Fin"];
+
+        $result = PersonaAdo::updateExperiencia($experiencia);
+
+        if ($result == "Actualizado") {
+            echo json_encode(array(
+                "estado" => 1,
+                "message" => "Se actualizaron correctamente los datos"
+            ));
+        } else if ($result == "Duplicado") {
+            echo json_encode(array(
+                "estado" => 2,
+                "message" => "La experiencia " . $experiencia["experiencia"] . " en" . $experiencia["entidad"] . " ya se encuentra registrado."
+            ));
+        } else {
+            echo json_encode(array(
+                "estado" => 3,
+                "message" => $result
+            ));
+        }
+    } else if ($_POST["type"] == "deleteExperiencia") {
+        $experiencia["idexperiencia"] = $_POST["idExperiencia"];
+
+        $result = PersonaAdo::deleteExperiencia($experiencia);
+
+        if ($result == "eliminado") {
+            echo json_encode(array(
+                "estado" => 1,
+                "message" => "Se eliminaron correctamente los datos"
+            ));
+        } else {
+            echo json_encode(array(
+                "estado" => 2,
+                "message" => $result
+            ));
+        }
+    } else if ($_POST["type"] == "updateEstudios") {
+        $estudios["IdEstudio"] = $_POST["idEstudios"];
+        $estudios["Grado"] = $_POST["grado"];
+        $estudios["Materia"] = $_POST["materia"];
+        $estudios["Universidad"] = $_POST["universidad"];
+        $estudios["Fecha"] = $_POST["fecha"];
+
+        $result = PersonaAdo::updateEstudios($estudios);
+
+        if ($result == "Actualizado") {
+            echo json_encode(array(
+                "estado" => 1,
+                "message" => "Se actualizaron correctamente los datos"
+            ));
+        } else if ($result == "Duplicado") {
+            echo json_encode(array(
+                "estado" => 2,
+                "message" => "Ya existe una materia " . $estudios["Materia"] . " en una misma universidad y con el mismo grado"
+            ));
+        } else {
+            echo json_encode(array(
+                "estado" => 3,
+                "message" => $result
+            ));
+        }
+    } else if ($_POST["type"] == "deleteEstudio") {
+        $estudio["idestudio"] = $_POST["idestudio"];
+
+        $result = PersonaAdo::deleteEstudio($estudio);
+
+        if ($result == "eliminado") {
+            echo json_encode(array(
+                "estado" => 1,
+                "message" => "Se eliminaron correctamente los datos"
+            ));
+        } else {
+            echo json_encode(array(
+                "estado" => 2,
+                "message" => $result
+            ));
+        }
+    } else if ($_POST["type"] == "updateCorreo") {
+        $correo["IdCorreo"] = $_POST["idCorreo"];
+        $correo["Tipo"] = $_POST["tipo"];
+        $correo["Direccion"] = $_POST["direccion"];
+
+        $result = PersonaAdo::updateCorreo($correo);
+
+        if ($result == "Actualizado") {
+            echo json_encode(array(
+                "estado" => 1,
+                "message" => "Se actualizaron correctamente los datos"
+            ));
+        } else if ($result == "Duplicado") {
+            echo json_encode(array(
+                "estado" => 2,
+                "message" => "La direccion: " .  $correo["Direccion"] . " ya se encuentra registrada"
+            ));
+        } else {
+            echo json_encode(array(
+                "estado" => 3,
+                "message" => $result
+            ));
+        }
+    } else if ($_POST["type"] == "deleteCorreo") {
+        $correo["IdCorreo"] = $_POST["idCorreo"];
+
+        $result = PersonaAdo::deleteCorreo($correo);
+
+        if ($result == "eliminado") {
+            echo json_encode(array(
+                "estado" => 1,
+                "message" => "Se eliminaron correctamente los datos"
             ));
         } else {
             echo json_encode(array(

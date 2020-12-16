@@ -1,6 +1,7 @@
 function Cuotas() {
 
     this.componentesCuotas = function() {
+        
         $("#btnCuotas").click(function() {
             if (idDNI == 0) {
                 tools.AlertWarning("Cuotas", "No selecciono ningún ingeniero para obtener sus cuotas.")
@@ -20,6 +21,7 @@ function Cuotas() {
             }
             event.preventDefault();
         });
+
         $("#btnCuotaNormal").click(function() {
             $("#lblCuotasMensaje").html("Cuotas Ordinarias");
             loadCuotas(1);

@@ -92,11 +92,40 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
                 ));
             }
         } else if (intval($_GET["categoria"]) === 5) {
-            $result = ConceptoAdo::getCertificadoHabilidad();
+            $result = ConceptoAdo::getCertificadoHabilidad($_GET['Dni']);
             if (is_array($result)) {
                 echo json_encode(array(
                     "estado" => 1,
-                    "data" => $result
+                    "data" => $result[0],
+                    "especialidades" => $result[1]
+                ));
+            } else {
+                echo json_encode(array(
+                    "estado" => 0,
+                    "message" => $result
+                ));
+            }
+        } else if (intval($_GET["categoria"]) === 6) {
+            $result = ConceptoAdo::getCertificadoHabilidadObraPublica($_GET['Dni']);
+            if (is_array($result)) {
+                echo json_encode(array(
+                    "estado" => 1,
+                    "data" => $result[0],
+                    "especialidades" => $result[1]
+                ));
+            } else {
+                echo json_encode(array(
+                    "estado" => 0,
+                    "message" => $result
+                ));
+            }
+        } else if (intval($_GET["categoria"]) === 7) {
+            $result = ConceptoAdo::getCertificadoHabilidadProyecto($_GET['Dni']);
+            if (is_array($result)) {
+                echo json_encode(array(
+                    "estado" => 1,
+                    "data" => $result[0],
+                    "especialidades" => $result[1]
                 ));
             } else {
                 echo json_encode(array(
@@ -130,6 +159,20 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
                     "message" => $result
                 ));
             }
+        }
+    } else if ($_GET["type"] === "getubigeo") {
+        $arrayUbigeo = ConceptoAdo::getUbigeo();
+
+        if (is_array($arrayUbigeo)) {
+            echo json_encode(array(
+                "estado" => 1,
+                "ubicacion" => $arrayUbigeo,
+            ));
+        } else {
+            echo json_encode(array(
+                "estado" => 2,
+                "message" => $arrayUbigeo
+            ));
         }
     }
 } else if ($_SERVER['REQUEST_METHOD'] == 'POST') {

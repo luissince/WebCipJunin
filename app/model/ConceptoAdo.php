@@ -181,40 +181,91 @@ class ConceptoAdo
         }
     }
 
-    public static function getCertificadoHabilidad()
+    public static function getCertificadoHabilidad($dni)
     {
         try {
-            $cmdHabilidad = "SELECT idConcepto,Categoria,Concepto,Precio FROM Concepto WHERE Categoria = 5 AND Estado = 1";
-            $cmdConcepto = Database::getInstance()->getDb()->prepare($cmdHabilidad);
+            $array = array();
+
+            $cmdConcepto = Database::getInstance()->getDb()->prepare("SELECT idConcepto,Categoria,Concepto,Precio FROM Concepto WHERE Categoria = 5 AND Estado = 1");
             $cmdConcepto->execute();
             $resultConcepto = $cmdConcepto->fetchAll();
-            return $resultConcepto;
+
+            $cmdEspecialidad = Database::getInstance()->getDb()->prepare("SELECT c.idColegiado, c.idEspecialidad, e.Especialidad FROM Colegiatura AS c 
+                INNER JOIN Especialidad AS e ON e.idEspecialidad = c.idEspecialidad where c.idDNI = ?");
+            $cmdEspecialidad->bindParam(1, $dni, PDO::PARAM_STR);
+            $cmdEspecialidad->execute();
+
+            $arrayEspecialidades = array();
+            while ($row = $cmdEspecialidad->fetch()) {
+                array_push($arrayEspecialidades, array(
+                    "idColegiado" => $row["idColegiado"],
+                    "idEspecialidad" => $row["idEspecialidad"],
+                    "Especialidad" => $row["Especialidad"]
+                ));
+            }
+
+            array_push($array, $resultConcepto, $arrayEspecialidades);
+            return $array;
         } catch (Exception $ex) {
             return $ex->getMessage();
         }
     }
 
-    public static function getCertificadoHabilidadObraPublica()
+    public static function getCertificadoHabilidadObraPublica($dni)
     {
         try {
-            $cmdHabilidad = "SELECT idConcepto,Categoria,Concepto, Precio FROM Concepto WHERE Categoria = 6 AND Estado = 1";
-            $cmdConcepto = Database::getInstance()->getDb()->prepare($cmdHabilidad);
+            $array = array();
+
+            $cmdConcepto = Database::getInstance()->getDb()->prepare("SELECT idConcepto,Categoria,Concepto, Precio FROM Concepto WHERE Categoria = 6 AND Estado = 1");
             $cmdConcepto->execute();
             $resultConcepto = $cmdConcepto->fetchObject();
-            return $resultConcepto;
+
+            $cmdEspecialidad = Database::getInstance()->getDb()->prepare("SELECT c.idColegiado, c.idEspecialidad, e.Especialidad FROM Colegiatura AS c 
+                INNER JOIN Especialidad AS e ON e.idEspecialidad = c.idEspecialidad where c.idDNI = ?");
+            $cmdEspecialidad->bindParam(1, $dni, PDO::PARAM_STR);
+            $cmdEspecialidad->execute();
+
+            $arrayEspecialidades = array();
+            while ($row = $cmdEspecialidad->fetch()) {
+                array_push($arrayEspecialidades, array(
+                    "idColegiado" => $row["idColegiado"],
+                    "idEspecialidad" => $row["idEspecialidad"],
+                    "Especialidad" => $row["Especialidad"]
+                ));
+            }
+
+            array_push($array, $resultConcepto, $arrayEspecialidades);
+            return $array;
         } catch (Exception $ex) {
             return $ex->getMessage();
         }
     }
 
-    public static function getCertificadoHabilidadProyecto()
+    public static function getCertificadoHabilidadProyecto($dni)
     {
         try {
-            $cmdHabilidad = "SELECT idConcepto,Categoria,Concepto, Precio FROM Concepto WHERE Categoria = 7 AND Estado = 1";
-            $cmdConcepto = Database::getInstance()->getDb()->prepare($cmdHabilidad);
+            $array = array();
+
+            $cmdConcepto = Database::getInstance()->getDb()->prepare("SELECT idConcepto,Categoria,Concepto, Precio FROM Concepto WHERE Categoria = 7 AND Estado = 1");
             $cmdConcepto->execute();
             $resultConcepto = $cmdConcepto->fetchObject();
-            return $resultConcepto;
+
+            $cmdEspecialidad = Database::getInstance()->getDb()->prepare("SELECT c.idColegiado, c.idEspecialidad, e.Especialidad FROM Colegiatura AS c 
+                INNER JOIN Especialidad AS e ON e.idEspecialidad = c.idEspecialidad where c.idDNI = ?");
+            $cmdEspecialidad->bindParam(1, $dni, PDO::PARAM_STR);
+            $cmdEspecialidad->execute();
+
+            $arrayEspecialidades = array();
+            while ($row = $cmdEspecialidad->fetch()) {
+                array_push($arrayEspecialidades, array(
+                    "idColegiado" => $row["idColegiado"],
+                    "idEspecialidad" => $row["idEspecialidad"],
+                    "Especialidad" => $row["Especialidad"]
+                ));
+            }
+
+            array_push($array, $resultConcepto, $arrayEspecialidades);
+            return $array;
         } catch (Exception $ex) {
             return $ex->getMessage();
         }
@@ -251,6 +302,28 @@ class ConceptoAdo
                 ));
             }
             return $array;
+        } catch (Exception $ex) {
+            return $ex->getMessage();
+        }
+    }
+
+    public function getUbigeo()
+    {
+        try {
+            $arrayUbigeo = array();
+
+            $cmdUbigeo = Database::getInstance()->getDb()->prepare(" SELECT idUbigeo, CONCAT(Departamento, ' - ', Provincia, ' - ', 
+            Distrito) AS Ubicacion FROM Ubigeo ");
+            $cmdUbigeo->execute();
+
+            while ($row = $cmdUbigeo->fetch()) {
+                array_push($arrayUbigeo, array(
+                    'IdUbicacion' => $row['idUbigeo'],
+                    'Ubicacion' => $row['Ubicacion'],
+                ));
+            }
+
+            return $arrayUbigeo;
         } catch (Exception $ex) {
             return $ex->getMessage();
         }
