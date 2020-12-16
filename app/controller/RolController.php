@@ -3,100 +3,85 @@ header("Access-Control-Allow-Origin: *");
 header("Access-Control-Allow-Headers: Origin, X-Requested-With, Content-Type, Accept");
 header('Access-Control-Allow-Methods: GET, POST, PUT, DELETE');
 header('Content-Type: application/json; charset=UTF-8');
-include_once '../model/UsuarioAdo.php';
+include_once '../model/RolAdo.php';
 
 if ($_SERVER['REQUEST_METHOD'] == 'GET') {
     if ($_GET["type"] === "alldata") {
-        $nombres = $_GET['nombres'];
+        $nombre = $_GET['nombre'];
         $posicionPagina = $_GET['posicionPagina'];
         $filasPorPagina = $_GET['filasPorPagina'];
 
-        $usuario = UsuarioAdo::getAllUsuarios($nombres, intval($posicionPagina), intval($filasPorPagina));
-        if (is_array($usuario)) {
+        $rol = RolAdo::getAllRoles($nombre, intval($posicionPagina), intval($filasPorPagina));
+        if (is_array($rol)) {
             echo json_encode(array(
                 "estado" => 1,
-                "usuarios" => $usuario[0],
-                "total" => $usuario[1],
+                "roles" => $rol[0],
+                "total" => $rol[1],
             ));
         } else {
             echo json_encode(array(
                 "estado" => 2,
-                "message" => $usuario,
+                "message" => $rol,
             ));
         }
-    } else if ($_GET["type"] === "login") {
-        $usuario = $_GET['usuario'];
-        $clave = $_GET['clave'];
-
-        $result = UsuarioAdo::login($usuario, $clave);
-        if (is_object($result)) {
-            session_start();
-            $_SESSION["IdUsuario"] = $result->idUsuario;
-            $_SESSION["Nombres"] = $result->Nombres;
-            $_SESSION["Apellidos"] = $result->Apellidos;
-            $_SESSION["Usuario"] = $result->Usuario;
-            $_SESSION["Permisos"] = $result->Permisos;
-            $_SESSION["Estado"] = $result->Estado;
-            $_SESSION["Sistema"] = $result->Sistema;
+    } else if ($_GET["type"] === "data") {
+        $rol = RolAdo::getRolById($_GET["idRol"]);
+        if (is_object($rol)) {
             echo json_encode(array(
                 "estado" => 1,
-                "datos" => $result,
-            ));
-        } else if ($result == false) {
-            echo json_encode(array(
-                "estado" => 2,
-                "message" => "Usuario o contraseña incorrecto(s).",
+                "object" => $rol
             ));
         } else {
             echo json_encode(array(
-                "estado" => 0,
-                "message" => $result,
+                "estado" => 2,
+                "message" => $rol
             ));
         }
     }
-} else if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-    if ($_POST["type"] === "insertUsuario") {
-        $usuario["nombres"] = trim($_POST['nombres']);
-        $usuario["apellidos"] = trim($_POST['apellidos']);
-        $usuario["usuarios"] = trim($_POST['usuarios']);
-        $usuario["contrasena"] = $_POST['contrasena'];
 
-        $result = UsuarioAdo::insertUsuario($usuario);
+} else if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+    if ($_POST["type"] === "insertRol") {
+        $rol["Nombre"] = trim($_POST['Nombre']);
+        $rol["Descripcion"] = trim($_POST['Descripcion']);
+        $rol["Estado"] = $_POST['Estado'];
+        $rol["Sistema"] = $_POST['Sistema'];
+
+        $result = RolAdo::insertRol($rol);
 
         if ($result == "insertado") {
             echo json_encode(array(
                 "estado" => 1,
-                "message" => "Se actualizaron correctamente los datos",
+                "message" => "Se registraron correctamente los datos",
             ));
         } else if ($result == "duplicado") {
             echo json_encode(array(
                 "estado" => 3,
-                "message" => "El usuario " . $usuario["nombres"] . " " . $usuario["apellidos"] . " ya se encuentra registrado.",
+                "message" => "El rol " . $rol["Nombre"] . " ya se encuentra registrado.",
             ));
         } else {
             echo json_encode(array(
                 "estado" => 2,
-                "message" => "Error al tratar de actualizar los datos " . $result,
+                "message" => "Error al tratar de registrar los datos " . $result,
             ));
         }
-    } else if ($_POST["type"] === 'updateUsuario') {
-        $usuario["idusuario"] = $_POST['idusuario'];
-        $usuario["nombres"] = trim($_POST['nombres']);
-        $usuario["apellidos"] = trim($_POST['apellidos']);
-        $usuario["usuarios"] = trim($_POST['usuario']);
-        $usuario["contrasena"] = $_POST['contrasena'];
+    } else if ($_POST["type"] === 'updateRol') {
+        $rol["idRol"] = $_POST['idRol'];
+        $rol["Nombre"] = trim($_POST['Nombre']);
+        $rol["Descripcion"] = trim($_POST['Descripcion']);
+        $rol["Estado"] = $_POST['Estado'];
+        $rol["Sistema"] = $_POST['Sistema'];
 
-        $result = UsuarioAdo::updateUsuario($usuario);
+        $result = RolAdo::updateRol($rol);
 
         if ($result == "actualizado") {
             echo json_encode(array(
                 "estado" => 1,
                 "message" => "Se actualizaron correctamente los datos",
             ));
-        } else if ($result == "duplicado") {
+        } else if ($result == "sistema") {
             echo json_encode(array(
                 "estado" => 3,
-                "message" => "El usuario " . $usuario["nombres"] . " " . $usuario["apellidos"] . " ya se encuentra registrado.",
+                "message" => "Ya existe un rol preterminado del sistema",
             ));
         } else {
             echo json_encode(array(
@@ -104,7 +89,10 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
                 "message" => "Error al tratar de actualizar los datos " . $result,
             ));
         }
-    } else if ($_POST["type"] === 'deleteUsuario') {
+    } 
+
+    /*
+    else if ($_POST["type"] === 'deleteUsuario') {
         $usuario["idusuario"] = $_POST['idUsuario'];
 
         $result = UsuarioAdo::deleteUsuario($usuario);
@@ -131,4 +119,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
             ));
         }
     }
+    */
+
 }

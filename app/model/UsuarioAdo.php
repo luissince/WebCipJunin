@@ -138,4 +138,22 @@ class UsuarioAdo
             return $ex->getMessage();
         }
     }
+
+    // Funciones de Ruber
+
+    public static function login($usuario, $clave){
+
+        try {
+            $cmdLogin = Database::getInstance()->getDb()->prepare("SELECT * FROM Usuario WHERE Usuario = ? AND Clave = ?");
+            $cmdLogin->bindParam(1, $usuario, PDO::PARAM_STR);
+            $cmdLogin->bindParam(2, $clave, PDO::PARAM_STR);
+            $cmdLogin->execute();
+
+            $result = $cmdLogin->fetchObject();
+            // $result = $cmdLogin->fetch();
+            return $result;
+        } catch (Exception $ex) {
+            return $ex->getMessage();
+        }
+    }
 }
