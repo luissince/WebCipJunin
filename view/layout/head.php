@@ -30,9 +30,11 @@
 <!-- eliminar en caso falle-->
 <!-- jQuery 3 -->
 <script src="adminlte/bower_components/jquery/dist/jquery.min.js"></script>
-<script src="adminlte/bower_components/select2/dist/js/select2.min.js"></script>
 <!-- Bootstrap 3.3.7 -->
 <script src="adminlte/bower_components/bootstrap/dist/js/bootstrap.js"></script>
+<!-- Select 2 -->
+<script src="adminlte/bower_components/select2/dist/js/select2.min.js"></script>
+<script src="adminlte/bower_components/select2/dist/js/select2.full.min.js"></script>
 <!-- Slimscroll -->
 <script src="adminlte/bower_components/jquery-slimscroll/jquery.slimscroll.min.js"></script>
 <!-- FastClick -->
