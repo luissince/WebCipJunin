@@ -150,18 +150,57 @@ class PersonaAdo
     {
         try {
             $array = array();
+            //trae informacion del usuario (por su dni)
             $comandoPersona = Database::getInstance()->getDb()->prepare("SELECT p.idDNI, p.idUsuario, p.Nombres, p.Apellidos, p.Sexo, cast(p.FechaNac as date) as FechaNacimiento, 
                                     p.EstadoCivil, p.FechaReg, p.RUC, p.CIP, p.Condicion, p.TEMP, p.RAZONSOCIAL
                                     FROM Persona AS p  WHERE p.idDNI = ?");
             $comandoPersona->bindParam(1, $idPersona, PDO::PARAM_STR);
             $comandoPersona->execute();
             $object = $comandoPersona->fetchObject();
-
+            //trae la imagen del usuario
             $cmdImage = Database::getInstance()->getDb()->prepare("SELECT TOP 1 
             idDNI,Foto
             FROM PersonaImagen WHERE idDNI = ?");
             $cmdImage->bindParam(1, $idPersona, PDO::PARAM_STR);
             $cmdImage->execute();
+            //trae informacion del historial de pagos del usuario
+            $cmdHistorial = Database::getInstance()->getDb()->prepare("SELECT dbo.Ingreso.idIngreso, dbo.Ingreso.idDNI, CONCAT(dbo.Ingreso.Serie,' - ',dbo.Ingreso.NumRecibo) AS Recibo, dbo.Ingreso.Fecha, 
+                CASE 
+                    WHEN NOT idCuota IS NULL THEN RIGHT(CONVERT(VARCHAR(10), Cuota.FechaIni, 103), 7) + ' a ' + RIGHT(CONVERT(VARCHAR(10), Cuota.FechaFin, 103), 7) 
+                        ELSE Ingreso.Observacion END AS Observacion, dbo.vINGRESOTotal.Total,
+                            CASE 
+                                WHEN NOT idCuota IS NULL THEN 1
+                                WHEN NOT idAltaColegio IS NULL THEN 4 
+                                WHEN NOT idHabilidad IS NULL THEN 5 
+                                WHEN NOT idResidencia IS NULL THEN 6 
+                                WHEN NOT idProyecto IS NULL THEN 7 
+                                WHEN NOT idPeritaje IS NULL THEN 8 
+                                ELSE 100 END AS TipoIngreso
+                FROM dbo.Ingreso INNER JOIN dbo.vINGRESOTotal ON dbo.vINGRESOTotal.idIngreso = dbo.Ingreso.idIngreso 
+                                LEFT OUTER JOIN dbo.Cuota ON dbo.Cuota.idIngreso = dbo.Ingreso.idIngreso 
+                                LEFT OUTER JOIN dbo.AltaColegio ON dbo.AltaColegio.idIngreso = dbo.Ingreso.idIngreso 
+                                LEFT OUTER JOIN dbo.CERTHabilidad ON dbo.CERTHabilidad.idIngreso = dbo.Ingreso.idIngreso 
+                                LEFT OUTER JOIN dbo.CERTResidencia ON dbo.CERTResidencia.idIngreso = dbo.Ingreso.idIngreso 
+                                LEFT OUTER JOIN dbo.CERTProyecto ON dbo.CERTProyecto.idIngreso = dbo.Ingreso.idIngreso 
+                                LEFT OUTER JOIN dbo.Peritaje ON dbo.Peritaje.idIngreso = dbo.Ingreso.idIngreso
+                WHERE (dbo.Ingreso.Estado = 'C') AND idDNI = ?
+                ORDER BY dbo.Ingreso.Fecha DESC");
+            $cmdHistorial->bindParam(1, $idPersona, PDO::PARAM_STR);
+            $cmdHistorial->execute();
+            $count=0;
+            $arrayHistorial = array();
+            while ($row = $cmdHistorial->fetch()) {
+                $count++;
+                array_push($arrayHistorial, array(
+                    "Id" => $count,
+                    "idIngreso" => $row["idIngreso"],
+                    "Recibo" => $row["Recibo"],
+                    "Fecha" => $row["Fecha"],
+                    "Concepto" => $row["TipoIngreso"],
+                    "Monto" => number_format($row["Total"], 2, ".", ""),
+                    "Observacion" => $row["Observacion"],
+                ));
+            }
 
             $image = null;
 
@@ -169,7 +208,7 @@ class PersonaAdo
                 $image = (object)array($row['idDNI'], base64_encode($row['Foto']));
             }
 
-            array_push($array, $object, $image);
+            array_push($array, $object, $image,$arrayHistorial);
             return $array;
         } catch (Exception $ex) {
             return $ex->getMessage();
@@ -873,14 +912,14 @@ class PersonaAdo
             } else {
                 $comandoInsert = Database::getInstance()->getDb()->prepare('INSERT INTO Web (idDNI, Tipo, Direccion) VALUES (?,?,LOWER(?));');
 
-            $comandoInsert->bindParam(1, $correo['dni'], PDO::PARAM_STR);
-            $comandoInsert->bindParam(2, $correo['tipo'], PDO::PARAM_INT);
-            $comandoInsert->bindParam(3, $correo['correo'], PDO::PARAM_STR);
+                $comandoInsert->bindParam(1, $correo['dni'], PDO::PARAM_STR);
+                $comandoInsert->bindParam(2, $correo['tipo'], PDO::PARAM_INT);
+                $comandoInsert->bindParam(3, $correo['correo'], PDO::PARAM_STR);
 
-            $comandoInsert->execute();
-            Database::getInstance()->getDb()->commit();
-            return 'Insertado';
-            }            
+                $comandoInsert->execute();
+                Database::getInstance()->getDb()->commit();
+                return 'Insertado';
+            }
         } catch (Exception $ex) {
             Database::getInstance()->getDb()->rollback();
             return $ex->getMessage();

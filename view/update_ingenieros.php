@@ -1662,17 +1662,6 @@ if (!isset($_GET["idPersona"])) {
                 event.preventDefault();
             });
 
-            // $("#EbtnAceptarColegiatura").click(function() {
-            //     colegiatura.AceptarUpdate();
-            // });
-
-            // $("#EbtnAceptarColegiatura").keypress(function(event) {
-            //     if (event.keyCode === 13) {
-            //         colegiatura.AceptarUpdate();
-            //     }
-            //     event.preventDefault();
-            // });
-
             $("#btnAceptarDomicilio").click(function() {
                 modelDomicilio.crudDomicilio();
             });
@@ -1737,19 +1726,6 @@ if (!isset($_GET["idPersona"])) {
                 }
                 event.preventDefault();
             });
-
-            // $("#EbtnCancelar").click(function() {
-            //     $("#editColegiatura").modal("hide");
-            //     clearModal();
-            // });
-
-            // $("#EbtnCancelar").keypress(function(event) {
-            //     if (event.keyCode === 13) {
-            //         $("#editColegiatura").modal("hide");
-            //         clearModal();
-            //     }
-            //     event.preventDefault();
-            // });
         });
 
 

@@ -1,5 +1,6 @@
 function CobroIngenieros() {
 
+
     this.componentesIngenieros = function () {
         $("#btnIngenieros").click(function (event) {
             $('#mdIngenieros').modal('show');
@@ -147,12 +148,15 @@ function CobroIngenieros() {
             },
             beforeSend: function () {
                 $('#mdIngenieros').modal('hide');
+                $("#tbHistorial").empty();
                 idDNI = 0;
                 tools.AlertInfo("Ingeniero", "En proceso de busqueda.", "toast-bottom-right");
+                $("#tbHistorial").append('<tr class="text-center"><td colspan="6"><img src="./images/spiner.gif"/><p>cargando información.</p></td></tr>');
             },
             success: function (data) {
                 if (data.estado === 1) {
-                    idDNI = data.persona.idDNI;
+                    $("#tbHistorial").empty();
+                    idDNI = data.persona.idDNI;                    
                     let Condicion = data.persona.Condicion ==
                         'T' ? 'Transeunte' :
                         data.persona.Condicion == 'F' ? 'Fallecido' :
@@ -163,11 +167,22 @@ function CobroIngenieros() {
                     $("#lblDocumentSeleccionado").html(data.persona.idDNI);
                     $("#lblDatosSeleccionado").html(data.persona.Apellidos + " " + data.persona.Nombres);
                     $("#lblDireccionSeleccionado").html("");
+
+                    for (let Historial of data.historial) {
+                        $("#tbHistorial").append('<tr>' +
+                                '<td>' + Historial.Id + '</td>' +
+                                '<td>' + Historial.Recibo + '</td>' +
+                                '<td>' + Historial.Fecha + '</td>' +
+                                '<td>' + Historial.Concepto + '</td>' +
+                                '<td>' + Historial.Monto+ '</td>' +
+                                '<td>' + Historial.Observacion + '</td>' +
+                                '</tr>');
+                    }
+
                     tools.AlertSuccess("Ingeniero", "Los obtuvo los datos correctamente.", "toast-bottom-right");
 
-                    $("#btnCertificado").attr('data-toggle','dropdown');
-                    $("#btnCertificado").attr('aria-expanded','true');
                 } else {
+                    $("#tbHistorial").empty();
                     idDNI = 0;
                     $("#lblCipSeleccionado").html("--");
                     $("#lblTipoIngenieroSeleccionado").html("--");
@@ -178,6 +193,7 @@ function CobroIngenieros() {
                 }
             },
             error: function (error) {
+                $("#tbHistorial").empty();
                 tools.AlertError("Ingeniero", "Error en obtener los datos, comuníquese con su proveedor o intente nuevamente.", "toast-bottom-right");
             }
         });
