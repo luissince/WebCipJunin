@@ -466,38 +466,39 @@
             });
         }
 
-        function deleteUser(idU) {
-            $("#deleteUser").modal("show");
-            $("#btnDeleteUser").unbind();
+        function deleteUser(id) {
+            tools.ModalDialog("Usuarios", "¿Está seguro de eliminar el usuario?", function(value) {
+                if (value == true) {
+                    $.ajax({
+                        url: "../app/controller/UsuarioController.php",
+                        method: "POST",
+                        data: {
+                            "type": "deleteUsuario",
+                            "idUsuario": id,
+                        },
+                        beforeSend: function() {
+                            tools.ModalAlertInfo("Usuarios", "Procesando petición..");
+                        },
+                        success: function(result) {
+                            if (result.estado == 1) {
+                                tools.ModalAlertSuccess("Usuarios", result.message);
+                                loadInitUsuario();
+                            } else if (result.estado == 2) {
+                                tools.ModalAlertWarning("Usuarios", result.message);
 
-            $("#btnDeleteUser").bind("click", function() {
-                $.ajax({
-                    url: "../app/controller/UsuarioController.php",
-                    method: "POST",
-                    data: {
-                        "type": "deleteUsuario",
-                        "idUsuario": idU,
-                    },
-                    beforeSend: function() {
-                        tools.AlertInfo("Usuario", "Procesando información.");
-                    },
-                    success: function(result) {
-                        if (result.estado == 1) {
-                            tools.AlertSuccess("Usuario", result.message);
-                            $("#deleteUser").modal("hide");
-                        } else if (result.estado == 2) {
-                            tools.AlertWarning("Usuario", result.message);
-                        } else if (result.estado == 3) {
-                            tools.AlertWarning("Usuario", result.message);
-                        } else {
-                            tools.AlertWarning("Usuario", result.message);
+                            } else if (result.estado == 3) {
+                                tools.ModalAlertWarning("Usuarios", result.message);
+
+                            } else {
+                                tools.ModalAlertWarning("Usuarios", result.message);
+                            }
+                        },
+                        error: function(error) {
+                            tools.ModalAlertError("Usuarios", error.responseText);
                         }
-                    },
-                    error: function(error) {
-                        tools.AlertError("Usuario", "Error fatal: Comuniquese con el administrador del sistema");
-                    }
-                });
-            })
+                    });
+                }
+            });
         }
     </script>
 </body>
