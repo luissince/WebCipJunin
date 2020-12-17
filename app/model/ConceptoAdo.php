@@ -25,7 +25,8 @@ class ConceptoAdo
             convert(varchar,cast(Fin as date), 103) as Fin,
             Observacion,
             Codigo,
-            Estado
+            Estado, 
+            Asignado
             FROM Concepto 
             where Concepto like concat(?,'%') 
             order by Categoria asc,Concepto asc,cast(Inicio as date) desc, cast(Fin as date) desc
@@ -49,6 +50,7 @@ class ConceptoAdo
                     "Observacion" => $row["Observacion"],
                     "Codigo" => $row["Codigo"],
                     "Estado" => $row["Estado"],
+                    "Asignado" => $row["Asignado"],
                 ));
             }
 
@@ -383,7 +385,8 @@ class ConceptoAdo
             Fin = ?,
             Observacion = ?,
             Codigo = ?,
-            Estado = ?
+            Estado = ?,
+            Asignado =?
             WHERE idConcepto = ?");
 
             $cmdConcepto->bindParam(1, $data["Categoria"], PDO::PARAM_INT);
@@ -395,7 +398,8 @@ class ConceptoAdo
             $cmdConcepto->bindParam(7, $data["Observacion"], PDO::PARAM_STR);
             $cmdConcepto->bindParam(8, $data["Codigo"], PDO::PARAM_INT);
             $cmdConcepto->bindParam(9, $data["Estado"], PDO::PARAM_STR);
-            $cmdConcepto->bindParam(10, $data["IdConcepto"], PDO::PARAM_INT);
+            $cmdConcepto->bindParam(10, $data["Asignado"], PDO::PARAM_INT);
+            $cmdConcepto->bindParam(11, $data["IdConcepto"], PDO::PARAM_INT);
             $cmdConcepto->execute();
             Database::getInstance()->getDb()->commit();
             return "updated";

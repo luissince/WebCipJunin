@@ -323,11 +323,11 @@
                 }
             });
 
-            $("#btnCancelarModal").click(function(){
+            $("#btnCancelarModal").click(function() {
                 clearModalConcepto();
             });
 
-            $("#btnCloseModal").click(function(){
+            $("#btnCloseModal").click(function() {
                 clearModalConcepto();
             });
 
@@ -407,12 +407,16 @@
                                     (concepto.Categoria == '7') ? 'Certificado de proyecto' :
                                     (concepto.Categoria == '8') ? 'Peritaje' : 'Ingresos Diversos';
 
-                                let propiedad = concepto.Propiedad == "0" ? "Precio Ordinario" :
+                                let propiedad =
+                                    concepto.Propiedad == "48" || concepto.Propiedad == "16" ? "Se deriva al CIP NACIONAL" :
+                                    "Se deriva al CIP JUNÍN";
+
+                                //0 cip junin
+                                //48 cip nacional
+
+                                let Asinador = concepto.Asignado == "0" ? "Precio Ordinario" :
                                     concepto.Propiedad == "1" ? "Precio Transeunte" :
-                                    concepto.Propiedad == "2" ? "Precio Vitalicio" :
-                                    concepto.Propiedad == "128" ? "Precio Variable" :
-                                    concepto.Propiedad == "48" ? "Se deriva al CIP NACIONAL" :
-                                    concepto.Propiedad == "16" ? "Se deriva al CIP NACIONAL" : "";
+                                    concepto.Propiedad == "2" ? "Precio Vitalicio" : "Precio Variable";
 
                                 tbTable.append('<tr>' +
                                     '<td style="text-align: center;color: #2270D1;">' +
@@ -424,6 +428,7 @@
                                     '<td>' + concepto.Precio + '</td>' +
                                     '<td>' + concepto.Inicio.split(' ')[0] + '<br>' + concepto.Fin.split(' ')[0] + '</td>' +
                                     '<td> ' + propiedad + '</td>' +
+                                    '<td>' + Asinador + '</td>' +
                                     '<td>' + estado + '</td>' +
                                     '<td>' + btnUpdate + '</td>' +
                                     '</tr>');
@@ -462,6 +467,10 @@
         }
 
         function validateInsertConcepto() {
+            insertConcepto();
+        }
+
+        function insertConcepto() {
             if ($("#cbCategoria").val() == "0") {
                 tools.AlertWarning("Advertencia", "Seleccione la categoría del concepto.");
             } else if ($("#txtConcepto").val() == '' || $("#txtConcepto").val().length < 2) {
@@ -473,62 +482,44 @@
             } else if ($("#txtFecha_fin").val() == '') {
                 tools.AlertWarning("Advertencia", "Seleccione la fecha de fin.");
             } else {
-
-                insertConcepto(
-                    $("#cbCategoria").val(),
-                    $("#txtConcepto").val(),
-                    $("#txtPrecio").val(),
-                    $("#precio_ordinario").is(":checked") ? 0 : $("#precio_transeunte").is(":checked") ? 1 : $("#precio_vitalicio").is(":checked") ? 2 : $("#precio_deriva").is(":checked") ? 48 : 128,
-                    $("#txtFecha_inicio").val(),
-                    $("#txtFecha_fin").val(),
-                    $("#rbJunin").is(":checked") ? 0 : 1,
-                    "",
-                    $("#txtCodigo").val(),
-                    $("#estado").is(":checked"));
-            }
-        }
-
-        function insertConcepto(categoria, concepto, precio, propiedad, inicio, fin, asignado, observacion, codigo, estado) {
-            $.ajax({
-                url: "../app/controller/ConceptoController.php",
-                method: "POST",
-                data: {
-                    "type": "create",
-                    "Categoria": categoria,
-                    "Concepto": concepto,
-                    "Precio": precio,
-                    "Propiedad": propiedad,
-                    "Inicio": inicio,
-                    "Fin": fin,
-                    "Asignado": asignado,
-                    "Observacion": observacion.toUpperCase(),
-                    "Codigo": codigo,
-                    "Estado": estado
-                },
-                beforeEnd: function() {
-                    $("#btnaceptar").empty();
-                    $("#btnaceptar").append('<img src="./images/spiner.gif" width="25" height="25" />')
-                },
-                success: function(result) {
-                    if (result.estado == 1) {
-                        tools.AlertSuccess("Mensaje", result.message)
-                        setTimeout(function() {
-                            location.href = "conceptos.php"
-                        }, 1000);
-                    } else {
-                        tools.AlertWarning("Mensaje", result.message)
-                        setTimeout(function() {
-                            $("#btnaceptar").empty();
-                            $("#btnaceptar").append('<i class="fa fa-check"></i> Aceptar');
-                        }, 1000);
+                tools.ModalDialog("Conceptos", "¿Está seguro de continuar?", function(value) {
+                    if (value == true) {
+                        $.ajax({
+                            url: "../app/controller/ConceptoController.php",
+                            method: "POST",
+                            data: {
+                                "type": "create",
+                                "Categoria": categoria,
+                                "Concepto": concepto,
+                                "Precio": precio,
+                                "Propiedad": $("#rbJunin").is(":checked") ? 0 : 48,
+                                "Inicio": inicio,
+                                "Fin": fin,
+                                "Asignado": $("#precio_ordinario").is(":ckecked") ? 0 : $("#precio_transeunte").is(":ckecked") ? 1 : $("#precio_vitalicio").is(":ckecked") ? 2 : 3,
+                                "Observacion": observacion.toUpperCase(),
+                                "Codigo": codigo,
+                                "Estado": estado,
+                            },
+                            beforeEnd: function() {
+                                clearModalConcepto();
+                                tools.ModalAlertInfo("Conceptos", "Procesando petición..");
+                            },
+                            success: function(result) {
+                                if (result.estado == 1) {
+                                    tools.AlertSuccess("Mensaje", result.message)
+                                    tools.ModalAlertSuccess("Conceptos", result.message);
+                                } else {
+                                    tools.ModalAlertWarning("Conceptos", result.message);
+                                }
+                            },
+                            error: function(error) {
+                                tools.ModalAlertError("Conceptos", error.responseText);
+                            }
+                        });
                     }
-                },
-                error: function(error) {
-                    tools.AlertError("Error", error.responseText);
-                    $("#btnaceptar").empty();
-                    $("#btnaceptar").append('<i class="fa fa-check"></i> Aceptar');
-                }
-            });
+                });
+            }
+
         }
 
         function clearModalConcepto() {

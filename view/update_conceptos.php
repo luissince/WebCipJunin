@@ -319,9 +319,10 @@ if (!isset($_GET["idConcepto"])) {
                         $("#categoria").val(),
                         $("#concepto").val(),
                         $("#precio").val(),
-                        $("#precio_ordinario").is(":checked") ? 0 : $("#precio_transeunte").is(":checked") ? 1 : $("#precio_vitalicio").is(":checked") ? 2 : $("#precio_deriva").is(":checked") ? 48 : 128,
+                        $("#rbJunin").is(":checked") ? 0 : 48,
                         $("#fecha_inicio").val(),
                         $("#fecha_fin").val(),
+                        $("#precio_ordinario").is(":ckecked") ? 0 : $("#precio_transeunte").is(":ckecked") ? 1 : $("#precio_vitalicio").is(":ckecked") ? 2 : 3,
                         "",
                         $("#codigo").val(),
                         $("#estado").is(":checked"));
@@ -332,7 +333,7 @@ if (!isset($_GET["idConcepto"])) {
             }
         }
 
-        function updateConcepto(IdConcepto, categoria, concepto, precio, propiedad, inicio, fin, observacion, codigo, estado) {
+        function updateConcepto(IdConcepto, categoria, concepto,precio, asignado, inicio, fin, propiedad, observacion, codigo, estado) {
             $.ajax({
                 url: "../app/controller/ConceptoController.php",
                 method: "POST",
@@ -347,7 +348,8 @@ if (!isset($_GET["idConcepto"])) {
                     "Fin": fin,
                     "Observacion": observacion.toUpperCase(),
                     "Codigo": codigo,
-                    "Estado": estado
+                    "Estado": estado,
+                    "Asignado": asignado,
                 },
                 beforeEnd: function() {
                     $("#btnaceptar").empty();

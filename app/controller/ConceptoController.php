@@ -209,6 +209,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
         $data["Observacion"] = $_POST["Observacion"];
         $data["Codigo"] = $_POST["Codigo"];
         $data["Estado"] = $_POST["Estado"];
+        $data["Asignado"] = $_POST["Asignado"];
         $result = ConceptoAdo::update($data);
         if ($result == "updated") {
             echo json_encode(array(
