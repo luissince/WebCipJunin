@@ -25,15 +25,13 @@
             <!-- modal añadir usuario  -->
             <div class="row">
                 <div class="modal fade" id="mdAddUser">
-                    <div class="modal-dialog modal-xs" style="width: 500px;">
+                    <div class="modal-dialog modal-xs">
                         <div class="modal-content">
                             <div class="modal-header">
                                 <button type="button" class="close" id="btnCloseAddUser">
                                     <i class="fa fa-close"></i>
                                 </button>
-                                <h4 class="modal-title">
-                                    <i class="fa fa-user">
-                                    </i> Registrar Usuario
+                                <h4 class="modal-title" id="modal-user-title">
                                 </h4>
                             </div>
                             <div class="modal-body">
@@ -60,16 +58,6 @@
                                 <div class="row" style="padding-top: 0.5em;">
                                     <div class="col-md-12">
                                         <div class="form-group">
-                                            <label for="Universidad" class="col-sm-4 control-label">Contraseña</label>
-                                            <div class="col-sm-8">
-                                                <input id="txtContrasena" type="text" class="form-control" placeholder="Ingrese una contraseña" required="">
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="row" style="padding-top: 0.5em;">
-                                    <div class="col-md-12">
-                                        <div class="form-group">
                                             <label for="Universidad" class="col-sm-4 control-label">Usuario</label>
                                             <div class="col-sm-8">
                                                 <input id="txtAddUsuario" type="text" class="form-control" placeholder="Ingrese su usuario" required="">
@@ -77,11 +65,21 @@
                                         </div>
                                     </div>
                                 </div>
+                                <div class="row" style="padding-top: 0.5em;">
+                                    <div class="col-md-12">
+                                        <div class="form-group">
+                                            <label for="Universidad" class="col-sm-4 control-label">Contraseña</label>
+                                            <div class="col-sm-8">
+                                                <input id="txtContrasena" type="password" class="form-control" placeholder="Ingrese una contraseña" required="">
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
                             </div>
                             <div class="modal-footer">
-                                <button type="button" class="btn btn-warning" id="btnAceptarAddUser">
-                                    <i class="fa fa-check"></i> Aceptar</button>
-                                <button type="button" class="btn btn-primary" data-dismiss="modal" id="cancel-nuevo">
+                                <button type="button" class="btn btn-danger" id="btnAceptarAddUser">
+                                    <i class="fa fa-check"></i> Guardar</button>
+                                <button type="button" class="btn btn-primary" id="btnCancelAddUser">
                                     <i class="fa fa-remove"></i> Cancelar</button>
                             </div>
                             </form>
@@ -90,76 +88,6 @@
                 </div>
             </div>
             <!-- end modal añadir usuario -->
-
-            <!-- modal update usuario  -->
-            <div class="row">
-                <div class="modal fade" id="mdEditUser">
-                    <div class="modal-dialog modal-xs" style="width: 500px;">
-                        <div class="modal-content">
-                            <div class="modal-header">
-                                <button type="button" class="close" id="btnCloseEditUser">
-                                    <i class="fa fa-close"></i>
-                                </button>
-                                <h4 class="modal-title">
-                                    <i class="fa fa-user">
-                                    </i> Editar Usuario
-                                </h4>
-                            </div>
-                            <div class="modal-body">
-                                <div class="row">
-                                    <div class="col-md-12">
-                                        <div class="form-group">
-                                            <label for="txtEditNombres" class="col-sm-4 control-label">Nombres</label>
-                                            <div class="col-sm-8">
-                                                <input id="txtEditNombres" type="text" class="form-control" placeholder="" required="">
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="row" style="padding-top: 0.5em;">
-                                    <div class="col-md-12">
-                                        <div class="form-group">
-                                            <label for="txtEditApellidos" class="col-sm-4 control-label">Apellidos</label>
-                                            <div class="col-sm-8">
-                                                <input id="txtEditApellidos" type="text" class="form-control" placeholder="" required="">
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="row" style="padding-top: 0.5em;">
-                                    <div class="col-md-12">
-                                        <div class="form-group">
-                                            <label for="Universidad" class="col-sm-4 control-label">Contraseña</label>
-                                            <div class="col-sm-8">
-                                                <input id="txtEditContrasena" type="text" class="form-control" placeholder="" required="">
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="row" style="padding-top: 0.5em;">
-                                    <div class="col-md-12">
-                                        <div class="form-group">
-                                            <label for="Universidad" class="col-sm-4 control-label">Usuario</label>
-                                            <div class="col-sm-8">
-                                                <input id="txtEditUsuario" type="text" class="form-control" placeholder="" required="">
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="modal-footer">
-                                <button type="button" class="btn btn-warning" id="btnAceptarEditUser">
-                                    <i class="fa fa-check"></i> Aceptar</button>
-                                <button type="button" class="btn btn-primary" data-dismiss="modal" id="cancel-edit">
-                                    <i class="fa fa-remove"></i> Cancelar</button>
-                            </div>
-                            </form>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <!-- end modal update usuario  -->
-
             <!-- modal eliminar Usuario  -->
             <div class="row">
                 <div class="modal fade" id="deleteUser">
@@ -285,6 +213,8 @@
         let filasPorPagina = 10;
         let tbTable = $("#tbTable");
 
+        let idUsuario = 0;
+
         $(document).ready(function() {
 
             loadInitUsuario();
@@ -319,52 +249,31 @@
                 }
             });
 
-            $("#btnNuevo").click(function() {
-                $("#mdAddUser").modal("show");
-            })
-
             $("#btnSearch").click(function() {
                 paginacion = 1;
                 loadTableUsuario($("#buscar").val());
                 opcion = 1;
             });
 
+            //---------------------------------------------------------------------------
+            $("#btnNuevo").click(function() {
+                $("#mdAddUser").modal("show");
+                $("#modal-user-title").empty()
+                $("#modal-user-title").append('<i class="fa fa-user"></i> Registrar Usuario')
+            })
+
             $("#btnAceptarAddUser").click(function() {
-                crudUsuario($("#txtAddNombres").val(), $("#txtAddApellidos").val(), $("#txtAddUsuario").val(), $("#txtContrasena").val());
+                crudUsuario();
             });
 
-            $("#cancel-nuevo").click(function() {
-                $("#mdAddUser").modal("hide");
-                $("#txtAddNombres").val('');
-                $("#txAddApellidos").val('');
-                $("#txtAddUsuario").val('');
-                $("#txtContrasena").val('');
-            });
-
-            $("#cancel-edit").click(function() {
-                $("#mdEditUser").modal("hide");
-                // $("#txtEditNombres").val('');
-                // $("#txAddApellidos").val('');
-                // $("#txtAddUsuario").val('');
-                // $("#txtContrasena").val('');
-            });
-
-            $("#cancel-eliminar").click(function() {
-                $("#deleteUser").modal("hide");
+            $("#btnCancelAddUser").click(function() {
+                clearModalUsuario()
             });
 
             $("#btnCloseAddUser").click(function() {
-                $("#mdAddUser").modal("hide");
-                $("#txtNombres").val('');
-                $("#txtApellidos").val('');
-                $("#txtUsuario").val('');
+                clearModalUsuario()
             });
 
-            // $("#btnCLoseEditUniversidad").click(function() {
-            //     $("#editAddUniversidad").modal("hide");
-            //     $("#txtUniversidad1").val('');
-            //     $("#txtSiglas1").val('');
-            // });
         });
 
         function onEventPaginacion() {
@@ -399,7 +308,7 @@
                 beforeSend: function() {
                     tbTable.empty();
                     tbTable.append(
-                        '<tr class="text-center"><td colspan="6"><img src="./images/spiner.gif"/><p>cargando información.</p></td></tr>'
+                        '<tr class="text-center"><td colspan="6"><img src="./images/spiner.gif"/><p>Cargando información.</p></td></tr>'
                     );
                     state = true;
                 },
@@ -460,159 +369,136 @@
             });
         }
 
-        function crudUsuario(nombres, apellidos, usuarios, contrasenas) {
-            let nombre = nombres;
-            let apellido = apellidos;
-            let usuario = usuarios;
-            let contrasena = contrasenas;
-
-            console.log('entro');
+        function crudUsuario() {
             if ($("#txtAddNombres").val() == '') {
                 tools.AlertWarning('Usuario', "Ingrese minimo un nombre correcto");
                 $("#txtAddNombres").focus();
             } else if ($("#txtAddApellidos").val() == '') {
                 tools.AlertWarning('Usuario', "Ingrese apellidos");
                 $("#txtAddApellidos").focus();
-            } else if ($("#txtContrasena").val() == '') {
-                tools.AlertWarning('Usuario', "Digite una contraseña ");
-                $("#txtContrasena").focus();
             } else if ($("#txtAddUsuario").val() == '') {
                 tools.AlertWarning('Usuario', "Ingrese usuario");
                 $("#txtAddUsuario").focus();
+            } else if ($("#txtContrasena").val() == '') {
+                tools.AlertWarning('Usuario', "Digite una contraseña ");
+                $("#txtContrasena").focus();
             } else {
-                $.ajax({
-                    url: "../app/controller/UsuarioController.php",
-                    method: "POST",
-                    data: {
-                        "type": "insertUsuario",
-                        "nombres": nombre,
-                        "apellidos": apellido,
-                        "usuarios": usuario,
-                        "contrasena": contrasena
-                    },
-                    beforeSend: function() {
-                        tools.AlertInfo("Usuario", "Procesando información.");
-                    },
-                    success: function(result) {
-                        if (result.estado == 1) {
-                            tools.AlertSuccess("Usuario", "Se registro correctamente.");
-                            $("#mdAddUser").modal("hide");
-                            // clearModal();
-                        } else if (result.estado == 3) {
-                            tools.AlertWarning("Usuario", result.message);
-                        } else {
-                            console.log(result);
-                            tools.AlertWarning("Usuario", result.message);
-                        }
-                    },
-                    error: function(error) {
-                        console.log(error);
-                        tools.AlertError("Usuario", "Error fatal: Comuniquese con el administrador del sistema");
+                tools.ModalDialog("Usuarios", "¿Está seguro de continuar?", function(value) {
+                    if (value == true) {
+                        $.ajax({
+                            url: "../app/controller/UsuarioController.php",
+                            method: "POST",
+                            data: {
+                                "type": "insertUsuario",
+                                "idusuario": idUsuario,
+                                "nombres": $("#txtAddNombres").val(),
+                                "apellidos": $("#txtAddApellidos").val(),
+                                "usuarios": $("#txtAddUsuario").val(),
+                                "contrasena": $("#txtContrasena").val()
+                            },
+                            beforeSend: function() {
+                                clearModalUsuario();
+                                tools.ModalAlertInfo("Usuarios", "Procesando petición..");
+                            },
+                            success: function(result) {
+                                if (result.estado == 1) {
+                                    tools.ModalAlertSuccess("Usuarios", result.message);
+                                    loadInitUsuario();
+                                } else if (result.estado == 3) {
+                                    tools.ModalAlertWarning("Usuarios", result.message);
+                                } else {
+                                    tools.ModalAlertWarning("Usuarios", result.message);
+                                }
+                            },
+                            error: function(error) {
+                                tools.ModalAlertError("Usuarios", error.responseText);
+                            }
+                        });
                     }
                 });
             }
         }
 
-        function updateUsuario(idUsuario, nombre, apellido, usuario, clave) {
-            // let idUsuari = idUsuario;
-            // let nombre = nombre;
-            // let apellido = apellido;
-            // let usuario = usuario;
-            // let clave = clave;
+        function clearModalUsuario() {
+            $("#mdAddUser").modal("hide")
+            $("#modal-user-title").empty()
+            $("#txtAddNombres").val("")
+            $("#txtAddApellidos").val("")
+            $("#txtAddUsuario").val("")
+            $("#txtContrasena").val("")
+        }
 
-            $("#mdEditUser").modal("show");
-            $("#txtEditNombres").val(nombre);
-            $("#txtEditApellidos").val(apellido);
-            $("#txtEditContrasena").val(clave);
-            $("#txtEditUsuario").val(usuario);
+        function updateUsuario(id) {
+            $("#mdAddUser").modal("show");
+            $("#modal-user-title").empty()
+            $("#modal-user-title").append('<i class="fa fa-user"></i> Editar Usuario')
+            $.ajax({
+                url: "../app/controller/UsuarioController.php",
+                method: "GET",
+                data: {
+                    "type": "usuario",
+                    "idUsuario": id
+                },
+                beforeSend: function() {
+                    $("#modal-user-title").append(
+                        '<img src="./images/spiner.gif" width="25" height="25" style="margin-left: 10px;"/>'
+                    )
+                },
+                success: function(result) {
+                    $("#modal-user-title").empty();
+                    $("#modal-user-title").append('<i class="fa fa-address-book"> </i> Editar Usuario');
+                    if (result.estado == 1) {
+                        idUsuario = id;
+                        $("#txtAddNombres").val(result.object.Nombres);
+                        $("#txtAddApellidos").val(result.object.Apellidos);
+                        $("#txtAddUsuario").val(result.object.Usuario);
+                        $("#txtContrasena").val(result.object.Clave);
+                        tools.AlertInfo("Información", "Se cargo correctamente los datos.");
+                    } else {
+                        tools.AlertWarning("Advertencia", result.message);
+                    }
+                },
+                error: function(error) {
+                    $("#modal-user-title").empty();
+                    $("#modal-user-title").append('<i class="fa fa-address-book"> </i> Editar Usuario');
+                    tools.AlertError("Error", error.responseText);
+                }
+            });
+        }
 
-            $("#btnAceptarEditUser").unbind();
-
-            $("#btnAceptarEditUser").bind("click", function() {
-                if ($("#txtEditNombres").val() == '') {
-                    tools.AlertWarning('Usuario', "Ingrese un usuario");
-                    $("#txtEditNombres").focus();
-                } else if ($("#txtEditApellidos").val() == '') {
-                    tools.AlertWarning('Usuario', "Ingrese los apellidos");
-                    $("#txtEditApellidos").focus();
-                } else if ($("#txtEditContrasena").val() == '') {
-                    tools.AlertWarning('Usuario', "Ingrese una contraseña");
-                    $("#txtEditContrasena").focus();
-                } else if ($("#txtEditUsuario").val() == '') {
-                    tools.AlertWarning('Usuario', "Ingrese un usuario");
-                    $("#txtEditUsuario").focus();
-                } else {
+        function deleteUser(id) {
+            tools.ModalDialog("Usuarios", "¿Está seguro de eliminar el usuario?", function(value) {
+                if (value == true) {
                     $.ajax({
                         url: "../app/controller/UsuarioController.php",
                         method: "POST",
                         data: {
-                            "type": "updateUsuario",
-                            "idusuario": idUsuario,
-                            "nombres": $("#txtEditNombres").val(),
-                            "apellidos": $("#txtEditApellidos").val(),
-                            "contrasena": $("#txtEditContrasena").val(),
-                            "usuario": $("#txtEditUsuario").val()
+                            "type": "deleteUsuario",
+                            "idUsuario": id,
                         },
                         beforeSend: function() {
-                            tools.AlertInfo("Usuario", "Procesando información.");
+                            tools.ModalAlertInfo("Usuarios", "Procesando petición..");
                         },
                         success: function(result) {
                             if (result.estado == 1) {
-                                tools.AlertSuccess("Usuario", "Se actualizo correctamente.");
-                                $("#mdEditUser").modal("hide");
+                                tools.ModalAlertSuccess("Usuarios", result.message);
+                                loadInitUsuario();
+                            } else if (result.estado == 2) {
+                                tools.ModalAlertWarning("Usuarios", result.message);
+
                             } else if (result.estado == 3) {
-                                tools.AlertWarning("Usuario", result.message);
-                                // } else if (result.estado == 4) {
-                                //     tools.AlertWarning("Universidad", result.message);
+                                tools.ModalAlertWarning("Usuarios", result.message);
+
                             } else {
-                                tools.AlertWarning("Usuario", result.message);
+                                tools.ModalAlertWarning("Usuarios", result.message);
                             }
                         },
                         error: function(error) {
-                            console.log(error);
-                            tools.AlertError("Usuario", "Error fatal: Comuniquese con el administrador del sistema");
+                            tools.ModalAlertError("Usuarios", error.responseText);
                         }
                     });
                 }
-            })
-        }
-
-        function deleteUser(idU) {
-            $("#deleteUser").modal("show");
-
-            let idUser = idU;
-
-            $("#btnDeleteUser").unbind();
-
-            $("#btnDeleteUser").bind("click", function() {
-                $.ajax({
-                    url: "../app/controller/UsuarioController.php",
-                    method: "POST",
-                    data: {
-                        "type": "deleteUsuario",
-                        "idUsuario": idUser,
-                    },
-                    beforeSend: function() {
-                        tools.AlertInfo("Usuario", "Procesando información.");
-                    },
-                    success: function(result) {
-                        if (result.estado == 1) {
-                            tools.AlertSuccess("Usuario", result.message);
-                            $("#deleteUser").modal("hide");
-                        } else if (result.estado == 2) {
-                            tools.AlertWarning("Usuario", result.message);
-                        } else if (result.estado == 3) {
-                            tools.AlertWarning("Usuario", result.message);
-                        } else {
-                            tools.AlertWarning("Usuario", result.message);
-                        }
-                    },
-                    error: function(error) {
-                        console.log(error);
-                        tools.AlertError("Usuario", "Error fatal: Comuniquese con el administrador del sistema");
-                    }
-                });
-            })
+            });
         }
     </script>
 </body>

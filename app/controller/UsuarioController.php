@@ -53,42 +53,34 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
                 "message" => $result,
             ));
         }
-    }
-} else if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-    if ($_POST["type"] === "insertUsuario") {
-        $usuario["nombres"] = trim($_POST['nombres']);
-        $usuario["apellidos"] = trim($_POST['apellidos']);
-        $usuario["usuarios"] = trim($_POST['usuarios']);
-        $usuario["contrasena"] = $_POST['contrasena'];
-
-        $result = UsuarioAdo::insertUsuario($usuario);
-
-        if ($result == "insertado") {
+    } else if ($_GET["type"] === "usuario") {
+        $result = UsuarioAdo::getUsuarioById($_GET['idUsuario']);
+        if (is_object($result)) {
             echo json_encode(array(
                 "estado" => 1,
-                "message" => "Se actualizaron correctamente los datos",
-            ));
-        } else if ($result == "duplicado") {
-            echo json_encode(array(
-                "estado" => 3,
-                "message" => "El usuario " . $usuario["nombres"] . " " . $usuario["apellidos"] . " ya se encuentra registrado.",
+                "object" => $result,
             ));
         } else {
             echo json_encode(array(
                 "estado" => 2,
-                "message" => "Error al tratar de actualizar los datos " . $result,
+                "message" => $result,
             ));
         }
-    } else if ($_POST["type"] === 'updateUsuario') {
-        $usuario["idusuario"] = $_POST['idusuario'];
+    }
+} else if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+    if ($_POST["type"] === "insertUsuario") {
+        $usuario["idusuario"] = trim($_POST['idusuario']);
         $usuario["nombres"] = trim($_POST['nombres']);
         $usuario["apellidos"] = trim($_POST['apellidos']);
-        $usuario["usuarios"] = trim($_POST['usuario']);
+        $usuario["usuarios"] = trim($_POST['usuarios']);
         $usuario["contrasena"] = $_POST['contrasena'];
-
-        $result = UsuarioAdo::updateUsuario($usuario);
-
-        if ($result == "actualizado") {
+        $result = UsuarioAdo::insertUsuario($usuario);
+        if ($result == "insertado") {
+            echo json_encode(array(
+                "estado" => 1,
+                "message" => "Se registraron correctamente los datos",
+            ));
+        } else if ($result == "actualizado") {
             echo json_encode(array(
                 "estado" => 1,
                 "message" => "Se actualizaron correctamente los datos",
@@ -106,9 +98,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
         }
     } else if ($_POST["type"] === 'deleteUsuario') {
         $usuario["idusuario"] = $_POST['idUsuario'];
-
         $result = UsuarioAdo::deleteUsuario($usuario);
-
         if ($result == "actualizado") {
             echo json_encode(array(
                 "estado" => 1,
