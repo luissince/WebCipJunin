@@ -31,9 +31,11 @@
              <li>
                  <a href="./"><i class="fa fa-home"></i> <span>Inicio</span></a>
              </li>
-
              <li>
                  <a href="./usuario.php"><i class="fa fa-laptop"></i> <span>Usuarios</span></a>
+             </li>
+             <li>
+                 <a href="./roles.php"><i class="fa fa-table"></i> <span>Roles</span></a>
              </li>
              <li>
                  <a href="./ingresos.php"><i class="fa fa-sitemap"></i><span>Ingresos</span></a>
@@ -45,7 +47,7 @@
                  <a href="./universidad.php"><i class="fa fa-bank"></i><span>Universidades</span></a>
              </li>
              <li>
-                 <a href="./conceptos.php"><i class="fa fa-sort-amount-asc"></i><span>Conceptos</span></a>
+                 <a href="./conceptos.php"><i class="fa fa fa-list-alt"></i><span>Conceptos</span></a>
              </li>
              <li>
                  <a href="./ingenieros.php"><i class="fa fa-user"></i> <span>Ingenieros</span></a>

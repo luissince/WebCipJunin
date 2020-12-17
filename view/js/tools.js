@@ -120,6 +120,36 @@ function Tools() {
         }
     };
 
+    this.ModalDialog = function(title, mensaje, callback) {
+        swal({
+            title: title,
+            text: mensaje,
+            type: 'question',
+            showCancelButton: true,
+            confirmButtonText: "Si",
+            cancelButtonText: "No",
+            allowOutsideClick: false
+        }).then((isConfirm) => {
+            if (isConfirm.value) {
+                callback(true)
+            } else {
+                callback(false)
+            }
+        });
+    }
+
+    this.ModalAlertSuccess = function(title, message) {
+        swal({ title: title, text: message, type: "success", showConfirmButton: true, allowOutsideClick: false });
+    }
+    this.ModalAlertWarning = function(title, message) {
+        swal({ title: title, text: message, type: "warning", showConfirmButton: true, allowOutsideClick: false });
+    }
+    this.ModalAlertError = function(title, message) {
+        swal({ title: title, text: message, type: "error", showConfirmButton: true, allowOutsideClick: false });
+    }
+    this.ModalAlertInfo = function(title, message) {
+        swal({ title: title, text: message, type: "info", showConfirmButton: false, allowOutsideClick: false, allowEscapeKey: false, });
+    }
 
     this.AlertSuccess = function(title, message, position = "toast-top-right") {
         toastr.options = {

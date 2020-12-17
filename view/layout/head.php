@@ -24,7 +24,7 @@
 <link rel="stylesheet" href="adminlte/dist/css/skins/_all-skins.min.css">
 <link rel="stylesheet" href="css/toastr.min.css">
 <link rel="stylesheet" href="css/themes/semantic.min.css">
-<link rel="stylesheet" href="css/alertify.min.css">
+<link rel="stylesheet" href="css/sweetalert.min.css">
 <link rel="stylesheet" href="css/main.css">
 
 <!-- eliminar en caso falle-->
@@ -45,7 +45,7 @@
 <script src="adminlte/bower_components/chart.js/Chart.js"></script>
 <!-- AdminLTE for demo purposes -->
 <script src="adminlte/dist/js/demo.js"></script>
-<script src="js/alertify.min.js"></script>
+<script src="js/sweetalert.min.js"></script>
 <script src="js/toastr.min.js"></script>
 
 <style>
