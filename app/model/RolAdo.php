@@ -80,7 +80,7 @@ class RolAdo
                     $idRol = Database::getInstance()->getDb()->lastInsertId();
                     $comandoPermisos = Database::getInstance()->getDb()->prepare("INSERT INTO Permiso (idRol, idModulo, ver,crear,actualizar,eliminar) VALUES (?,?,?,?,?,?)");
                     for ($i = 0; $i < 10; $i++) {
-                        $comandoPermisos->execute(array($idRol, ($i + 1), 1, 1, 1, 1));
+                        $comandoPermisos->execute(array($idRol, ($i + 1), 0, 0, 0, 0));
                     }
                     Database::getInstance()->getDb()->commit();
                     return "insertado";
@@ -137,6 +137,28 @@ class RolAdo
             }
             return $array;
         } catch (Exception $ex) {
+            return $ex->getMessage();
+        }
+    }
+
+    public static function updateModulo($body)
+    {
+        try {
+            Database::getInstance()->getDb()->beginTransaction();
+            $comando = Database::getInstance()->getDb()->prepare("UPDATE Permiso SET ver = ?,crear=?,actualizar=?,eliminar=? WHERE idPermiso = ?");
+            foreach ($body["modulos"] as $value) {
+                $comando->execute(array(
+                    $value["ver"],
+                    $value["crear"],
+                    $value["actualizar"],
+                    $value["eliminar"],
+                    $value["idPermiso"]
+                ));
+            }
+            Database::getInstance()->getDb()->commit();
+            return "updated";
+        } catch (Exception $ex) {
+            Database::getInstance()->getDb()->rollBack();
             return $ex->getMessage();
         }
     }

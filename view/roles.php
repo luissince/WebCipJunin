@@ -231,13 +231,7 @@
             });
 
             $("#btnAceptarModulos").click(function() {
-                $("#tbModulos tr").each(function(row, tr) {
-                    console.log($(tr).find("td:eq(2)").find('input[type="checkbox"]').is(':checked'))
-                    //   $(tr).find("td:eq(0)").find("input").val();
-                    //      $(tr).find("td:eq(1)").find("input").val();
-                    // $(tr).find("td:eq(2)").find('input[type="checkbox"]').is(':checked');
-
-                });
+                updateModules();
             });
 
             //-------------------------------------------------------
@@ -260,7 +254,6 @@
             });
 
             //-------------------------------------------------------
-
         });
 
         function loadInitRoles() {
@@ -342,7 +335,6 @@
             });
         }
 
-
         function insertRol() {
             if ($("#nombre").val() == '' || $("#nombre").val().length < 3) {
                 tools.AlertWarning("Advertencia", "Ingrese un nombre de rol por favor.");
@@ -356,7 +348,7 @@
                             method: "POST",
                             data: {
                                 "type": "insertRol",
-                                "IdRol":idRol,
+                                "IdRol": idRol,
                                 "Nombre": $("#nombre").val(),
                                 "Descripcion": $("#descripcion").val(),
                                 "Estado": $("#estado").val()
@@ -383,13 +375,46 @@
             }
         }
 
-        function clearModalNuevoRol() {
-            $("#confirmar").modal("hide");
-            $("#modal-rol-title").empty();
-            $("#nombre").val("");
-            $("#descripcion").val("");
-            $("#estado").val("1");
-            idRol=0;
+        function updateModules() {
+            let modulos = [];
+            $("#tbModulos tr").each(function(row, tr) {
+                modulos.push({
+                    "idPermiso": $(this).attr('id'),
+                    "ver": $(tr).find("td:eq(2)").find('input[type="checkbox"]').is(':checked'),
+                    "crear": $(tr).find("td:eq(3)").find('input[type="checkbox"]').is(':checked'),
+                    "actualizar": $(tr).find("td:eq(4)").find('input[type="checkbox"]').is(':checked'),
+                    "eliminar": $(tr).find("td:eq(5)").find('input[type="checkbox"]').is(':checked'),
+                });
+            });
+            tools.ModalDialog("Modulos", "¿Está seguro de continuar?", function(value) {
+                if (value == true) {
+                    $.ajax({
+                        url: '../app/controller/ModuloController.php',
+                        method: 'POST',
+                        accepts: "application/json",
+                        contentType: "application/json",
+                        data: JSON.stringify({
+                            "type": "updateModulo",
+                            "modulos": modulos
+                        }),
+                        beforeSend: function() {
+                            $("#mostrarModulos").modal("hide");
+                            tools.ModalAlertInfo("Roles", "Procesando petición..");
+                        },
+                        success: function(result) {
+                            if (result.estado == 1) {
+                                tools.ModalAlertSuccess("Modulos", result.message);
+                                loadInitRoles();
+                            } else {
+                                tools.ModalAlertWarning("Modulos", result.message);
+                            }
+                        },
+                        error: function(error) {
+                            tools.ModalAlertError("Modulos", error.responseText);
+                        }
+                    });
+                }
+            });
         }
 
         function loadDataRol(id) {
@@ -414,7 +439,7 @@
                     $("#modal-rol-title").append('<i class="fa fa-address-book"> </i> Editar Rol');
                     if (result.estado === 1) {
                         let rol = result.object;
-                        idRol =id;
+                        idRol = id;
                         $("#nombre").val(rol.Nombre)
                         $("#descripcion").val(rol.Descripcion)
                         $("#estado").val(rol.Estado)
@@ -431,6 +456,14 @@
             });
         }
 
+        function clearModalNuevoRol() {
+            $("#confirmar").modal("hide");
+            $("#modal-rol-title").empty();
+            $("#nombre").val("");
+            $("#descripcion").val("");
+            $("#estado").val("1");
+            idRol = 0;
+        }
 
         function loadTableModulos(idRol) {
             $("#mostrarModulos").modal("show");
@@ -443,34 +476,44 @@
                 },
                 beforeSend: function() {
                     $("#tbModulos").empty();
+                    $("#tbModulos").append(
+                        '<tr class="text-center"><td colspan="6"><img src="./images/spiner.gif"/><p>Cargando información.</p></td></tr>'
+                    );
+
                 },
                 success: function(result) {
-                    console.log(result)
                     if (result.estado == 1) {
+                        $("#tbModulos").empty();
                         for (let modulo of result.modulos) {
-                            $("#tbModulos").append('<tr>' +
+                            $("#tbModulos").append('<tr id="' + modulo.idPermiso + '">' +
                                 '          <td>' + modulo.id + '</td>' +
                                 '          <td>' + modulo.nombre + '</td>' +
                                 '          <td>' +
-                                '          ' + (modulo.ver == 1 ? '<input class="form-group checkbox" type="checkbox" checked>' : '<input class="form-group checkbox" type="checkbox" checked>') + '' +
+                                '          ' + (modulo.ver == 1 ? '<input class="form-group checkbox" type="checkbox" checked>' : '<input class="form-group checkbox" type="checkbox" >') + '' +
                                 '          </td>' +
                                 '          <td>' +
-                                '          ' + (modulo.crear == 1 ? '<input class="form-group checkbox" type="checkbox" checked>' : '<input class="form-group checkbox" type="checkbox" checked>') + '' +
+                                '          ' + (modulo.crear == 1 ? '<input class="form-group checkbox" type="checkbox" checked>' : '<input class="form-group checkbox" type="checkbox" >') + '' +
                                 '          </td>' +
                                 '          <td>' +
-                                '          ' + (modulo.actualizar == 1 ? '<input class="form-group checkbox" type="checkbox" checked>' : '<input class="form-group checkbox" type="checkbox" checked>') + '' +
+                                '          ' + (modulo.actualizar == 1 ? '<input class="form-group checkbox" type="checkbox" checked>' : '<input class="form-group checkbox" type="checkbox" >') + '' +
                                 '          </td>' +
                                 '          <td>' +
-                                '          ' + (modulo.eliminar == 1 ? '<input class="form-group checkbox" type="checkbox" checked>' : '<input class="form-group checkbox" type="checkbox" checked>') + '' +
+                                '          ' + (modulo.eliminar == 1 ? '<input class="form-group checkbox" type="checkbox" checked>' : '<input class="form-group checkbox" type="checkbox" >') + '' +
                                 '          </td>' +
                                 '      </tr>');
                         }
                     } else {
-
+                        $("#tbModulos").empty();
+                        $("#tbModulos").append(
+                            '<tr class="text-center"><td colspan="6"><p>'+result.message+'</p></td></tr>'
+                        );
                     }
                 },
                 error: function(error) {
-                    console.log(error)
+                    $("#tbModulos").empty();
+                    $("#tbModulos").append(
+                        '<tr class="text-center"><td colspan="6"><p>'+error.responseText+'</p></td></tr>'
+                    );
                 }
             });
         }
