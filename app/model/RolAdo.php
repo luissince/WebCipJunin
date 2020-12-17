@@ -40,53 +40,52 @@ class RolAdo
     {
         try {
             Database::getInstance()->getDb()->beginTransaction();
-            $comandSelect = Database::getInstance()->getDb()->prepare("SELECT * FROM Rol WHERE UPPER(Nombre) = UPPER(?)");
-            $comandSelect->bindParam(1, $rol["Nombre"], PDO::PARAM_STR);
+
+            $comandSelect = Database::getInstance()->getDb()->prepare("SELECT * FROM Rol WHERE idRol = ?");
+            $comandSelect->bindParam(1, $rol["IdRol"], PDO::PARAM_STR);
             $comandSelect->execute();
             if ($comandSelect->fetch()) {
-                Database::getInstance()->getDb()->rollback();
-                return "duplicado";
-            } else {
-                $comandoInsert = Database::getInstance()->getDb()->prepare("INSERT INTO Rol (Nombre, Descripcion, Estado) VALUES (UPPER(?), UPPER(?), ?)");
-                $comandoInsert->bindParam(1, $rol["Nombre"], PDO::PARAM_STR);
-                $comandoInsert->bindParam(2, $rol["Descripcion"], PDO::PARAM_STR);
-                $comandoInsert->bindParam(3, $rol["Estado"], PDO::PARAM_STR);
-                $comandoInsert->execute();
-
-                $idRol = Database::getInstance()->getDb()->lastInsertId();
-                $comandoPermisos = Database::getInstance()->getDb()->prepare("INSERT INTO Permiso (idRol, idModulo, ver,crear,actualizar,eliminar) VALUES (?,?,?,?,?,?)");
-                for ($i = 0; $i < 10; $i++) {
-                    $comandoPermisos->execute(array($idRol, ($i+1), 1, 1, 1, 1));
+                $comandSelect = Database::getInstance()->getDb()->prepare("SELECT * FROM Rol WHERE idRol <> ? AND UPPER(Nombre) = UPPER(?)");
+                $comandSelect->bindParam(1, $rol["IdRol"], PDO::PARAM_STR);
+                $comandSelect->bindParam(2, $rol["Nombre"], PDO::PARAM_STR);
+                $comandSelect->execute();
+                if ($comandSelect->fetch()) {
+                    Database::getInstance()->getDb()->rollback();
+                    return "duplicado";
+                } else {
+                    $comandoInsert = Database::getInstance()->getDb()->prepare("UPDATE Rol SET Nombre = UPPER(?), Descripcion = UPPER(?), Estado = ? WHERE idRol = ?");
+                    $comandoInsert->bindParam(1, $rol["Nombre"], PDO::PARAM_STR);
+                    $comandoInsert->bindParam(2, $rol["Descripcion"], PDO::PARAM_STR);
+                    $comandoInsert->bindParam(3, $rol["Estado"], PDO::PARAM_STR);
+                    $comandoInsert->bindParam(4, $rol["IdRol"], PDO::PARAM_INT);
+                    $comandoInsert->execute();
+                    Database::getInstance()->getDb()->commit();
+                    return "actualizado";
                 }
-                Database::getInstance()->getDb()->commit();
-                return "insertado";
-            }
-        } catch (Exception $ex) {
-            Database::getInstance()->getDb()->rollback();
-            return $ex->getMessage();
-        }
-    }
+            } else {
 
-    public static function updateRol($rol)
-    {
-        try {
-            Database::getInstance()->getDb()->beginTransaction();
-            // $comandSelect = Database::getInstance()->getDb()->prepare("SELECT * FROM Rol WHERE Sistema = ? ");
-            // $comandSelect->bindParam(1, $rol["Sistema"], PDO::PARAM_STR);
-            // $comandSelect->execute();
-            // if ($comandSelect->fetch()) {
-            //     Database::getInstance()->getDb()->rollback();
-            //     return "sistema";
-            // } else {
-            $comandoInsert = Database::getInstance()->getDb()->prepare("UPDATE Rol SET Nombre = UPPER(?), Descripcion = UPPER(?), Estado = ? WHERE idRol = ?");
-            $comandoInsert->bindParam(1, $rol["Nombre"], PDO::PARAM_STR);
-            $comandoInsert->bindParam(2, $rol["Descripcion"], PDO::PARAM_STR);
-            $comandoInsert->bindParam(3, $rol["Estado"], PDO::PARAM_STR);
-            $comandoInsert->bindParam(4, $rol["idRol"], PDO::PARAM_INT);
-            $comandoInsert->execute();
-            Database::getInstance()->getDb()->commit();
-            return "actualizado";
-            // }
+                $comandSelect = Database::getInstance()->getDb()->prepare("SELECT * FROM Rol WHERE UPPER(Nombre) = UPPER(?)");
+                $comandSelect->bindParam(1, $rol["Nombre"], PDO::PARAM_STR);
+                $comandSelect->execute();
+                if ($comandSelect->fetch()) {
+                    Database::getInstance()->getDb()->rollback();
+                    return "duplicado";
+                } else {
+                    $comandoInsert = Database::getInstance()->getDb()->prepare("INSERT INTO Rol (Nombre, Descripcion, Estado) VALUES (UPPER(?), UPPER(?), ?)");
+                    $comandoInsert->bindParam(1, $rol["Nombre"], PDO::PARAM_STR);
+                    $comandoInsert->bindParam(2, $rol["Descripcion"], PDO::PARAM_STR);
+                    $comandoInsert->bindParam(3, $rol["Estado"], PDO::PARAM_STR);
+                    $comandoInsert->execute();
+
+                    $idRol = Database::getInstance()->getDb()->lastInsertId();
+                    $comandoPermisos = Database::getInstance()->getDb()->prepare("INSERT INTO Permiso (idRol, idModulo, ver,crear,actualizar,eliminar) VALUES (?,?,?,?,?,?)");
+                    for ($i = 0; $i < 10; $i++) {
+                        $comandoPermisos->execute(array($idRol, ($i + 1), 1, 1, 1, 1));
+                    }
+                    Database::getInstance()->getDb()->commit();
+                    return "insertado";
+                }
+            }
         } catch (Exception $ex) {
             Database::getInstance()->getDb()->rollback();
             return $ex->getMessage();

@@ -39,7 +39,7 @@
                                     <div class="col-md-12">
                                         <div class="form-group">
                                             <label for="nombre">Nombre: <i class="fa fa-fw fa-asterisk text-danger"></i></label>
-                                            <input id="nombre" type="text" name="nombre" class="form-control" placeholder="Nombre del rol" required="" minlength="3">
+                                            <input id="nombre" type="text" class="form-control" placeholder="Nombre del rol" required="" minlength="3">
                                         </div>
                                     </div>
                                 </div>
@@ -47,7 +47,7 @@
                                     <div class="col-md-12">
                                         <div class="form-group">
                                             <label for="descripcion">Descripción: <i class="fa fa-fw fa-asterisk text-danger"></i></label>
-                                            <input id="descripcion" type="text" name="descripcion" class="form-control" placeholder="Descripción del rol" required="" minlength="3">
+                                            <input id="descripcion" type="text" class="form-control" placeholder="Descripción del rol" required="" minlength="3">
                                         </div>
                                     </div>
                                 </div>
@@ -66,7 +66,7 @@
                             <div class="modal-footer">
                                 <p class="text-left text-danger">Todos los campos marcados con <i class="fa fa-fw fa-asterisk text-danger"></i> son obligatorios</p>
                                 <button type="submit" class="btn btn-danger" id="btnAceptarRol">
-                                    <i class="fa fa-check"></i> Aceptar</button>
+                                    <i class="fa fa-check"></i> Guardar</button>
                                 <button type="button" class="btn btn-primary" id="btnCancelarRol">
                                     <i class="fa fa-remove"></i> Cancelar</button>
                             </div>
@@ -214,6 +214,8 @@
         let state = false;
         let tbTable = $("#tbTable");
 
+        let idRol = 0;
+
         $(document).ready(function() {
 
             loadInitRoles();
@@ -250,11 +252,11 @@
             });
 
             $("#btnCancelarRol").click(function() {
-                clearModalNuevoRol() 
+                clearModalNuevoRol()
             });
 
             $("#btnCloseRol").click(function() {
-                clearModalNuevoRol() 
+                clearModalNuevoRol()
             });
 
             //-------------------------------------------------------
@@ -298,7 +300,7 @@
                                     '</button>';
 
                                 let btnUpdate =
-                                    '<button class="btn btn-warning btn-sm" onclick="loadUpdateRoles(\'' +
+                                    '<button class="btn btn-warning btn-sm" onclick="loadDataRol(\'' +
                                     rol.IdRol + '\')">' +
                                     '<i class="fa fa-wrench"></i> Editar' +
                                     '</button>';
@@ -341,11 +343,7 @@
         }
 
 
-        function loadUpdateRoles(idRol) {
-            location.href = "update_roles.php?idRol=" + idRol
-        }
-
-        function insertRol(nombre, descripcion, estado) {
+        function insertRol() {
             if ($("#nombre").val() == '' || $("#nombre").val().length < 3) {
                 tools.AlertWarning("Advertencia", "Ingrese un nombre de rol por favor.");
             } else if ($("#descripcion").val() == '') {
@@ -358,6 +356,7 @@
                             method: "POST",
                             data: {
                                 "type": "insertRol",
+                                "IdRol":idRol,
                                 "Nombre": $("#nombre").val(),
                                 "Descripcion": $("#descripcion").val(),
                                 "Estado": $("#estado").val()
@@ -390,39 +389,44 @@
             $("#nombre").val("");
             $("#descripcion").val("");
             $("#estado").val("1");
+            idRol=0;
         }
 
-        function loadDataRol(idRol) {
+        function loadDataRol(id) {
+            $("#confirmar").modal("show");
+            $("#modal-rol-title").empty();
+            $("#modal-rol-title").append('<i class="fa fa-address-book"> </i> Editar Rol');
+
             $.ajax({
                 url: "../app/controller/RolController.php",
                 method: "GET",
                 data: {
                     "type": "data",
-                    "idRol": idRol
+                    "idRol": id
                 },
                 beforeSend: function() {
-                    spiner.append(
+                    $("#modal-rol-title").append(
                         '<img src="./images/spiner.gif" width="25" height="25" style="margin-left: 10px;"/>'
                     )
                 },
                 success: function(result) {
-                    // console.log(result)
-                    spiner.remove()
+                    $("#modal-rol-title").empty();
+                    $("#modal-rol-title").append('<i class="fa fa-address-book"> </i> Editar Rol');
                     if (result.estado === 1) {
                         let rol = result.object;
+                        idRol =id;
                         $("#nombre").val(rol.Nombre)
                         $("#descripcion").val(rol.Descripcion)
                         $("#estado").val(rol.Estado)
                         tools.AlertInfo("Información", "Se cargo correctamente los datos.");
-                        state = true;
                     } else {
                         tools.AlertWarning("Advertencia", result.message);
-                        state = false;
                     }
                 },
                 error: function(error) {
-                    tools.AlertError("Error", error);
-                    state = false;
+                    $("#modal-rol-title").empty();
+                    $("#modal-rol-title").append('<i class="fa fa-address-book"> </i> Editar Rol');
+                    tools.AlertError("Error", error.responseText);
                 }
             });
         }

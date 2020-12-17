@@ -57,50 +57,49 @@ class UsuarioAdo
     {
         try {
             Database::getInstance()->getDb()->beginTransaction();
-            $comandSelect = Database::getInstance()->getDb()->prepare("SELECT * FROM Usuario WHERE UPPER(Nombres) = UPPER(?) AND UPPER(Apellidos) = UPPER(?)");
-            $comandSelect->bindParam(1, $usuario["nombres"], PDO::PARAM_STR);
-            $comandSelect->bindParam(2, $usuario["apellidos"], PDO::PARAM_STR);
+            $comandSelect = Database::getInstance()->getDb()->prepare("SELECT * FROM Usuario WHERE idUsuario = ? ");
+            $comandSelect->bindParam(1, $usuario["idusuario"], PDO::PARAM_INT);
             $comandSelect->execute();
             if ($comandSelect->fetch()) {
-                Database::getInstance()->getDb()->rollback();
-                return "duplicado";
-            } else {
-                $comandoInsert = Database::getInstance()->getDb()->prepare("INSERT INTO Usuario (Nombres, Apellidos, Usuario,Clave,Estado,Sistema) VALUES (UPPER(?), UPPER(?), UPPER(?), ?,1,0)");
-                $comandoInsert->bindParam(1, $usuario["nombres"], PDO::PARAM_STR);
-                $comandoInsert->bindParam(2, $usuario["apellidos"], PDO::PARAM_STR);
-                $comandoInsert->bindParam(3, $usuario["usuarios"], PDO::PARAM_STR);
-                $comandoInsert->bindParam(4, $usuario["contrasena"], PDO::PARAM_STR);
-                $comandoInsert->execute();
-                Database::getInstance()->getDb()->commit();
-                return "insertado";
-            }
-        } catch (Exception $ex) {
-            Database::getInstance()->getDb()->rollback();
-            return $ex->getMessage();
-        }
-    }
 
-    public static function updateUsuario($usuario)
-    {
-        try {
-            Database::getInstance()->getDb()->beginTransaction();
-            $comandSelect = Database::getInstance()->getDb()->prepare("SELECT * FROM Usuario WHERE UPPER(Nombres) = UPPER(?) AND UPPER(Apellidos) = UPPER(?)");
-            $comandSelect->bindParam(1, $usuario["nombres"], PDO::PARAM_STR);
-            $comandSelect->bindParam(2, $usuario["apellidos"], PDO::PARAM_STR);
-            $comandSelect->execute();
-            if ($comandSelect->fetch()) {
-                Database::getInstance()->getDb()->rollback();
-                return "duplicado";
+                $comandSelect = Database::getInstance()->getDb()->prepare("SELECT * FROM Usuario WHERE idUsuario <> ? AND UPPER(Nombres) = UPPER(?) AND UPPER(Apellidos) = UPPER(?)");
+                $comandSelect->bindParam(1, $usuario["idusuario"], PDO::PARAM_INT);
+                $comandSelect->bindParam(2, $usuario["nombres"], PDO::PARAM_STR);
+                $comandSelect->bindParam(3, $usuario["apellidos"], PDO::PARAM_STR);
+                $comandSelect->execute();
+                if ($comandSelect->fetch()) {
+                    Database::getInstance()->getDb()->rollback();
+                    return "duplicado";
+                } else {
+                    $comandoInsert = Database::getInstance()->getDb()->prepare("UPDATE Usuario SET Nombres = UPPER(?), Apellidos = UPPER(?), Usuario = UPPER(?), Clave = ? WHERE idUsuario = ?");
+                    $comandoInsert->bindParam(1, $usuario["nombres"], PDO::PARAM_STR);
+                    $comandoInsert->bindParam(2, $usuario["apellidos"], PDO::PARAM_STR);
+                    $comandoInsert->bindParam(3, $usuario["usuarios"], PDO::PARAM_STR);
+                    $comandoInsert->bindParam(4, $usuario["contrasena"], PDO::PARAM_STR);
+                    $comandoInsert->bindParam(5, $usuario["idusuario"], PDO::PARAM_INT);
+                    $comandoInsert->execute();
+                    Database::getInstance()->getDb()->commit();
+                    return "actualizado";
+                }
             } else {
-                $comandoInsert = Database::getInstance()->getDb()->prepare("UPDATE Usuario SET Nombres = UPPER(?), Apellidos = UPPER(?), Usuario = UPPER(?), Clave = ? WHERE idUsuario = ?");
-                $comandoInsert->bindParam(1, $usuario["nombres"], PDO::PARAM_STR);
-                $comandoInsert->bindParam(2, $usuario["apellidos"], PDO::PARAM_STR);
-                $comandoInsert->bindParam(3, $usuario["usuarios"], PDO::PARAM_STR);
-                $comandoInsert->bindParam(4, $usuario["contrasena"], PDO::PARAM_STR);
-                $comandoInsert->bindParam(5, $usuario["idusuario"], PDO::PARAM_INT);
-                $comandoInsert->execute();
-                Database::getInstance()->getDb()->commit();
-                return "actualizado";
+
+                $comandSelect = Database::getInstance()->getDb()->prepare("SELECT * FROM Usuario WHERE UPPER(Nombres) = UPPER(?) AND UPPER(Apellidos) = UPPER(?)");
+                $comandSelect->bindParam(1, $usuario["nombres"], PDO::PARAM_STR);
+                $comandSelect->bindParam(2, $usuario["apellidos"], PDO::PARAM_STR);
+                $comandSelect->execute();
+                if ($comandSelect->fetch()) {
+                    Database::getInstance()->getDb()->rollback();
+                    return "duplicado";
+                } else {
+                    $comandoInsert = Database::getInstance()->getDb()->prepare("INSERT INTO Usuario (Nombres, Apellidos, Usuario,Clave,Estado,Sistema) VALUES (UPPER(?), UPPER(?), UPPER(?), ?,1,0)");
+                    $comandoInsert->bindParam(1, $usuario["nombres"], PDO::PARAM_STR);
+                    $comandoInsert->bindParam(2, $usuario["apellidos"], PDO::PARAM_STR);
+                    $comandoInsert->bindParam(3, $usuario["usuarios"], PDO::PARAM_STR);
+                    $comandoInsert->bindParam(4, $usuario["contrasena"], PDO::PARAM_STR);
+                    $comandoInsert->execute();
+                    Database::getInstance()->getDb()->commit();
+                    return "insertado";
+                }
             }
         } catch (Exception $ex) {
             Database::getInstance()->getDb()->rollback();
@@ -139,9 +138,21 @@ class UsuarioAdo
         }
     }
 
-    // Funciones de Ruber
+    public static function getUsuarioById($idUsuario)
+    {
+        try {
+            $cmdLogin = Database::getInstance()->getDb()->prepare("SELECT * FROM Usuario WHERE idUsuario = ? ");
+            $cmdLogin->bindParam(1, $idUsuario, PDO::PARAM_INT);
+            $cmdLogin->execute();
+            $result = $cmdLogin->fetchObject();
+            return $result;
+        } catch (Exception $ex) {
+            return $ex->getMessage();
+        }
+    }
 
-    public static function login($usuario, $clave){
+    public static function login($usuario, $clave)
+    {
 
         try {
             $cmdLogin = Database::getInstance()->getDb()->prepare("SELECT * FROM Usuario WHERE Usuario = ? AND Clave = ?");
