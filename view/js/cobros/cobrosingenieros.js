@@ -168,35 +168,23 @@ function CobroIngenieros() {
                     $("#lblDatosSeleccionado").html(data.persona.Apellidos + " " + data.persona.Nombres);
                     $("#lblDireccionSeleccionado").html("");
 
-                    
+
                     for (let Historial of data.historial) {
-                        let Concepto;
-                        if(Historial.Concepto = 1){
-                            Concepto = "Cuota Ordinaria";
-                        } else if(Historial.Concepto = 2){
-                            Concepto = "Cuota Ordinaria (Amnistia)";
-                        } else if(Historial.Concepto = 3){
-                            Concepto = "Cuota Ordinaria (Vitalicio)";
-                        } else if(Historial.Concepto = 4){
-                            Concepto = "Colegiatura";
-                        } else if(Historial.Concepto = 5){
-                            Concepto = "Certificado de habilidad";
-                        } else if(Historial.Concepto = 6){
-                            Concepto = "Cuota de residencia de obra";
-                        } else if(Historial.Concepto = 7){
-                            Concepto = "Certificado de proyecto";
-                        } else if(Historial.Concepto = 8){
-                            Concepto = "Peritaje";
-                        } else if(Historial.Concepto = 100){
-                            Concepto = "Ingresos Diversos";
-                        }
+                        let Concepto = Historial.Concepto == 1 ? 'Cuota Ordinaria' :
+                            Historial.Concepto == 2 ? 'Cuota Ordinaria (Amnistia)' :
+                                Historial.Concepto == 3 ? 'Cuota Ordinaria (Vitalicio)' :
+                                    Historial.Concepto == 4 ? 'Colegiatura' :
+                                        Historial.Concepto == 5 ? 'Certificado de habilidad' :
+                                            Historial.Concepto == 6 ? 'Cuota de residencia de obra' :
+                                                Historial.Concepto == 7 ? 'Certificado de proyecto' :
+                                                    Historial.Concepto == 8 ? 'Peritaje' : 'Ingresos Diversos';
 
                         $("#tbHistorial").append('<tr>' +
                             '<td>' + Historial.Id + '</td>' +
                             '<td>' + Historial.Recibo + '</td>' +
                             '<td>' + Historial.Fecha + '</td>' +
                             '<td>' + Concepto + '</td>' +
-                            '<td>' + Historial.Monto + '</td>' +
+                            '<td>' +"S/ " +Historial.Monto + '</td>' +
                             '<td>' + Historial.Observacion + '</td>' +
                             '</tr>');
                     }

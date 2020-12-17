@@ -284,7 +284,6 @@ class ConceptoAdo
         }
     }
 
-
     public static function getOtrosConceptos()
     {
         try {
