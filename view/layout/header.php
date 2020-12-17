@@ -25,7 +25,7 @@
                     <a href="#" class="dropdown-toggle" data-toggle="dropdown">
                         <img src="images/usuario.png" class="user-image" alt="Usuario">
                         <span class="hidden-xs">
-                            <?php echo $_SESSION["Nombres"] . " " . $_SESSION["Apellidos"] ?> <i
+                            <i
                                 class="fa fa-chevron-down"></i>
                         </span>
                     </a>
@@ -57,13 +57,6 @@
                         </li>
                     </ul>
                 </li>
-                <!-- Control Sidebar Toggle Button -->
-
-                <li>
-                    <a href="#" data-toggle="control-sidebar"><i class="fa fa-gears"></i></a>
-                </li>
-
-
             </ul>
         </div>
 

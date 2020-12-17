@@ -1,14 +1,3 @@
-<?php
-
-session_start();
-
-if (!isset($_SESSION['IdUsuario'])) {
-    echo '<script>location.href = "./login.php";</script>';
-} else if (!isset($_GET["idRol"])) {
-    echo '<script>location.href = "roles.php";</script>';
-} else {
-
-?>
 
 <!DOCTYPE html>
 <html lang="en">
@@ -68,27 +57,7 @@ if (!isset($_SESSION['IdUsuario'])) {
                                             <option value="0">Inactivo</option>
                                         </select>
                                     </div>
-                                </div>
-                                <div class="col-md-2">
-                                    <div class="form-group">
-                                        <label for="condicion">Habilitar: </label>
-                                        <div class="checkbox">
-                                            <label>
-                                                <input type="checkbox" id="condicion">Sistema
-                                            </label>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="col-md-5">
-                                    <div class="form-group">
-                                        <label for="sistema">Sistema: </label>
-                                        <select id="sistema" class="form-control" disabled>
-                                            <option value="0">Indeterminado</option>
-                                            <option value="1">Predeterminado</option>
-                                        </select>
-                                    </div>
-                                </div>
-
+                                </div>        
                             </div>
 
                             <div class="row">
@@ -148,10 +117,6 @@ if (!isset($_SESSION['IdUsuario'])) {
             event.preventDefault();
         });
 
-        $("#condicion").on("change", function() {
-            $("#sistema").prop("disabled", !this.checked);
-        });
-
     });
 
     function loadDataRol(idRol) {
@@ -171,14 +136,10 @@ if (!isset($_SESSION['IdUsuario'])) {
                 // console.log(result)
                 spiner.remove()
                 if (result.estado === 1) {
-
                     let rol = result.object;
-
                     $("#nombre").val(rol.Nombre)
                     $("#descripcion").val(rol.Descripcion)
-                    $("#estado").val(rol.Estado)
-                    $("#sistema").val(rol.Sistema)
-                
+                    $("#estado").val(rol.Estado)                
                     tools.AlertInfo("Información", "Se cargo correctamente los datos.");
                     state = true;
                 } else {
@@ -203,8 +164,7 @@ if (!isset($_SESSION['IdUsuario'])) {
                 updateRol(idRol,
                     $("#nombre").val(),
                     $("#descripcion").val(),
-                    $("#estado").val(),
-                    $("#sistema").val() );
+                    $("#estado").val());
             }
         } else {
             tools.AlertWarning("Advertencia",
@@ -212,7 +172,7 @@ if (!isset($_SESSION['IdUsuario'])) {
         }
     }
 
-    function updateRol(IdRol, nombre, descripcion, estado, sistema) {
+    function updateRol(IdRol, nombre, descripcion, estado) {
         $.ajax({
             url: "../app/controller/RolController.php",
             method: "POST",
@@ -221,9 +181,7 @@ if (!isset($_SESSION['IdUsuario'])) {
                 "idRol": IdRol,
                 "Nombre": (nombre.toUpperCase()).trim(),
                 "Descripcion": (descripcion.toUpperCase()).trim(),
-                "Estado": estado,
-                "Sistema": sistema
-                
+                "Estado": estado                
             },
             beforeEnd: function() {
                 $("#btnaceptar").empty();
@@ -256,7 +214,3 @@ if (!isset($_SESSION['IdUsuario'])) {
 </body>
 
 </html>
-
-<?php
-
-}

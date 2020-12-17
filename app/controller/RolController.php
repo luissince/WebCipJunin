@@ -8,15 +8,12 @@ include_once '../model/RolAdo.php';
 if ($_SERVER['REQUEST_METHOD'] == 'GET') {
     if ($_GET["type"] === "alldata") {
         $nombre = $_GET['nombre'];
-        $posicionPagina = $_GET['posicionPagina'];
-        $filasPorPagina = $_GET['filasPorPagina'];
 
-        $rol = RolAdo::getAllRoles($nombre, intval($posicionPagina), intval($filasPorPagina));
+        $rol = RolAdo::getAllRoles($nombre);
         if (is_array($rol)) {
             echo json_encode(array(
                 "estado" => 1,
-                "roles" => $rol[0],
-                "total" => $rol[1],
+                "roles" => $rol
             ));
         } else {
             echo json_encode(array(
@@ -37,6 +34,19 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
                 "message" => $rol
             ));
         }
+    }else if($_GET["type"] === "modulos"){
+        $modulos = RolAdo::getModulosByIdRol($_GET["idRol"]);
+        if (is_array($modulos)) {
+            echo json_encode(array(
+                "estado" => 1,
+                "modulos" => $modulos
+            ));
+        } else {
+            echo json_encode(array(
+                "estado" => 2,
+                "message" => $modulos
+            ));
+        }
     }
 
 } else if ($_SERVER['REQUEST_METHOD'] == 'POST') {
@@ -44,10 +54,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
         $rol["Nombre"] = trim($_POST['Nombre']);
         $rol["Descripcion"] = trim($_POST['Descripcion']);
         $rol["Estado"] = $_POST['Estado'];
-        $rol["Sistema"] = $_POST['Sistema'];
 
         $result = RolAdo::insertRol($rol);
-
         if ($result == "insertado") {
             echo json_encode(array(
                 "estado" => 1,
@@ -69,10 +77,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
         $rol["Nombre"] = trim($_POST['Nombre']);
         $rol["Descripcion"] = trim($_POST['Descripcion']);
         $rol["Estado"] = $_POST['Estado'];
-        $rol["Sistema"] = $_POST['Sistema'];
 
         $result = RolAdo::updateRol($rol);
-
         if ($result == "actualizado") {
             echo json_encode(array(
                 "estado" => 1,

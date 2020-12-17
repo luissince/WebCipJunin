@@ -22,186 +22,186 @@
                 <h3 class="no-margin"> Usuarios <small> Lista </small> </h3>
             </section>
 
+            <!-- modal añadir usuario  -->
+            <div class="row">
+                <div class="modal fade" id="mdAddUser">
+                    <div class="modal-dialog modal-xs" style="width: 500px;">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <button type="button" class="close" id="btnCloseAddUser">
+                                    <i class="fa fa-close"></i>
+                                </button>
+                                <h4 class="modal-title">
+                                    <i class="fa fa-user">
+                                    </i> Registrar Usuario
+                                </h4>
+                            </div>
+                            <div class="modal-body">
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <div class="form-group">
+                                            <label for="Universidad" class="col-sm-4 control-label">Nombres</label>
+                                            <div class="col-sm-8">
+                                                <input id="txtAddNombres" type="text" class="form-control" placeholder="Ingrese su(s) nombre(s)" required="">
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row" style="padding-top: 0.5em;">
+                                    <div class="col-md-12">
+                                        <div class="form-group">
+                                            <label for="Universidad" class="col-sm-4 control-label">Apellidos</label>
+                                            <div class="col-sm-8">
+                                                <input id="txtAddApellidos" type="text" class="form-control" placeholder="Ingrese sus apellidos" required="">
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row" style="padding-top: 0.5em;">
+                                    <div class="col-md-12">
+                                        <div class="form-group">
+                                            <label for="Universidad" class="col-sm-4 control-label">Contraseña</label>
+                                            <div class="col-sm-8">
+                                                <input id="txtContrasena" type="text" class="form-control" placeholder="Ingrese una contraseña" required="">
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row" style="padding-top: 0.5em;">
+                                    <div class="col-md-12">
+                                        <div class="form-group">
+                                            <label for="Universidad" class="col-sm-4 control-label">Usuario</label>
+                                            <div class="col-sm-8">
+                                                <input id="txtAddUsuario" type="text" class="form-control" placeholder="Ingrese su usuario" required="">
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-warning" id="btnAceptarAddUser">
+                                    <i class="fa fa-check"></i> Aceptar</button>
+                                <button type="button" class="btn btn-primary" data-dismiss="modal" id="cancel-nuevo">
+                                    <i class="fa fa-remove"></i> Cancelar</button>
+                            </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- end modal añadir usuario -->
+
+            <!-- modal update usuario  -->
+            <div class="row">
+                <div class="modal fade" id="mdEditUser">
+                    <div class="modal-dialog modal-xs" style="width: 500px;">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <button type="button" class="close" id="btnCloseEditUser">
+                                    <i class="fa fa-close"></i>
+                                </button>
+                                <h4 class="modal-title">
+                                    <i class="fa fa-user">
+                                    </i> Editar Usuario
+                                </h4>
+                            </div>
+                            <div class="modal-body">
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <div class="form-group">
+                                            <label for="txtEditNombres" class="col-sm-4 control-label">Nombres</label>
+                                            <div class="col-sm-8">
+                                                <input id="txtEditNombres" type="text" class="form-control" placeholder="" required="">
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row" style="padding-top: 0.5em;">
+                                    <div class="col-md-12">
+                                        <div class="form-group">
+                                            <label for="txtEditApellidos" class="col-sm-4 control-label">Apellidos</label>
+                                            <div class="col-sm-8">
+                                                <input id="txtEditApellidos" type="text" class="form-control" placeholder="" required="">
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row" style="padding-top: 0.5em;">
+                                    <div class="col-md-12">
+                                        <div class="form-group">
+                                            <label for="Universidad" class="col-sm-4 control-label">Contraseña</label>
+                                            <div class="col-sm-8">
+                                                <input id="txtEditContrasena" type="text" class="form-control" placeholder="" required="">
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row" style="padding-top: 0.5em;">
+                                    <div class="col-md-12">
+                                        <div class="form-group">
+                                            <label for="Universidad" class="col-sm-4 control-label">Usuario</label>
+                                            <div class="col-sm-8">
+                                                <input id="txtEditUsuario" type="text" class="form-control" placeholder="" required="">
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-warning" id="btnAceptarEditUser">
+                                    <i class="fa fa-check"></i> Aceptar</button>
+                                <button type="button" class="btn btn-primary" data-dismiss="modal" id="cancel-edit">
+                                    <i class="fa fa-remove"></i> Cancelar</button>
+                            </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- end modal update usuario  -->
+
+            <!-- modal eliminar Usuario  -->
+            <div class="row">
+                <div class="modal fade" id="deleteUser">
+                    <div class="modal-dialog modal-xs" style="width: 500px;">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <button type="button" class="close" data-dismiss="modal">
+                                    <i class="fa fa-close"></i>
+                                </button>
+                                <h4 class="modal-title">
+                                    <i class="fa fa-user">
+                                    </i> Eliminar Usuario
+                                </h4>
+                            </div>
+                            <div class="modal-body">
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <div class="form-group">
+                                            <label for="Universidad" class="col-sm-12 control-label">¿Estas seguro que deseas elimininar este universidad?</label>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-warning" id="btnDeleteUser">
+                                        <i class="fa fa-check"></i> Aceptar</button>
+                                    <button type="button" class="btn btn-primary" data-dismiss="modal" id="cancel-eliminar">
+                                        <i class="fa fa-remove"></i> Cancelar</button>
+                                </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- end modal eliminar usuario -->
+
             <section class="content">
-
-                <!-- modal añadir usuario  -->
-                <div class="row">
-                    <div class="modal fade" id="mdAddUser">
-                        <div class="modal-dialog modal-xs" style="width: 500px;">
-                            <div class="modal-content">
-                                <div class="modal-header">
-                                    <button type="button" class="close" id="btnCloseAddUser">
-                                        <i class="fa fa-close"></i>
-                                    </button>
-                                    <h4 class="modal-title">
-                                        <i class="fa fa-user">
-                                        </i> Registrar Usuario
-                                    </h4>
-                                </div>
-                                <div class="modal-body">
-                                    <div class="row">
-                                        <div class="col-md-12">
-                                            <div class="form-group">
-                                                <label for="Universidad" class="col-sm-4 control-label">Nombres</label>
-                                                <div class="col-sm-8">
-                                                    <input id="txtAddNombres" type="text" class="form-control" placeholder="Ingrese su(s) nombre(s)" required="">
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="row" style="padding-top: 0.5em;">
-                                        <div class="col-md-12">
-                                            <div class="form-group">
-                                                <label for="Universidad" class="col-sm-4 control-label">Apellidos</label>
-                                                <div class="col-sm-8">
-                                                    <input id="txtAddApellidos" type="text" class="form-control" placeholder="Ingrese sus apellidos" required="">
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="row" style="padding-top: 0.5em;">
-                                        <div class="col-md-12">
-                                            <div class="form-group">
-                                                <label for="Universidad" class="col-sm-4 control-label">Contraseña</label>
-                                                <div class="col-sm-8">
-                                                    <input id="txtContrasena" type="text" class="form-control" placeholder="Ingrese una contraseña" required="">
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="row" style="padding-top: 0.5em;">
-                                        <div class="col-md-12">
-                                            <div class="form-group">
-                                                <label for="Universidad" class="col-sm-4 control-label">Usuario</label>
-                                                <div class="col-sm-8">
-                                                    <input id="txtAddUsuario" type="text" class="form-control" placeholder="Ingrese su usuario" required="">
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="modal-footer">
-                                    <button type="button" class="btn btn-warning" id="btnAceptarAddUser">
-                                        <i class="fa fa-check"></i> Aceptar</button>
-                                    <button type="button" class="btn btn-primary" data-dismiss="modal" id="cancel-nuevo">
-                                        <i class="fa fa-remove"></i> Cancelar</button>
-                                </div>
-                                </form>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <!-- end modal añadir usuario -->
-
-                <!-- modal update usuario  -->
-                <div class="row">
-                    <div class="modal fade" id="mdEditUser">
-                        <div class="modal-dialog modal-xs" style="width: 500px;">
-                            <div class="modal-content">
-                                <div class="modal-header">
-                                    <button type="button" class="close" id="btnCloseEditUser">
-                                        <i class="fa fa-close"></i>
-                                    </button>
-                                    <h4 class="modal-title">
-                                        <i class="fa fa-user">
-                                        </i> Editar Usuario
-                                    </h4>
-                                </div>
-                                <div class="modal-body">
-                                    <div class="row">
-                                        <div class="col-md-12">
-                                            <div class="form-group">
-                                                <label for="txtEditNombres" class="col-sm-4 control-label">Nombres</label>
-                                                <div class="col-sm-8">
-                                                    <input id="txtEditNombres" type="text" class="form-control" placeholder="" required="">
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="row" style="padding-top: 0.5em;">
-                                        <div class="col-md-12">
-                                            <div class="form-group">
-                                                <label for="txtEditApellidos" class="col-sm-4 control-label">Apellidos</label>
-                                                <div class="col-sm-8">
-                                                    <input id="txtEditApellidos" type="text" class="form-control" placeholder="" required="">
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="row" style="padding-top: 0.5em;">
-                                        <div class="col-md-12">
-                                            <div class="form-group">
-                                                <label for="Universidad" class="col-sm-4 control-label">Contraseña</label>
-                                                <div class="col-sm-8">
-                                                    <input id="txtEditContrasena" type="text" class="form-control" placeholder="" required="">
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="row" style="padding-top: 0.5em;">
-                                        <div class="col-md-12">
-                                            <div class="form-group">
-                                                <label for="Universidad" class="col-sm-4 control-label">Usuario</label>
-                                                <div class="col-sm-8">
-                                                    <input id="txtEditUsuario" type="text" class="form-control" placeholder="" required="">
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="modal-footer">
-                                    <button type="button" class="btn btn-warning" id="btnAceptarEditUser">
-                                        <i class="fa fa-check"></i> Aceptar</button>
-                                    <button type="button" class="btn btn-primary" data-dismiss="modal" id="cancel-edit">
-                                        <i class="fa fa-remove"></i> Cancelar</button>
-                                </div>
-                                </form>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <!-- end modal update usuario  -->
-
-                <!-- modal eliminar Usuario  -->
-                <div class="row">
-                    <div class="modal fade" id="deleteUser">
-                        <div class="modal-dialog modal-xs" style="width: 500px;">
-                            <div class="modal-content">
-                                <div class="modal-header">
-                                    <button type="button" class="close" data-dismiss="modal">
-                                        <i class="fa fa-close"></i>
-                                    </button>
-                                    <h4 class="modal-title">
-                                        <i class="fa fa-user">
-                                        </i> Eliminar Usuario
-                                    </h4>
-                                </div>
-                                <div class="modal-body">
-                                    <div class="row">
-                                        <div class="col-md-12">
-                                            <div class="form-group">
-                                                <label for="Universidad" class="col-sm-12 control-label">¿Estas seguro que deseas elimininar este universidad?</label>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="modal-footer">
-                                        <button type="button" class="btn btn-warning" id="btnDeleteUser">
-                                            <i class="fa fa-check"></i> Aceptar</button>
-                                        <button type="button" class="btn btn-primary" data-dismiss="modal" id="cancel-eliminar">
-                                            <i class="fa fa-remove"></i> Cancelar</button>
-                                    </div>
-                                    </form>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <!-- end modal eliminar usuario -->
 
                 <div class="row">
                     <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
                         <div class="form-group">
-                            <button type="button" class="btn btn-warning" id="btnNuevo">
+                            <button type="button" class="btn btn-danger" id="btnNuevo">
                                 <i class="fa fa-plus"></i> Nuevo usuario
                             </button>
                             <button class="btn btn-link" id="btnactualizar">
@@ -409,12 +409,12 @@
                         for (let usuario of result.usuarios) {
 
                             let btnUpdate =
-                                '<button class="btn btn-success btn-sm" onclick="updateUsuario(\'' + usuario.idUsuario + '\',\'' +
+                                '<button class="btn btn-warning btn-sm" onclick="updateUsuario(\'' + usuario.idUsuario + '\',\'' +
                                 usuario.Nombres + '\',\'' + usuario.Apellidos + '\',\'' + usuario.Usuario + '\',\'' + usuario.Clave + '\')">' +
                                 '<i class="fa fa-wrench"></i> Editar' +
                                 '</button>';
                             let btnDelete =
-                                '<button class="btn btn-warning btn-sm" onclick="deleteUser(\'' + usuario.idUsuario + '\')">' +
+                                '<button class="btn btn-danger btn-sm" onclick="deleteUser(\'' + usuario.idUsuario + '\')">' +
                                 '<i class="fa fa-trash"></i> Eliminar' +
                                 '</button>';
 
