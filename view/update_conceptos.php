@@ -131,12 +131,6 @@ if (!isset($_GET["idConcepto"])) {
                                 </div>
                                 <div class="col-md-6 col-sm-12 col-xs-12">
                                     <div class="form-group">
-                                        <input type="radio" id="precio_deriva" name="espesifico" value="48">
-                                        <label for="precio_deriva">Se deriva al CIP NACIONAL</label>
-                                    </div>
-                                </div>
-                                <div class="col-md-6 col-sm-12 col-xs-12">
-                                    <div class="form-group">
                                         <input type="radio" id="precio_variable" name="espesifico" value="128">
                                         <label for="precio_variable">Precio Variable</label>
                                     </div>
@@ -232,6 +226,7 @@ if (!isset($_GET["idConcepto"])) {
                 success: function(result) {
                     spiner.remove()
                     if (result.estado === 1) {
+                        console.log(result)
                         let concepto = result.object;
                         switch (concepto.Categoria) {
                             case "1":
@@ -272,18 +267,20 @@ if (!isset($_GET["idConcepto"])) {
                         document.getElementById("fecha_inicio").value = tools.getDateForma(fInicio, 'yyyy-mm-dd');
                         document.getElementById("fecha_fin").value = tools.getDateForma(fFinal, 'yyyy-mm-dd');
 
-                        if (concepto.Propiedad == 0) {
+                        if (concepto.Asignado == "0") {
                             $("#precio_ordinario").prop("checked", true);
-                        } else if (concepto.Propiedad == 1) {
+                        } else if (concepto.Asignado == "1") {
                             $("#precio_transeunte").prop("checked", true);
-                        } else if (concepto.Propiedad == 2) {
+                        } else if (concepto.Asignado == "2") {
                             $("#precio_vitalicio").prop("checked", true);
-                        } else if (concepto.Propiedad == 16 || concepto.Propiedad == 48) {
-                            $("#precio_deriva").prop("checked", true);
-                        } else if (concepto.Propiedad == 128) {
+                        } else if (concepto.Asignado == "3") {
                             $("#precio_variable").prop("checked", true);
+                        }
+
+                        if (concepto.Propiedad == 0) {
+                            $("#rbJunin").prop("checked", true);
                         } else {
-                            $("#precio_ordinario").prop("checked", true);
+                            $("#rbNacional").prop("checked", true);
                         }
 
                         $("#estado").prop("checked", concepto.Estado == 0 ? false : true);
@@ -304,77 +301,71 @@ if (!isset($_GET["idConcepto"])) {
 
         function validateUpdateConcepto() {
             if (state) {
-                if ($("#categoria").val() == "0") {
-                    tools.AlertWarning("Advertencia", "Seleccione la categoría del concepto.");
-                } else if ($("#concepto").val() == '' || $("#concepto").val().length < 2) {
-                    tools.AlertWarning("Advertencia", "Ingrese el nombre del concepto.");
-                } else if ($("#precio").val() == '' || $("#precio").val().length == 0) {
-                    tools.AlertWarning("Advertencia", "Ingrese el precio del concepto.");
-                } else if ($("#fecha_inicio").val() == '') {
-                    tools.AlertWarning("Advertencia", "Seleccione la fecha de inicio.");
-                } else if ($("#fecha_inicio").val() == '') {
-                    tools.AlertWarning("Advertencia", "Seleccione la fecha de fin.");
-                } else {
-                    updateConcepto(idConcepto,
-                        $("#categoria").val(),
-                        $("#concepto").val(),
-                        $("#precio").val(),
-                        $("#rbJunin").is(":checked") ? 0 : 48,
-                        $("#fecha_inicio").val(),
-                        $("#fecha_fin").val(),
-                        $("#precio_ordinario").is(":ckecked") ? 0 : $("#precio_transeunte").is(":ckecked") ? 1 : $("#precio_vitalicio").is(":ckecked") ? 2 : 3,
-                        "",
-                        $("#codigo").val(),
-                        $("#estado").is(":checked"));
-                }
+                updateConcepto();
             } else {
                 tools.AlertWarning("Advertencia",
                     "Nose pudo cargar los datos correctamente, recargue la pantalla por favor.");
             }
         }
 
-        function updateConcepto(IdConcepto, categoria, concepto,precio, asignado, inicio, fin, propiedad, observacion, codigo, estado) {
-            $.ajax({
-                url: "../app/controller/ConceptoController.php",
-                method: "POST",
-                data: {
-                    "type": "update",
-                    "IdConcepto": IdConcepto,
-                    "Categoria": categoria,
-                    "Concepto": concepto,
-                    "Precio": precio,
-                    "Propiedad": propiedad,
-                    "Inicio": inicio,
-                    "Fin": fin,
-                    "Observacion": observacion.toUpperCase(),
-                    "Codigo": codigo,
-                    "Estado": estado,
-                    "Asignado": asignado,
-                },
-                beforeEnd: function() {
-                    $("#btnaceptar").empty();
-                    $("#btnaceptar").append('<img src="./images/spiner.gif" width="25" height="25" />')
-                },
-                success: function(result) {
-                    if (result.estado == 1) {
-                        tools.AlertSuccess("Mensaje", result.message)
-                        setTimeout(function() {
-                            location.href = "conceptos.php"
-                        }, 1000);
-                    } else {
-                        tools.AlertWarning("Mensaje", result.message)
-                        setTimeout(function() {
-                            $("#btnaceptar").empty();
-                            $("#btnaceptar").append('<i class="fa fa-check"></i> Editar');
-                        }, 1000);
+        function updateConcepto() {
+            if ($("#categoria").val() == "0") {
+                tools.AlertWarning("Advertencia", "Seleccione la categoría del concepto.");
+            } else if ($("#concepto").val() == '' || $("#concepto").val().length < 2) {
+                tools.AlertWarning("Advertencia", "Ingrese el nombre del concepto.");
+            } else if ($("#precio").val() == '' || $("#precio").val().length == 0) {
+                tools.AlertWarning("Advertencia", "Ingrese el precio del concepto.");
+            } else if ($("#fecha_inicio").val() == '') {
+                tools.AlertWarning("Advertencia", "Seleccione la fecha de inicio.");
+            } else if ($("#fecha_inicio").val() == '') {
+                tools.AlertWarning("Advertencia", "Seleccione la fecha de fin.");
+            } else {
+                tools.ModalDialog("Conceptos", "¿Está seguro de continuar?", function(value) {
+                    if (value == true) {
+                        $.ajax({
+                            url: "../app/controller/ConceptoController.php",
+                            method: "POST",
+                            data: {
+                                "type": "update",
+                                "IdConcepto": idConcepto,
+                                "Categoria": $("#categoria").val(),
+                                "Concepto": $("#concepto").val(),
+                                "Precio": $("#precio").val(),
+                                "Propiedad": $("#rbJunin").is(":checked") ? 0 : 48,
+                                "Inicio": $("#fecha_inicio").val(),
+                                "Fin": $("#fecha_inicio").val(),
+                                "Observacion": "",
+                                "Codigo": $("#codigo").val(),
+                                "Estado": $("#estado").is(":checked"),
+                                "Asignado": $("#precio_ordinario").is(":checked") ? 0 : $("#precio_transeunte").is(":checked") ? 1 : $("#precio_vitalicio").is(":checked") ? 2 : 3,
+                            },
+                            beforeEnd: function() {
+                                $("#btnaceptar").empty();
+                                $("#btnaceptar").append('<img src="./images/spiner.gif" width="25" height="25" />')
+                            },
+                            success: function(result) {
+                                if (result.estado == 1) {
+                                    tools.AlertSuccess("Mensaje", result.message)
+                                    setTimeout(function() {
+                                        location.href = "conceptos.php"
+                                    }, 1000);
+                                } else {
+                                    tools.AlertWarning("Mensaje", result.message)
+                                    setTimeout(function() {
+                                        $("#btnaceptar").empty();
+                                        $("#btnaceptar").append('<i class="fa fa-check"></i> Editar');
+                                    }, 1000);
+                                }
+                            },
+                            error: function(error) {
+                                tools.AlertError("Error", error.responseText);
+                                $("#btnaceptar").empty();
+                                $("#btnaceptar").append('<i class="fa fa-check"></i> Editar');
+                            }
+                        });
                     }
-                },
-                error: function(error) {
-                    tools.AlertError("Error", error.responseText);
-                    $("#btnaceptar").empty();
-                    $("#btnaceptar").append('<i class="fa fa-check"></i> Editar');
-                }
-            });
+                });
+            }
         }
     </script>
 </body>

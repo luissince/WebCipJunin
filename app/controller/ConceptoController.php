@@ -186,6 +186,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
         $data["Asignado"] = $_POST["Asignado"];
         $data["Observacion"] = $_POST["Observacion"];
         $data["Codigo"] = $_POST["Codigo"];
+        $data["Estado"] = $_POST["Estado"];
         $result = ConceptoAdo::insert($data);
         if ($result == "inserted") {
             echo json_encode(array(

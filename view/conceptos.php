@@ -415,8 +415,8 @@
                                 //48 cip nacional
 
                                 let Asinador = concepto.Asignado == "0" ? "Precio Ordinario" :
-                                    concepto.Propiedad == "1" ? "Precio Transeunte" :
-                                    concepto.Propiedad == "2" ? "Precio Vitalicio" : "Precio Variable";
+                                    concepto.Asignado == "1" ? "Precio Transeunte" :
+                                    concepto.Asignado == "2" ? "Precio Vitalicio" : "Precio Variable";
 
                                 tbTable.append('<tr>' +
                                     '<td style="text-align: center;color: #2270D1;">' +
@@ -489,16 +489,16 @@
                             method: "POST",
                             data: {
                                 "type": "create",
-                                "Categoria": categoria,
-                                "Concepto": concepto,
-                                "Precio": precio,
+                                "Categoria": $("#cbCategoria").val(),
+                                "Concepto": $("#txtConcepto").val(),
+                                "Precio": $("#txtPrecio").val(),
                                 "Propiedad": $("#rbJunin").is(":checked") ? 0 : 48,
-                                "Inicio": inicio,
-                                "Fin": fin,
-                                "Asignado": $("#precio_ordinario").is(":ckecked") ? 0 : $("#precio_transeunte").is(":ckecked") ? 1 : $("#precio_vitalicio").is(":ckecked") ? 2 : 3,
-                                "Observacion": observacion.toUpperCase(),
-                                "Codigo": codigo,
-                                "Estado": estado,
+                                "Inicio": $("#txtFecha_inicio").val(),
+                                "Fin": $("#txtFecha_fin").val() ,
+                                "Asignado":$("#precio_ordinario").is(":checked") ? 0 : $("#precio_transeunte").is(":checked") ? 1 : $("#precio_vitalicio").is(":checked") ? 2 : 3,
+                                "Observacion":"",
+                                "Codigo": $("#txtCodigo").val(),
+                                "Estado": $("#estado").is(":checked"),
                             },
                             beforeEnd: function() {
                                 clearModalConcepto();
@@ -508,6 +508,8 @@
                                 if (result.estado == 1) {
                                     tools.AlertSuccess("Mensaje", result.message)
                                     tools.ModalAlertSuccess("Conceptos", result.message);
+                                    $("#confirmar").modal('hide');
+                                    loadInitConceptos()
                                 } else {
                                     tools.ModalAlertWarning("Conceptos", result.message);
                                 }

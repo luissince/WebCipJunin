@@ -70,7 +70,6 @@ class ConceptoAdo
     public static function getId($idConcepto)
     {
         try {
-            $object = null;
             $comandoConcepto = Database::getInstance()->getDb()->prepare("SELECT 
                 idConcepto,
                 Categoria,
@@ -81,7 +80,8 @@ class ConceptoAdo
                 convert(VARCHAR,cast(Fin as date),103) AS Fin,
                 Observacion,
                 Codigo,
-                Estado              
+                Estado,
+                Asignado             
             FROM Concepto WHERE idConcepto = ?");
             $comandoConcepto->bindParam(1, $idConcepto, PDO::PARAM_STR);
             $comandoConcepto->execute();
@@ -346,7 +346,7 @@ class ConceptoAdo
             Observacion,
             Codigo,
             Estado            
-            )VALUES(?,?,?,?,?,?,?,?,?)");
+            )VALUES(?,?,?,?,?,?,?,?,?,?)");
 
             // $dateTimeInicio = date('Y-d-m H:i:s', strtotime($data["Inicio"]));
             // $dateTimeFin = date('Y-d-m H:i:s', strtotime($data["Fin"]));
@@ -355,8 +355,8 @@ class ConceptoAdo
             $cmdConcepto->bindParam(2, $data["Concepto"], PDO::PARAM_STR);
             $cmdConcepto->bindParam(3, $data["Precio"], PDO::PARAM_STR);
             $cmdConcepto->bindParam(4, $data["Propiedad"], PDO::PARAM_INT);
-            $cmdConcepto->bindParam(5, $$data["Inicio"], PDO::PARAM_STR);
-            $cmdConcepto->bindParam(6, $$data["Fin"], PDO::PARAM_STR);
+            $cmdConcepto->bindParam(5, $data["Inicio"], PDO::PARAM_STR);
+            $cmdConcepto->bindParam(6, $data["Fin"], PDO::PARAM_STR);
             $cmdConcepto->bindParam(7, $data["Asignado"], PDO::PARAM_INT);
             $cmdConcepto->bindParam(8, $data["Observacion"], PDO::PARAM_STR);
             $cmdConcepto->bindParam(9, $data["Codigo"], PDO::PARAM_INT);

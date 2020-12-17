@@ -3,7 +3,11 @@ function CobroIngenieros() {
 
     this.componentesIngenieros = function () {
         $("#btnIngenieros").click(function (event) {
-            $('#mdIngenieros').modal('show');
+            $('#mdIngenieros').modal('show');        
+        });
+
+        $('#mdIngenieros').on('shown.bs.modal', function () {
+            $('#txtBuscarIngeniero').focus();
             loadInitIngenieros();
         });
 
@@ -13,10 +17,6 @@ function CobroIngenieros() {
                 loadInitIngenieros();
             }
             event.preventDefault();
-        });
-
-        $('#mdIngenieros').on('shown.bs.modal', function () {
-            $('#txtBuscarIngeniero').focus();
         });
 
         $("#txtBuscarIngeniero").on("keyup", function (event) {
