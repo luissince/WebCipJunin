@@ -24,7 +24,7 @@
 
             <!-- modal nuevo rol  -->
             <div class="row">
-                <div class="modal fade" id="confirmar">
+                <div class="modal fade" data-backdrop="static" id="confirmar">
                     <div class="modal-dialog">
                         <div class="modal-content">
                             <div class="modal-header">
@@ -52,7 +52,7 @@
                                     </div>
                                 </div>
                                 <div class="row">
-                                    <div class="col-md-5">
+                                    <div class="col-md-6">
                                         <div class="form-group">
                                             <label for="estado">Estado: </label>
                                             <select id="estado" class="form-control">
@@ -78,7 +78,7 @@
 
             <!-- modal Modulo -->
             <div class="row">
-                <div class="modal fade" id="mostrarModulos">
+                <div class="modal fade" data-backdrop="static" id="mostrarModulos">
                     <div class="modal-dialog modal-lg">
                         <div class="modal-content">
                             <div class="modal-header">
@@ -91,7 +91,7 @@
                                 </h4>
                             </div>
                             <div class="modal-body">
-                                <div class="row" style="overflow-x: auto; height:280px">
+                                <div class="row">
                                     <div class="col-md-12">
                                         <table class="table table-striped table-hover table-sm">
                                             <thead>

@@ -1395,7 +1395,7 @@ a:focus {
 .form-control {
     border-radius: 0;
     box-shadow: none;
-    border-color: #d2d6de
+    border-color: #a9aaac
 }
 
 .form-control:focus {
@@ -3419,11 +3419,11 @@ table.text-center th {
 }
 
 .modal-header {
-    border-bottom-color: #f4f4f4
+    border-bottom-color: #cacacb
 }
 
 .modal-footer {
-    border-top-color: #f4f4f4
+    border-top-color: #cacacb
 }
 
 .modal-primary .modal-header,
