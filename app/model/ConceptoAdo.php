@@ -75,8 +75,8 @@ class ConceptoAdo
                 Concepto,
                 Precio,
                 Propiedad,
-                cast(Inicio as date) as Inicio,
-                cast(Fin as date) as Fin,
+                convert(VARCHAR,cast(Inicio as date),103) AS Inicio,
+                convert(VARCHAR,cast(Fin as date),103) AS Fin,
                 Observacion,
                 Codigo,
                 Estado              
@@ -340,23 +340,26 @@ class ConceptoAdo
             Propiedad,
             Inicio,
             Fin,
+            Asignado,
             Observacion,
             Codigo,
-            Estado
+            Estado            
             )VALUES(?,?,?,?,?,?,?,?,?)");
 
-            $dateTimeInicio = date('Y-d-m H:i:s', strtotime($data["Inicio"]));
-            $dateTimeFin = date('Y-d-m H:i:s', strtotime($data["Fin"]));
+            // $dateTimeInicio = date('Y-d-m H:i:s', strtotime($data["Inicio"]));
+            // $dateTimeFin = date('Y-d-m H:i:s', strtotime($data["Fin"]));
 
             $cmdConcepto->bindParam(1, $data["Categoria"], PDO::PARAM_INT);
             $cmdConcepto->bindParam(2, $data["Concepto"], PDO::PARAM_STR);
             $cmdConcepto->bindParam(3, $data["Precio"], PDO::PARAM_STR);
             $cmdConcepto->bindParam(4, $data["Propiedad"], PDO::PARAM_INT);
-            $cmdConcepto->bindParam(5, $dateTimeInicio, PDO::PARAM_STR);
-            $cmdConcepto->bindParam(6, $dateTimeFin, PDO::PARAM_STR);
-            $cmdConcepto->bindParam(7, $data["Observacion"], PDO::PARAM_STR);
-            $cmdConcepto->bindParam(8, $data["Codigo"], PDO::PARAM_INT);
-            $cmdConcepto->bindParam(9, $data["Estado"], PDO::PARAM_BOOL);
+            $cmdConcepto->bindParam(5, $$data["Inicio"], PDO::PARAM_STR);
+            $cmdConcepto->bindParam(6, $$data["Fin"], PDO::PARAM_STR);
+            $cmdConcepto->bindParam(7, $data["Asignado"], PDO::PARAM_INT);
+            $cmdConcepto->bindParam(8, $data["Observacion"], PDO::PARAM_STR);
+            $cmdConcepto->bindParam(9, $data["Codigo"], PDO::PARAM_INT);
+            $cmdConcepto->bindParam(10, $data["Estado"], PDO::PARAM_BOOL);
+            
             $cmdConcepto->execute();
             Database::getInstance()->getDb()->commit();
             return "inserted";
@@ -383,16 +386,12 @@ class ConceptoAdo
             Estado = ?
             WHERE idConcepto = ?");
 
-            $dateTimeInicio = date('Y-d-m H:i:s', strtotime($data["Inicio"]));
-
-            $dateTimeFin = date('Y-d-m H:i:s', strtotime($data["Fin"]));
-
             $cmdConcepto->bindParam(1, $data["Categoria"], PDO::PARAM_INT);
             $cmdConcepto->bindParam(2, $data["Concepto"], PDO::PARAM_STR);
             $cmdConcepto->bindParam(3, $data["Precio"], PDO::PARAM_STR);
             $cmdConcepto->bindParam(4, $data["Propiedad"], PDO::PARAM_INT);
-            $cmdConcepto->bindParam(5, $dateTimeInicio, PDO::PARAM_STR);
-            $cmdConcepto->bindParam(6, $dateTimeFin, PDO::PARAM_STR);
+            $cmdConcepto->bindParam(5, $data["Inicio"], PDO::PARAM_STR);
+            $cmdConcepto->bindParam(6, $data["Fin"], PDO::PARAM_STR);
             $cmdConcepto->bindParam(7, $data["Observacion"], PDO::PARAM_STR);
             $cmdConcepto->bindParam(8, $data["Codigo"], PDO::PARAM_INT);
             $cmdConcepto->bindParam(9, $data["Estado"], PDO::PARAM_STR);

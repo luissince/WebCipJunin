@@ -28,7 +28,7 @@
                     <div class="modal-dialog">
                         <div class="modal-content">
                             <div class="modal-header">
-                                <button type="button" class="close" data-dismiss="modal">
+                                <button type="button" class="close" id="btnCloseModal">
                                     <i class="fa fa-close"></i>
                                 </button>
                                 <h4 class="modal-title">
@@ -93,7 +93,24 @@
                                 </div>
                                 <div class="row">
                                     <div class="col-md-12">
-                                        <p>Agrege especificaciones: <i class="fa fa-fw fa-asterisk text-danger"></i></p>
+                                        <p>Referido a: <i class="fa fa-fw fa-asterisk text-danger"></i></p>
+                                    </div>
+                                    <div class="col-md-6 col-sm-12 col-xs-12">
+                                        <div class="form-group">
+                                            <input type="radio" id="rbJunin" name="referido" value="" checked="checked">
+                                            <label for="rbJunin">CIP Junin</label>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6 col-sm-12 col-xs-12">
+                                        <div class="form-group">
+                                            <input type="radio" id="rbNacional" name="referido" value="1">
+                                            <label for="rbNacional">CIP Nacional</label>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <p>Modalidad de ingeniero: <i class="fa fa-fw fa-asterisk text-danger"></i></p>
                                     </div>
                                     <div class="col-md-6 col-sm-12 col-xs-12">
                                         <div class="form-group">
@@ -111,12 +128,6 @@
                                         <div class="form-group">
                                             <input type="radio" id="precio_vitalicio" name="espesifico" value="2">
                                             <label for="precio_vitalicio">Precio para Vitalicio</label>
-                                        </div>
-                                    </div>
-                                    <div class="col-md-6 col-sm-12 col-xs-12">
-                                        <div class="form-group">
-                                            <input type="radio" id="precio_deriva" name="espesifico" value="48">
-                                            <label for="precio_deriva">Se deriva al CIP NACIONAL</label>
                                         </div>
                                     </div>
                                     <div class="col-md-6 col-sm-12 col-xs-12">
@@ -140,9 +151,9 @@
                                     <p class="text-left text-danger">Todos los campos marcados con <i class="fa fa-fw fa-asterisk text-danger"></i> son obligatorios</p>
                                 </div>
                                 <div class="col-md-6 col-sm-6 col-xs-12">
-                                    <button type="button" class="btn btn-warning" name="btnaceptar" id="btnaceptar">
+                                    <button type="button" class="btn btn-warning" id="btnAceptarModal">
                                         <i class="fa fa-check"></i> Aceptar</button>
-                                    <button type="button" class="btn btn-primary" data-dismiss="modal">
+                                    <button type="button" class="btn btn-primary" id="btnCancelarModal">
                                         <i class="fa fa-remove"></i> Cancelar</button>
                                 </div>
                             </div>
@@ -158,7 +169,8 @@
                 <div class="row">
                     <div class="col-md-2 col-sm-12 col-xs-12">
                         <div class="form-group">
-                            <button type="button" class="btn btn-danger" data-toggle="modal" data-target="#confirmar">
+                            <!-- <button type="button" class="btn btn-danger" data-toggle="modal" data-target="#confirmar"> -->
+                            <button type="button" class="btn btn-danger" id="btnNuevo">
                                 <i class="fa fa-plus"></i> Nuevo Concepto
                             </button>
                         </div>
@@ -199,6 +211,7 @@
                                     <th>Precio</th>
                                     <th>Inicio/Fin</th>
                                     <th>Especificación</th>
+                                    <th>Asignado</th>
                                     <th>Estado</th>
                                     <th>Opciones</th>
                                 </thead>
@@ -289,14 +302,33 @@
                 }
             });
 
-            $("#btnaceptar").click(function() {
+            //-------------------------------------------------------------------
+            $("#btnNuevo").click(function() {
+                $("#confirmar").modal("show");
+            });
+
+            $("#btnNuevo").on("keyup", function(event) {
+                if (event.keyCode === 13) {
+                    $("#confirmar").modal("show");
+                }
+            });
+
+            $("#btnAceptarModal").click(function() {
                 validateInsertConcepto();
             });
 
-            $("#btnaceptar").on("keyup", function(event) {
+            $("#btnAceptarModal").on("keyup", function(event) {
                 if (event.keyCode === 13) {
                     validateInsertConcepto();
                 }
+            });
+
+            $("#btnCancelarModal").click(function(){
+                clearModalConcepto();
+            });
+
+            $("#btnCloseModal").click(function(){
+                clearModalConcepto();
             });
 
             $("#estado").change(function() {
@@ -449,13 +481,14 @@
                     $("#precio_ordinario").is(":checked") ? 0 : $("#precio_transeunte").is(":checked") ? 1 : $("#precio_vitalicio").is(":checked") ? 2 : $("#precio_deriva").is(":checked") ? 48 : 128,
                     $("#txtFecha_inicio").val(),
                     $("#txtFecha_fin").val(),
+                    $("#rbJunin").is(":checked") ? 0 : 1,
                     "",
                     $("#txtCodigo").val(),
                     $("#estado").is(":checked"));
             }
         }
 
-        function insertConcepto(categoria, concepto, precio, propiedad, inicio, fin, observacion, codigo, estado) {
+        function insertConcepto(categoria, concepto, precio, propiedad, inicio, fin, asignado, observacion, codigo, estado) {
             $.ajax({
                 url: "../app/controller/ConceptoController.php",
                 method: "POST",
@@ -467,6 +500,7 @@
                     "Propiedad": propiedad,
                     "Inicio": inicio,
                     "Fin": fin,
+                    "Asignado": asignado,
                     "Observacion": observacion.toUpperCase(),
                     "Codigo": codigo,
                     "Estado": estado
@@ -495,6 +529,20 @@
                     $("#btnaceptar").append('<i class="fa fa-check"></i> Aceptar');
                 }
             });
+        }
+
+        function clearModalConcepto() {
+            $("#confirmar").modal("hide");
+            $("#cbCategoria").val(0);
+            $("#txtCodigo").val(null);
+            $("#txtConcepto").val(null);
+            $("#txtPrecio").val(null);
+            $("#txtFecha_inicio").val('');
+            $("#txtFecha_fin").val('');
+            $("#rbJunin").prop('checked', 'checked');
+            $("#precio_ordinario").prop('checked', 'checked');
+            $("#estado").prop('checked', false);
+            $("#lblEstado").html("Inactivo");
         }
     </script>
 </body>

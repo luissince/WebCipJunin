@@ -89,6 +89,23 @@ if (!isset($_GET["idConcepto"])) {
                                     </div>
                                 </div>
                             </div>
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <p>Referido a: <i class="fa fa-fw fa-asterisk text-danger"></i></p>
+                                </div>
+                                <div class="col-md-6 col-sm-12 col-xs-12">
+                                    <div class="form-group">
+                                        <input type="radio" id="rbJunin" name="referido" value="" checked="checked">
+                                        <label for="rbJunin">CIP Junin</label>
+                                    </div>
+                                </div>
+                                <div class="col-md-6 col-sm-12 col-xs-12">
+                                    <div class="form-group">
+                                        <input type="radio" id="rbNacional" name="referido" value="1">
+                                        <label for="rbNacional">CIP Nacional</label>
+                                    </div>
+                                </div>
+                            </div>
 
                             <div class="row">
                                 <div class="col-md-12">
@@ -250,8 +267,10 @@ if (!isset($_GET["idConcepto"])) {
                         $("#codigo").val(concepto.Codigo)
                         $("#concepto").val(concepto.Concepto)
                         $("#precio").val(concepto.Precio)
-                        document.getElementById("fecha_inicio").value = tools.getDateForma(concepto.Inicio, 'yyyy-mm-dd');
-                        document.getElementById("fecha_fin").value = tools.getDateForma(concepto.Fin, 'yyyy-mm-dd');
+                        let fInicio = concepto.Inicio.split("/").reverse().join("-");
+                        let fFinal = concepto.Fin.split("/").reverse().join("-");
+                        document.getElementById("fecha_inicio").value = tools.getDateForma(fInicio, 'yyyy-mm-dd');
+                        document.getElementById("fecha_fin").value = tools.getDateForma(fFinal, 'yyyy-mm-dd');
 
                         if (concepto.Propiedad == 0) {
                             $("#precio_ordinario").prop("checked", true);

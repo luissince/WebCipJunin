@@ -183,6 +183,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
         $data["Propiedad"] = $_POST["Propiedad"];
         $data["Inicio"] = $_POST["Inicio"];
         $data["Fin"] = $_POST["Fin"];
+        $data["Asignado"] = $_POST["Asignado"];
         $data["Observacion"] = $_POST["Observacion"];
         $data["Codigo"] = $_POST["Codigo"];
         $result = ConceptoAdo::insert($data);
