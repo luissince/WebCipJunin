@@ -17,22 +17,10 @@ function Peritaje() {
                 $('#mdPeritaje').modal('show');
                 loadPeritaje();
             }
-
         });
 
         $('#mdPeritaje').on('shown.bs.modal', function() {
             $('#txtDescripcionPeritaje').focus();
-        });
-
-        $("#btnAceptarPeritaje").click(function() {
-            validateIngresoPeritaje();
-        });
-
-        $("#btnAceptarPeritaje").keypress(function(event) {
-            if (event.keyCode === 13) {
-                validateIngresoPeritaje();
-            }
-            event.preventDefault();
         });
 
         $("#btnClosePeritaje").click(function() {
@@ -53,6 +41,17 @@ function Peritaje() {
         $("#btnCancelarPeritaje").keypress(function(event) {
             if (event.keyCode === 13) {
                 $('#mdPeritaje').modal('hide');
+            }
+            event.preventDefault();
+        });
+
+        $("#btnAceptarPeritaje").click(function() {
+            validateIngresoPeritaje();
+        });
+
+        $("#btnAceptarPeritaje").keypress(function(event) {
+            if (event.keyCode === 13) {
+                validateIngresoPeritaje();
             }
             event.preventDefault();
         });

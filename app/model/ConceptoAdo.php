@@ -408,4 +408,19 @@ class ConceptoAdo
             return $ex->getMessage();
         }
     }
+
+    public static function deleteConcepto($concepto)
+    {
+        try {
+            Database::getInstance()->getDb()->beginTransaction();
+            $comandSelect = Database::getInstance()->getDb()->prepare("DELETE FROM Concepto WHERE idConcepto = ?");
+            $comandSelect->bindParam(1, $concepto["idConcepto"], PDO::PARAM_INT);
+            $comandSelect->execute();
+            Database::getInstance()->getDb()->commit();
+            return "eliminado";
+        } catch (Exception $ex) {
+            Database::getInstance()->getDb()->rollback();
+            return $ex->getMessage();
+        }
+    }
 }

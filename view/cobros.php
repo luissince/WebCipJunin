@@ -865,6 +865,7 @@
         let paginacion = 0;
         let filasPorPagina = 10;
         let idDNI = 0;
+        let condiccion = "";
 
         let modelCobrosIngenieros = new CobroIngenieros();
         let modelColegiatura = new Colegiatura();

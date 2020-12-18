@@ -213,7 +213,7 @@
                                     <th>Especificación</th>
                                     <th>Asignado</th>
                                     <th>Estado</th>
-                                    <th>Opciones</th>
+                                    <th colspan="2" style="text-align: center;">Opciones</th>
                                 </thead>
                                 <tbody id="tbTable">
 
@@ -391,9 +391,12 @@
                             tbTable.empty();
                             for (let concepto of lista) {
                                 let btnUpdate =
-                                    '<button class="btn btn-warning btn-sm" onclick="loadUpdateConceptos(\'' +
+                                    '<button class="btn btn-success btn-sm" onclick="loadUpdateConceptos(\'' +
                                     concepto.idConcepto + '\')">' +
                                     '<i class="fa fa-wrench"></i> Editar' +
+                                    '</button>';
+                                let btndelete = '<button class="btn btn-warning btn-sm" onclick="DeleteConcepto(\'' + concepto.idConcepto + '\')">' +
+                                    '<i class="fa fa-trash"></i> Eliminar' +
                                     '</button>';
 
                                 let estado = '<span class="' + (concepto.Estado == true ? "label label-success" : "label label-danger") + '">' + (concepto.Estado == true ? "Activo" : "Inactivo") + '</span>';
@@ -430,7 +433,8 @@
                                     '<td> ' + propiedad + '</td>' +
                                     '<td>' + Asinador + '</td>' +
                                     '<td>' + estado + '</td>' +
-                                    '<td>' + btnUpdate + '</td>' +
+                                    '<td style="text-align:right ">' + btnUpdate + '</td>' +
+                                    '<td>' + btndelete + '</td>' +
                                     '</tr>');
                             }
                             totalPaginacion = parseInt(Math.ceil((parseFloat(result.total) / parseInt(
@@ -494,9 +498,9 @@
                                 "Precio": $("#txtPrecio").val(),
                                 "Propiedad": $("#rbJunin").is(":checked") ? 0 : 48,
                                 "Inicio": $("#txtFecha_inicio").val(),
-                                "Fin": $("#txtFecha_fin").val() ,
-                                "Asignado":$("#precio_ordinario").is(":checked") ? 0 : $("#precio_transeunte").is(":checked") ? 1 : $("#precio_vitalicio").is(":checked") ? 2 : 3,
-                                "Observacion":"",
+                                "Fin": $("#txtFecha_fin").val(),
+                                "Asignado": $("#precio_ordinario").is(":checked") ? 0 : $("#precio_transeunte").is(":checked") ? 1 : $("#precio_vitalicio").is(":checked") ? 2 : 3,
+                                "Observacion": "",
                                 "Codigo": $("#txtCodigo").val(),
                                 "Estado": $("#estado").is(":checked"),
                             },
@@ -536,6 +540,35 @@
             $("#precio_ordinario").prop('checked', 'checked');
             $("#estado").prop('checked', false);
             $("#lblEstado").html("Inactivo");
+        }
+
+        function DeleteConcepto(idConcepto) {
+            tools.ModalDialog("Concepto", "¿Está seguro de continuar?", function(value){
+                if (value == true) {
+                    $.ajax({
+                    url: "../app/controller/ConceptoController.php",
+                    method: "POST",
+                    data: {
+                        "type": "deleteConcepto",
+                        "idconcepto": idConcepto,
+                    },
+                    beforeSend: function() {
+                        tools.AlertInfo("Concepto", "Procesando información.");
+                    },
+                    success: function(result) {
+                        if (result.estado == 1) {
+                            tools.AlertSuccess("Concepto", result.message);
+                            loadInitConceptos()
+                        } else {
+                            tools.AlertWarning("Concepto", result.message);
+                        }
+                    },
+                    error: function(error) {
+                        tools.AlertError("Concepto", "Error fatal: Comuniquese con el administrador del sistema");
+                    }
+                });
+                }
+            });
         }
     </script>
 </body>

@@ -154,9 +154,11 @@ function CobroIngenieros() {
                 $("#tbHistorial").append('<tr class="text-center"><td colspan="6"><img src="./images/spiner.gif"/><p>cargando información.</p></td></tr>');
             },
             success: function (data) {
+                console.log(data)
                 if (data.estado === 1) {
                     $("#tbHistorial").empty();
                     idDNI = data.persona.idDNI;
+                    condiccion = data.persona.Condicion;
                     let Condicion = data.persona.Condicion ==
                         'T' ? 'Transeunte' :
                         data.persona.Condicion == 'F' ? 'Fallecido' :

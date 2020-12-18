@@ -224,5 +224,20 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
                 "result" => $data
             ));
         }
+    } else if ($_POST["type"] === "deleteConcepto") {
+        $concepto["idConcepto"] = $_POST["idconcepto"];
+        $result = ConceptoAdo::deleteConcepto($concepto);
+
+        if ($result == "eliminado") {
+            echo json_encode(array(
+                "estado" => 1,
+                "message" => "Se eliminaron correctamente los datos"
+            ));
+        } else {
+            echo json_encode(array(
+                "estado" => 2,
+                "message" => $result
+            ));
+        }
     }
 }
