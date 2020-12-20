@@ -264,7 +264,7 @@
                                         <div class="col-md-12">
                                             <div class="form-group">
                                                 <label for="txtIngenieroCertificado">Ingeniero(a)</label>
-                                                <input type="text" class="form-control" id="txtIngenieroCertificado" placeholder="Datos completos del ingeniero">
+                                                <input type="text" class="form-control" id="txtIngenieroCertificado" placeholder="Datos completos del ingeniero" readonly>
                                             </div>
                                         </div>
                                         <div class="col-md-12">
@@ -343,7 +343,7 @@
                                         <div class="col-md-12">
                                             <div class="form-group">
                                                 <label for="txtIngenieroProyecto">Ingeniero(a)</label>
-                                                <input type="text" class="form-control" id="txtIngenieroProyecto" placeholder="Datos completos del ingeniero">
+                                                <input type="text" class="form-control" id="txtIngenieroProyecto" readonly placeholder="Datos completos del ingeniero">
                                             </div>
                                         </div>
                                     </div>
@@ -366,7 +366,7 @@
                                         <div class="col-md-6">
                                             <div class="form-group">
                                                 <label for="txtNumeroCertificadoProyecto">Certificado N°</label>
-                                                <input type="text" class="form-control" id="txtNumeroCertificadoProyecto" placeholder="Número del certificado">
+                                                <input type="number" class="form-control" id="txtNumeroCertificadoProyecto" placeholder="Número del certificado">
                                             </div>
                                         </div>
                                     </div>
@@ -476,7 +476,7 @@
                                         <div class="col-md-12">
                                             <div class="form-group">
                                                 <label for="txtIngenieroObra">Ingeniero(a)</label>
-                                                <input type="text" class="form-control" id="txtIngenieroObra" placeholder="Datos completos del ingeniero">
+                                                <input type="text" class="form-control" id="txtIngenieroObra" readonly placeholder="Datos completos del ingeniero">
                                             </div>
                                         </div>
                                     </div>
@@ -501,7 +501,7 @@
                                         <div class="col-md-12">
                                             <div class="form-group">
                                                 <label for="txtCertificadoNumeroObra">Certificado N°</label>
-                                                <input type="text" class="form-control" id="txtCertificadoNumeroObra">
+                                                <input type="number" class="form-control" id="txtCertificadoNumeroObra">
                                             </div>
                                         </div>
                                     </div>
@@ -865,6 +865,7 @@
         let paginacion = 0;
         let filasPorPagina = 10;
         let idDNI = 0;
+        let Ingeniero = "";
         let condiccion = "";
 
         let modelCobrosIngenieros = new CobroIngenieros();

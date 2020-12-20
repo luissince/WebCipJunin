@@ -158,6 +158,7 @@ function CobroIngenieros() {
                 if (data.estado === 1) {
                     $("#tbHistorial").empty();
                     idDNI = data.persona.idDNI;
+                    Ingeniero = data.persona.Nombres+', '+data.persona.Apellidos
                     condiccion = data.persona.Condicion;
                     let Condicion = data.persona.Condicion ==
                         'T' ? 'Transeunte' :

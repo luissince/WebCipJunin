@@ -206,7 +206,18 @@ class ConceptoAdo
                 ));
             }
 
-            array_push($array, $resultConcepto, $arrayEspecialidades);
+            $Persona = Database::getInstance()->getDb()->prepare("SELECT CONCAT(Nombres,' ' ,Apellidos) AS Persona FROM Persona WHERE idDNI = ?");
+            $Persona->bindParam(1, $dni, PDO::PARAM_STR);
+            $Persona->execute();
+
+            $arrayPersona = array();
+            while ($row = $Persona->fetch()) {
+                array_push($arrayPersona, array(
+                    "Persona" => $row["Persona"]
+                ));
+            }
+
+            array_push($array, $resultConcepto, $arrayEspecialidades, $arrayPersona);
             return $array;
         } catch (Exception $ex) {
             return $ex->getMessage();
