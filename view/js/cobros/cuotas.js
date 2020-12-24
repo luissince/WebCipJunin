@@ -1,7 +1,7 @@
 function Cuotas() {
 
     this.componentesCuotas = function() {
-        
+
         $("#btnCuotas").click(function() {
             if (idDNI == 0) {
                 tools.AlertWarning("Cuotas", "No selecciono ningún ingeniero para obtener sus cuotas.")
@@ -197,8 +197,6 @@ function Cuotas() {
             cuotasInicio = cuotas[0].day + "/" + cuotas[0].mes + "/" + cuotas[0].year;
             cuotasFin = cuotas[cuotas.length - 1].day + "/" + cuotas[cuotas.length - 1].mes + "/" + cuotas[cuotas.length - 1].year;
         }
-        console.log(cuotasInicio)
-        console.log(cuotasFin)
         addIngresos();
         $('#mdCuotas').modal('hide');
         countCurrentDate = 0;

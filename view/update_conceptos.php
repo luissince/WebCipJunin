@@ -1,10 +1,9 @@
 <?php
+session_start();
 
-if (!isset($_GET["idConcepto"])) {
-    echo '<script>location.href = "conceptos.php";</script>';
+if (!isset($_SESSION['IdUsuario'])) {
+    echo '<script>location.href = "./login.php";</script>';
 } else {
-}
-
 ?>
 
 <!DOCTYPE html>
@@ -360,4 +359,4 @@ if (!isset($_GET["idConcepto"])) {
 
 </html>
 
-<?php
+<?php }

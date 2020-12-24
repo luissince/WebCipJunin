@@ -97,7 +97,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
                 echo json_encode(array(
                     "estado" => 1,
                     "data" => $result[0],
-                    "especialidades" => $result[1]
+                    "especialidades" => $result[1],
+                    "ultimopago"=>$result[2]
                 ));
             } else {
                 echo json_encode(array(

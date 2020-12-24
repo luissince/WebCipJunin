@@ -188,7 +188,10 @@ class ConceptoAdo
 
             $cmdConcepto = Database::getInstance()->getDb()->prepare("SELECT idConcepto,Categoria,Concepto,Precio FROM Concepto WHERE Categoria = 5 AND Estado = 1");
             $cmdConcepto->execute();
-            $resultConcepto = $cmdConcepto->fetchAll();
+            $resultConcepto = $cmdConcepto->fetchObject();
+            if (!$resultConcepto) {
+                throw new Exception('Error en cargar el concepto.');
+            }
 
             $cmdEspecialidad = Database::getInstance()->getDb()->prepare("SELECT c.idColegiado, c.idEspecialidad, e.Especialidad FROM Colegiatura AS c 
                 INNER JOIN Especialidad AS e ON e.idEspecialidad = c.idEspecialidad where c.idDNI = ?");
@@ -204,7 +207,26 @@ class ConceptoAdo
                 ));
             }
 
-            array_push($array, $resultConcepto, $arrayEspecialidades);
+            if (empty($arrayEspecialidades)) {
+                throw new Exception('Error en cargar en las espcialidad(es).');
+            }
+
+            $cmdUltimoPago = Database::getInstance()->getDb()->prepare("SELECT 
+            cast(ISNULL(ul.FechaUltimaCuota, c.FechaColegiado)as date) as UltimoPago     
+            from Persona as p inner join Colegiatura as c
+            on p.idDNI = c.idDNI and c.Principal = 1
+            left outer join ULTIMACuota as ul
+            on p.idDNI = ul.idDNI
+            WHERE p.idDNI = ?");
+            $cmdUltimoPago->bindParam(1, $dni, PDO::PARAM_STR);
+            $cmdUltimoPago->execute();
+            $resultPago = $cmdUltimoPago->fetchColumn();
+
+            $date = new DateTime($resultPago);
+            $date->modify('last day of this month');
+            $date->modify('+3 month');
+
+            array_push($array, $resultConcepto, $arrayEspecialidades, $date->format('Y-m-d'));
             return $array;
         } catch (Exception $ex) {
             return $ex->getMessage();
@@ -219,6 +241,9 @@ class ConceptoAdo
             $cmdConcepto = Database::getInstance()->getDb()->prepare("SELECT idConcepto,Categoria,Concepto, Precio FROM Concepto WHERE Categoria = 6 AND Estado = 1");
             $cmdConcepto->execute();
             $resultConcepto = $cmdConcepto->fetchObject();
+            if (!$resultConcepto) {
+                throw new Exception('Error en cargar el concepto.');
+            }
 
             $cmdEspecialidad = Database::getInstance()->getDb()->prepare("SELECT c.idColegiado, c.idEspecialidad, e.Especialidad FROM Colegiatura AS c 
                 INNER JOIN Especialidad AS e ON e.idEspecialidad = c.idEspecialidad where c.idDNI = ?");
@@ -234,7 +259,26 @@ class ConceptoAdo
                 ));
             }
 
-            array_push($array, $resultConcepto, $arrayEspecialidades);
+            if (empty($arrayEspecialidades)) {
+                throw new Exception('Error en cargar en las espcialidad(es).');
+            }
+
+            $cmdUltimoPago = Database::getInstance()->getDb()->prepare("SELECT 
+            cast(ISNULL(ul.FechaUltimaCuota, c.FechaColegiado)as date) as UltimoPago     
+            from Persona as p inner join Colegiatura as c
+            on p.idDNI = c.idDNI and c.Principal = 1
+            left outer join ULTIMACuota as ul
+            on p.idDNI = ul.idDNI
+            WHERE p.idDNI = ?");
+            $cmdUltimoPago->bindParam(1, $dni, PDO::PARAM_STR);
+            $cmdUltimoPago->execute();
+            $resultPago = $cmdUltimoPago->fetchColumn();
+
+            $date = new DateTime($resultPago);
+            $date->modify('last day of this month');
+            $date->modify('+3 month');
+
+            array_push($array, $resultConcepto, $arrayEspecialidades,$date->format('Y-m-d'));
             return $array;
         } catch (Exception $ex) {
             return $ex->getMessage();

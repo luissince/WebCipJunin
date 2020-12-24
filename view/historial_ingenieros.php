@@ -1,9 +1,9 @@
 <?php
+session_start();
 
-if (!isset($_GET["idPersona"])) {
-    echo '<script>location.href = "ingenieros.php";</script>';
+if (!isset($_SESSION['IdUsuario'])) {
+    echo '<script>location.href = "./login.php";</script>';
 } else {
-}
 ?>
 
 <!DOCTYPE html>
@@ -443,3 +443,4 @@ if (!isset($_GET["idPersona"])) {
 </html>
 
 <?php
+}

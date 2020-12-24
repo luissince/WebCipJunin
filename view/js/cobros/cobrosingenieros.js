@@ -1,13 +1,13 @@
 function CobroIngenieros() {
 
 
-    this.componentesIngenieros = function () {
-        $("#btnIngenieros").click(function (event) {
+    this.componentesIngenieros = function() {
+        $("#btnIngenieros").click(function(event) {
             $('#mdIngenieros').modal('show');
             loadInitIngenieros();
         });
 
-        $("#btnIngenieros").keypress(function (event) {
+        $("#btnIngenieros").keypress(function(event) {
             if (event.keyCode === 13) {
                 $('#mdIngenieros').modal('show');
                 loadInitIngenieros();
@@ -15,11 +15,11 @@ function CobroIngenieros() {
             event.preventDefault();
         });
 
-        $('#mdIngenieros').on('shown.bs.modal', function () {
+        $('#mdIngenieros').on('shown.bs.modal', function() {
             $('#txtBuscarIngeniero').focus();
         });
 
-        $("#txtBuscarIngeniero").on("keyup", function (event) {
+        $("#txtBuscarIngeniero").on("keyup", function(event) {
             if (event.keyCode === 13) {
                 if (!state) {
                     paginacion = 1;
@@ -29,7 +29,7 @@ function CobroIngenieros() {
             }
         });
 
-        $("#btnIzquierda").click(function () {
+        $("#btnIzquierda").click(function() {
             if (!state) {
                 if (paginacion > 1) {
                     paginacion--;
@@ -38,7 +38,7 @@ function CobroIngenieros() {
             }
         });
 
-        $("#btnDerecha").click(function () {
+        $("#btnDerecha").click(function() {
             if (!state) {
                 if (paginacion < totalPaginacion) {
                     paginacion++;
@@ -79,7 +79,7 @@ function CobroIngenieros() {
                 "posicionPagina": ((paginacion - 1) * filasPorPagina),
                 "filasPorPagina": filasPorPagina
             },
-            beforeSend: function () {
+            beforeSend: function() {
                 totalPaginacion = 0;
                 tbIngenieros.empty();
                 tbIngenieros.append(
@@ -87,7 +87,7 @@ function CobroIngenieros() {
                 );
                 state = true;
             },
-            success: function (result) {
+            success: function(result) {
                 if (result.estado === 1) {
                     tbIngenieros.empty();
                     if (result.personas.length == 0) {
@@ -126,7 +126,7 @@ function CobroIngenieros() {
                     state = false;
                 }
             },
-            error: function (error) {
+            error: function(error) {
                 tbIngenieros.empty();
                 tbIngenieros.append(
                     '<tr class="text-center"><td colspan="8"><p>Se produjo un error, intente nuevamente.</p></td></tr>'
@@ -138,7 +138,7 @@ function CobroIngenieros() {
         });
     }
 
-    onSelectedIngeniero = function (idIngeniero) {
+    onSelectedIngeniero = function(idIngeniero) {
         $.ajax({
             url: "../app/controller/PersonaController.php",
             method: "GET",
@@ -146,55 +146,56 @@ function CobroIngenieros() {
                 "type": "data",
                 "dni": idIngeniero
             },
-            beforeSend: function () {
+            beforeSend: function() {
                 $('#mdIngenieros').modal('hide');
                 $("#tbHistorial").empty();
                 idDNI = 0;
                 tools.AlertInfo("Ingeniero", "En proceso de busqueda.", "toast-bottom-right");
                 $("#tbHistorial").append('<tr class="text-center"><td colspan="6"><img src="./images/spiner.gif"/><p>cargando información.</p></td></tr>');
             },
-            success: function (data) {
+            success: function(data) {
                 if (data.estado === 1) {
                     $("#tbHistorial").empty();
                     idDNI = data.persona.idDNI;
+
                     let Condicion = data.persona.Condicion ==
                         'T' ? 'Transeunte' :
                         data.persona.Condicion == 'F' ? 'Fallecido' :
-                            data.persona.Condicion == 'R' ? 'Retirado' :
-                                data.persona.Condicion == 'V' ? 'Vitalicio' : 'Ordinario';
+                        data.persona.Condicion == 'R' ? 'Retirado' :
+                        data.persona.Condicion == 'V' ? 'Vitalicio' : 'Ordinario';
                     $("#lblCipSeleccionado").html(data.persona.CIP);
                     $("#lblTipoIngenieroSeleccionado").html(Condicion);
                     $("#lblDocumentSeleccionado").html(data.persona.idDNI);
                     $("#lblDatosSeleccionado").html(data.persona.Apellidos + " " + data.persona.Nombres);
                     $("#lblDireccionSeleccionado").html("");
+                    $("#txtIngenieroCertificado").val(data.persona.Apellidos + " " + data.persona.Nombres);
 
-                    
                     for (let Historial of data.historial) {
                         let Concepto;
-                        if(Historial.Concepto = 1){
+                        if (Historial.Concepto == 1) {
                             Concepto = "Cuota Ordinaria";
-                        } else if(Historial.Concepto = 2){
+                        } else if (Historial.Concepto == 2) {
                             Concepto = "Cuota Ordinaria (Amnistia)";
-                        } else if(Historial.Concepto = 3){
+                        } else if (Historial.Concepto == 3) {
                             Concepto = "Cuota Ordinaria (Vitalicio)";
-                        } else if(Historial.Concepto = 4){
+                        } else if (Historial.Concepto == 4) {
                             Concepto = "Colegiatura";
-                        } else if(Historial.Concepto = 5){
+                        } else if (Historial.Concepto == 5) {
                             Concepto = "Certificado de habilidad";
-                        } else if(Historial.Concepto = 6){
+                        } else if (Historial.Concepto == 6) {
                             Concepto = "Cuota de residencia de obra";
-                        } else if(Historial.Concepto = 7){
+                        } else if (Historial.Concepto == 7) {
                             Concepto = "Certificado de proyecto";
-                        } else if(Historial.Concepto = 8){
+                        } else if (Historial.Concepto == 8) {
                             Concepto = "Peritaje";
-                        } else if(Historial.Concepto = 100){
+                        } else if (Historial.Concepto == 100) {
                             Concepto = "Ingresos Diversos";
                         }
 
                         $("#tbHistorial").append('<tr>' +
                             '<td>' + Historial.Id + '</td>' +
                             '<td>' + Historial.Recibo + '</td>' +
-                            '<td>' + Historial.Fecha + '</td>' +
+                            '<td>' + tools.getDateForma(Historial.Fecha) + '<br>' + tools.getTimeForma(Historial.Hora, true) + '</td>' +
                             '<td>' + Concepto + '</td>' +
                             '<td>' + Historial.Monto + '</td>' +
                             '<td>' + Historial.Observacion + '</td>' +
@@ -211,10 +212,11 @@ function CobroIngenieros() {
                     $("#lblDocumentSeleccionado").html("--");
                     $("#lblDatosSeleccionado").html("--");
                     $("#lblDireccionSeleccionado").html("--");
+                    $("#txtIngenieroCertificado").val("");
                     tools.AlertWarning("Ingeniero", "Se produjo un problema en obtener los datos, intente nuevamente.", "toast-bottom-right");
                 }
             },
-            error: function (error) {
+            error: function(error) {
                 $("#tbHistorial").empty();
                 tools.AlertError("Ingeniero", "Error en obtener los datos, comuníquese con su proveedor o intente nuevamente.", "toast-bottom-right");
             }

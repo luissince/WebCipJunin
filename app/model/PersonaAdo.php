@@ -164,7 +164,8 @@ class PersonaAdo
             $cmdImage->bindParam(1, $idPersona, PDO::PARAM_STR);
             $cmdImage->execute();
             //trae informacion del historial de pagos del usuario
-            $cmdHistorial = Database::getInstance()->getDb()->prepare("SELECT dbo.Ingreso.idIngreso, dbo.Ingreso.idDNI, CONCAT(dbo.Ingreso.Serie,' - ',dbo.Ingreso.NumRecibo) AS Recibo, dbo.Ingreso.Fecha, 
+            $cmdHistorial = Database::getInstance()->getDb()->prepare("SELECT dbo.Ingreso.idIngreso, dbo.Ingreso.idDNI, CONCAT(dbo.Ingreso.Serie,' - ',dbo.Ingreso.NumRecibo) AS Recibo, 
+            dbo.Ingreso.Fecha,dbo.Ingreso.Hora,
                 CASE 
                     WHEN NOT idCuota IS NULL THEN RIGHT(CONVERT(VARCHAR(10), Cuota.FechaIni, 103), 7) + ' a ' + RIGHT(CONVERT(VARCHAR(10), Cuota.FechaFin, 103), 7) 
                         ELSE Ingreso.Observacion END AS Observacion, dbo.vINGRESOTotal.Total,
@@ -184,10 +185,10 @@ class PersonaAdo
                                 LEFT OUTER JOIN dbo.CERTProyecto ON dbo.CERTProyecto.idIngreso = dbo.Ingreso.idIngreso 
                                 LEFT OUTER JOIN dbo.Peritaje ON dbo.Peritaje.idIngreso = dbo.Ingreso.idIngreso
                 WHERE (dbo.Ingreso.Estado = 'C') AND idDNI = ?
-                ORDER BY dbo.Ingreso.Fecha DESC");
+                ORDER BY dbo.Ingreso.Fecha DESC,dbo.Ingreso.Hora DESC");
             $cmdHistorial->bindParam(1, $idPersona, PDO::PARAM_STR);
             $cmdHistorial->execute();
-            $count=0;
+            $count = 0;
             $arrayHistorial = array();
             while ($row = $cmdHistorial->fetch()) {
                 $count++;
@@ -196,6 +197,7 @@ class PersonaAdo
                     "idIngreso" => $row["idIngreso"],
                     "Recibo" => $row["Recibo"],
                     "Fecha" => $row["Fecha"],
+                    "Hora" => $row["Hora"],
                     "Concepto" => $row["TipoIngreso"],
                     "Monto" => number_format($row["Total"], 2, ".", ""),
                     "Observacion" => $row["Observacion"],
@@ -208,7 +210,7 @@ class PersonaAdo
                 $image = (object)array($row['idDNI'], base64_encode($row['Foto']));
             }
 
-            array_push($array, $object, $image,$arrayHistorial);
+            array_push($array, $object, $image, $arrayHistorial);
             return $array;
         } catch (Exception $ex) {
             return $ex->getMessage();

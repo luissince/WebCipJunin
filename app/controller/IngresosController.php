@@ -13,7 +13,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     if($result === "inserted"){
         print json_encode(array(
             "estado" => 1,
-            "mensaje" => "Se completo correctamento el ingreso."
+            "mensaje" => "Se completo correctamento el ingreso.",
         ));
     }else{
         print json_encode(array(

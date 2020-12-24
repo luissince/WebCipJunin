@@ -17,7 +17,6 @@ function Peritaje() {
                 $('#mdPeritaje').modal('show');
                 loadPeritaje();
             }
-
         });
 
         $('#mdPeritaje').on('shown.bs.modal', function() {

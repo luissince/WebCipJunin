@@ -25,8 +25,7 @@
                     <a href="#" class="dropdown-toggle" data-toggle="dropdown">
                         <img src="images/usuario.png" class="user-image" alt="Usuario">
                         <span class="hidden-xs">
-                            <i
-                                class="fa fa-chevron-down"></i>
+                            <?= $_SESSION['Apellidos'] . ' ' . $_SESSION['Nombres']  ?> <i class="fa fa-chevron-down"></i>
                         </span>
                     </a>
                     <ul class="dropdown-menu" style="border-width: 1px;border-style: solid;border-color: gray;">
@@ -35,9 +34,8 @@
                             <img src="images/usuario.png" class="img-circle" alt="Usuario">
 
                             <p>
-                                <span
-                                    style="font-size: 12pt;"><?php echo $_SESSION["Nombres"] . " " . $_SESSION["Apellidos"] ?></span>
-                                <small> <i><?php echo $_SESSION["Usuario"] ?> </i> </small>
+                                <span style="font-size: 12pt;"><?= $_SESSION['Apellidos'] . ' ' . $_SESSION['Nombres']  ?></span>
+                                <small> <i><?= $_SESSION["Nombre"] ?> </i> </small>
                             </p>
                         </li>
                         <!-- Menu Footer-->
@@ -47,12 +45,9 @@
                                     Clave</a>
                             </div>
                             <div class="pull-right">
-                                <a href="closesession.php" id="btnCloseSesion" class="btn btn-default btn-flat"> 
+                                <a href="closesession.php" id="btnCloseSesion" class="btn btn-default btn-flat">
                                     <i class="fa fa-remove"></i> Cerrar Sesion
                                 </a>
-                                <!-- <form id="logout-form" action="#" method="POST" style="display: none;">
-                                    {{ csrf_field() }}
-                                </form> -->
                             </div>
                         </li>
                     </ul>
@@ -63,21 +58,3 @@
 
     </nav>
 </header>
-<!-- <script>
-let tools = new Tools();
-
-
-$(document).ready(function() {
-
-    $("#btnCloseSesion").click(function() {
-
-        
-        
-        tools.AlertSuccess('Mensaje', 'Cerrando Sesión...')
-
-        setTimeout(function() {
-            location.href = "../closesession.php"
-        }, 1000);
-    })
-})
-</script> -->

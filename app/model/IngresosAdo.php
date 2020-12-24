@@ -85,11 +85,12 @@ class IngresosAdo
             Serie,
             NumRecibo,
             Fecha,
+            Hora,
             idUsuario,
             Estado,
             Deposito,
             Observacion
-            )VALUES(?,?,?,?,GETDATE(),?,?,0,'')");
+            )VALUES(?,?,?,?,GETDATE(),GETDATE(),?,?,0,'')");
             $cmdIngreso->bindParam(1, $body["idCliente"], PDO::PARAM_STR);
             $cmdIngreso->bindParam(2, $body["idTipoDocumento"], PDO::PARAM_INT);
             $cmdIngreso->bindParam(3, $serie_numeracion[0], PDO::PARAM_STR);
@@ -102,18 +103,31 @@ class IngresosAdo
 
             if ($body["estadoCuotas"] == true) {
                 $cmdCuota = Database::getInstance()->getDb()->prepare("INSERT INTO Cuota(idIngreso,FechaIni,FechaFin) VALUES(?,?,?)");
-                $dateInicio = date('Y-d-m H:i:s', strtotime($body["cuotasInicio"]));
-                $dateFin = date('Y-d-m H:i:s', strtotime($body["cuotasFin"]));
                 $cmdCuota->bindParam(1, $idIngreso, PDO::PARAM_INT);
-                $cmdCuota->bindParam(2, $dateInicio, PDO::PARAM_STR);
-                $cmdCuota->bindParam(3, $dateFin, PDO::PARAM_STR);
+                $cmdCuota->bindParam(2, $body["cuotasInicio"], PDO::PARAM_STR);
+                $cmdCuota->bindParam(3, $body["cuotasFin"], PDO::PARAM_STR);
                 $cmdCuota->execute();
             }
 
             if ($body["estadoColegiatura"] == true) {
-                $cmdCuota = Database::getInstance()->getDb()->prepare("INSERT INTO AltaColegio(idIngreso) VALUES(?)");
-                $cmdCuota->bindParam(1, $idIngreso, PDO::PARAM_INT);
-                $cmdCuota->execute();
+                $cmdAltaColegio = Database::getInstance()->getDb()->prepare("INSERT INTO AltaColegio(idIngreso) VALUES(?)");
+                $cmdAltaColegio->bindParam(1, $idIngreso, PDO::PARAM_INT);
+                $cmdAltaColegio->execute();
+            }
+
+            if($body["estadoCertificadoHabilidad"] == true){
+                $cmdCertHabilidad = Database::getInstance()->getDb()->prepare("INSERT INTO CERTHabilidad(idIUsuario,idColegiatura,Numero,Asunto,Entidad,Lugar,Fecha,HastaFecha,Anulado,idIngreso) VALUES(?,?,?,?,?,?,?,?,?,?)");
+                $cmdCertHabilidad->bindParam(1, $body["idUsuario"], PDO::PARAM_INT);
+                $cmdCertHabilidad->bindParam(2, $body["objectCertificadoHabilidad"]["idEspecialidad"], PDO::PARAM_INT);
+                $cmdCertHabilidad->bindParam(3, $body["objectCertificadoHabilidad"]["numero"], PDO::PARAM_INT);
+                $cmdCertHabilidad->bindParam(4, $body["objectCertificadoHabilidad"]["asunto"], PDO::PARAM_INT);
+                $cmdCertHabilidad->bindParam(5, $body["objectCertificadoHabilidad"]["entidad"], PDO::PARAM_INT);
+                $cmdCertHabilidad->bindParam(6, $body["objectCertificadoHabilidad"]["lugar"], PDO::PARAM_INT);
+                $cmdCertHabilidad->bindParam(7, $body["objectCertificadoHabilidad"]["fechaPago"], PDO::PARAM_INT);
+                $cmdCertHabilidad->bindParam(8, $body["objectCertificadoHabilidad"]["ultimoPago"], PDO::PARAM_INT);
+                $cmdCertHabilidad->bindParam(9, $body["objectCertificadoHabilidad"]["anulado"], PDO::PARAM_INT);
+                $cmdCertHabilidad->bindParam(10, $idIngreso, PDO::PARAM_INT);
+                $cmdCertHabilidad->execute();
             }
 
             foreach ($body["ingresos"] as $value) {

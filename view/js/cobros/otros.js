@@ -1,8 +1,6 @@
 function Otros() {
 
-    this.componentesOtros = function(addIngresos, validateDuplicate) {
-        this.addIngresos = addIngresos;
-        this.validateDuplicate = validateDuplicate;
+    this.componentesOtros = function() {
         $("#btnOtro").click(function() {
             $('#mdOtros').modal('show');
             loadOtros();
@@ -69,7 +67,7 @@ function Otros() {
     function validateIngresoOtros() {
         if ($("#cbOtrosConcepto").val() != "") {
             if ($("#txtCantidadOtrosConceptos").val() !== "") {
-                if (!this.validateDuplicate($("#cbOtrosConcepto").val())) {
+                if (!validateDuplicate($("#cbOtrosConcepto").val())) {
                     arrayIngresos.push({
                         "idConcepto": parseInt($("#cbOtrosConcepto").val()),
                         "categoria": 100,
@@ -78,7 +76,7 @@ function Otros() {
                         "precio": parseFloat($("#cbOtrosConcepto").find('option:selected').attr('id')),
                         "monto": parseFloat($("#txtCantidadOtrosConceptos").val()) * parseFloat($("#cbOtrosConcepto").find('option:selected').attr('id'))
                     });
-                    this.addIngresos();
+                    addIngresos();
                     $('#mdOtros').modal('hide');
                     $("#txtCantidadOtrosConceptos").val("1");
                     $("#txtMontoOtrosConceptos").val("");

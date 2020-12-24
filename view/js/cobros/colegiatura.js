@@ -1,8 +1,6 @@
 function Colegiatura() {
 
-    this.componentesColegiatura = function(addIngresos, validateDuplicate) {
-        this.addIngresos = addIngresos;
-        this.validateDuplicate = validateDuplicate;
+    this.componentesColegiatura = function() {
         $("#btnColegitura").click(function() {
             $('#mdColegiatura').modal('show');
             loadColegiatura();
@@ -76,7 +74,7 @@ function Colegiatura() {
 
     function validateIngresoColegiatura() {
         for (let value of colegiaturas) {
-            if (!this.validateDuplicate(value.IdConcepto)) {
+            if (!validateDuplicate(value.IdConcepto)) {
                 arrayIngresos.push({
                     "idConcepto": parseInt(value.IdConcepto),
                     "categoria": parseInt(value.Categoria),
@@ -101,7 +99,7 @@ function Colegiatura() {
         if (colegiaturas.length > 0) {
             colegiaturaEstado = true;
         }
-        this.addIngresos();
+        addIngresos();
         $('#mdColegiatura').modal('hide');
     }
 }

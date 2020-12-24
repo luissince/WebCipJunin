@@ -8,7 +8,6 @@
 /*! normalize.css v3.0.3 | MIT License | github.com/necolas/normalize.css */
 
 html {
-    font-family: sans-serif;
     -webkit-text-size-adjust: 100%;
     -ms-text-size-adjust: 100%;
 }
@@ -224,6 +223,7 @@ optgroup {
 table {
     border-spacing: 0;
     border-collapse: collapse;
+    cursor: pointer;
 }
 
 td,
@@ -6022,7 +6022,7 @@ a.thumbnail.active {
 
 .alert {
     padding: 10px;
-    margin-bottom: 20px;
+    margin-bottom: 15px;
     border: 1px solid transparent;
     border-radius: 4px;
 }

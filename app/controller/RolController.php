@@ -46,6 +46,19 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
                 "message" => $modulos
             ));
         }
+    }else  if ($_GET["type"] === "roles") {
+        $rol = RolAdo::getRoles();
+        if (is_array($rol)) {
+            echo json_encode(array(
+                "estado" => 1,
+                "roles" => $rol
+            ));
+        } else {
+            echo json_encode(array(
+                "estado" => 2,
+                "message" => $rol,
+            ));
+        }
     }
 } else if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     if ($_POST["type"] === "insertRol") {

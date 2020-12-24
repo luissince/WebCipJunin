@@ -4977,7 +4977,7 @@ table.text-center th {
 .box .datepicker-inline .datepicker-days td:hover,
 .box .datepicker-inline>table td:hover,
 .box .datepicker-inline .datepicker-days>table td:hover {
-    background-color: rgba(255, 255, 255, 0.3)
+    background-color: rgba(255, 255, 255, 0.3);
 }
 
 .box .datepicker-inline td.day.old,
