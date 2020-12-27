@@ -31,6 +31,7 @@ class PersonaAdo
                     'idDNI' => $row['idDNI'],
                     'Nombres' => $row['Nombres'],
                     'Apellidos' => $row['Apellidos'],
+                    'Sexo' => $row["Sexo"] == 'M' ? "MASCULINO" : "FEMENINO",
                     'EstadoCivil' => $row['EstadoCivil'],
                     'Ruc' => $row['RUC'],
                     'Cip' => $row['CIP'],
@@ -162,8 +163,25 @@ class PersonaAdo
             idDNI,Foto
             FROM PersonaImagen WHERE idDNI = ?");
             $cmdImage->bindParam(1, $idPersona, PDO::PARAM_STR);
-            $cmdImage->execute();
-            //trae informacion del historial de pagos del usuario
+            $cmdImage->execute();            
+            $image = null;
+
+            if ($row = $cmdImage->fetch()) {
+                $image = (object)array($row['idDNI'], base64_encode($row['Foto']));
+            }
+
+            array_push($array, $object, $image);
+            return $array;
+        } catch (Exception $ex) {
+            return $ex->getMessage();
+        }
+    }
+
+    public static function getHistorialPagos($idPersona, $posicionPagina, $filasPorPagina)
+    {
+        try {
+            $array = array();
+
             $cmdHistorial = Database::getInstance()->getDb()->prepare("SELECT dbo.Ingreso.idIngreso, dbo.Ingreso.idDNI, CONCAT(dbo.Ingreso.Serie,' - ',dbo.Ingreso.NumRecibo) AS Recibo, 
             dbo.Ingreso.Fecha,dbo.Ingreso.Hora,
                 CASE 
@@ -185,16 +203,19 @@ class PersonaAdo
                                 LEFT OUTER JOIN dbo.CERTProyecto ON dbo.CERTProyecto.idIngreso = dbo.Ingreso.idIngreso 
                                 LEFT OUTER JOIN dbo.Peritaje ON dbo.Peritaje.idIngreso = dbo.Ingreso.idIngreso
                 WHERE (dbo.Ingreso.Estado = 'C') AND idDNI = ?
-                ORDER BY dbo.Ingreso.Fecha DESC,dbo.Ingreso.Hora DESC");
+                ORDER BY dbo.Ingreso.Fecha DESC,dbo.Ingreso.Hora DESC
+                offset ? ROWS FETCH NEXT ? ROWS only");
             $cmdHistorial->bindParam(1, $idPersona, PDO::PARAM_STR);
+            $cmdHistorial->bindParam(2, $posicionPagina, PDO::PARAM_INT);
+            $cmdHistorial->bindParam(3, $filasPorPagina, PDO::PARAM_INT);
             $cmdHistorial->execute();
             $count = 0;
             $arrayHistorial = array();
             while ($row = $cmdHistorial->fetch()) {
                 $count++;
                 array_push($arrayHistorial, array(
-                    "Id" => $count,
-                    "idIngreso" => $row["idIngreso"],
+                    "Id" => $count + $posicionPagina,
+                    "IdIngreso" => $row["idIngreso"],
                     "Recibo" => $row["Recibo"],
                     "Fecha" => $row["Fecha"],
                     "Hora" => $row["Hora"],
@@ -204,13 +225,20 @@ class PersonaAdo
                 ));
             }
 
-            $image = null;
+            $cmdTotales = Database::getInstance()->getDb()->prepare("SELECT COUNT(dbo.Ingreso.idIngreso)
+                FROM dbo.Ingreso INNER JOIN dbo.vINGRESOTotal ON dbo.vINGRESOTotal.idIngreso = dbo.Ingreso.idIngreso 
+                                LEFT OUTER JOIN dbo.Cuota ON dbo.Cuota.idIngreso = dbo.Ingreso.idIngreso 
+                                LEFT OUTER JOIN dbo.AltaColegio ON dbo.AltaColegio.idIngreso = dbo.Ingreso.idIngreso 
+                                LEFT OUTER JOIN dbo.CERTHabilidad ON dbo.CERTHabilidad.idIngreso = dbo.Ingreso.idIngreso 
+                                LEFT OUTER JOIN dbo.CERTResidencia ON dbo.CERTResidencia.idIngreso = dbo.Ingreso.idIngreso 
+                                LEFT OUTER JOIN dbo.CERTProyecto ON dbo.CERTProyecto.idIngreso = dbo.Ingreso.idIngreso 
+                                LEFT OUTER JOIN dbo.Peritaje ON dbo.Peritaje.idIngreso = dbo.Ingreso.idIngreso
+                WHERE (dbo.Ingreso.Estado = 'C') AND idDNI = ?");
+            $cmdTotales->bindParam(1, $idPersona, PDO::PARAM_STR);
+            $cmdTotales->execute();
+            $resultTotal = $cmdTotales->fetchColumn();
 
-            if ($row = $cmdImage->fetch()) {
-                $image = (object)array($row['idDNI'], base64_encode($row['Foto']));
-            }
-
-            array_push($array, $object, $image, $arrayHistorial);
+            array_push($array,  $arrayHistorial, $resultTotal);
             return $array;
         } catch (Exception $ex) {
             return $ex->getMessage();
@@ -226,8 +254,7 @@ class PersonaAdo
             WHERE idDNI = ?");
             $comandoValidate->bindParam(1, $persona['dni'], PDO::PARAM_STR);
             $comandoValidate->execute();
-            $resultValue = $comandoValidate->fetchColumn();
-            if ($resultValue > 0) {
+            if ($comandoValidate->fetch()) {
                 $comandoPersona = Database::getInstance()->getDb()->prepare("UPDATE Persona SET 
                 Nombres = UPPER(?),
                 Apellidos = UPPER(?),
@@ -290,25 +317,35 @@ class PersonaAdo
     {
         try {
             Database::getInstance()->getDb()->beginTransaction();
-            $comandoPersona = Database::getInstance()->getDb()->prepare("INSERT INTO Persona (idDNI,idUsuario,Nombres,Apellidos,Sexo,FechaNac,EstadoCivil,RUC,RAZONSOCIAL,CIP,Condicion)
-                VALUES (?,'-1',?,?,?,?,?,?,?,?,?)");
 
-            $dateTime = date('Y-d-m H:i:s', strtotime($persona['nacimiento']));
+            $comandoValidate = Database::getInstance()->getDb()->prepare("SELECT * FROM Persona WHERE idDNI = ?");
+            $comandoValidate->bindParam(1, $persona['dni'], PDO::PARAM_STR);
+            $comandoValidate->execute();
+            if ($comandoValidate->fetch()) {
+                Database::getInstance()->getDb()->rollback();
+                return "duplicate";
+            } else {
 
-            $comandoPersona->bindParam(1, $persona['dni'], PDO::PARAM_STR);
-            $comandoPersona->bindParam(2, strtoupper($persona['nombres']), PDO::PARAM_STR);
-            $comandoPersona->bindParam(3, strtoupper($persona['apellidos']), PDO::PARAM_STR);
-            $comandoPersona->bindParam(4, $persona['sexo'], PDO::PARAM_STR);
-            $comandoPersona->bindParam(5, $dateTime, PDO::PARAM_STR);
-            $comandoPersona->bindParam(6, $persona['estado_civil'], PDO::PARAM_STR);
-            $comandoPersona->bindParam(7, $persona['ruc'], PDO::PARAM_STR);
-            $comandoPersona->bindParam(8, $persona['rason_social'], PDO::PARAM_STR);
-            $comandoPersona->bindParam(9, $persona['cip'], PDO::PARAM_STR);
-            $comandoPersona->bindParam(10, $persona['condicion'], PDO::PARAM_STR);
+                $comandoPersona = Database::getInstance()->getDb()->prepare("INSERT INTO Persona (idDNI,idUsuario,Nombres,Apellidos,Sexo,FechaNac,EstadoCivil,RUC,RAZONSOCIAL,CIP,Condicion)
+                VALUES (?,'-1',UPPER(?),UPPER(?),?,?,?,?,?,?,?)");
 
-            $comandoPersona->execute();
-            Database::getInstance()->getDb()->commit();
-            return 'create';
+                $dateTime = date('Y-d-m H:i:s', strtotime($persona['nacimiento']));
+
+                $comandoPersona->bindParam(1, $persona['dni'], PDO::PARAM_STR);
+                $comandoPersona->bindParam(2, $persona['nombres'], PDO::PARAM_STR);
+                $comandoPersona->bindParam(3, $persona['apellidos'], PDO::PARAM_STR);
+                $comandoPersona->bindParam(4, $persona['sexo'], PDO::PARAM_STR);
+                $comandoPersona->bindParam(5, $dateTime, PDO::PARAM_STR);
+                $comandoPersona->bindParam(6, $persona['estado_civil'], PDO::PARAM_STR);
+                $comandoPersona->bindParam(7, $persona['ruc'], PDO::PARAM_STR);
+                $comandoPersona->bindParam(8, $persona['rason_social'], PDO::PARAM_STR);
+                $comandoPersona->bindParam(9, $persona['cip'], PDO::PARAM_STR);
+                $comandoPersona->bindParam(10, $persona['condicion'], PDO::PARAM_STR);
+
+                $comandoPersona->execute();
+                Database::getInstance()->getDb()->commit();
+                return 'create';
+            }
         } catch (Exception $ex) {
             Database::getInstance()->getDb()->rollback();
             return $ex->getMessage();

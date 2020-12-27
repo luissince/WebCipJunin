@@ -112,7 +112,9 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
                 echo json_encode(array(
                     "estado" => 1,
                     "data" => $result[0],
-                    "especialidades" => $result[1]
+                    "especialidades" => $result[1],
+                    "ultimopago"=>$result[2],
+                    "ubigeo"=>$result[3]
                 ));
             } else {
                 echo json_encode(array(
@@ -126,7 +128,9 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
                 echo json_encode(array(
                     "estado" => 1,
                     "data" => $result[0],
-                    "especialidades" => $result[1]
+                    "especialidades" => $result[1],
+                    "ultimopago"=>$result[2],
+                    "ubigeo"=>$result[3]
                 ));
             } else {
                 echo json_encode(array(
@@ -184,8 +188,10 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
         $data["Propiedad"] = $_POST["Propiedad"];
         $data["Inicio"] = $_POST["Inicio"];
         $data["Fin"] = $_POST["Fin"];
+        $data["Asignado"] = $_POST["Asignado"];
         $data["Observacion"] = $_POST["Observacion"];
         $data["Codigo"] = $_POST["Codigo"];
+        $data["Estado"] = $_POST["Estado"];
         $result = ConceptoAdo::insert($data);
         if ($result == "inserted") {
             echo json_encode(array(
@@ -209,6 +215,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
         $data["Observacion"] = $_POST["Observacion"];
         $data["Codigo"] = $_POST["Codigo"];
         $data["Estado"] = $_POST["Estado"];
+        $data["Asignado"] = $_POST["Asignado"];
         $result = ConceptoAdo::update($data);
         if ($result == "updated") {
             echo json_encode(array(
@@ -220,6 +227,21 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
                 "estado" => 0,
                 "message" => $result,
                 "result" => $data
+            ));
+        }
+    } else if ($_POST["type"] === "deleteConcepto") {
+        $concepto["idConcepto"] = $_POST["idconcepto"];
+        $result = ConceptoAdo::deleteConcepto($concepto);
+
+        if ($result == "eliminado") {
+            echo json_encode(array(
+                "estado" => 1,
+                "message" => "Se eliminaron correctamente los datos"
+            ));
+        } else {
+            echo json_encode(array(
+                "estado" => 2,
+                "message" => $result
             ));
         }
     }

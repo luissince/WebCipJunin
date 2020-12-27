@@ -25,7 +25,8 @@ class ConceptoAdo
             convert(varchar,cast(Fin as date), 103) as Fin,
             Observacion,
             Codigo,
-            Estado
+            Estado, 
+            Asignado
             FROM Concepto 
             where Concepto like concat(?,'%') 
             order by Categoria asc,Concepto asc,cast(Inicio as date) desc, cast(Fin as date) desc
@@ -49,6 +50,7 @@ class ConceptoAdo
                     "Observacion" => $row["Observacion"],
                     "Codigo" => $row["Codigo"],
                     "Estado" => $row["Estado"],
+                    "Asignado" => $row["Asignado"],
                 ));
             }
 
@@ -79,7 +81,8 @@ class ConceptoAdo
                 cast(Fin as date) as Fin,
                 Observacion,
                 Codigo,
-                Estado              
+                Estado,
+                Asignado       
             FROM Concepto WHERE idConcepto = ?");
             $comandoConcepto->bindParam(1, $idConcepto, PDO::PARAM_STR);
             $comandoConcepto->execute();
@@ -190,7 +193,7 @@ class ConceptoAdo
             $cmdConcepto->execute();
             $resultConcepto = $cmdConcepto->fetchObject();
             if (!$resultConcepto) {
-                throw new Exception('Error en cargar el concepto.');
+                throw new Exception('No se encontro ningún concepto para obtener.');
             }
 
             $cmdEspecialidad = Database::getInstance()->getDb()->prepare("SELECT c.idColegiado, c.idEspecialidad, e.Especialidad FROM Colegiatura AS c 
@@ -223,8 +226,8 @@ class ConceptoAdo
             $resultPago = $cmdUltimoPago->fetchColumn();
 
             $date = new DateTime($resultPago);
-            $date->modify('last day of this month');
             $date->modify('+3 month');
+            $date->modify('last day of this month');            
 
             array_push($array, $resultConcepto, $arrayEspecialidades, $date->format('Y-m-d'));
             return $array;
@@ -242,7 +245,7 @@ class ConceptoAdo
             $cmdConcepto->execute();
             $resultConcepto = $cmdConcepto->fetchObject();
             if (!$resultConcepto) {
-                throw new Exception('Error en cargar el concepto.');
+                throw new Exception('No se encontro ningún concepto para obtener.');
             }
 
             $cmdEspecialidad = Database::getInstance()->getDb()->prepare("SELECT c.idColegiado, c.idEspecialidad, e.Especialidad FROM Colegiatura AS c 
@@ -275,10 +278,26 @@ class ConceptoAdo
             $resultPago = $cmdUltimoPago->fetchColumn();
 
             $date = new DateTime($resultPago);
-            $date->modify('last day of this month');
             $date->modify('+3 month');
+            $date->modify('last day of this month');     
+            
+            $arrayUbigeo = array();
+            $cmdUbigeo = Database::getInstance()->getDb()->prepare(" SELECT idUbigeo, CONCAT(Departamento, ' - ', Provincia, ' - ', 
+            Distrito) AS Ubicacion FROM Ubigeo ");
+            $cmdUbigeo->execute();
 
-            array_push($array, $resultConcepto, $arrayEspecialidades,$date->format('Y-m-d'));
+            while ($row = $cmdUbigeo->fetch()) {
+                array_push($arrayUbigeo, array(
+                    'IdUbicacion' => $row['idUbigeo'],
+                    'Ubicacion' => $row['Ubicacion'],
+                ));
+            }
+
+            if (empty($arrayUbigeo)) {
+                throw new Exception('Error en cargar el ubigeo.');
+            }
+
+            array_push($array, $resultConcepto, $arrayEspecialidades,$date->format('Y-m-d'),$arrayUbigeo);
             return $array;
         } catch (Exception $ex) {
             return $ex->getMessage();
@@ -293,6 +312,9 @@ class ConceptoAdo
             $cmdConcepto = Database::getInstance()->getDb()->prepare("SELECT idConcepto,Categoria,Concepto, Precio FROM Concepto WHERE Categoria = 7 AND Estado = 1");
             $cmdConcepto->execute();
             $resultConcepto = $cmdConcepto->fetchObject();
+            if (!$resultConcepto) {
+                throw new Exception('No se encontro ningún concepto para obtener.');
+            }
 
             $cmdEspecialidad = Database::getInstance()->getDb()->prepare("SELECT c.idColegiado, c.idEspecialidad, e.Especialidad FROM Colegiatura AS c 
                 INNER JOIN Especialidad AS e ON e.idEspecialidad = c.idEspecialidad where c.idDNI = ?");
@@ -308,7 +330,42 @@ class ConceptoAdo
                 ));
             }
 
-            array_push($array, $resultConcepto, $arrayEspecialidades);
+            if (empty($arrayEspecialidades)) {
+                throw new Exception('Error en cargar en las espcialidad(es).');
+            }
+
+            $cmdUltimoPago = Database::getInstance()->getDb()->prepare("SELECT 
+            cast(ISNULL(ul.FechaUltimaCuota, c.FechaColegiado)as date) as UltimoPago     
+            from Persona as p inner join Colegiatura as c
+            on p.idDNI = c.idDNI and c.Principal = 1
+            left outer join ULTIMACuota as ul
+            on p.idDNI = ul.idDNI
+            WHERE p.idDNI = ?");
+            $cmdUltimoPago->bindParam(1, $dni, PDO::PARAM_STR);
+            $cmdUltimoPago->execute();
+            $resultPago = $cmdUltimoPago->fetchColumn();
+
+            $date = new DateTime($resultPago);
+            $date->modify('+3 month');
+            $date->modify('last day of this month'); 
+
+            $arrayUbigeo = array();
+            $cmdUbigeo = Database::getInstance()->getDb()->prepare(" SELECT idUbigeo, CONCAT(Departamento, ' - ', Provincia, ' - ', 
+            Distrito) AS Ubicacion FROM Ubigeo ");
+            $cmdUbigeo->execute();
+
+            while ($row = $cmdUbigeo->fetch()) {
+                array_push($arrayUbigeo, array(
+                    'IdUbicacion' => $row['idUbigeo'],
+                    'Ubicacion' => $row['Ubicacion'],
+                ));
+            }
+
+            if (empty($arrayUbigeo)) {
+                throw new Exception('Error en cargar el ubigeo.');
+            }
+
+            array_push($array, $resultConcepto, $arrayEspecialidades,$date->format('Y-m-d'),$arrayUbigeo);
             return $array;
         } catch (Exception $ex) {
             return $ex->getMessage();
@@ -322,6 +379,9 @@ class ConceptoAdo
             $cmdConcepto = Database::getInstance()->getDb()->prepare($cmdPeritaje);
             $cmdConcepto->execute();
             $resultConcepto = $cmdConcepto->fetchObject();
+            if (!$resultConcepto) {
+                throw new Exception('No se encontro ningún concepto para obtener.');
+            }
             return $resultConcepto;
         } catch (Exception $ex) {
             return $ex->getMessage();
@@ -385,23 +445,26 @@ class ConceptoAdo
             Propiedad,
             Inicio,
             Fin,
+            Asignado,
             Observacion,
             Codigo,
-            Estado
-            )VALUES(?,?,?,?,?,?,?,?,?)");
+            Estado            
+            )VALUES(?,?,?,?,?,?,?,?,?,?)");
 
-            $dateTimeInicio = date('Y-d-m H:i:s', strtotime($data["Inicio"]));
-            $dateTimeFin = date('Y-d-m H:i:s', strtotime($data["Fin"]));
+            // $dateTimeInicio = date('Y-d-m H:i:s', strtotime($data["Inicio"]));
+            // $dateTimeFin = date('Y-d-m H:i:s', strtotime($data["Fin"]));
 
             $cmdConcepto->bindParam(1, $data["Categoria"], PDO::PARAM_INT);
             $cmdConcepto->bindParam(2, $data["Concepto"], PDO::PARAM_STR);
             $cmdConcepto->bindParam(3, $data["Precio"], PDO::PARAM_STR);
             $cmdConcepto->bindParam(4, $data["Propiedad"], PDO::PARAM_INT);
-            $cmdConcepto->bindParam(5, $dateTimeInicio, PDO::PARAM_STR);
-            $cmdConcepto->bindParam(6, $dateTimeFin, PDO::PARAM_STR);
-            $cmdConcepto->bindParam(7, $data["Observacion"], PDO::PARAM_STR);
-            $cmdConcepto->bindParam(8, $data["Codigo"], PDO::PARAM_INT);
-            $cmdConcepto->bindParam(9, $data["Estado"], PDO::PARAM_BOOL);
+            $cmdConcepto->bindParam(5, $data["Inicio"], PDO::PARAM_STR);
+            $cmdConcepto->bindParam(6, $data["Fin"], PDO::PARAM_STR);
+            $cmdConcepto->bindParam(7, $data["Asignado"], PDO::PARAM_INT);
+            $cmdConcepto->bindParam(8, $data["Observacion"], PDO::PARAM_STR);
+            $cmdConcepto->bindParam(9, $data["Codigo"], PDO::PARAM_INT);
+            $cmdConcepto->bindParam(10, $data["Estado"], PDO::PARAM_BOOL);
+            
             $cmdConcepto->execute();
             Database::getInstance()->getDb()->commit();
             return "inserted";
@@ -425,26 +488,39 @@ class ConceptoAdo
             Fin = ?,
             Observacion = ?,
             Codigo = ?,
-            Estado = ?
+            Estado = ?,
+            Asignado =?
             WHERE idConcepto = ?");
-
-            $dateTimeInicio = date('Y-d-m H:i:s', strtotime($data["Inicio"]));
-
-            $dateTimeFin = date('Y-d-m H:i:s', strtotime($data["Fin"]));
 
             $cmdConcepto->bindParam(1, $data["Categoria"], PDO::PARAM_INT);
             $cmdConcepto->bindParam(2, $data["Concepto"], PDO::PARAM_STR);
             $cmdConcepto->bindParam(3, $data["Precio"], PDO::PARAM_STR);
             $cmdConcepto->bindParam(4, $data["Propiedad"], PDO::PARAM_INT);
-            $cmdConcepto->bindParam(5, $dateTimeInicio, PDO::PARAM_STR);
-            $cmdConcepto->bindParam(6, $dateTimeFin, PDO::PARAM_STR);
+            $cmdConcepto->bindParam(5, $data["Inicio"], PDO::PARAM_STR);
+            $cmdConcepto->bindParam(6, $data["Fin"], PDO::PARAM_STR);
             $cmdConcepto->bindParam(7, $data["Observacion"], PDO::PARAM_STR);
             $cmdConcepto->bindParam(8, $data["Codigo"], PDO::PARAM_INT);
             $cmdConcepto->bindParam(9, $data["Estado"], PDO::PARAM_STR);
-            $cmdConcepto->bindParam(10, $data["IdConcepto"], PDO::PARAM_INT);
+            $cmdConcepto->bindParam(10, $data["Asignado"], PDO::PARAM_INT);
+            $cmdConcepto->bindParam(11, $data["IdConcepto"], PDO::PARAM_INT);
             $cmdConcepto->execute();
             Database::getInstance()->getDb()->commit();
             return "updated";
+        } catch (Exception $ex) {
+            Database::getInstance()->getDb()->rollback();
+            return $ex->getMessage();
+        }
+    }
+
+    public static function deleteConcepto($concepto)
+    {
+        try {
+            Database::getInstance()->getDb()->beginTransaction();
+            $comandSelect = Database::getInstance()->getDb()->prepare("DELETE FROM Concepto WHERE idConcepto = ?");
+            $comandSelect->bindParam(1, $concepto["idConcepto"], PDO::PARAM_INT);
+            $comandSelect->execute();
+            Database::getInstance()->getDb()->commit();
+            return "eliminado";
         } catch (Exception $ex) {
             Database::getInstance()->getDb()->rollback();
             return $ex->getMessage();

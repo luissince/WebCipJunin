@@ -203,6 +203,7 @@ if (!isset($_SESSION['IdUsuario'])) {
             let tools = new Tools();
 
             let state = false;
+            let opcion = 0;
             let totalPaginacion = 0;
             let paginacion = 0;
             let filasPorPagina = 10;
@@ -240,22 +241,8 @@ if (!isset($_SESSION['IdUsuario'])) {
                 });
 
                 $("#btnEnvioMasivo").click(function() {
-                    alertify.confirm('Ingreso', "¿Está seguro de continuar con el envío?", function() {
-                        for (let ingresos of arrayIngresos) {
-                            if (ingresos.estado == "C") {
-                                if (ingresos.xmlsunat !== "0") {
-                                    firmaMasivaXml(ingresos.idIngreso);
-                                }
-                            }
-                        }
-                    }, function() {
-
-                    });
-                });
-
-                $("#btnEnvioMasivo").keypress(function(event) {
-                    if (event.keyCode === 13) {
-                        alertify.confirm('Ingreso', "¿Está seguro de continuar con el envío?", function() {
+                    tools.ModalDialog("Ingreso", "Está seguro de continuar con el envío?", function(value) {
+                        if (value == true) {
                             for (let ingresos of arrayIngresos) {
                                 if (ingresos.estado == "C") {
                                     if (ingresos.xmlsunat !== "0") {
@@ -263,8 +250,22 @@ if (!isset($_SESSION['IdUsuario'])) {
                                     }
                                 }
                             }
-                        }, function() {
+                        }
+                    });
+                });
 
+                $("#btnEnvioMasivo").keypress(function(event) {
+                    if (event.keyCode === 13) {
+                        tools.ModalDialog("Ingreso", "Está seguro de continuar con el envío?", function(value) {
+                            if (value == true) {
+                                for (let ingresos of arrayIngresos) {
+                                    if (ingresos.estado == "C") {
+                                        if (ingresos.xmlsunat !== "0") {
+                                            firmaMasivaXml(ingresos.idIngreso);
+                                        }
+                                    }
+                                }
+                            }
                         });
                     }
                     event.preventDefault();
@@ -281,12 +282,25 @@ if (!isset($_SESSION['IdUsuario'])) {
                     event.preventDefault();
                 });
 
+
             });
+
+            function onEventPaginacion() {
+                switch (opcion) {
+                    case 0:
+                        loadTableIngresos();
+                        break;
+                    case 1:
+                        loadTableIngresos();
+                        break;
+                }
+            }
 
             function loadInitIngresos() {
                 if (!state) {
                     paginacion = 1;
                     loadTableIngresos();
+                    opcion = 0;
                 }
             }
 
@@ -366,7 +380,7 @@ if (!isset($_SESSION['IdUsuario'])) {
                         } else {
                             tbTable.empty();
                             tbTable.append(
-                                '<tr class="text-center"><td colspan="9"><p>No se pudo cargar la información.</p></td></tr>'
+                                '<tr class="text-center"><td colspan="9"><p>'+result.mensaje+'</p></td></tr>'
                             );
                             $("#lblPaginaActual").html(0);
                             $("#lblPaginaSiguiente").html(0);
@@ -375,10 +389,9 @@ if (!isset($_SESSION['IdUsuario'])) {
                     },
 
                     error: function(error) {
-                        console.log(error)
                         tbTable.empty();
                         tbTable.append(
-                            '<tr class="text-center"><td colspan="9"><p>Se produjo un error, intente nuevamente.</p></td></tr>'
+                            '<tr class="text-center"><td colspan="9"><p>'+error.responseText+'</p></td></tr>'
                         );
                         $("#lblPaginaActual").html(0);
                         $("#lblPaginaSiguiente").html(0);

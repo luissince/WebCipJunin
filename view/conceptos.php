@@ -35,7 +35,7 @@ if (!isset($_SESSION['IdUsuario'])) {
                         <div class="modal-dialog">
                             <div class="modal-content">
                                 <div class="modal-header">
-                                    <button type="button" class="close" data-dismiss="modal">
+                                    <button type="button" class="close" id="btnCloseModal">
                                         <i class="fa fa-close"></i>
                                     </button>
                                     <h4 class="modal-title">
@@ -100,7 +100,24 @@ if (!isset($_SESSION['IdUsuario'])) {
                                     </div>
                                     <div class="row">
                                         <div class="col-md-12">
-                                            <p>Agrege especificaciones: <i class="fa fa-fw fa-asterisk text-danger"></i></p>
+                                            <p>Referido a: <i class="fa fa-fw fa-asterisk text-danger"></i></p>
+                                        </div>
+                                        <div class="col-md-6 col-sm-12 col-xs-12">
+                                            <div class="form-group">
+                                                <input type="radio" id="rbJunin" name="referido" value="" checked="checked">
+                                                <label for="rbJunin">CIP Junin</label>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6 col-sm-12 col-xs-12">
+                                            <div class="form-group">
+                                                <input type="radio" id="rbNacional" name="referido" value="1">
+                                                <label for="rbNacional">CIP Nacional</label>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-md-12">
+                                            <p>Modalidad de ingeniero: <i class="fa fa-fw fa-asterisk text-danger"></i></p>
                                         </div>
                                         <div class="col-md-6 col-sm-12 col-xs-12">
                                             <div class="form-group">
@@ -118,12 +135,6 @@ if (!isset($_SESSION['IdUsuario'])) {
                                             <div class="form-group">
                                                 <input type="radio" id="precio_vitalicio" name="espesifico" value="2">
                                                 <label for="precio_vitalicio">Precio para Vitalicio</label>
-                                            </div>
-                                        </div>
-                                        <div class="col-md-6 col-sm-12 col-xs-12">
-                                            <div class="form-group">
-                                                <input type="radio" id="precio_deriva" name="espesifico" value="48">
-                                                <label for="precio_deriva">Se deriva al CIP NACIONAL</label>
                                             </div>
                                         </div>
                                         <div class="col-md-6 col-sm-12 col-xs-12">
@@ -147,9 +158,9 @@ if (!isset($_SESSION['IdUsuario'])) {
                                         <p class="text-left text-danger">Todos los campos marcados con <i class="fa fa-fw fa-asterisk text-danger"></i> son obligatorios</p>
                                     </div>
                                     <div class="col-md-6 col-sm-6 col-xs-12">
-                                        <button type="button" class="btn btn-warning" name="btnaceptar" id="btnaceptar">
+                                        <button type="button" class="btn btn-warning" id="btnAceptarModal">
                                             <i class="fa fa-check"></i> Aceptar</button>
-                                        <button type="button" class="btn btn-primary" data-dismiss="modal">
+                                        <button type="button" class="btn btn-primary" id="btnCancelarModal">
                                             <i class="fa fa-remove"></i> Cancelar</button>
                                     </div>
                                 </div>
@@ -165,7 +176,8 @@ if (!isset($_SESSION['IdUsuario'])) {
                     <div class="row">
                         <div class="col-md-2 col-sm-12 col-xs-12">
                             <div class="form-group">
-                                <button type="button" class="btn btn-danger" data-toggle="modal" data-target="#confirmar">
+                                <!-- <button type="button" class="btn btn-danger" data-toggle="modal" data-target="#confirmar"> -->
+                                <button type="button" class="btn btn-danger" id="btnNuevo">
                                     <i class="fa fa-plus"></i> Nuevo Concepto
                                 </button>
                             </div>
@@ -204,10 +216,10 @@ if (!isset($_SESSION['IdUsuario'])) {
                                         <th>Categoria</th>
                                         <th>Concepto</th>
                                         <th>Precio</th>
-                                        <th>Inicio/Fin</th>
                                         <th>Especificación</th>
+                                        <th>Asignado</th>
                                         <th>Estado</th>
-                                        <th>Opciones</th>
+                                        <th colspan="2" style="text-align: center;">Opciones</th>
                                     </thead>
                                     <tbody id="tbTable">
 
@@ -296,14 +308,33 @@ if (!isset($_SESSION['IdUsuario'])) {
                     }
                 });
 
-                $("#btnaceptar").click(function() {
+                //-------------------------------------------------------------------
+                $("#btnNuevo").click(function() {
+                    $("#confirmar").modal("show");
+                });
+
+                $("#btnNuevo").on("keyup", function(event) {
+                    if (event.keyCode === 13) {
+                        $("#confirmar").modal("show");
+                    }
+                });
+
+                $("#btnAceptarModal").click(function() {
                     validateInsertConcepto();
                 });
 
-                $("#btnaceptar").on("keyup", function(event) {
+                $("#btnAceptarModal").on("keyup", function(event) {
                     if (event.keyCode === 13) {
                         validateInsertConcepto();
                     }
+                });
+
+                $("#btnCancelarModal").click(function() {
+                    clearModalConcepto();
+                });
+
+                $("#btnCloseModal").click(function() {
+                    clearModalConcepto();
                 });
 
                 $("#estado").change(function() {
@@ -368,7 +399,10 @@ if (!isset($_SESSION['IdUsuario'])) {
                                     let btnUpdate =
                                         '<button class="btn btn-warning btn-sm" onclick="loadUpdateConceptos(\'' +
                                         concepto.idConcepto + '\')">' +
-                                        '<i class="fa fa-wrench"></i> Editar' +
+                                        '<i class="fa fa-edit"></i> Editar' +
+                                        '</button>';
+                                    let btndelete = '<button class="btn btn-danger btn-sm" onclick="DeleteConcepto(\'' + concepto.idConcepto + '\')">' +
+                                        '<i class="fa fa-trash"></i> Eliminar' +
                                         '</button>';
 
                                     let estado = '<span class="' + (concepto.Estado == true ? "label label-success" : "label label-danger") + '">' + (concepto.Estado == true ? "Activo" : "Inactivo") + '</span>';
@@ -382,12 +416,16 @@ if (!isset($_SESSION['IdUsuario'])) {
                                         (concepto.Categoria == '7') ? 'Certificado de proyecto' :
                                         (concepto.Categoria == '8') ? 'Peritaje' : 'Ingresos Diversos';
 
-                                    let propiedad = concepto.Propiedad == "0" ? "Precio Ordinario" :
-                                        concepto.Propiedad == "1" ? "Precio Transeunte" :
-                                        concepto.Propiedad == "2" ? "Precio Vitalicio" :
-                                        concepto.Propiedad == "128" ? "Precio Variable" :
-                                        concepto.Propiedad == "48" ? "Se deriva al CIP NACIONAL" :
-                                        concepto.Propiedad == "16" ? "Se deriva al CIP NACIONAL" : "";
+                                    let propiedad =
+                                        concepto.Propiedad == "48" || concepto.Propiedad == "16" ? "Se deriva al CIP NACIONAL" :
+                                        "Se deriva al CIP JUNÍN";
+
+                                    //0 cip junin
+                                    //48 cip nacional
+
+                                    let Asinador = concepto.Asignado == "0" ? "Precio Ordinario" :
+                                        concepto.Asignado == "1" ? "Precio Transeunte" :
+                                        concepto.Asignado == "2" ? "Precio Vitalicio" : "Precio Variable";
 
                                     tbTable.append('<tr>' +
                                         '<td style="text-align: center;color: #2270D1;">' +
@@ -397,10 +435,11 @@ if (!isset($_SESSION['IdUsuario'])) {
                                         '<td>' + categoria + '</td>' +
                                         '<td>' + concepto.Concepto + '</td>' +
                                         '<td>' + concepto.Precio + '</td>' +
-                                        '<td>' + concepto.Inicio.split(' ')[0] + '<br>' + concepto.Fin.split(' ')[0] + '</td>' +
                                         '<td> ' + propiedad + '</td>' +
+                                        '<td>' + Asinador + '</td>' +
                                         '<td>' + estado + '</td>' +
-                                        '<td>' + btnUpdate + '</td>' +
+                                        '<td style="text-align:right ">' + btnUpdate + '</td>' +
+                                        '<td>' + btndelete + '</td>' +
                                         '</tr>');
                                 }
                                 totalPaginacion = parseInt(Math.ceil((parseFloat(result.total) / parseInt(
@@ -437,6 +476,10 @@ if (!isset($_SESSION['IdUsuario'])) {
             }
 
             function validateInsertConcepto() {
+                insertConcepto();
+            }
+
+            function insertConcepto() {
                 if ($("#cbCategoria").val() == "0") {
                     tools.AlertWarning("Advertencia", "Seleccione la categoría del concepto.");
                 } else if ($("#txtConcepto").val() == '' || $("#txtConcepto").val().length < 2) {
@@ -448,58 +491,87 @@ if (!isset($_SESSION['IdUsuario'])) {
                 } else if ($("#txtFecha_fin").val() == '') {
                     tools.AlertWarning("Advertencia", "Seleccione la fecha de fin.");
                 } else {
-
-                    insertConcepto(
-                        $("#cbCategoria").val(),
-                        $("#txtConcepto").val(),
-                        $("#txtPrecio").val(),
-                        $("#precio_ordinario").is(":checked") ? 0 : $("#precio_transeunte").is(":checked") ? 1 : $("#precio_vitalicio").is(":checked") ? 2 : $("#precio_deriva").is(":checked") ? 48 : 128,
-                        $("#txtFecha_inicio").val(),
-                        $("#txtFecha_fin").val(),
-                        "",
-                        $("#txtCodigo").val(),
-                        $("#estado").is(":checked"));
+                    tools.ModalDialog("Conceptos", "¿Está seguro de continuar?", function(value) {
+                        if (value == true) {
+                            $.ajax({
+                                url: "../app/controller/ConceptoController.php",
+                                method: "POST",
+                                data: {
+                                    "type": "create",
+                                    "Categoria": $("#cbCategoria").val(),
+                                    "Concepto": $("#txtConcepto").val(),
+                                    "Precio": $("#txtPrecio").val(),
+                                    "Propiedad": $("#rbJunin").is(":checked") ? 0 : 48,
+                                    "Inicio": $("#txtFecha_inicio").val(),
+                                    "Fin": $("#txtFecha_fin").val(),
+                                    "Asignado": $("#precio_ordinario").is(":checked") ? 0 : $("#precio_transeunte").is(":checked") ? 1 : $("#precio_vitalicio").is(":checked") ? 2 : 3,
+                                    "Observacion": "",
+                                    "Codigo": $("#txtCodigo").val(),
+                                    "Estado": $("#estado").is(":checked"),
+                                },
+                                beforeEnd: function() {
+                                    clearModalConcepto();
+                                    tools.ModalAlertInfo("Conceptos", "Procesando petición..");
+                                },
+                                success: function(result) {
+                                    if (result.estado == 1) {
+                                        tools.AlertSuccess("Mensaje", result.message)
+                                        tools.ModalAlertSuccess("Conceptos", result.message);
+                                        $("#confirmar").modal('hide');
+                                        loadInitConceptos()
+                                    } else {
+                                        tools.ModalAlertWarning("Conceptos", result.message);
+                                    }
+                                },
+                                error: function(error) {
+                                    tools.ModalAlertError("Conceptos", error.responseText);
+                                }
+                            });
+                        }
+                    });
                 }
+
             }
 
-            function insertConcepto(categoria, concepto, precio, propiedad, inicio, fin, observacion, codigo, estado) {
-                $.ajax({
-                    url: "../app/controller/ConceptoController.php",
-                    method: "POST",
-                    data: {
-                        "type": "create",
-                        "Categoria": categoria,
-                        "Concepto": concepto,
-                        "Precio": precio,
-                        "Propiedad": propiedad,
-                        "Inicio": inicio,
-                        "Fin": fin,
-                        "Observacion": observacion.toUpperCase(),
-                        "Codigo": codigo,
-                        "Estado": estado
-                    },
-                    beforeEnd: function() {
-                        $("#btnaceptar").empty();
-                        $("#btnaceptar").append('<img src="./images/spiner.gif" width="25" height="25" />')
-                    },
-                    success: function(result) {
-                        if (result.estado == 1) {
-                            tools.AlertSuccess("Mensaje", result.message)
-                            setTimeout(function() {
-                                location.href = "conceptos.php"
-                            }, 1000);
-                        } else {
-                            tools.AlertWarning("Mensaje", result.message)
-                            setTimeout(function() {
-                                $("#btnaceptar").empty();
-                                $("#btnaceptar").append('<i class="fa fa-check"></i> Aceptar');
-                            }, 1000);
-                        }
-                    },
-                    error: function(error) {
-                        tools.AlertError("Error", error.responseText);
-                        $("#btnaceptar").empty();
-                        $("#btnaceptar").append('<i class="fa fa-check"></i> Aceptar');
+            function clearModalConcepto() {
+                $("#confirmar").modal("hide");
+                $("#cbCategoria").val(0);
+                $("#txtCodigo").val(null);
+                $("#txtConcepto").val(null);
+                $("#txtPrecio").val(null);
+                $("#txtFecha_inicio").val('');
+                $("#txtFecha_fin").val('');
+                $("#rbJunin").prop('checked', 'checked');
+                $("#precio_ordinario").prop('checked', 'checked');
+                $("#estado").prop('checked', false);
+                $("#lblEstado").html("Inactivo");
+            }
+
+            function DeleteConcepto(idConcepto) {
+                tools.ModalDialog("Concepto", "¿Está seguro de continuar?", function(value) {
+                    if (value == true) {
+                        $.ajax({
+                            url: "../app/controller/ConceptoController.php",
+                            method: "POST",
+                            data: {
+                                "type": "deleteConcepto",
+                                "idconcepto": idConcepto,
+                            },
+                            beforeSend: function() {
+                                tools.AlertInfo("Concepto", "Procesando información.");
+                            },
+                            success: function(result) {
+                                if (result.estado == 1) {
+                                    tools.AlertSuccess("Concepto", result.message);
+                                    loadInitConceptos()
+                                } else {
+                                    tools.AlertWarning("Concepto", result.message);
+                                }
+                            },
+                            error: function(error) {
+                                tools.AlertError("Concepto", "Error fatal: Comuniquese con el administrador del sistema");
+                            }
+                        });
                     }
                 });
             }

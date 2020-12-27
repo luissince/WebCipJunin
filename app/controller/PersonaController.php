@@ -33,13 +33,28 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
             echo json_encode(array(
                 "estado" => 1,
                 "persona" => $persona[0],
-                "imagen" => $persona[1],
-                "historial" => $persona[2]
+                "imagen" => $persona[1]
             ));
         } else {
             echo json_encode(array(
                 "estado" => 2,
                 "message" => $persona
+            ));
+        }
+    }else if($_GET["type"] === "historialpago"){
+        $posicionPagina = $_GET['posicionPagina'];
+        $filasPorPagina = $_GET['filasPorPagina'];
+        $historial = PersonaAdo::getHistorialPagos($_GET["dni"],intval($posicionPagina), intval($filasPorPagina));
+        if (is_array($historial)) {
+            echo json_encode(array(
+                "estado" => 1,
+                "historial" => $historial[0],
+                "total" =>$historial[1]
+            ));
+        } else {
+            echo json_encode(array(
+                "estado" => 2,
+                "message" => $historial
             ));
         }
     } else if ($_GET["type"] === "listdata") {
@@ -294,6 +309,11 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
             echo json_encode(array(
                 "estado" => 1,
                 "message" => "Se insertarron correctamente los datos"
+            ));
+        }else if($result == "duplicate"){
+            echo json_encode(array(
+                "estado" => 3,
+                "message" => "El número de dni ya se encuentra registrado."
             ));
         } else {
             echo json_encode(array(

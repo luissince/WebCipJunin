@@ -104,6 +104,48 @@ if (!isset($_SESSION['IdUsuario'])) {
                     </div>
                     <!-- modal end ingenieros -->
 
+                    <!-- modal detalle del ingreso -->
+                    <div class="row">
+                        <div class="modal fade" id="mostrarDetalleIngreso" data-backdrop="static">
+                            <div class="modal-dialog">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <button type="button" class="close" data-dismiss="modal">
+                                            <i class="fa fa-close"></i>
+                                        </button>
+                                        <h4 class="modal-title">
+                                            <i class="fa fa-group">
+                                            </i> Detalle del Ingreso
+                                        </h4>
+                                    </div>
+                                    <div class="modal-body">
+                                        <div class="row">
+                                            <div class="col-md-12">
+                                                <div class="table-responsive">
+                                                    <table class="table table-striped table-hover table-sm">
+                                                        <thead>
+                                                            <tr>
+                                                                <th width="5%">#</th>
+                                                                <th width="50%">Concepto</th>
+                                                                <th width="15%">Precio</th>
+                                                                <th width="15%">Cantidad</th>
+                                                                <th width="15%">Importe</th>
+                                                            </tr>
+                                                        </thead>
+                                                        <tbody id="tbDetalleIngreso">
+
+                                                        </tbody>
+                                                    </table>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <!--end modal history enginner  -->
+
                     <!-- modal start colegiatura-->
                     <div class="row">
                         <div class="modal fade" id="mdColegiatura">
@@ -456,19 +498,26 @@ if (!isset($_SESSION['IdUsuario'])) {
 
                     <!-- modal start certificado de proyecto -->
                     <div class="row">
-                        <div class="modal fade" id="mdCertProyecto">
+                        <div class="modal fade" id="mdCertProyecto" data-backdrop="static">
                             <div class="modal-dialog modal-xl">
                                 <div class="modal-content">
                                     <div class="modal-header">
-                                        <button type="button" class="close" data-dismiss="modal">
+                                        <button type="button" class="close" id="btnCloseCertProyecto">
                                             <i class="fa fa-close"></i>
                                         </button>
-                                        <h4 class="modal-title">
+                                        <h4 class="modal-title" id="modal-title-certificado-proyecto">
                                             <i class="fa fa-plus">
                                             </i> Certificado de Proyecto
                                         </h4>
                                     </div>
                                     <div class="modal-body">
+
+                                        <div class="row">
+                                            <div class="col-md-12">
+                                                <label id="lblCertificadoProyectoEstado"></label>
+                                            </div>
+                                        </div>
+
                                         <div class="row">
                                             <div class="col-md-12">
                                                 <div class="form-group">
@@ -526,26 +575,15 @@ if (!isset($_SESSION['IdUsuario'])) {
                                             <div class="col-md-12">
                                                 <div class="form-group">
                                                     <label for="txtMontoContratoProyecto">Monto de Contrato</label>
-                                                    <input type="number" class="form-control" id="txtMontoContratoProyecto" placeholder="0.00">
+                                                    <input type="text" class="form-control" id="txtMontoContratoProyecto" placeholder="0.00">
                                                 </div>
                                             </div>
                                         </div>
-                                        <!-- <div class="row">
-                                        <div class="col-md-12">
-                                            <div class="form-group">
-                                                <label>Dep/Prov/Dist:</label>
-                                                <select class="form-control" id="cbDepartamentoProyecto" search="true">
-                                                </select>
-                                            </div>
-                                            
-                                        </div>
-                                    </div> -->
                                         <div class="row">
                                             <div class="col-md-12">
                                                 <div class="form-group">
                                                     <label>Departamento/Provincia/Distrito</label>
                                                     <select class="form-control select2" style="width: 100%;" id="cbDepartamentoProyecto">
-                                                        <!-- <option >Alabama</option>-->
                                                     </select>
                                                 </div>
                                             </div>
@@ -554,7 +592,7 @@ if (!isset($_SESSION['IdUsuario'])) {
                                             <div class="col-md-12">
                                                 <div class="form-group">
                                                     <label for="txtUrbProyecto">Urb./A.A.H.H./PP.JJ/Asoc</label>
-                                                    <input type="text" class="form-control" id="txtUrbProyecto" placeholder="">
+                                                    <input type="text" class="form-control" id="txtUrbProyecto" placeholder="Urb./A.A.H.H./PP.JJ/Asoc">
                                                 </div>
                                             </div>
                                         </div>
@@ -562,7 +600,7 @@ if (!isset($_SESSION['IdUsuario'])) {
                                             <div class="col-md-12">
                                                 <div class="form-group">
                                                     <label for="txtCalleProyecto">Jr./Av./Calle/Pasaje</label>
-                                                    <input type="text" class="form-control" id="txtCalleProyecto" placeholder="">
+                                                    <input type="text" class="form-control" id="txtCalleProyecto" placeholder="Jr./Av./Calle/Pasaje">
                                                 </div>
                                             </div>
                                         </div>
@@ -570,15 +608,15 @@ if (!isset($_SESSION['IdUsuario'])) {
                                             <div class="col-md-12">
                                                 <div class="form-group">
                                                     <label for="txtMontoCobrarProyecto">Monto a Cobrar</label>
-                                                    <input type="number" class="form-control" id="txtMontoCobrarProyecto" placeholder="0.00">
+                                                    <input type="text" class="form-control" id="txtMontoCobrarProyecto" placeholder="0.00">
                                                 </div>
                                             </div>
                                         </div>
                                     </div>
                                     <div class="modal-footer">
-                                        <button type="button" class="btn btn-danger" id="btnAceptarProyecto">
+                                        <button type="button" class="btn btn-danger" id="btnAceptarCertProyecto">
                                             <i class="fa fa-check"></i> Aceptar</button>
-                                        <button type="button" class="btn btn-primary" data-dismiss="modal">
+                                        <button type="button" class="btn btn-primary" id="btnCancelCertProyecto">
                                             <i class="fa fa-remove"></i> Cancelar</button>
                                     </div>
                                 </div>
@@ -602,13 +640,13 @@ if (!isset($_SESSION['IdUsuario'])) {
                                         </h4>
                                     </div>
                                     <div class="modal-body">
+
                                         <div class="row">
                                             <div class="col-md-12">
-                                                <div class="alert alert-danger">
-                                                    Correctamente
-                                                </div>
+                                                <label id="lblPeritajeEstado"></label>
                                             </div>
                                         </div>
+
                                         <div class="row">
                                             <div class="col-md-12">
                                                 <div class="form-group">
@@ -621,7 +659,7 @@ if (!isset($_SESSION['IdUsuario'])) {
                                             <div class="col-md-12">
                                                 <div class="form-group">
                                                     <label for="txtMontoPeritaje">Monto</label>
-                                                    <input type="number" class="form-control" id="txtMontoPeritaje" placeholder="0.00">
+                                                    <input type="text" class="form-control" id="txtMontoPeritaje" placeholder="0.00">
                                                 </div>
                                             </div>
                                         </div>
@@ -759,6 +797,21 @@ if (!isset($_SESSION['IdUsuario'])) {
                                 </div>
                                 <div class="panel-body">
                                     <div class="row">
+                                        <div class="col-md-12 col-sm-12 col-xs-12">
+                                            <div class="form-group">
+                                                <button class="btn btn-danger" id="btnIzquierdaHistorial">
+                                                    <i class="fa fa-toggle-left"></i>
+                                                </button>
+                                                <span id="lblPaginaActualHistorial" class="font-weight-bold margin">0</span>
+                                                <span class="margin">a</span>
+                                                <span id="lblPaginSiguienteHistorial" class="font-weight-bold margin">0</span>
+                                                <button class="btn btn-danger" id="btnDerechaHistorial">
+                                                    <i class="fa fa-toggle-right"></i>
+                                                </button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="row">
                                         <div class="col-md-12">
                                             <table class="table table-striped table-hover" style="border-width: 1px; border-style: dashed; border-color: #E31E25;">
                                                 <thead style="background-color: #FDB2B1;color: #B72928;">
@@ -768,10 +821,11 @@ if (!isset($_SESSION['IdUsuario'])) {
                                                     <th style="text-align: center;" width="25%">Concepto</th>
                                                     <th style="text-align: center;" width="15%">Monto</th>
                                                     <th style="text-align: center;" width="30%">Observacion</th>
+                                                    <th style="text-align: center;" width="10%">Detalle</th>
                                                 </thead>
                                                 <tbody id="tbHistorial">
                                                     <tr class="text-center">
-                                                        <td colspan="6">
+                                                        <td colspan="7">
                                                             <p>No se ha seleccionado ningún ingeniero.</p>
                                                         </td>
                                                     </tr>
@@ -881,6 +935,14 @@ if (!isset($_SESSION['IdUsuario'])) {
             let certificadoResidenciaObra = {};
             let certificadoResidenciaObraEstado = false;
 
+            //certificado de proyecto
+            let certificadoProyecto = {};
+            let certificadoProyectoEstado = false;
+
+            //peritaje
+            let peritaje = {};
+            let peritajeEstado = false;
+
             //ingresos totales
             let arrayIngresos = [];
             let sumaTotal = 0;
@@ -978,7 +1040,7 @@ if (!isset($_SESSION['IdUsuario'])) {
                     tools.ModalDialog("Cobros", "¿Está seguro de continuar?", function(value) {
                         if (value == true) {
                             $.ajax({
-                                url: "../app/controller/IngresosController.php",
+                                url: "../app/controller/RegistrarIngresoController.php",
                                 method: "POST",
                                 accepts: "application/json",
                                 contentType: "application/json",
@@ -991,6 +1053,12 @@ if (!isset($_SESSION['IdUsuario'])) {
                                     "estadoColegiatura": colegiaturaEstado,
                                     "estadoCertificadoHabilidad": certificadoHabilidadEstado,
                                     "objectCertificadoHabilidad": certificadoHabilidad,
+                                    "estadoCertificadoResidenciaObra": certificadoResidenciaObraEstado,
+                                    "objectCertificadoResidenciaObra": certificadoResidenciaObra,
+                                    "estadoCertificadoProyecto": certificadoProyectoEstado,
+                                    "objectCertificadoProyecto": certificadoProyecto,
+                                    "estadoPeritaje": peritajeEstado,
+                                    "objectPeritaje": peritaje,
                                     "ingresos": arrayIngresos,
                                     "cuotasInicio": cuotasInicio,
                                     "cuotasFin": cuotasFin
@@ -1086,18 +1154,21 @@ if (!isset($_SESSION['IdUsuario'])) {
                         if (arrayIngresos[i].idConcepto === parseInt(idConcepto)) {
                             arrayIngresos.splice(i, 1);
                             i--;
+                            certificadoResidenciaObraEstado = false;
                             break;
                         }
                     } else if (arrayIngresos[i].categoria == 7) {
                         if (arrayIngresos[i].idConcepto === parseInt(idConcepto)) {
                             arrayIngresos.splice(i, 1);
                             i--;
+                            certificadoProyectoEstado = false;
                             break;
                         }
                     } else if (arrayIngresos[i].categoria == 8) {
                         if (arrayIngresos[i].idConcepto === parseInt(idConcepto)) {
                             arrayIngresos.splice(i, 1);
                             i--;
+                            peritajeEstado = false;
                             break;
                         }
                     } else {
@@ -1130,12 +1201,19 @@ if (!isset($_SESSION['IdUsuario'])) {
                 $("#lblTipoIngenieroSeleccionado").html("--");
                 $("#lblDocumentSeleccionado").html("--");
                 $("#lblDatosSeleccionado").html("--");
-                $("#txtIngenieroCertificado").val("");
                 $("#lblDireccionSeleccionado").html("--");
+                $("#txtIngenieroCertificado").val("");
+                $("#txtIngenieroObra").val("");
+                $("#txtIngenieroProyecto").val("");
                 idDNI = 0;
                 cuotasEstate = false;
                 colegiaturaEstado = false;
                 certificadoHabilidadEstado = false;
+                certificadoResidenciaObraEstado = false;
+                certificadoProyectoEstado = false;
+                certificadoHabilidad = {};
+                certificadoResidenciaObra = {};
+                certificadoProyecto = {};
                 $("#btnCertificado").attr('aria-expanded', 'false');
                 $("#tbHistorial").empty();
             }

@@ -46,7 +46,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
                 "message" => $modulos
             ));
         }
-    }else  if ($_GET["type"] === "roles") {
+    } else  if ($_GET["type"] === "roles") {
         $rol = RolAdo::getRoles();
         if (is_array($rol)) {
             echo json_encode(array(
@@ -73,8 +73,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
                 "estado" => 1,
                 "message" => "Se registraron correctamente los datos",
             ));
-        }
-        if ($result == "actualizado") {
+        } else if ($result == "actualizado") {
             echo json_encode(array(
                 "estado" => 1,
                 "message" => "Se actualizaron correctamente los datos",

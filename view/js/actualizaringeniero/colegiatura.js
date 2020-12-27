@@ -1,6 +1,6 @@
 function Colegiatura() {
 
-    this.loadColegiatura = function (idDni) {
+    this.loadColegiatura = function(idDni) {
         $.ajax({
             url: "../app/controller/PersonaController.php",
             method: "GET",
@@ -8,15 +8,15 @@ function Colegiatura() {
                 type: "getcolegiatura",
                 idDni: idDni
             },
-            beforeSend: function () {
+            beforeSend: function() {
                 $("#tbColegiaturas").empty();
-                $("#tbColegiaturas").append('<tr class="text-center"><td colspan="11"><img src="./images/spiner.gif"/><p>cargando información.</p></td></tr>');
+                $("#tbColegiaturas").append('<tr class="text-center"><td colspan="13"><img src="./images/spiner.gif"/><p>cargando información.</p></td></tr>');
             },
-            success: function (result) {
+            success: function(result) {
                 if (result.estado == 1) {
                     $("#tbColegiaturas").empty();
                     if (result.data.length == 0) {
-                        $("#tbColegiaturas").append('<tr class="text-center"><td colspan="11"><p>No tiene registrado ninguna colegiatura.</p></td></tr>');
+                        $("#tbColegiaturas").append('<tr class="text-center"><td colspan="13"><p>No tiene registrado ninguna colegiatura.</p></td></tr>');
                     } else {
                         for (let cv of result.data) {
 
@@ -50,24 +50,24 @@ function Colegiatura() {
                     }
                 } else {
                     $("#tbColegiaturas").empty();
-                    $("#tbColegiaturas").append('<tr class="text-center"><td colspan="11"><p>' + result.message + '</p></td></tr>');
+                    $("#tbColegiaturas").append('<tr class="text-center"><td colspan="13"><p>' + result.message + '</p></td></tr>');
                 }
             },
-            error: function (error) {
+            error: function(error) {
                 $("#tbColegiaturas").empty();
-                $("#tbColegiaturas").append('<tr class="text-center"><td colspan="11"><p>Se produjo un error interno, comuniquese con el administrador del sistema.</p></td></tr>');
+                $("#tbColegiaturas").append('<tr class="text-center"><td colspan="13"><p>Se produjo un error interno, comuniquese con el administrador del sistema.</p></td></tr>');
             }
         });
     }
 
-    this.loadAddColegiatura = function () {
+    this.loadAddColegiatura = function() {
         $.ajax({
             url: "../app/controller/PersonaController.php",
             method: "GET",
             data: {
                 type: "getaddcolegiatura",
             },
-            beforeSend: function () {
+            beforeSend: function() {
                 $("#Sede").empty();
                 $("#Especialidad").empty();
                 $("#UniversidadEgreso").empty();
@@ -78,7 +78,7 @@ function Colegiatura() {
                 $("#FechaTitulo").val(null);
                 $('#Principal').prop("checked", false);
             },
-            success: function (result) {
+            success: function(result) {
                 if (result.estado == 1) {
                     $("#Sede").append('<option value="">- Seleccione -</option>');
                     for (let sede of result.sedes) {
@@ -100,13 +100,13 @@ function Colegiatura() {
                     tools.AlertWarning("colegiatura", "Se produjo un error al cargar los datos en el modal");
                 }
             },
-            error: function (error) {
+            error: function(error) {
                 tools.AlertError("colegiatura", "Error Fatal: Comuniquese con el administrador del sistema");
             }
         });
     }
 
-    this.crudColegiatura = function () {
+    this.crudColegiatura = function() {
         if ($("#Sede").val() == '') {
             tools.AlertWarning('Colegiatura', "Seleccione una sede");
             $("#Sede").focus();
@@ -148,10 +148,10 @@ function Colegiatura() {
                     "fechatitulo": $("#FechaTitulo").val(),
                     "resolucion": $("#txtResolucion").val(),
                 },
-                beforeSend: function () {
+                beforeSend: function() {
                     tools.AlertInfo("Colegiatura", "Procesando información.");
                 },
-                success: function (result) {
+                success: function(result) {
                     if (result.estado == 1) {
                         $("#addColegiatura").modal("hide");
                         tools.AlertSuccess("Colegiatura", "Se registro correctamente.");
@@ -162,7 +162,7 @@ function Colegiatura() {
                         tools.AlertWarning("Colegiatura", "Error al tratar de registrar los datos " + result.message);
                     }
                 },
-                error: function (error) {
+                error: function(error) {
                     tools.AlertError("Colegiatura", "Error fatal: Comuniquese con el administrador del sistema");
                 }
             });
@@ -199,43 +199,43 @@ function updateColegiatura(Id, sede, especialidad, fechaColegiado, universidadEg
         data: {
             type: "getaddcolegiatura",
         },
-        beforeSend: function () {
+        beforeSend: function() {
             $("#Sede").empty();
             $("#Especialidad").empty();
             $("#UniversidadEgreso").empty();
             $("#UniversidadTitulacion").empty();
         },
-        success: function (result) {
+        success: function(result) {
             if (result.estado == 1) {
                 // cbxSede.append('<option value="">- Seleccione -</option>');
                 for (let sede of result.sedes) {
                     $("#ESede").append('<option value="' + sede.IdConsejo + '">' + sede.Sede + '</option>');
                 }
-                cbxSede.val(sede);//rellena la informacion con la sede que esta registrada
+                cbxSede.val(sede); //rellena la informacion con la sede que esta registrada
 
                 // $("#EEspecialidad").append('<option value="">- Seleccione -</option>');
                 for (let especialidad of result.espacialidades) {
                     $("#EEspecialidad").append('<option value="' + especialidad.IdEspecialidad + '">' + especialidad.Especialidad + '</option>');
                 }
-                cbxEspecialidad.val(especialidad);//rellena la informacion con la Especialidad que esta registrada
+                cbxEspecialidad.val(especialidad); //rellena la informacion con la Especialidad que esta registrada
 
                 // $("#EUniversidadEgreso").append('<option value="">- Seleccione -</option>');
                 for (let universidadegreso of result.universidades) {
                     $("#EUniversidadEgreso").append('<option value="' + universidadegreso.IdUniversidad + '">' + universidadegreso.Universidad + '</option>');
                 }
-                cbxuniversidadEgreso.val(universidadEgreso);//rellena la informacion con la Universidad de egreso que esta registrada
+                cbxuniversidadEgreso.val(universidadEgreso); //rellena la informacion con la Universidad de egreso que esta registrada
 
                 // $("#EUniversidadTitulacion").append('<option value="">- Seleccione -</option>');
                 for (let universidadtitulacion of result.universidades) {
                     $("#EUniversidadTitulacion").append('<option value="' + universidadtitulacion.IdUniversidad + '">' + universidadtitulacion.Universidad + '</option>');
                 }
-                cbxuniversidadTitulacion.val(universidadTitulacion);//rellena la informacion con la Universidad de titulacion que esta registrada 
+                cbxuniversidadTitulacion.val(universidadTitulacion); //rellena la informacion con la Universidad de titulacion que esta registrada 
 
             } else {
                 tools.AlertWarning("colegiatura", "Se produjo un error al cargar los datos en el modal");
             }
         },
-        error: function (error) {
+        error: function(error) {
             tools.AlertError("colegiatura", "Error Fatal: Comuniquese con el administrador del sistema");
         }
     })
@@ -245,7 +245,7 @@ function updateColegiatura(Id, sede, especialidad, fechaColegiado, universidadEg
     //     console.log('diste click');
     //     // AceptarUpdate(idCapitulo, idEspecialidad);
     // });
-    $("#EbtnAceptarColegiatura").bind('click', function () {
+    $("#EbtnAceptarColegiatura").bind('click', function() {
         AceptarUpdateColegiatura(Id);
     });
 }
@@ -271,22 +271,21 @@ function AceptarUpdateColegiatura(Id) {
                 "fechatitulo": $("#EFechaTitulo").val(),
                 "resolucion": $("#EtxtResolucion").val(),
             },
-            beforeSend: function () {
+            beforeSend: function() {
                 tools.AlertInfo("Colegiatura", "Procesando información.");
             },
-            success: function (result) {
+            success: function(result) {
                 if (result.estado == 1) {
                     $("#editColegiatura").modal("hide");
                     tools.AlertSuccess("Colegiatura", "Se actualizo correctamente.");
                     modelColegiatura.loadColegiatura($("#dni").val());
                 } else if (result.estado == 2) {
                     tools.AlertWarning("Colegiatura", result.message);
-                }
-                else {
+                } else {
                     tools.AlertWarning("Colegiatura", "Error al tratar de actualizar los datos " + result.message);
                 }
             },
-            error: function (error) {
+            error: function(error) {
                 tools.AlertError("Colegiatura", "Error fatal: Comuniquese con el administrador del sistema");
             }
         });
@@ -300,7 +299,7 @@ function DeleteColegiatura(Id) {
 
     $("#btnDeleteColegiatura").unbind();
 
-    $("#btnDeleteColegiatura").bind("click", function () {
+    $("#btnDeleteColegiatura").bind("click", function() {
         $.ajax({
             url: "../app/controller/PersonaController.php",
             method: "POST",
@@ -308,10 +307,10 @@ function DeleteColegiatura(Id) {
                 "type": "deleteColegiatura",
                 "idcolegiatura": idColegiatura,
             },
-            beforeSend: function () {
+            beforeSend: function() {
                 tools.AlertInfo("Colegiatura", "Procesando información.");
             },
-            success: function (result) {
+            success: function(result) {
                 if (result.estado == 1) {
                     tools.AlertSuccess("Colegiatura", result.message);
                     $("#deleteColegiatura").modal("hide");
@@ -320,7 +319,7 @@ function DeleteColegiatura(Id) {
                     tools.AlertWarning("Colegiatura", result.message);
                 }
             },
-            error: function (error) {
+            error: function(error) {
                 tools.AlertError("Colegiatura", "Error fatal: Comuniquese con el administrador del sistema");
             }
         });

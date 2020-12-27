@@ -35,7 +35,7 @@ if (!isset($_SESSION['IdUsuario'])) {
                         <div class="modal-dialog">
                             <div class="modal-content">
                                 <div class="modal-header">
-                                    <button type="button" class="close" data-dismiss="modal">
+                                    <button type="button" class="close" id="btnCloseIngeniero">
                                         <i class="fa fa-close"></i>
                                     </button>
                                     <h4 class="modal-title">
@@ -144,9 +144,9 @@ if (!isset($_SESSION['IdUsuario'])) {
                                 </div>
                                 <div class="modal-footer">
                                     <p class="text-left text-danger">Todos los campos marcados con <i class="fa fa-fw fa-asterisk text-danger"></i> son obligatorios</p>
-                                    <button type="submit" class="btn btn-danger" name="btnaceptar" id="btnaceptar">
+                                    <button type="submit" class="btn btn-danger" id="btnAceptarIngeniero">
                                         <i class="fa fa-check"></i> Aceptar</button>
-                                    <button type="button" class="btn btn-primary" data-dismiss="modal">
+                                    <button type="button" class="btn btn-primary" id="btnCancelarIngeniero">
                                         <i class="fa fa-remove"></i> Cancelar</button>
                                 </div>
                             </div>
@@ -157,8 +157,8 @@ if (!isset($_SESSION['IdUsuario'])) {
 
                 <!-- modal historial de un ingeniero -->
                 <div class="row">
-                    <div class="modal fade" id="mostrarHistorial">
-                        <div class="modal-dialog modal-xs">
+                    <div class="modal fade" id="mostrarHistorial" data-backdrop="static">
+                        <div class="modal-dialog modal-lg">
                             <div class="modal-content">
                                 <div class="modal-header">
                                     <button type="button" class="close" data-dismiss="modal">
@@ -166,63 +166,65 @@ if (!isset($_SESSION['IdUsuario'])) {
                                     </button>
                                     <h4 class="modal-title">
                                         <i class="fa fa-group">
-                                        </i> Lista de Ingenieros
+                                        </i> Historial de Pagos
                                     </h4>
                                 </div>
                                 <div class="modal-body">
                                     <div class="row">
                                         <div class="col-md-4 col-sm-12 col-xs-12">
-                                            <button class="btn btn-primary" id="btnIzquierda">
-                                                <i class="fa fa-toggle-left"></i>
-                                            </button>
-                                            <span id="lblPaginaActual" class="font-weight-bold">0</span>
-                                            <span>&nbsp;</span>
-                                            <span>a</span>
-                                            <span>&nbsp;</span>
-                                            <span id="lblPaginaSiguiente" class="font-weight-bold">0</span>
-                                            <button class="btn btn-primary" id="btnDerecha">
-                                                <i class="fa fa-toggle-right"></i>
-                                            </button>
+                                            <div class="form-group">
+                                                <button class="btn btn-danger" id="btnIzquierdaHistorial">
+                                                    <i class="fa fa-toggle-left"></i>
+                                                </button>
+                                                <span id="lblPaginaActualHistorial" class="font-weight-bold margin">0</span>
+                                                <span class="margin">a</span>
+                                                <span id="lblPaginSiguienteHistorial" class="font-weight-bold margin">0</span>
+                                                <button class="btn btn-danger" id="btnDerechaHistorial">
+                                                    <i class="fa fa-toggle-right"></i>
+                                                </button>
+                                            </div>
                                         </div>
                                         <div class="col-md-6 col-sm-12 col-xs-12">
-                                            <div class="input-group col-lg-12 col-md-12 col-sm-12 col-xs-12">
-                                                <input type="search" id="txtBuscarIngeniero" class="form-control" placeholder="Buscar por información, n° cip o dni" aria-describedby="search">
+                                            <div class="form-group">
+                                                <div class="input-group col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                                                    <input type="search" class="form-control" aria-describedby="search">
+                                                </div>
                                             </div>
                                         </div>
                                         <div class="col-md-2 col-sm-12 col-xs-12">
-                                            <button id="btnBuscarIngeniero" class="btn btn-default col-lg-12 col-md-12 col-sm-12 col-xs-12">
-                                                <i class="fa fa-search"></i> Buscar
-                                            </button>
+                                            <div class="form-group">
+                                                <button id="btnBuscarIngeniero" class="btn btn-default">
+                                                    <i class="fa fa-search"></i> Buscar
+                                                </button>
+                                            </div>
                                         </div>
                                     </div>
-                                    <div class="row" style="overflow-x: auto; height:280px">
+                                    <div class="row">
                                         <div class="col-md-12">
-                                            <table class="table table-striped table-hover table-sm">
-                                                <thead>
-                                                    <tr>
-                                                        <th>#</th>
-                                                        <th>Cip</th>
-                                                        <th>Dni</th>
-                                                        <th>Ingeniero</th>
-                                                        <th>Condición</th>
-                                                        <th>Ultima Cuota</th>
-                                                        <th>Debe</th>
-                                                    </tr>
-                                                </thead>
-                                                <tbody id="tbIngenieros">
+                                            <div class="table-responsive">
+                                                <table class="table table-striped table-hover table-sm">
+                                                    <thead>
+                                                        <tr>
+                                                            <th>#</th>
+                                                            <th>Recibo</th>
+                                                            <th>Fecha</th>
+                                                            <th>Concepto</th>
+                                                            <th>Monto</th>
+                                                            <th>Observación</th>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody id="tbHistorial">
 
-                                                </tbody>
-                                            </table>
+                                                    </tbody>
+                                                </table>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
                                 <div class="modal-footer">
-                                    <button type="button" class="btn btn-warning" id="btnAceptarIngenieros">
-                                        <i class="fa fa-check"></i> Aceptar</button>
                                     <button type="button" class="btn btn-primary" data-dismiss="modal">
-                                        <i class="fa fa-remove"></i> Cancelar</button>
+                                        <i class="fa fa-remove"></i> Cerrar</button>
                                 </div>
-                                </form>
                             </div>
                         </div>
                     </div>
@@ -234,7 +236,7 @@ if (!isset($_SESSION['IdUsuario'])) {
                     <div class="row">
                         <div class="col-md-2 col-sm-12 col-xs-12">
                             <div class="form-group">
-                                <button type="button" class="btn btn-danger" style="margin-right: 10px;" data-toggle="modal" data-target="#confirmar">
+                                <button type="button" class="btn btn-danger" id="btnNuevoIngeniero">
                                     <i class="fa fa-plus"></i> Nuevo Ingeniero
                                 </button>
                             </div>
@@ -265,25 +267,26 @@ if (!isset($_SESSION['IdUsuario'])) {
 
                     <div class="row" style="margin-top: -5px;">
                         <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-                            <table class="table table-striped" style="border-width: 1px;border-style: dashed;border-color: #E31E25;">
-                                <thead style="background-color: #FDB2B1;color: #B72928;">
-                                    <th style="text-align: center;">#</th>
-                                    <th>DNI</th>
-                                    <th>CIP</th>
-                                    <th>Apellidos y Nombres</th>
-                                    <th>Estado Civil</th>
-                                    <th>RUC</th>
-                                    <th>Condicion</th>
-                                    <th>Colegiaturas</th>
-                                    <th>Historial</th>
-                                    <th>Opciones</th>
-                                </thead>
-                                <tbody id="tbTable">
+                            <div class="table-responsive">
+                                <table class="table table-striped" style="border-width: 1px;border-style: dashed;border-color: #E31E25;">
+                                    <thead style="background-color: #FDB2B1;color: #B72928;">
+                                        <th style="text-align: center;">#</th>
+                                        <th>Cip</th>
+                                        <th>Dni</th>
+                                        <th>Apellidos y Nombres</th>
+                                        <th>Sexo</th>
+                                        <th>Estado Civil</th>
+                                        <th>Condicion</th>
+                                        <th>Colegiaturas</th>
+                                        <th>Historial</th>
+                                        <th>Opciones</th>
+                                    </thead>
+                                    <tbody id="tbTable">
 
-                                </tbody>
-
-                            </table>
-                            <div class="col-md-12" style="text-align:center;">
+                                    </tbody>
+                                </table>
+                            </div>
+                            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12" style="text-align:center;">
                                 <ul class="pagination">
                                     <li>
                                         <button class="btn btn-primary" id="btnIzquierda">
@@ -328,6 +331,14 @@ if (!isset($_SESSION['IdUsuario'])) {
             let filasPorPagina = 10;
             let tbTable = $("#tbTable");
 
+            let stateHistorial = false;
+            let opcionHistorial = 0;
+            let totalPaginacionHistorial = 0;
+            let paginacionHistorial = 0;
+            let filasPorPaginacionHistorial = 10;
+            let tbHistorial = $("#tbHistorial");
+            let dni = 0;
+
             $(document).ready(function() {
 
                 loadInitVentas();
@@ -366,7 +377,24 @@ if (!isset($_SESSION['IdUsuario'])) {
                     }
                 });
 
-                $("#btnaceptar").click(function() {
+                $("#btnNuevoIngeniero").click(function() {
+                    $("#confirmar").modal("show");
+                });
+
+
+                //-------------------------------------------------------------------------
+
+                $("#btnCloseIngeniero").click(function() {
+                    $("#confirmar").modal("hide")
+                    clearModalIngeniero()
+                });
+
+                $("#btnCancelarIngeniero").click(function() {
+                    $("#confirmar").modal("hide")
+                    clearModalIngeniero()
+                });
+
+                $("#btnAceptarIngeniero").click(function() {
                     if ($("#dni").val() == '' || $("#dni").val().length < 8) {
                         tools.AlertWarning("Advertencia", "Ingrese un número de dni o ruc correcto por favor.");
                     } else if ($("#Nombres").val() == '' || $("#Nombres").val().length < 2) {
@@ -381,6 +409,25 @@ if (!isset($_SESSION['IdUsuario'])) {
                         insertPersona($("#dni").val(), $("#Nombres").val(), $("#Apellidos").val(), $("#Genero").val(),
                             $("#Nacimiento").val(), $("#Estado_civil").val(), $("#Ruc").val(), $("#Razon_social").val(),
                             $("#Codigo").val(), $("#Condicion").val());
+                    }
+                });
+
+                //-------------------------------------------------------------------------
+                $("#btnIzquierdaHistorial").click(function() {
+                    if (!stateHistorial) {
+                        if (paginacionHistorial > 1) {
+                            paginacionHistorial--;
+                            onEventPaginacionHistorial();
+                        }
+                    }
+                });
+
+                $("#btnDerechaHistorial").click(function() {
+                    if (!stateHistorial) {
+                        if (paginacionHistorial < totalPaginacionHistorial) {
+                            paginacionHistorial++;
+                            onEventPaginacionHistorial();
+                        }
                     }
                 });
 
@@ -418,7 +465,7 @@ if (!isset($_SESSION['IdUsuario'])) {
                     beforeSend: function() {
                         tbTable.empty();
                         tbTable.append(
-                            '<tr class="text-center"><td colspan="10"><img src="./images/spiner.gif"/><p>cargando información.</p></td></tr>'
+                            '<tr class="text-center"><td colspan="9"><img src="./images/spiner.gif"/><p>cargando información.</p></td></tr>'
                         );
                         state = true;
                     },
@@ -428,7 +475,7 @@ if (!isset($_SESSION['IdUsuario'])) {
                             tbTable.empty();
                             for (let persona of result.personas) {
                                 // let image = '<img src="images/masculino.png" width="30">';
-                                let btnHistorial = '<button class="btn btn-info btn-sm"  data-toggle="modal" data-target="#mostrarHistorial">' +
+                                let btnHistorial = '<button class="btn btn-info btn-sm" onclick="onSelectedIngeniero(\'' + persona.idDNI + '\')">' +
                                     '<i class="fa fa-eye"></i> Ver' +
                                     '</button>';
 
@@ -448,14 +495,12 @@ if (!isset($_SESSION['IdUsuario'])) {
                                     (persona.Condicion == 'R') ? 'Retirado' : 'Vitalicio'
 
                                 tbTable.append('<tr>' +
-                                    '<td style="text-align: center;color: #2270D1;">' +
-                                    '' + persona.Id + '' +
-                                    '</td>' +
-                                    '<td>' + persona.idDNI + '</td>' +
+                                    '<td style="text-align: center;color: #2270D1;">' + persona.Id + '</td>' +
                                     '<td>' + persona.Cip + '</td>' +
+                                    '<td>' + persona.idDNI + '</td>' +
                                     '<td>' + persona.Apellidos + ' ' + persona.Nombres + '</td>' +
+                                    '<td>' + persona.Sexo + '</td>' +
                                     '<td>' + estadoCivil + '</td>' +
-                                    '<td>' + persona.Ruc + '</td>' +
                                     '<td>' + condicion + '</td>' +
                                     '<td>' + 0 + '</td>' +
                                     '<td>' + btnHistorial + '</td>' +
@@ -472,7 +517,7 @@ if (!isset($_SESSION['IdUsuario'])) {
                         } else {
                             tbTable.empty();
                             tbTable.append(
-                                '<tr class="text-center"><td colspan="10"><p>No se pudo cargar la información.</p></td></tr>'
+                                '<tr class="text-center"><td colspan="9"><p>' + result.message + '</p></td></tr>'
                             );
                             $("#lblPaginaActual").html(0);
                             $("#lblPaginaSiguiente").html(0);
@@ -482,7 +527,7 @@ if (!isset($_SESSION['IdUsuario'])) {
                     error: function(error) {
                         tbTable.empty();
                         tbTable.append(
-                            '<tr class="text-center"><td colspan="10"><p>Se produjo un error, intente nuevamente.</p></td></tr>'
+                            '<tr class="text-center"><td colspan="9"><p>' + error.responseText + '</p></td></tr>'
                         );
                         $("#lblPaginaActual").html(0);
                         $("#lblPaginaSiguiente").html(0);
@@ -491,56 +536,162 @@ if (!isset($_SESSION['IdUsuario'])) {
                 });
             }
 
-            function showHistorialIngenieros(idPersona) {
-                location.href = "update_ingenieros.php?idPersona=" + idPersona;
-            }
-
             function loadUpdateIngenieros(idPersona) {
                 location.href = "update_ingenieros.php?idPersona=" + idPersona;
             }
 
             function insertPersona(idPersona, nombres, apellidos, sexo, nacimiento, estado_civil, ruc, rason_social, cip,
                 condicion) {
+                tools.ModalDialog("Ingeniero", "¿Está seguro de continuar?", function(value) {
+                    if (value == true) {
+                        $.ajax({
+                            url: "../app/controller/PersonaController.php",
+                            method: "POST",
+                            data: {
+                                "type": "create",
+                                "dni": idPersona,
+                                "nombres": nombres.toUpperCase(),
+                                "apellidos": apellidos.toUpperCase(),
+                                "sexo": sexo,
+                                "nacimiento": nacimiento,
+                                "estado_civil": estado_civil,
+                                "ruc": ruc,
+                                "rason_social": rason_social,
+                                "cip": cip,
+                                "condicion": condicion,
+                            },
+                            beforeSend: function() {
+                                $("#confirmar").modal("hide")
+                                clearModalIngeniero();
+                                tools.ModalAlertInfo("Ingeniero", "Procesando petición..");
+                            },
+                            success: function(result) {
+                                if (result.estado == 1) {
+                                    tools.ModalAlertSuccess("Ingeniero", result.message);
+                                } else if (result.estado == 3) {
+                                    tools.ModalAlertWarning("Ingeniero", result.message);
+                                } else {
+                                    tools.ModalAlertWarning("Ingeniero", result.message);
+                                }
+                            },
+                            error: function(error) {
+                                tools.ModalAlertError("Ingeniero", "Se produjo un error: " + error.responseText);
+                            }
+                        });
+                    }
+                });
+            }
+
+            function onEventPaginacionHistorial() {
+                switch (opcionHistorial) {
+                    case 0:
+                        loadTableHistorial(dni);
+                        break;
+                }
+            }
+
+            function loadTableHistorial(dni) {
                 $.ajax({
                     url: "../app/controller/PersonaController.php",
-                    method: "POST",
+                    method: "GET",
                     data: {
-                        "type": "create",
-                        "dni": idPersona,
-                        "nombres": nombres.toUpperCase(),
-                        "apellidos": apellidos.toUpperCase(),
-                        "sexo": sexo,
-                        "nacimiento": nacimiento,
-                        "estado_civil": estado_civil,
-                        "ruc": ruc,
-                        "rason_social": rason_social,
-                        "cip": cip,
-                        "condicion": condicion,
+                        "type": "historialpago",
+                        "dni": dni,
+                        "posicionPagina": ((paginacionHistorial - 1) * filasPorPaginacionHistorial),
+                        "filasPorPagina": filasPorPaginacionHistorial
                     },
                     beforeSend: function() {
-                        $("#btnaceptar").empty();
-                        $("#btnaceptar").append('<img src="./images/spiner.gif" width="25" height="25" />')
+                        tbHistorial.empty()
+                        tbHistorial.append('<tr class="text-center"><td colspan="6"><img src="./images/spiner.gif"/><p>Cargando información.</p></td></tr>');
+                        stateHistorial = true;
                     },
                     success: function(result) {
                         if (result.estado == 1) {
-                            tools.AlertSuccess("Mensaje", result.message)
-                            setTimeout(function() {
-                                location.href = "ingenieros.php"
-                            }, 1000);
+                            tbHistorial.empty()
+                            if (result.historial.length == 0) {
+                                tbHistorial.append('<tr class="text-center"><td colspan="6"><p>No hay datos para mostrar.</p></td></tr>');
+                                totalPaginacionHistorial = 0;
+                                $("#lblPaginaActual").html(paginacionHistorial);
+                                $("#lblPaginaSiguiente").html(totalPaginacionHistorial);
+                                stateHistorial = false;
+                            } else {
+                                for (let historial of result.historial) {
+
+                                    let Concepto;
+                                    if (historial.Concepto == 1) {
+                                        Concepto = "Cuota Ordinaria";
+                                    } else if (historial.Concepto == 2) {
+                                        Concepto = "Cuota Ordinaria (Amnistia)";
+                                    } else if (historial.Concepto == 3) {
+                                        Concepto = "Cuota Ordinaria (Vitalicio)";
+                                    } else if (historial.Concepto == 4) {
+                                        Concepto = "Colegiatura";
+                                    } else if (historial.Concepto == 5) {
+                                        Concepto = "Certificado de habilidad";
+                                    } else if (historial.Concepto == 6) {
+                                        Concepto = "Cuota de residencia de obra";
+                                    } else if (historial.Concepto == 7) {
+                                        Concepto = "Certificado de proyecto";
+                                    } else if (historial.Concepto == 8) {
+                                        Concepto = "Peritaje";
+                                    } else if (historial.Concepto == 100) {
+                                        Concepto = "Ingresos Diversos";
+                                    }
+
+                                    tbHistorial.append('<tr>' +
+                                        '<td>' + historial.Id + '</td>' +
+                                        '<td>' + historial.Recibo + '</td>' +
+                                        '<td>' + tools.getDateForma(historial.Fecha) + '<br>' + tools.getTimeForma(historial.Hora, true) + '</td>' +
+                                        '<td>' + Concepto + '</td>' +
+                                        '<td>' + tools.formatMoney(historial.Monto) + '</td>' +
+                                        '<td>' + historial.Observacion + '</td>' +
+                                        '</tr>');
+                                }
+
+                                totalPaginacionHistorial = parseInt(Math.ceil((parseFloat(result.total) / parseInt(
+                                    filasPorPaginacionHistorial))));
+                                $("#lblPaginaActualHistorial").html(paginacionHistorial);
+                                $("#lblPaginSiguienteHistorial").html(totalPaginacionHistorial);
+                                stateHistorial = false;
+                            }
                         } else {
-                            tools.AlertWarning("Mensaje", result.message)
-                            setTimeout(function() {
-                                $("#btnaceptar").empty();
-                                $("#btnaceptar").append('<i class="fa fa-check"></i> Aceptar');
-                            }, 1000);
+
+                            tbHistorial.empty()
+                            tbHistorial.append('<tr class="text-center"><td colspan="6"><p>' + result.message + '</p></td></tr>');
+                            stateHistorial = false;
                         }
                     },
                     error: function(error) {
-                        tools.AlertError("Error", error.responseText);
-                        $("#btnaceptar").empty();
-                        $("#btnaceptar").append('<i class="fa fa-check"></i> Aceptar');
+                        tbHistorial.empty()
+                        tbHistorial.append('<tr class="text-center"><td colspan="6"><p>' + error.responseText + '</p></td></tr>');
+                        stateHistorial = false;
                     }
                 });
+            }
+
+            function onSelectedIngeniero(idIngeniero) {
+                $("#mostrarHistorial").modal("show");
+                dni = idIngeniero;
+                if (!stateHistorial) {
+                    paginacionHistorial = 1;
+                    loadTableHistorial(dni);
+                    opcionHistorial = 0;
+                }
+            }
+
+            function clearModalIngeniero() {
+                $("#dni").val("")
+                $("#Nombres").val("")
+                $("#Apellidos").val("")
+                $("#Genero").val("M")
+                $("#Nacimiento").val("")
+                $("#Estado_civil").val("S")
+                $("#Ruc").val("")
+                $("#Razon_social").val("")
+                $("#Codigo").val("")
+                $("#cbTramite").attr("checked", true);
+                $("#Codigo").prop("disabled", $("#cbTramite").is(":checked"));
+                $("#Condicion").val("O")
             }
         </script>
     </body>

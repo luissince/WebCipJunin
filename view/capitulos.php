@@ -292,7 +292,6 @@ if (!isset($_SESSION['IdUsuario'])) {
                 });
 
                 $("#btnNuevo").click(function() {
-
                     $("#confirmar").modal("show");
                     $("#txtEspecialidad").attr('disabled', true);
                     $("#cbxCapitulo").attr('disabled', true);
