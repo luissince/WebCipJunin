@@ -98,11 +98,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
                     "estado" => 1,
                     "data" => $result[0],
                     "especialidades" => $result[1],
-<<<<<<< HEAD
                     "ultimopago"=>$result[2]
-=======
-                    "persona" => $result[2]
->>>>>>> c8010c2e76c45e25b15a63cf71ff23204529b2d4
                 ));
             } else {
                 echo json_encode(array(

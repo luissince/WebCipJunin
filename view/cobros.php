@@ -292,7 +292,6 @@ if (!isset($_SESSION['IdUsuario'])) {
                             </div>
                         </div>
                     </div>
-<<<<<<< HEAD
                     <!-- modal end cuotas -->
 
                     <!-- modal start certificado -->
@@ -314,31 +313,6 @@ if (!isset($_SESSION['IdUsuario'])) {
                                         <div class="row">
                                             <div class="col-md-12">
                                                 <label id="lblCertificadoHabilidadEstado"></label>
-=======
-                </div>
-                <!-- modal end cuotas -->
-
-                <!-- modal start certificado -->
-                <div class="row">
-                    <div class="modal fade" id="mdCertHabilidad">
-                        <div class="modal-dialog modal-xl">
-                            <div class="modal-content">
-                                <div class="modal-header">
-                                    <button type="button" class="close" data-dismiss="modal">
-                                        <i class="fa fa-close"></i>
-                                    </button>
-                                    <h4 class="modal-title">
-                                        <i class="fa fa-plus">
-                                        </i> Certificado de Habilidad
-                                    </h4>
-                                </div>
-                                <div class="modal-body">
-                                    <div class="row">
-                                        <div class="col-md-12">
-                                            <div class="form-group">
-                                                <label for="txtIngenieroCertificado">Ingeniero(a)</label>
-                                                <input type="text" class="form-control" id="txtIngenieroCertificado" placeholder="Datos completos del ingeniero" readonly>
->>>>>>> c8010c2e76c45e25b15a63cf71ff23204529b2d4
                                             </div>
                                         </div>
 
@@ -404,7 +378,6 @@ if (!isset($_SESSION['IdUsuario'])) {
                             </div>
                         </div>
                     </div>
-<<<<<<< HEAD
                     <!-- modal end certificado -->
 
                     <!-- modal start certificado de residencia de obra -->
@@ -420,33 +393,6 @@ if (!isset($_SESSION['IdUsuario'])) {
                                             <i class="fa fa-plus">
                                             </i> Certificado de Habilidad para Firmar de Contrato de Obra Pública o Residencia
                                         </h4>
-=======
-                </div>
-                <!-- modal end certificado -->
-
-                <!-- modal start certificado de proyecto -->
-                <div class="row">
-                    <div class="modal fade" id="mdCertProyecto">
-                        <div class="modal-dialog modal-xl">
-                            <div class="modal-content">
-                                <div class="modal-header">
-                                    <button type="button" class="close" data-dismiss="modal">
-                                        <i class="fa fa-close"></i>
-                                    </button>
-                                    <h4 class="modal-title">
-                                        <i class="fa fa-plus">
-                                        </i> Certificado de Proyecto
-                                    </h4>
-                                </div>
-                                <div class="modal-body">
-                                    <div class="row">
-                                        <div class="col-md-12">
-                                            <div class="form-group">
-                                                <label for="txtIngenieroProyecto">Ingeniero(a)</label>
-                                                <input type="text" class="form-control" id="txtIngenieroProyecto" readonly placeholder="Datos completos del ingeniero">
-                                            </div>
-                                        </div>
->>>>>>> c8010c2e76c45e25b15a63cf71ff23204529b2d4
                                     </div>
                                     <div class="modal-body">
 
@@ -465,7 +411,6 @@ if (!isset($_SESSION['IdUsuario'])) {
                                                 </div>
                                             </div>
                                         </div>
-<<<<<<< HEAD
                                         <div class="row">
                                             <div class="col-md-12">
                                                 <div class="form-group">
@@ -473,12 +418,6 @@ if (!isset($_SESSION['IdUsuario'])) {
                                                     <select class="form-control" id="cbEspecialidadObra">
                                                     </select>
                                                 </div>
-=======
-                                        <div class="col-md-6">
-                                            <div class="form-group">
-                                                <label for="txtNumeroCertificadoProyecto">Certificado N°</label>
-                                                <input type="number" class="form-control" id="txtNumeroCertificadoProyecto" placeholder="Número del certificado">
->>>>>>> c8010c2e76c45e25b15a63cf71ff23204529b2d4
                                             </div>
                                         </div>
                                         <div class="row">
@@ -555,7 +494,6 @@ if (!isset($_SESSION['IdUsuario'])) {
                             </div>
                         </div>
                     </div>
-<<<<<<< HEAD
                     <!-- modal end certificado de residencia de obra-->
 
                     <!-- modal start certificado de proyecto -->
@@ -577,31 +515,6 @@ if (!isset($_SESSION['IdUsuario'])) {
                                         <div class="row">
                                             <div class="col-md-12">
                                                 <label id="lblCertificadoProyectoEstado"></label>
-=======
-                </div>
-                <!-- modal end certificado de proyecto -->
-
-                <!-- modal start certificado de residencia de obra -->
-                <div class="row">
-                    <div class="modal fade" id="mdCertResidenciaObra">
-                        <div class="modal-dialog modal-xl">
-                            <div class="modal-content">
-                                <div class="modal-header">
-                                    <button type="button" class="close" data-dismiss="modal">
-                                        <i class="fa fa-close"></i>
-                                    </button>
-                                    <h4 class="modal-title">
-                                        <i class="fa fa-plus">
-                                        </i> Certificado de Residencia de Obra
-                                    </h4>
-                                </div>
-                                <div class="modal-body">
-                                    <div class="row">
-                                        <div class="col-md-12">
-                                            <div class="form-group">
-                                                <label for="txtIngenieroObra">Ingeniero(a)</label>
-                                                <input type="text" class="form-control" id="txtIngenieroObra" readonly placeholder="Datos completos del ingeniero">
->>>>>>> c8010c2e76c45e25b15a63cf71ff23204529b2d4
                                             </div>
                                         </div>
 
@@ -622,7 +535,6 @@ if (!isset($_SESSION['IdUsuario'])) {
                                                 </div>
                                             </div>
                                         </div>
-<<<<<<< HEAD
                                         <div class="row">
                                             <div class="col-md-6">
                                                 <div class="form-group">
@@ -635,14 +547,6 @@ if (!isset($_SESSION['IdUsuario'])) {
                                                     <label for="txtNumeroCertificadoProyecto">Certificado N°</label>
                                                     <input type="text" class="form-control" id="txtNumeroCertificadoProyecto" placeholder="Número del certificado">
                                                 </div>
-=======
-                                    </div>
-                                    <div class="row">
-                                        <div class="col-md-12">
-                                            <div class="form-group">
-                                                <label for="txtCertificadoNumeroObra">Certificado N°</label>
-                                                <input type="number" class="form-control" id="txtCertificadoNumeroObra">
->>>>>>> c8010c2e76c45e25b15a63cf71ff23204529b2d4
                                             </div>
                                         </div>
                                         <div class="row">
@@ -1000,7 +904,6 @@ if (!isset($_SESSION['IdUsuario'])) {
             </div>
             <!-- /.content-wrapper -->
         </div>
-<<<<<<< HEAD
         <!-- ./wrapper -->
 
         <!-- Select2 -->
@@ -1019,60 +922,6 @@ if (!isset($_SESSION['IdUsuario'])) {
             let cuotasEstate = false;
             let cuotasInicio = "";
             let cuotasFin = "";
-=======
-        <!-- /.content-wrapper -->
-    </div>
-    <!-- ./wrapper -->
-
-    <!-- Select2 -->
-    <script src="js/tools.js"></script>
-    <script src="js/cobros/cobrosingenieros.js"></script>
-    <script src="js/cobros/colegiatura.js"></script>
-    <script src="js/cobros/cuotas.js"></script>
-    <script src="js/cobros/certificados.js"></script>
-    <script src="js/cobros/peritaje.js"></script>
-    <script src="js/cobros/otros.js"></script>
-    <script>
-        let tools = new Tools();
-        //cuotas
-        let cuotas = [];
-        let countCurrentDate = 0;
-        let cuotasEstate = false;
-        let cuotasInicio = "";
-        let cuotasFin = "";
-
-        //colegiatura
-        let colegiaturas = [];
-        let colegiaturaEstado = false;
-
-        //ingresos totales
-        let arrayIngresos = [];
-        let sumaTotal = 0;
-
-        //paginacion ingenieros
-        let state = false;
-        let opcion = 0;
-        let totalPaginacion = 0;
-        let paginacion = 0;
-        let filasPorPagina = 10;
-        let idDNI = 0;
-        let Ingeniero = "";
-        let condiccion = "";
-
-        let modelCobrosIngenieros = new CobroIngenieros();
-        let modelColegiatura = new Colegiatura();
-        let modelCuotas = new Cuotas();
-        let modelCertificado = new Certificado();
-        let modelPeritaje = new Peritaje();
-        let modelOtros = new Otros();
-
-        $(document).ready(function() {
-            // comprobantes
-            loadComprobantes();
-
-            //ingenieros
-            modelCobrosIngenieros.componentesIngenieros();
->>>>>>> c8010c2e76c45e25b15a63cf71ff23204529b2d4
 
             //colegiatura
             let colegiaturas = [];
