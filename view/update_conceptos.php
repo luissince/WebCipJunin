@@ -105,6 +105,27 @@ if (!isset($_SESSION['IdUsuario'])) {
                                         </div>
                                     </div>
                                 </div>
+<<<<<<< HEAD
+=======
+                            </div>
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <p>Referido a: <i class="fa fa-fw fa-asterisk text-danger"></i></p>
+                                </div>
+                                <div class="col-md-6 col-sm-12 col-xs-12">
+                                    <div class="form-group">
+                                        <input type="radio" id="rbJunin" name="referido" value="" checked="checked">
+                                        <label for="rbJunin">CIP Junin</label>
+                                    </div>
+                                </div>
+                                <div class="col-md-6 col-sm-12 col-xs-12">
+                                    <div class="form-group">
+                                        <input type="radio" id="rbNacional" name="referido" value="1">
+                                        <label for="rbNacional">CIP Nacional</label>
+                                    </div>
+                                </div>
+                            </div>
+>>>>>>> c8010c2e76c45e25b15a63cf71ff23204529b2d4
 
                                 <div class="row">
                                     <div class="col-md-12">
@@ -122,6 +143,7 @@ if (!isset($_SESSION['IdUsuario'])) {
                                             <label for="precio_transeunte">Precio para Transeunte</label>
                                         </div>
                                     </div>
+<<<<<<< HEAD
                                     <div class="col-md-6 col-sm-12 col-xs-12">
                                         <div class="form-group">
                                             <input type="radio" id="precio_vitalicio" name="espesifico" value="2">
@@ -133,6 +155,13 @@ if (!isset($_SESSION['IdUsuario'])) {
                                             <input type="radio" id="precio_variable" name="espesifico" value="128">
                                             <label for="precio_variable">Precio Variable</label>
                                         </div>
+=======
+                                </div>
+                                <div class="col-md-6 col-sm-12 col-xs-12">
+                                    <div class="form-group">
+                                        <input type="radio" id="precio_variable" name="espesifico" value="128">
+                                        <label for="precio_variable">Precio Variable</label>
+>>>>>>> c8010c2e76c45e25b15a63cf71ff23204529b2d4
                                     </div>
                                 </div>
 
@@ -203,6 +232,7 @@ if (!isset($_SESSION['IdUsuario'])) {
                     event.preventDefault();
                 });
 
+<<<<<<< HEAD
                 $("#estado").change(function() {
                     $("#lblEstado").html($("#estado").is(":checked") ? "Activo" : "Inactivo");
                 });
@@ -289,6 +319,81 @@ if (!isset($_SESSION['IdUsuario'])) {
                         } else {
                             tools.AlertWarning("Advertencia", result.message);
                             state = false;
+=======
+        });
+
+        function loadDataConcepto(idConcepto) {
+            $.ajax({
+                url: "../app/controller/ConceptoController.php",
+                method: "GET",
+                data: {
+                    "type": "data",
+                    "idConcepto": idConcepto
+                },
+                beforeSend: function() {
+                    spiner.append(
+                        '<img src="./images/spiner.gif" width="25" height="25" style="margin-left: 10px;"/>'
+                    )
+                },
+                success: function(result) {
+                    spiner.remove()
+                    if (result.estado === 1) {
+                        console.log(result)
+                        let concepto = result.object;
+                        switch (concepto.Categoria) {
+                            case "1":
+                                $("#categoria").val("1")
+                                break
+                            case "2":
+                                $("#categoria").val("2")
+                                break
+                            case "3":
+                                $("#categoria").val("3")
+                                break
+                            case "4":
+                                $("#categoria").val("4")
+                                break
+                            case "5":
+                                $("#categoria").val("5")
+                                break
+                            case "6":
+                                $("#categoria").val("6")
+                                break
+                            case "7":
+                                $("#categoria").val("7")
+                                break
+                            case "8":
+                                $("#categoria").val("8")
+                                break
+                            case "100":
+                                $("#categoria").val("100")
+                                break
+                            default:
+                        }
+
+                        $("#codigo").val(concepto.Codigo)
+                        $("#concepto").val(concepto.Concepto)
+                        $("#precio").val(concepto.Precio)
+                        let fInicio = concepto.Inicio.split("/").reverse().join("-");
+                        let fFinal = concepto.Fin.split("/").reverse().join("-");
+                        document.getElementById("fecha_inicio").value = tools.getDateForma(fInicio, 'yyyy-mm-dd');
+                        document.getElementById("fecha_fin").value = tools.getDateForma(fFinal, 'yyyy-mm-dd');
+
+                        if (concepto.Asignado == "0") {
+                            $("#precio_ordinario").prop("checked", true);
+                        } else if (concepto.Asignado == "1") {
+                            $("#precio_transeunte").prop("checked", true);
+                        } else if (concepto.Asignado == "2") {
+                            $("#precio_vitalicio").prop("checked", true);
+                        } else if (concepto.Asignado == "3") {
+                            $("#precio_variable").prop("checked", true);
+                        }
+
+                        if (concepto.Propiedad == 0) {
+                            $("#rbJunin").prop("checked", true);
+                        } else {
+                            $("#rbNacional").prop("checked", true);
+>>>>>>> c8010c2e76c45e25b15a63cf71ff23204529b2d4
                         }
                     },
                     error: function(error) {
@@ -307,6 +412,7 @@ if (!isset($_SESSION['IdUsuario'])) {
                 }
             }
 
+<<<<<<< HEAD
             function updateConcepto() {
                 if ($("#categoria").val() == "0") {
                     tools.AlertWarning("Advertencia", "Seleccione la categoría del concepto.");
@@ -370,6 +476,78 @@ if (!isset($_SESSION['IdUsuario'])) {
     </body>
 
     </html>
+=======
+        function validateUpdateConcepto() {
+            if (state) {
+                updateConcepto();
+            } else {
+                tools.AlertWarning("Advertencia",
+                    "Nose pudo cargar los datos correctamente, recargue la pantalla por favor.");
+            }
+        }
+
+        function updateConcepto() {
+            if ($("#categoria").val() == "0") {
+                tools.AlertWarning("Advertencia", "Seleccione la categoría del concepto.");
+            } else if ($("#concepto").val() == '' || $("#concepto").val().length < 2) {
+                tools.AlertWarning("Advertencia", "Ingrese el nombre del concepto.");
+            } else if ($("#precio").val() == '' || $("#precio").val().length == 0) {
+                tools.AlertWarning("Advertencia", "Ingrese el precio del concepto.");
+            } else if ($("#fecha_inicio").val() == '') {
+                tools.AlertWarning("Advertencia", "Seleccione la fecha de inicio.");
+            } else if ($("#fecha_inicio").val() == '') {
+                tools.AlertWarning("Advertencia", "Seleccione la fecha de fin.");
+            } else {
+                tools.ModalDialog("Conceptos", "¿Está seguro de continuar?", function(value) {
+                    if (value == true) {
+                        $.ajax({
+                            url: "../app/controller/ConceptoController.php",
+                            method: "POST",
+                            data: {
+                                "type": "update",
+                                "IdConcepto": idConcepto,
+                                "Categoria": $("#categoria").val(),
+                                "Concepto": $("#concepto").val(),
+                                "Precio": $("#precio").val(),
+                                "Propiedad": $("#rbJunin").is(":checked") ? 0 : 48,
+                                "Inicio": $("#fecha_inicio").val(),
+                                "Fin": $("#fecha_inicio").val(),
+                                "Observacion": "",
+                                "Codigo": $("#codigo").val(),
+                                "Estado": $("#estado").is(":checked"),
+                                "Asignado": $("#precio_ordinario").is(":checked") ? 0 : $("#precio_transeunte").is(":checked") ? 1 : $("#precio_vitalicio").is(":checked") ? 2 : 3,
+                            },
+                            beforeEnd: function() {
+                                $("#btnaceptar").empty();
+                                $("#btnaceptar").append('<img src="./images/spiner.gif" width="25" height="25" />')
+                            },
+                            success: function(result) {
+                                if (result.estado == 1) {
+                                    tools.AlertSuccess("Mensaje", result.message)
+                                    setTimeout(function() {
+                                        location.href = "conceptos.php"
+                                    }, 1000);
+                                } else {
+                                    tools.AlertWarning("Mensaje", result.message)
+                                    setTimeout(function() {
+                                        $("#btnaceptar").empty();
+                                        $("#btnaceptar").append('<i class="fa fa-check"></i> Editar');
+                                    }, 1000);
+                                }
+                            },
+                            error: function(error) {
+                                tools.AlertError("Error", error.responseText);
+                                $("#btnaceptar").empty();
+                                $("#btnaceptar").append('<i class="fa fa-check"></i> Editar');
+                            }
+                        });
+                    }
+                });
+            }
+        }
+    </script>
+</body>
+>>>>>>> c8010c2e76c45e25b15a63cf71ff23204529b2d4
 
 
 <?php }

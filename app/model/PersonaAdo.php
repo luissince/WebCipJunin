@@ -968,7 +968,8 @@ class PersonaAdo
     public static function updateColegiatura($colegiatura)
     {
         try {
-            Database::getInstance()->getDb()->beginTransaction();
+            Database::getInstance()->getDb()->beginTransaction();        
+
             $cmdSelect = Database::getInstance()->getDb()->prepare('SELECT * FROM Colegiatura WHERE idColegiado <> ? AND UPPER(Resolucion) = UPPER(?)');
             $cmdSelect->bindParam(1, $colegiatura['idcolegiatura'], PDO::PARAM_INT);
             $cmdSelect->bindParam(2, $colegiatura['resolucion'], PDO::PARAM_STR);
@@ -978,6 +979,13 @@ class PersonaAdo
                 Database::getInstance()->getDb()->rollback();
                 return 'Duplicado';
             } else {
+
+                // if($colegiatura['principal']==1){
+                //     $cmdSelect = Database::getInstance()->getDb()->prepare('UPDATE Colegiatura SET principal = 0');
+                //     $cmdSelect->execute();
+
+                // }
+
                 $cmdUpdate = Database::getInstance()->getDb()->prepare("UPDATE Colegiatura SET
                 idSede = ?,
                 idEspecialidad = ?, 
@@ -989,10 +997,6 @@ class PersonaAdo
                 Resolucion = ?, 
                 Principal = ?
                 WHERE idColegiado = ?");
-
-                // $dateColegiacion = date( 'Y-d-m H:i:s', strtotime( $colegiatura['fechacolegiacion'] ) );
-                // $dateEgreso = date( 'Y-d-m H:i:s', strtotime( $colegiatura['fechaegreso'] ) );
-                // $dateTitulo = date( 'Y-d-m H:i:s', strtotime( $colegiatura['fechatitulo'] ) );
 
                 $cmdUpdate->bindParam(1, $colegiatura['sede'], PDO::PARAM_INT);
                 $cmdUpdate->bindParam(2, $colegiatura['especialidad'], PDO::PARAM_INT);

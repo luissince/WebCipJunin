@@ -70,19 +70,22 @@ class ConceptoAdo
     public static function getId($idConcepto)
     {
         try {
-            $object = null;
             $comandoConcepto = Database::getInstance()->getDb()->prepare("SELECT 
                 idConcepto,
                 Categoria,
                 Concepto,
                 Precio,
                 Propiedad,
-                cast(Inicio as date) as Inicio,
-                cast(Fin as date) as Fin,
+                convert(VARCHAR,cast(Inicio as date),103) AS Inicio,
+                convert(VARCHAR,cast(Fin as date),103) AS Fin,
                 Observacion,
                 Codigo,
                 Estado,
+<<<<<<< HEAD
                 Asignado       
+=======
+                Asignado             
+>>>>>>> c8010c2e76c45e25b15a63cf71ff23204529b2d4
             FROM Concepto WHERE idConcepto = ?");
             $comandoConcepto->bindParam(1, $idConcepto, PDO::PARAM_STR);
             $comandoConcepto->execute();
@@ -210,6 +213,7 @@ class ConceptoAdo
                 ));
             }
 
+<<<<<<< HEAD
             if (empty($arrayEspecialidades)) {
                 throw new Exception('Error en cargar en las espcialidad(es).');
             }
@@ -230,6 +234,20 @@ class ConceptoAdo
             $date->modify('last day of this month');            
 
             array_push($array, $resultConcepto, $arrayEspecialidades, $date->format('Y-m-d'));
+=======
+            $Persona = Database::getInstance()->getDb()->prepare("SELECT CONCAT(Nombres,' ' ,Apellidos) AS Persona FROM Persona WHERE idDNI = ?");
+            $Persona->bindParam(1, $dni, PDO::PARAM_STR);
+            $Persona->execute();
+
+            $arrayPersona = array();
+            while ($row = $Persona->fetch()) {
+                array_push($arrayPersona, array(
+                    "Persona" => $row["Persona"]
+                ));
+            }
+
+            array_push($array, $resultConcepto, $arrayEspecialidades, $arrayPersona);
+>>>>>>> c8010c2e76c45e25b15a63cf71ff23204529b2d4
             return $array;
         } catch (Exception $ex) {
             return $ex->getMessage();
@@ -387,7 +405,6 @@ class ConceptoAdo
             return $ex->getMessage();
         }
     }
-
 
     public static function getOtrosConceptos()
     {

@@ -22,17 +22,6 @@ function Peritaje() {
             $('#txtDescripcionPeritaje').focus();
         });
 
-        $("#btnAceptarPeritaje").click(function() {
-            validateIngresoPeritaje();
-        });
-
-        $("#btnAceptarPeritaje").keypress(function(event) {
-            if (event.keyCode === 13) {
-                validateIngresoPeritaje();
-            }
-            event.preventDefault();
-        });
-
         $("#btnClosePeritaje").click(function() {
             $('#mdPeritaje').modal('hide');
         });
@@ -51,6 +40,17 @@ function Peritaje() {
         $("#btnCancelarPeritaje").keypress(function(event) {
             if (event.keyCode === 13) {
                 $('#mdPeritaje').modal('hide');
+            }
+            event.preventDefault();
+        });
+
+        $("#btnAceptarPeritaje").click(function() {
+            validateIngresoPeritaje();
+        });
+
+        $("#btnAceptarPeritaje").keypress(function(event) {
+            if (event.keyCode === 13) {
+                validateIngresoPeritaje();
             }
             event.preventDefault();
         });

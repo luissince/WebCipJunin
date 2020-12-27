@@ -1,7 +1,12 @@
 function Certificado() {
+<<<<<<< HEAD
     this.componentesCertificado = function() {
         //********************************************* */
         $("#btnCertificado").click(function() {
+=======
+    this.componentesCertificado = function () {
+        $("#btnCertificado").click(function () {
+>>>>>>> c8010c2e76c45e25b15a63cf71ff23204529b2d4
             if (idDNI == 0) {
                 tools.AlertWarning("Certificado", "No selecciono ningún ingeniero para obtener sus cuotas.")
             } else {
@@ -10,14 +15,18 @@ function Certificado() {
             }
         });
 
+<<<<<<< HEAD
         /****************************************************/
         //-----CERTIFICADO DE HABILIDAD
         $("#btnCertHabilidad").click(function() {
+=======
+        $("#btnCertHabilidad").click(function () {
+>>>>>>> c8010c2e76c45e25b15a63cf71ff23204529b2d4
             $('#mdCertHabilidad').modal('show');
-            loadCertificadoHabilidad(idDNI);
+            loadCertificadoHabilidad(idDNI, Ingeniero);
         });
 
-        $("#btnCertHabilidad").keypress(function(event) {
+        $("#btnCertHabilidad").keypress(function (event) {
             if (event.keyCode === 13) {
                 $('#mdCertHabilidad').modal('show');
                 loadCertificadoHabilidad(idDNI);
@@ -25,6 +34,7 @@ function Certificado() {
             event.preventDefault();
         });
 
+<<<<<<< HEAD
         $("#txtCorrelativoCertificado").keypress(function(event) {
             var key = window.Event ? event.which : event.keyCode;
             var c = String.fromCharCode(key);
@@ -40,10 +50,24 @@ function Certificado() {
         $("#btnAceptarCertificado").keypress(function(event) {
             if (event.keyCode === 13) {
                 validateIngresosCertificadoHabilidad();
+=======
+        $("#btnCertProyecto").click(function () {
+            $('#mdCertProyecto').modal('show');
+            loadCertificadoProyecto(idDNI, Ingeniero);
+            loadUbigeoProyecto();
+        });
+
+        $("#btnCertProyecto").keypress(function (event) {
+            if (event.keyCode === 13) {
+                $('#mdCertProyecto').modal('show');
+                loadCertificadoProyecto(idDNI, Ingeniero);
+                loadUbigeoProyecto();
+>>>>>>> c8010c2e76c45e25b15a63cf71ff23204529b2d4
             }
             event.preventDefault();
         });
 
+<<<<<<< HEAD
         $("#btnCancelarCertificado").click(function() {
             $('#mdCertHabilidad').modal('hide');
             clearIngresosCertificadoHabilidad()
@@ -59,16 +83,28 @@ function Certificado() {
         $("#btnCertResidenciaObra").click(function() {
             $('#mdCertResidenciaObra').modal('show');
             loadCertificadoObra(idDNI);
+=======
+        $("#btnCertResidenciaObra").click(function () {
+            $('#mdCertResidenciaObra').modal('show');
+            loadCertificadoObra(idDNI,Ingeniero);
+            loadUbigeoObras();
+>>>>>>> c8010c2e76c45e25b15a63cf71ff23204529b2d4
         });
 
-        $("#btnCertResidenciaObra").keypress(function(event) {
+        $("#btnCertResidenciaObra").keypress(function (event) {
             if (event.keyCode === 13) {
                 $('#mdCertResidenciaObra').modal('show');
+<<<<<<< HEAD
                 loadCertificadoObra(idDNI);
+=======
+                loadCertificadoObra(idDNI, Ingeniero);
+                loadUbigeoObras();
+>>>>>>> c8010c2e76c45e25b15a63cf71ff23204529b2d4
             }
             event.preventDefault();
         });
 
+<<<<<<< HEAD
         $("#txtCertificadoNumeroObra").keypress(function(event) {
             var key = window.Event ? event.which : event.keyCode;
             var c = String.fromCharCode(key);
@@ -107,6 +143,37 @@ function Certificado() {
         $("#btnAceptarCertResidenciaObra").keypress(function(event) {
             if (event.keyCode === 13) {
                 validateIngresosCertificadoResidenciaObra();
+=======
+        $("#btnAceptarCertificado").click(function () {
+            InsertCertHabilidad();
+        });
+
+        $("#btnAceptarCertificado").keypress(function (event) {
+            if (event.keyCode === 13) {
+                InsertCertHabilidad();
+            }
+            event.preventDefault();
+        });
+
+        $("#btnAceptarProyecto").click(function () {
+            InsertCertProyecto();
+        });
+
+        $("#btnAceptarProyecto").keypress(function (event) {
+            if (event.keyCode === 13) {
+                InsertCertProyecto();
+            }
+            event.preventDefault();
+        });
+
+        $("#btnAceptarObra").click(function () {
+            InsertCertObra();
+        });
+
+        $("#btnAceptarObra").keypress(function (event) {
+            if (event.keyCode === 13) {
+                InsertCertObra();
+>>>>>>> c8010c2e76c45e25b15a63cf71ff23204529b2d4
             }
             event.preventDefault();
         });
@@ -190,7 +257,7 @@ function Certificado() {
 
     }
 
-    function loadCertificadoHabilidad($dni) {
+    function loadCertificadoHabilidad($dni, $ingeniero) {
         $.ajax({
             url: "../app/controller/ConceptoController.php",
             method: "GET",
@@ -200,8 +267,9 @@ function Certificado() {
                 "categoria": 5,
                 "Dni": $dni,
             },
-            beforeSend: function() {
+            beforeSend: function () {
                 $("#cbEspecialidadCertificado").empty();
+<<<<<<< HEAD
                 $("#modal-title-certificado-habilidad").append('<img src="./images/spiner.gif" width="25" height="25" style="margin-left: 10px;"/>');
 
                 $("#lblCertificadoHabilidadEstado").removeClass();
@@ -221,6 +289,14 @@ function Certificado() {
                         "monto": parseFloat(result.data.Precio),
                         "ultimoPago": result.ultimopago
                     };
+=======
+            },
+            success: function (result) {
+                if (result.estado == 1) {
+                    $("#txtIngenieroCertificado").val($ingeniero);
+
+
+>>>>>>> c8010c2e76c45e25b15a63cf71ff23204529b2d4
                     $("#cbEspecialidadCertificado").append('<option value="">- Seleccione -</option>');
                     for (let especialidades of result.especialidades) {
                         $("#cbEspecialidadCertificado").append('<option value="' + especialidades.idEspecialidad + '">' + especialidades.Especialidad + '</option>');
@@ -235,17 +311,26 @@ function Certificado() {
                     $("#cbEspecialidadCertificado").append('<option value="">- Seleccione -</option>');
                 }
             },
+<<<<<<< HEAD
             error: function(error) {
                 $("#modal-title-certificado-habilidad").empty();
                 $("#modal-title-certificado-habilidad").append('<i class="fa fa-plus"></i> Certificado de Habilidad');
                 $("#cbEspecialidadCertificado").append('<option value="">- Seleccione -</option>');
                 $("#lblCertificadoHabilidadEstado").addClass("text-danger");
                 $("#lblCertificadoHabilidadEstado").append('<i class="fa fa-check"> </i> ' + error.responseText);
+=======
+            error: function (error) {
+                console.log(error);
+>>>>>>> c8010c2e76c45e25b15a63cf71ff23204529b2d4
             }
         });
     }
 
+<<<<<<< HEAD
     function loadCertificadoObra($dni) {
+=======
+    function loadCertificadoProyecto($dni, $ingeniero) {
+>>>>>>> c8010c2e76c45e25b15a63cf71ff23204529b2d4
         $.ajax({
             url: "../app/controller/ConceptoController.php",
             method: "GET",
@@ -254,6 +339,7 @@ function Certificado() {
                 "categoria": 6,
                 "Dni": $dni,
             },
+<<<<<<< HEAD
             beforeSend: function() {
                 $("#cbEspecialidadObra").empty();
                 $("#cbDepartamentoObra").empty();
@@ -279,6 +365,16 @@ function Certificado() {
                         "ultimoPago": result.ultimopago
                     };
                     $("#cbEspecialidadObra").append('<option value="">- Seleccione -</option>');
+=======
+            beforeSend: function () {
+                $("#cbEspecialidadProyecto").empty();
+            },
+            success: function (result) {
+                if (result.estado == 1) {
+                    $("#txtIngenieroProyecto").val($ingeniero);
+
+                    $("#cbEspecialidadProyecto").append('<option value="">- Seleccione -</option>');
+>>>>>>> c8010c2e76c45e25b15a63cf71ff23204529b2d4
                     for (let especialidades of result.especialidades) {
                         $("#cbEspecialidadObra").append('<option value="' + especialidades.idEspecialidad + '">' + especialidades.Especialidad + '</option>');
                     }
@@ -298,17 +394,26 @@ function Certificado() {
                     $("#cbEspecialidadObra").append('<option value="">- Seleccione -</option>');
                 }
             },
+<<<<<<< HEAD
             error: function(error) {
                 $("#modal-title-residencia-obra").empty();
                 $("#modal-title-residencia-obra").append('<i class="fa fa-plus"> </i> Certificado de Habilidad para Firmar de Contrato de Obra Pública o Residencia');
                 $("#cbEspecialidadObra").append('<option value="">- Seleccione -</option>');
                 $("#lblCertificadoResidenciaObraEstado").addClass("text-danger");
                 $("#lblCertificadoResidenciaObraEstado").append('<i class="fa fa-check"> </i> Error en: ' + error.responseText);
+=======
+            error: function (error) {
+                console.log(error);
+>>>>>>> c8010c2e76c45e25b15a63cf71ff23204529b2d4
             }
         });
     }
 
+<<<<<<< HEAD
     function loadCertificadoProyecto($dni) {
+=======
+    function loadCertificadoObra($dni, $ingeniero) {
+>>>>>>> c8010c2e76c45e25b15a63cf71ff23204529b2d4
         $.ajax({
             url: "../app/controller/ConceptoController.php",
             method: "GET",
@@ -317,6 +422,7 @@ function Certificado() {
                 "categoria": 7,
                 "Dni": $dni,
             },
+<<<<<<< HEAD
             beforeSend: function() {
                 $("#cbEspecialidadProyecto").empty();
                 $("#cbDepartamentoProyecto").empty();
@@ -325,12 +431,17 @@ function Certificado() {
                 $("#lblCertificadoProyectoEstado").removeClass();
                 $("#lblCertificadoProyectoEstado").empty();
                 certificadoProyecto = {};
+=======
+            beforeSend: function () {
+                $("#cbEspecialidadObra").empty();
+>>>>>>> c8010c2e76c45e25b15a63cf71ff23204529b2d4
             },
-            success: function(result) {
+            success: function (result) {
                 console.log(result);
                 $("#modal-title-certificado-proyecto").empty();
                 $("#modal-title-certificado-proyecto").append('<i class="fa fa-plus"> </i> Certificado de Proyecto');
                 if (result.estado == 1) {
+<<<<<<< HEAD
                     certificadoProyecto = {
                         "idConcepto": parseInt(result.data.idConcepto),
                         "categoria": parseInt(result.data.Categoria),
@@ -341,10 +452,40 @@ function Certificado() {
                         "ultimoPago": result.ultimopago
                     };
                     $("#cbEspecialidadProyecto").append('<option value="">- Seleccione -</option>');
+=======
+                    $("#txtIngenieroObra").val($ingeniero);
+
+                    $("#cbEspecialidadObra").append('<option value="">- Seleccione -</option>');
+>>>>>>> c8010c2e76c45e25b15a63cf71ff23204529b2d4
                     for (let especialidades of result.especialidades) {
                         $("#cbEspecialidadProyecto").append('<option value="' + especialidades.idEspecialidad + '">' + especialidades.Especialidad + '</option>');
                     }
+<<<<<<< HEAD
                     $("#txtFechaProyecto").val(result.ultimopago);
+=======
+                } else {
+                    tools.AlertWarning("Especialidad", "Se produjo un error al cargar los datos en el modal");
+                }
+            },
+            error: function (error) {
+                console.log(error);
+            }
+        });
+    }
+
+    function loadUbigeoProyecto() {
+        $.ajax({
+            url: "../app/controller/ConceptoController.php",
+            method: "GET",
+            data: {
+                type: "getubigeo",
+            },
+            beforeSend: function () {
+
+            },
+            success: function (result) {
+                if (result.estado == 1) {
+>>>>>>> c8010c2e76c45e25b15a63cf71ff23204529b2d4
 
                     $("#cbDepartamentoProyecto").append('<option value="">- Seleccione un Ubigeo -</option>');
                     for (let ubigeo of result.ubigeo) {
@@ -372,6 +513,7 @@ function Certificado() {
         });
     }
 
+<<<<<<< HEAD
     function validateIngresosCertificadoHabilidad() {
         if ($("#cbEspecialidadCertificado").val() == '') {
             $("#cbEspecialidadCertificado").focus();
@@ -413,6 +555,26 @@ function Certificado() {
             }
         }
     }
+=======
+    function loadUbigeoObras() {
+        $.ajax({
+            url: "../app/controller/ConceptoController.php",
+            method: "GET",
+            data: {
+                type: "getubigeo",
+            },
+            beforeSend: function () {
+
+            },
+            success: function (result) {
+                if (result.estado == 1) {
+
+                    $("#cbDepartamentoObra").append('<option value="">- Seleccione un Ubigeo -</option>');
+                    for (let Ubigeo of result.ubicacion) {
+                        $("#cbDepartamentoObra").append('<option value="' + Ubigeo.IdUbicacion + '">' + Ubigeo.Ubicacion + '</option>');
+                    }
+                    $('#cbDepartamentoObra').select2();
+>>>>>>> c8010c2e76c45e25b15a63cf71ff23204529b2d4
 
     function validateIngresosCertificadoResidenciaObra() {
         if ($("#cbEspecialidadObra").val() == '') {
@@ -559,5 +721,105 @@ function Certificado() {
         $("#txtUrbProyecto").val("")
         $("#txtCalleProyecto").val("")
         $("#txtMontoCobrarProyecto").val("")
+    }
+
+    function InsertCertHabilidad() {
+        if ($("#cbEspecialidadCertificado").val() == '') {
+            tools.AlertWarning('Habilidad', "Seleccione una especialidad");
+            $("#cbEspecialidadCertificado").focus();
+        } else if (!tools.validateDate($("#txtFechaCertificado").val())) {
+            tools.AlertWarning('Habilidad', "Ingrese una fecha");
+            $("#txtFechaCertificado").focus();
+        } else if ($("#txtCorrelativoCertificado").val() == '') {
+            tools.AlertWarning('Habilidad', "Ingrese un correlativo");
+            $("#txtCorrelativoCertificado").focus();
+        } else if ($("#txtAsuntoCertificado").val() == '') {
+            tools.AlertWarning('Habilidad', "Ingrese un asunto");
+            $("#txtAsuntoCertificado").focus();
+        } else if ($("#txtEntidadCertificado").val() == '') {
+            tools.AlertWarning('Habilidad', "Ingrese una entidad");
+            $("#txtEntidadCertificado").focus();
+        } else if ($("#txtLugarCertificado").val() == '') {
+            tools.AlertWarning('Habilidad', "Ingrese un lugar");
+            $("#txtLugarCertificado").focus();
+        } else{
+            $('#mdCertHabilidad').modal('hide');
+            console.log('entro');
+        }
+    }
+
+    function InsertCertProyecto() {
+        if ($("#cbEspecialidadProyecto").val() == '') {
+            tools.AlertWarning('Proyecto', "Seleccione una especialidad");
+            $("#cbEspecialidadProyecto").focus();
+        } else if (!tools.validateDate($("#txtFechaProyecto").val())) {
+            tools.AlertWarning('Proyecto', "Ingrese una fecha");
+            $("#txtFechaProyecto").focus();
+        } else if ($("#txtNumeroCertificadoProyecto").val() == '') {
+            tools.AlertWarning('Proyecto', "Ingrese un numero de certificado");
+            $("#txtNumeroCertificadoProyecto").focus();
+        } else if ($("#txtModalidadProyecto").val() == '') {
+            tools.AlertWarning('Proyecto', "Ingrese una modalidad");
+            $("#txtModalidadProyecto").focus();
+        } else if ($("#txtPropietarioProyecto").val() == '') {
+            tools.AlertWarning('Proyecto', "Ingrese un propietario");
+            $("#txtPropietarioProyecto").focus();
+        } else if ($("#txtProyectoProyecto").val() == '') {
+            tools.AlertWarning('Proyecto', "Ingrese un proyecto");
+            $("#txtProyectoProyecto").focus();
+        } else if ($("#txtMontoContratoProyecto").val() == '') {
+            tools.AlertWarning('Proyecto', "Ingrese un monto mayor que cero");
+            $("#txtMontoContratoProyecto").focus();
+        } else if ($("#cbDepartamentoProyecto").val() == '') {
+            tools.AlertWarning('Proyecto', "Seleccione un Ubigeo");
+            $("#cbDepartamentoProyecto").focus();
+        } else if ($("#txtUrbProyecto").val() == '') {
+            tools.AlertWarning('Proyecto', "Ingrese urbanizacion");
+            $("#txtUrbProyecto").focus();
+        } else if ($("#txtCalleProyecto").val() == '') {
+            tools.AlertWarning('Proyecto', "Ingrese dirección valida");
+            $("#txtCalleProyecto").focus();
+        } else if ($("#txtMontoCobrarProyecto").val() == '') {
+            tools.AlertWarning('Proyecto', "Ingrese Monto a Cobrar");
+            $("#txtMontoCobrarProyecto").focus();
+        } else{
+            $('#mdCertProyecto').modal('hide');
+            console.log('entro');
+            
+        }
+    }
+
+    function InsertCertObra() {
+        if ($("#cbEspecialidadObra").val() == '') {
+            tools.AlertWarning('Obra', "Seleccione una especialidad");
+            $("#cbEspecialidadObra").focus();
+        } else if (!tools.validateDate($("#txtFechaObra").val())) {
+            tools.AlertWarning('Obra', "Ingrese una fecha");
+            $("#txtFechaObra").focus();
+        } else if ($("#txtCertificadoNumeroObra").val() == '') {
+            tools.AlertWarning('Obra', "Ingrese un numero de certificado");
+            $("#txtCertificadoNumeroObra").focus();
+        } else if ($("#txtModalidadObra").val() == '') {
+            tools.AlertWarning('Obra', "Ingrese una modalidad");
+            $("#txtModalidadObra").focus();
+        } else if ($("#txtProyectoObra").val() == '') {
+            tools.AlertWarning('Obra', "Ingrese un proyecto");
+            $("#txtProyectoObra").focus();
+        } else if ($("#txtPropietarioObra").val() == '') {
+            tools.AlertWarning('Obra', "Ingrese Propietario");
+            $("#txtPropietarioObra").focus();
+        } else if ($("#txtMontoContratoObra").val() == '') {
+            tools.AlertWarning('Obra', "Ingrese Monto");
+            $("#txtMontoContratoObra").focus();
+        } else if ($("#cbDepartamentoObra").val() == '') {
+            tools.AlertWarning('Obra', "Seleccione un Ubigeo");
+            $("#cbDepartamentoObra").focus();
+        } else if ($("#txtMontoCobrarObra").val() == '') {
+            tools.AlertWarning('Obra', "Ingrese Monto a Cobrar");
+            $("#txtMontoCobrarObra").focus();
+        } else{
+            $('#mdCertResidenciaObra').modal('hide');
+            console.log('entro');
+        }
     }
 }
