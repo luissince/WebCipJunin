@@ -115,7 +115,7 @@ class IngresosAdo
                 $cmdAltaColegio->execute();
             }
 
-            if($body["estadoCertificadoHabilidad"] == true){
+            if ($body["estadoCertificadoHabilidad"] == true) {
                 $cmdCertHabilidad = Database::getInstance()->getDb()->prepare("INSERT INTO CERTHabilidad(idIUsuario,idColegiatura,Numero,Asunto,Entidad,Lugar,Fecha,HastaFecha,Anulado,idIngreso) VALUES(?,?,?,?,?,?,?,?,?,?)");
                 $cmdCertHabilidad->bindParam(1, $body["idUsuario"], PDO::PARAM_INT);
                 $cmdCertHabilidad->bindParam(2, $body["objectCertificadoHabilidad"]["idEspecialidad"], PDO::PARAM_INT);
@@ -130,41 +130,48 @@ class IngresosAdo
                 $cmdCertHabilidad->execute();
             }
 
-            if($body["estadoCertificadoResidenciaObra"] == true){
+            if ($body["estadoCertificadoResidenciaObra"] == true) {
                 $cmdCertResidenciaObra = Database::getInstance()->getDb()->prepare("INSERT INTO CERTResidencia(idUsuario,idColegiatura,Numero,Modalidad,Propietario,Proyecto,Monto,idUbigeo,Fecha,HastaFecha,Anulado,idIngreso) VALUES(?,?,?,?,?,?,?,?,?,?,?,?)");
-                $cmdCertResidenciaObra->bindParam(1,$body["idUsuario"],PDO::PARAM_INT);
-                $cmdCertResidenciaObra->bindParam(2,$body["objectCertificadoResidenciaObra"]["idEspecialidad"],PDO::PARAM_STR);
-                $cmdCertResidenciaObra->bindParam(3,$body["objectCertificadoResidenciaObra"]["numero"],PDO::PARAM_INT);
-                $cmdCertResidenciaObra->bindParam(4,$body["objectCertificadoResidenciaObra"]["modalidad"],PDO::PARAM_STR);
-                $cmdCertResidenciaObra->bindParam(5,$body["objectCertificadoResidenciaObra"]["propietario"],PDO::PARAM_STR);
-                $cmdCertResidenciaObra->bindParam(6,$body["objectCertificadoResidenciaObra"]["proyecto"],PDO::PARAM_STR);
-                $cmdCertResidenciaObra->bindParam(7,$body["objectCertificadoResidenciaObra"]["montocontrato"],PDO::PARAM_STR);
-                $cmdCertResidenciaObra->bindParam(8,$body["objectCertificadoResidenciaObra"]["ubigeo"],PDO::PARAM_INT);
-                $cmdCertResidenciaObra->bindParam(9,$body["objectCertificadoResidenciaObra"]["fechaPago"],PDO::PARAM_STR);
-                $cmdCertResidenciaObra->bindParam(10,$body["objectCertificadoResidenciaObra"]["ultimoPago"],PDO::PARAM_STR);
-                $cmdCertResidenciaObra->bindParam(11,$body["objectCertificadoResidenciaObra"]["anulado"],PDO::PARAM_BOOL);
-                $cmdCertResidenciaObra->bindParam(12,$idIngreso,PDO::PARAM_INT);
+                $cmdCertResidenciaObra->bindParam(1, $body["idUsuario"], PDO::PARAM_INT);
+                $cmdCertResidenciaObra->bindParam(2, $body["objectCertificadoResidenciaObra"]["idEspecialidad"], PDO::PARAM_STR);
+                $cmdCertResidenciaObra->bindParam(3, $body["objectCertificadoResidenciaObra"]["numero"], PDO::PARAM_INT);
+                $cmdCertResidenciaObra->bindParam(4, $body["objectCertificadoResidenciaObra"]["modalidad"], PDO::PARAM_STR);
+                $cmdCertResidenciaObra->bindParam(5, $body["objectCertificadoResidenciaObra"]["propietario"], PDO::PARAM_STR);
+                $cmdCertResidenciaObra->bindParam(6, $body["objectCertificadoResidenciaObra"]["proyecto"], PDO::PARAM_STR);
+                $cmdCertResidenciaObra->bindParam(7, $body["objectCertificadoResidenciaObra"]["montocontrato"], PDO::PARAM_STR);
+                $cmdCertResidenciaObra->bindParam(8, $body["objectCertificadoResidenciaObra"]["ubigeo"], PDO::PARAM_INT);
+                $cmdCertResidenciaObra->bindParam(9, $body["objectCertificadoResidenciaObra"]["fechaPago"], PDO::PARAM_STR);
+                $cmdCertResidenciaObra->bindParam(10, $body["objectCertificadoResidenciaObra"]["ultimoPago"], PDO::PARAM_STR);
+                $cmdCertResidenciaObra->bindParam(11, $body["objectCertificadoResidenciaObra"]["anulado"], PDO::PARAM_BOOL);
+                $cmdCertResidenciaObra->bindParam(12, $idIngreso, PDO::PARAM_INT);
                 $cmdCertResidenciaObra->execute();
             }
 
-            
-            if($body["estadoCertificadoProyecto"] == true){
+
+            if ($body["estadoCertificadoProyecto"] == true) {
                 $cmdCertProyecto = Database::getInstance()->getDb()->prepare("INSERT INTO CERTProyecto(idUsuario,idColegiatura,Numero,Modalidad,Propietario,Proyecto,Monto,idUbigeo,Adicional1,Adicional2,Fecha,HastaFecha,Anulado,idIngreso) VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?)");
-                $cmdCertProyecto->bindParam(1,$body["idUsuario"],PDO::PARAM_INT);
-                $cmdCertProyecto->bindParam(2,$body["objectCertificadoProyecto"]["idEspecialidad"],PDO::PARAM_STR);
-                $cmdCertProyecto->bindParam(3,$body["objectCertificadoProyecto"]["numero"],PDO::PARAM_INT);
-                $cmdCertProyecto->bindParam(4,$body["objectCertificadoProyecto"]["modalidad"],PDO::PARAM_STR);
-                $cmdCertProyecto->bindParam(5,$body["objectCertificadoProyecto"]["propietario"],PDO::PARAM_STR);
-                $cmdCertProyecto->bindParam(6,$body["objectCertificadoProyecto"]["proyecto"],PDO::PARAM_STR);
-                $cmdCertProyecto->bindParam(7,$body["objectCertificadoProyecto"]["montocontrato"],PDO::PARAM_STR);
-                $cmdCertProyecto->bindParam(8,$body["objectCertificadoProyecto"]["ubigeo"],PDO::PARAM_STR);
-                $cmdCertProyecto->bindParam(9,$body["objectCertificadoProyecto"]["asociacion"],PDO::PARAM_STR);
-                $cmdCertProyecto->bindParam(10,$body["objectCertificadoProyecto"]["pasaje"],PDO::PARAM_STR);
-                $cmdCertProyecto->bindParam(11,$body["objectCertificadoProyecto"]["fechaPago"],PDO::PARAM_STR);
-                $cmdCertProyecto->bindParam(12,$body["objectCertificadoProyecto"]["ultimoPago"],PDO::PARAM_STR);
-                $cmdCertProyecto->bindParam(13,$body["objectCertificadoProyecto"]["anulado"],PDO::PARAM_BOOL);
-                $cmdCertProyecto->bindParam(14,$idIngreso,PDO::PARAM_INT);
+                $cmdCertProyecto->bindParam(1, $body["idUsuario"], PDO::PARAM_INT);
+                $cmdCertProyecto->bindParam(2, $body["objectCertificadoProyecto"]["idEspecialidad"], PDO::PARAM_STR);
+                $cmdCertProyecto->bindParam(3, $body["objectCertificadoProyecto"]["numero"], PDO::PARAM_INT);
+                $cmdCertProyecto->bindParam(4, $body["objectCertificadoProyecto"]["modalidad"], PDO::PARAM_STR);
+                $cmdCertProyecto->bindParam(5, $body["objectCertificadoProyecto"]["propietario"], PDO::PARAM_STR);
+                $cmdCertProyecto->bindParam(6, $body["objectCertificadoProyecto"]["proyecto"], PDO::PARAM_STR);
+                $cmdCertProyecto->bindParam(7, $body["objectCertificadoProyecto"]["montocontrato"], PDO::PARAM_STR);
+                $cmdCertProyecto->bindParam(8, $body["objectCertificadoProyecto"]["ubigeo"], PDO::PARAM_STR);
+                $cmdCertProyecto->bindParam(9, $body["objectCertificadoProyecto"]["asociacion"], PDO::PARAM_STR);
+                $cmdCertProyecto->bindParam(10, $body["objectCertificadoProyecto"]["pasaje"], PDO::PARAM_STR);
+                $cmdCertProyecto->bindParam(11, $body["objectCertificadoProyecto"]["fechaPago"], PDO::PARAM_STR);
+                $cmdCertProyecto->bindParam(12, $body["objectCertificadoProyecto"]["ultimoPago"], PDO::PARAM_STR);
+                $cmdCertProyecto->bindParam(13, $body["objectCertificadoProyecto"]["anulado"], PDO::PARAM_BOOL);
+                $cmdCertProyecto->bindParam(14, $idIngreso, PDO::PARAM_INT);
                 $cmdCertProyecto->execute();
+            }
+
+            if ($body["estadoPeritaje"] == true) {
+                $cmdCertPeritaje = Database::getInstance()->getDb()->prepare("INSERT INTO Peritaje(idIngreso,Detalle) VALUES(?,?)");
+                $cmdCertPeritaje->bindParam(1, $idIngreso, PDO::PARAM_INT);
+                $cmdCertPeritaje->bindParam(2, $body["objectPeritaje"]["descripcion"], PDO::PARAM_STR);
+                $cmdCertPeritaje->execute();
             }
 
             foreach ($body["ingresos"] as $value) {
@@ -182,6 +189,55 @@ class IngresosAdo
             }
             Database::getInstance()->getDb()->commit();
             return "inserted";
+        } catch (PDOException $ex) {
+            Database::getInstance()->getDb()->rollBack();
+            return $ex->getMessage();
+        }
+    }
+
+    public static function EliminarIngreso($idIngreso,$idUsuario,$fecha,$hora,$motivo)
+    {
+        try {
+            Database::getInstance()->getDb()->beginTransaction();
+
+            $cmdValidate = Database::getInstance()->getDb()->prepare("SELECT * FROM Ingreso WHERE idIngreso = ? AND  Estado = 'A'");
+            $cmdValidate->bindParam(1, $idIngreso, PDO::PARAM_INT);
+            $cmdValidate->execute();
+            if ($cmdValidate->fetch()) {
+                Database::getInstance()->getDb()->rollBack();
+                return "anulado";
+            } else {
+                $cmdDetalle = Database::getInstance()->getDb()->prepare("UPDATE Ingreso SET Estado = 'A' WHERE idIngreso = ?");
+                $cmdDetalle->bindParam(1, $idIngreso, PDO::PARAM_INT);
+                $cmdDetalle->execute();
+
+                $cmdAnular = Database::getInstance()->getDb()->prepare("INSERT INTO Anulado(Tipo,idDocumento,idUsuario,Motivo,Fecha,Hora)VALUES('R',?,?,?,?,?)");
+                $cmdAnular->bindParam(1, $idIngreso, PDO::PARAM_INT);
+                $cmdAnular->bindParam(2, $idUsuario, PDO::PARAM_INT);
+                $cmdAnular->bindParam(3, $motivo, PDO::PARAM_INT);
+                $cmdAnular->bindParam(4, $fecha, PDO::PARAM_INT);
+                $cmdAnular->bindParam(5, $hora, PDO::PARAM_INT);
+                $cmdAnular->execute();
+
+                $cmdCuotas = Database::getInstance()->getDb()->prepare("DELETE FROM Cuota WHERE idIngreso = ?");
+                $cmdCuotas->bindParam(1, $idIngreso, PDO::PARAM_INT);
+                $cmdCuotas->execute();
+
+                $cmdHabilidad = Database::getInstance()->getDb()->prepare("UPDATE CERTHabilidad SET Anulado = 1 WHERE idIngreso = ?");
+                $cmdHabilidad->bindParam(1, $idIngreso, PDO::PARAM_INT);
+                $cmdHabilidad->execute();
+
+                $cmdObra = Database::getInstance()->getDb()->prepare("UPDATE CERTResidencia SET Anulado = 1 WHERE idIngreso = ?");
+                $cmdObra->bindParam(1, $idIngreso, PDO::PARAM_INT);
+                $cmdObra->execute();
+
+                $cmdProyecto = Database::getInstance()->getDb()->prepare("UPDATE CERTProyecto SET Anulado = 1 WHERE idIngreso = ?");
+                $cmdProyecto->bindParam(1, $idIngreso, PDO::PARAM_INT);
+                $cmdProyecto->execute();
+
+                Database::getInstance()->getDb()->commit();
+                return "deleted";
+            }
         } catch (PDOException $ex) {
             Database::getInstance()->getDb()->rollBack();
             return $ex->getMessage();
@@ -220,7 +276,7 @@ class IngresosAdo
             $cmdDetail->bindParam(1, $idIngreso, PDO::PARAM_INT);
             $cmdDetail->execute();
             $count = 0;
-            
+
             $detalleIngreso = array();
             while ($row = $cmdDetail->fetch()) {
                 $count++;
@@ -321,8 +377,9 @@ class IngresosAdo
         }
     }
 
-    public static function DetalleIngresoPorIdIngreso($idIngreso){
-        try{
+    public static function DetalleIngresoPorIdIngreso($idIngreso)
+    {
+        try {
             $cmdDetail = Database::getInstance()->getDb()->prepare("SELECT d.idDetalle,
             d.idIngreso,c.Concepto,            
             (d.Monto/d.Cantidad) as Precio,
@@ -334,7 +391,7 @@ class IngresosAdo
             $cmdDetail->bindParam(1, $idIngreso, PDO::PARAM_INT);
             $cmdDetail->execute();
             $count = 0;
-            
+
             $detalleIngreso = array();
             while ($row = $cmdDetail->fetch()) {
                 $count++;
@@ -355,9 +412,11 @@ class IngresosAdo
         }
     }
 
-    public static function ResumenIngresosPorFecha($fechaInicio,$fechaFinal)
+    public static function ResumenIngresosPorFecha($fechaInicio, $fechaFinal)
     {
         try {
+            $array = array();
+
             $arrayIngresos = array();
             $cmdConcepto = Database::getInstance()->getDb()->prepare("SELECT 
             c.Codigo,
@@ -376,11 +435,11 @@ class IngresosAdo
             ON i.idIngreso = d.idIngreso
             INNER JOIN Concepto AS c
             ON d.idConcepto = c.idConcepto
-            WHERE CAST(i.Fecha AS DATE) >= ? and CAST(i.Fecha AS DATE) <= ?
+            WHERE i.Estado = 'C' AND  i.Fecha  >= ? and i.Fecha  <= ? 
             GROUP BY c.Codigo,c.Concepto,c.Propiedad
             ORDER BY c.Concepto ASC");
-            $cmdConcepto->bindParam(1,$fechaInicio,PDO::PARAM_STR);
-            $cmdConcepto->bindParam(2,$fechaFinal,PDO::PARAM_STR);
+            $cmdConcepto->bindParam(1, $fechaInicio, PDO::PARAM_STR);
+            $cmdConcepto->bindParam(2, $fechaFinal, PDO::PARAM_STR);
             $cmdConcepto->execute();
             $count = 0;
 
@@ -396,19 +455,33 @@ class IngresosAdo
                 ));
             }
 
-            return $arrayIngresos;
+            $cmdMinMaxRecibos = Database::getInstance()->getDb()->prepare("SELECT 
+            min(Serie) as SerieMin,
+            min(NumRecibo) NumReciboMin,
+            max(Serie) as SerieMax,
+            max(NumRecibo) as NumReciboMax 
+            from Ingreso 
+            where Estado = 'C' AND Fecha >= ? and Fecha  <= ?");
+            $cmdMinMaxRecibos->bindParam(1, $fechaInicio, PDO::PARAM_STR);
+            $cmdMinMaxRecibos->bindParam(2, $fechaFinal, PDO::PARAM_STR);
+            $cmdMinMaxRecibos->execute();
+            $resultRecibos = $cmdMinMaxRecibos->fetchObject();
+
+            array_push($array, $arrayIngresos, $resultRecibos);
+
+            return $array;
         } catch (PDOException $ex) {
             return $ex->getMessage();
         }
     }
 
-    public static function ResumenAporteCIN($fechaInicio,$fechaFinal)
+    public static function ResumenAporteCIN($fechaInicio, $fechaFinal)
     {
         try {
             $arrayIngresos = array();
             $cmdConcepto = Database::getInstance()->getDb()->prepare("{CALL ResumenCobrosCIN(?,?)}");
-            $cmdConcepto->bindParam(1,$fechaInicio,PDO::PARAM_STR);
-            $cmdConcepto->bindParam(2,$fechaFinal,PDO::PARAM_STR);
+            $cmdConcepto->bindParam(1, $fechaInicio, PDO::PARAM_STR);
+            $cmdConcepto->bindParam(2, $fechaFinal, PDO::PARAM_STR);
             $cmdConcepto->execute();
             $count = 0;
 
@@ -456,5 +529,4 @@ class IngresosAdo
             return $ex->getMessage();
         }
     }
-
 }

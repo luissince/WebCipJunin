@@ -134,7 +134,7 @@ function Peritaje() {
         } else if (!tools.isNumeric($("#txtMontoPeritaje").val())) {
             tools.AlertWarning("Peritaje", "Ingrese el monto del peritaje.");
             $("#txtMontoPeritaje").focus();
-        } else if ($.isEmptyObject(actualizar)) {
+        } else if ($.isEmptyObject(peritaje)) {
             tools.AlertWarning("Peritaje", "No se pudo crear el objeto por error en cargar los datos.")
         } else {
 

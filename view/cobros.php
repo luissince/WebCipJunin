@@ -234,47 +234,35 @@ if (!isset($_SESSION['IdUsuario'])) {
                                                     <i class="fa fa-plus"></i> Vitalicio
                                                 </button>
                                             </div>
-                                            <div class="col-md-5">
+                                            <div class="col-md-2">
                                                 <h4 class="text-info" id="lblCuotasMensaje">
                                                     Cuotas Ordinarias
                                                 </h4>
                                             </div>
-                                        </div>
-                                        <div class="row">
-                                            <div class="col-md-6">
-                                                <div class="checkbox">
-                                                    <label>
-                                                        <input type="checkbox" id="selectall" checked> Seleccionar todo
-                                                    </label>
-                                                </div>
-                                            </div>
-                                            <div class="col-md-6 text-right">
-                                                <button id="btnAddCuota" type="button" class="btn btn-danger">
-                                                    <i class="fa fa-plus"></i> Add
+                                            <div class="col-md-3 text-right">
+                                                <button id="btnAddCuota" type="button" class="btn btn-warning">
+                                                    <i class="fa fa-plus"></i> Agregar
                                                 </button>
                                             </div>
                                         </div>
+                                        
                                         <div class="row">
-                                            <div class="col-md-12" style="width:100%; height: 35px;">
+                                            <div class="col-md-12" style="width:100%;  overflow-x: auto;height:260px">
                                                 <table class="table table-striped table-hover">
                                                     <thead>
                                                         <tr>
-                                                            <th style="width: 73%;">Cuota del Mes</th>
-                                                            <th>Monto</th>
+                                                            <th width="70%">Cuota del Mes</th>
+                                                            <th width="15%">Monto</th>
+                                                            <th width="15%">Quitar</th>
                                                         </tr>
                                                     </thead>
-                                                </table>
-                                            </div>
-                                        </div>
-                                        <div class="row" style="overflow-x: auto; height:260px">
-                                            <div class="col-md-12">
-                                                <table class="table table-striped table-hover">
                                                     <tbody id="tbCuotas">
 
                                                     </tbody>
                                                 </table>
                                             </div>
                                         </div>
+
                                         <div class="row no-padding border" style="background-color: #337ab7;color:white;">
                                             <div class="col-md-12 text-center">
                                                 <h4 id="lblTotalCuotas" class="no-margin margin-5px">TOTAL DE CUOTAS: 0.00</h4>
@@ -1211,9 +1199,11 @@ if (!isset($_SESSION['IdUsuario'])) {
                 certificadoHabilidadEstado = false;
                 certificadoResidenciaObraEstado = false;
                 certificadoProyectoEstado = false;
+                peritajeEstado = false;
                 certificadoHabilidad = {};
                 certificadoResidenciaObra = {};
                 certificadoProyecto = {};
+                peritajeEstado = {};
                 $("#btnCertificado").attr('aria-expanded', 'false');
                 $("#tbHistorial").empty();
             }

@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 <?php
 session_start();
 
@@ -63,64 +62,7 @@ if (!isset($_SESSION['IdUsuario'])) {
                                                     <option value="100">Ingresos Diversos</option>
                                                 </select>
                                             </div>
-=======
-<!DOCTYPE html>
-<html lang="en">
 
-<head>
-    <?php include('./layout/head.php'); ?>
-
-</head>
-
-<body class="hold-transition skin-blue sidebar-mini">
-    <div class="wrapper">
-
-        <!-- start header -->
-        <?php include('./layout/header.php') ?>
-        <!-- end header -->
-        <!-- start menu -->
-        <?php include('./layout/menu.php') ?>
-        <!-- end menu -->
-        <!-- Content Wrapper. Contains page content -->
-        <div class="content-wrapper" style="background-color: #FFFFFF;">
-            <!-- Main content -->
-            <section class="content-header">
-                <h3 class="no-margin"> Conceptos de cobros <small> Lista </small> </h3>
-            </section>
-
-            <!-- Modal -->
-            <div class="row">
-                <div class="modal fade" id="confirmar">
-                    <div class="modal-dialog">
-                        <div class="modal-content">
-                            <div class="modal-header">
-                                <button type="button" class="close" id="btnCloseModal">
-                                    <i class="fa fa-close"></i>
-                                </button>
-                                <h4 class="modal-title">
-                                    <i class="fa fa-list-alt">
-                                    </i> Registrar Concepto
-                                </h4>
-                            </div>
-                            <div class="modal-body">
-
-                                <div class="row">
-                                    <div class="col-md-8">
-                                        <div class="form-group">
-                                            <label for="categoria">Categoria: <i class="fa fa-fw fa-asterisk text-danger"></i></label>
-                                            <select id="cbCategoria" class="form-control">
-                                                <option value="0">- - Seleccione - -</option>
-                                                <option value="1">Cuota ordinaria</option>
-                                                <option value="2">Cuota ordinaria (Admistia)</option>
-                                                <option value="3">Cuota ordinaria (Vitalicio)</option>
-                                                <option value="4">Colegiatura</option>
-                                                <option value="5">Certificado de habilidad</option>
-                                                <option value="6">Certificado de residencia de obra</option>
-                                                <option value="7">Certificado de Proyecto</option>
-                                                <option value="8">Peritaje</option>
-                                                <option value="100">Ingresos Diversos</option>
-                                            </select>
->>>>>>> c8010c2e76c45e25b15a63cf71ff23204529b2d4
                                         </div>
                                         <div class="col-md-4">
                                             <div class="form-group">
@@ -157,38 +99,10 @@ if (!isset($_SESSION['IdUsuario'])) {
                                             </div>
                                         </div>
                                     </div>
-<<<<<<< HEAD
                                     <div class="row">
                                         <div class="col-md-12">
                                             <p>Referido a: <i class="fa fa-fw fa-asterisk text-danger"></i></p>
-=======
-                                </div>
-                                <div class="row">
-                                    <div class="col-md-12">
-                                        <p>Referido a: <i class="fa fa-fw fa-asterisk text-danger"></i></p>
-                                    </div>
-                                    <div class="col-md-6 col-sm-12 col-xs-12">
-                                        <div class="form-group">
-                                            <input type="radio" id="rbJunin" name="referido" value="" checked="checked">
-                                            <label for="rbJunin">CIP Junin</label>
-                                        </div>
-                                    </div>
-                                    <div class="col-md-6 col-sm-12 col-xs-12">
-                                        <div class="form-group">
-                                            <input type="radio" id="rbNacional" name="referido" value="1">
-                                            <label for="rbNacional">CIP Nacional</label>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="row">
-                                    <div class="col-md-12">
-                                        <p>Modalidad de ingeniero: <i class="fa fa-fw fa-asterisk text-danger"></i></p>
-                                    </div>
-                                    <div class="col-md-6 col-sm-12 col-xs-12">
-                                        <div class="form-group">
-                                            <input type="radio" id="precio_ordinario" name="espesifico" value="0" checked="checked">
-                                            <label for="precio_ordinario">Precio Ordinario</label>
->>>>>>> c8010c2e76c45e25b15a63cf71ff23204529b2d4
+
                                         </div>
                                         <div class="col-md-6 col-sm-12 col-xs-12">
                                             <div class="form-group">
@@ -203,7 +117,6 @@ if (!isset($_SESSION['IdUsuario'])) {
                                             </div>
                                         </div>
                                     </div>
-<<<<<<< HEAD
                                     <div class="row">
                                         <div class="col-md-12">
                                             <p>Modalidad de ingeniero: <i class="fa fa-fw fa-asterisk text-danger"></i></p>
@@ -231,12 +144,6 @@ if (!isset($_SESSION['IdUsuario'])) {
                                                 <input type="radio" id="precio_variable" name="espesifico" value="128">
                                                 <label for="precio_variable">Precio Variable</label>
                                             </div>
-=======
-                                    <div class="col-md-6 col-sm-12 col-xs-12">
-                                        <div class="form-group">
-                                            <input type="radio" id="precio_variable" name="espesifico" value="128">
-                                            <label for="precio_variable">Precio Variable</label>
->>>>>>> c8010c2e76c45e25b15a63cf71ff23204529b2d4
                                         </div>
                                     </div>
                                     <div class="row">
@@ -248,7 +155,6 @@ if (!isset($_SESSION['IdUsuario'])) {
                                         </div>
                                     </div>
                                 </div>
-<<<<<<< HEAD
                                 <div class="modal-footer">
                                     <div class="col-md-6 col-sm-6 col-xs-12">
                                         <p class="text-left text-danger">Todos los campos marcados con <i class="fa fa-fw fa-asterisk text-danger"></i> son obligatorios</p>
@@ -259,20 +165,7 @@ if (!isset($_SESSION['IdUsuario'])) {
                                         <button type="button" class="btn btn-primary" id="btnCancelarModal">
                                             <i class="fa fa-remove"></i> Cancelar</button>
                                     </div>
-=======
-                            </div>
-                            <div class="modal-footer">
-                                <div class="col-md-6 col-sm-6 col-xs-12">
-                                    <p class="text-left text-danger">Todos los campos marcados con <i class="fa fa-fw fa-asterisk text-danger"></i> son obligatorios</p>
                                 </div>
-                                <div class="col-md-6 col-sm-6 col-xs-12">
-                                    <button type="button" class="btn btn-warning" id="btnAceptarModal">
-                                        <i class="fa fa-check"></i> Aceptar</button>
-                                    <button type="button" class="btn btn-primary" id="btnCancelarModal">
-                                        <i class="fa fa-remove"></i> Cancelar</button>
->>>>>>> c8010c2e76c45e25b15a63cf71ff23204529b2d4
-                                </div>
-                                </form>
                             </div>
                         </div>
                     </div>
@@ -281,7 +174,6 @@ if (!isset($_SESSION['IdUsuario'])) {
 
                 <section class="content">
 
-<<<<<<< HEAD
                     <div class="row">
                         <div class="col-md-2 col-sm-12 col-xs-12">
                             <div class="form-group">
@@ -290,15 +182,6 @@ if (!isset($_SESSION['IdUsuario'])) {
                                     <i class="fa fa-plus"></i> Nuevo Concepto
                                 </button>
                             </div>
-=======
-                <div class="row">
-                    <div class="col-md-2 col-sm-12 col-xs-12">
-                        <div class="form-group">
-                            <!-- <button type="button" class="btn btn-danger" data-toggle="modal" data-target="#confirmar"> -->
-                            <button type="button" class="btn btn-danger" id="btnNuevo">
-                                <i class="fa fa-plus"></i> Nuevo Concepto
-                            </button>
->>>>>>> c8010c2e76c45e25b15a63cf71ff23204529b2d4
                         </div>
 
                         <div class="col-md-2 col-sm-12 col-xs-12">
@@ -323,8 +206,6 @@ if (!isset($_SESSION['IdUsuario'])) {
                             </div>
                         </div>
                     </div>
-
-<<<<<<< HEAD
                     <div class="row">
                         <div class="col-md-12 col-sm-12 col-xs-12">
                             <div class="table-responsive">
@@ -345,28 +226,6 @@ if (!isset($_SESSION['IdUsuario'])) {
                                     </tbody>
                                 </table>
                             </div>
-=======
-                <div class="row">
-                    <div class="col-md-12 col-sm-12 col-xs-12">
-                        <div class="table-responsive">
-                            <table class="table table-striped" style="border-width: 1px;border-style: dashed;border-color: #E31E25;">
-                                <thead style="background-color: #FDB2B1;color: #B72928;">
-                                    <th style="text-align: center;">#</th>
-                                    <th>Codigo</th>
-                                    <th>Categoria</th>
-                                    <th>Concepto</th>
-                                    <th>Precio</th>
-                                    <th>Inicio/Fin</th>
-                                    <th>Especificación</th>
-                                    <th>Asignado</th>
-                                    <th>Estado</th>
-                                    <th colspan="2" style="text-align: center;">Opciones</th>
-                                </thead>
-                                <tbody id="tbTable">
-
-                                </tbody>
-                            </table>
->>>>>>> c8010c2e76c45e25b15a63cf71ff23204529b2d4
                         </div>
                     </div>
 
@@ -449,7 +308,6 @@ if (!isset($_SESSION['IdUsuario'])) {
                     }
                 });
 
-<<<<<<< HEAD
                 //-------------------------------------------------------------------
                 $("#btnNuevo").click(function() {
                     $("#confirmar").modal("show");
@@ -462,25 +320,6 @@ if (!isset($_SESSION['IdUsuario'])) {
                 });
 
                 $("#btnAceptarModal").click(function() {
-=======
-            //-------------------------------------------------------------------
-            $("#btnNuevo").click(function() {
-                $("#confirmar").modal("show");
-            });
-
-            $("#btnNuevo").on("keyup", function(event) {
-                if (event.keyCode === 13) {
-                    $("#confirmar").modal("show");
-                }
-            });
-
-            $("#btnAceptarModal").click(function() {
-                validateInsertConcepto();
-            });
-
-            $("#btnAceptarModal").on("keyup", function(event) {
-                if (event.keyCode === 13) {
->>>>>>> c8010c2e76c45e25b15a63cf71ff23204529b2d4
                     validateInsertConcepto();
                 });
 
@@ -502,19 +341,6 @@ if (!isset($_SESSION['IdUsuario'])) {
                     $("#lblEstado").html($("#estado").is(":checked") ? "Activo" : "Inactivo");
                 });
 
-<<<<<<< HEAD
-=======
-            $("#btnCancelarModal").click(function() {
-                clearModalConcepto();
-            });
-
-            $("#btnCloseModal").click(function() {
-                clearModalConcepto();
-            });
-
-            $("#estado").change(function() {
-                $("#lblEstado").html($("#estado").is(":checked") ? "Activo" : "Inactivo");
->>>>>>> c8010c2e76c45e25b15a63cf71ff23204529b2d4
             });
 
             function onEventPaginacion() {
@@ -628,70 +454,9 @@ if (!isset($_SESSION['IdUsuario'])) {
                             tbTable.append(
                                 '<tr class="text-center"><td colspan="9"><p>No se pudo cargar la información.</p></td></tr>'
                             );
-<<<<<<< HEAD
                             $("#lblPaginaActual").html(0);
                             $("#lblPaginaSiguiente").html(0);
-=======
-                            totalPaginacion = parseInt(Math.ceil((parseFloat(result.total) / parseInt(
-                                filasPorPagina))));
-                            $("#lblPaginaActual").html("0");
-                            $("#lblPaginaSiguiente").html(totalPaginacion);
-                            state = false;
-                        } else {
-                            tbTable.empty();
-                            for (let concepto of lista) {
-                                let btnUpdate =
-                                    '<button class="btn btn-success btn-sm" onclick="loadUpdateConceptos(\'' +
-                                    concepto.idConcepto + '\')">' +
-                                    '<i class="fa fa-wrench"></i> Editar' +
-                                    '</button>';
-                                let btndelete = '<button class="btn btn-warning btn-sm" onclick="DeleteConcepto(\'' + concepto.idConcepto + '\')">' +
-                                    '<i class="fa fa-trash"></i> Eliminar' +
-                                    '</button>';
 
-                                let estado = '<span class="' + (concepto.Estado == true ? "label label-success" : "label label-danger") + '">' + (concepto.Estado == true ? "Activo" : "Inactivo") + '</span>';
-
-                                let categoria = (concepto.Categoria == '1') ? 'Cuota ordinaria' :
-                                    (concepto.Categoria == '2') ? 'Cuota ordinaria (Admistia)' :
-                                    (concepto.Categoria == '3') ? 'Cuota ordinaria (Vitalicio)' :
-                                    (concepto.Categoria == '4') ? 'Colegiatura' :
-                                    (concepto.Categoria == '5') ? 'Certificado de habilidad' :
-                                    (concepto.Categoria == '6') ? 'Certificado de residencia de obra' :
-                                    (concepto.Categoria == '7') ? 'Certificado de proyecto' :
-                                    (concepto.Categoria == '8') ? 'Peritaje' : 'Ingresos Diversos';
-
-                                let propiedad =
-                                    concepto.Propiedad == "48" || concepto.Propiedad == "16" ? "Se deriva al CIP NACIONAL" :
-                                    "Se deriva al CIP JUNÍN";
-
-                                //0 cip junin
-                                //48 cip nacional
-
-                                let Asinador = concepto.Asignado == "0" ? "Precio Ordinario" :
-                                    concepto.Asignado == "1" ? "Precio Transeunte" :
-                                    concepto.Asignado == "2" ? "Precio Vitalicio" : "Precio Variable";
-
-                                tbTable.append('<tr>' +
-                                    '<td style="text-align: center;color: #2270D1;">' +
-                                    '' + concepto.Id + '' +
-                                    '</td>' +
-                                    '<td>' + concepto.Codigo + '</td>' +
-                                    '<td>' + categoria + '</td>' +
-                                    '<td>' + concepto.Concepto + '</td>' +
-                                    '<td>' + concepto.Precio + '</td>' +
-                                    '<td>' + concepto.Inicio.split(' ')[0] + '<br>' + concepto.Fin.split(' ')[0] + '</td>' +
-                                    '<td> ' + propiedad + '</td>' +
-                                    '<td>' + Asinador + '</td>' +
-                                    '<td>' + estado + '</td>' +
-                                    '<td style="text-align:right ">' + btnUpdate + '</td>' +
-                                    '<td>' + btndelete + '</td>' +
-                                    '</tr>');
-                            }
-                            totalPaginacion = parseInt(Math.ceil((parseFloat(result.total) / parseInt(
-                                filasPorPagina))));
-                            $("#lblPaginaActual").html(paginacion);
-                            $("#lblPaginaSiguiente").html(totalPaginacion);
->>>>>>> c8010c2e76c45e25b15a63cf71ff23204529b2d4
                             state = false;
                         }
                     },
@@ -766,8 +531,6 @@ if (!isset($_SESSION['IdUsuario'])) {
                         }
                     });
                 }
-<<<<<<< HEAD
-
             }
 
             function clearModalConcepto() {
@@ -814,117 +577,6 @@ if (!isset($_SESSION['IdUsuario'])) {
             }
         </script>
     </body>
-=======
-            });
-        }
-
-        function loadUpdateConceptos(idConcepto) {
-            location.href = "update_conceptos.php?idConcepto=" + idConcepto
-        }
-
-        function validateInsertConcepto() {
-            insertConcepto();
-        }
-
-        function insertConcepto() {
-            if ($("#cbCategoria").val() == "0") {
-                tools.AlertWarning("Advertencia", "Seleccione la categoría del concepto.");
-            } else if ($("#txtConcepto").val() == '' || $("#txtConcepto").val().length < 2) {
-                tools.AlertWarning("Advertencia", "Ingrese el nombre del concepto.");
-            } else if ($("#txtPrecio").val() == '' || $("#txtPrecio").val().length == 0) {
-                tools.AlertWarning("Advertencia", "Ingrese el precio del concepto.");
-            } else if ($("#txtFecha_inicio").val() == '') {
-                tools.AlertWarning("Advertencia", "Seleccione la fecha de inicio.");
-            } else if ($("#txtFecha_fin").val() == '') {
-                tools.AlertWarning("Advertencia", "Seleccione la fecha de fin.");
-            } else {
-                tools.ModalDialog("Conceptos", "¿Está seguro de continuar?", function(value) {
-                    if (value == true) {
-                        $.ajax({
-                            url: "../app/controller/ConceptoController.php",
-                            method: "POST",
-                            data: {
-                                "type": "create",
-                                "Categoria": $("#cbCategoria").val(),
-                                "Concepto": $("#txtConcepto").val(),
-                                "Precio": $("#txtPrecio").val(),
-                                "Propiedad": $("#rbJunin").is(":checked") ? 0 : 48,
-                                "Inicio": $("#txtFecha_inicio").val(),
-                                "Fin": $("#txtFecha_fin").val(),
-                                "Asignado": $("#precio_ordinario").is(":checked") ? 0 : $("#precio_transeunte").is(":checked") ? 1 : $("#precio_vitalicio").is(":checked") ? 2 : 3,
-                                "Observacion": "",
-                                "Codigo": $("#txtCodigo").val(),
-                                "Estado": $("#estado").is(":checked"),
-                            },
-                            beforeEnd: function() {
-                                clearModalConcepto();
-                                tools.ModalAlertInfo("Conceptos", "Procesando petición..");
-                            },
-                            success: function(result) {
-                                if (result.estado == 1) {
-                                    tools.AlertSuccess("Mensaje", result.message)
-                                    tools.ModalAlertSuccess("Conceptos", result.message);
-                                    $("#confirmar").modal('hide');
-                                    loadInitConceptos()
-                                } else {
-                                    tools.ModalAlertWarning("Conceptos", result.message);
-                                }
-                            },
-                            error: function(error) {
-                                tools.ModalAlertError("Conceptos", error.responseText);
-                            }
-                        });
-                    }
-                });
-            }
-
-        }
-
-        function clearModalConcepto() {
-            $("#confirmar").modal("hide");
-            $("#cbCategoria").val(0);
-            $("#txtCodigo").val(null);
-            $("#txtConcepto").val(null);
-            $("#txtPrecio").val(null);
-            $("#txtFecha_inicio").val('');
-            $("#txtFecha_fin").val('');
-            $("#rbJunin").prop('checked', 'checked');
-            $("#precio_ordinario").prop('checked', 'checked');
-            $("#estado").prop('checked', false);
-            $("#lblEstado").html("Inactivo");
-        }
-
-        function DeleteConcepto(idConcepto) {
-            tools.ModalDialog("Concepto", "¿Está seguro de continuar?", function(value){
-                if (value == true) {
-                    $.ajax({
-                    url: "../app/controller/ConceptoController.php",
-                    method: "POST",
-                    data: {
-                        "type": "deleteConcepto",
-                        "idconcepto": idConcepto,
-                    },
-                    beforeSend: function() {
-                        tools.AlertInfo("Concepto", "Procesando información.");
-                    },
-                    success: function(result) {
-                        if (result.estado == 1) {
-                            tools.AlertSuccess("Concepto", result.message);
-                            loadInitConceptos()
-                        } else {
-                            tools.AlertWarning("Concepto", result.message);
-                        }
-                    },
-                    error: function(error) {
-                        tools.AlertError("Concepto", "Error fatal: Comuniquese con el administrador del sistema");
-                    }
-                });
-                }
-            });
-        }
-    </script>
-</body>
->>>>>>> c8010c2e76c45e25b15a63cf71ff23204529b2d4
 
     </html>
 <?php }

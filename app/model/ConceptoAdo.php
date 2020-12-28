@@ -411,7 +411,7 @@ class ConceptoAdo
         }
     }
 
-    public function getUbigeo()
+    public static function getUbigeo()
     {
         try {
             $arrayUbigeo = array();

@@ -23,5 +23,23 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
     }
 
 }else if($_SERVER['REQUEST_METHOD'] == 'POST'){
-
+    if($_POST["type"] == "deleteIngreso"){
+        $result = IngresosAdo::EliminarIngreso($_POST["idIngreso"],$_POST["idUsuario"],$_POST["fecha"],$_POST["hora"],$_POST["motivo"]);
+        if ($result == "deleted") {
+            echo json_encode(array(
+                "estado" => 1,
+                "message" => "Se anuló el ingreso correctamente."
+            ));
+        }elseif($result == "anulado"){
+            echo json_encode(array(
+                "estado" => 2,
+                "message" => "El comprobante ya se encuentra anulado."
+            ));
+        } else {
+            echo json_encode(array(
+                "estado" => 0,
+                "message" => $result
+            ));
+        }
+    }
 }

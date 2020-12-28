@@ -336,7 +336,8 @@ if (!isset($_SESSION['IdUsuario'])) {
                             } else {
                                 tbTable.empty();
                                 for (let ingresos of arrayIngresos) {
-                                    let btnAnular = '<button class="btn btn-danger btn-xs" onclick="">' +
+                                    
+                                    let btnAnular = '<button class="btn btn-danger btn-xs" onclick="anularIngreso(\'' + ingresos.idIngreso + '\')">' +
                                         '<i class="fa fa-ban"></i></br>Anular' +
                                         '</button>';
                                     let btnPdf = '<button class="btn btn-default btn-xs" onclick="openPdf(\'' + ingresos.idIngreso + '\')">' +
@@ -380,7 +381,7 @@ if (!isset($_SESSION['IdUsuario'])) {
                         } else {
                             tbTable.empty();
                             tbTable.append(
-                                '<tr class="text-center"><td colspan="9"><p>'+result.mensaje+'</p></td></tr>'
+                                '<tr class="text-center"><td colspan="9"><p>' + result.mensaje + '</p></td></tr>'
                             );
                             $("#lblPaginaActual").html(0);
                             $("#lblPaginaSiguiente").html(0);
@@ -391,7 +392,7 @@ if (!isset($_SESSION['IdUsuario'])) {
                     error: function(error) {
                         tbTable.empty();
                         tbTable.append(
-                            '<tr class="text-center"><td colspan="9"><p>'+error.responseText+'</p></td></tr>'
+                            '<tr class="text-center"><td colspan="9"><p>' + error.responseText + '</p></td></tr>'
                         );
                         $("#lblPaginaActual").html(0);
                         $("#lblPaginaSiguiente").html(0);
@@ -401,10 +402,66 @@ if (!isset($_SESSION['IdUsuario'])) {
             }
 
             function facturarXml(idIngreso, estado) {
-                alertify.confirm('Ingreso', "¿Está seguro de continuar con el envío?", function() {
-                    if (estado === "C") {
+                tools.ModalDialog("Ingreso", "¿Está seguro de continuar con el envío?", function(value) {
+                    if (value == true) {
+                        if (estado === "C") {
+                            $.ajax({
+                                url: "../app/examples/boleta.php",
+                                method: "GET",
+                                data: {
+                                    "idIngreso": idIngreso
+                                },
+                                beforeSend: function() {
+                                    $("#alertIcon").empty();
+                                    $("#alertIcon").append('<i class="fa fa-refresh fa-3x text-primary"></i>');
+                                    $("#alertText").html("Firmando xml y enviando a la sunat.");
+                                    $("#btnIconCloseModal").addClass('disabled pointer-events');
+                                    $("#btnButtonAcceptModal").addClass('disabled pointer-events');
+                                    $("#modalAlert").modal('show');
+                                },
+                                success: function(result) {
+                                    let object = result;
+                                    if (object.state === true) {
+                                        if (object.accept === true) {
+                                            $("#alertIcon").empty();
+                                            $("#alertIcon").append('<i class="fa fa-exclamation-circle fa-3x text-success"></i>');
+                                            $("#alertText").html("Resultado: Código " + object.code + " " + object.description);
+                                            $("#btnIconCloseModal").removeClass('disabled pointer-events');
+                                            $("#btnButtonAcceptModal").removeClass('disabled pointer-events');
+                                            //loadInitIngresos();
+                                        } else {
+                                            $("#alertIcon").empty();
+                                            $("#alertIcon").append('<i class="fa fa-warning fa-3x text-warning"></i>');
+                                            $("#alertText").html("Resultado: Código " + object.code + " " + object.description);
+                                            $("#btnIconCloseModal").removeClass('disabled pointer-events');
+                                            $("#btnButtonAcceptModal").removeClass('disabled pointer-events');
+                                        }
+                                    } else {
+                                        $("#alertIcon").empty();
+                                        $("#alertIcon").append('<i class="fa fa-warning fa-3x text-warning"></i>');
+                                        $("#alertText").html("Resultado: Código " + object.code + " " + object.description);
+                                        $("#btnIconCloseModal").removeClass('disabled pointer-events');
+                                        $("#btnButtonAcceptModal").removeClass('disabled pointer-events');
+                                    }
+                                },
+                                error: function(error) {                              
+                                    $("#alertIcon").empty();
+                                    $("#alertIcon").append('<i class="fa fa-times-circle fa-3x text-danger "></i>');
+                                    $("#alertText").html("Error en el momento de firmar el xml, intente nuevamente o comuníquese con su proveedor del sistema.");
+                                    $("#btnIconCloseModal").removeClass('disabled pointer-events');
+                                    $("#btnButtonAcceptModal").removeClass('disabled pointer-events');
+                                }
+                            });
+                        }
+                    }
+                });
+            }
+
+            function resumenDiarioXml(idIngreso, comprobante, resumen) {                
+                tools.ModalDialog("¿Realmente Deseas Anular el Documento?", "Se anulará el documento: " + comprobante + ", y se creará el siguiente resumen individual: RC-" + resumen + "-1, estás seguro de anular el documento? los cambios no se podrán revertir!", function(value) {
+                    if (value == true) {
                         $.ajax({
-                            url: "../app/examples/boleta.php",
+                            url: "./examples/resumen.php",
                             method: "GET",
                             data: {
                                 "idIngreso": idIngreso
@@ -426,7 +483,6 @@ if (!isset($_SESSION['IdUsuario'])) {
                                         $("#alertText").html("Resultado: Código " + object.code + " " + object.description);
                                         $("#btnIconCloseModal").removeClass('disabled pointer-events');
                                         $("#btnButtonAcceptModal").removeClass('disabled pointer-events');
-                                        //loadInitIngresos();
                                     } else {
                                         $("#alertIcon").empty();
                                         $("#alertIcon").append('<i class="fa fa-warning fa-3x text-warning"></i>');
@@ -443,7 +499,6 @@ if (!isset($_SESSION['IdUsuario'])) {
                                 }
                             },
                             error: function(error) {
-                                console.log(error.responseText)
                                 $("#alertIcon").empty();
                                 $("#alertIcon").append('<i class="fa fa-times-circle fa-3x text-danger "></i>');
                                 $("#alertText").html("Error en el momento de firmar el xml, intente nuevamente o comuníquese con su proveedor del sistema.");
@@ -451,66 +506,9 @@ if (!isset($_SESSION['IdUsuario'])) {
                                 $("#btnButtonAcceptModal").removeClass('disabled pointer-events');
                             }
                         });
+
                     }
-                }, function() {
-                    //console.log("hjhj");
                 });
-
-            }
-
-            function resumenDiarioXml(idIngreso, comprobante, resumen) {
-                alertify.confirm('Ingreso', "¿Realmente Deseas Anular el Documento?", "Se anulará el documento: " + comprobante + ", y se creará el siguiente resumen individual: RC-" + resumen + "-1, estás seguro de anular el documento? los cambios no se podrán revertir!", function() {
-                    $.ajax({
-                        url: "./examples/resumen.php",
-                        method: "GET",
-                        data: {
-                            "idIngreso": idIngreso
-                        },
-                        beforeSend: function() {
-                            $("#alertIcon").empty();
-                            $("#alertIcon").append('<i class="fa fa-refresh fa-3x text-primary"></i>');
-                            $("#alertText").html("Firmando xml y enviando a la sunat.");
-                            $("#btnIconCloseModal").addClass('disabled pointer-events');
-                            $("#btnButtonAcceptModal").addClass('disabled pointer-events');
-                            $("#modalAlert").modal('show');
-                        },
-                        success: function(result) {
-                            let object = result;
-                            if (object.state === true) {
-                                if (object.accept === true) {
-                                    $("#alertIcon").empty();
-                                    $("#alertIcon").append('<i class="fa fa-exclamation-circle fa-3x text-success"></i>');
-                                    $("#alertText").html("Resultado: Código " + object.code + " " + object.description);
-                                    $("#btnIconCloseModal").removeClass('disabled pointer-events');
-                                    $("#btnButtonAcceptModal").removeClass('disabled pointer-events');
-                                } else {
-                                    $("#alertIcon").empty();
-                                    $("#alertIcon").append('<i class="fa fa-warning fa-3x text-warning"></i>');
-                                    $("#alertText").html("Resultado: Código " + object.code + " " + object.description);
-                                    $("#btnIconCloseModal").removeClass('disabled pointer-events');
-                                    $("#btnButtonAcceptModal").removeClass('disabled pointer-events');
-                                }
-                            } else {
-                                $("#alertIcon").empty();
-                                $("#alertIcon").append('<i class="fa fa-warning fa-3x text-warning"></i>');
-                                $("#alertText").html("Resultado: Código " + object.code + " " + object.description);
-                                $("#btnIconCloseModal").removeClass('disabled pointer-events');
-                                $("#btnButtonAcceptModal").removeClass('disabled pointer-events');
-                            }
-                        },
-                        error: function(error) {
-                            $("#alertIcon").empty();
-                            $("#alertIcon").append('<i class="fa fa-times-circle fa-3x text-danger "></i>');
-                            $("#alertText").html("Error en el momento de firmar el xml, intente nuevamente o comuníquese con su proveedor del sistema.");
-                            $("#btnIconCloseModal").removeClass('disabled pointer-events');
-                            $("#btnButtonAcceptModal").removeClass('disabled pointer-events');
-                        }
-                    });
-
-                }, function() {
-
-                });
-                //alert.alertConfirmation("Ventas", "¿Realmente Deseas Anular el Documento?", "Se anulará el documento: " + comprobante + ", y se creará el siguiente resumen individual: RC-" + resumen + "-1, estás seguro de anular el documento? los cambios no se podrán revertir!", function(result) {
             }
 
             function firmaMasivaXml(idIngreso) {
@@ -564,6 +562,43 @@ if (!isset($_SESSION['IdUsuario'])) {
 
             function openPdf(idIngreso) {
                 window.open("../app/sunat/pdfingresos.php?idIngreso=" + idIngreso, "_blank");
+            }
+
+            function anularIngreso(idIngreso) {
+                tools.ModalDialogInputText("Ingreso", "¿Está seguro de anular el comprobante?", function(value) {
+                    if (value.dismiss == "cancel") {                       
+                    } else if (value.value.length == 0) {
+                        tools.ModalAlertWarning("Ingreso", "No ingreso ningún motivo :(");
+                    } else {
+                        $.ajax({
+                            url: "../app/controller/IngresoController.php",
+                            method: 'POST',
+                            data: {
+                                "type": "deleteIngreso",
+                                "idIngreso": idIngreso,
+                                "idUsuario": 1,
+                                "motivo":value.value.toUpperCase(),
+                                "fecha": tools.getCurrentDate(),
+                                "hora": tools.getCurrentTime()
+                            },
+                            beforeSend: function() {
+                                tools.ModalAlertInfo("Ingreso", "Procesando petición..");
+                            },
+                            success: function(result) {                              
+                                if (result.estado == 1) {
+                                    tools.ModalAlertSuccess("Ingreso", result.message);
+                                } else if (result.estado == 2) {
+                                    tools.ModalAlertWarning("Ingreso", result.message);
+                                } else {
+                                    tools.ModalAlertWarning("Ingreso", result.message);
+                                }
+                            },
+                            error: function(error) {
+                                tools.ModalAlertError("Ingreso", "Se produjo un error: " + error.responseText);
+                            }
+                        });
+                    }
+                });
             }
         </script>
     </body>

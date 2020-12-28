@@ -61,10 +61,6 @@ function Cuotas() {
             event.preventDefault();
         });
 
-        $("#selectall").on("click", function() {
-            $(".cuotasid").attr("checked", this.checked);
-        });
-
         $("#btnAddCuota").click(function() {
             addCuotas();
         });
@@ -115,7 +111,7 @@ function Cuotas() {
             },
             beforeSend: function() {
                 $("#tbCuotas").empty();
-                $("#tbCuotas").append('<tr class="text-center"><td colspan="2"><img src="./images/spiner.gif"/><p>Cargando información.</p></td></tr>');
+                $("#tbCuotas").append('<tr class="text-center"><td colspan="3"><img src="./images/spiner.gif"/><p>Cargando información.</p></td></tr>');
                 cuotas.splice(0, cuotas.length);
             },
             success: function(result) {
@@ -124,14 +120,16 @@ function Cuotas() {
                     cuotas = result.data;
                     if (cuotas.length > 0) {
                         let totalCuotas = 0;
+                        console.log(cuotas)
                         for (let value of cuotas) {
                             let monto = 0;
                             for (let c of value.concepto) {
                                 monto += parseFloat(c.Precio);
                             }
-                            $("#tbCuotas").append('<tr >' +
-                                '<td class="no-padding"><div><label><input type="checkbox" class="cuotasid" checked> ' + tools.nombreMes(value.mes) + ' - ' + value.year + '</label></div></td>' +
-                                '<td class="no-padding">' + tools.formatMoney(monto) + '</td>' +
+                            $("#tbCuotas").append('<tr id="' + (value.mes + '-' + value.year) + '">' +
+                                '<td class="no-padding"> ' + tools.nombreMes(value.mes) + ' - ' + value.year + '</td>' +
+                                '<td class="no-padding text-center">' + tools.formatMoney(monto) + '</td>' +
+                                '<td class="no-padding text-center"><button class="btn btn-danger btn-sm" onclick="removeCuota(\'' + (value.mes + '-' + value.year) + '\')"><i class="fa fa-trash"></i></button></td>' +
                                 +'</tr>');
                             totalCuotas += parseFloat(monto);
                         }
@@ -140,24 +138,26 @@ function Cuotas() {
                             $("#lblNumeroCuotas").html("CUOTAS DEL: " + cuotas[0].mes + "/" + cuotas[0].year + " al " + cuotas[cuotas.length - 1].mes + "/" + cuotas[cuotas.length - 1].year);
                         }
                     } else {
-                        $("#tbCuotas").append('<tr class="text-center"><td colspan="2"><img src="./images/ayuda.png" width="80"/><p>Cuotas al Día has click en boton (+add) para más cuotas.</p></td></tr>');
+                        $("#tbCuotas").append('<tr class="text-center"><td colspan="3"><img src="./images/ayuda.png" width="80"/><p>Cuotas al Día has click en boton (+Agregar) para más cuotas.</p></td></tr>');
                         $("#lblTotalCuotas").html("TOTAL DE 0 CUOTAS: 0.00");
                         $("#lblNumeroCuotas").html("CUOTAS DEL: 00/0000 al 00/0000");
                     }
                 } else {
-                    console.log(result)
                     $("#tbCuotas").empty();
-                    $("#tbCuotas").append('<tr class="text-center"><td colspan="2"><p>' + result.message + '</p></td></tr>');
+                    $("#tbCuotas").append('<tr class="text-center"><td colspan="3"><p>' + result.message + '</p></td></tr>');
                     $("#lblTotalCuotas").html("TOTAL DE 0 CUOTAS: 0.00");
                     $("#lblNumeroCuotas").html("CUOTAS DEL: 00/0000 al 00/0000");
                 }
             },
             error: function(error) {
-                //  console.log(error);
                 $("#tbCuotas").empty();
-                $("#tbCuotas").append('<tr class="text-center"><p>Se produjo un error intente nuevamente o comuníquese con su proveedor.</p></td></tr>');
+                $("#tbCuotas").append('<tr class="text-center"><td colspan="3"><p>' + error.responseText + '</p></td></tr>');
             }
         });
+    }
+
+    removeCuota = function(idCuota) {
+        $("#" + idCuota).remove();
     }
 
     function validateIngresoCuotas() {

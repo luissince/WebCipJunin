@@ -7,14 +7,16 @@ include_once('../model/IngresosAdo.php');
 
 $rutaImage = __DIR__ . "/../../view/images/logologin.png";
 $title = "RESUMEN DE INGRESOS";
-$fechaIngreso = "FECHA: ".$_GET["fechaInicial"]." al ".$_GET["fechaFinal"];
-$recibos = "RECIBOS DEL : B001-000001 al B001-000002";
+$fechaIngreso = date("d-m-Y", strtotime($_GET["fechaInicial"]))." al ".date("d-m-Y", strtotime($_GET["fechaFinal"]));
+$recibos = "RECIBOS DEL : - al -";
 $totalCipJunin = 0;
 $totalCipNacional = 0;
-$resumen = IngresosAdo::ResumenIngresosPorFecha($_GET["fechaInicial"],$_GET["fechaFinal"]);
-if (!is_array($resumen)) {
-    echo $resumen;
+$result = IngresosAdo::ResumenIngresosPorFecha($_GET["fechaInicial"],$_GET["fechaFinal"]);
+if (!is_array($result)) {
+    echo $result;
 } else {
+    $resumen = $result[0];
+    $recibos = "RECIBOS DEL :".$result[1]->SerieMin."-".$result[1]->NumReciboMin." al ".$result[1]->SerieMax."-".$result[1]->NumReciboMax;
     $html = '
 <html>
 <head>
@@ -100,7 +102,7 @@ mpdf-->
             </span>
             <br>
             <span style="font-size: 10pt; color: black; font-family: sans;">
-                ' . $fechaIngreso . ' 
+                FECHA: ' . $fechaIngreso . ' 
         </span>
         </td>
     </tr>
@@ -210,8 +212,8 @@ mpdf-->
     ]);
 
     $mpdf->SetProtection(array('print'));
-    $mpdf->SetTitle("Acme Trading Co. - Invoice");
-    $mpdf->SetAuthor("Acme Trading Co.");
+    $mpdf->SetTitle("Reporte de Ingresos CIP-JUNIN");
+    $mpdf->SetAuthor("SysSoft Integra");
     $mpdf->SetWatermarkText("");
     $mpdf->showWatermarkText = true;
     $mpdf->watermark_font = 'DejaVuSansCondensed';
@@ -220,5 +222,5 @@ mpdf-->
 
     $mpdf->WriteHTML($html);
 
-    $mpdf->Output();
+    $mpdf->Output("Reporte de Ingresos CIP-JUNIN del ".$fechaIngreso.".pdf",'I');
 }

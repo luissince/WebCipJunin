@@ -600,7 +600,7 @@ body.swal2-no-backdrop>.swal2-shown.swal2-bottom-right {
     -webkit-box-pack: center;
     -ms-flex-pack: center;
     justify-content: center;
-    margin-top: 15px;
+    margin-top: 5px;
 }
 
 .swal2-popup .swal2-buttonswrapper:not(.swal2-loading) .swal2-styled[disabled] {
@@ -736,12 +736,13 @@ body.swal2-no-backdrop>.swal2-shown.swal2-bottom-right {
     width: 100%;
     -webkit-box-sizing: border-box;
     box-sizing: border-box;
-    font-size: 18px;
-    border-radius: 3px;
-    border: 1px solid #d9d9d9;
-    -webkit-box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.06);
-    box-shadow: inset 0 1px 1px rgba(0, 0, 0, 0.06);
-    -webkit-transition: border-color .3s, -webkit-box-shadow .3s;
+    font-size: 14px;
+    border-radius: 0px;
+    border: 1px solid #a9aaac;
+    background-color: #fff;
+    background-image: none;
+    color: #555;
+    line-height: 1.42857143;
     transition: border-color .3s, -webkit-box-shadow .3s;
     transition: border-color .3s, box-shadow .3s;
     transition: border-color .3s, box-shadow .3s, -webkit-box-shadow .3s;
@@ -759,33 +760,31 @@ body.swal2-no-backdrop>.swal2-shown.swal2-bottom-right {
 .swal2-popup .swal2-file:focus,
 .swal2-popup .swal2-textarea:focus {
     outline: none;
-    border: 1px solid #b4dbed;
-    -webkit-box-shadow: 0 0 3px #c4e6f5;
-    box-shadow: 0 0 3px #c4e6f5;
+    border: 1px solid #003366;
 }
 
 .swal2-popup .swal2-input::-webkit-input-placeholder,
 .swal2-popup .swal2-file::-webkit-input-placeholder,
 .swal2-popup .swal2-textarea::-webkit-input-placeholder {
-    color: #cccccc;
+    color: #999999;
 }
 
 .swal2-popup .swal2-input:-ms-input-placeholder,
 .swal2-popup .swal2-file:-ms-input-placeholder,
 .swal2-popup .swal2-textarea:-ms-input-placeholder {
-    color: #cccccc;
+    color: #999999;
 }
 
 .swal2-popup .swal2-input::-ms-input-placeholder,
 .swal2-popup .swal2-file::-ms-input-placeholder,
 .swal2-popup .swal2-textarea::-ms-input-placeholder {
-    color: #cccccc;
+    color: #999999;
 }
 
 .swal2-popup .swal2-input::placeholder,
 .swal2-popup .swal2-file::placeholder,
 .swal2-popup .swal2-textarea::placeholder {
-    color: #cccccc;
+    color: #999999;
 }
 
 .swal2-popup .swal2-range input {
@@ -811,8 +810,8 @@ body.swal2-no-backdrop>.swal2-shown.swal2-bottom-right {
 }
 
 .swal2-popup .swal2-input {
-    height: 43px;
-    padding: 0 12px;
+    height: 34px;
+    padding: 6px 12px;
 }
 
 .swal2-popup .swal2-input[type='number'] {
@@ -863,7 +862,7 @@ body.swal2-no-backdrop>.swal2-shown.swal2-bottom-right {
 }
 
 .swal2-popup .swal2-validationerror {
-    background-color: #f0f0f0;
+    background-color: #ffffff;
     margin: 0 -20px;
     overflow: hidden;
     padding: 10px;

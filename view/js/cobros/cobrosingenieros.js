@@ -7,19 +7,9 @@ function CobroIngenieros() {
     let filasPorPaginacionHistorial = 10;
     let tbHistorial = $("#tbHistorial");
 
-<<<<<<< HEAD
     this.componentesIngenieros = function() {
         $("#btnIngenieros").click(function(event) {
             $('#mdIngenieros').modal('show');
-=======
-    this.componentesIngenieros = function () {
-        $("#btnIngenieros").click(function (event) {
-            $('#mdIngenieros').modal('show');        
-        });
-
-        $('#mdIngenieros').on('shown.bs.modal', function () {
-            $('#txtBuscarIngeniero').focus();
->>>>>>> c8010c2e76c45e25b15a63cf71ff23204529b2d4
             loadInitIngenieros();
         });
 
@@ -31,15 +21,11 @@ function CobroIngenieros() {
             event.preventDefault();
         });
 
-<<<<<<< HEAD
         $('#mdIngenieros').on('shown.bs.modal', function() {
             $('#txtBuscarIngeniero').focus();
         });
 
         $("#txtBuscarIngeniero").on("keyup", function(event) {
-=======
-        $("#txtBuscarIngeniero").on("keyup", function (event) {
->>>>>>> c8010c2e76c45e25b15a63cf71ff23204529b2d4
             if (event.keyCode === 13) {
                 if (!state) {
                     paginacion = 1;
@@ -193,21 +179,10 @@ function CobroIngenieros() {
                 tools.AlertInfo("Ingeniero", "En proceso de busqueda.", "toast-bottom-right");
                 $("#tbHistorial").append('<tr class="text-center"><td colspan="7"><img src="./images/spiner.gif"/><p>cargando información.</p></td></tr>');
             },
-<<<<<<< HEAD
             success: function(data) {
                 if (data.estado === 1) {
                     $("#tbHistorial").empty();
                     idDNI = data.persona.idDNI;
-
-=======
-            success: function (data) {
-                console.log(data)
-                if (data.estado === 1) {
-                    $("#tbHistorial").empty();
-                    idDNI = data.persona.idDNI;
-                    Ingeniero = data.persona.Nombres+', '+data.persona.Apellidos
-                    condiccion = data.persona.Condicion;
->>>>>>> c8010c2e76c45e25b15a63cf71ff23204529b2d4
                     let Condicion = data.persona.Condicion ==
                         'T' ? 'Transeunte' :
                         data.persona.Condicion == 'F' ? 'Fallecido' :
@@ -222,31 +197,7 @@ function CobroIngenieros() {
                     $("#txtIngenieroObra").val(data.persona.Apellidos + " " + data.persona.Nombres);
                     $("#txtIngenieroProyecto").val(data.persona.Apellidos + " " + data.persona.Nombres);
 
-<<<<<<< HEAD
                     onSelectedHistorial(idDNI);
-=======
-
-                    for (let Historial of data.historial) {
-                        let Concepto = Historial.Concepto == 1 ? 'Cuota Ordinaria' :
-                            Historial.Concepto == 2 ? 'Cuota Ordinaria (Amnistia)' :
-                                Historial.Concepto == 3 ? 'Cuota Ordinaria (Vitalicio)' :
-                                    Historial.Concepto == 4 ? 'Colegiatura' :
-                                        Historial.Concepto == 5 ? 'Certificado de habilidad' :
-                                            Historial.Concepto == 6 ? 'Cuota de residencia de obra' :
-                                                Historial.Concepto == 7 ? 'Certificado de proyecto' :
-                                                    Historial.Concepto == 8 ? 'Peritaje' : 'Ingresos Diversos';
-
-                        $("#tbHistorial").append('<tr>' +
-                            '<td>' + Historial.Id + '</td>' +
-                            '<td>' + Historial.Recibo + '</td>' +
-                            '<td>' + Historial.Fecha + '</td>' +
-                            '<td>' + Concepto + '</td>' +
-                            '<td>' +"S/ " +Historial.Monto + '</td>' +
-                            '<td>' + Historial.Observacion + '</td>' +
-                            '</tr>');
-                    }
-
->>>>>>> c8010c2e76c45e25b15a63cf71ff23204529b2d4
                     tools.AlertSuccess("Ingeniero", "Los obtuvo los datos correctamente.", "toast-bottom-right");
 
                 } else {
@@ -299,14 +250,14 @@ function CobroIngenieros() {
             },
             beforeSend: function() {
                 tbHistorial.empty()
-                tbHistorial.append('<tr class="text-center"><td colspan="6"><img src="./images/spiner.gif"/><p>Cargando información.</p></td></tr>');
+                tbHistorial.append('<tr class="text-center"><td colspan="7"><img src="./images/spiner.gif"/><p>Cargando información.</p></td></tr>');
                 stateHistorial = true;
             },
             success: function(result) {
                 if (result.estado == 1) {
                     tbHistorial.empty()
                     if (result.historial.length == 0) {
-                        tbHistorial.append('<tr class="text-center"><td colspan="6"><p>No hay datos para mostrar.</p></td></tr>');
+                        tbHistorial.append('<tr class="text-center"><td colspan="7"><p>No hay datos para mostrar.</p></td></tr>');
                         totalPaginacionHistorial = 0;
                         $("#lblPaginaActual").html(paginacionHistorial);
                         $("#lblPaginaSiguiente").html(totalPaginacionHistorial);
@@ -353,15 +304,14 @@ function CobroIngenieros() {
                         stateHistorial = false;
                     }
                 } else {
-
                     tbHistorial.empty()
-                    tbHistorial.append('<tr class="text-center"><td colspan="6"><p>' + result.message + '</p></td></tr>');
+                    tbHistorial.append('<tr class="text-center"><td colspan="7"><p>' + result.message + '</p></td></tr>');
                     stateHistorial = false;
                 }
             },
             error: function(error) {
                 tbHistorial.empty()
-                tbHistorial.append('<tr class="text-center"><td colspan="6"><p>' + error.responseText + '</p></td></tr>');
+                tbHistorial.append('<tr class="text-center"><td colspan="7"><p>' + error.responseText + '</p></td></tr>');
                 stateHistorial = false;
             }
         });
