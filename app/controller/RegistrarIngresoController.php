@@ -10,10 +10,14 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $body = json_decode(file_get_contents("php://input"), true);
     //$search = $_GET['search'];
     $result = IngresosAdo::RegistrarIngresos($body);
-    if($result === "inserted"){
+    if($result[0] === "inserted"){
         print json_encode(array(
             "estado" => 1,
-            "mensaje" => "Se completo correctamento el ingreso."
+            "mensaje" => "Se completo correctamento el ingreso.",
+            "idIngreso" => $result[1],
+            "cerHabilidad" => $result[2],
+            "cerObra" => $result[3],
+            "cerProyecto" => $result[4],
         ));
     }else{
         print json_encode(array(

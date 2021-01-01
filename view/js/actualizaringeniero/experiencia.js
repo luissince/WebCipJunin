@@ -1,6 +1,6 @@
 function Experiencia() {
 
-    this.loadExperiencia = function (idDni) {
+    this.loadExperiencia = function(idDni) {
         $.ajax({
             url: "../app/controller/PersonaController.php",
             method: "GET",
@@ -8,15 +8,15 @@ function Experiencia() {
                 type: "getexperiencia",
                 idDni: idDni
             },
-            beforeSend: function () {
+            beforeSend: function() {
                 $("#tbExperiencia").empty();
-                $("#tbExperiencia").append('<tr class="text-center"><td colspan="5"><img src="./images/spiner.gif"/><p>cargando información.</p></td></tr>');
+                $("#tbExperiencia").append('<tr class="text-center"><td colspan="6"><img src="./images/spiner.gif"/><p>cargando información.</p></td></tr>');
             },
-            success: function (result) {
+            success: function(result) {
                 if (result.estado == 1) {
                     $("#tbExperiencia").empty();
                     if (result.data.length == 0) {
-                        $("#tbExperiencia").append('<tr class="text-center"><td colspan="5"><p>No tiene registrado ninguna experiencia.</p></td></tr>');
+                        $("#tbExperiencia").append('<tr class="text-center"><td colspan="6"><p>No tiene registrado ninguna experiencia.</p></td></tr>');
                     } else {
                         for (let experiencia of result.data) {
 
@@ -41,24 +41,24 @@ function Experiencia() {
                     }
                 } else {
                     $("#tbExperiencia").empty();
-                    $("#tbExperiencia").append('<tr class="text-center"><td colspan="5"><p>' + result.message + '</p></td></tr>');
+                    $("#tbExperiencia").append('<tr class="text-center"><td colspan="6"><p>' + result.message + '</p></td></tr>');
                 }
             },
-            error: function (error) {
+            error: function(error) {
                 $("#tbExperiencia").empty();
-                $("#tbExperiencia").append('<tr class="text-center"><td colspan="5"><p>Se produjo un error interno, comuniquese on el administrador del sistema.</p></td></tr>');
+                $("#tbExperiencia").append('<tr class="text-center"><td colspan="6"><p>Se produjo un error interno, comuniquese on el administrador del sistema.</p></td></tr>');
             }
         });
     }
 
-    this.loadAddExperiencia = function () {
+    this.loadAddExperiencia = function() {
         $("#txtEntidad").val('');
         $("#txtExperiencia").val('');
         $("#FechaInicio").val(null);
         $("#FechaFin").val(null);
     }
 
-    this.crudExperiencia = function () {
+    this.crudExperiencia = function() {
 
         if ($("#txtEntidad").val() == '') {
             tools.AlertWarning('Experiencia', "Ingrese una entidad valida");
@@ -84,21 +84,21 @@ function Experiencia() {
                     "fechaInicio": $("#FechaInicio").val(),
                     "fechaFin": $("#FechaFin").val(),
                 },
-                beforeSend: function () {
+                beforeSend: function() {
                     tools.AlertInfo("Experiencia", "Procesando información.");
                 },
-                success: function (result) {
+                success: function(result) {
                     if (result.estado == 1) {
                         $("#addExperiencia").modal("hide");
                         tools.AlertSuccess("Experiencia", "Se registro correctamente.");
                         modelExperiencia.loadExperiencia($("#dni").val());
                     } else if (result.estado == 3) {
-                        tools.AlertWarning("Experiencia",  result.message);
+                        tools.AlertWarning("Experiencia", result.message);
                     } else {
                         tools.AlertWarning("Experiencia", "Error al tratar de registrar los datos " + result.message);
                     }
                 },
-                error: function (error) {
+                error: function(error) {
                     tools.AlertError("Experiencia", "Error fatal: Comuniquese con el administrador del sistema");
                 }
             });
@@ -123,7 +123,7 @@ function updateExperiencia(Id, Entidad, Experiencia, Inicio, Fin) {
     //     console.log('diste click');
     //     // AceptarUpdate(idCapitulo, idEspecialidad);
     // });
-    $("#EbtnAceptarExperiencia").bind('click', function () {
+    $("#EbtnAceptarExperiencia").bind('click', function() {
         AceptarUpdateExperiencia(Id);
     });
 }
@@ -147,22 +147,21 @@ function AceptarUpdateExperiencia(Id) {
                 "Inicio": $("#EFechaInicio").val(),
                 "Fin": $('#EFechaFin').val(),
             },
-            beforeSend: function () {
+            beforeSend: function() {
                 tools.AlertInfo("Experiencia", "Procesando información.");
             },
-            success: function (result) {
+            success: function(result) {
                 if (result.estado == 1) {
                     $("#editExperiencia").modal("hide");
                     tools.AlertSuccess("Experiencia", "Se actualizo correctamente.");
                     modelExperiencia.loadExperiencia($("#dni").val());
                 } else if (result.estado == 2) {
                     tools.AlertWarning("Experiencia", result.message);
-                }
-                else {
+                } else {
                     tools.AlertWarning("Experiencia", "Error al tratar de actualizar los datos " + result.message);
                 }
             },
-            error: function (error) {
+            error: function(error) {
                 tools.AlertError("Experiencia", "Error fatal: Comuniquese con el administrador del sistema");
             }
         });
@@ -176,7 +175,7 @@ function DeleteExperiencia(Id) {
 
     $("#btnDeleteExperiencia").unbind();
 
-    $("#btnDeleteExperiencia").bind("click", function () {
+    $("#btnDeleteExperiencia").bind("click", function() {
         $.ajax({
             url: "../app/controller/PersonaController.php",
             method: "POST",
@@ -184,10 +183,10 @@ function DeleteExperiencia(Id) {
                 "type": "deleteExperiencia",
                 "idExperiencia": idExperiencia,
             },
-            beforeSend: function () {
+            beforeSend: function() {
                 tools.AlertInfo("Experiencia", "Procesando información.");
             },
-            success: function (result) {
+            success: function(result) {
                 if (result.estado == 1) {
                     tools.AlertSuccess("Experiencia", result.message);
                     $("#deleteExperiencia").modal("hide");
@@ -196,7 +195,7 @@ function DeleteExperiencia(Id) {
                     tools.AlertWarning("Experiencia", result.message);
                 }
             },
-            error: function (error) {
+            error: function(error) {
                 tools.AlertError("Experiencia", "Error fatal: Comuniquese con el administrador del sistema");
             }
         });

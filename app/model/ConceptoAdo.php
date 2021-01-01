@@ -70,18 +70,19 @@ class ConceptoAdo
     public static function getId($idConcepto)
     {
         try {
+            $object = null;
             $comandoConcepto = Database::getInstance()->getDb()->prepare("SELECT 
                 idConcepto,
                 Categoria,
                 Concepto,
                 Precio,
                 Propiedad,
-                convert(VARCHAR,cast(Inicio as date),103) AS Inicio,
-                convert(VARCHAR,cast(Fin as date),103) AS Fin,
+                cast(Inicio as date) as Inicio,
+                cast(Fin as date) as Fin,
                 Observacion,
                 Codigo,
                 Estado,
-                Asignado             
+                Asignado       
             FROM Concepto WHERE idConcepto = ?");
             $comandoConcepto->bindParam(1, $idConcepto, PDO::PARAM_STR);
             $comandoConcepto->execute();
@@ -190,7 +191,10 @@ class ConceptoAdo
 
             $cmdConcepto = Database::getInstance()->getDb()->prepare("SELECT idConcepto,Categoria,Concepto,Precio FROM Concepto WHERE Categoria = 5 AND Estado = 1");
             $cmdConcepto->execute();
-            $resultConcepto = $cmdConcepto->fetchAll();
+            $resultConcepto = $cmdConcepto->fetchObject();
+            if (!$resultConcepto) {
+                throw new Exception('No se encontro ningún concepto para obtener.');
+            }
 
             $cmdEspecialidad = Database::getInstance()->getDb()->prepare("SELECT c.idColegiado, c.idEspecialidad, e.Especialidad FROM Colegiatura AS c 
                 INNER JOIN Especialidad AS e ON e.idEspecialidad = c.idEspecialidad where c.idDNI = ?");
@@ -206,18 +210,26 @@ class ConceptoAdo
                 ));
             }
 
-            $Persona = Database::getInstance()->getDb()->prepare("SELECT CONCAT(Nombres,' ' ,Apellidos) AS Persona FROM Persona WHERE idDNI = ?");
-            $Persona->bindParam(1, $dni, PDO::PARAM_STR);
-            $Persona->execute();
-
-            $arrayPersona = array();
-            while ($row = $Persona->fetch()) {
-                array_push($arrayPersona, array(
-                    "Persona" => $row["Persona"]
-                ));
+            if (empty($arrayEspecialidades)) {
+                throw new Exception('Error en cargar en las espcialidad(es).');
             }
 
-            array_push($array, $resultConcepto, $arrayEspecialidades, $arrayPersona);
+            $cmdUltimoPago = Database::getInstance()->getDb()->prepare("SELECT 
+            cast(ISNULL(ul.FechaUltimaCuota, c.FechaColegiado)as date) as UltimoPago     
+            from Persona as p inner join Colegiatura as c
+            on p.idDNI = c.idDNI and c.Principal = 1
+            left outer join ULTIMACuota as ul
+            on p.idDNI = ul.idDNI
+            WHERE p.idDNI = ?");
+            $cmdUltimoPago->bindParam(1, $dni, PDO::PARAM_STR);
+            $cmdUltimoPago->execute();
+            $resultPago = $cmdUltimoPago->fetchColumn();
+
+            $date = new DateTime($resultPago);
+            $date->modify('+3 month');
+            $date->modify('last day of this month');            
+
+            array_push($array, $resultConcepto, $arrayEspecialidades, $date->format('Y-m-d'));
             return $array;
         } catch (Exception $ex) {
             return $ex->getMessage();
@@ -232,6 +244,9 @@ class ConceptoAdo
             $cmdConcepto = Database::getInstance()->getDb()->prepare("SELECT idConcepto,Categoria,Concepto, Precio FROM Concepto WHERE Categoria = 6 AND Estado = 1");
             $cmdConcepto->execute();
             $resultConcepto = $cmdConcepto->fetchObject();
+            if (!$resultConcepto) {
+                throw new Exception('No se encontro ningún concepto para obtener.');
+            }
 
             $cmdEspecialidad = Database::getInstance()->getDb()->prepare("SELECT c.idColegiado, c.idEspecialidad, e.Especialidad FROM Colegiatura AS c 
                 INNER JOIN Especialidad AS e ON e.idEspecialidad = c.idEspecialidad where c.idDNI = ?");
@@ -247,7 +262,42 @@ class ConceptoAdo
                 ));
             }
 
-            array_push($array, $resultConcepto, $arrayEspecialidades);
+            if (empty($arrayEspecialidades)) {
+                throw new Exception('Error en cargar en las espcialidad(es).');
+            }
+
+            $cmdUltimoPago = Database::getInstance()->getDb()->prepare("SELECT 
+            cast(ISNULL(ul.FechaUltimaCuota, c.FechaColegiado)as date) as UltimoPago     
+            from Persona as p inner join Colegiatura as c
+            on p.idDNI = c.idDNI and c.Principal = 1
+            left outer join ULTIMACuota as ul
+            on p.idDNI = ul.idDNI
+            WHERE p.idDNI = ?");
+            $cmdUltimoPago->bindParam(1, $dni, PDO::PARAM_STR);
+            $cmdUltimoPago->execute();
+            $resultPago = $cmdUltimoPago->fetchColumn();
+
+            $date = new DateTime($resultPago);
+            $date->modify('+3 month');
+            $date->modify('last day of this month');     
+            
+            $arrayUbigeo = array();
+            $cmdUbigeo = Database::getInstance()->getDb()->prepare(" SELECT idUbigeo, CONCAT(Departamento, ' - ', Provincia, ' - ', 
+            Distrito) AS Ubicacion FROM Ubigeo ");
+            $cmdUbigeo->execute();
+
+            while ($row = $cmdUbigeo->fetch()) {
+                array_push($arrayUbigeo, array(
+                    'IdUbicacion' => $row['idUbigeo'],
+                    'Ubicacion' => $row['Ubicacion'],
+                ));
+            }
+
+            if (empty($arrayUbigeo)) {
+                throw new Exception('Error en cargar el ubigeo.');
+            }
+
+            array_push($array, $resultConcepto, $arrayEspecialidades,$date->format('Y-m-d'),$arrayUbigeo);
             return $array;
         } catch (Exception $ex) {
             return $ex->getMessage();
@@ -262,6 +312,9 @@ class ConceptoAdo
             $cmdConcepto = Database::getInstance()->getDb()->prepare("SELECT idConcepto,Categoria,Concepto, Precio FROM Concepto WHERE Categoria = 7 AND Estado = 1");
             $cmdConcepto->execute();
             $resultConcepto = $cmdConcepto->fetchObject();
+            if (!$resultConcepto) {
+                throw new Exception('No se encontro ningún concepto para obtener.');
+            }
 
             $cmdEspecialidad = Database::getInstance()->getDb()->prepare("SELECT c.idColegiado, c.idEspecialidad, e.Especialidad FROM Colegiatura AS c 
                 INNER JOIN Especialidad AS e ON e.idEspecialidad = c.idEspecialidad where c.idDNI = ?");
@@ -277,7 +330,42 @@ class ConceptoAdo
                 ));
             }
 
-            array_push($array, $resultConcepto, $arrayEspecialidades);
+            if (empty($arrayEspecialidades)) {
+                throw new Exception('Error en cargar en las espcialidad(es).');
+            }
+
+            $cmdUltimoPago = Database::getInstance()->getDb()->prepare("SELECT 
+            cast(ISNULL(ul.FechaUltimaCuota, c.FechaColegiado)as date) as UltimoPago     
+            from Persona as p inner join Colegiatura as c
+            on p.idDNI = c.idDNI and c.Principal = 1
+            left outer join ULTIMACuota as ul
+            on p.idDNI = ul.idDNI
+            WHERE p.idDNI = ?");
+            $cmdUltimoPago->bindParam(1, $dni, PDO::PARAM_STR);
+            $cmdUltimoPago->execute();
+            $resultPago = $cmdUltimoPago->fetchColumn();
+
+            $date = new DateTime($resultPago);
+            $date->modify('+3 month');
+            $date->modify('last day of this month'); 
+
+            $arrayUbigeo = array();
+            $cmdUbigeo = Database::getInstance()->getDb()->prepare(" SELECT idUbigeo, CONCAT(Departamento, ' - ', Provincia, ' - ', 
+            Distrito) AS Ubicacion FROM Ubigeo ");
+            $cmdUbigeo->execute();
+
+            while ($row = $cmdUbigeo->fetch()) {
+                array_push($arrayUbigeo, array(
+                    'IdUbicacion' => $row['idUbigeo'],
+                    'Ubicacion' => $row['Ubicacion'],
+                ));
+            }
+
+            if (empty($arrayUbigeo)) {
+                throw new Exception('Error en cargar el ubigeo.');
+            }
+
+            array_push($array, $resultConcepto, $arrayEspecialidades,$date->format('Y-m-d'),$arrayUbigeo);
             return $array;
         } catch (Exception $ex) {
             return $ex->getMessage();
@@ -291,11 +379,15 @@ class ConceptoAdo
             $cmdConcepto = Database::getInstance()->getDb()->prepare($cmdPeritaje);
             $cmdConcepto->execute();
             $resultConcepto = $cmdConcepto->fetchObject();
+            if (!$resultConcepto) {
+                throw new Exception('No se encontro ningún concepto para obtener.');
+            }
             return $resultConcepto;
         } catch (Exception $ex) {
             return $ex->getMessage();
         }
     }
+
 
     public static function getOtrosConceptos()
     {
@@ -319,7 +411,7 @@ class ConceptoAdo
         }
     }
 
-    public function getUbigeo()
+    public static function getUbigeo()
     {
         try {
             $arrayUbigeo = array();

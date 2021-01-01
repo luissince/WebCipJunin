@@ -6,7 +6,8 @@ function Tools() {
     }
 
     this.getDateYYMMDD = function(value) {
-        var parts = value.split("-");
+        var parts = value.split("/");
+        console.log(value)
         return parts[0] + parts[1] + parts[2];
     }
 
@@ -137,6 +138,23 @@ function Tools() {
             }
         });
     }
+
+    this.ModalDialogInputText = function(title, mensaje, callback) {
+        swal({
+            title: title,
+            text: mensaje,
+            input: 'text',
+            inputPlaceholder: 'Ingrese un el motivo de la anulación',
+            type: 'question',
+            showCancelButton: true,
+            confirmButtonText: "Si",
+            cancelButtonText: "No",
+            allowOutsideClick: false,
+        }).then((isConfirm) => {
+            callback(isConfirm)
+        });
+    }
+
 
     this.ModalAlertSuccess = function(title, message) {
         swal({ title: title, text: message, type: "success", showConfirmButton: true, allowOutsideClick: false });

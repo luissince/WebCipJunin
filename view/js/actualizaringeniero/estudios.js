@@ -9,19 +9,19 @@ function Estudios() {
             },
             beforeSend: function() {
                 $("#tbGradosyExperiencia").empty();
-                $("#tbGradosyExperiencia").append('<tr class="text-center"><td colspan="5"><img src="./images/spiner.gif"/><p>cargando información.</p></td></tr>');
+                $("#tbGradosyExperiencia").append('<tr class="text-center"><td colspan="6"><img src="./images/spiner.gif"/><p>cargando información.</p></td></tr>');
             },
             success: function(result) {
                 if (result.estado == 1) {
                     $("#tbGradosyExperiencia").empty();
                     if (result.data.length == 0) {
-                        $("#tbGradosyExperiencia").append('<tr class="text-center"><td colspan="5"><p>No tiene registrado ningun grado o estudio.</p></td></tr>');
+                        $("#tbGradosyExperiencia").append('<tr class="text-center"><td colspan="6"><p>No tiene registrado ningun grado o estudio.</p></td></tr>');
                     } else {
                         for (let gradosyestudios of result.data) {
 
                             let btnUpdate = '<button class="btn btn-success btn-sm" onclick="updateEstudios(\'' + gradosyestudios.IdEstudio + '\',\'' +
-                            gradosyestudios.IdTipo + '\',\'' + gradosyestudios.Materia + '\',\'' + gradosyestudios.IdUniversidad + '\',\'' +
-                            gradosyestudios.Fecha + '\')">' +
+                                gradosyestudios.IdTipo + '\',\'' + gradosyestudios.Materia + '\',\'' + gradosyestudios.IdUniversidad + '\',\'' +
+                                gradosyestudios.Fecha + '\')">' +
                                 '<i class="fa fa-wrench"></i> Editar' +
                                 '</button>';
 
@@ -41,13 +41,13 @@ function Estudios() {
                     }
                 } else {
                     $("#tbGradosyExperiencia").empty();
-                    $("#tbGradosyExperiencia").append('<tr class="text-center"><td colspan="5"><p>' + result.message + '</p></td></tr>');
+                    $("#tbGradosyExperiencia").append('<tr class="text-center"><td colspan="6"><p>' + result.message + '</p></td></tr>');
                 }
 
             },
             error: function(error) {
                 $("#tbGradosyExperiencia").empty();
-                $("#tbGradosyExperiencia").append('<tr class="text-center"><td colspan="5"><p>Se produjo un error interno, comuniquese on el administrador del sistema.</p></td></tr>');
+                $("#tbGradosyExperiencia").append('<tr class="text-center"><td colspan="6"><p>Se produjo un error interno, comuniquese on el administrador del sistema.</p></td></tr>');
             }
         });
     }
@@ -120,9 +120,9 @@ function Estudios() {
                         $("#addGradosyEstudios").modal("hide");
                         tools.AlertSuccess("Estudios", "Se registro correctamente.");
                         modelEstudios.loadGradosyEstudios($("#dni").val());
-                    } else if(result.estado == 3){
+                    } else if (result.estado == 3) {
                         tools.AlertWarning("Estudios", result.message);
-                    }else {
+                    } else {
                         tools.AlertWarning("Estudios", "Error al tratar de registrar los datos " + result.message);
                     }
                 },
@@ -183,7 +183,7 @@ function updateEstudios(Id, Tipo, Materia, Universidad, Fecha) {
     //     console.log('diste click');
     //     // AceptarUpdate(idCapitulo, idEspecialidad);
     // });
-    $("#EbtnAceptarEstudios").bind('click', function () {
+    $("#EbtnAceptarEstudios").bind('click', function() {
         AceptarUpdateEstudios(Id);
     });
 }
@@ -204,22 +204,21 @@ function AceptarUpdateEstudios(Id) {
                 "universidad": $("#EselectUniversidad").val(),
                 "fecha": $("#EfechaEstudios").val(),
             },
-            beforeSend: function () {
+            beforeSend: function() {
                 tools.AlertInfo("Estudios", "Procesando información.");
             },
-            success: function (result) {
+            success: function(result) {
                 if (result.estado == 1) {
                     $("#editarGradosyEstudios").modal("hide");
                     tools.AlertSuccess("Estudios", "Se actualizo correctamente.");
                     modelEstudios.loadGradosyEstudios($("#dni").val());
                 } else if (result.estado == 2) {
                     tools.AlertWarning("Estudios", result.message);
-                }
-                else {
+                } else {
                     tools.AlertWarning("Estudios", "Error al tratar de actualizar los datos " + result.message);
                 }
             },
-            error: function (error) {
+            error: function(error) {
                 tools.AlertError("Estudios", "Error fatal: Comuniquese con el administrador del sistema");
             }
         });
@@ -233,7 +232,7 @@ function DeleteEstudios(Id) {
 
     $("#btnDeleteEstudio").unbind();
 
-    $("#btnDeleteEstudio").bind("click", function () {
+    $("#btnDeleteEstudio").bind("click", function() {
         $.ajax({
             url: "../app/controller/PersonaController.php",
             method: "POST",
@@ -241,10 +240,10 @@ function DeleteEstudios(Id) {
                 "type": "deleteEstudio",
                 "idestudio": idEstudio,
             },
-            beforeSend: function () {
+            beforeSend: function() {
                 tools.AlertInfo("Estudio", "Procesando información.");
             },
-            success: function (result) {
+            success: function(result) {
                 if (result.estado == 1) {
                     tools.AlertSuccess("Estudio", result.message);
                     $("#deleteEstudio").modal("hide");
@@ -253,7 +252,7 @@ function DeleteEstudios(Id) {
                     tools.AlertWarning("Estudio", result.message);
                 }
             },
-            error: function (error) {
+            error: function(error) {
                 tools.AlertError("Estudio", "Error fatal: Comuniquese con el administrador del sistema");
             }
         });

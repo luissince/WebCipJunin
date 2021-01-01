@@ -1,4 +1,4 @@
- <!-- Left side column. contains the logo and sidebar -->
+  <!-- Left side column. contains the logo and sidebar -->
  <aside class="main-sidebar">
      <!-- sidebar: style can be found in sidebar.less -->
      <section class="sidebar">
@@ -9,7 +9,7 @@
              </div>
 
              <div class="pull-left info">
-                 <p>{{ Auth::user()->Usuario }}</p>
+                 <p><?= $_SESSION["Nombre"]  ?></p>
                  <a href="#"><i class="fa fa-circle text-success"></i> Online</a>
              </div>
          </div>
@@ -28,38 +28,70 @@
          <!-- sidebar menu: : style can be found in sidebar.less -->
          <ul class="sidebar-menu" data-widget="tree">
              <li class="header">Opciones</li>
-             <li>
-                 <a href="./"><i class="fa fa-home"></i> <span>Inicio</span></a>
-             </li>
-             <li>
-                 <a href="./usuario.php"><i class="fa fa-laptop"></i> <span>Usuarios</span></a>
-             </li>
-             <li>
-                 <a href="./roles.php"><i class="fa fa-table"></i> <span>Roles</span></a>
-             </li>
-             <li>
-                 <a href="./ingresos.php"><i class="fa fa-sitemap"></i><span>Ingresos</span></a>
-             </li>
-             <li>
-                 <a href="./capitulos.php"><i class="fa fa-clone"></i><span>Capítulos</span></a>
-             </li>
-             <li>
-                 <a href="./universidad.php"><i class="fa fa-bank"></i><span>Universidades</span></a>
-             </li>
-             <li>
-                 <a href="./conceptos.php"><i class="fa fa fa-list-alt"></i><span>Conceptos</span></a>
-             </li>
-             <li>
-                 <a href="./ingenieros.php"><i class="fa fa-user"></i> <span>Ingenieros</span></a>
-             </li>
-             <li>
-                 <a href="./cobros.php"><i class="fa fa-money"></i><span>Cobros</span></a>
-             </li>
-             <li>
-                 <a href="./reportes.php"><i class="fa fa-bar-chart"></i><span>Reportes</span></a>
-             </li>
+             <?php
+                if ($_SESSION["Permisos"][0]["ver"] == 1) {                    
+                    print '<li>
+                    <a href="./"><i class="fa fa-home"></i> <span>Inicio</span></a>
+                </li>';
+                }
 
-
+                if ($_SESSION["Permisos"][1]["ver"] == 1) {
+                    print ' <li>
+                    <a href="./usuario.php"><i class="fa fa-laptop"></i> <span>Usuarios</span></a>
+                </li>';
+                }
+                if ($_SESSION["Permisos"][2]["ver"] == 1) {
+                    print '<li>
+                    <a href="./roles.php"><i class="fa fa-table"></i> <span>Roles</span></a>
+                </li>';
+                }
+                if ($_SESSION["Permisos"][3]["ver"] == 1) {
+                print '<li class="treeview">
+                    <a href="#">
+                        <i class="fa fa-sitemap"></i> <span>Documentos</span>
+                        <span class="pull-right-container">
+                            <i class="fa fa-angle-left pull-right"></i>
+                        </span>
+                    </a>
+                    <ul class="treeview-menu">
+                        <li><a href="./ingresos.php"><i class="fa fa-circle-o"></i> Ingresos</a></li>
+                        <li><a href="./certHabilidad.php"><i class="fa fa-circle-o"></i> Certificado de Habilidad</a></li>
+                        <li><a href="./certObra.php"><i class="fa fa-circle-o"></i> Certificado de Obra</a></li>
+                        <li><a href="./certProyecto.php"><i class="fa fa-circle-o"></i> Certificado de Proyecto</a></li>
+                    </ul>
+                </li>';
+                }
+                if ($_SESSION["Permisos"][4]["ver"] == 1) {
+                    print '<li>
+                    <a href="./capitulos.php"><i class="fa fa-clone"></i><span>Capítulos</span></a>
+                </li>';
+                }
+                if ($_SESSION["Permisos"][5]["ver"] == 1) {
+                    print '  <li>
+                    <a href="./universidad.php"><i class="fa fa-bank"></i><span>Universidades</span></a>
+                </li>';
+                }
+                if ($_SESSION["Permisos"][6]["ver"] == 1) {
+                    print ' <li>
+                    <a href="./conceptos.php"><i class="fa fa fa-list-alt"></i><span>Conceptos</span></a>
+                </li>';
+                }
+                if ($_SESSION["Permisos"][7]["ver"] == 1) {
+                    print '<li>
+                    <a href="./ingenieros.php"><i class="fa fa-user"></i> <span>Ingenieros</span></a>
+                </li>';
+                }
+                if ($_SESSION["Permisos"][8]["ver"] == 1) {
+                    print '<li>
+                    <a href="./cobros.php"><i class="fa fa-money"></i><span>Cobros</span></a>
+                </li>';
+                }
+                if ($_SESSION["Permisos"][9]["ver"] == 1) {
+                    print '  <li>
+                    <a href="./reportes.php"><i class="fa fa-bar-chart"></i><span>Reportes</span></a>
+                </li>';
+                }
+                ?>
+              
      </section>
-     <!-- /.sidebar -->
  </aside>

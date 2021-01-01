@@ -48,15 +48,3 @@
 <script src="js/sweetalert.min.js"></script>
 <script src="js/toastr.min.js"></script>
 
-<style>
-       @font-face {
-              font-family: "SourceSansPro-SemiBold";
-              src: url("./fonts/SourceSansPro-SemiBold.ttf");
-       }
-
-       body {
-              font-family: 'SourceSansPro-SemiBold';
-              font-style: normal;
-              font-weight: normal;
-       }
-</style>

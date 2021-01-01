@@ -35,6 +35,24 @@ class RolAdo
         }
     }
 
+    public static function getRoles()
+    {
+        try {
+            $array = array();
+            $comandoRoles = Database::getInstance()->getDb()->prepare("SELECT idRol,Nombre FROM Rol
+            ORDER BY idRol ASC");
+            $comandoRoles->execute();
+            while ($row = $comandoRoles->fetch()) {
+                array_push($array, array(
+                    "IdRol" => $row["idRol"],
+                    "Nombre" => $row["Nombre"]
+                ));
+            }
+            return $array;
+        } catch (Exception $ex) {
+            return $ex->getMessage();
+        }
+    }
 
     public static function insertRol($rol)
     {

@@ -14,10 +14,11 @@ class UsuarioAdo
         try {
             $array = array();
             $arrayUsuarios = array();
-            $comandoUsuarios = Database::getInstance()->getDb()->prepare("SELECT idUsuario, upper(Nombres) AS Nombres, upper(Apellidos) AS Apellidos, 
-            upper(Usuario) AS Usuario, Clave FROM Usuario 
-            where Nombres like concat('%', ?,'%') or Apellidos like concat('%', ?,'%') or Usuario like concat('%', ?,'%')
-            ORDER BY idUsuario ASC
+            $comandoUsuarios = Database::getInstance()->getDb()->prepare("SELECT 
+            u.idUsuario, upper(u.Nombres) AS Nombres, upper(u.Apellidos) AS Apellidos, 
+            upper(u.Usuario) AS Usuario, u.Clave,r.Nombre as Rol FROM Usuario as u INNER JOIN Rol AS r ON r.idRol = u.Rol
+            where u.Nombres like concat('%', ?,'%') or u.Apellidos like concat('%', ?,'%') or u.Usuario like concat('%', ?,'%')
+            ORDER BY u.idUsuario ASC
             offset ? rows fetch next ? rows only");
             $comandoUsuarios->bindParam(1, $nombres, PDO::PARAM_STR);
             $comandoUsuarios->bindParam(2, $nombres, PDO::PARAM_STR);
@@ -34,12 +35,14 @@ class UsuarioAdo
                     "Nombres" => $row["Nombres"],
                     "Apellidos" => $row["Apellidos"],
                     "Usuario" => $row["Usuario"],
-                    "Clave" => $row["Clave"]
+                    "Clave" => $row["Clave"],
+                    "Rol"=>$row["Rol"]
                 ));
             }
 
-            $comandoTotal = Database::getInstance()->getDb()->prepare("SELECT COUNT(*) FROM Usuario 
-            where Nombres like concat('%',?,'%') or Apellidos like concat('%',?,'%')");
+            $comandoTotal = Database::getInstance()->getDb()->prepare("SELECT COUNT(*) 
+            FROM Usuario as u INNER JOIN Rol AS r ON r.idRol = u.Rol 
+            where u.Nombres like concat('%',?,'%') or u.Apellidos like concat('%',?,'%')");
             $comandoTotal->bindParam(1, $nombres, PDO::PARAM_STR);
             $comandoTotal->bindParam(2, $nombres, PDO::PARAM_STR);
             $comandoTotal->execute();
@@ -71,12 +74,13 @@ class UsuarioAdo
                     Database::getInstance()->getDb()->rollback();
                     return "duplicado";
                 } else {
-                    $comandoInsert = Database::getInstance()->getDb()->prepare("UPDATE Usuario SET Nombres = UPPER(?), Apellidos = UPPER(?), Usuario = UPPER(?), Clave = ? WHERE idUsuario = ?");
+                    $comandoInsert = Database::getInstance()->getDb()->prepare("UPDATE Usuario SET Nombres = UPPER(?), Apellidos = UPPER(?), Usuario = UPPER(?), Clave = ?,Rol=? WHERE idUsuario = ?");
                     $comandoInsert->bindParam(1, $usuario["nombres"], PDO::PARAM_STR);
                     $comandoInsert->bindParam(2, $usuario["apellidos"], PDO::PARAM_STR);
                     $comandoInsert->bindParam(3, $usuario["usuarios"], PDO::PARAM_STR);
                     $comandoInsert->bindParam(4, $usuario["contrasena"], PDO::PARAM_STR);
-                    $comandoInsert->bindParam(5, $usuario["idusuario"], PDO::PARAM_INT);
+                    $comandoInsert->bindParam(5, $usuario["rol"], PDO::PARAM_INT);
+                    $comandoInsert->bindParam(6, $usuario["idusuario"], PDO::PARAM_INT);
                     $comandoInsert->execute();
                     Database::getInstance()->getDb()->commit();
                     return "actualizado";
@@ -91,11 +95,12 @@ class UsuarioAdo
                     Database::getInstance()->getDb()->rollback();
                     return "duplicado";
                 } else {
-                    $comandoInsert = Database::getInstance()->getDb()->prepare("INSERT INTO Usuario (Nombres, Apellidos, Usuario,Clave,Estado,Sistema) VALUES (UPPER(?), UPPER(?), UPPER(?), ?,1,0)");
+                    $comandoInsert = Database::getInstance()->getDb()->prepare("INSERT INTO Usuario (Nombres, Apellidos, Usuario,Clave,Rol,Estado,Sistema) VALUES (UPPER(?), UPPER(?), UPPER(?), ?, ?, 1, 0)");
                     $comandoInsert->bindParam(1, $usuario["nombres"], PDO::PARAM_STR);
                     $comandoInsert->bindParam(2, $usuario["apellidos"], PDO::PARAM_STR);
                     $comandoInsert->bindParam(3, $usuario["usuarios"], PDO::PARAM_STR);
                     $comandoInsert->bindParam(4, $usuario["contrasena"], PDO::PARAM_STR);
+                    $comandoInsert->bindParam(5, $usuario["rol"], PDO::PARAM_INT);
                     $comandoInsert->execute();
                     Database::getInstance()->getDb()->commit();
                     return "insertado";
@@ -153,16 +158,34 @@ class UsuarioAdo
 
     public static function login($usuario, $clave)
     {
-
         try {
-            $cmdLogin = Database::getInstance()->getDb()->prepare("SELECT * FROM Usuario WHERE Usuario = ? AND Clave = ?");
+            $array = array();
+            $cmdLogin = Database::getInstance()->getDb()->prepare("SELECT u.idUsuario,u.Nombres,u.Apellidos,u.Usuario,u.Rol,r.Nombre,u.Estado,u.Sistema FROM Usuario as u  inner join Rol as r
+            on u.Rol = r.idRol 
+            WHERE u.Usuario = ? AND u.Clave = ?");
             $cmdLogin->bindParam(1, $usuario, PDO::PARAM_STR);
             $cmdLogin->bindParam(2, $clave, PDO::PARAM_STR);
             $cmdLogin->execute();
-
-            $result = $cmdLogin->fetchObject();
-            // $result = $cmdLogin->fetch();
-            return $result;
+            $usuario = $cmdLogin->fetchObject();
+            if ($usuario) {
+                $cmdPermisos = Database::getInstance()->getDb()->prepare("SELECT * FROM Permiso where idRol = ?");
+                $cmdPermisos->bindParam(1, $usuario->Rol, PDO::PARAM_INT);
+                $cmdPermisos->execute();
+                $arrayPermisos = array();
+                while ($row = $cmdPermisos->fetch()) {
+                    array_push($arrayPermisos, array(
+                        "idModulo" => $row["idModulo"],
+                        "ver" => $row["ver"],
+                        "crear" => $row["crear"],
+                        "actualizar" => $row["actualizar"],
+                        "eliminar" => $row["eliminar"]
+                    ));
+                }
+                array_push($array, $usuario, $arrayPermisos);
+                return $array;
+            } else {
+                return false;
+            }
         } catch (Exception $ex) {
             return $ex->getMessage();
         }

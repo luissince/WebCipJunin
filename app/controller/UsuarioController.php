@@ -29,18 +29,19 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
         $clave = $_GET['clave'];
 
         $result = UsuarioAdo::login($usuario, $clave);
-        if (is_object($result)) {
+        if (is_array($result)) {
             session_start();
-            $_SESSION["IdUsuario"] = $result->idUsuario;
-            $_SESSION["Nombres"] = $result->Nombres;
-            $_SESSION["Apellidos"] = $result->Apellidos;
-            $_SESSION["Usuario"] = $result->Usuario;
-            $_SESSION["Permisos"] = $result->Permisos;
-            $_SESSION["Estado"] = $result->Estado;
-            $_SESSION["Sistema"] = $result->Sistema;
+            $_SESSION["IdUsuario"] = $result[0]->idUsuario;
+            $_SESSION["Nombres"] = $result[0]->Nombres;
+            $_SESSION["Apellidos"] = $result[0]->Apellidos;
+            $_SESSION["Usuario"] = $result[0]->Usuario;
+            $_SESSION["Nombre"] = $result[0]->Nombre;
+            $_SESSION["Estado"] = $result[0]->Estado;
+            $_SESSION["Sistema"] = $result[0]->Sistema;
+            $_SESSION["Permisos"] = $result[1];
             echo json_encode(array(
                 "estado" => 1,
-                "datos" => $result,
+                "datos" => $result[0],
             ));
         } else if ($result == false) {
             echo json_encode(array(
@@ -74,6 +75,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
         $usuario["apellidos"] = trim($_POST['apellidos']);
         $usuario["usuarios"] = trim($_POST['usuarios']);
         $usuario["contrasena"] = $_POST['contrasena'];
+        $usuario["rol"] = $_POST['rol'];
+
         $result = UsuarioAdo::insertUsuario($usuario);
         if ($result == "insertado") {
             echo json_encode(array(
