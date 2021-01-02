@@ -309,6 +309,7 @@ if (!isset($_SESSION['IdUsuario'])) {
                     url: "../app/controller/ListarIngresos.php",
                     method: "GET",
                     data: {
+                        "type": "allIngresos",
                         "posicionPagina": ((paginacion - 1) * filasPorPagina),
                         "filasPorPagina": filasPorPagina
                     },

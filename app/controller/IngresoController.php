@@ -41,5 +41,59 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
                 "message" => $result
             ));
         }
+    } else if($_POST["type"] == "deleteCertHabilidad"){
+        $result = IngresosAdo::EliminarCertHabilidad($_POST["idIngreso"],$_POST["idUsuario"],$_POST["fecha"],$_POST["hora"],$_POST["motivo"]);
+        if ($result == "deleted") {
+            echo json_encode(array(
+                "estado" => 1,
+                "message" => "Se anuló el certificado correctamente."
+            ));
+        }elseif($result == "anulado"){
+            echo json_encode(array(
+                "estado" => 2,
+                "message" => "El certificado ya se encuentra anulado."
+            ));
+        } else {
+            echo json_encode(array(
+                "estado" => 0,
+                "message" => $result
+            ));
+        }
+    } else if($_POST["type"] == "deleteCertObra"){
+        $result = IngresosAdo::EliminarCertObra($_POST["idIngreso"],$_POST["idUsuario"],$_POST["fecha"],$_POST["hora"],$_POST["motivo"]);
+        if ($result == "deleted") {
+            echo json_encode(array(
+                "estado" => 1,
+                "message" => "Se anuló el certificado correctamente."
+            ));
+        }elseif($result == "anulado"){
+            echo json_encode(array(
+                "estado" => 2,
+                "message" => "El certificado ya se encuentra anulado."
+            ));
+        } else {
+            echo json_encode(array(
+                "estado" => 0,
+                "message" => $result
+            ));
+        }
+    } else if($_POST["type"] == "deleteCertProyecto"){
+        $result = IngresosAdo::EliminarCertProyecto($_POST["idIngreso"],$_POST["idUsuario"],$_POST["fecha"],$_POST["hora"],$_POST["motivo"]);
+        if ($result == "deleted") {
+            echo json_encode(array(
+                "estado" => 1,
+                "message" => "Se anuló el certificado correctamente."
+            ));
+        }elseif($result == "anulado"){
+            echo json_encode(array(
+                "estado" => 2,
+                "message" => "El certificado ya se encuentra anulado."
+            ));
+        } else {
+            echo json_encode(array(
+                "estado" => 0,
+                "message" => $result
+            ));
+        }
     }
 }

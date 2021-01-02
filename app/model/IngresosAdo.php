@@ -61,6 +61,150 @@ class IngresosAdo
         }
     }
 
+    public function ListarCertificadosHabilidad($posicionPagina, $filasPorPagina)
+    {
+        try {
+            $array = array();
+            $arrayCertHabilidad = array();
+            $cmdCertHabilidad = Database::getInstance()->getDb()->prepare("SELECT p.idDNI, p.Nombres,p.Apellidos, e.Especialidad, ch.Numero, ch.Asunto, ch.Entidad, ch.Lugar, convert(VARCHAR, CAST(ch.Fecha AS DATE),103) AS Fecha, convert(VARCHAR, CAST(ch.HastaFecha AS DATE),103) AS HastaFecha, ch.idIngreso,ch.Anulado AS Estado from CERTHabilidad AS ch
+            INNER JOIN Ingreso AS i ON i.idIngreso = ch.idIngreso
+            INNER JOIN Persona AS p On p.idDNI = i.idDNI
+            INNER JOIN Especialidad AS e On e.idEspecialidad = ch.idColegiatura");
+            $cmdCertHabilidad->bindParam(1, $posicionPagina, PDO::PARAM_INT);
+            $cmdCertHabilidad->bindParam(2, $filasPorPagina, PDO::PARAM_INT);
+            $cmdCertHabilidad->execute();
+            $count = 0;
+
+            while ($row = $cmdCertHabilidad->fetch()) {
+                $count++;
+                array_push($arrayCertHabilidad, array(
+                    "id" => $count + $posicionPagina,
+                    "idIngreso" => $row["idIngreso"],
+                    "dni" => $row["idDNI"],
+                    "usuario" => $row["Nombres"],
+                    "apellidos" => $row["Apellidos"],
+                    "especialidad" => $row["Especialidad"],
+                    "numCertificado" => $row["Numero"],
+                    "asunto" => $row["Asunto"],
+                    "entidad" => $row["Entidad"],
+                    "lugar" => $row["Lugar"],
+                    "fechaPago" => $row["Fecha"],
+                    "fechaVencimiento" => $row["HastaFecha"],
+                    "estado" => ($row["Estado"] == 0 ) ? 'Activo' : 'Anulado',
+                ));
+            }
+
+            $comandoTotal = Database::getInstance()->getDb()->prepare("SELECT COUNT(*) FROM CERTHabilidad");
+            $comandoTotal->execute();
+            $resultTotal =  $comandoTotal->fetchColumn();
+
+            array_push($array, $arrayCertHabilidad, $resultTotal);
+            return $array;
+        } catch (PDOException $ex) {
+            return $ex->getMessage();
+        }
+    }
+
+    public function ListarCertificadosProyecto($posicionPagina, $filasPorPagina)
+    {
+        try {
+            $array = array();
+            $arrayCertProyecto = array();
+            $cmdCertProyecto = Database::getInstance()->getDb()->prepare("SELECT p.idDNI, p.Nombres,p.Apellidos, e.Especialidad, cp.Numero, cp.Modalidad, cp.Propietario, 
+            cp.Proyecto, cp.Monto, CONCAT(U.Departamento,'-',U.Provincia,'-', u.Distrito) AS Ubigeo, ISNULL(cp.Adicional1,'N/D') AS Adicional1, ISNULL(cp.Adicional2,'N/D') AS Adicional2, 
+            convert(VARCHAR, CAST(cp.Fecha AS DATE),103) AS Fecha, convert(VARCHAR, CAST(cp.HastaFecha AS DATE),103) AS HastaFecha, cp.idIngreso, cp.Anulado AS Estado  from CERTProyecto AS cp
+            INNER JOIN Ingreso AS i ON i.idIngreso = cp.idIngreso
+            INNER JOIN Persona AS p On p.idDNI = i.idDNI
+            INNER JOIN Especialidad AS e On e.idEspecialidad = cp.idColegiatura
+            INNER JOIN Ubigeo AS u ON u.IdUbigeo = cp.idUbigeo");
+            $cmdCertProyecto->bindParam(1, $posicionPagina, PDO::PARAM_INT);
+            $cmdCertProyecto->bindParam(2, $filasPorPagina, PDO::PARAM_INT);
+            $cmdCertProyecto->execute();
+            $count = 0;
+
+            while ($row = $cmdCertProyecto->fetch()) {
+                $count++;
+                array_push($arrayCertProyecto, array(
+                    "id" => $count + $posicionPagina,
+                    "idIngreso" => $row["idIngreso"],
+                    "dni" => $row["idDNI"],
+                    "usuario" => $row["Nombres"],
+                    "apellidos" => $row["Apellidos"],
+                    "especialidad" => $row["Especialidad"],
+                    "numCertificado" => $row["Numero"],
+                    "modalidad" => $row["Modalidad"],
+                    "propietario" => $row["Propietario"],
+                    "proyecto" => $row["Proyecto"],
+                    "monto" => $row["Monto"],
+                    "ubigeo" => $row["Ubigeo"],
+                    "adicional1" => $row["Adicional1"],
+                    "adicional2" => $row["Adicional2"],
+                    "fechaPago" => $row["Fecha"],
+                    "fechaVencimiento" => $row["HastaFecha"],
+                    "estado" => ($row["Estado"] == 0 ) ? 'Activo' : 'Anulado',
+                ));
+            }
+
+            $comandoTotal = Database::getInstance()->getDb()->prepare("SELECT COUNT(*) FROM CERTProyecto");
+            $comandoTotal->execute();
+            $resultTotal =  $comandoTotal->fetchColumn();
+
+            array_push($array, $arrayCertProyecto, $resultTotal);
+            return $array;
+        } catch (PDOException $ex) {
+            return $ex->getMessage();
+        }
+    }
+
+    public function ListarCertificadosObra($posicionPagina, $filasPorPagina)
+    {
+        try {
+            $array = array();
+            $arrayCertObra = array();
+            $cmdCertObra = Database::getInstance()->getDb()->prepare("SELECT p.idDNI, p.Nombres,p.Apellidos, e.Especialidad, cr.Numero, cr.Modalidad, cr.Propietario, 
+            cr.Proyecto, cr.Monto, CONCAT(u.Departamento,'-',u.Provincia,'-', u.Distrito) AS Ubigeo, convert(VARCHAR, CAST(cr.Fecha AS DATE),103) AS Fecha, 
+            convert(VARCHAR, CAST(cr.HastaFecha AS DATE),103) AS HastaFecha, cr.idIngreso, cr.Anulado AS Estado from CERTResidencia AS cr
+            INNER JOIN Ingreso AS i ON i.idIngreso = cr.idIngreso
+            INNER JOIN Persona AS p On p.idDNI = i.idDNI
+            INNER JOIN Especialidad AS e On e.idEspecialidad = cr.idColegiatura
+            INNER JOIN Ubigeo AS u ON u.IdUbigeo = cr.idUbigeo");
+            $cmdCertObra->bindParam(1, $posicionPagina, PDO::PARAM_INT);
+            $cmdCertObra->bindParam(2, $filasPorPagina, PDO::PARAM_INT);
+            $cmdCertObra->execute();
+            $count = 0;
+
+            while ($row = $cmdCertObra->fetch()) {
+                $count++;
+                array_push($arrayCertObra, array(
+                    "id" => $count + $posicionPagina,
+                    "idIngreso" => $row["idIngreso"],
+                    "dni" => $row["idDNI"],
+                    "usuario" => $row["Nombres"],
+                    "apellidos" => $row["Apellidos"],
+                    "especialidad" => $row["Especialidad"],
+                    "numCertificado" => $row["Numero"],
+                    "modalidad" => $row["Modalidad"],
+                    "propietario" => $row["Propietario"],
+                    "proyecto" => $row["Proyecto"],
+                    "monto" => $row["Monto"],
+                    "ubigeo" => $row["Ubigeo"],
+                    "fechaPago" => $row["Fecha"],
+                    "fechaVencimiento" => $row["HastaFecha"],
+                    "estado" => ($row["Estado"] == 0 ) ? 'Activo' : 'Anulado',
+                ));
+            }
+
+            $comandoTotal = Database::getInstance()->getDb()->prepare("SELECT COUNT(*) FROM CERTResidencia");
+            $comandoTotal->execute();
+            $resultTotal =  $comandoTotal->fetchColumn();
+
+            array_push($array, $arrayCertObra, $resultTotal);
+            return $array;
+        } catch (PDOException $ex) {
+            return $ex->getMessage();
+        }
+    }
+
     private static function limitar_cadena($cadena, $limite, $sufijo)
     {
         if (strlen($cadena) > $limite) {
@@ -73,6 +217,8 @@ class IngresosAdo
     {
         try {
             Database::getInstance()->getDb()->beginTransaction();
+
+            $array = array();
 
             $codigoSerieNumeracion = Database::getInstance()->getDb()->prepare("SELECT dbo.Fc_Serie_Numero(?)");
             $codigoSerieNumeracion->bindParam(1, $body["idTipoDocumento"], PDO::PARAM_STR);
@@ -188,14 +334,16 @@ class IngresosAdo
                 $cmdDetalle->execute();
             }
             Database::getInstance()->getDb()->commit();
-            return "inserted";
+
+            array_push($array, "inserted", $idIngreso, $body["estadoCertificadoHabilidad"], $body["estadoCertificadoResidenciaObra"], $body["estadoCertificadoProyecto"]);
+            return $array;
         } catch (PDOException $ex) {
             Database::getInstance()->getDb()->rollBack();
             return $ex->getMessage();
         }
     }
 
-    public static function EliminarIngreso($idIngreso,$idUsuario,$fecha,$hora,$motivo)
+    public static function EliminarIngreso($idIngreso, $idUsuario, $fecha, $hora, $motivo)
     {
         try {
             Database::getInstance()->getDb()->beginTransaction();
@@ -234,6 +382,105 @@ class IngresosAdo
                 $cmdProyecto = Database::getInstance()->getDb()->prepare("UPDATE CERTProyecto SET Anulado = 1 WHERE idIngreso = ?");
                 $cmdProyecto->bindParam(1, $idIngreso, PDO::PARAM_INT);
                 $cmdProyecto->execute();
+
+                Database::getInstance()->getDb()->commit();
+                return "deleted";
+            }
+        } catch (PDOException $ex) {
+            Database::getInstance()->getDb()->rollBack();
+            return $ex->getMessage();
+        }
+    }
+
+    public static function EliminarCertHabilidad($idIngreso, $idUsuario, $fecha, $hora, $motivo)
+    {
+        try {
+            Database::getInstance()->getDb()->beginTransaction();
+
+            $cmdValidate = Database::getInstance()->getDb()->prepare("SELECT * FROM CERTHabilidad WHERE idIngreso = ? AND  Anulado = '1'");
+            $cmdValidate->bindParam(1, $idIngreso, PDO::PARAM_INT);
+            $cmdValidate->execute();
+            if ($cmdValidate->fetch()) {
+                Database::getInstance()->getDb()->rollBack();
+                return "anulado";
+            } else {
+                $cmdDetalle = Database::getInstance()->getDb()->prepare("UPDATE CERTHabilidad SET Anulado = 1 WHERE idIngreso = ?");
+                $cmdDetalle->bindParam(1, $idIngreso, PDO::PARAM_INT);
+                $cmdDetalle->execute();
+
+                $cmdAnular = Database::getInstance()->getDb()->prepare("INSERT INTO Anulado(Tipo,idDocumento,idUsuario,Motivo,Fecha,Hora)VALUES('R',?,?,?,?,?)");
+                $cmdAnular->bindParam(1, $idIngreso, PDO::PARAM_INT);
+                $cmdAnular->bindParam(2, $idUsuario, PDO::PARAM_INT);
+                $cmdAnular->bindParam(3, $motivo, PDO::PARAM_STR);
+                $cmdAnular->bindParam(4, $fecha, PDO::PARAM_INT);
+                $cmdAnular->bindParam(5, $hora, PDO::PARAM_INT);
+                $cmdAnular->execute();
+
+                Database::getInstance()->getDb()->commit();
+                return "deleted";
+            }
+        } catch (PDOException $ex) {
+            Database::getInstance()->getDb()->rollBack();
+            return $ex->getMessage();
+        }
+    }
+
+    public static function EliminarCertObra($idIngreso, $idUsuario, $fecha, $hora, $motivo)
+    {
+        try {
+            Database::getInstance()->getDb()->beginTransaction();
+
+            $cmdValidate = Database::getInstance()->getDb()->prepare("SELECT * FROM CERTResidencia WHERE idIngreso = ? AND  Anulado = '1'");
+            $cmdValidate->bindParam(1, $idIngreso, PDO::PARAM_INT);
+            $cmdValidate->execute();
+            if ($cmdValidate->fetch()) {
+                Database::getInstance()->getDb()->rollBack();
+                return "anulado";
+            } else {
+                $cmdDetalle = Database::getInstance()->getDb()->prepare("UPDATE CERTResidencia SET Anulado = 1 WHERE idIngreso = ?");
+                $cmdDetalle->bindParam(1, $idIngreso, PDO::PARAM_INT);
+                $cmdDetalle->execute();
+
+                $cmdAnular = Database::getInstance()->getDb()->prepare("INSERT INTO Anulado(Tipo,idDocumento,idUsuario,Motivo,Fecha,Hora)VALUES('R',?,?,?,?,?)");
+                $cmdAnular->bindParam(1, $idIngreso, PDO::PARAM_INT);
+                $cmdAnular->bindParam(2, $idUsuario, PDO::PARAM_INT);
+                $cmdAnular->bindParam(3, $motivo, PDO::PARAM_STR);
+                $cmdAnular->bindParam(4, $fecha, PDO::PARAM_INT);
+                $cmdAnular->bindParam(5, $hora, PDO::PARAM_INT);
+                $cmdAnular->execute();
+
+                Database::getInstance()->getDb()->commit();
+                return "deleted";
+            }
+        } catch (PDOException $ex) {
+            Database::getInstance()->getDb()->rollBack();
+            return $ex->getMessage();
+        }
+    }
+
+    public static function EliminarCertProyecto($idIngreso, $idUsuario, $fecha, $hora, $motivo)
+    {
+        try {
+            Database::getInstance()->getDb()->beginTransaction();
+
+            $cmdValidate = Database::getInstance()->getDb()->prepare("SELECT * FROM CERTProyecto WHERE idIngreso = ? AND  Anulado = '1'");
+            $cmdValidate->bindParam(1, $idIngreso, PDO::PARAM_INT);
+            $cmdValidate->execute();
+            if ($cmdValidate->fetch()) {
+                Database::getInstance()->getDb()->rollBack();
+                return "anulado";
+            } else {
+                $cmdDetalle = Database::getInstance()->getDb()->prepare("UPDATE CERTProyecto SET Anulado = 1 WHERE idIngreso = ?");
+                $cmdDetalle->bindParam(1, $idIngreso, PDO::PARAM_INT);
+                $cmdDetalle->execute();
+
+                $cmdAnular = Database::getInstance()->getDb()->prepare("INSERT INTO Anulado(Tipo,idDocumento,idUsuario,Motivo,Fecha,Hora)VALUES('R',?,?,?,?,?)");
+                $cmdAnular->bindParam(1, $idIngreso, PDO::PARAM_INT);
+                $cmdAnular->bindParam(2, $idUsuario, PDO::PARAM_INT);
+                $cmdAnular->bindParam(3, $motivo, PDO::PARAM_STR);
+                $cmdAnular->bindParam(4, $fecha, PDO::PARAM_INT);
+                $cmdAnular->bindParam(5, $hora, PDO::PARAM_INT);
+                $cmdAnular->execute();
 
                 Database::getInstance()->getDb()->commit();
                 return "deleted";
@@ -334,6 +581,174 @@ class IngresosAdo
                 "totalconimpuesto" => $totalsinimpuesto + $impuesto,
             ));
             return $array;
+        } catch (Exception $ex) {
+            return $ex->getMessage();
+        }
+    }
+
+    public static function ObtenerDatosPdfCertHabilidad($idIngreso)
+    {
+        try{
+            $arrayCertHabilidad = array();
+            $cmdCertHabilidad = Database::getInstance()->getDb()->prepare("SELECT p.idDNI, p.Nombres,p.Apellidos, e.Especialidad, ch.Numero, ch.Asunto, ch.Entidad, ch.Lugar, convert(VARCHAR, CAST(c.FechaColegiado AS DATE),103) AS FechaIncorporacion,
+            DATEPART(DAY, (convert(VARCHAR, CAST(c.FechaColegiado AS DATE),103))) AS FIDia, DATEPART(MONTH, (convert(VARCHAR, CAST(c.FechaColegiado AS DATE),103))) AS FIMes, 
+            DATEPART(YEAR, (convert(VARCHAR, CAST(c.FechaColegiado AS DATE),103))) AS FIAnio, convert(VARCHAR, CAST(ch.Fecha AS DATE),103) AS FechaRegistro,
+            DATEPART(DAY, (convert(VARCHAR, CAST(ch.Fecha AS DATE),103))) AS FRDia, DATEPART(MONTH, (convert(VARCHAR, CAST(ch.Fecha AS DATE),103))) AS FRMes, 
+            DATEPART(YEAR, (convert(VARCHAR, CAST(ch.Fecha AS DATE),103))) AS FRAnio, 
+            convert(VARCHAR, CAST(ch.HastaFecha AS DATE),103) AS HastaFecha, DATEPART(DAY, (convert(VARCHAR, CAST(ch.HastaFecha AS DATE),103))) AS FVDia,
+            DATEPART(MONTH, (convert(VARCHAR, CAST(ch.HastaFecha AS DATE),103))) AS FVMes, DATEPART(YEAR, (convert(VARCHAR, CAST(ch.HastaFecha AS DATE),103))) AS FVAnio,
+            ch.idIngreso from CERTHabilidad AS ch
+            INNER JOIN Ingreso AS i ON i.idIngreso = ch.idIngreso
+            INNER JOIN Persona AS p On p.idDNI = i.idDNI
+            INNER JOIN Especialidad AS e On e.idEspecialidad = ch.idColegiatura
+            INNER JOIN Colegiatura AS c ON c.idEspecialidad = ch.idColegiatura
+            WHERE ch.idIngreso = ?");
+            $cmdCertHabilidad->bindParam(1, $idIngreso, PDO::PARAM_INT);
+            $cmdCertHabilidad->execute();
+
+            while ($row = $cmdCertHabilidad->fetch()) {
+                array_push($arrayCertHabilidad, array(
+                    "idIngreso" => $row["idIngreso"],
+                    "dni" => $row["idDNI"],
+                    "usuario" => $row["Nombres"],
+                    "apellidos" => $row["Apellidos"],
+                    "especialidad" => $row["Especialidad"],
+                    "numCertificado" => $row["Numero"],
+                    "asunto" => $row["Asunto"],
+                    "entidad" => $row["Entidad"],
+                    "lugar" => $row["Lugar"],
+                    "fechaIncorporacion" => $row["FechaIncorporacion"],
+                    "fiDia" => $row["FIDia"],
+                    "fiMes" => $row["FIMes"],
+                    "fiAnio" => $row["FIAnio"],
+                    "fechaRegistro" => $row["FechaRegistro"],
+                    "frDia" => $row["FRDia"],
+                    "frMes" => $row["FRMes"],
+                    "frAnio" => $row["FRAnio"],
+                    "fechaVencimiento" => $row["HastaFecha"],
+                    "fvDia" => $row["FVDia"],
+                    "fvMes" => $row["FVMes"],
+                    "fvAnio" => $row["FVAnio"],
+                ));
+            }
+
+            return $arrayCertHabilidad;
+        } catch (Exception $ex) {
+            return $ex->getMessage();
+        }
+    }
+
+    public static function ObtenerDatosPdfCertObra($idIngreso)
+    {
+        try{
+            $arrayCertObra = array();
+            $cmdCertObra = Database::getInstance()->getDb()->prepare("SELECT p.idDNI, p.Nombres,p.Apellidos, e.Especialidad, cr.Numero, cr.Modalidad, cr.Propietario, cr.Proyecto, cr.Monto, u.Departamento,u.Provincia,u.Distrito, 
+            convert(VARCHAR, CAST(c.FechaColegiado AS DATE),103) AS FechaIncorporacion, DATEPART(DAY, (convert(VARCHAR, CAST(c.FechaColegiado AS DATE),103))) AS FIDia, 
+            DATEPART(MONTH, (convert(VARCHAR, CAST(c.FechaColegiado AS DATE),103))) AS FIMes, DATEPART(YEAR, (convert(VARCHAR, CAST(c.FechaColegiado AS DATE),103))) AS FIAnio, 
+            convert(VARCHAR, CAST(cr.Fecha AS DATE),103) AS FechaRegistro, DATEPART(DAY, (convert(VARCHAR, CAST(cr.Fecha AS DATE),103))) AS FRDia, 
+            DATEPART(MONTH, (convert(VARCHAR, CAST(cr.Fecha AS DATE),103))) AS FRMes, DATEPART(YEAR, (convert(VARCHAR, CAST(cr.Fecha AS DATE),103))) AS FRAnio, 
+            convert(VARCHAR, CAST(cr.HastaFecha AS DATE),103) AS HastaFecha, DATEPART(DAY, (convert(VARCHAR, CAST(cr.HastaFecha AS DATE),103))) AS FVDia,
+            DATEPART(MONTH, (convert(VARCHAR, CAST(cr.HastaFecha AS DATE),103))) AS FVMes, DATEPART(YEAR, (convert(VARCHAR, CAST(cr.HastaFecha AS DATE),103))) AS FVAnio,
+            cr.idIngreso  from CERTResidencia AS cr
+            INNER JOIN Ingreso AS i ON i.idIngreso = cr.idIngreso
+            INNER JOIN Persona AS p On p.idDNI = i.idDNI
+            INNER JOIN Especialidad AS e On e.idEspecialidad = cr.idColegiatura
+            INNER JOIN Ubigeo AS u ON u.IdUbigeo = cr.idUbigeo
+            INNER JOIN Colegiatura AS c ON c.idEspecialidad = cr.idColegiatura
+            WHERE cr.idIngreso = ?");
+            $cmdCertObra->bindParam(1, $idIngreso, PDO::PARAM_INT);
+            $cmdCertObra->execute();
+
+            while ($row = $cmdCertObra->fetch()) {
+                array_push($arrayCertObra, array(
+                    "idIngreso" => $row["idIngreso"],
+                    "dni" => $row["idDNI"],
+                    "usuario" => $row["Nombres"],
+                    "apellidos" => $row["Apellidos"],
+                    "especialidad" => $row["Especialidad"],
+                    "numCertificado" => $row["Numero"],
+                    "modalidad" => $row["Modalidad"],
+                    "propietario" => $row["Propietario"],
+                    "proyecto" => $row["Proyecto"],
+                    "monto" => $row["Monto"],
+                    "departamento" => $row["Departamento"],
+                    "provincia" => $row["Provincia"],
+                    "distrito" => $row["Distrito"],
+                    "fechaIncorporacion" => $row["FechaIncorporacion"],
+                    "fiDia" => $row["FIDia"],
+                    "fiMes" => $row["FIMes"],
+                    "fiAnio" => $row["FIAnio"],
+                    "fechaRegistro" => $row["FechaRegistro"],
+                    "frDia" => $row["FRDia"],
+                    "frMes" => $row["FRMes"],
+                    "frAnio" => $row["FRAnio"],
+                    "fechaVencimiento" => $row["HastaFecha"],
+                    "fvDia" => $row["FVDia"],
+                    "fvMes" => $row["FVMes"],
+                    "fvAnio" => $row["FVAnio"],
+                ));
+            }
+
+            return $arrayCertObra;
+        } catch (Exception $ex) {
+            return $ex->getMessage();
+        }
+    }
+
+    public static function ObtenerDatosPdfCertProyecto($idIngreso)
+    {
+        try{
+            $arrayCertProyecto = array();
+            $cmdCertProyecto = Database::getInstance()->getDb()->prepare("SELECT p.idDNI, p.Nombres,p.Apellidos, e.Especialidad, cp.Numero, cp.Modalidad, cp.Propietario, cp.Proyecto, cp.Monto, u.Departamento, u.Provincia, u.Distrito, 
+            ISNULL(cp.Adicional1,'N/D') AS Adicional1, ISNULL(cp.Adicional2,'N/D') AS Adicional2, convert(VARCHAR, CAST(c.FechaColegiado AS DATE),103) AS FechaIncorporacion, 
+            DATEPART(DAY, (convert(VARCHAR, CAST(c.FechaColegiado AS DATE),103))) AS FIDia, DATEPART(MONTH, (convert(VARCHAR, CAST(c.FechaColegiado AS DATE),103))) AS FIMes, 
+            DATEPART(YEAR, (convert(VARCHAR, CAST(c.FechaColegiado AS DATE),103))) AS FIAnio, convert(VARCHAR, CAST(cp.Fecha AS DATE),103) AS FechaRegistro, 
+            DATEPART(DAY, (convert(VARCHAR, CAST(cp.Fecha AS DATE),103))) AS FRDia, DATEPART(MONTH, (convert(VARCHAR, CAST(cp.Fecha AS DATE),103))) AS FRMes, 
+            DATEPART(YEAR, (convert(VARCHAR, CAST(cp.Fecha AS DATE),103))) AS FRAnio, CONVERT(VARCHAR, CAST(cp.HastaFecha AS DATE),103) AS HastaFecha, 
+            DATEPART(DAY, (convert(VARCHAR, CAST(cp.HastaFecha AS DATE),103))) AS FVDia, DATEPART(MONTH, (convert(VARCHAR, CAST(cp.HastaFecha AS DATE),103))) AS FVMes, 
+            DATEPART(YEAR, (convert(VARCHAR, CAST(cp.HastaFecha AS DATE),103))) AS FVAnio,cp.idIngreso  from CERTProyecto AS cp
+            INNER JOIN Ingreso AS i ON i.idIngreso = cp.idIngreso
+            INNER JOIN Persona AS p On p.idDNI = i.idDNI
+            INNER JOIN Especialidad AS e On e.idEspecialidad = cp.idColegiatura
+            INNER JOIN Ubigeo AS u ON u.IdUbigeo = cp.idUbigeo
+            INNER JOIN Colegiatura AS c ON c.idEspecialidad = cp.idColegiatura
+            WHERE cp.idIngreso = ?");
+            $cmdCertProyecto->bindParam(1, $idIngreso, PDO::PARAM_INT);
+            $cmdCertProyecto->execute();
+
+            while ($row = $cmdCertProyecto->fetch()) {
+                array_push($arrayCertProyecto, array(
+                    "idIngreso" => $row["idIngreso"],
+                    "dni" => $row["idDNI"],
+                    "usuario" => $row["Nombres"],
+                    "apellidos" => $row["Apellidos"],
+                    "especialidad" => $row["Especialidad"],
+                    "numCertificado" => $row["Numero"],
+                    "modalidad" => $row["Modalidad"],
+                    "propietario" => $row["Propietario"],
+                    "proyecto" => $row["Proyecto"],
+                    "monto" => $row["Monto"],
+                    "departamento" => $row["Departamento"],
+                    "provincia" => $row["Provincia"],
+                    "distrito" => $row["Distrito"],
+                    "adicional1" => $row["Adicional1"],
+                    "adicional2" => $row["Adicional2"],
+                    "fechaIncorporacion" => $row["FechaIncorporacion"],
+                    "fiDia" => $row["FIDia"],
+                    "fiMes" => $row["FIMes"],
+                    "fiAnio" => $row["FIAnio"],
+                    "fechaRegistro" => $row["FechaRegistro"],
+                    "frDia" => $row["FRDia"],
+                    "frMes" => $row["FRMes"],
+                    "frAnio" => $row["FRAnio"],
+                    "fechaVencimiento" => $row["HastaFecha"],
+                    "fvDia" => $row["FVDia"],
+                    "fvMes" => $row["FVMes"],
+                    "fvAnio" => $row["FVAnio"],
+                ));
+            }
+
+            return $arrayCertProyecto;
         } catch (Exception $ex) {
             return $ex->getMessage();
         }

@@ -8,22 +8,70 @@ require '../model/IngresosAdo.php';
 
 if ($_SERVER['REQUEST_METHOD'] == 'GET') {
     //$search = $_GET['search'];
-    $posicionPagina = $_GET['posicionPagina'];
-    $filasPorPagina = $_GET['filasPorPagina'];
-    $result = IngresosAdo::ListarIngresos(intval($posicionPagina), intval($filasPorPagina));
-    if (is_array($result)) {
-        print json_encode(array(
-            "estado" => 1,
-            "data" => $result[0],
-            "total"=>$result[1]
-        ));
-    } else {
-        print json_encode(array(
-            "estado" => 2,
-            "mensaje" => $result
-        ));
+    if ($_GET["type"] === "allIngresos") {
+        $posicionPagina = $_GET['posicionPagina'];
+        $filasPorPagina = $_GET['filasPorPagina'];
+        $result = IngresosAdo::ListarIngresos(intval($posicionPagina), intval($filasPorPagina));
+        if (is_array($result)) {
+            print json_encode(array(
+                "estado" => 1,
+                "data" => $result[0],
+                "total" => $result[1]
+            ));
+        } else {
+            print json_encode(array(
+                "estado" => 2,
+                "mensaje" => $result
+            ));
+        }
+    } else if($_GET["type"] === "allCertHabilidad"){
+        $posicionPagina = $_GET['posicionPagina'];
+        $filasPorPagina = $_GET['filasPorPagina'];
+        $result = IngresosAdo::ListarCertificadosHabilidad(intval($posicionPagina), intval($filasPorPagina));
+        if (is_array($result)) {
+            print json_encode(array(
+                "estado" => 1,
+                "data" => $result[0],
+                "total" => $result[1]
+            ));
+        } else {
+            print json_encode(array(
+                "estado" => 2,
+                "mensaje" => $result
+            ));
+        }
+    } else if($_GET["type"] === "allCertProyecto"){
+        $posicionPagina = $_GET['posicionPagina'];
+        $filasPorPagina = $_GET['filasPorPagina'];
+        $result = IngresosAdo::ListarCertificadosProyecto(intval($posicionPagina), intval($filasPorPagina));
+        if (is_array($result)) {
+            print json_encode(array(
+                "estado" => 1,
+                "data" => $result[0],
+                "total" => $result[1]
+            ));
+        } else {
+            print json_encode(array(
+                "estado" => 2,
+                "mensaje" => $result
+            ));
+        }
+    } else if($_GET["type"] === "allCertObra"){
+        $posicionPagina = $_GET['posicionPagina'];
+        $filasPorPagina = $_GET['filasPorPagina'];
+        $result = IngresosAdo::ListarCertificadosObra(intval($posicionPagina), intval($filasPorPagina));
+        if (is_array($result)) {
+            print json_encode(array(
+                "estado" => 1,
+                "data" => $result[0],
+                "total" => $result[1]
+            ));
+        } else {
+            print json_encode(array(
+                "estado" => 2,
+                "mensaje" => $result
+            ));
+        }
     }
-
-
     exit();
 }

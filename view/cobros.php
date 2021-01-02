@@ -223,8 +223,8 @@ if (!isset($_SESSION['IdUsuario'])) {
                                     </div>
                                     <div class="modal-body">
                                         <div class="row">
-                                            <div class="col-md-7">
-                                                <button id="btnCuotaNormal" type="button" class="btn btn-success">
+                                            <div class="col-md-7" style="margin-right: 30px;">
+                                                <!-- <button id="btnCuotaNormal" type="button" class="btn btn-success">
                                                     <i class="fa fa-plus"></i> Ordinaria
                                                 </button>
                                                 <button id="btnCuotaAmnistia" type="button" class="btn btn-success">
@@ -232,20 +232,31 @@ if (!isset($_SESSION['IdUsuario'])) {
                                                 </button>
                                                 <button id="btnCuotaVitalicio" type="button" class="btn btn-success">
                                                     <i class="fa fa-plus"></i> Vitalicio
-                                                </button>
+                                                </button> -->
+                                                <select class="form-control" id="cbConcepto">
+
+                                                </select>
                                             </div>
-                                            <div class="col-md-2">
-                                                <h4 class="text-info" id="lblCuotasMensaje">
-                                                    Cuotas Ordinarias
-                                                </h4>
-                                            </div>
-                                            <div class="col-md-3 text-right">
+                                            <div class="col-md-2 text-right">
                                                 <button id="btnAddCuota" type="button" class="btn btn-warning">
                                                     <i class="fa fa-plus"></i> Agregar
                                                 </button>
                                             </div>
+                                            <div class="col-md-2 text-right">
+                                                <button id="btnDeleteCuota" type="button" class="btn btn-danger">
+                                                    <i class="fa fa-trash"></i> Eliminar
+                                                </button>
+                                            </div>
                                         </div>
-                                        
+
+                                        <div class="row">
+                                            <div class="col-md-12 text-center" style="padding-top: 10px;">
+                                                <h4 class="text-info" id="lblCuotasMensaje">
+                                                    Cuotas Ordinarias
+                                                </h4>
+                                            </div>
+                                        </div>
+
                                         <div class="row">
                                             <div class="col-md-12" style="width:100%;  overflow-x: auto;height:260px">
                                                 <table class="table table-striped table-hover">
@@ -253,7 +264,6 @@ if (!isset($_SESSION['IdUsuario'])) {
                                                         <tr>
                                                             <th width="70%">Cuota del Mes</th>
                                                             <th width="15%">Monto</th>
-                                                            <th width="15%">Quitar</th>
                                                         </tr>
                                                     </thead>
                                                     <tbody id="tbCuotas">
@@ -720,7 +730,7 @@ if (!isset($_SESSION['IdUsuario'])) {
                     <div class="row">
 
                         <div class="col-md-8">
-                            <!-- panel derecho superior-->
+                            <!-- panel izquierdo superior-->
                             <div class="panel panel-primary">
                                 <div class="panel-heading">
                                     <h5 class="no-margin"> Generar cobro</h5>
@@ -825,6 +835,7 @@ if (!isset($_SESSION['IdUsuario'])) {
                             </div>
                         </div>
 
+                        <!-- panel derecho de cobro -->
                         <div class="col-md-4">
                             <div class="panel panel-primary">
                                 <div class="panel-heading">
@@ -1003,7 +1014,6 @@ if (!isset($_SESSION['IdUsuario'])) {
                 });
             }
 
-
             function componentesRegistrarIngreso() {
                 $("#btnCobrar").click(function() {
                     registrarIngreso();
@@ -1056,9 +1066,24 @@ if (!isset($_SESSION['IdUsuario'])) {
                                     tools.ModalAlertInfo("Cobros", "Procesando petición..");
                                 },
                                 success: function(result) {
-                                    console.log(result)
+
                                     if (result.estado === 1) {
                                         tools.ModalAlertSuccess("Cobros", result.mensaje);
+                                        openPdfComprobante(result.idIngreso);
+
+                                        if (result.cerHabilidad == true) {
+                                            // openPdfCertHabilidad();
+                                        }
+                                        if (result.cerObra == true) {
+
+                                        }
+                                        if (result.cerProyecto == true) {
+
+                                        }
+                                        // 
+                                        $("#btnCertificado").attr('data-toggle', '');
+                                        $("#btnCertificado").attr('aria-expanded', 'false');
+
                                     } else {
                                         tools.ModalAlertWarning("Cobros", result.mensaje);
                                     }
@@ -1070,6 +1095,14 @@ if (!isset($_SESSION['IdUsuario'])) {
                         }
                     });
                 }
+            }
+
+            function openPdfComprobante(idIngreso) {
+                window.open("../app/sunat/pdfingresos.php?idIngreso=" + idIngreso, "_blank");
+            }
+
+            function openPdfCertHabilidad() {
+                window.open("../app/sunat/certHabilidad.php", "_blank");
             }
 
             function addIngresos() {

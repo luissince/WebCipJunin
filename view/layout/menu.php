@@ -1,4 +1,4 @@
- <!-- Left side column. contains the logo and sidebar -->
+  <!-- Left side column. contains the logo and sidebar -->
  <aside class="main-sidebar">
      <!-- sidebar: style can be found in sidebar.less -->
      <section class="sidebar">
@@ -29,7 +29,7 @@
          <ul class="sidebar-menu" data-widget="tree">
              <li class="header">Opciones</li>
              <?php
-                if ($_SESSION["Permisos"][0]["ver"] == 1) {
+                if ($_SESSION["Permisos"][0]["ver"] == 1) {                    
                     print '<li>
                     <a href="./"><i class="fa fa-home"></i> <span>Inicio</span></a>
                 </li>';
@@ -46,8 +46,19 @@
                 </li>';
                 }
                 if ($_SESSION["Permisos"][3]["ver"] == 1) {
-                    print '<li>
-                    <a href="./ingresos.php"><i class="fa fa-sitemap"></i><span>Ingresos</span></a>
+                print '<li class="treeview">
+                    <a href="#">
+                        <i class="fa fa-sitemap"></i> <span>Documentos</span>
+                        <span class="pull-right-container">
+                            <i class="fa fa-angle-left pull-right"></i>
+                        </span>
+                    </a>
+                    <ul class="treeview-menu">
+                        <li><a href="./ingresos.php"><i class="fa fa-circle-o"></i> Ingresos</a></li>
+                        <li><a href="./certHabilidad.php"><i class="fa fa-circle-o"></i> Certificado de Habilidad</a></li>
+                        <li><a href="./certObra.php"><i class="fa fa-circle-o"></i> Certificado de Obra</a></li>
+                        <li><a href="./certProyecto.php"><i class="fa fa-circle-o"></i> Certificado de Proyecto</a></li>
+                    </ul>
                 </li>';
                 }
                 if ($_SESSION["Permisos"][4]["ver"] == 1) {
@@ -83,5 +94,4 @@
                 ?>
               
      </section>
-     <!-- /.sidebar -->
  </aside>

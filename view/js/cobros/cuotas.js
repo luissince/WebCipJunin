@@ -1,8 +1,8 @@
 function Cuotas() {
 
-    this.componentesCuotas = function() {
+    this.componentesCuotas = function () {
 
-        $("#btnCuotas").click(function() {
+        $("#btnCuotas").click(function () {
             if (idDNI == 0) {
                 tools.AlertWarning("Cuotas", "No selecciono ningún ingeniero para obtener sus cuotas.")
             } else {
@@ -12,7 +12,7 @@ function Cuotas() {
 
         });
 
-        $("#btnCuotas").keypress(function(event) {
+        $("#btnCuotas").keypress(function (event) {
             if (idDNI == 0) {
                 tools.AlertWarning("Cuotas", "No selecciono ningún ingeniero para obtener sus cuotas.")
             } else {
@@ -22,12 +22,12 @@ function Cuotas() {
             event.preventDefault();
         });
 
-        $("#btnCuotaNormal").click(function() {
+        $("#btnCuotaNormal").click(function () {
             $("#lblCuotasMensaje").html("Cuotas Ordinarias");
             loadCuotas(1);
         });
 
-        $("#btnCuotaNormal").keypress(function(event) {
+        $("#btnCuotaNormal").keypress(function (event) {
             if (event.keyCode === 13) {
                 $("#lblCuotasMensaje").html("Cuotas Ordinarias");
                 loadCuotas(1);
@@ -35,12 +35,12 @@ function Cuotas() {
             event.preventDefault();
         });
 
-        $("#btnCuotaAmnistia").click(function() {
+        $("#btnCuotaAmnistia").click(function () {
             $("#lblCuotasMensaje").html("Cuotas de Amnistia");
             loadCuotas(2);
         });
 
-        $("#btnCuotaAmnistia").keypress(function(event) {
+        $("#btnCuotaAmnistia").keypress(function (event) {
             if (event.keyCode === 13) {
                 $("#lblCuotasMensaje").html("Cuotas de Amnistia");
                 loadCuotas(2);
@@ -48,12 +48,12 @@ function Cuotas() {
             event.preventDefault();
         });
 
-        $("#btnCuotaVitalicio").click(function() {
+        $("#btnCuotaVitalicio").click(function () {
             $("#lblCuotasMensaje").html("Cuotas de Vitalicio");
             loadCuotas(3);
         });
 
-        $("#btnCuotaVitalicio").keypress(function(event) {
+        $("#btnCuotaVitalicio").keypress(function (event) {
             if (event.keyCode === 13) {
                 $("#lblCuotasMensaje").html("Cuotas de Vitalicio");
                 loadCuotas(3);
@@ -61,38 +61,66 @@ function Cuotas() {
             event.preventDefault();
         });
 
-        $("#btnAddCuota").click(function() {
+        $("#btnAddCuota").click(function () {
             addCuotas();
         });
 
-        $("#btnAddCuota").keypress(function(event) {
+        $("#btnAddCuota").keypress(function (event) {
             if (event.keyCode === 13) {
                 addCuotas();
             }
             event.preventDefault();
         });
 
-        $("#btnCloseCuotas").click(function() {
+        $("#btnDeleteCuota").click(function () {
+            removeCuota();
+        });
+
+        $("#btnCloseCuotas").click(function () {
             $('#mdCuotas').modal('hide');
             countCurrentDate = 0;
         });
 
-        $("#btnCancelarCuotas").click(function() {
+        $("#btnCancelarCuotas").click(function () {
             $('#mdCuotas').modal('hide');
             countCurrentDate = 0;
         });
 
-        $("#btnAceptarCuotas").click(function() {
+        $("#btnAceptarCuotas").click(function () {
             validateIngresoCuotas();
         });
 
-        $("#btnAceptarCuotas").keypress(function(event) {
+        $("#btnAceptarCuotas").keypress(function (event) {
             if (event.keyCode === 13) {
                 validateIngresoCuotas();
             }
             event.preventDefault();
         });
     }
+
+     function loadConcepto() {
+                $.ajax({
+                    url: "../app/controller/ComprobanteController.php",
+                    method: "GET",
+                    data: {},
+                    beforeSend: function() {
+                        $("#cbComprobante").empty();
+                    },
+                    success: function(result) {
+                        if (result.estado === 1) {
+                            $("#cbComprobante").append('<option value="">- Seleccione -</option>');
+                            for (let value of result.data) {
+                                $("#cbComprobante").append('<option value="' + value.IdTipoComprobante + '">' + value.Nombre + '</option>')
+                            }
+                        } else {
+                            $("#cbComprobante").append('<option value="">- Seleccione -</option>');
+                        }
+                    },
+                    error: function(error) {
+                        $("#cbComprobante").append('<option value="">- Seleccione -</option>');
+                    }
+                });
+            }
 
     function addCuotas() {
         countCurrentDate++;
@@ -109,12 +137,12 @@ function Cuotas() {
                 "dni": idDNI,
                 "mes": countCurrentDate
             },
-            beforeSend: function() {
+            beforeSend: function () {
                 $("#tbCuotas").empty();
-                $("#tbCuotas").append('<tr class="text-center"><td colspan="3"><img src="./images/spiner.gif"/><p>Cargando información.</p></td></tr>');
+                $("#tbCuotas").append('<tr class="text-center"><td colspan="2"><img src="./images/spiner.gif"/><p>Cargando información.</p></td></tr>');
                 cuotas.splice(0, cuotas.length);
             },
-            success: function(result) {
+            success: function (result) {
                 if (result.estado == 1) {
                     $("#tbCuotas").empty();
                     cuotas = result.data;
@@ -129,7 +157,6 @@ function Cuotas() {
                             $("#tbCuotas").append('<tr id="' + (value.mes + '-' + value.year) + '">' +
                                 '<td class="no-padding"> ' + tools.nombreMes(value.mes) + ' - ' + value.year + '</td>' +
                                 '<td class="no-padding text-center">' + tools.formatMoney(monto) + '</td>' +
-                                '<td class="no-padding text-center"><button class="btn btn-danger btn-sm" onclick="removeCuota(\'' + (value.mes + '-' + value.year) + '\')"><i class="fa fa-trash"></i></button></td>' +
                                 +'</tr>');
                             totalCuotas += parseFloat(monto);
                         }
@@ -138,26 +165,54 @@ function Cuotas() {
                             $("#lblNumeroCuotas").html("CUOTAS DEL: " + cuotas[0].mes + "/" + cuotas[0].year + " al " + cuotas[cuotas.length - 1].mes + "/" + cuotas[cuotas.length - 1].year);
                         }
                     } else {
-                        $("#tbCuotas").append('<tr class="text-center"><td colspan="3"><img src="./images/ayuda.png" width="80"/><p>Cuotas al Día has click en boton (+Agregar) para más cuotas.</p></td></tr>');
+                        $("#tbCuotas").append('<tr class="text-center"><td colspan="2"><img src="./images/ayuda.png" width="80"/><p>Cuotas al Día has click en boton (+Agregar) para más cuotas.</p></td></tr>');
                         $("#lblTotalCuotas").html("TOTAL DE 0 CUOTAS: 0.00");
                         $("#lblNumeroCuotas").html("CUOTAS DEL: 00/0000 al 00/0000");
                     }
                 } else {
                     $("#tbCuotas").empty();
-                    $("#tbCuotas").append('<tr class="text-center"><td colspan="3"><p>' + result.message + '</p></td></tr>');
+                    $("#tbCuotas").append('<tr class="text-center"><td colspan="2"><p>' + result.message + '</p></td></tr>');
                     $("#lblTotalCuotas").html("TOTAL DE 0 CUOTAS: 0.00");
                     $("#lblNumeroCuotas").html("CUOTAS DEL: 00/0000 al 00/0000");
                 }
             },
-            error: function(error) {
+            error: function (error) {
                 $("#tbCuotas").empty();
-                $("#tbCuotas").append('<tr class="text-center"><td colspan="3"><p>' + error.responseText + '</p></td></tr>');
+                $("#tbCuotas").append('<tr class="text-center"><td colspan="2"><p>' + error.responseText + '</p></td></tr>');
             }
         });
     }
 
-    removeCuota = function(idCuota) {
-        $("#" + idCuota).remove();
+    function removeCuota() {
+        if (cuotas.length != 0) {
+            cuotas.pop();
+            countCurrentDate--;
+            $("#tbCuotas").empty();
+            if (cuotas.length > 0) {
+                let totalCuotas = 0;
+                console.log(cuotas)
+                for (let value of cuotas) {
+                    let monto = 0;
+                    for (let c of value.concepto) {
+                        monto += parseFloat(c.Precio);
+                    }
+                    $("#tbCuotas").append('<tr id="' + (value.mes + '-' + value.year) + '">' +
+                        '<td class="no-padding"> ' + tools.nombreMes(value.mes) + ' - ' + value.year + '</td>' +
+                        '<td class="no-padding text-center">' + tools.formatMoney(monto) + '</td>' +
+                        // '<td class="no-padding text-center"><button class="btn btn-danger btn-sm" onclick="removeCuota(\'' + (value.mes + '-' + value.year) + '\')"><i class="fa fa-trash"></i></button></td>' +
+                        +'</tr>');
+                    totalCuotas += parseFloat(monto);
+                }
+                $("#lblTotalCuotas").html("TOTAL DE " + (cuotas.length) + " CUOTAS: " + tools.formatMoney(totalCuotas));
+                if (cuotas.length > 0) {
+                    $("#lblNumeroCuotas").html("CUOTAS DEL: " + cuotas[0].mes + "/" + cuotas[0].year + " al " + cuotas[cuotas.length - 1].mes + "/" + cuotas[cuotas.length - 1].year);
+                }
+            } else {
+                $("#tbCuotas").append('<tr class="text-center"><td colspan="3"><img src="./images/ayuda.png" width="80"/><p>Cuotas al Día has click en boton (+Agregar) para más cuotas.</p></td></tr>');
+                $("#lblTotalCuotas").html("TOTAL DE 0 CUOTAS: 0.00");
+                $("#lblNumeroCuotas").html("CUOTAS DEL: 00/0000 al 00/0000");
+            }
+        }
     }
 
     function validateIngresoCuotas() {
