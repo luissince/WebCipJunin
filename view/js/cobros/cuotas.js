@@ -98,29 +98,30 @@ function Cuotas() {
         });
     }
 
-     function loadConcepto() {
-                $.ajax({
-                    url: "../app/controller/ComprobanteController.php",
-                    method: "GET",
-                    data: {},
-                    beforeSend: function() {
-                        $("#cbComprobante").empty();
-                    },
-                    success: function(result) {
-                        if (result.estado === 1) {
-                            $("#cbComprobante").append('<option value="">- Seleccione -</option>');
-                            for (let value of result.data) {
-                                $("#cbComprobante").append('<option value="' + value.IdTipoComprobante + '">' + value.Nombre + '</option>')
-                            }
-                        } else {
-                            $("#cbComprobante").append('<option value="">- Seleccione -</option>');
-                        }
-                    },
-                    error: function(error) {
-                        $("#cbComprobante").append('<option value="">- Seleccione -</option>');
-                    }
-                });
-            }
+    //  function loadConcepto() {
+    //             $.ajax({
+    //                 url: "../app/controller/ComprobanteController.php",
+    //                 method: "GET",
+    //                 type: "concepto",
+    //                 data: {},
+    //                 beforeSend: function() {
+    //                     $("#cbComprobante").empty();
+    //                 },
+    //                 success: function(result) {
+    //                     if (result.estado === 1) {
+    //                         $("#cbComprobante").append('<option value="">- Seleccione -</option>');
+    //                         for (let value of result.data) {
+    //                             $("#cbComprobante").append('<option value="' + value.IdTipoComprobante + '">' + value.Nombre + '</option>')
+    //                         }
+    //                     } else {
+    //                         $("#cbComprobante").append('<option value="">- Seleccione -</option>');
+    //                     }
+    //                 },
+    //                 error: function(error) {
+    //                     $("#cbComprobante").append('<option value="">- Seleccione -</option>');
+    //                 }
+    //             });
+    //         }
 
     function addCuotas() {
         countCurrentDate++;

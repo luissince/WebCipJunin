@@ -1406,8 +1406,7 @@ if (!isset($_SESSION['IdUsuario'])) {
                                                         <th>F. Egreso</th>
                                                         <th>Universidad de titulo</th>
                                                         <th>F. Titulacion</th>
-                                                        <th>Resolución</th>
-                                                        <th>Principal</th>
+                                                        <th>Resolución</th>                                                    
                                                         <th colspan="2" style="text-align: center;">Opciones</th>
                                                     </tr>
                                                 </thead>

@@ -1,35 +1,35 @@
   <!-- Left side column. contains the logo and sidebar -->
- <aside class="main-sidebar">
-     <!-- sidebar: style can be found in sidebar.less -->
-     <section class="sidebar">
-         <!-- Sidebar user panel -->
-         <div class="user-panel">
-             <div class="pull-left image">
-                 <img src="images/usuario.png" class="img-circle" alt="Usuario">
-             </div>
+  <aside class="main-sidebar">
+      <!-- sidebar: style can be found in sidebar.less -->
+      <section class="sidebar">
+          <!-- Sidebar user panel -->
+          <div class="user-panel">
+              <div class="pull-left image">
+                  <img src="images/usuario.png" class="img-circle" alt="Usuario">
+              </div>
 
-             <div class="pull-left info">
-                 <p><?= $_SESSION["Nombre"]  ?></p>
-                 <a href="#"><i class="fa fa-circle text-success"></i> Online</a>
-             </div>
-         </div>
-         <!-- search form -->
-         <form action="#" method="get" class="sidebar-form">
-             <div class="input-group">
-                 <input type="text" name="q" class="form-control" placeholder="Buscar...">
-                 <span class="input-group-btn">
-                     <button type="submit" name="search" id="search-btn" class="btn btn-flat">
-                         <i class="fa fa-search"></i>
-                     </button>
-                 </span>
-             </div>
-         </form>
-         <!-- /.search form -->
-         <!-- sidebar menu: : style can be found in sidebar.less -->
-         <ul class="sidebar-menu" data-widget="tree">
-             <li class="header">Opciones</li>
-             <?php
-                if ($_SESSION["Permisos"][0]["ver"] == 1) {                    
+              <div class="pull-left info">
+                  <p><?= $_SESSION["Nombre"]  ?></p>
+                  <a href="#"><i class="fa fa-circle text-success"></i> Online</a>
+              </div>
+          </div>
+          <!-- search form -->
+          <form action="#" method="get" class="sidebar-form">
+              <div class="input-group">
+                  <input type="text" name="q" class="form-control" placeholder="Buscar...">
+                  <span class="input-group-btn">
+                      <button type="submit" name="search" id="search-btn" class="btn btn-flat">
+                          <i class="fa fa-search"></i>
+                      </button>
+                  </span>
+              </div>
+          </form>
+          <!-- /.search form -->
+          <!-- sidebar menu: : style can be found in sidebar.less -->
+          <ul class="sidebar-menu" data-widget="tree">
+              <li class="header">Opciones</li>
+              <?php
+                if ($_SESSION["Permisos"][0]["ver"] == 1) {
                     print '<li>
                     <a href="./"><i class="fa fa-home"></i> <span>Inicio</span></a>
                 </li>';
@@ -46,7 +46,7 @@
                 </li>';
                 }
                 if ($_SESSION["Permisos"][3]["ver"] == 1) {
-                print '<li class="treeview">
+                    print '<li class="treeview">
                     <a href="#">
                         <i class="fa fa-sitemap"></i> <span>Documentos</span>
                         <span class="pull-right-container">
@@ -81,6 +81,11 @@
                     <a href="./ingenieros.php"><i class="fa fa-user"></i> <span>Ingenieros</span></a>
                 </li>';
                 }
+                if ($_SESSION["Permisos"][10]["ver"] == 1) {
+                    print '<li>
+                    <a href="./empresas.php"><i class="fa fa-building-o"></i> <span>Empresas</span></a>
+                </li>';
+                }
                 if ($_SESSION["Permisos"][8]["ver"] == 1) {
                     print '<li>
                     <a href="./cobros.php"><i class="fa fa-money"></i><span>Cobros</span></a>
@@ -92,6 +97,6 @@
                 </li>';
                 }
                 ?>
-              
-     </section>
- </aside>
+
+      </section>
+  </aside>

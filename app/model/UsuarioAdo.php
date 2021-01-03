@@ -174,7 +174,7 @@ class UsuarioAdo
             $array = array();
             $cmdLogin = Database::getInstance()->getDb()->prepare("SELECT u.idUsuario,u.Nombres,u.Apellidos,u.Usuario,u.Rol,r.Nombre,u.Estado,u.Sistema FROM Usuario as u  inner join Rol as r
             on u.Rol = r.idRol 
-            WHERE u.Usuario = ? AND u.Clave = ? AND Estado = 1");
+            WHERE u.Usuario = ? AND u.Clave = ? AND u.Estado = 1");
             $cmdLogin->bindParam(1, $usuario, PDO::PARAM_STR);
             $cmdLogin->bindParam(2, $clave, PDO::PARAM_STR);
             $cmdLogin->execute();

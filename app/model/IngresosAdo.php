@@ -357,6 +357,7 @@ class IngresosAdo
 
             $cmdIngreso = Database::getInstance()->getDb()->prepare("INSERT INTO Ingreso(
             idDni,
+            idEmpresaPersona,
             TipoComprobante,
             Serie,
             NumRecibo,
@@ -366,13 +367,14 @@ class IngresosAdo
             Estado,
             Deposito,
             Observacion
-            )VALUES(?,?,?,?,GETDATE(),GETDATE(),?,?,0,'')");
+            )VALUES(?,?,?,?,?,GETDATE(),GETDATE(),?,?,0,'')");
             $cmdIngreso->bindParam(1, $body["idCliente"], PDO::PARAM_STR);
-            $cmdIngreso->bindParam(2, $body["idTipoDocumento"], PDO::PARAM_INT);
-            $cmdIngreso->bindParam(3, $serie_numeracion[0], PDO::PARAM_STR);
-            $cmdIngreso->bindParam(4, $serie_numeracion[1], PDO::PARAM_STR);
-            $cmdIngreso->bindParam(5, $body["idUsuario"], PDO::PARAM_INT);
-            $cmdIngreso->bindParam(6, $body["estado"], PDO::PARAM_STR);
+            $cmdIngreso->bindParam(2, $body["idEmpresaPersona"], PDO::PARAM_INT);
+            $cmdIngreso->bindParam(3, $body["idTipoDocumento"], PDO::PARAM_INT);
+            $cmdIngreso->bindParam(4, $serie_numeracion[0], PDO::PARAM_STR);
+            $cmdIngreso->bindParam(5, $serie_numeracion[1], PDO::PARAM_STR);
+            $cmdIngreso->bindParam(6, $body["idUsuario"], PDO::PARAM_INT);
+            $cmdIngreso->bindParam(7, $body["estado"], PDO::PARAM_STR);
             $cmdIngreso->execute();
 
             $idIngreso = Database::getInstance()->getDb()->lastInsertId();
