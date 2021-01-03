@@ -81,6 +81,11 @@
                     <a href="./ingenieros.php"><i class="fa fa-user"></i> <span>Ingenieros</span></a>
                 </li>';
                 }
+                if ($_SESSION["Permisos"][10]["ver"] == 1) {
+                    print '<li>
+                    <a href="./empresas.php"><i class="fa fa-building-o"></i> <span>Empresas</span></a>
+                </li>';
+                }
                 if ($_SESSION["Permisos"][8]["ver"] == 1) {
                     print '<li>
                     <a href="./cobros.php"><i class="fa fa-money"></i><span>Cobros</span></a>
