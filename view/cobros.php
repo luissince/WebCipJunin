@@ -1066,21 +1066,9 @@ if (!isset($_SESSION['IdUsuario'])) {
                                     tools.ModalAlertInfo("Cobros", "Procesando petición..");
                                 },
                                 success: function(result) {
-
                                     if (result.estado === 1) {
                                         tools.ModalAlertSuccess("Cobros", result.mensaje);
-                                        openPdfComprobante(result.idIngreso);
-
-                                        if (result.cerHabilidad == true) {
-                                            // openPdfCertHabilidad();
-                                        }
-                                        if (result.cerObra == true) {
-
-                                        }
-                                        if (result.cerProyecto == true) {
-
-                                        }
-                                        // 
+                                        openPdfComprobante(result.idIngreso);                                        
                                         $("#btnCertificado").attr('data-toggle', '');
                                         $("#btnCertificado").attr('aria-expanded', 'false');
 
@@ -1251,6 +1239,7 @@ if (!isset($_SESSION['IdUsuario'])) {
                 }
                 return ret;
             }
+            
         </script>
     </body>
 

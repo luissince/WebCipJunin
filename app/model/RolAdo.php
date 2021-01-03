@@ -9,19 +9,23 @@ class RolAdo
     {
     }
 
-    public static function getAllRoles($nombres)
+    public static function getAllRoles($nombres, $posicionPagina, $filasPorPagina)
     {
         try {
             $array = array();
             $comandoRoles = Database::getInstance()->getDb()->prepare("SELECT * FROM Rol 
             where Nombre like concat('%', ?,'%')
-            ORDER BY idRol ASC");
+            ORDER BY idRol ASC
+            offset ? rows fetch next ? rows only");
             $comandoRoles->bindParam(1, $nombres, PDO::PARAM_STR);
+            $comandoRoles->bindParam(2, $posicionPagina, PDO::PARAM_INT);
+            $comandoRoles->bindParam(3, $filasPorPagina, PDO::PARAM_INT);
             $comandoRoles->execute();
             $count = 0;
+            $arrayRoles = array();
             while ($row = $comandoRoles->fetch()) {
                 $count++;
-                array_push($array, array(
+                array_push($arrayRoles, array(
                     "Id" => $count,
                     "IdRol" => $row["idRol"],
                     "Nombre" => $row["Nombre"],
@@ -29,6 +33,14 @@ class RolAdo
                     "Estado" => $row["Estado"]
                 ));
             }
+
+            $comandoRoles = Database::getInstance()->getDb()->prepare("SELECT COUNT(*) FROM Rol 
+            where Nombre like concat('%', ?,'%')");
+            $comandoRoles->bindParam(1, $nombres, PDO::PARAM_STR);
+            $comandoRoles->execute();
+            $resultTotal = $comandoRoles->fetchColumn();
+
+            array_push($array,$arrayRoles,$resultTotal);
             return $array;
         } catch (Exception $ex) {
             return $ex->getMessage();
@@ -54,7 +66,7 @@ class RolAdo
         }
     }
 
-    public static function insertRol($rol)
+    public static function crudRol($rol)
     {
         try {
             Database::getInstance()->getDb()->beginTransaction();
@@ -103,6 +115,35 @@ class RolAdo
                     Database::getInstance()->getDb()->commit();
                     return "insertado";
                 }
+            }
+        } catch (Exception $ex) {
+            Database::getInstance()->getDb()->rollback();
+            return $ex->getMessage();
+        }
+    }
+
+    public static function deleteRol($idRol)
+    {
+        try {
+            Database::getInstance()->getDb()->beginTransaction();
+
+            $cmdValidate = Database::getInstance()->getDb()->prepare("SELECT * FROM Usuario WHERE Rol = ?");
+            $cmdValidate->bindParam(1, $idRol, PDO::PARAM_STR);
+            $cmdValidate->execute();
+            if ($cmdValidate->fetch()) {
+                Database::getInstance()->getDb()->rollback();
+                return "usuario";
+            } else {
+                $cmdRol = Database::getInstance()->getDb()->prepare("DELETE FROM Rol WHERE idRol = ?");
+                $cmdRol->bindParam(1, $idRol, PDO::PARAM_STR);
+                $cmdRol->execute();
+
+                $cmdPermiso = Database::getInstance()->getDb()->prepare("DELETE FROM Permiso WHERE idRol = ?");
+                $cmdPermiso->bindParam(1, $idRol, PDO::PARAM_STR);
+                $cmdPermiso->execute();
+
+                Database::getInstance()->getDb()->commit();
+                return "deleted";
             }
         } catch (Exception $ex) {
             Database::getInstance()->getDb()->rollback();

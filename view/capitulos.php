@@ -29,144 +29,144 @@ if (!isset($_SESSION['IdUsuario'])) {
                     <h3 class="no-margin"> Capitulos <small> Lista </small> </h3>
                 </section>
 
+                <!-- modal nuevo capitulo o especialidad  -->
+                <div class="row">
+                    <div class="modal fade" id="confirmar" data-backdrop="static">
+                        <div class="modal-dialog">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <button type="button" class="close" id="close">
+                                        <i class="fa fa-close"></i>
+                                    </button>
+                                    <h4 class="modal-title">
+                                        <i class="fa fa-indent">
+                                        </i> Registrar Capitulo y/o Especialidad
+                                    </h4>
+                                </div>
+                                <div class="modal-body">
+                                    <form role="form">
+                                        <div class="row">
+                                            <div class="col-md-12">
+                                                <div class="form-group">
+                                                    <input class="form-check-input" type="radio" name="RadioOptions" id="btnRadio1" checked>
+                                                    <label class="form-check-label" for="btnRadio1" style="margin-left: 0.5em;">Nuevo Capitulo</label>
+
+                                                    <input class="form-check-input" style="margin-left: 2em;" type="radio" name="RadioOptions" id="btnRadio2">
+                                                    <label class="form-check-label" for="btnRadio2" style="margin-left: 0.5em;">Nueva Especialidad</label>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-md-6">
+                                                <div class="form-group">
+                                                    <label for="txtCapitulo">Capitulo: <i class="fa fa-fw fa-asterisk text-danger"></i></label>
+                                                    <input id="txtCapitulo" type="text" name="txtCapitulo" class="form-control" placeholder="Dijite el nuevo Capitulo" required="">
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-md-6">
+                                                <div class="form-group">
+                                                    <label for="cbxCapitulo">Capitulo: <i class="fa fa-fw fa-asterisk text-danger"></i></label>
+                                                    <select id="cbxCapitulo" class="form-control">
+                                                    </select>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-6">
+                                                <div class="form-group">
+                                                    <label for="txtEspecialidad">Especialidad: <i class="fa fa-fw fa-asterisk text-danger"></i></label>
+                                                    <input id="txtEspecialidad" type="text" class="form-control" placeholder="Dijite la nueva Especialidad" required="">
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </form>
+                                </div>
+                                <div class="modal-footer">
+                                    <p class="text-left text-danger">Todos los campos marcados con <i class="fa fa-fw fa-asterisk text-danger"></i> son obligatorios</p>
+                                    <button type="submit" class="btn btn-warning" name="btnaceptar-Capitulo" id="btnaceptar-Capitulo">
+                                        <i class="fa fa-check"></i> Aceptar</button>
+                                    <button type="button" class="btn btn-primary" id="cancel-nuevo">
+                                        <i class="fa fa-remove"></i> Cancelar</button>
+                                </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- end modal nuevo capitulo o especialidad -->
+
+                <!-- modal editar capitulo o especialidad  -->
+                <div class="row">
+                    <div class="modal fade" id="editar" data-backdrop="static">
+                        <div class="modal-dialog">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <button type="button" class="close" id="close1">
+                                        <i class="fa fa-close"></i>
+                                    </button>
+                                    <h4 class="modal-title">
+                                        <i class="fa fa-indent">
+                                        </i> Editar Capitulo y/o Especialidad
+                                    </h4>
+                                </div>
+                                <div class="modal-body">
+                                    <form role="form">
+                                        <div class="row">
+                                            <div class="col-md-12">
+                                                <div class="form-group">
+                                                    <input class="form-check-input" type="radio" name="RadioOptions" id="btnRadio01" checked>
+                                                    <label class="form-check-label" for="btnRadio01" style="margin-left: 0.5em;">Editar Capitulo</label>
+
+                                                    <input class="form-check-input" style="margin-left: 2em;" type="radio" name="RadioOptions" id="btnRadio02">
+                                                    <label class="form-check-label" for="btnRadio02" style="margin-left: 0.5em;">Editar Especialidad</label>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-md-6">
+                                                <div class="form-group">
+                                                    <label for="txtCapitulo1">Capitulo: <i class="fa fa-fw fa-asterisk text-danger"></i></label>
+                                                    <input id="txtCapitulo1" type="text" name="txtCapitulo1" class="form-control" required="">
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-md-6">
+                                                <div class="form-group">
+                                                    <label for="cbxCapitulo1">Capitulo: <i class="fa fa-fw fa-asterisk text-danger"></i></label>
+                                                    <select id="cbxCapitulo1" class="form-control">
+                                                    </select>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-6">
+                                                <div class="form-group">
+                                                    <label for="txtEspecialidad1">Especialidad: <i class="fa fa-fw fa-asterisk text-danger"></i></label>
+                                                    <input id="txtEspecialidad1" type="text" class="form-control" required="">
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </form>
+                                </div>
+                                <div class="modal-footer">
+                                    <p class="text-left text-danger">Todos los campos marcados con <i class="fa fa-fw fa-asterisk text-danger"></i> son obligatorios</p>
+                                    <button type="submit" class="btn btn-warning" name="btnaceptar-editar-Capitulo" id="btnaceptar-editar-Capitulo">
+                                        <i class="fa fa-check"></i> Aceptar</button>
+                                    <button type="button" class="btn btn-primary" id="cancel-editar">
+                                        <i class="fa fa-remove"></i> Cancelar</button>
+                                </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- end modal editar capitulo o especialidad -->
+
                 <section class="content">
-
-                    <!-- modal nuevo capitulo o especialidad  -->
-                    <div class="row">
-                        <div class="modal fade" id="confirmar" data-backdrop="static">
-                            <div class="modal-dialog">
-                                <div class="modal-content">
-                                    <div class="modal-header">
-                                        <button type="button" class="close" id="close">
-                                            <i class="fa fa-close"></i>
-                                        </button>
-                                        <h4 class="modal-title">
-                                            <i class="fa fa-indent">
-                                            </i> Registrar Capitulo y/o Especialidad
-                                        </h4>
-                                    </div>
-                                    <div class="modal-body">
-                                        <form role="form">
-                                            <div class="row">
-                                                <div class="col-md-12">
-                                                    <div class="form-group">
-                                                        <input class="form-check-input" type="radio" name="RadioOptions" id="btnRadio1" checked>
-                                                        <label class="form-check-label" for="btnRadio1" style="margin-left: 0.5em;">Nuevo Capitulo</label>
-
-                                                        <input class="form-check-input" style="margin-left: 2em;" type="radio" name="RadioOptions" id="btnRadio2">
-                                                        <label class="form-check-label" for="btnRadio2" style="margin-left: 0.5em;">Nueva Especialidad</label>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            <div class="row">
-                                                <div class="col-md-6">
-                                                    <div class="form-group">
-                                                        <label for="txtCapitulo">Capitulo: <i class="fa fa-fw fa-asterisk text-danger"></i></label>
-                                                        <input id="txtCapitulo" type="text" name="txtCapitulo" class="form-control" placeholder="Dijite el nuevo Capitulo" required="">
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            <div class="row">
-                                                <div class="col-md-6">
-                                                    <div class="form-group">
-                                                        <label for="cbxCapitulo">Capitulo: <i class="fa fa-fw fa-asterisk text-danger"></i></label>
-                                                        <select id="cbxCapitulo" class="form-control">
-                                                        </select>
-                                                    </div>
-                                                </div>
-                                                <div class="col-md-6">
-                                                    <div class="form-group">
-                                                        <label for="txtEspecialidad">Especialidad: <i class="fa fa-fw fa-asterisk text-danger"></i></label>
-                                                        <input id="txtEspecialidad" type="text" name="txtEspecialidad" class="form-control" placeholder="Dijite la nueva Especialidad" required="">
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </form>
-                                    </div>
-                                    <div class="modal-footer">
-                                        <p class="text-left text-danger">Todos los campos marcados con <i class="fa fa-fw fa-asterisk text-danger"></i> son obligatorios</p>
-                                        <button type="submit" class="btn btn-warning" name="btnaceptar-Capitulo" id="btnaceptar-Capitulo">
-                                            <i class="fa fa-check"></i> Aceptar</button>
-                                        <button type="button" class="btn btn-primary" id="cancel-nuevo">
-                                            <i class="fa fa-remove"></i> Cancelar</button>
-                                    </div>
-                                    </form>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <!-- end modal nuevo capitulo o especialidad -->
-
-                    <!-- modal editar capitulo o especialidad  -->
-                    <div class="row">
-                        <div class="modal fade" id="editar" data-backdrop="static">
-                            <div class="modal-dialog">
-                                <div class="modal-content">
-                                    <div class="modal-header">
-                                        <button type="button" class="close" id="close1">
-                                            <i class="fa fa-close"></i>
-                                        </button>
-                                        <h4 class="modal-title">
-                                            <i class="fa fa-indent">
-                                            </i> Editar Capitulo y/o Especialidad
-                                        </h4>
-                                    </div>
-                                    <div class="modal-body">
-                                        <form role="form">
-                                            <div class="row">
-                                                <div class="col-md-12">
-                                                    <div class="form-group">
-                                                        <input class="form-check-input" type="radio" name="RadioOptions" id="btnRadio01" checked>
-                                                        <label class="form-check-label" for="btnRadio01" style="margin-left: 0.5em;">Editar Capitulo</label>
-
-                                                        <input class="form-check-input" style="margin-left: 2em;" type="radio" name="RadioOptions" id="btnRadio02">
-                                                        <label class="form-check-label" for="btnRadio02" style="margin-left: 0.5em;">Editar Especialidad</label>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            <div class="row">
-                                                <div class="col-md-6">
-                                                    <div class="form-group">
-                                                        <label for="txtCapitulo1">Capitulo: <i class="fa fa-fw fa-asterisk text-danger"></i></label>
-                                                        <input id="txtCapitulo1" type="text" name="txtCapitulo1" class="form-control" required="">
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            <div class="row">
-                                                <div class="col-md-6">
-                                                    <div class="form-group">
-                                                        <label for="cbxCapitulo1">Capitulo: <i class="fa fa-fw fa-asterisk text-danger"></i></label>
-                                                        <select id="cbxCapitulo1" class="form-control">
-                                                        </select>
-                                                    </div>
-                                                </div>
-                                                <div class="col-md-6">
-                                                    <div class="form-group">
-                                                        <label for="txtEspecialidad1">Especialidad: <i class="fa fa-fw fa-asterisk text-danger"></i></label>
-                                                        <input id="txtEspecialidad1" type="text" name="txtEspecialidad" class="form-control" required="">
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </form>
-                                    </div>
-                                    <div class="modal-footer">
-                                        <p class="text-left text-danger">Todos los campos marcados con <i class="fa fa-fw fa-asterisk text-danger"></i> son obligatorios</p>
-                                        <button type="submit" class="btn btn-warning" name="btnaceptar-editar-Capitulo" id="btnaceptar-editar-Capitulo">
-                                            <i class="fa fa-check"></i> Aceptar</button>
-                                        <button type="button" class="btn btn-primary" id="cancel-editar">
-                                            <i class="fa fa-remove"></i> Cancelar</button>
-                                    </div>
-                                    </form>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <!-- end modal editar capitulo o especialidad -->
 
                     <div class="row">
                         <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
                             <div class="form-group">
-                                <button type="button" class="btn btn-warning" id="btnNuevo">
+                                <button type="button" class="btn btn-success" id="btnNuevo">
                                     <i class="fa fa-plus"></i> Nuevo Capitulo y/o Especialidad
                                 </button>
                                 <button class="btn btn-link" id="btnactualizar">
@@ -198,7 +198,9 @@ if (!isset($_SESSION['IdUsuario'])) {
                                         <th style="text-align: center;">#</th>
                                         <th>Capitulo</th>
                                         <th>Especialidad</th>
-                                        <th>Opciones</th>
+                                        <th>Editar</th>
+                                        <th>Eliminar Capit.</th>
+                                        <th>Eliminar Espec.</th>
                                     </thead>
                                     <tbody id="tbTable">
 
@@ -249,7 +251,6 @@ if (!isset($_SESSION['IdUsuario'])) {
             let tbTable = $("#tbTable");
             let cbxCapitulos = $("#cbxCapitulo");
             let cbxCapitulos1 = $("#cbxCapitulo1");
-            // let cbxCapitulo = $("#Capitulo")
 
             $(document).ready(function() {
 
@@ -343,21 +344,6 @@ if (!isset($_SESSION['IdUsuario'])) {
                 });
             });
 
-            function clearModal() {
-                $("#btnRadio1").prop('checked', true);
-                // $("#btnRadio01").prop('checked', true);
-                $("#txtCapitulo").val('');
-                $("#txtCapitulo").attr('disabled', false);
-                // $("#txtCapitulo1").val('');
-                // $("#txtCapitulo1").attr('disabled', false);
-                $("#cbxCapitulo").attr('disabled', true);
-                $("#cbxCapitulo").val($("#cbxCapitulo option:first").val());
-                // $("#cbxCapitulo1").attr('disabled', true);
-                // $("#cbxCapitulo1").val($("#cbxCapitulo1 option:first").val());
-                $("#txtEspecialidad").val('');
-                // $("#txtEspecialidad1").val('');
-            }
-
             function onEventPaginacion() {
                 switch (opcion) {
                     case 0:
@@ -390,42 +376,61 @@ if (!isset($_SESSION['IdUsuario'])) {
                     beforeSend: function() {
                         tbTable.empty();
                         tbTable.append(
-                            '<tr class="text-center"><td colspan="4"><img src="./images/spiner.gif"/><p>cargando información.</p></td></tr>'
+                            '<tr class="text-center"><td colspan="6"><img src="./images/spiner.gif"/><p>Cargando información.</p></td></tr>'
                         );
                         state = true;
+                        totalPaginacion = 0;
                     },
                     success: function(result) {
-
                         if (result.estado === 1) {
                             tbTable.empty();
-                            for (let especialidad of result.especialidades) {
+                            if (result.especialidades.length == 0) {
+                                tbTable.append(
+                                    '<tr class="text-center"><td colspan="6"><p>No hay información para mostrar.</p></td></tr>'
+                                );
+                                $("#lblPaginaActual").html(paginacion);
+                                $("#lblPaginaSiguiente").html(totalPaginacion);
+                                state = false;
+                            } else {
+                                for (let especialidad of result.especialidades) {
 
-                                let btnUpdate =
-                                    '<button class="btn btn-success btn-sm" onclick="updateCapituloEspecialidad(\'' +
-                                    especialidad.idCapitulo + '\',\'' + especialidad.Capitulo + '\',\'' + especialidad.idEspecialidad + '\',\'' + especialidad.Especialidad + '\')">' +
-                                    '<i class="fa fa-wrench"></i> Editar' +
-                                    '</button>';
+                                    let btnUpdate =
+                                        '<button class="btn btn-warning btn-sm" onclick="updateCapituloModal(\'' +
+                                        especialidad.idCapitulo + '\',\'' + especialidad.Capitulo + '\',\'' + especialidad.idEspecialidad + '\',\'' + especialidad.Especialidad + '\')">' +
+                                        '<i class="fa fa-wrench"></i> Editar' +
+                                        '</button>';
 
-                                tbTable.append('<tr>' +
-                                    '<td style="text-align: center;color: #2270D1;">' +
-                                    '' + especialidad.Id + '' +
-                                    '</td>' +
-                                    '<td>' + especialidad.Capitulo + '</td>' +
-                                    '<td>' + especialidad.Especialidad + '</td>' +
-                                    '<td>' +
-                                    '' + btnUpdate + '' +
-                                    '</td>' +
-                                    '</tr>');
+                                    let btnDeleteCapitulo =
+                                        '<button class="btn btn-danger btn-sm" onclick="deleteCapitulo(\'' + especialidad.idCapitulo + '\')">' +
+                                        '<i class="fa fa-trash"></i> Eliminar' +
+                                        '</button>';
+
+                                    let btnDeleteEspecialidad =
+                                        '<button class="btn btn-danger btn-sm" onclick="deleteEspecialidad(\'' + especialidad.idEspecialidad + '\')">' +
+                                        '<i class="fa fa-trash"></i> Eliminar' +
+                                        '</button>';
+
+                                    tbTable.append('<tr>' +
+                                        '<td style="text-align: center;color: #2270D1;">' +
+                                        '' + especialidad.Id + '' +
+                                        '</td>' +
+                                        '<td>' + especialidad.Capitulo + '</td>' +
+                                        '<td>' + especialidad.Especialidad + '</td>' +
+                                        '<td>' + btnUpdate + '</td>' +
+                                        '<td>' + btnDeleteCapitulo + '</td>' +
+                                        '<td>' + btnDeleteEspecialidad + '</td>' +
+                                        '</tr>');
+                                }
+                                totalPaginacion = parseInt(Math.ceil((parseFloat(result.total) / parseInt(
+                                    filasPorPagina))));
+                                $("#lblPaginaActual").html(paginacion);
+                                $("#lblPaginaSiguiente").html(totalPaginacion);
+                                state = false;
                             }
-                            totalPaginacion = parseInt(Math.ceil((parseFloat(result.total) / parseInt(
-                                filasPorPagina))));
-                            $("#lblPaginaActual").html(paginacion);
-                            $("#lblPaginaSiguiente").html(totalPaginacion);
-                            state = false;
                         } else {
                             tbTable.empty();
                             tbTable.append(
-                                '<tr class="text-center"><td colspan="4"><p>No se pudo cargar la información.</p></td></tr>'
+                                '<tr class="text-center"><td colspan="6"><p>' + result.message + '</p></td></tr>'
                             );
                             $("#lblPaginaActual").html(0);
                             $("#lblPaginaSiguiente").html(0);
@@ -435,40 +440,10 @@ if (!isset($_SESSION['IdUsuario'])) {
                     error: function(error) {
                         tbTable.empty();
                         tbTable.append(
-                            '<tr class="text-center"><td colspan="4"><p>Se produjo un error, intente nuevamente.</p></td></tr>'
+                            '<tr class="text-center"><td colspan="6"><p>' + error.responseText + '</p></td></tr>'
                         );
                         $("#lblPaginaActual").html(0);
                         $("#lblPaginaSiguiente").html(0);
-                        state = false;
-                    }
-                });
-            }
-
-            function loadCapitulos() {
-                $.ajax({
-                    url: "../app/controller/CapituloController.php",
-                    method: "GET",
-                    data: {
-                        "type": "allCapitulos"
-                    },
-                    beforeSend: function() {
-                        state = true;
-                    },
-                    success: function(result) {
-
-                        if (result.estado === 1) {
-                            cbxCapitulos.append('<option value="">- Seleccione un capítulo- </option>')
-                            for (let capitulo of result.capitulos) {
-                                cbxCapitulos.append('<option value=' + capitulo.idCapitulo + '> ' + capitulo.Capitulo + '</option>')
-                            }
-                            state = false;
-
-                        } else {
-
-                            state = false;
-                        }
-                    },
-                    error: function(error) {
                         state = false;
                     }
                 });
@@ -487,21 +462,22 @@ if (!isset($_SESSION['IdUsuario'])) {
                             "capitulo": jQuery.trim($("#txtCapitulo").val()),
                         },
                         beforeSend: function() {
-                            tools.AlertInfo("Capitulo", "Procesando información.");
+                            tools.ModalAlertInfo("Capítulo", "Procesando petición..")
+                            $("#confirmar").modal("hide");
                         },
                         success: function(result) {
                             if (result.estado == 1) {
-                                tools.AlertSuccess("Capitulo", "Se registro correctamente.");
-                                $("#confirmar").modal("hide");
-                                clearModal();
+                                tools.ModalAlertSuccess("Capítulo", result.message)
+                                loadInitCapitulos();
+                                clearModal();                               
                             } else if (result.estado == 3) {
-                                tools.AlertWarning("Capitulo", result.message);
+                                tools.ModalAlertWarning("Capítulo", result.message)
                             } else {
-                                tools.AlertWarning("Capitulo", result.message);
+                                tools.ModalAlertWarning("Capítulo", result.message)
                             }
                         },
                         error: function(error) {
-                            tools.AlertError("Capitulo", "Error fatal: Comuniquese con el administrador del sistema");
+                            tools.ModalAlertError("Capítulo", "Se produjo un error: " + error.responseText)
                         }
                     });
                 }
@@ -520,31 +496,33 @@ if (!isset($_SESSION['IdUsuario'])) {
                         method: "POST",
                         data: {
                             "type": "insertEspecialidad",
-                            "capitulo": jQuery.trim($("#cbxCapitulo").val()),
-                            "especialidad": jQuery.trim(("#txtEspecialidad").val()),
+                            "capitulo": $("#cbxCapitulo").val().trim(),
+                            "especialidad": $("#txtEspecialidad").val().trim(),
                         },
                         beforeSend: function() {
-                            tools.AlertInfo("Especialidad", "Procesando información.");
+                            tools.ModalAlertInfo("Especialidad", "Procesando petición..")
+                            $("#confirmar").modal("hide");
                         },
                         success: function(result) {
                             if (result.estado == 1) {
-                                tools.AlertSuccess("Especialidad", "Se registro correctamente.");
-                                $("#confirmar").modal("hide");
-                                clearModal();
+                                tools.ModalAlertSuccess("Especialidad", result.message)
+                                loadInitCapitulos();
+                                clearModal();                               
                             } else if (result.estado == 3) {
-                                tools.AlertWarning("Especialidad", result.message);
+                                tools.ModalAlertWarning("Especialidad", result.message)
+
                             } else {
-                                tools.AlertWarning("Especialidad", "Error al tratar de registrar los datos " + result.message);
+                                tools.ModalAlertWarning("Especialidad", result.message)
                             }
                         },
                         error: function(error) {
-                            tools.AlertError("Especialidad", "Error fatal: Comuniquese con el administrador del sistema");
+                            tools.ModalAlertError("Especialidad", "Se produjo un error: " + error.responseText)
                         }
                     });
                 }
             }
 
-            function updateCapituloEspecialidad(idC, capitulo, idE, especialidad) {
+            function updateCapituloModal(idC, capitulo, idE, especialidad) {
 
                 let idCapitulo = idC;
                 let Capitulo = capitulo;
@@ -566,10 +544,10 @@ if (!isset($_SESSION['IdUsuario'])) {
                         $("#txtEspecialidad1").val(Especialidaddd);
                         $("#txtEspecialidad1").prop('disabled', 'disabled');
                         $("#cbxCapitulo1").attr('disabled', true);
-                        loadEditCapitulos(idCapitulo);
+                        loadUpdateCapitulos(idCapitulo);
                     } else {
                         if ($("#txtEspecialidad1").val(Especialidaddd) != "No tiene asignado ninguna especialidad") {
-                            $("#txtEspecialidad1").val('')
+                            $
                             $("#txtCapitulo1").val(Capitulo);
                             $("#txtCapitulo1").attr('disabled', true);
                             $("#txtEspecialidad1").prop('disabled', '');
@@ -583,20 +561,17 @@ if (!isset($_SESSION['IdUsuario'])) {
                     }
                 });
 
-                loadEditCapitulos(idCapitulo);
+                loadUpdateCapitulos(idCapitulo);
 
-                $("#btnaceptar-editar-Capitulo").click(function() {
-                    AceptarUpdate(idCapitulo, idEspecialidad);
+                $("#btnaceptar-editar-Capitulo").unbind();
+                $("#btnaceptar-editar-Capitulo").bind("click", function() {
+                    updateCapituloOEspecialidad(idCapitulo,idEspecialidad);
                 });
             }
 
-            function AceptarUpdate(idC, idE) {
-                let idCapitulo = idC;
-                let idEspecialidad = idE;
+            function updateCapituloOEspecialidad(idCapitulo,idEspecialidad) {
 
-                // $(".form-check-input").on('change', function() {
                 if ($("#btnRadio01").is(':checked')) {
-
                     if ($("#txtCapitulo1").val() == "") {
                         tools.AlertWarning("Advertencia", "Ingrese un capitulo.");
                         $("#txtCapitulo1").focus();
@@ -607,68 +582,68 @@ if (!isset($_SESSION['IdUsuario'])) {
                             data: {
                                 "type": "updateCapitulo",
                                 "idcapitulo": idCapitulo,
-                                "capitulo": jQuery.trim($("#txtCapitulo1").val()),
+                                "capitulo": $("#txtCapitulo1").val().trim(),
                             },
                             beforeSend: function() {
-                                tools.AlertInfo("Capitulo", "Procesando información.");
+                                tools.ModalAlertInfo("Capítulo", "Procesando petición..")
+                                $("#editar").modal("hide");
                             },
                             success: function(result) {
                                 if (result.estado == 1) {
-                                    tools.AlertSuccess("Capitulo", "Se actualizo correctamente.");
-                                    $("#editar").modal("hide");
-                                    clearModal();
+                                    tools.ModalAlertSuccess("Capítulo", result.message)
+                                    loadInitCapitulos();
                                 } else if (result.estado == 3) {
-                                    tools.AlertWarning("Capitulo", result.message);
+                                    tools.ModalAlertWarning("Capítulo", result.message)
                                 } else {
-                                    tools.AlertWarning("Capitulo", "Error al tratar de actualizar los datos " + result.message);
+                                    tools.ModalAlertWarning("Capítulo", result.message)
                                 }
                             },
                             error: function(error) {
-                                tools.AlertError("Capitulo", "Error fatal: Comuniquese con el administrador del sistema");
+                                tools.ModalAlertError("Capítulo", "Se produjo un error: " + error.responseText)
                             }
                         });
                     }
                 } else {
-                    if ($("#cbxCapitulo").val() == '') {
+                    if ($("#cbxCapitulo1").val() == '') {
                         tools.AlertWarning("Advertencia", "Seleccione un capitulos.");
-                        $("#cbxCapitulo").focus();
-                    } else if (($("#txtEspecialidad").val() == '') || ($("#txtEspecialidad").val() == "No tiene asignado ninguna especialidad")) {
+                        $("#cbxCapitulo1").focus();
+                    } else if (($("#txtEspecialidad1").val() == '') || ($("#txtEspecialidad1").val() == "No tiene asignado ninguna especialidad")) {
                         tools.AlertWarning("Advertencia", "Digite una especialidad valida.");
-                        $("#txtEspecialidad").focus();
+                        $("#txtEspecialidad1").focus();
                     } else {
                         $.ajax({
                             url: "../app/controller/CapituloController.php",
                             method: "POST",
                             data: {
                                 "type": "updateEspecialidad",
-                                "idCapitulo": idCapitulo,
+                                "idCapitulo": $("#cbxCapitulo1").val(),
                                 "idEspecialidad": idEspecialidad,
-                                "especialidad": jQuery.trim(("#txtEspecialidad").val()),
+                                "especialidad": $("#txtEspecialidad1").val().trim(),
                             },
                             beforeSend: function() {
-                                tools.AlertInfo("Especialidad", "Procesando información.");
+                                tools.ModalAlertInfo("Especialidad", "Procesando petición..");
+                                $("#editar").modal("hide");
                             },
                             success: function(result) {
                                 if (result.estado == 1) {
-                                    tools.AlertSuccess("Especialidad", "Se actualizo correctamente.");
-                                    $("#editar").modal("hide");
+                                    tools.ModalAlertSuccess("Especialidad", result.message);
                                     clearModal();
+                                    loadInitCapitulos();
                                 } else if (result.estado == 3) {
-                                    tools.AlertWarning("Especialidad", result.message);
+                                    tools.ModalAlertWarning("Especialidad", result.message);
                                 } else {
-                                    tools.AlertWarning("Especialidad", "Error al tratar de actualizar los datos " + result.message);
+                                    tools.ModalAlertWarning("Especialidad", result.message);
                                 }
                             },
                             error: function(error) {
-                                tools.AlertError("Especialidad", "Error fatal: Comuniquese con el administrador del sistema");
+                                tools.ModalAlertError("Especialidad", "Se produjo un error: " + error.responseText)
                             }
                         });
                     }
                 }
-                // });
             }
 
-            function loadEditCapitulos(capitulo) {
+            function loadCapitulos() {
                 $.ajax({
                     url: "../app/controller/CapituloController.php",
                     method: "GET",
@@ -676,25 +651,118 @@ if (!isset($_SESSION['IdUsuario'])) {
                         "type": "allCapitulos"
                     },
                     beforeSend: function() {
-                        state = true;
+
                     },
                     success: function(result) {
-
                         if (result.estado === 1) {
-
-                            cbxCapitulos1.append('<option value="">- Seleccione un capítulo- </option>')
+                            cbxCapitulos.append('<option value="">- Seleccione un capítulo- </option>')
                             for (let capitulo of result.capitulos) {
-                                cbxCapitulos1.append('<option value=' + capitulo.idCapitulo + '> ' + capitulo.Capitulo + '</option>')
+                                cbxCapitulos.append('<option value=' + capitulo.idCapitulo + '> ' + capitulo.Capitulo + '</option>')
                             }
-                            $("#cbxCapitulo1").val(capitulo);
-
                         } else {
-
 
                         }
                     },
                     error: function(error) {
 
+                    }
+                });
+            }
+
+            function loadUpdateCapitulos(idCapitulo) {
+                $.ajax({
+                    url: "../app/controller/CapituloController.php",
+                    method: "GET",
+                    data: {
+                        "type": "allCapitulos"
+                    },
+                    beforeSend: function() {
+                        cbxCapitulos1.empty();
+                    },
+                    success: function(result) {
+                        if (result.estado === 1) {
+                            cbxCapitulos1.append('<option value="">- Seleccione un capítulo- </option>')
+                            for (let capitulo of result.capitulos) {
+                                cbxCapitulos1.append('<option value=' + capitulo.idCapitulo + '> ' + capitulo.Capitulo + '</option>')
+                            }
+                            cbxCapitulos1.val(idCapitulo);
+                        } else {
+
+                        }
+                    },
+                    error: function(error) {
+
+                    }
+                });
+            }
+
+            function clearModal() {
+                $("#btnRadio1").prop('checked', true);
+                $("#txtCapitulo").val('');
+                $("#txtCapitulo").attr('disabled', false);
+                $("#cbxCapitulo").attr('disabled', true);
+                $("#cbxCapitulo").val($("#cbxCapitulo option:first").val());
+                $("#txtEspecialidad").val('');
+            }
+
+            function deleteCapitulo(idCapitulo) {
+                tools.ModalDialog("Capítulo", "¿Está seguro de eliminar ?", function(value) {
+                    if (value == true) {
+                        $.ajax({
+                            url: "../app/controller/CapituloController.php",
+                            method: "POST",
+                            data: {
+                                "type": "deleteCapitulo",
+                                "idCapitulo": idCapitulo
+                            },
+                            beforeSend: function() {
+                                tools.ModalAlertInfo("Capítulo", "Procesando petición..");
+                            },
+                            success: function(result) {
+                                if (result.estado === 1) {
+                                    tools.ModalAlertSuccess("Capítulo", result.message);
+                                    loadInitCapitulos();
+                                } else if (result.estado === 2) {
+                                    tools.ModalAlertWarning("Capítulo", result.message);
+                                } else {
+                                    tools.ModalAlertWarning("Capítulo", result.message);
+                                }
+                            },
+                            error: function(error) {
+                                tools.ModalAlertError("Capítulo", "Se produjo un error: " + error.responseText)
+                            }
+                        });
+                    }
+                });
+            }
+
+            function deleteEspecialidad(idEspecialidad) {
+                tools.ModalDialog("Especialidad", "¿Está seguro de eliminar ?", function(value) {
+                    if (value == true) {
+                        $.ajax({
+                            url: "../app/controller/CapituloController.php",
+                            method: "POST",
+                            data: {
+                                "type": "deleteEspecialidad",
+                                "idEspecialidad": idEspecialidad
+                            },
+                            beforeSend: function() {
+                                tools.ModalAlertInfo("Especialidad", "Procesando petición..");
+                            },
+                            success: function(result) {
+                                if (result.estado === 1) {
+                                    tools.ModalAlertSuccess("Especialidad", result.message);
+                                    loadInitCapitulos();
+                                } else if (result.estado === 2) {
+                                    tools.ModalAlertWarning("Especialidad", result.message);
+                                } else {
+                                    tools.ModalAlertWarning("Especialidad", result.message);
+                                }
+                            },
+                            error: function(error) {
+                                tools.ModalAlertError("Especialidad", "Se produjo un error: " + error.responseText)
+                            }
+                        });
                     }
                 });
             }

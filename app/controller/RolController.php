@@ -8,11 +8,14 @@ include_once '../model/RolAdo.php';
 if ($_SERVER['REQUEST_METHOD'] == 'GET') {
     if ($_GET["type"] === "alldata") {
         $nombre = $_GET['nombre'];
-        $rol = RolAdo::getAllRoles($nombre);
+        $posicionPagina = $_GET['posicionPagina'];
+        $filasPorPagina = $_GET['filasPorPagina'];
+        $rol = RolAdo::getAllRoles($nombre, intval($posicionPagina), intval($filasPorPagina));
         if (is_array($rol)) {
             echo json_encode(array(
                 "estado" => 1,
-                "roles" => $rol
+                "roles" => $rol[0],
+                "total" =>$rol[1]
             ));
         } else {
             echo json_encode(array(
@@ -61,13 +64,13 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
         }
     }
 } else if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-    if ($_POST["type"] === "insertRol") {
+    if ($_POST["type"] === "crudRol") {
         $rol["IdRol"] = $_POST['IdRol'];
         $rol["Nombre"] = trim($_POST['Nombre']);
         $rol["Descripcion"] = trim($_POST['Descripcion']);
         $rol["Estado"] = $_POST['Estado'];
 
-        $result = RolAdo::insertRol($rol);
+        $result = RolAdo::crudRol($rol);
         if ($result == "insertado") {
             echo json_encode(array(
                 "estado" => 1,
@@ -87,6 +90,24 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
             echo json_encode(array(
                 "estado" => 2,
                 "message" => "Error al tratar de registrar los datos " . $result,
+            ));
+        }
+    }else if($_POST["type"] === "deletedRol"){
+        $result = RolAdo::deleteRol($_POST["idRol"]);
+        if($result == "deleted"){
+            echo json_encode(array(
+                "estado" => 1,
+                "message" => "Se eleminó correctamente el rol.",
+            ));
+        }else if($result == "usuario"){
+            echo json_encode(array(
+                "estado" => 2,
+                "message" => "No se pudo eliminar el rol, porque está asociado a un usuario.",
+            ));
+        }else{
+            echo json_encode(array(
+                "estado" => 0,
+                "message" => $result,
             ));
         }
     }

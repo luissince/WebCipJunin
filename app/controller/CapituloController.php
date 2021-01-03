@@ -46,7 +46,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
         if ($result == "insertado") {
             echo json_encode(array(
                 "estado" => 1,
-                "message" => "Se insertaron correctamente los datos"
+                "message" => "Se registró correctamente el capítulo."
             ));
         } else if ($result == "duplicado") {
             echo json_encode(array(
@@ -56,7 +56,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
         } else {
             echo json_encode(array(
                 "estado" => 2,
-                "message" =>"Error al tratar de registrar los datos ".$result
+                "message" =>$result
             ));
         }
     } else if ($_POST["type"] === "insertEspecialidad") {
@@ -68,7 +68,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
         if ($result == "Insertado") {
             echo json_encode(array(
                 "estado" => 1,
-                "message" => "Se insertaron correctamente los datos"
+                "message" => "Se registró correctamente la especialidad."
             ));
         } else if ($result == "duplicado") {
             echo json_encode(array(
@@ -90,7 +90,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
         if ($result == "actualizado") {
             echo json_encode(array(
                 "estado" => 1,
-                "message" => "Se actualizaron correctamente los datos"
+                "message" => "Se actualizaron correctamente el capítulo."
             ));
         } else if ($result == "duplicado") {
             echo json_encode(array(
@@ -113,7 +113,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
         if ($result == "actualizado") {
             echo json_encode(array(
                 "estado" => 1,
-                "message" => "Se actualizaron correctamente los datos"
+                "message" => "Se actualizaron correctamente la especialidad."
             ));
         } else if ($result == "duplicado") {
             echo json_encode(array(
@@ -123,6 +123,45 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
         } else {
             echo json_encode(array(
                 "estado" => 2,
+                "message" => $result
+            ));
+        }
+    }else if($_POST["type"] === "deleteCapitulo"){
+
+        $result = CapituloAdo::deleteCapitulo($_POST["idCapitulo"]);
+        if ($result == "eliminado") {
+            echo json_encode(array(
+                "estado" => 1,
+                "message" => "Se eliminó correctamente el capítulo."
+            ));
+        } else if ($result == "especialidad") {
+            echo json_encode(array(
+                "estado" => 2,
+                "message" => "No se puede elimar el capítulo porque tiene ligado especialidades."
+            ));
+        } else {
+            echo json_encode(array(
+                "estado" => 0,
+                "message" => $result
+            ));
+        }
+
+    }else if($_POST["type"] === "deleteEspecialidad"){
+
+        $result = CapituloAdo::deleteEspecialidad($_POST["idEspecialidad"]);
+        if ($result == "eliminado") {
+            echo json_encode(array(
+                "estado" => 1,
+                "message" => "Se eliminó correctamente la especialidad."
+            ));
+        } else if ($result == "colegiatura") {
+            echo json_encode(array(
+                "estado" => 2,
+                "message" => "No se puede elimar la especialidad porque esta ligada a una colegiatura."
+            ));
+        } else {
+            echo json_encode(array(
+                "estado" => 0,
                 "message" => $result
             ));
         }

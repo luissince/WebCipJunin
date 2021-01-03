@@ -113,7 +113,7 @@ if (!isset($_SESSION['IdUsuario'])) {
                     <div class="row">
                         <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
                             <div class="form-group">
-                                <button type="button" class="btn btn-danger" id="btnNuevo">
+                                <button type="button" class="btn btn-success" id="btnNuevo">
                                     <i class="fa fa-plus"></i> Nuevo usuario
                                 </button>
                                 <button class="btn btn-link" id="btnactualizar">
@@ -148,6 +148,7 @@ if (!isset($_SESSION['IdUsuario'])) {
                                         <th>Apellido</th>
                                         <th>Usuario</th>
                                         <th>Rol</th>
+                                        <th>Estado</th>
                                         <th colspan="2" style="padding-left: 10%;">Opciones</th>
                                     </thead>
                                     <tbody id="tbTable">
@@ -321,12 +322,9 @@ if (!isset($_SESSION['IdUsuario'])) {
                                     '<td>' + usuario.Apellidos + '</td>' +
                                     '<td>' + usuario.Usuario + '</td>' +
                                     '<td>' + usuario.Rol + '</td>' +
-                                    '<td style="text-align: right;">' +
-                                    '' + btnUpdate + '' +
-                                    '</td>' +
-                                    '<td>' +
-                                    '' + btnDelete +
-                                    '</td>' +
+                                    '<td>' +( usuario.Estado == "1" ? '<label class="text-success">Activo<label>' : '<label class="text-danger">Inactivo</label>') + '</td>' +
+                                    '<td>' +  btnUpdate +'</td>' +
+                                    '<td>' + btnDelete +'</td>' +
                                     '</tr>');
                             }
                             totalPaginacion = parseInt(Math.ceil((parseFloat(result.total) / parseInt(
@@ -385,7 +383,8 @@ if (!isset($_SESSION['IdUsuario'])) {
                                     "apellidos": $("#txtAddApellidos").val(),
                                     "usuarios": $("#txtAddUsuario").val(),
                                     "contrasena": $("#txtContrasena").val(),
-                                    "rol": $("#rol").val()
+                                    "rol": $("#rol").val(),
+                                    "estado": $("#estado").val()
                                 },
                                 beforeSend: function() {
                                     clearModalUsuario();
@@ -417,6 +416,7 @@ if (!isset($_SESSION['IdUsuario'])) {
                 $("#txtAddApellidos").val("")
                 $("#txtAddUsuario").val("")
                 $("#txtContrasena").val("")
+                $("#estado").val("1")
             }
 
             function updateUsuario(id) {
@@ -461,6 +461,7 @@ if (!isset($_SESSION['IdUsuario'])) {
                                         $("#txtAddUsuario").val(result.object.Usuario);
                                         $("#txtContrasena").val(result.object.Clave);
                                         $("#rol").val(result.object.Rol);
+                                        $("#estado").val(result.object.Estado);
                                         tools.AlertInfo("Información", "Se cargo correctamente los datos.");
                                     } else {
                                         tools.AlertWarning("Advertencia", result.message);
@@ -500,6 +501,7 @@ if (!isset($_SESSION['IdUsuario'])) {
                                 tools.ModalAlertInfo("Usuarios", "Procesando petición..");
                             },
                             success: function(result) {
+                                console.log(result)
                                 if (result.estado == 1) {
                                     tools.ModalAlertSuccess("Usuarios", result.message);
                                     loadInitUsuario();
@@ -507,6 +509,9 @@ if (!isset($_SESSION['IdUsuario'])) {
                                     tools.ModalAlertWarning("Usuarios", result.message);
 
                                 } else if (result.estado == 3) {
+                                    tools.ModalAlertWarning("Usuarios", result.message);
+
+                                } else if (result.estado == 4) {
                                     tools.ModalAlertWarning("Usuarios", result.message);
 
                                 } else {

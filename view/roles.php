@@ -135,7 +135,7 @@ if (!isset($_SESSION['IdUsuario'])) {
                     <div class="row">
                         <div class="col-md-2 col-sm-12 col-xs-12">
                             <div class="form-group">
-                                <button id="btnNuevoRol" type="button" class="btn btn-danger" style="margin-right: 10px;">
+                                <button id="btnNuevoRol" type="button" class="btn btn-success" style="margin-right: 10px;">
                                     <i class="fa fa-plus"></i> Nuevo Rol
                                 </button>
                             </div>
@@ -174,7 +174,8 @@ if (!isset($_SESSION['IdUsuario'])) {
                                         <th width="30%">Descripción</th>
                                         <th width="15%">Estado</th>
                                         <th width="10%">Modulos</th>
-                                        <th width="10%">Opciones</th>
+                                        <th width="10%">Editar</th>
+                                        <th width="10%">Eliminar</th>
                                     </thead>
                                     <tbody id="tbTable">
                                     </tbody>
@@ -219,6 +220,11 @@ if (!isset($_SESSION['IdUsuario'])) {
             let tools = new Tools();
 
             let state = false;
+            let opcion = 0;
+            let totalPaginacion = 0;
+            let paginacion = 0;
+            let filasPorPagina = 10;
+
             let tbTable = $("#tbTable");
 
             let idRol = 0;
@@ -231,9 +237,30 @@ if (!isset($_SESSION['IdUsuario'])) {
                     loadInitRoles()
                 });
 
+                $("#btnIzquierda").click(function() {
+                    if (!state) {
+                        if (paginacion > 1) {
+                            paginacion--;
+                            onEventPaginacion();
+                        }
+                    }
+                });
+
+                $("#btnDerecha").click(function() {
+                    if (!state) {
+                        if (paginacion < totalPaginacion) {
+                            paginacion++;
+                            onEventPaginacion();
+                        }
+                    }
+                });
+
+
                 $("#buscar").on("keyup", function(event) {
-                    if (event.keyCode === 13) {
+                    if (!state) {
+                        paginacion = 1;
                         loadTableRoles($("#buscar").val());
+                        opcion = 1;
                     }
                 });
 
@@ -263,9 +290,22 @@ if (!isset($_SESSION['IdUsuario'])) {
                 //-------------------------------------------------------
             });
 
+            function onEventPaginacion() {
+                switch (opcion) {
+                    case 0:
+                        loadTableRoles("");
+                        break;
+                    case 1:
+                        loadTableRoles($("#buscar").val());
+                        break;
+                }
+            }
+
             function loadInitRoles() {
                 if (!state) {
+                    paginacion = 1;
                     loadTableRoles("");
+                    opcion = 0;
                 }
             }
 
@@ -276,21 +316,26 @@ if (!isset($_SESSION['IdUsuario'])) {
                     data: {
                         "type": "alldata",
                         "nombre": nombre,
+                        "posicionPagina": ((paginacion - 1) * filasPorPagina),
+                        "filasPorPagina": filasPorPagina
                     },
                     beforeSend: function() {
                         tbTable.empty();
                         tbTable.append(
-                            '<tr class="text-center"><td colspan="6"><img src="./images/spiner.gif"/><p>Cargando información.</p></td></tr>'
+                            '<tr class="text-center"><td colspan="7"><img src="./images/spiner.gif"/><p>Cargando información.</p></td></tr>'
                         );
                         state = true;
+                        totalPaginacion = 0;
                     },
                     success: function(result) {
                         if (result.estado === 1) {
                             tbTable.empty();
                             if (result.roles.length == 0) {
                                 tbTable.append(
-                                    '<tr class="text-center"><td colspan="6"><p>No hay datos para mostrar</p></td></tr>'
+                                    '<tr class="text-center"><td colspan="7"><p>No hay datos para mostrar</p></td></tr>'
                                 );
+                                $("#lblPaginaActual").html(0);
+                                $("#lblPaginaSiguiente").html(0);
                                 state = false;
                             } else {
                                 for (let rol of result.roles) {
@@ -300,9 +345,13 @@ if (!isset($_SESSION['IdUsuario'])) {
                                         '</button>';
 
                                     let btnUpdate =
-                                        '<button class="btn btn-warning btn-sm" onclick="loadDataRol(\'' +
-                                        rol.IdRol + '\')">' +
-                                        '<i class="fa fa-wrench"></i> Editar' +
+                                        '<button class="btn btn-warning btn-sm" onclick="loadDataRol(\'' + rol.IdRol + '\')">' +
+                                        '<i class="fa fa-edit"></i> Editar' +
+                                        '</button>';
+
+                                    let btnDelete =
+                                        '<button class="btn btn-danger btn-sm" onclick="eliminarRol(\'' + rol.IdRol + '\')">' +
+                                        '<i class="fa fa-trash"></i> Eliminar' +
                                         '</button>';
 
                                     let estado = rol.Estado == 1 ? 'Activo' : 'Inactivo'
@@ -316,14 +365,19 @@ if (!isset($_SESSION['IdUsuario'])) {
                                         '<td>' + estado + '</td>' +
                                         '<td>' + btnModulos + '</td>' +
                                         '<td>' + btnUpdate + '</td>' +
+                                        '<td>' + btnDelete + '</td>' +
                                         '</tr>');
                                 }
+                                totalPaginacion = parseInt(Math.ceil((parseFloat(result.total) / parseInt(
+                                    filasPorPagina))));
+                                $("#lblPaginaActual").html(paginacion);
+                                $("#lblPaginaSiguiente").html(totalPaginacion);
                                 state = false;
                             }
                         } else {
                             tbTable.empty();
                             tbTable.append(
-                                '<tr class="text-center"><td colspan="6"><p>' + result.message + '</p></td></tr>'
+                                '<tr class="text-center"><td colspan="7"><p>' + result.message + '</p></td></tr>'
                             );
                             $("#lblPaginaActual").html(0);
                             $("#lblPaginaSiguiente").html(0);
@@ -333,7 +387,7 @@ if (!isset($_SESSION['IdUsuario'])) {
                     error: function(error) {
                         tbTable.empty();
                         tbTable.append(
-                            '<tr class="text-center"><td colspan="6"><p>Se produjo un error, intente nuevamente.</p></td></tr>'
+                            '<tr class="text-center"><td colspan="7"><p>Se produjo un error, intente nuevamente.</p></td></tr>'
                         );
                         $("#lblPaginaActual").html(0);
                         $("#lblPaginaSiguiente").html(0);
@@ -354,7 +408,7 @@ if (!isset($_SESSION['IdUsuario'])) {
                                 url: "../app/controller/RolController.php",
                                 method: "POST",
                                 data: {
-                                    "type": "insertRol",
+                                    "type": "crudRol",
                                     "IdRol": idRol,
                                     "Nombre": $("#nombre").val(),
                                     "Descripcion": $("#descripcion").val(),
@@ -380,6 +434,39 @@ if (!isset($_SESSION['IdUsuario'])) {
                     });
 
                 }
+            }
+
+
+            function eliminarRol(idRol) {
+                tools.ModalDialog("Roles", "¿Está seguro eliminar el rol?", function(value) {
+                    if (value == true) {
+                        $.ajax({
+                            url: "../app/controller/RolController.php",
+                            method: "POST",
+                            data: {
+                                "type": "deletedRol",
+                                "idRol": idRol,
+                            },
+                            beforeSend: function() {
+                                tools.ModalAlertInfo("Roles", "Procesando petición..");
+                            },
+                            success: function(result) {
+                                if (result.estado == 1) {
+                                    tools.ModalAlertSuccess("Roles", result.message);
+                                    loadInitRoles();
+                                } else if (result.estado == 2) {
+                                    tools.ModalAlertWarning("Roles", result.message);
+                                } else {
+                                    tools.ModalAlertWarning("Roles", result.message);
+                                }
+                            },
+                            error: function(error) {
+                                tools.ModalAlertError("Roles", error.responseText);
+                            }
+                        });
+                    }
+                });
+
             }
 
             function updateModules() {

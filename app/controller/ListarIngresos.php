@@ -9,9 +9,13 @@ require '../model/IngresosAdo.php';
 if ($_SERVER['REQUEST_METHOD'] == 'GET') {
     //$search = $_GET['search'];
     if ($_GET["type"] === "allIngresos") {
+        $opcion = $_GET['opcion'];
+        $buscar = $_GET['buscar'];
+        $fechaInicio = $_GET['fechaInicio'];
+        $fechaFinal = $_GET['fechaFinal'];
         $posicionPagina = $_GET['posicionPagina'];
         $filasPorPagina = $_GET['filasPorPagina'];
-        $result = IngresosAdo::ListarIngresos(intval($posicionPagina), intval($filasPorPagina));
+        $result = IngresosAdo::ListarIngresos($opcion, $buscar, $fechaInicio, $fechaFinal, intval($posicionPagina), intval($filasPorPagina));
         if (is_array($result)) {
             print json_encode(array(
                 "estado" => 1,
@@ -24,10 +28,14 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
                 "mensaje" => $result
             ));
         }
-    } else if($_GET["type"] === "allCertHabilidad"){
+    } else if ($_GET["type"] === "allCertHabilidad") {
+        $opcion = $_GET['opcion'];
+        $buscar = $_GET['buscar'];
+        $fechaInicio = $_GET['fechaInicio'];
+        $fechaFinal = $_GET['fechaFinal'];
         $posicionPagina = $_GET['posicionPagina'];
         $filasPorPagina = $_GET['filasPorPagina'];
-        $result = IngresosAdo::ListarCertificadosHabilidad(intval($posicionPagina), intval($filasPorPagina));
+        $result = IngresosAdo::ListarCertificadosHabilidad($opcion, $buscar, $fechaInicio, $fechaFinal, intval($posicionPagina), intval($filasPorPagina));
         if (is_array($result)) {
             print json_encode(array(
                 "estado" => 1,
@@ -40,11 +48,15 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
                 "mensaje" => $result
             ));
         }
-    } else if($_GET["type"] === "allCertProyecto"){
+    } else if ($_GET["type"] === "allCertProyecto") {
+        $opcion = $_GET['opcion'];
+        $buscar = $_GET['buscar'];
+        $fechaInicio = $_GET['fechaInicio'];
+        $fechaFinal = $_GET['fechaFinal'];
         $posicionPagina = $_GET['posicionPagina'];
         $filasPorPagina = $_GET['filasPorPagina'];
-        $result = IngresosAdo::ListarCertificadosProyecto(intval($posicionPagina), intval($filasPorPagina));
-        if (is_array($result)) {
+        $result = IngresosAdo::ListarCertificadosProyecto($opcion, $buscar, $fechaInicio, $fechaFinal,intval($posicionPagina), intval($filasPorPagina));
+        if (is_array($result)) { 
             print json_encode(array(
                 "estado" => 1,
                 "data" => $result[0],
@@ -56,10 +68,14 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
                 "mensaje" => $result
             ));
         }
-    } else if($_GET["type"] === "allCertObra"){
+    } else if ($_GET["type"] === "allCertObra") {
+        $opcion = $_GET['opcion'];
+        $buscar = $_GET['buscar'];
+        $fechaInicio = $_GET['fechaInicio'];
+        $fechaFinal = $_GET['fechaFinal'];
         $posicionPagina = $_GET['posicionPagina'];
         $filasPorPagina = $_GET['filasPorPagina'];
-        $result = IngresosAdo::ListarCertificadosObra(intval($posicionPagina), intval($filasPorPagina));
+        $result = IngresosAdo::ListarCertificadosObra($opcion, $buscar, $fechaInicio, $fechaFinal,intval($posicionPagina), intval($filasPorPagina));
         if (is_array($result)) {
             print json_encode(array(
                 "estado" => 1,

@@ -9,7 +9,7 @@ class IngresosAdo
     {
     }
 
-    public static function ListarIngresos($posicionPagina, $filasPorPagina)
+    public static function ListarIngresos($opcion, $buscar, $fechaInicio, $fechaFinal, $posicionPagina, $filasPorPagina)
     {
         try {
             $array = array();
@@ -22,12 +22,34 @@ class IngresosAdo
             ON i.idDNI = p.idDNI
             INNER JOIN Detalle AS d 
             ON d.idIngreso = i.idIngreso
+            WHERE
+            $opcion = 0 AND i.Fecha BETWEEN ? AND ?
+            OR
+            ($opcion = 1 AND i.Serie LIKE CONCAT(?,'%'))
+            OR
+            ($opcion = 1 AND i.NumRecibo LIKE CONCAT(?,'%'))
+            OR
+            ($opcion = 1 AND CONCAT(i.Serie,'-',i.NumRecibo) LIKE CONCAT(?,'%'))
+            OR
+            ($opcion = 1 AND p.idDNI LIKE CONCAT(?,'%'))
+            OR
+            ($opcion = 1 AND p.Apellidos LIKE CONCAT(?,'%'))
+            OR
+            ($opcion = 1 AND p.Nombres LIKE CONCAT(?,'%'))
             GROUP BY i.idIngreso,i.Fecha,i.Hora,i.Serie,i.NumRecibo,i.Estado,
             p.CIP,p.idDNI,p.Apellidos,p.Nombres,i.Xmlsunat,i.Xmldescripcion
             ORDER BY i.Fecha DESC,i.Hora DESC
             offset ? ROWS FETCH NEXT ? ROWS only");
-            $cmdConcepto->bindParam(1, $posicionPagina, PDO::PARAM_INT);
-            $cmdConcepto->bindParam(2, $filasPorPagina, PDO::PARAM_INT);
+            $cmdConcepto->bindParam(1, $fechaInicio, PDO::PARAM_STR);
+            $cmdConcepto->bindParam(2, $fechaFinal, PDO::PARAM_STR);
+            $cmdConcepto->bindParam(3, $buscar, PDO::PARAM_STR);
+            $cmdConcepto->bindParam(4, $buscar, PDO::PARAM_STR);
+            $cmdConcepto->bindParam(5, $buscar, PDO::PARAM_STR);
+            $cmdConcepto->bindParam(6, $buscar, PDO::PARAM_STR);
+            $cmdConcepto->bindParam(7, $buscar, PDO::PARAM_STR);
+            $cmdConcepto->bindParam(8, $buscar, PDO::PARAM_STR);
+            $cmdConcepto->bindParam(9, $posicionPagina, PDO::PARAM_INT);
+            $cmdConcepto->bindParam(10, $filasPorPagina, PDO::PARAM_INT);
             $cmdConcepto->execute();
             $count = 0;
 
@@ -50,7 +72,30 @@ class IngresosAdo
                 ));
             }
 
-            $comandoTotal = Database::getInstance()->getDb()->prepare("SELECT COUNT(*) FROM Ingreso");
+            $comandoTotal = Database::getInstance()->getDb()->prepare("SELECT COUNT(*) AS Total FROM Ingreso AS i INNER JOIN Persona AS p
+            ON i.idDNI = p.idDNI
+            WHERE
+            $opcion = 0 AND i.Fecha BETWEEN ? AND ?
+            OR
+            ($opcion = 1 AND i.Serie LIKE CONCAT(?,'%'))
+            OR
+            ($opcion = 1 AND i.NumRecibo LIKE CONCAT(?,'%'))
+            OR
+            ($opcion = 1 AND CONCAT(i.Serie,'-',i.NumRecibo) LIKE CONCAT(?,'%'))
+            OR
+            ($opcion = 1 AND p.idDNI LIKE CONCAT(?,'%'))
+            OR
+            ($opcion = 1 AND p.Apellidos LIKE CONCAT(?,'%'))
+            OR
+            ($opcion = 1 AND p.Nombres LIKE CONCAT(?,'%'))");
+            $comandoTotal->bindParam(1, $fechaInicio, PDO::PARAM_STR);
+            $comandoTotal->bindParam(2, $fechaFinal, PDO::PARAM_STR);
+            $comandoTotal->bindParam(3, $buscar, PDO::PARAM_STR);
+            $comandoTotal->bindParam(4, $buscar, PDO::PARAM_STR);
+            $comandoTotal->bindParam(5, $buscar, PDO::PARAM_STR);
+            $comandoTotal->bindParam(6, $buscar, PDO::PARAM_STR);
+            $comandoTotal->bindParam(7, $buscar, PDO::PARAM_STR);
+            $comandoTotal->bindParam(8, $buscar, PDO::PARAM_STR);
             $comandoTotal->execute();
             $resultTotal =  $comandoTotal->fetchColumn();
 
@@ -61,17 +106,41 @@ class IngresosAdo
         }
     }
 
-    public function ListarCertificadosHabilidad($posicionPagina, $filasPorPagina)
+    public static function ListarCertificadosHabilidad($opcion, $buscar, $fechaInicio, $fechaFinal, $posicionPagina, $filasPorPagina)
     {
         try {
             $array = array();
             $arrayCertHabilidad = array();
-            $cmdCertHabilidad = Database::getInstance()->getDb()->prepare("SELECT p.idDNI, p.Nombres,p.Apellidos, e.Especialidad, ch.Numero, ch.Asunto, ch.Entidad, ch.Lugar, convert(VARCHAR, CAST(ch.Fecha AS DATE),103) AS Fecha, convert(VARCHAR, CAST(ch.HastaFecha AS DATE),103) AS HastaFecha, ch.idIngreso,ch.Anulado AS Estado from CERTHabilidad AS ch
+            $cmdCertHabilidad = Database::getInstance()->getDb()->prepare("SELECT 
+            p.idDNI, p.Nombres,p.Apellidos,
+            e.Especialidad, ch.Numero, ch.Asunto, ch.Entidad, ch.Lugar, 
+            convert(VARCHAR, CAST(ch.Fecha AS DATE),103) AS Fecha, 
+            convert(VARCHAR, CAST(ch.HastaFecha AS DATE),103) AS HastaFecha, 
+            ch.idIngreso,ch.Anulado AS Estado 
+            FROM CERTHabilidad AS ch
             INNER JOIN Ingreso AS i ON i.idIngreso = ch.idIngreso
             INNER JOIN Persona AS p On p.idDNI = i.idDNI
-            INNER JOIN Especialidad AS e On e.idEspecialidad = ch.idColegiatura");
-            $cmdCertHabilidad->bindParam(1, $posicionPagina, PDO::PARAM_INT);
-            $cmdCertHabilidad->bindParam(2, $filasPorPagina, PDO::PARAM_INT);
+            INNER JOIN Especialidad AS e On e.idEspecialidad = ch.idColegiatura
+            WHERE
+            $opcion = 0 AND i.Fecha BETWEEN ? AND ?
+            OR
+            $opcion = 1 AND ch.Numero LIKE CONCAT(?,'%')
+            OR
+            $opcion = 1 AND  ch.Asunto LIKE CONCAT(?,'%')
+            OR
+            $opcion = 1 AND ch.Entidad LIKE CONCAT(?,'%')
+            OR
+            $opcion = 1 AND ch.Lugar LIKE CONCAT(?,'%')
+            ORDER BY i.Fecha DESC,i.Hora DESC
+            offset ? ROWS FETCH NEXT ? ROWS only");
+            $cmdCertHabilidad->bindParam(1, $fechaInicio, PDO::PARAM_STR);
+            $cmdCertHabilidad->bindParam(2, $fechaFinal, PDO::PARAM_STR);
+            $cmdCertHabilidad->bindParam(3, $buscar, PDO::PARAM_STR);
+            $cmdCertHabilidad->bindParam(4, $buscar, PDO::PARAM_STR);
+            $cmdCertHabilidad->bindParam(5, $buscar, PDO::PARAM_STR);
+            $cmdCertHabilidad->bindParam(6, $buscar, PDO::PARAM_STR);
+            $cmdCertHabilidad->bindParam(7, $posicionPagina, PDO::PARAM_INT);
+            $cmdCertHabilidad->bindParam(8, $filasPorPagina, PDO::PARAM_INT);
             $cmdCertHabilidad->execute();
             $count = 0;
 
@@ -90,11 +159,30 @@ class IngresosAdo
                     "lugar" => $row["Lugar"],
                     "fechaPago" => $row["Fecha"],
                     "fechaVencimiento" => $row["HastaFecha"],
-                    "estado" => ($row["Estado"] == 0 ) ? 'Activo' : 'Anulado',
+                    "estado" => $row["Estado"] == 0
                 ));
             }
 
-            $comandoTotal = Database::getInstance()->getDb()->prepare("SELECT COUNT(*) FROM CERTHabilidad");
+            $comandoTotal = Database::getInstance()->getDb()->prepare("SELECT COUNT(*) FROM CERTHabilidad AS ch
+            INNER JOIN Ingreso AS i ON i.idIngreso = ch.idIngreso
+            INNER JOIN Persona AS p On p.idDNI = i.idDNI
+            INNER JOIN Especialidad AS e On e.idEspecialidad = ch.idColegiatura 
+            WHERE
+            $opcion = 0 AND i.Fecha BETWEEN ? AND ?
+            OR
+            $opcion = 1 AND ch.Numero LIKE CONCAT(?,'%')
+            OR
+            $opcion = 1 AND  ch.Asunto LIKE CONCAT(?,'%')
+            OR
+            $opcion = 1 AND ch.Entidad LIKE CONCAT(?,'%')
+            OR
+            $opcion = 1 AND ch.Lugar LIKE CONCAT(?,'%')");
+            $comandoTotal->bindParam(1, $fechaInicio, PDO::PARAM_STR);
+            $comandoTotal->bindParam(2, $fechaFinal, PDO::PARAM_STR);
+            $comandoTotal->bindParam(3, $buscar, PDO::PARAM_STR);
+            $comandoTotal->bindParam(4, $buscar, PDO::PARAM_STR);
+            $comandoTotal->bindParam(5, $buscar, PDO::PARAM_STR);
+            $comandoTotal->bindParam(6, $buscar, PDO::PARAM_STR);
             $comandoTotal->execute();
             $resultTotal =  $comandoTotal->fetchColumn();
 
@@ -105,20 +193,30 @@ class IngresosAdo
         }
     }
 
-    public function ListarCertificadosProyecto($posicionPagina, $filasPorPagina)
+    public static function ListarCertificadosProyecto($opcion, $buscar, $fechaInicio, $fechaFinal, $posicionPagina, $filasPorPagina)
     {
         try {
             $array = array();
             $arrayCertProyecto = array();
             $cmdCertProyecto = Database::getInstance()->getDb()->prepare("SELECT p.idDNI, p.Nombres,p.Apellidos, e.Especialidad, cp.Numero, cp.Modalidad, cp.Propietario, 
             cp.Proyecto, cp.Monto, CONCAT(U.Departamento,'-',U.Provincia,'-', u.Distrito) AS Ubigeo, ISNULL(cp.Adicional1,'N/D') AS Adicional1, ISNULL(cp.Adicional2,'N/D') AS Adicional2, 
-            convert(VARCHAR, CAST(cp.Fecha AS DATE),103) AS Fecha, convert(VARCHAR, CAST(cp.HastaFecha AS DATE),103) AS HastaFecha, cp.idIngreso, cp.Anulado AS Estado  from CERTProyecto AS cp
+            convert(VARCHAR, CAST(cp.Fecha AS DATE),103) AS Fecha, convert(VARCHAR, CAST(cp.HastaFecha AS DATE),103) AS HastaFecha, cp.idIngreso, cp.Anulado AS Estado  
+            FROM CERTProyecto AS cp
             INNER JOIN Ingreso AS i ON i.idIngreso = cp.idIngreso
             INNER JOIN Persona AS p On p.idDNI = i.idDNI
             INNER JOIN Especialidad AS e On e.idEspecialidad = cp.idColegiatura
-            INNER JOIN Ubigeo AS u ON u.IdUbigeo = cp.idUbigeo");
-            $cmdCertProyecto->bindParam(1, $posicionPagina, PDO::PARAM_INT);
-            $cmdCertProyecto->bindParam(2, $filasPorPagina, PDO::PARAM_INT);
+            INNER JOIN Ubigeo AS u ON u.IdUbigeo = cp.idUbigeo
+            WHERE
+            $opcion = 0 AND i.Fecha BETWEEN ? AND ?
+            OR
+            $opcion = 1 AND cp.Numero LIKE CONCAT(?,'%')
+            ORDER BY i.Fecha DESC,i.Hora DESC
+            offset ? ROWS FETCH NEXT ? ROWS only");
+            $cmdCertProyecto->bindParam(1, $fechaInicio, PDO::PARAM_STR);
+            $cmdCertProyecto->bindParam(2, $fechaFinal, PDO::PARAM_STR);
+            $cmdCertProyecto->bindParam(3, $buscar, PDO::PARAM_STR);
+            $cmdCertProyecto->bindParam(4, $posicionPagina, PDO::PARAM_INT);
+            $cmdCertProyecto->bindParam(5, $filasPorPagina, PDO::PARAM_INT);
             $cmdCertProyecto->execute();
             $count = 0;
 
@@ -141,11 +239,22 @@ class IngresosAdo
                     "adicional2" => $row["Adicional2"],
                     "fechaPago" => $row["Fecha"],
                     "fechaVencimiento" => $row["HastaFecha"],
-                    "estado" => ($row["Estado"] == 0 ) ? 'Activo' : 'Anulado',
+                    "estado" => $row["Estado"]
                 ));
             }
 
-            $comandoTotal = Database::getInstance()->getDb()->prepare("SELECT COUNT(*) FROM CERTProyecto");
+            $comandoTotal = Database::getInstance()->getDb()->prepare("SELECT COUNT(*) FROM CERTProyecto  AS cp
+            INNER JOIN Ingreso AS i ON i.idIngreso = cp.idIngreso
+            INNER JOIN Persona AS p On p.idDNI = i.idDNI
+            INNER JOIN Especialidad AS e On e.idEspecialidad = cp.idColegiatura
+            INNER JOIN Ubigeo AS u ON u.IdUbigeo = cp.idUbigeo
+            WHERE
+            $opcion = 0 AND i.Fecha BETWEEN ? AND ?
+            OR
+            $opcion = 1 AND cp.Numero LIKE CONCAT(?,'%')");
+            $comandoTotal->bindParam(1, $fechaInicio, PDO::PARAM_STR);
+            $comandoTotal->bindParam(2, $fechaFinal, PDO::PARAM_STR);
+            $comandoTotal->bindParam(3, $buscar, PDO::PARAM_STR);
             $comandoTotal->execute();
             $resultTotal =  $comandoTotal->fetchColumn();
 
@@ -156,20 +265,30 @@ class IngresosAdo
         }
     }
 
-    public function ListarCertificadosObra($posicionPagina, $filasPorPagina)
+    public static function ListarCertificadosObra($opcion, $buscar, $fechaInicio, $fechaFinal, $posicionPagina, $filasPorPagina)
     {
         try {
             $array = array();
             $arrayCertObra = array();
             $cmdCertObra = Database::getInstance()->getDb()->prepare("SELECT p.idDNI, p.Nombres,p.Apellidos, e.Especialidad, cr.Numero, cr.Modalidad, cr.Propietario, 
             cr.Proyecto, cr.Monto, CONCAT(u.Departamento,'-',u.Provincia,'-', u.Distrito) AS Ubigeo, convert(VARCHAR, CAST(cr.Fecha AS DATE),103) AS Fecha, 
-            convert(VARCHAR, CAST(cr.HastaFecha AS DATE),103) AS HastaFecha, cr.idIngreso, cr.Anulado AS Estado from CERTResidencia AS cr
+            convert(VARCHAR, CAST(cr.HastaFecha AS DATE),103) AS HastaFecha, cr.idIngreso, cr.Anulado AS Estado
+            FROM CERTResidencia AS cr
             INNER JOIN Ingreso AS i ON i.idIngreso = cr.idIngreso
             INNER JOIN Persona AS p On p.idDNI = i.idDNI
             INNER JOIN Especialidad AS e On e.idEspecialidad = cr.idColegiatura
-            INNER JOIN Ubigeo AS u ON u.IdUbigeo = cr.idUbigeo");
-            $cmdCertObra->bindParam(1, $posicionPagina, PDO::PARAM_INT);
-            $cmdCertObra->bindParam(2, $filasPorPagina, PDO::PARAM_INT);
+            INNER JOIN Ubigeo AS u ON u.IdUbigeo = cr.idUbigeo
+            WHERE
+            $opcion = 0 AND i.Fecha BETWEEN ? AND ?
+            OR
+            $opcion = 1 AND cr.Numero LIKE CONCAT(?,'%')
+            ORDER BY i.Fecha DESC,i.Hora DESC
+            offset ? ROWS FETCH NEXT ? ROWS only");
+            $cmdCertObra->bindParam(1, $fechaInicio, PDO::PARAM_STR);
+            $cmdCertObra->bindParam(2, $fechaFinal, PDO::PARAM_STR);
+            $cmdCertObra->bindParam(3, $buscar, PDO::PARAM_STR);
+            $cmdCertObra->bindParam(4, $posicionPagina, PDO::PARAM_INT);
+            $cmdCertObra->bindParam(5, $filasPorPagina, PDO::PARAM_INT);
             $cmdCertObra->execute();
             $count = 0;
 
@@ -190,11 +309,22 @@ class IngresosAdo
                     "ubigeo" => $row["Ubigeo"],
                     "fechaPago" => $row["Fecha"],
                     "fechaVencimiento" => $row["HastaFecha"],
-                    "estado" => ($row["Estado"] == 0 ) ? 'Activo' : 'Anulado',
+                    "estado" => $row["Estado"],
                 ));
             }
 
-            $comandoTotal = Database::getInstance()->getDb()->prepare("SELECT COUNT(*) FROM CERTResidencia");
+            $comandoTotal = Database::getInstance()->getDb()->prepare("SELECT COUNT(*) FROM CERTResidencia AS cr
+            INNER JOIN Ingreso AS i ON i.idIngreso = cr.idIngreso
+            INNER JOIN Persona AS p On p.idDNI = i.idDNI
+            INNER JOIN Especialidad AS e On e.idEspecialidad = cr.idColegiatura
+            INNER JOIN Ubigeo AS u ON u.IdUbigeo = cr.idUbigeo
+            WHERE
+            $opcion = 0 AND i.Fecha BETWEEN ? AND ?
+            OR
+            $opcion = 1 AND cr.Numero LIKE CONCAT(?,'%')");
+            $comandoTotal->bindParam(1, $fechaInicio, PDO::PARAM_STR);
+            $comandoTotal->bindParam(2, $fechaFinal, PDO::PARAM_STR);
+            $comandoTotal->bindParam(3, $buscar, PDO::PARAM_STR);
             $comandoTotal->execute();
             $resultTotal =  $comandoTotal->fetchColumn();
 
@@ -588,7 +718,7 @@ class IngresosAdo
 
     public static function ObtenerDatosPdfCertHabilidad($idIngreso)
     {
-        try{
+        try {
             $arrayCertHabilidad = array();
             $cmdCertHabilidad = Database::getInstance()->getDb()->prepare("SELECT p.idDNI, p.Nombres,p.Apellidos, e.Especialidad, ch.Numero, ch.Asunto, ch.Entidad, ch.Lugar, convert(VARCHAR, CAST(c.FechaColegiado AS DATE),103) AS FechaIncorporacion,
             DATEPART(DAY, (convert(VARCHAR, CAST(c.FechaColegiado AS DATE),103))) AS FIDia, DATEPART(MONTH, (convert(VARCHAR, CAST(c.FechaColegiado AS DATE),103))) AS FIMes, 
@@ -640,7 +770,7 @@ class IngresosAdo
 
     public static function ObtenerDatosPdfCertObra($idIngreso)
     {
-        try{
+        try {
             $arrayCertObra = array();
             $cmdCertObra = Database::getInstance()->getDb()->prepare("SELECT p.idDNI, p.Nombres,p.Apellidos, e.Especialidad, cr.Numero, cr.Modalidad, cr.Propietario, cr.Proyecto, cr.Monto, u.Departamento,u.Provincia,u.Distrito, 
             convert(VARCHAR, CAST(c.FechaColegiado AS DATE),103) AS FechaIncorporacion, DATEPART(DAY, (convert(VARCHAR, CAST(c.FechaColegiado AS DATE),103))) AS FIDia, 
@@ -697,7 +827,7 @@ class IngresosAdo
 
     public static function ObtenerDatosPdfCertProyecto($idIngreso)
     {
-        try{
+        try {
             $arrayCertProyecto = array();
             $cmdCertProyecto = Database::getInstance()->getDb()->prepare("SELECT p.idDNI, p.Nombres,p.Apellidos, e.Especialidad, cp.Numero, cp.Modalidad, cp.Propietario, cp.Proyecto, cp.Monto, u.Departamento, u.Provincia, u.Distrito, 
             ISNULL(cp.Adicional1,'N/D') AS Adicional1, ISNULL(cp.Adicional2,'N/D') AS Adicional2, convert(VARCHAR, CAST(c.FechaColegiado AS DATE),103) AS FechaIncorporacion, 

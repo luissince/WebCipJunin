@@ -37,7 +37,7 @@ class CapituloAdo
                 ));
             }
 
-            $comandoTotal = Database::getInstance()->getDb()->prepare("SELECT COUNT(*) FROM Especialidad AS e LEFT JOIN Capitulo 
+            $comandoTotal = Database::getInstance()->getDb()->prepare("SELECT COUNT(*) FROM Especialidad AS e RIGHT JOIN Capitulo 
             AS c ON c.idCapitulo = e.idCapitulo 
             where Capitulo like concat(?,'%') or Especialidad like concat(?,'%')");
             $comandoTotal->bindParam(1, $nombres, PDO::PARAM_STR);
@@ -65,19 +65,20 @@ class CapituloAdo
         }
     }
 
-    public static function getAllDistinctEspecialidades(){
-        try{ 
+    public static function getAllDistinctEspecialidades()
+    {
+        try {
             $comandoEspecialidad = Database::getInstance()->getDb()->prepare("SELECT DISTINCT Especialidad from Especialidad");
             $comandoEspecialidad->execute();
             $resultado = $comandoEspecialidad->fetchAll();
             return $resultado;
-        }
-        catch(Exception $ex){
+        } catch (Exception $ex) {
             return $ex->getMessage();
         }
     }
-    
-    public static function getAllCountCapAndEsp(){
+
+    public static function getAllCountCapAndEsp()
+    {
         try {
             $comandoEsp = Database::getInstance()->getDb()->prepare("SELECT count(1) FROM Especialidad");
             $comandoCap = Database::getInstance()->getDb()->prepare("SELECT count(1) FROM Capitulo");
@@ -142,12 +143,13 @@ class CapituloAdo
         }
     }
 
-    public static function updateCapitulo ($capitulo){
-        try{
+    public static function updateCapitulo($capitulo)
+    {
+        try {
             Database::getInstance()->getDb()->beginTransaction();
-            $comandSelect = Database::getInstance()->getDb()->prepare("SELECT * FROM Capitulo WHERE Capitulo = UPPER(?)");
-            // $comandSelect->bindParam(1, $capitulo["idCapitulo"], PDO::PARAM_INT);
-            $comandSelect->bindParam(1, $capitulo["Capitulo"], PDO::PARAM_STR);
+            $comandSelect = Database::getInstance()->getDb()->prepare("SELECT * FROM Capitulo WHERE idCapitulo <> ? AND Capitulo = UPPER(?)");
+            $comandSelect->bindParam(1, $capitulo["idCapitulo"], PDO::PARAM_INT);
+            $comandSelect->bindParam(2, $capitulo["Capitulo"], PDO::PARAM_STR);
             $comandSelect->execute();
             if ($comandSelect->fetch()) {
                 Database::getInstance()->getDb()->rollback();
@@ -166,23 +168,72 @@ class CapituloAdo
         }
     }
 
-    public static function updateEspecialidad($especialidad){
-        try{
+    public static function updateEspecialidad($especialidad)
+    {
+        try {
             Database::getInstance()->getDb()->beginTransaction();
-            $comandSelect = Database::getInstance()->getDb()->prepare("SELECT * FROM Especialidad WHERE UPPER(Especialidad) = UPPER(?)");
-            $comandSelect->bindParam(1, $especialidad["Especialidad"], PDO::PARAM_STR);
+            $comandSelect = Database::getInstance()->getDb()->prepare("SELECT * FROM Especialidad WHERE idEspecialidad <> ? AND UPPER(Especialidad) = UPPER(?)");
+            $comandSelect->bindParam(1, $especialidad["idEspecialidad"], PDO::PARAM_STR);
+            $comandSelect->bindParam(2, $especialidad["Especialidad"], PDO::PARAM_STR);
             $comandSelect->execute();
             if ($comandSelect->fetch()) {
                 Database::getInstance()->getDb()->rollback();
                 return "duplicado";
             } else {
-                $comandoInsert = Database::getInstance()->getDb()->prepare("UPDATE Especialidad SET idEspecialidad = ?, Especialidad = ? WHERE idEspecialidad = ?");
+                $comandoInsert = Database::getInstance()->getDb()->prepare("UPDATE Especialidad SET idCapitulo = ?, Especialidad = ? WHERE idEspecialidad = ?");
                 $comandoInsert->bindParam(1, $especialidad["idCapitulo"], PDO::PARAM_INT);
                 $comandoInsert->bindParam(2, $especialidad["Especialidad"], PDO::PARAM_STR);
                 $comandoInsert->bindParam(3, $especialidad["idEspecialidad"], PDO::PARAM_INT);
                 $comandoInsert->execute();
                 Database::getInstance()->getDb()->commit();
                 return "actualizado";
+            }
+        } catch (Exception $ex) {
+            Database::getInstance()->getDb()->rollback();
+            return $ex->getMessage();
+        }
+    }
+
+    public static function deleteCapitulo($idCapitulo)
+    {
+        try {
+            Database::getInstance()->getDb()->beginTransaction();
+
+            $cmdValidate = Database::getInstance()->getDb()->prepare("SELECT * FROM Especialidad WHERE idCapitulo = ?");
+            $cmdValidate->bindParam(1, $idCapitulo, PDO::PARAM_STR);
+            $cmdValidate->execute();
+            if ($cmdValidate->fetch()) {
+                Database::getInstance()->getDb()->rollback();
+                return "especialidad";
+            } else {
+                $cmdCapitulo = Database::getInstance()->getDb()->prepare("DELETE FROM Capitulo WHERE idCapitulo = ?");
+                $cmdCapitulo->bindParam(1, $idCapitulo, PDO::PARAM_STR);
+                $cmdCapitulo->execute();
+                Database::getInstance()->getDb()->commit();
+                return "eliminado";
+            }
+        } catch (Exception $ex) {
+            Database::getInstance()->getDb()->rollback();
+            return $ex->getMessage();
+        }
+    }
+
+    public static function deleteEspecialidad($idEspecialidad)
+    {
+        try {
+            Database::getInstance()->getDb()->beginTransaction();
+            $cmdValidate = Database::getInstance()->getDb()->prepare("SELECT * FROM Colegiatura WHERE idEspecialidad = ?");
+            $cmdValidate->bindParam(1, $idEspecialidad, PDO::PARAM_STR);
+            $cmdValidate->execute();
+            if ($cmdValidate->fetch()) {
+                Database::getInstance()->getDb()->rollback();
+                return "colegiatura";
+            } else {
+                $comandSelect = Database::getInstance()->getDb()->prepare("DELETE FROM Especialidad WHERE idEspecialidad = ?");
+                $comandSelect->bindParam(1, $idEspecialidad, PDO::PARAM_STR);
+                $comandSelect->execute();
+                Database::getInstance()->getDb()->commit();
+                return "eliminado";
             }
         } catch (Exception $ex) {
             Database::getInstance()->getDb()->rollback();

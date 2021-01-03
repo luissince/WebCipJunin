@@ -261,7 +261,6 @@ if (!isset($_GET["idIngreso"])) {
 
                     <div style="font-style: italic;font-weight: bold;padding:5px 0px;">' . (isset($cuotas->Pago) ? 'CUOTAS: ' . $cuotas->Pago : '') . '</div>
        
-<<<<<<< HEAD
                     <table class="items" style="font-family:Arial;font-size: 11pt; border-collapse: collapse; border: 0px;margin-bottom:10px;" width="100%">
                         <tr>
                             <td class="estado" width="50%"></td>
@@ -299,45 +298,6 @@ if (!isset($_GET["idIngreso"])) {
                             <td class="cost" align="right" width="15%">S/ ' . number_format(round($totales['totalconimpuesto'], 2, PHP_ROUND_HALF_UP), 2, '.', '') . '</td>
                         </tr>
                     </table>
-=======
-        <table class="items" style="font-family:Arial;font-size: 11pt; border-collapse: collapse; border: 0px;margin-bottom:10px;" width="100%">
-            <tr>
-                <td class="estado" width="50%"></td>
-                <td class="totals" width="15%" align="right">Op.Gravadas:</td>
-                <td class="cost" align="right" width="15%">S/ 0.00</td>
-            </tr>  
-            <tr>
-                <td class="estado" width="50%"></td>    
-                <td class="totals" width="15%" align="right">Op.Gratuitas: </td>
-                <td class="cost" align="right" width="15%">S/ 0.00</td>
-            </tr>         
-            <tr>
-                <td class="estado" width="50%"></td>
-                <td class="totals" width="15%" align="right">Op.Exogeneradas: </td>
-                <td class="cost" align="right" width="15%">S/ ' . number_format(round($totales['totalconimpuesto'], 2, PHP_ROUND_HALF_UP), 2, '.', '') . '</td>
-            </tr>            
-            <tr>
-                <td class="estado" width="50%"></td>
-                <td class="totals" width="15%" align="right">Op.Inafectas: </td>
-                <td class="cost" align="right" width="15%">S/ 0.00</td>
-            </tr>
-            <tr>
-                <td class="estado" width="50%"></td>
-                <td class="totals" width="15%" align="right">Descuentos: </td>
-                <td class="cost" align="right" width="15%">S/ 0.00</td>
-            </tr>
-            <tr>
-                <td class="estado" width="50%"></td>
-                <td class="totals" width="15%" align="right">Igv(18%). </td>
-                <td class="cost" align="right" width="15%">S/ 0.00</td>
-            </tr>
-            <tr>
-                <td class="estado" width="50%"></td>
-                <td class="totals" width="15%" align="right">Importe Total:</td>
-                <td class="cost" align="right" width="15%">S/ ' . number_format(round($totales['totalconimpuesto'], 2, PHP_ROUND_HALF_UP), 2, '.', '') . '</td>
-            </tr>
-        </table>
->>>>>>> 92671ee0fb890cc326aa563f0fe2796f7d1fe028
  
                     <div style="border-top: 1px solid #000000">
                         <p style="padding:7px 0px;">SON:<strong> ' . $gcl->getResult(round($totales['totalconimpuesto'], 2, PHP_ROUND_HALF_UP), "SOL") . '</strong></p>

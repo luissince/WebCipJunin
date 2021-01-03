@@ -46,7 +46,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
         } else if ($result == false) {
             echo json_encode(array(
                 "estado" => 2,
-                "message" => "Usuario o contraseña incorrecto(s).",
+                "message" => "El usuario y/u contraseña son incorrectas o se encuentra con estado inactivo.",
             ));
         } else {
             echo json_encode(array(
@@ -76,6 +76,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
         $usuario["usuarios"] = trim($_POST['usuarios']);
         $usuario["contrasena"] = $_POST['contrasena'];
         $usuario["rol"] = $_POST['rol'];
+        $usuario["estado"] = $_POST['estado'];
 
         $result = UsuarioAdo::insertUsuario($usuario);
         if ($result == "insertado") {
@@ -102,25 +103,30 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
     } else if ($_POST["type"] === 'deleteUsuario') {
         $usuario["idusuario"] = $_POST['idUsuario'];
         $result = UsuarioAdo::deleteUsuario($usuario);
-        if ($result == "actualizado") {
+        if ($result == "eliminado") {
             echo json_encode(array(
                 "estado" => 1,
-                "message" => "Se eliminaron correctamente los datos",
+                "message" => "Se eliminaron correctamente el usuario.",
             ));
         } else if ($result == "sistema") {
             echo json_encode(array(
                 "estado" => 2,
-                "message" => "El usuario es propio del sistema; no se puede eliminar",
+                "message" => "El usuario es propio del sistema; no se puede eliminar.",
             ));
         } else if ($result == "activo") {
             echo json_encode(array(
                 "estado" => 3,
-                "message" => "No se puede eliminar; el usuario esta activo",
+                "message" => "No se puede eliminar porque se encuentra activo.",
+            ));
+        }else if ($result == "ingreso") {
+            echo json_encode(array(
+                "estado" => 4,
+                "message" => "No se puede eliminar el usuario porque ligado ingresos.",
             ));
         } else {
             echo json_encode(array(
                 "estado" => 0,
-                "message" => "Error al tratar de eliminar los datos " . $result,
+                "message" =>  $result,
             ));
         }
     }

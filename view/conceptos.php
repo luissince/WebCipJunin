@@ -178,7 +178,7 @@ if (!isset($_SESSION['IdUsuario'])) {
                         <div class="col-md-2 col-sm-12 col-xs-12">
                             <div class="form-group">
                                 <!-- <button type="button" class="btn btn-danger" data-toggle="modal" data-target="#confirmar"> -->
-                                <button type="button" class="btn btn-danger" id="btnNuevo">
+                                <button type="button" class="btn btn-success" id="btnNuevo">
                                     <i class="fa fa-plus"></i> Nuevo Concepto
                                 </button>
                             </div>

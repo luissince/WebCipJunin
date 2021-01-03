@@ -59,6 +59,49 @@ if (!isset($_SESSION['IdUsuario'])) {
                     </div>
                 </div>
                 <!-- Modal alert-->
+
+                <!-- modal detalle del ingreso -->
+                <div class="row">
+                    <div class="modal fade" id="mostrarDetalleIngreso" data-backdrop="static">
+                        <div class="modal-dialog">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <button type="button" class="close" data-dismiss="modal">
+                                        <i class="fa fa-close"></i>
+                                    </button>
+                                    <h4 class="modal-title">
+                                        <i class="fa fa-group">
+                                        </i> Detalle del Ingreso
+                                    </h4>
+                                </div>
+                                <div class="modal-body">
+                                    <div class="row">
+                                        <div class="col-md-12">
+                                            <div class="table-responsive">
+                                                <table class="table table-striped table-hover table-sm">
+                                                    <thead>
+                                                        <tr>
+                                                            <th width="5%">#</th>
+                                                            <th width="50%">Concepto</th>
+                                                            <th width="15%">Precio</th>
+                                                            <th width="15%">Cantidad</th>
+                                                            <th width="15%">Importe</th>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody id="tbDetalleIngreso">
+
+                                                    </tbody>
+                                                </table>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!--end modal history enginner  -->
+
                 <section class="content">
 
                     <div class="row">
@@ -91,26 +134,12 @@ if (!isset($_SESSION['IdUsuario'])) {
 
                     <div class="row">
                         <div class="col-md-3 col-sm-12 col-xs-12">
-                            <!-- <div class="form-group"> -->
                             <label>Fecha de inicio:</label>
-                            <!-- <div class="input-group date"> -->
-                            <!-- <div class="input-group-addon"> -->
-                            <!-- <i class="fa fa-calendar"></i> -->
-                            <!-- </div> -->
-                            <input type="date" class="form-control pull-right" id="datepicker">
-                            <!-- </div> -->
-                            <!-- </div> -->
+                            <input type="date" class="form-control pull-right" id="fechaInicio">
                         </div>
                         <div class="col-md-3 col-sm-12 col-xs-12">
-                            <!-- <div class="form-group"> -->
                             <label>Fecha de fin:</label>
-                            <!-- <div class="input-group date"> -->
-                            <!-- <div class="input-group-addon"> -->
-                            <!-- <i class="fa fa-calendar"></i> -->
-                            <!-- </div> -->
-                            <input type="date" class="form-control pull-right" id="datepicker">
-                            <!-- </div> -->
-                            <!-- </div> -->
+                            <input type="date" class="form-control pull-right" id="fechaFinal">
                         </div>
                         <div class="col-md-3 col-sm-12 col-xs-12">
                             <div class="form-group">
@@ -212,7 +241,10 @@ if (!isset($_SESSION['IdUsuario'])) {
             let arrayIngresos = [];
 
             $(document).ready(function() {
-                loadInitIngresos();
+
+                $("#fechaInicio").val(tools.getCurrentDate());
+
+                $("#fechaFinal").val(tools.getCurrentDate());
 
                 $("#btnIzquierda").click(function() {
                     if (!state) {
@@ -271,6 +303,36 @@ if (!isset($_SESSION['IdUsuario'])) {
                     event.preventDefault();
                 });
 
+                $("#fechaInicio").on("change", function() {
+                    if (tools.validateDate($("#fechaInicio").val()) && tools.validateDate($("#fechaFinal").val())) {
+                        if (!state) {
+                            paginacion = 1;
+                            loadTableIngresos(0, "", $("#fechaInicio").val(), $("#fechaFinal").val());
+                            opcion = 0;
+                        }
+                    }
+                });
+
+                $("#fechaInicio").on("change", function() {
+                    if (tools.validateDate($("#fechaInicio").val()) && tools.validateDate($("#fechaFinal").val())) {
+                        if (!state) {
+                            paginacion = 1;
+                            loadTableIngresos(0, "", $("#fechaInicio").val(), $("#fechaFinal").val());
+                            opcion = 0;
+                        }
+                    }
+                });
+
+                $("#buscar").keyup(function() {
+                    if ($("#buscar").val().trim() != '') {
+                        if (!state) {
+                            paginacion = 1;
+                            loadTableIngresos(1, $("#buscar").val().trim(), "", "");
+                            opcion = 1;
+                        }
+                    }
+                });
+
                 $("#btnRecargar").click(function() {
                     loadInitIngresos();
                 });
@@ -282,34 +344,41 @@ if (!isset($_SESSION['IdUsuario'])) {
                     event.preventDefault();
                 });
 
+                loadInitIngresos();
 
             });
 
             function onEventPaginacion() {
                 switch (opcion) {
                     case 0:
-                        loadTableIngresos();
+                        loadTableIngresos(0, "", $("#fechaInicio").val(), $("#fechaFinal").val());
                         break;
                     case 1:
-                        loadTableIngresos();
+                        loadTableIngresos(1, $("#buscar").val().trim(), "", "");
                         break;
                 }
             }
 
             function loadInitIngresos() {
-                if (!state) {
-                    paginacion = 1;
-                    loadTableIngresos();
-                    opcion = 0;
+                if (tools.validateDate($("#fechaInicio").val()) && tools.validateDate($("#fechaFinal").val())) {
+                    if (!state) {
+                        paginacion = 1;
+                        loadTableIngresos(0, "", $("#fechaInicio").val(), $("#fechaFinal").val());
+                        opcion = 0;
+                    }
                 }
             }
 
-            function loadTableIngresos() {
+            function loadTableIngresos(opcion, buscar, fechaInicio, fechaFinal) {
                 $.ajax({
                     url: "../app/controller/ListarIngresos.php",
                     method: "GET",
                     data: {
                         "type": "allIngresos",
+                        "opcion": opcion,
+                        "buscar": buscar,
+                        "fechaInicio": fechaInicio,
+                        "fechaFinal": fechaFinal,
                         "posicionPagina": ((paginacion - 1) * filasPorPagina),
                         "filasPorPagina": filasPorPagina
                     },
@@ -318,10 +387,11 @@ if (!isset($_SESSION['IdUsuario'])) {
                         tbTable.append(
                             '<tr class="text-center"><td colspan="9"><img src="./images/spiner.gif"/><p>Cargando información.</p></td></tr>'
                         );
-                        arrayIngresos.splice(0, arrayIngresos.length);
+                        arrayIngresos = [];
                         state = true;
                     },
                     success: function(result) {
+
                         if (result.estado == 1) {
                             arrayIngresos = result.data;
                             if (arrayIngresos.length == 0) {
@@ -337,12 +407,15 @@ if (!isset($_SESSION['IdUsuario'])) {
                             } else {
                                 tbTable.empty();
                                 for (let ingresos of arrayIngresos) {
-                                    
+
                                     let btnAnular = '<button class="btn btn-danger btn-xs" onclick="anularIngreso(\'' + ingresos.idIngreso + '\')">' +
                                         '<i class="fa fa-ban"></i></br>Anular' +
                                         '</button>';
                                     let btnPdf = '<button class="btn btn-default btn-xs" onclick="openPdf(\'' + ingresos.idIngreso + '\')">' +
                                         '<i class="fa fa-file-pdf-o"></i></br>P.D.F' +
+                                        '</button>';
+                                    let btnDetalle = '<button class="btn btn-warning btn-xs" onclick="openDetalle(\'' + ingresos.idIngreso + '\')">' +
+                                        '<i class="fa fa-eye"></i></br>Detalle' +
                                         '</button>';
 
                                     let estadosunat = ingresos.estado === "C" ?
@@ -362,7 +435,7 @@ if (!isset($_SESSION['IdUsuario'])) {
                                         '<td style="text-align: center;color: #2270D1;">' +
                                         '' + ingresos.id + '' +
                                         '</td>' +
-                                        '<td>' + btnAnular + ' ' + btnPdf + '</td>' +
+                                        '<td>' + btnAnular + ' ' + btnPdf + ' ' + btnDetalle + '</td>' +
                                         '<td>' + ingresos.fecha + '</td>' +
                                         '<td>' + ingresos.serie + '-' + ingresos.numRecibo + '</td>' +
                                         '<td>' + ingresos.idDNI + '</br>' + ingresos.nombres + ' ' + ingresos.apellidos + '</td>' +
@@ -445,7 +518,7 @@ if (!isset($_SESSION['IdUsuario'])) {
                                         $("#btnButtonAcceptModal").removeClass('disabled pointer-events');
                                     }
                                 },
-                                error: function(error) {                              
+                                error: function(error) {
                                     $("#alertIcon").empty();
                                     $("#alertIcon").append('<i class="fa fa-times-circle fa-3x text-danger "></i>');
                                     $("#alertText").html("Error en el momento de firmar el xml, intente nuevamente o comuníquese con su proveedor del sistema.");
@@ -458,7 +531,7 @@ if (!isset($_SESSION['IdUsuario'])) {
                 });
             }
 
-            function resumenDiarioXml(idIngreso, comprobante, resumen) {                
+            function resumenDiarioXml(idIngreso, comprobante, resumen) {
                 tools.ModalDialog("¿Realmente Deseas Anular el Documento?", "Se anulará el documento: " + comprobante + ", y se creará el siguiente resumen individual: RC-" + resumen + "-1, estás seguro de anular el documento? los cambios no se podrán revertir!", function(value) {
                     if (value == true) {
                         $.ajax({
@@ -565,10 +638,50 @@ if (!isset($_SESSION['IdUsuario'])) {
                 window.open("../app/sunat/pdfingresos.php?idIngreso=" + idIngreso, "_blank");
             }
 
+            function openDetalle(idIngreso) {
+                $("#mostrarDetalleIngreso").modal("show");
+                $.ajax({
+                    url: "../app/controller/IngresoController.php",
+                    method: "GET",
+                    data: {
+                        "type": "detalleingreso",
+                        "idIngreso": idIngreso,
+                    },
+                    beforeSend: function() {
+                        $("#tbDetalleIngreso").empty();
+                        $("#tbDetalleIngreso").append('<tr class="text-center"><td colspan="5"><img src="./images/spiner.gif"/><p>Cargando información.</p></td></tr>');
+
+                    },
+                    success: function(result) {
+                        if (result.estado == 1) {
+                            $("#tbDetalleIngreso").empty();
+                            if (result.detalles.length == 0) {
+                                $("#tbDetalleIngreso").append('<tr class="text-center"><td colspan="5"><p>No hay datos para Mostrar</p></td></tr>');
+                            } else {
+                                for (let detalle of result.detalles) {
+                                    $("#tbDetalleIngreso").append('<tr>' +
+                                        '<td>' + detalle.Id + '</td>' +
+                                        '<td>' + detalle.Concepto + '</td>' +
+                                        '<td>' + tools.formatMoney(detalle.Precio) + '</td>' +
+                                        '<td>' + tools.formatMoney(detalle.Cantidad) + '</td>' +
+                                        '<td>' + tools.formatMoney(detalle.Total) + '</td>' +
+                                        '</tr>');
+                                }
+                            }
+                        } else {
+                            $("#tbDetalleIngreso").append('<tr class="text-center"><td colspan="5"><p>' + result.message + '</p></td></tr>');
+                        }
+                    },
+                    error: function(error) {
+                        $("#tbDetalleIngreso").append('<tr class="text-center"><td colspan="5"><p>' + error.responseText + '</p></td></tr>');
+
+                    }
+                });
+            }
+
             function anularIngreso(idIngreso) {
                 tools.ModalDialogInputText("Ingreso", "¿Está seguro de anular el comprobante?", function(value) {
-                    if (value.dismiss == "cancel") {                       
-                    } else if (value.value.length == 0) {
+                    if (value.dismiss == "cancel") {} else if (value.value.length == 0) {
                         tools.ModalAlertWarning("Ingreso", "No ingreso ningún motivo :(");
                     } else {
                         $.ajax({
@@ -578,16 +691,17 @@ if (!isset($_SESSION['IdUsuario'])) {
                                 "type": "deleteIngreso",
                                 "idIngreso": idIngreso,
                                 "idUsuario": 1,
-                                "motivo":value.value.toUpperCase(),
+                                "motivo": value.value.toUpperCase(),
                                 "fecha": tools.getCurrentDate(),
                                 "hora": tools.getCurrentTime()
                             },
                             beforeSend: function() {
                                 tools.ModalAlertInfo("Ingreso", "Procesando petición..");
                             },
-                            success: function(result) {                              
+                            success: function(result) {
                                 if (result.estado == 1) {
                                     tools.ModalAlertSuccess("Ingreso", result.message);
+                                    loadInitIngresos();
                                 } else if (result.estado == 2) {
                                     tools.ModalAlertWarning("Ingreso", result.message);
                                 } else {
