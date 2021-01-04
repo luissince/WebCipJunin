@@ -364,6 +364,7 @@ if (!isset($_SESSION['IdUsuario'])) {
                                 state = false;
                             }
                         } else {
+                            console.log(result);
                             tbTable.empty();
                             tbTable.append(
                                 '<tr class="text-center"><td colspan="9"><p>No se pudo cargar la información.</p></td></tr>'
