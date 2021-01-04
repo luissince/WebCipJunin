@@ -2,8 +2,13 @@ function Colegiatura() {
 
     this.componentesColegiatura = function() {
         $("#btnColegitura").click(function() {
-            $('#mdColegiatura').modal('show');
-            loadColegiatura();
+            if (idDNI == 0) {
+                tools.AlertWarning("Colegiatura", "No selecciono ningún ingeniero para obtener su colegiatura.")
+            } else {
+                $('#mdColegiatura').modal('show');
+                loadColegiatura();
+            }
+
         });
 
         $("#btnColegitura").keypress(function(event) {

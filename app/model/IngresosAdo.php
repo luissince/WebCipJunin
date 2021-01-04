@@ -1029,7 +1029,7 @@ class IngresosAdo
     {
         try {
             $arrayIngresos = array();
-            $cmdConcepto = Database::getInstance()->getDb()->prepare("{CALL ResumenCobrosCIN(?,?)}");
+            $cmdConcepto = Database::getInstance()->getDb()->prepare("{CALL Sp_Resumen_CipNacional(?,?)}");
             $cmdConcepto->bindParam(1, $fechaInicio, PDO::PARAM_STR);
             $cmdConcepto->bindParam(2, $fechaFinal, PDO::PARAM_STR);
             $cmdConcepto->execute();
@@ -1044,33 +1044,33 @@ class IngresosAdo
                     "Condicion" => ($row["Condicion"] == "F" ? "FALLECIDO" : $row["Condicion"] == "R" ? "RETIRADO" : $row["Condicion"] == "V" ? "VITALICIO" : "ORDINARIO"),
                     "Ingeniero" => $row["Ingeniero"],
                     "Anno" => $row["Anno"],
-                    "X1" => $row["X1"],
-                    "X2" => $row["X2"],
-                    "X3" => $row["X3"],
-                    "X4" => $row["X4"],
-                    "X5" => $row["X5"],
-                    "X6" => $row["X6"],
-                    "X7" => $row["X7"],
-                    "X8" => $row["X8"],
-                    "X9" => $row["X9"],
-                    "X10" => $row["X10"],
-                    "X11" => $row["X11"],
-                    "X12" => $row["X12"],
-                    "XZ" => $row["XZ"],
-                    "Y1" => $row["Y1"],
-                    "Y2" => $row["Y2"],
-                    "Y3" => $row["Y3"],
-                    "Y4" => $row["Y4"],
-                    "Y5" => $row["Y5"],
-                    "Y6" => $row["Y6"],
-                    "Y7" => $row["Y7"],
-                    "Y8" => $row["Y8"],
-                    "Y9" => $row["Y9"],
-                    "Y10" => $row["Y10"],
-                    "Y11" => $row["Y11"],
-                    "Y12" => $row["Y12"],
-                    "YZ" => $row["YZ"],
-                    "XYZ" => $row["XYZ"]
+                    "X1" => $row["Enero"],
+                    "X2" => $row["Febrero"],
+                    "X3" => $row["Marzo"],
+                    "X4" => $row["Abril"],
+                    "X5" => $row["Mayo"],
+                    "X6" => $row["Junio"],
+                    "X7" => $row["Julio"],
+                    "X8" => $row["Agosto"],
+                    "X9" => $row["Setiembre"],
+                    "X10" => $row["Octubre"],
+                    "X11" => $row["Noviembre"],
+                    "X12" => $row["Diciembre"],
+                    "XZ" => $row["Total_ISS_CIP"],
+                    "Y1" => $row["Enero"],
+                    "Y2" => $row["Febrero"],
+                    "Y3" => $row["Marzo"],
+                    "Y4" => $row["Abril"],
+                    "Y5" => $row["Mayo"],
+                    "Y6" => $row["Junio"],
+                    "Y7" => $row["Julio"],
+                    "Y8" => $row["Agosto"],
+                    "Y9" => $row["Setiembre"],
+                    "Y10" => $row["Octubre"],
+                    "Y11" => $row["Noviembre"],
+                    "Y12" => $row["Diciembre"],
+                    "YZ" => $row["Total_Cuotas_CIP"],
+                    "XYZ" => $row["Suma Total"]
                 ));
             }
 
