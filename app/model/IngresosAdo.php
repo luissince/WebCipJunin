@@ -722,13 +722,20 @@ class IngresosAdo
     {
         try {
             $arrayCertHabilidad = array();
-            $cmdCertHabilidad = Database::getInstance()->getDb()->prepare("SELECT p.CIP,p.idDNI, p.Nombres,p.Apellidos, e.Especialidad, ch.Numero, ch.Asunto, ch.Entidad, ch.Lugar, convert(VARCHAR, CAST(c.FechaColegiado AS DATE),103) AS FechaIncorporacion,
-            DATEPART(DAY, (convert(VARCHAR, CAST(c.FechaColegiado AS DATE),103))) AS FIDia, DATEPART(MONTH, (convert(VARCHAR, CAST(c.FechaColegiado AS DATE),103))) AS FIMes, 
-            DATEPART(YEAR, (convert(VARCHAR, CAST(c.FechaColegiado AS DATE),103))) AS FIAnio, convert(VARCHAR, CAST(ch.Fecha AS DATE),103) AS FechaRegistro,
-            DATEPART(DAY, (convert(VARCHAR, CAST(ch.Fecha AS DATE),103))) AS FRDia, DATEPART(MONTH, (convert(VARCHAR, CAST(ch.Fecha AS DATE),103))) AS FRMes, 
+            $cmdCertHabilidad = Database::getInstance()->getDb()->prepare("SELECT p.CIP,p.idDNI, p.Nombres,p.Apellidos,
+            e.Especialidad, ch.Numero, ch.Asunto, ch.Entidad, ch.Lugar, 
+            convert(VARCHAR, CAST(c.FechaColegiado AS DATE),103) AS FechaIncorporacion,
+            DATEPART(DAY, (convert(VARCHAR, CAST(c.FechaColegiado AS DATE),103))) AS FIDia, 
+            DATEPART(MONTH, (convert(VARCHAR, CAST(c.FechaColegiado AS DATE),103))) AS FIMes, 
+            DATEPART(YEAR, (convert(VARCHAR, CAST(c.FechaColegiado AS DATE),103))) AS FIAnio, 
+            convert(VARCHAR, CAST(ch.Fecha AS DATE),103) AS FechaRegistro,
+            DATEPART(DAY, (convert(VARCHAR, CAST(ch.Fecha AS DATE),103))) AS FRDia, 
+            DATEPART(MONTH, (convert(VARCHAR, CAST(ch.Fecha AS DATE),103))) AS FRMes, 
             DATEPART(YEAR, (convert(VARCHAR, CAST(ch.Fecha AS DATE),103))) AS FRAnio, 
-            convert(VARCHAR, CAST(ch.HastaFecha AS DATE),103) AS HastaFecha, DATEPART(DAY, (convert(VARCHAR, CAST(ch.HastaFecha AS DATE),103))) AS FVDia,
-            DATEPART(MONTH, (convert(VARCHAR, CAST(ch.HastaFecha AS DATE),103))) AS FVMes, DATEPART(YEAR, (convert(VARCHAR, CAST(ch.HastaFecha AS DATE),103))) AS FVAnio,
+            convert(VARCHAR, CAST(ch.HastaFecha AS DATE),103) AS HastaFecha, 
+            DATEPART(DAY, (convert(VARCHAR, CAST(ch.HastaFecha AS DATE),103))) AS FVDia,
+            DATEPART(MONTH, (convert(VARCHAR, CAST(ch.HastaFecha AS DATE),103))) AS FVMes, 
+            DATEPART(YEAR, (convert(VARCHAR, CAST(ch.HastaFecha AS DATE),103))) AS FVAnio,
             ch.idIngreso from CERTHabilidad AS ch
             INNER JOIN Ingreso AS i ON i.idIngreso = ch.idIngreso
             INNER JOIN Persona AS p On p.idDNI = i.idDNI
