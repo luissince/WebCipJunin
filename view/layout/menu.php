@@ -48,7 +48,7 @@
                 if ($_SESSION["Permisos"][3]["ver"] == 1) {
                     print '<li class="treeview">
                     <a href="#">
-                        <i class="fa fa-sitemap"></i> <span>Documentos</span>
+                        <i class="fa fa-sitemap"></i> <span>Registros</span>
                         <span class="pull-right-container">
                             <i class="fa fa-angle-left pull-right"></i>
                         </span>
@@ -89,6 +89,11 @@
                 if ($_SESSION["Permisos"][8]["ver"] == 1) {
                     print '<li>
                     <a href="./cobros.php"><i class="fa fa-money"></i><span>Cobros</span></a>
+                </li>';
+                }
+                if ($_SESSION["Permisos"][11]["ver"] == 1) {
+                    print '<li>
+                    <a href="./comprobantes.php"><i class="fa fa-file-text-o"></i><span>Comprobantes</span></a>
                 </li>';
                 }
                 if ($_SESSION["Permisos"][9]["ver"] == 1) {
