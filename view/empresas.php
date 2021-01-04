@@ -412,7 +412,7 @@ if (!isset($_SESSION['IdUsuario'])) {
                                     } else if (result.estado === 3) {
                                         loadInitEmpresas();
                                         clearModalAddEmpresa();
-                                        tools.ModalAlertWarning("Empresa", result.mensaje);
+                                        tools.ModalAlertSuccess("Empresa", result.mensaje);
                                     } else {
                                         tools.ModalAlertWarning("Empresa", result.mensaje);
                                     }

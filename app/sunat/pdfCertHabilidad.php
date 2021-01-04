@@ -56,7 +56,7 @@ if (!isset($_GET["idIngreso"])) {
                         font-family: "Arial";
                         font-size: 10pt;
                         color:#000000;
-                        padding-top:60px;
+                        padding-top:70px;
                     }
                     .header-two {
                         font-family: "Arial";
@@ -68,19 +68,19 @@ if (!isset($_GET["idIngreso"])) {
                         font-family: "Arial";
                         font-size: 10pt;
                         color:#000000;
-                        padding-top:213px;
+                        padding-top:210px;
                     }
                     .body-two {
                         font-family: "Arial";
                         font-size: 10pt;
                         color:#000000;
-                        padding-top:120px;
+                        padding-top:105px;
                     }
                     .footer-one {
                         font-family: "Arial";
                         font-size: 10pt;
                         color:#000000;
-                        padding-top:83px;
+                        padding-top:82px;
                         text-align: center; 
                         padding-left: 400px;
                     }
@@ -88,7 +88,7 @@ if (!isset($_GET["idIngreso"])) {
                         font-family: "Arial";
                         font-size: 10pt;
                         color:#000000;
-                        padding-top:36px; 
+                        padding-top:34px; 
                         padding-left:320px;
                     }
                 </style>

@@ -31,66 +31,78 @@ if (!isset($_SESSION['IdUsuario'])) {
 
                 <!-- modal nuevo Comprobante  -->
                 <div class="row">
-                    <div class="modal fade" id="NuevaEmpresaPersona">
+                    <div class="modal fade" id="NuevoComprobante">
                         <div class="modal-dialog">
                             <div class="modal-content">
                                 <div class="modal-header">
-                                    <button type="button" class="close" id="btnCloseEmpresa">
+                                    <button type="button" class="close" id="btnCloseComprobante">
                                         <i class="fa fa-close"></i>
                                     </button>
-                                    <!-- <h4 class="modal-title">
-                                            <i class="fa fa-building-o">
-                                            </i> Registrar Empresa
-                                        </h4> -->
-                                    <h4 class="modal-title" id="modal-empresa-title">
+                                    <h4 class="modal-title" id="modal-comprobante-title">
                                     </h4>
                                 </div>
                                 <div class="modal-body">
                                     <div class="row">
                                         <div class="col-md-12">
                                             <div class="form-group">
-                                                <label for="txtRuc">RUC: <i class="fa fa-fw fa-asterisk text-danger"></i></label>
-                                                <input id="txtRuc" type="number" class="form-control" placeholder="Ingrese ruc" required="" minlength="11">
+                                                <label for="txtNombre">Nombre: <i class="fa fa-fw fa-asterisk text-danger"></i></label>
+                                                <input id="txtNombre" type="text" class="form-control" placeholder="Ingrese Nombre" required="" minlength="11">
                                             </div>
                                         </div>
                                     </div>
                                     <div class="row">
-                                        <div class="col-md-12">
+                                        <div class="col-md-4">
                                             <div class="form-group">
-                                                <label for="NombreComercial">Nombre/Razón Social: <i class="fa fa-fw fa-asterisk text-danger"></i></label>
-                                                <input id="NombreComercial" type="text" class="form-control" placeholder="Nombre Comercial" required="">
+                                                <label for="txtSerie">Serie: <i class="fa fa-fw fa-asterisk text-danger"></i></label>
+                                                <input id="txtSerie" type="text" class="form-control" placeholder="Serie ejemp (B001/F001)" required="">
                                             </div>
                                         </div>
-                                    </div>
-                                    <div class="row">
-                                        <div class="col-md-12">
+                                        <div class="col-md-4">
                                             <div class="form-group">
-                                                <label for="DireccionEmpresa">Dirección: <i class="fa fa-fw fa-asterisk text-danger"></i></label>
-                                                <input id="DireccionEmpresa" type="text" class="form-control" placeholder="Dirección" required="">
+                                                <label for="txtNumeracion">Numeracion: <i class="fa fa-fw fa-asterisk text-danger"></i></label>
+                                                <input id="txtNumeracion" type="number" class="form-control" placeholder="Ingrese numeracion" required="">
                                             </div>
                                         </div>
-                                    </div>
-
-                                    <div class="row">
-                                        <div class="col-md-6">
+                                        <div class="col-md-4">
                                             <div class="form-group">
-                                                <label for="Tlf_Celular">Telefono/Celular:</label>
-                                                <input id="Tlf_Celular" type="number" class="form-control" placeholder="telefono o celular" required="">
-                                            </div>
-                                        </div>
-                                        <div class="col-md-6">
-                                            <div class="form-group">
-                                                <label for="Pagina_web">Pagina Web:</label>
-                                                <input id="Pagina_web" type="text" class="form-control" placeholder="página web" required="">
+                                                <label for="txtAlterno">Codigo Alterno: <i class="fa fa-fw fa-asterisk text-danger"></i></label>
+                                                <input id="txtAlterno" type="number" class="form-control" placeholder="Codigo alterno" required="">
                                             </div>
                                         </div>
                                     </div>
 
                                     <div class="row">
-                                        <div class="col-md-12">
+                                        <div class="col-md-4">
                                             <div class="form-group">
-                                                <label for="Email_Empresa">Correo Electrónico:</label>
-                                                <input id="Email_Empresa" type="text" class="form-control" placeholder="Correo electónico" required="">
+                                                <label for="cbPredeterminado">Predeterminado:</label>
+                                                <div class="checkbox">
+                                                    <label>
+                                                        <input type="checkbox" id="cbPredeterminado">
+                                                        Si
+                                                    </label>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-4">
+                                            <div class="form-group">
+                                                <label for="cbEstado">Estado:</label>
+                                                <div class="checkbox">
+                                                    <label>
+                                                        <input type="checkbox" id="cbEstado">
+                                                        Activo
+                                                    </label>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-4">
+                                            <div class="form-group">
+                                                <label for="cbUsaRuc">Usa RUC:</label>
+                                                <div class="checkbox">
+                                                    <label>
+                                                        <input type="checkbox" id="cbUsaRuc">
+                                                        Si
+                                                    </label>
+                                                </div>
                                             </div>
                                         </div>
                                     </div>
@@ -98,9 +110,9 @@ if (!isset($_SESSION['IdUsuario'])) {
                                 </div>
                                 <div class="modal-footer">
                                     <p class="text-left text-danger">Todos los campos marcados con <i class="fa fa-fw fa-asterisk text-danger"></i> son obligatorios</p>
-                                    <button type="submit" class="btn btn-danger" id="btnAceptarAddEmpresa">
+                                    <button type="submit" class="btn btn-danger" id="btnAceptarAddComprobante">
                                         <i class="fa fa-check"></i> Aceptar</button>
-                                    <button type="button" class="btn btn-primary" id="btnCancelarAddEmpresa">
+                                    <button type="button" class="btn btn-primary" id="btnCancelarAddComprobante">
                                         <i class="fa fa-remove"></i> Cancelar</button>
                                 </div>
                             </div>
@@ -151,7 +163,8 @@ if (!isset($_SESSION['IdUsuario'])) {
                                         <th>Código Alterno</th>
                                         <th>Predeterminado</th>
                                         <th>Estado</th>
-                                        <th colspan="2">Opciones</th>
+                                        <th>Usa Ruc</th>
+                                        <th>Opciones</th>
                                     </thead>
                                     <tbody id="tbTable">
 
@@ -205,7 +218,7 @@ if (!isset($_SESSION['IdUsuario'])) {
 
             $(document).ready(function() {
 
-                loadInitEmpresas();
+                loadInitComprobantes();
 
                 $("#btnIzquierda").click(function() {
                     if (!state) {
@@ -226,20 +239,20 @@ if (!isset($_SESSION['IdUsuario'])) {
                 });
 
                 $("#btnactualizar").click(function() {
-                    loadInitEmpresas();
+                    loadInitComprobantes();
                 });
 
                 $("#buscar").on("keyup", function(event) {
                     if (event.keyCode === 13) {
                         paginacion = 1;
-                        loadTableEmpresa($("#buscar").val());
+                        loadTableComprobante($("#buscar").val());
                         opcion = 1;
                     }
                 });
 
                 $("#btnSearch").click(function() {
                     paginacion = 1;
-                    loadTableEmpresa($("#buscar").val());
+                    loadTableComprobante($("#buscar").val());
                     opcion = 1;
                 });
 
@@ -251,16 +264,16 @@ if (!isset($_SESSION['IdUsuario'])) {
                 //     $("#modal-empresa-title").append('<i class="fa fa-building-o"></i> Registrar Empresa')
                 // })
 
-                $("#btnAceptarAddEmpresa").click(function() {
-                    crudEmpresa();
+                $("#btnAceptarAddComprobante").click(function() {
+                    crudComprobante();
                 });
 
-                $("#btnCancelarAddEmpresa").click(function() {
-                    clearModalAddEmpresa()
+                $("#btnCancelarAddComprobante").click(function() {
+                    clearModalAddComprobante()
                 });
 
-                $("#btnCloseEmpresa").click(function() {
-                    clearModalAddEmpresa()
+                $("#btnCloseComprobante").click(function() {
+                    clearModalAddComprobante()
                 });
 
             });
@@ -268,28 +281,28 @@ if (!isset($_SESSION['IdUsuario'])) {
             function onEventPaginacion() {
                 switch (opcion) {
                     case 0:
-                        loadTableEmpresa("");
+                        loadTableComprobante("");
                         break;
                     case 1:
-                        loadTableEmpresa($("#buscar").val());
+                        loadTableComprobante($("#buscar").val());
                         break;
                 }
             }
 
-            function loadInitEmpresas() {
+            function loadInitComprobantes() {
                 if (!state) {
                     paginacion = 1;
-                    loadTableEmpresa("");
+                    loadTableComprobante("");
                     opcion = 0;
                 }
             }
 
-            function loadTableEmpresa(nombres) {
+            function loadTableComprobante(nombres) {
                 $.ajax({
-                    url: "../app/controller/EmpresaController.php",
+                    url: "../app/controller/ComprobanteController.php",
                     method: "GET",
                     data: {
-                        "type": "alldata",
+                        "type": "listaComprobantes",
                         "nombres": nombres,
                         "posicionPagina": ((paginacion - 1) * filasPorPagina),
                         "filasPorPagina": filasPorPagina
@@ -305,7 +318,7 @@ if (!isset($_SESSION['IdUsuario'])) {
                     success: function(result) {
                         if (result.estado === 1) {
                             tbTable.empty();
-                            if (result.empresas.length == 0) {
+                            if (result.data.length == 0) {
                                 tbTable.append(
                                     '<tr class="text-center"><td colspan="9"><p>No hay datos para mostrar.</p></td></tr>'
                                 );
@@ -314,34 +327,34 @@ if (!isset($_SESSION['IdUsuario'])) {
                                 $("#lblPaginaSiguiente").html(totalPaginacion);
                                 state = false;
                             } else {
-
-                                for (let empresa of result.empresas) {
+                                for (let comprobante of result.data) {
 
                                     let btnUpdate =
-                                        '<button class="btn btn-warning btn-sm" onclick="updateEmpresas(\'' + empresa.idEmpresa + '\')">' +
+                                        '<button class="btn btn-warning btn-sm" onclick="updateComprobante(\'' + comprobante.IdTipoComprobante + '\')">' +
                                         '<i class="fa fa-wrench"></i> Editar' +
                                         '</button>';
-                                    let btnDelete =
-                                        '<button class="btn btn-danger btn-sm" onclick="deleteEmpresa(\'' + empresa.idEmpresa + '\')">' +
-                                        '<i class="fa fa-trash"></i> Eliminar' +
-                                        '</button>';
+                                    // let btnDelete =
+                                    //     '<button class="btn btn-danger btn-sm" onclick="deleteComprobate(\'' + comprobante.IdTipoComprobante + '\')">' +
+                                    //     '<i class="fa fa-trash"></i> Eliminar' +
+                                    //     '</button>';
 
                                     tbTable.append('<tr>' +
                                         '<td style="text-align: center;color: #2270D1;">' +
-                                        '' + empresa.Id + '' +
+                                        '' + comprobante.Id + '' +
                                         '</td>' +
-                                        '<td>' + empresa.numeroRuc + '</td>' +
-                                        '<td>' + empresa.nombre + '</td>' +
-                                        '<td>' + empresa.direccion + '</td>' +
-                                        '<td>' + empresa.telefono + '</td>' +
-                                        '<td>' + empresa.paginaWeb + '</td>' +
-                                        '<td>' + empresa.email + '</td>' +
-                                        '<td style="text-align: right;">' +
-                                        '' + btnUpdate + '' +
+                                        '<td>' + comprobante.Nombre + '</td>' +
+                                        '<td>' + comprobante.Serie + '</td>' +
+                                        '<td>' + comprobante.Numeracion + '</td>' +
+                                        '<td>' + comprobante.CodigoAlterno + '</td>' +
+                                        '<td>' + comprobante.Predeterminado + '</td>' +
+                                        '<td>' + comprobante.Estado + '</td>' +
+                                        '<td>' + comprobante.Usa_ruc + '</td>' +
+                                        '<td style="text-align: left;">' +
+                                        btnUpdate +
                                         '</td>' +
-                                        '<td>' +
-                                        '' + btnDelete +
-                                        '</td>' +
+                                        // '<td>' +
+                                        // '' + btnDelete +
+                                        // '</td>' +
                                         '</tr>');
                                 }
                                 totalPaginacion = parseInt(Math.ceil((parseFloat(result.total) / parseInt(
@@ -373,48 +386,53 @@ if (!isset($_SESSION['IdUsuario'])) {
                 });
             }
 
-            function crudEmpresa() {
-                if ($("#txtRuc").val() == '') {
-                    $("#txtRuc").focus();
-                    tools.AlertWarning("Empresa", "Ingrese un ruc válido")
-                } else if ($("#NombreComercial").val() == "") {
-                    $("#NombreComercial").focus();
-                    tools.AlertWarning("Empresa", "Ingrese Nombre comercial")
-                } else if ($("#DireccionEmpresa").val() == "") {
-                    $("#DireccionEmpresa").focus();
-                    tools.AlertWarning("Empresa", "Ingrese dirección")
+            function crudComprobante() {
+
+                if ($("#txtNombre").val() == '') {
+                    $("#txtNombre").focus();
+                    tools.AlertWarning("Comprobante", "Ingrese un Nombre")
+                } else if ($("#txtSerie").val() == "") {
+                    $("#txtSerie").focus();
+                    tools.AlertWarning("Comprobante", "Ingrese Serie")
+                } else if ($("#txtNumeracion").val() == "") {
+                    $("#txtNumeracion").focus();
+                    tools.AlertWarning("Comprobante", "Ingrese Numeracion")
+                } else if ($("#txtAlterno").val() == "") {
+                    $("#txtAlterno").focus();
+                    tools.AlertWarning("Comprobante", "Ingrese Código Alterno")
                 } else {
-                    tools.ModalDialog("Empresa", "¿Está seguro de continuar?", function(value) {
+                    tools.ModalDialog("Comprobante", "¿Está seguro de continuar?", function(value) {
                         if (value == true) {
                             $.ajax({
-                                url: "../app/controller/EmpresaController.php",
+                                url: "../app/controller/ComprobanteController.php",
                                 method: "POST",
                                 data: {
-                                    "type": "addEmpresa",
-                                    "idEmpresa": idEmpresa,
-                                    "ruc": $("#txtRuc").val(),
-                                    "nombre": $("#NombreComercial").val(),
-                                    "direccion": $("#DireccionEmpresa").val(),
-                                    "telefono": $("#Tlf_Celular").val(),
-                                    "web": $("#Pagina_web").val(),
-                                    "email": $("#Email_Empresa").val()
+                                    "type": "addComprobante",
+                                    "idComprobante": idComprobante,
+                                    "nombre": $("#txtNombre").val(),
+                                    "serie": $("#txtSerie").val(),
+                                    "numeracion": $("#txtNumeracion").val(),
+                                    "codigoAlterno": $("#txtAlterno").val(),
+                                    "predeterminado": $("#cbPredeterminado").is(":checked"),
+                                    "estado": $("#cbEstado").is(":checked"),
+                                    "usaRuc": $("#cbUsaRuc").is(":checked")
                                 },
                                 beforeSend: function() {
-                                    tools.ModalAlertInfo("Empresa", "Procesando petición..");
+                                    tools.ModalAlertInfo("Comprobante", "Procesando petición..");
                                 },
                                 success: function(result) {
                                     if (result.estado === 1) {
-                                        loadInitEmpresas();
-                                        clearModalAddEmpresa();
-                                        tools.ModalAlertSuccess("Empresa", result.mensaje);
+                                        loadInitComprobantes();
+                                        clearModalAddComprobante();
+                                        tools.ModalAlertSuccess("Comprobante", result.mensaje);
                                     } else if (result.estado === 2) {
-                                        tools.ModalAlertWarning("Empresa", result.mensaje);
+                                        tools.ModalAlertWarning("Comprobante", result.mensaje);
                                     } else if (result.estado === 3) {
-                                        loadInitEmpresas();
-                                        clearModalAddEmpresa();
-                                        tools.ModalAlertWarning("Empresa", result.mensaje);
+                                        loadInitComprobantes();
+                                        clearModalAddComprobante();
+                                        tools.ModalAlertSuccess("Comprobante", result.mensaje);
                                     } else {
-                                        tools.ModalAlertWarning("Empresa", result.mensaje);
+                                        tools.ModalAlertWarning("Comprobante", result.mensaje);
                                     }
                                 },
                                 error: function(error) {
@@ -426,42 +444,46 @@ if (!isset($_SESSION['IdUsuario'])) {
                 }
             }
 
-            function clearModalAddEmpresa() {
-                $("#NuevaEmpresaPersona").modal("hide");
-                $("#txtRuc").val("")
-                $("#NombreComercial").val("")
-                $("#DireccionEmpresa").val("")
-                $("#Tlf_Celular").val("")
-                $("#Pagina_web").val("")
-                $("#Email_Empresa").val("")
+            function clearModalAddComprobante() {
+                $("#NuevoComprobante").modal("hide");
+                $("#txtNombre").val("");
+                $("#txtSerie").val("");
+                $("#txtNumeracion").val("");
+                $("#txtAlterno").val("");
+                $("#cbPredeterminado").prop("checked", false);
+                $("#cbEstado").prop("checked", false);
+                $("#cbUsaRuc").prop("checked", false);
                 idEmpresa = 0;
             }
 
-            function updateEmpresas(id) {
-                $("#NuevaEmpresaPersona").modal("show");
-                $("#modal-empresa-title").empty()
-                $("#modal-empresa-title").append('<i class="fa fa-building-o"></i> Editar Empresa')
+            function updateComprobante(id) {
+                $("#NuevoComprobante").modal("show");
+                $("#modal-comprobante-title").empty()
+                $("#modal-comprobante-title").append('<i class="fa fa-file-text-o"></i> Editar comprobante')
                 $.ajax({
-                    url: "../app/controller/EmpresaController.php",
+                    url: "../app/controller/ComprobanteController.php",
                     method: "GET",
                     data: {
-                        "type": "updateEmpresa",
-                        "idEmpresa": id
+                        "type": "updateComprobante",
+                        "idComprobante": id
                     },
-                    beforeSend: function() {},
+                    beforeSend: function() {
+
+                    },
                     success: function(result) {
-                        console.log(result);
-                        $("#modal-user-title").empty();
-                        $("#modal-user-title").append('<i class="fa fa-building-o"> </i> Editar Empresa');
+                        $("#modal-comprobante-title").empty();
+                        $("#modal-comprobante-title").append('<i class="fa fa-file-text-o"> </i> Editar comprobante');
                         if (result.estado == 1) {
-                            let empresa = result.empresa;
-                            idEmpresa = id;
-                            $("#txtRuc").val(empresa.NumeroRuc);
-                            $("#NombreComercial").val(empresa.Nombre);
-                            $("#DireccionEmpresa").val(empresa.Direccion);
-                            $("#Tlf_Celular").val(empresa.Telefono);
-                            $("#Pagina_web").val(empresa.PaginaWeb);
-                            $("#Email_Empresa").val(empresa.Email);
+                            let comprobante = result.Comprobante;
+                            idComprobante = id;
+
+                            $("#txtNombre").val(comprobante.Nombre);
+                            $("#txtSerie").val(comprobante.Serie);
+                            $("#txtNumeracion").val(comprobante.Numeracion);
+                            $("#txtAlterno").val(comprobante.CodigoAlterno);
+                            $("#cbPredeterminado").prop("checked", comprobante.Predeterminado == 1 ? true : false);
+                            $("#cbEstado").prop("checked", comprobante.Estado == 1 ? true : false);
+                            $("#cbUsaRuc").prop("checked", comprobante.UsarRuc == 1 ? true : false);
 
                             tools.AlertInfo("Información", "Se cargo correctamente los datos.");
                         } else {
@@ -470,42 +492,42 @@ if (!isset($_SESSION['IdUsuario'])) {
                     },
                     error: function(error) {
                         $("#modal-user-title").empty();
-                        $("#modal-user-title").append('<i class="fa fa-building-o"> </i> Editar Usuario');
+                        $("#modal-user-title").append('<i class="fa fa-file-text-o"> </i> Editar comprobante');
                         tools.AlertError("Error", error.responseText);
                     }
                 });
             }
 
-            function deleteEmpresa(id) {
-                tools.ModalDialog("Usuarios", "¿Está seguro de eliminar la empresa?", function(value) {
-                    if (value == true) {
-                        $.ajax({
-                            url: "../app/controller/EmpresaController.php",
-                            method: "POST",
-                            data: {
-                                "type": "deleteEmpresa",
-                                "idEmpresa": id,
-                            },
-                            beforeSend: function() {
-                                tools.ModalAlertInfo("Empresas", "Procesando petición..");
-                            },
-                            success: function(result) {
-                                if (result.estado == 1) {
-                                    tools.ModalAlertSuccess("Empresas", result.message);
-                                    loadInitEmpresas();
-                                    clearModalAddEmpresa();
+            // function deleteEmpresa(id) {
+            //     tools.ModalDialog("Usuarios", "¿Está seguro de eliminar la empresa?", function(value) {
+            //         if (value == true) {
+            //             $.ajax({
+            //                 url: "../app/controller/EmpresaController.php",
+            //                 method: "POST",
+            //                 data: {
+            //                     "type": "deleteEmpresa",
+            //                     "idEmpresa": id,
+            //                 },
+            //                 beforeSend: function() {
+            //                     tools.ModalAlertInfo("Empresas", "Procesando petición..");
+            //                 },
+            //                 success: function(result) {
+            //                     if (result.estado == 1) {
+            //                         tools.ModalAlertSuccess("Empresas", result.message);
+            //                         loadInitEmpresas();
+            //                         clearModalAddEmpresa();
 
-                                } else {
-                                    tools.ModalAlertWarning("Empresas", result.message);
-                                }
-                            },
-                            error: function(error) {
-                                tools.ModalAlertError("Empresas", error.responseText);
-                            }
-                        });
-                    }
-                });
-            }
+            //                     } else {
+            //                         tools.ModalAlertWarning("Empresas", result.message);
+            //                     }
+            //                 },
+            //                 error: function(error) {
+            //                     tools.ModalAlertError("Empresas", error.responseText);
+            //                 }
+            //             });
+            //         }
+            //     });
+            // }
         </script>
     </body>
 
