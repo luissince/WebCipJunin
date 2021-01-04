@@ -241,8 +241,8 @@ mpdf-->
     ]);
 
     $mpdf->SetProtection(array('print'));
-    $mpdf->SetTitle("Acme Trading Co. - Invoice");
-    $mpdf->SetAuthor("Acme Trading Co.");
+    $mpdf->SetTitle("Cip Junin");
+    $mpdf->SetAuthor("SysSoftIntegra");
     $mpdf->SetWatermarkText("");
     $mpdf->showWatermarkText = true;
     $mpdf->watermark_font = 'DejaVuSansCondensed';

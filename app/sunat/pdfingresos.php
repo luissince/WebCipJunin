@@ -336,7 +336,7 @@ if (!isset($_GET["idIngreso"])) {
 
         $mpdf->SetProtection(array('print'));
         $mpdf->SetTitle($ingreso->Comprobante . " " . $ingreso->Serie . '-' . $ingreso->Numeracion . " CIP-JUNIN");
-        $mpdf->SetAuthor("Cip Junin");
+        $mpdf->SetAuthor("SysSoftIntegra");
         $mpdf->SetWatermarkText(($ingreso->Estado === "C" ? "PAGADO" : "ANULADO"));   // anulada
         $mpdf->showWatermarkText = true;
         $mpdf->watermark_font = 'DejaVuSansCondensed';

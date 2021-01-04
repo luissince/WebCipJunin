@@ -212,8 +212,8 @@ mpdf-->
     ]);
 
     $mpdf->SetProtection(array('print'));
-    $mpdf->SetTitle("Reporte de Ingresos CIP-JUNIN");
-    $mpdf->SetAuthor("SysSoft Integra");
+    $mpdf->SetTitle("Cip Junin");
+    $mpdf->SetAuthor("SysSoftIntegra");
     $mpdf->SetWatermarkText("");
     $mpdf->showWatermarkText = true;
     $mpdf->watermark_font = 'DejaVuSansCondensed';
