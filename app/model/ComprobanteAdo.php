@@ -28,11 +28,7 @@ class ComprobanteAdo
             return $ex->getMessage();
         }
     }
-<<<<<<< HEAD
-
-=======
     
->>>>>>> 07b1eba37c520b3b6e2a29efdd7e087032fdd607
     public static function getAllEmpresaPersona()
     {
         try {

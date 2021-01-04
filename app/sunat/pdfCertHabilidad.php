@@ -68,21 +68,21 @@ if (!isset($_GET["idIngreso"])) {
                         font-family: "Arial";
                         font-size: 10pt;
                         color:#000000;
-                        padding-top:210px;
+                        padding-top:209px;
                     }
                     .body-two {
                         font-family: "Arial";
                         font-size: 10pt;
                         color:#000000;
-                        padding-top:105px;
+                        padding-top:109px;
                     }
                     .footer-one {
                         font-family: "Arial";
                         font-size: 10pt;
                         color:#000000;
-                        padding-top:82px;
+                        padding-top:80px;
                         text-align: center; 
-                        padding-left: 400px;
+                        padding-left: 398px;
                     }
                     .footer-two {
                         font-family: "Arial";
@@ -129,17 +129,17 @@ if (!isset($_GET["idIngreso"])) {
                 <!--########################################################## Cuerpo del documento ###################################################-->
                 <div class="body-one">
                     <div style="padding-left:240px; padding-top: 4px;">'.$Nombreingeniero.' '.$Apellidosingeniero.'</div>
-                    <div style="padding-left:355px; padding-top:10px;">'.$ConsejoDepartamental.'</div>
-                    <div style="padding-left:355px; padding-top:15px; width: 700px;">
+                    <div style="padding-left:355px; padding-top:9px;">'.$ConsejoDepartamental.'</div>
+                    <div style="padding-left:355px; padding-top:14px; width: 700px;">
                         <div style="width: 150px; float:left;">'.$NumeroCIP.'</div>
                         <div style="width: 100px; float:left; padding-left:155px;">'.$FechaIncorporacion.'</div>
                     </div>
                     <div style="padding-left:240px; padding-top:12px;">'.$Especialidad.'</div>
                 </div>
                 <div class="body-two">
-                    <div style="padding-left:210px;">'.$Asunto.'</div>
-                    <div style="padding-left:210px; padding-top:25px;">'.$Entidad.'</div>
-                    <div style="padding-left:210px; padding-top:25px;">'.$Lugar.'</div>
+                    <div style="padding-left:215px;">'.$Asunto.'</div>
+                    <div style="padding-left:215px; padding-top:29px;">'.$Entidad.'</div>
+                    <div style="padding-left:215px; padding-top:26px;">'.$Lugar.'</div>
                 </div>
                 <!--######################################### Fin Cuerpo del documento ##################################################################-->
 
