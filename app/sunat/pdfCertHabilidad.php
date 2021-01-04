@@ -74,7 +74,7 @@ if (!isset($_GET["idIngreso"])) {
                         font-family: "Arial";
                         font-size: 10pt;
                         color:#000000;
-                        padding-top:109px;
+                        padding-top:108px;
                     }
                     .footer-one {
                         font-family: "Arial";
@@ -82,7 +82,7 @@ if (!isset($_GET["idIngreso"])) {
                         color:#000000;
                         padding-top:80px;
                         text-align: center; 
-                        padding-left: 398px;
+                        padding-left: 388px;
                     }
                     .footer-two {
                         font-family: "Arial";
@@ -111,9 +111,9 @@ if (!isset($_GET["idIngreso"])) {
                     <div style="padding-left:120px; padding-top:5px; width: 510px;">'.$Entidad.'</div>
                     <div style="padding-left:120px; padding-top:5px; width: 700px;">
                         <div style="width:510px;float:left;">'.$Lugar.'</div>
-                        <div style="text-align:center; width:145px; padding-top: 17px;">
-                            <div style="width: 40px; float:right; padding-left:6px;">'.$AnioVencimiento.'</div>
-                            <div style="width: 50px; float:right; padding-left:6px;">'.$MesVencimiento.'</div>
+                        <div style="text-align:center; width:145px; padding-top: 12px;">
+                            <div style="width: 40px; float:right; padding-right:10px;">'.$AnioVencimiento.'</div>
+                            <div style="width: 50px; float:right; padding-right:1px;">'.$MesVencimiento.'</div>
                             <div style="width: 40px; float:right;">'.$DiaVencimiento.'</div>
                         </div>
                     </div>
@@ -146,7 +146,7 @@ if (!isset($_GET["idIngreso"])) {
                 <!--################################################## Pie del Documento ###############################################################-->
                 <div class="footer-one">
                     <div style="width:50; float:left;">'.$DiaVencimiento.'</div>
-                    <div style="width:50; float:left;">'.$MesVencimiento.'</div>
+                    <div style="width:50; float:left; padding-left: 10px;">'.$MesVencimiento.'</div>
                     <div style="width:50; float:left; padding-left:5px;">'.$AnioVencimiento.'</div>
                 </div>
                 <div class="footer-two">
