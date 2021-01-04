@@ -15,13 +15,22 @@ class PersonaAdo
             $array = array();
             $arrayPersonas = array();
             $comandoPersona = Database::getInstance()->getDb()->prepare("SELECT * FROM Persona 
-            where Nombres like concat(?,'%') or Apellidos like concat(?,'%')
+            where 
+            idDNI = ?
+            or
+            CIP = ?
+            or
+            Nombres like concat(?,'%') 
+            or 
+            Apellidos like concat(?,'%')
             order by CAST(FechaReg as date) asc
             offset ? rows fetch next ? rows only");
             $comandoPersona->bindParam(1, $nombres, PDO::PARAM_STR);
             $comandoPersona->bindParam(2, $nombres, PDO::PARAM_STR);
-            $comandoPersona->bindParam(3, $posicionPagina, PDO::PARAM_INT);
-            $comandoPersona->bindParam(4, $filasPorPagina, PDO::PARAM_INT);
+            $comandoPersona->bindParam(3, $nombres, PDO::PARAM_STR);
+            $comandoPersona->bindParam(4, $nombres, PDO::PARAM_STR);
+            $comandoPersona->bindParam(5, $posicionPagina, PDO::PARAM_INT);
+            $comandoPersona->bindParam(6, $filasPorPagina, PDO::PARAM_INT);
             $comandoPersona->execute();
             $count = 0;
             while ($row = $comandoPersona->fetch()) {
@@ -40,9 +49,17 @@ class PersonaAdo
             }
 
             $comandoTotal = Database::getInstance()->getDb()->prepare("SELECT COUNT(*) FROM Persona
-            where Nombres like concat(?,'%') or Apellidos like concat(?,'%')");
+            where 
+            idDNI = ?
+            or
+            CIP = ?
+            or
+            Nombres like concat(?,'%') 
+            or Apellidos like concat(?,'%')");
             $comandoTotal->bindParam(1, $nombres, PDO::PARAM_STR);
             $comandoTotal->bindParam(2, $nombres, PDO::PARAM_STR);
+            $comandoTotal->bindParam(3, $nombres, PDO::PARAM_STR);
+            $comandoTotal->bindParam(4, $nombres, PDO::PARAM_STR);
             $comandoTotal->execute();
             $resultTotal =  $comandoTotal->fetchColumn();
 

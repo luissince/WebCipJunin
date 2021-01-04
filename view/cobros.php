@@ -1045,6 +1045,9 @@ if (!isset($_SESSION['IdUsuario'])) {
 
             let idDNI = 0;
 
+            let comprobantes = [];
+            let UsarRuc = false;
+
             let modelCobrosIngenieros = new CobroIngenieros();
             let modelColegiatura = new Colegiatura();
             let modelCuotas = new Cuotas();
@@ -1098,6 +1101,19 @@ if (!isset($_SESSION['IdUsuario'])) {
                     crudEmpresa();
                 });
 
+                $("#cbComprobante").change(function() {
+                    for (let i = 0; i < comprobantes.length; i++) {
+                        if (comprobantes[i].IdTipoComprobante == $(this).val()) {                           
+                            if (comprobantes[i].UsarRuc == "1") {
+                                UsarRuc = true;
+                            }else{
+                                UsarRuc = false;
+                            }
+                            break;
+                        }
+                    }
+                });
+
             });
 
             function loadComprobantes() {
@@ -1109,11 +1125,13 @@ if (!isset($_SESSION['IdUsuario'])) {
                     },
                     beforeSend: function() {
                         $("#cbComprobante").empty();
+                        comprobantes = [];
                     },
                     success: function(result) {
                         if (result.estado === 1) {
+                            comprobantes = result.data;
                             $("#cbComprobante").append('<option value="">- Seleccione -</option>');
-                            for (let value of result.data) {
+                            for (let value of comprobantes) {
                                 $("#cbComprobante").append('<option value="' + value.IdTipoComprobante + '">' + value.Nombre + '</option>')
                             }
                         } else {
@@ -1121,7 +1139,6 @@ if (!isset($_SESSION['IdUsuario'])) {
                         }
                     },
                     error: function(error) {
-                        console.log(error);
                         $("#cbComprobante").append('<option value="">- Seleccione -</option>');
                     }
                 });
@@ -1174,6 +1191,9 @@ if (!isset($_SESSION['IdUsuario'])) {
                     tools.AlertWarning("Cobros", "No hay conceptos para continuar.");
                 } else if (idDNI == 0) {
                     tools.AlertWarning("Cobros", "No selecciono ningún ingeneniero para continuar.");
+                } else if (UsarRuc && $("#cbCliente").val() != '') {
+                    tools.AlertWarning("Cobros", "El comprobante requiere usar una empresa asociada.");
+                    $("#cbCliente").focus();
                 } else {
                     tools.ModalDialog("Cobros", "¿Está seguro de continuar?", function(value) {
                         if (value == true) {
@@ -1373,6 +1393,19 @@ if (!isset($_SESSION['IdUsuario'])) {
                 peritajeEstado = {};
                 $("#btnCertificado").attr('aria-expanded', 'false');
                 $("#tbHistorial").empty();
+                UsarRuc = false
+                for (let i = 0; i < comprobantes.length; i++) {
+                    if (comprobantes[i].IdTipoComprobante == $(this).val()) {
+                        if (comprobantes[i].Predeterminado == "1") {
+                            $("#cbComprobante").val(comprobantes[i].IdTipoComprobante)
+                        }
+                        if (comprobantes[i].UsarRuc == "1") {
+                            UsarRuc = true;
+                        }
+                        break;
+                    }
+                }
+
             }
 
             function validateDuplicate(idConcepto) {

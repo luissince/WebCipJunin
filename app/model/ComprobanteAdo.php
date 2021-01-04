@@ -13,13 +13,14 @@ class ComprobanteAdo
     {
         try {
             $array = array();
-            $comandoConcepto = Database::getInstance()->getDb()->prepare("SELECT * FROM TipoComprobante");
+            $comandoConcepto = Database::getInstance()->getDb()->prepare("SELECT * FROM TipoComprobante WHERE Estado = 1");
             $comandoConcepto->execute();
             while ($row = $comandoConcepto->fetch()) {
                 array_push($array, array(
                     "IdTipoComprobante" => $row["IdTipoComprobante"],
                     "Nombre" => $row["Nombre"],
                     "Predeterminado" => $row["Predeterminado"],
+                    "UsarRuc" => $row["UsarRuc"]
                 ));
             }
             return $array;
@@ -27,26 +28,7 @@ class ComprobanteAdo
             return $ex->getMessage();
         }
     }
-
-    // public static function getAllConceptos()
-    // {
-    //     try {
-    //         $array = array();
-    //         $comandoConcepto = Database::getInstance()->getDb()->prepare("SELECT * FROM TipoComprobante");
-    //         $comandoConcepto->execute();
-    //         while ($row = $comandoConcepto->fetch()) {
-    //             array_push($array, array(
-    //                 "IdTipoComprobante" => $row["IdTipoComprobante"],
-    //                 "Nombre" => $row["Nombre"],
-    //                 "Predeterminado" => $row["Predeterminado"],
-    //             ));
-    //         }
-    //         return $array;
-    //     } catch (Exception $ex) {
-    //         return $ex->getMessage();
-    //     }
-    // }
-
+    
     public static function getAllEmpresaPersona()
     {
         try {

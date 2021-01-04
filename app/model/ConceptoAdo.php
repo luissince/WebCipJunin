@@ -188,12 +188,26 @@ class ConceptoAdo
         try {
             $array = array();
 
-            $cmdConcepto = Database::getInstance()->getDb()->prepare("SELECT idConcepto,Categoria,Concepto,Precio FROM Concepto WHERE Categoria = 5 AND Estado = 1");
-            $cmdConcepto->execute();
-            $resultConcepto = $cmdConcepto->fetchObject();
-            if (!$resultConcepto) {
-                throw new Exception('No se encontro ningún concepto para obtener.');
+            $cmdIngeniero = Database::getInstance()->getDb()->prepare("SELECT * FROM Persona WHERE idDNI = ? AND Condicion = 'T' ");
+            $cmdIngeniero->bindParam(1, $dni, PDO::PARAM_STR);
+            $cmdIngeniero->execute();
+
+            if (!$cmdIngeniero->fetch()) {
+                $cmdConcepto = Database::getInstance()->getDb()->prepare("SELECT idConcepto,Categoria,Concepto,Precio FROM Concepto WHERE Categoria = 5 AND Estado = 1 AND Asignado = 0");
+                $cmdConcepto->execute();
+                $resultConcepto = $cmdConcepto->fetchObject();
+                if (!$resultConcepto) {
+                    throw new Exception('No se encontro ningún concepto para obtener.');
+                }
+            } else {
+                $cmdConcepto = Database::getInstance()->getDb()->prepare("SELECT idConcepto,Categoria,Concepto,Precio FROM Concepto WHERE Categoria = 5 AND Estado = 1 AND Asignado = 1");
+                $cmdConcepto->execute();
+                $resultConcepto = $cmdConcepto->fetchObject();
+                if (!$resultConcepto) {
+                    throw new Exception('No se encontro ningún concepto para obtener.');
+                }
             }
+
 
             $cmdEspecialidad = Database::getInstance()->getDb()->prepare("SELECT c.idColegiado, c.idEspecialidad, e.Especialidad FROM Colegiatura AS c 
                 INNER JOIN Especialidad AS e ON e.idEspecialidad = c.idEspecialidad where c.idDNI = ?");
