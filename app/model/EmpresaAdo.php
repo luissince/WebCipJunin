@@ -120,10 +120,10 @@ class EmpresaAdo
             $cmdEmpresa = Database::getInstance()->getDb()->prepare("SELECT IdEmpresa, NumeroRuc, UPPER(Nombre) AS Nombre, UPPER(Direccion) AS Direccion, Telefono, LOWER(PaginaWeb) AS PaginaWeb, 
             LOWER(Email) AS Email from EmpresaPersona
             WHERE IdEmpresa = ?");
-            $cmdEmpresa->bindParam(1, $idEmpresa, PDO::PARAM_INT);
-            $cmdEmpresa->execute();
-            $resultEmpresa = $cmdEmpresa->fetchObject();
-            return $resultEmpresa;
+             $cmdEmpresa->bindParam(1, $idEmpresa, PDO::PARAM_INT);
+             $cmdEmpresa->execute();
+             $resultEmpresa = $cmdEmpresa->fetchObject();
+             return $resultEmpresa;
         } catch (Exception $ex) {
             return $ex->getMessage();
         }
