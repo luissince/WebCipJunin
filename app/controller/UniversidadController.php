@@ -83,12 +83,22 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
         if ($result == "eliminado") {
             echo json_encode(array(
                 "estado" => 1,
-                "message" => "Se eliminaron correctamente los datos"
+                "message" => "Se eliminó correctamente la universidad."
+            ));
+        } else if ($result == "colegiatura") {
+            echo json_encode(array(
+                "estado" => 2,
+                "message" => "No se puede eliminar la universidad porque está ligada a una colegiatura."
+            ));
+        } else if ($result == "grado") {
+            echo json_encode(array(
+                "estado" => 3,
+                "message" => "No se puede eliminar la universidad porque está ligada a un grado y estudios."
             ));
         } else {
             echo json_encode(array(
-                "estado" => 2,
-                "message" => "Error al tratar de eliminar los datos " . $result
+                "estado" => 0,
+                "message" => $result
             ));
         }
     }

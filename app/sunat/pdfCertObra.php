@@ -18,7 +18,7 @@ if (!isset($_GET["idIngreso"])) {
         $Nombreingeniero = $Datos['usuario'];
         $Apellidosingeniero = $Datos['apellidos'];
         $ConsejoDepartamental = 'JUNIN';
-        $NumeroCIP = $Datos['numCertificado'];
+        $NumeroCIP = $Datos['cip'];
         
         $FechaIncorporacion = $Datos['fechaIncorporacion'];
         $DiaIncorporacion = $Datos['fiDia'];

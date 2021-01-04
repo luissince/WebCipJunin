@@ -94,13 +94,13 @@ class UniversidadAdo
                 //     Database::getInstance()->getDb()->rollback();
                 //     return "duplicadosiglas";
                 // } else {
-                    $comandoInsert = Database::getInstance()->getDb()->prepare("UPDATE Universidad SET Universidad = UPPER(?), Siglas = UPPER(?) WHERE idUniversidad = ?");
-                    $comandoInsert->bindParam(1, $universidad["universidad"], PDO::PARAM_STR);
-                    $comandoInsert->bindParam(2, $universidad["siglas"], PDO::PARAM_STR);
-                    $comandoInsert->bindParam(3, $universidad["idUniversidad"], PDO::PARAM_INT);
-                    $comandoInsert->execute();
-                    Database::getInstance()->getDb()->commit();
-                    return "actualizado";
+                $comandoInsert = Database::getInstance()->getDb()->prepare("UPDATE Universidad SET Universidad = UPPER(?), Siglas = UPPER(?) WHERE idUniversidad = ?");
+                $comandoInsert->bindParam(1, $universidad["universidad"], PDO::PARAM_STR);
+                $comandoInsert->bindParam(2, $universidad["siglas"], PDO::PARAM_STR);
+                $comandoInsert->bindParam(3, $universidad["idUniversidad"], PDO::PARAM_INT);
+                $comandoInsert->execute();
+                Database::getInstance()->getDb()->commit();
+                return "actualizado";
                 // }
             }
         } catch (Exception $ex) {
@@ -109,14 +109,32 @@ class UniversidadAdo
         }
     }
 
-    public static function deleteUniversidad($universidad){
+    public static function deleteUniversidad($universidad)
+    {
         try {
             Database::getInstance()->getDb()->beginTransaction();
-            $comandSelect = Database::getInstance()->getDb()->prepare("DELETE FROM Universidad WHERE idUniversidad = ?");
-            $comandSelect->bindParam(1, $universidad["idUniversidad"], PDO::PARAM_INT);
-            $comandSelect->execute();
-            Database::getInstance()->getDb()->commit();
-            return "eliminado";
+            $cmdValidate = Database::getInstance()->getDb()->prepare("SELECT * FROM Colegiatura WHERE idUniversidad = ?");
+            $cmdValidate->bindParam(1, $universidad["idUniversidad"], PDO::PARAM_INT);
+            $cmdValidate->execute();
+            if ($cmdValidate->fetch()) {
+                Database::getInstance()->getDb()->rollback();
+                return "colegiatura";
+            } else {
+
+                $cmdValidate = Database::getInstance()->getDb()->prepare("SELECT * FROM Grados WHERE idUniversidad = ?");
+                $cmdValidate->bindParam(1, $universidad["idUniversidad"], PDO::PARAM_INT);
+                $cmdValidate->execute();
+                if ($cmdValidate->fetch()) {
+                    Database::getInstance()->getDb()->rollback();
+                    return "grado";
+                } else {
+                    $cmdUniversidad = Database::getInstance()->getDb()->prepare("DELETE FROM Universidad WHERE idUniversidad = ?");
+                    $cmdUniversidad->bindParam(1, $universidad["idUniversidad"], PDO::PARAM_INT);
+                    $cmdUniversidad->execute();
+                    Database::getInstance()->getDb()->commit();
+                    return "eliminado";
+                }
+            }
         } catch (Exception $ex) {
             Database::getInstance()->getDb()->rollback();
             return $ex->getMessage();

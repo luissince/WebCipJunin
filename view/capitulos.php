@@ -591,7 +591,7 @@ if (!isset($_SESSION['IdUsuario'])) {
                             success: function(result) {
                                 if (result.estado == 1) {
                                     tools.ModalAlertSuccess("Capítulo", result.message)
-                                    loadInitCapitulos();
+                                    onEventPaginacion();
                                 } else if (result.estado == 3) {
                                     tools.ModalAlertWarning("Capítulo", result.message)
                                 } else {
@@ -628,7 +628,7 @@ if (!isset($_SESSION['IdUsuario'])) {
                                 if (result.estado == 1) {
                                     tools.ModalAlertSuccess("Especialidad", result.message);
                                     clearModal();
-                                    loadInitCapitulos();
+                                    onEventPaginacion();
                                 } else if (result.estado == 3) {
                                     tools.ModalAlertWarning("Especialidad", result.message);
                                 } else {

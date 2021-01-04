@@ -42,7 +42,6 @@ function Colegiatura() {
                                 '<td>' + cv.universidadTitulacion + '</td>' +
                                 '<td>' + cv.fechaTitulacion + '</td>' +
                                 '<td>' + cv.resolucion + '</td>' +
-                                '<td>' + cv.principal + '</td>' +
                                 '<td>' + btnUpdate + '</td>' +
                                 '<td>' + btnDelete + '</td>' +
                                 '</tr>');
@@ -76,7 +75,6 @@ function Colegiatura() {
                 $("#FechaColegiacion").val(null);
                 $("#FechaEgreso").val(null);
                 $("#FechaTitulo").val(null);
-                $('#Principal').prop("checked", false);
             },
             success: function(result) {
                 if (result.estado == 1) {
@@ -139,7 +137,6 @@ function Colegiatura() {
                     "type": "insertColegiatura",
                     "dni": $("#dni").val(),
                     "sede": $("#Sede").val(),
-                    "principal": $('#Principal').is(":checked"),
                     "especialidad": $("#Especialidad").val(),
                     "fechacolegiacion": $("#FechaColegiacion").val(),
                     "universidadegreso": $("#UniversidadEgreso").val(),
@@ -169,159 +166,151 @@ function Colegiatura() {
         }
     }
 
-}
+    updateColegiatura = function(Id, sede, especialidad, fechaColegiado, universidadEgreso, fechaEgreso, universidadTitulacion, fechaTitulacion, resolucion, principal) {
+        $("#editColegiatura").modal("show");
 
-function updateColegiatura(Id, sede, especialidad, fechaColegiado, universidadEgreso, fechaEgreso, universidadTitulacion, fechaTitulacion, resolucion, principal) {
-    $("#editColegiatura").modal("show");
+        let cbxSede = $("#ESede");
+        let cbxEspecialidad = $("#EEspecialidad");
+        let cbxuniversidadEgreso = $("#EUniversidadEgreso");
+        let cbxuniversidadTitulacion = $("#EUniversidadTitulacion");
+        let fColegiado = fechaColegiado.split("/").reverse().join("-");
+        let fEgreso = fechaEgreso.split("/").reverse().join("-");
+        let fTitulacion = fechaTitulacion.split("/").reverse().join("-");
+        $("#EtxtResolucion").val(resolucion);
 
-    let cbxSede = $("#ESede");
-    let cbxEspecialidad = $("#EEspecialidad");
-    let cbxuniversidadEgreso = $("#EUniversidadEgreso");
-    let cbxuniversidadTitulacion = $("#EUniversidadTitulacion");
-    let fColegiado = fechaColegiado.split("/").reverse().join("-");
-    let fEgreso = fechaEgreso.split("/").reverse().join("-");
-    let fTitulacion = fechaTitulacion.split("/").reverse().join("-");
+        document.getElementById("EFechaColegiacion").value = tools.getDateForma(fColegiado, 'yyyy-mm-dd');
+        document.getElementById("EFechaEgreso").value = tools.getDateForma(fEgreso, 'yyyy-mm-dd');
+        document.getElementById("EFechaTitulo").value = tools.getDateForma(fTitulacion, 'yyyy-mm-dd');
 
-    if (principal == 1) {
-        $("#EPrincipal").prop("checked", true);
-    } else {
-        $("#EPrincipal").prop("checked", false);
-    }
-    $("#EtxtResolucion").val(resolucion);
+        $.ajax({
+            url: "../app/controller/PersonaController.php",
+            method: "GET",
+            data: {
+                type: "getaddcolegiatura",
+            },
+            beforeSend: function() {
+                $("#Sede").empty();
+                $("#Especialidad").empty();
+                $("#UniversidadEgreso").empty();
+                $("#UniversidadTitulacion").empty();
+            },
+            success: function(result) {
+                if (result.estado == 1) {
+                    // cbxSede.append('<option value="">- Seleccione -</option>');
+                    for (let sede of result.sedes) {
+                        $("#ESede").append('<option value="' + sede.IdConsejo + '">' + sede.Sede + '</option>');
+                    }
+                    cbxSede.val(sede); //rellena la informacion con la sede que esta registrada
 
-    document.getElementById("EFechaColegiacion").value = tools.getDateForma(fColegiado, 'yyyy-mm-dd');
-    document.getElementById("EFechaEgreso").value = tools.getDateForma(fEgreso, 'yyyy-mm-dd');
-    document.getElementById("EFechaTitulo").value = tools.getDateForma(fTitulacion, 'yyyy-mm-dd');
+                    // $("#EEspecialidad").append('<option value="">- Seleccione -</option>');
+                    for (let especialidad of result.espacialidades) {
+                        $("#EEspecialidad").append('<option value="' + especialidad.IdEspecialidad + '">' + especialidad.Especialidad + '</option>');
+                    }
+                    cbxEspecialidad.val(especialidad); //rellena la informacion con la Especialidad que esta registrada
 
-    $.ajax({
-        url: "../app/controller/PersonaController.php",
-        method: "GET",
-        data: {
-            type: "getaddcolegiatura",
-        },
-        beforeSend: function() {
-            $("#Sede").empty();
-            $("#Especialidad").empty();
-            $("#UniversidadEgreso").empty();
-            $("#UniversidadTitulacion").empty();
-        },
-        success: function(result) {
-            if (result.estado == 1) {
-                // cbxSede.append('<option value="">- Seleccione -</option>');
-                for (let sede of result.sedes) {
-                    $("#ESede").append('<option value="' + sede.IdConsejo + '">' + sede.Sede + '</option>');
+                    // $("#EUniversidadEgreso").append('<option value="">- Seleccione -</option>');
+                    for (let universidadegreso of result.universidades) {
+                        $("#EUniversidadEgreso").append('<option value="' + universidadegreso.IdUniversidad + '">' + universidadegreso.Universidad + '</option>');
+                    }
+                    cbxuniversidadEgreso.val(universidadEgreso); //rellena la informacion con la Universidad de egreso que esta registrada
+
+                    // $("#EUniversidadTitulacion").append('<option value="">- Seleccione -</option>');
+                    for (let universidadtitulacion of result.universidades) {
+                        $("#EUniversidadTitulacion").append('<option value="' + universidadtitulacion.IdUniversidad + '">' + universidadtitulacion.Universidad + '</option>');
+                    }
+                    cbxuniversidadTitulacion.val(universidadTitulacion); //rellena la informacion con la Universidad de titulacion que esta registrada 
+
+                } else {
+                    tools.AlertWarning("colegiatura", "Se produjo un error al cargar los datos en el modal");
                 }
-                cbxSede.val(sede); //rellena la informacion con la sede que esta registrada
-
-                // $("#EEspecialidad").append('<option value="">- Seleccione -</option>');
-                for (let especialidad of result.espacialidades) {
-                    $("#EEspecialidad").append('<option value="' + especialidad.IdEspecialidad + '">' + especialidad.Especialidad + '</option>');
-                }
-                cbxEspecialidad.val(especialidad); //rellena la informacion con la Especialidad que esta registrada
-
-                // $("#EUniversidadEgreso").append('<option value="">- Seleccione -</option>');
-                for (let universidadegreso of result.universidades) {
-                    $("#EUniversidadEgreso").append('<option value="' + universidadegreso.IdUniversidad + '">' + universidadegreso.Universidad + '</option>');
-                }
-                cbxuniversidadEgreso.val(universidadEgreso); //rellena la informacion con la Universidad de egreso que esta registrada
-
-                // $("#EUniversidadTitulacion").append('<option value="">- Seleccione -</option>');
-                for (let universidadtitulacion of result.universidades) {
-                    $("#EUniversidadTitulacion").append('<option value="' + universidadtitulacion.IdUniversidad + '">' + universidadtitulacion.Universidad + '</option>');
-                }
-                cbxuniversidadTitulacion.val(universidadTitulacion); //rellena la informacion con la Universidad de titulacion que esta registrada 
-
-            } else {
-                tools.AlertWarning("colegiatura", "Se produjo un error al cargar los datos en el modal");
+            },
+            error: function(error) {
+                tools.AlertError("colegiatura", "Error Fatal: Comuniquese con el administrador del sistema");
             }
-        },
-        error: function(error) {
-            tools.AlertError("colegiatura", "Error Fatal: Comuniquese con el administrador del sistema");
+        })
+
+        $("#EbtnAceptarColegiatura").unbind();
+        // $("#EbtnAceptarColegiatura").bind('click',function() {
+        //     console.log('diste click');
+        //     // AceptarUpdate(idCapitulo, idEspecialidad);
+        // });
+        $("#EbtnAceptarColegiatura").bind('click', function() {
+            AceptarUpdateColegiatura(Id);
+        });
+    }
+
+    function AceptarUpdateColegiatura(Id) {
+        if ($("#EtxtResolucion").val() == '') {
+            tools.AlertWarning('Colegiatura', "Ingrese una resolucion valida");
+            $("#EtxtResolucion").focus();
+        } else {
+            $.ajax({
+                url: "../app/controller/PersonaController.php",
+                method: "POST",
+                data: {
+                    "type": "updateColegiatura",
+                    "idColegiatura": Id,
+                    "sede": $("#ESede").val(),
+                    "especialidad": $("#EEspecialidad").val(),
+                    "fechacolegiacion": $("#EFechaColegiacion").val(),
+                    "universidadegreso": $("#EUniversidadEgreso").val(),
+                    "fechaegreso": $("#EFechaEgreso").val(),
+                    "universidadtitulacion": $("#EUniversidadTitulacion").val(),
+                    "fechatitulo": $("#EFechaTitulo").val(),
+                    "resolucion": $("#EtxtResolucion").val(),
+                },
+                beforeSend: function() {
+                    tools.AlertInfo("Colegiatura", "Procesando información.");
+                },
+                success: function(result) {
+                    if (result.estado == 1) {
+                        $("#editColegiatura").modal("hide");
+                        tools.AlertSuccess("Colegiatura", "Se actualizo correctamente.");
+                        modelColegiatura.loadColegiatura($("#dni").val());
+                    } else if (result.estado == 2) {
+                        tools.AlertWarning("Colegiatura", result.message);
+                    } else {
+                        tools.AlertWarning("Colegiatura", "Error al tratar de actualizar los datos " + result.message);
+                    }
+                },
+                error: function(error) {
+                    tools.AlertError("Colegiatura", "Error fatal: Comuniquese con el administrador del sistema");
+                }
+            });
         }
-    })
-
-    $("#EbtnAceptarColegiatura").unbind();
-    // $("#EbtnAceptarColegiatura").bind('click',function() {
-    //     console.log('diste click');
-    //     // AceptarUpdate(idCapitulo, idEspecialidad);
-    // });
-    $("#EbtnAceptarColegiatura").bind('click', function() {
-        AceptarUpdateColegiatura(Id);
-    });
-}
-
-function AceptarUpdateColegiatura(Id) {
-    if ($("#EtxtResolucion").val() == '') {
-        tools.AlertWarning('Colegiatura', "Ingrese una resolucion valida");
-        $("#EtxtResolucion").focus();
-    } else {
-        $.ajax({
-            url: "../app/controller/PersonaController.php",
-            method: "POST",
-            data: {
-                "type": "updateColegiatura",
-                "idColegiatura": Id,
-                "sede": $("#ESede").val(),
-                "principal": $('#EPrincipal').is(":checked"),
-                "especialidad": $("#EEspecialidad").val(),
-                "fechacolegiacion": $("#EFechaColegiacion").val(),
-                "universidadegreso": $("#EUniversidadEgreso").val(),
-                "fechaegreso": $("#EFechaEgreso").val(),
-                "universidadtitulacion": $("#EUniversidadTitulacion").val(),
-                "fechatitulo": $("#EFechaTitulo").val(),
-                "resolucion": $("#EtxtResolucion").val(),
-            },
-            beforeSend: function() {
-                tools.AlertInfo("Colegiatura", "Procesando información.");
-            },
-            success: function(result) {
-                if (result.estado == 1) {
-                    $("#editColegiatura").modal("hide");
-                    tools.AlertSuccess("Colegiatura", "Se actualizo correctamente.");
-                    modelColegiatura.loadColegiatura($("#dni").val());
-                } else if (result.estado == 2) {
-                    tools.AlertWarning("Colegiatura", result.message);
-                } else {
-                    tools.AlertWarning("Colegiatura", "Error al tratar de actualizar los datos " + result.message);
-                }
-            },
-            error: function(error) {
-                tools.AlertError("Colegiatura", "Error fatal: Comuniquese con el administrador del sistema");
-            }
-        });
     }
-}
 
-function DeleteColegiatura(Id) {
-    $("#deleteColegiatura").modal("show");
+    DeleteColegiatura = function(Id) {
+        $("#deleteColegiatura").modal("show");
 
-    let idColegiatura = Id;
+        let idColegiatura = Id;
 
-    $("#btnDeleteColegiatura").unbind();
+        $("#btnDeleteColegiatura").unbind();
 
-    $("#btnDeleteColegiatura").bind("click", function() {
-        $.ajax({
-            url: "../app/controller/PersonaController.php",
-            method: "POST",
-            data: {
-                "type": "deleteColegiatura",
-                "idcolegiatura": idColegiatura,
-            },
-            beforeSend: function() {
-                tools.AlertInfo("Colegiatura", "Procesando información.");
-            },
-            success: function(result) {
-                if (result.estado == 1) {
-                    tools.AlertSuccess("Colegiatura", result.message);
-                    $("#deleteColegiatura").modal("hide");
-                    modelColegiatura.loadColegiatura($("#dni").val());
-                } else {
-                    tools.AlertWarning("Colegiatura", result.message);
+        $("#btnDeleteColegiatura").bind("click", function() {
+            $.ajax({
+                url: "../app/controller/PersonaController.php",
+                method: "POST",
+                data: {
+                    "type": "deleteColegiatura",
+                    "idcolegiatura": idColegiatura,
+                },
+                beforeSend: function() {
+                    tools.AlertInfo("Colegiatura", "Procesando información.");
+                },
+                success: function(result) {
+                    if (result.estado == 1) {
+                        tools.AlertSuccess("Colegiatura", result.message);
+                        $("#deleteColegiatura").modal("hide");
+                        modelColegiatura.loadColegiatura($("#dni").val());
+                    } else {
+                        tools.AlertWarning("Colegiatura", result.message);
+                    }
+                },
+                error: function(error) {
+                    tools.AlertError("Colegiatura", "Error fatal: Comuniquese con el administrador del sistema");
                 }
-            },
-            error: function(error) {
-                tools.AlertError("Colegiatura", "Error fatal: Comuniquese con el administrador del sistema");
-            }
-        });
-    })
+            });
+        })
+    }
 }

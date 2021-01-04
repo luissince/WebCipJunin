@@ -163,7 +163,7 @@ class PersonaAdo
             idDNI,Foto
             FROM PersonaImagen WHERE idDNI = ?");
             $cmdImage->bindParam(1, $idPersona, PDO::PARAM_STR);
-            $cmdImage->execute();            
+            $cmdImage->execute();
             $image = null;
 
             if ($row = $cmdImage->fetch()) {
@@ -267,12 +267,10 @@ class PersonaAdo
                 Condicion = ?
                 WHERE idDNI = ?");
 
-                $dateTime = date('Y-d-m H:i:s', strtotime($persona['nacimiento']));
-
                 $comandoPersona->bindParam(1, $persona['nombres'], PDO::PARAM_STR);
                 $comandoPersona->bindParam(2, $persona['apellidos'], PDO::PARAM_STR);
                 $comandoPersona->bindParam(3, $persona['sexo'], PDO::PARAM_STR);
-                $comandoPersona->bindParam(4, $dateTime, PDO::PARAM_STR);
+                $comandoPersona->bindParam(4, $persona['nacimiento'], PDO::PARAM_STR);
                 $comandoPersona->bindParam(5, $persona['estado_civil'], PDO::PARAM_STR);
                 $comandoPersona->bindParam(6, $persona['ruc'], PDO::PARAM_STR);
                 $comandoPersona->bindParam(7, $persona['rason_social'], PDO::PARAM_STR);
@@ -329,13 +327,11 @@ class PersonaAdo
                 $comandoPersona = Database::getInstance()->getDb()->prepare("INSERT INTO Persona (idDNI,idUsuario,Nombres,Apellidos,Sexo,FechaNac,EstadoCivil,RUC,RAZONSOCIAL,CIP,Condicion)
                 VALUES (?,'-1',UPPER(?),UPPER(?),?,?,?,?,?,?,?)");
 
-                $dateTime = date('Y-d-m H:i:s', strtotime($persona['nacimiento']));
-
                 $comandoPersona->bindParam(1, $persona['dni'], PDO::PARAM_STR);
                 $comandoPersona->bindParam(2, $persona['nombres'], PDO::PARAM_STR);
                 $comandoPersona->bindParam(3, $persona['apellidos'], PDO::PARAM_STR);
                 $comandoPersona->bindParam(4, $persona['sexo'], PDO::PARAM_STR);
-                $comandoPersona->bindParam(5, $dateTime, PDO::PARAM_STR);
+                $comandoPersona->bindParam(5, $persona['nacimiento'], PDO::PARAM_STR);
                 $comandoPersona->bindParam(6, $persona['estado_civil'], PDO::PARAM_STR);
                 $comandoPersona->bindParam(7, $persona['ruc'], PDO::PARAM_STR);
                 $comandoPersona->bindParam(8, $persona['rason_social'], PDO::PARAM_STR);
@@ -753,37 +749,64 @@ class PersonaAdo
                 Database::getInstance()->getDb()->rollback();
                 return 'Duplicado';
             } else {
-                $comandoInsert = Database::getInstance()->getDb()->prepare("INSERT INTO Colegiatura (
-                    idDNI,
-                     idSede,
-                      idEspecialidad, 
-                      FechaColegiado,
-                      idUnivesidadEgreso, 
-                      FechaEgreso,
-                      idUniversidad,
-                      FechaTitulacion,
-                      Resolucion, 
-                      Principal)
-                VALUES(?,?,?,?,?,?,?,?,?,?)");
+                $cmdSelect = Database::getInstance()->getDb()->prepare('SELECT * FROM Colegiatura WHERE idDNI = ?');
+                $cmdSelect->bindParam(1, $colegiatura['dni'], PDO::PARAM_STR);
+                $cmdSelect->execute();
+                if ($cmdSelect->fetch()) {
+                    $comandoInsert = Database::getInstance()->getDb()->prepare("INSERT INTO Colegiatura (
+                        idDNI,
+                         idSede,
+                          idEspecialidad, 
+                          FechaColegiado,
+                          idUnivesidadEgreso, 
+                          FechaEgreso,
+                          idUniversidad,
+                          FechaTitulacion,
+                          Resolucion, 
+                          Principal)
+                    VALUES(?,?,?,?,?,?,?,?,?,0)");
 
-                // $dateColegiacion = date('Y-d-m', strtotime($colegiatura['fechacolegiacion']));
-                // $dateEgreso = date('Y-d-m', strtotime($colegiatura['fechaegreso']));
-                // $dateTitulo = date('Y-d-m', strtotime($colegiatura['fechatitulo']));
+                    $comandoInsert->bindParam(1, $colegiatura['dni'], PDO::PARAM_STR);
+                    $comandoInsert->bindParam(2, $colegiatura['sede'], PDO::PARAM_INT);
+                    $comandoInsert->bindParam(3, $colegiatura['especialidad'], PDO::PARAM_INT);
+                    $comandoInsert->bindParam(4, $colegiatura['fechacolegiacion'], PDO::PARAM_STR);
+                    $comandoInsert->bindParam(5, $colegiatura['universidadegreso'], PDO::PARAM_INT);
+                    $comandoInsert->bindParam(6, $colegiatura['fechaegreso'], PDO::PARAM_STR);
+                    $comandoInsert->bindParam(7, $colegiatura['universidadtitulacion'], PDO::PARAM_INT);
+                    $comandoInsert->bindParam(8, $colegiatura['fechatitulo'], PDO::PARAM_STR);
+                    $comandoInsert->bindParam(9, $colegiatura['resolucion'], PDO::PARAM_STR);
 
-                $comandoInsert->bindParam(1, $colegiatura['dni'], PDO::PARAM_STR);
-                $comandoInsert->bindParam(2, $colegiatura['sede'], PDO::PARAM_INT);
-                $comandoInsert->bindParam(3, $colegiatura['especialidad'], PDO::PARAM_INT);
-                $comandoInsert->bindParam(4, $colegiatura['fechacolegiacion'], PDO::PARAM_STR);
-                $comandoInsert->bindParam(5, $colegiatura['universidadegreso'], PDO::PARAM_INT);
-                $comandoInsert->bindParam(6, $colegiatura['fechaegreso'], PDO::PARAM_STR);
-                $comandoInsert->bindParam(7, $colegiatura['universidadtitulacion'], PDO::PARAM_INT);
-                $comandoInsert->bindParam(8, $colegiatura['fechatitulo'], PDO::PARAM_STR);
-                $comandoInsert->bindParam(9, $colegiatura['resolucion'], PDO::PARAM_STR);
-                $comandoInsert->bindParam(10, $colegiatura['principal'], PDO::PARAM_BOOL);
+                    $comandoInsert->execute();
+                    Database::getInstance()->getDb()->commit();
+                    return 'Insertado';
+                } else {
+                    $comandoInsert = Database::getInstance()->getDb()->prepare("INSERT INTO Colegiatura (
+                        idDNI,
+                         idSede,
+                          idEspecialidad, 
+                          FechaColegiado,
+                          idUnivesidadEgreso, 
+                          FechaEgreso,
+                          idUniversidad,
+                          FechaTitulacion,
+                          Resolucion, 
+                          Principal)
+                    VALUES(?,?,?,?,?,?,?,?,?,1)");
 
-                $comandoInsert->execute();
-                Database::getInstance()->getDb()->commit();
-                return 'Insertado';
+                    $comandoInsert->bindParam(1, $colegiatura['dni'], PDO::PARAM_STR);
+                    $comandoInsert->bindParam(2, $colegiatura['sede'], PDO::PARAM_INT);
+                    $comandoInsert->bindParam(3, $colegiatura['especialidad'], PDO::PARAM_INT);
+                    $comandoInsert->bindParam(4, $colegiatura['fechacolegiacion'], PDO::PARAM_STR);
+                    $comandoInsert->bindParam(5, $colegiatura['universidadegreso'], PDO::PARAM_INT);
+                    $comandoInsert->bindParam(6, $colegiatura['fechaegreso'], PDO::PARAM_STR);
+                    $comandoInsert->bindParam(7, $colegiatura['universidadtitulacion'], PDO::PARAM_INT);
+                    $comandoInsert->bindParam(8, $colegiatura['fechatitulo'], PDO::PARAM_STR);
+                    $comandoInsert->bindParam(9, $colegiatura['resolucion'], PDO::PARAM_STR);
+
+                    $comandoInsert->execute();
+                    Database::getInstance()->getDb()->commit();
+                    return 'Insertado';
+                }
             }
         } catch (Exception $ex) {
             Database::getInstance()->getDb()->rollback();
@@ -883,9 +906,6 @@ class PersonaAdo
                 $comandoInsert = Database::getInstance()->getDb()->prepare("INSERT INTO Experiencia (idPersona, Entidad, ExpericienciaEn, FechaInicio, FechaFin) 
             VALUES (?,UPPER(?),UPPER(?),?,?);");
 
-                // $dateInicio = date('Y-d-m H:i:s', strtotime($experiencia['fechaInicio']));
-                // $dateFin = date('Y-d-m H:i:s', strtotime($experiencia['fechaFin']));
-
                 $comandoInsert->bindParam(1, $experiencia['dni'], PDO::PARAM_STR);
                 $comandoInsert->bindParam(2, $experiencia['entidad'], PDO::PARAM_STR);
                 $comandoInsert->bindParam(3, $experiencia['experiencia'], PDO::PARAM_STR);
@@ -917,8 +937,6 @@ class PersonaAdo
                 return 'Duplicado';
             } else {
                 $comandoInsert = Database::getInstance()->getDb()->prepare('INSERT INTO Grados (idDNI, Materia, Grado, idUniversidad, FechaGrado) VALUES (?,UPPER(?),?,?,?);');
-
-                // $dateEstudios = date('Y-d-m H:i:s', strtotime($estudios['fechaEstudios']));
 
                 $comandoInsert->bindParam(1, $estudios['dni'], PDO::PARAM_STR);
                 $comandoInsert->bindParam(2, $estudios['materia'], PDO::PARAM_STR);
@@ -968,7 +986,7 @@ class PersonaAdo
     public static function updateColegiatura($colegiatura)
     {
         try {
-            Database::getInstance()->getDb()->beginTransaction();        
+            Database::getInstance()->getDb()->beginTransaction();
 
             $cmdSelect = Database::getInstance()->getDb()->prepare('SELECT * FROM Colegiatura WHERE idColegiado <> ? AND UPPER(Resolucion) = UPPER(?)');
             $cmdSelect->bindParam(1, $colegiatura['idcolegiatura'], PDO::PARAM_INT);
@@ -980,12 +998,6 @@ class PersonaAdo
                 return 'Duplicado';
             } else {
 
-                // if($colegiatura['principal']==1){
-                //     $cmdSelect = Database::getInstance()->getDb()->prepare('UPDATE Colegiatura SET principal = 0');
-                //     $cmdSelect->execute();
-
-                // }
-
                 $cmdUpdate = Database::getInstance()->getDb()->prepare("UPDATE Colegiatura SET
                 idSede = ?,
                 idEspecialidad = ?, 
@@ -994,8 +1006,7 @@ class PersonaAdo
                 FechaEgreso = ?,
                 idUniversidad = ?,
                 FechaTitulacion = ?,
-                Resolucion = ?, 
-                Principal = ?
+                Resolucion = ?
                 WHERE idColegiado = ?");
 
                 $cmdUpdate->bindParam(1, $colegiatura['sede'], PDO::PARAM_INT);
@@ -1006,8 +1017,7 @@ class PersonaAdo
                 $cmdUpdate->bindParam(6, $colegiatura['universidadtitulacion'], PDO::PARAM_INT);
                 $cmdUpdate->bindParam(7, $colegiatura['fechatitulo'], PDO::PARAM_STR);
                 $cmdUpdate->bindParam(8, $colegiatura['resolucion'], PDO::PARAM_STR);
-                $cmdUpdate->bindParam(9, $colegiatura['principal'], PDO::PARAM_BOOL);
-                $cmdUpdate->bindParam(10, $colegiatura['idcolegiatura'], PDO::PARAM_INT);
+                $cmdUpdate->bindParam(9, $colegiatura['idcolegiatura'], PDO::PARAM_INT);
 
                 $cmdUpdate->execute();
                 Database::getInstance()->getDb()->commit();

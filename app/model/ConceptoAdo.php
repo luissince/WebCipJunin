@@ -96,7 +96,6 @@ class ConceptoAdo
     public static function getCuotas($ingeniero, $categoria, $mes)
     {
         try {
-
             $array = array();
             $cmdCuota = Database::getInstance()->getDb()->prepare("SELECT 
                 cast(ISNULL(ul.FechaUltimaCuota, c.FechaColegiado)as date) as UltimoPago     
@@ -227,9 +226,13 @@ class ConceptoAdo
 
             $date = new DateTime($resultPago);
             $date->modify('+3 month');
-            $date->modify('last day of this month');            
+            $date->modify('last day of this month');
 
-            array_push($array, $resultConcepto, $arrayEspecialidades, $date->format('Y-m-d'));
+            $cmdCorrelativo = Database::getInstance()->getDb()->prepare("SELECT ISNULL(MAX(Numero)+1,1) FROM CERTHabilidad");
+            $cmdCorrelativo->execute();
+            $resultCorrelativo = $cmdCorrelativo->fetchColumn();
+
+            array_push($array, $resultConcepto, $arrayEspecialidades, $date->format('Y-m-d'), $resultCorrelativo);
             return $array;
         } catch (Exception $ex) {
             return $ex->getMessage();
@@ -279,8 +282,8 @@ class ConceptoAdo
 
             $date = new DateTime($resultPago);
             $date->modify('+3 month');
-            $date->modify('last day of this month');     
-            
+            $date->modify('last day of this month');
+
             $arrayUbigeo = array();
             $cmdUbigeo = Database::getInstance()->getDb()->prepare(" SELECT idUbigeo, CONCAT(Departamento, ' - ', Provincia, ' - ', 
             Distrito) AS Ubicacion FROM Ubigeo ");
@@ -297,7 +300,11 @@ class ConceptoAdo
                 throw new Exception('Error en cargar el ubigeo.');
             }
 
-            array_push($array, $resultConcepto, $arrayEspecialidades,$date->format('Y-m-d'),$arrayUbigeo);
+            $cmdCorrelativo = Database::getInstance()->getDb()->prepare("SELECT ISNULL(MAX(Numero)+1,1) FROM CERTResidencia");
+            $cmdCorrelativo->execute();
+            $resultCorrelativo = $cmdCorrelativo->fetchColumn();
+
+            array_push($array, $resultConcepto, $arrayEspecialidades, $date->format('Y-m-d'), $arrayUbigeo, $resultCorrelativo);
             return $array;
         } catch (Exception $ex) {
             return $ex->getMessage();
@@ -347,7 +354,7 @@ class ConceptoAdo
 
             $date = new DateTime($resultPago);
             $date->modify('+3 month');
-            $date->modify('last day of this month'); 
+            $date->modify('last day of this month');
 
             $arrayUbigeo = array();
             $cmdUbigeo = Database::getInstance()->getDb()->prepare(" SELECT idUbigeo, CONCAT(Departamento, ' - ', Provincia, ' - ', 
@@ -365,7 +372,11 @@ class ConceptoAdo
                 throw new Exception('Error en cargar el ubigeo.');
             }
 
-            array_push($array, $resultConcepto, $arrayEspecialidades,$date->format('Y-m-d'),$arrayUbigeo);
+            $cmdCorrelativo = Database::getInstance()->getDb()->prepare("SELECT ISNULL(MAX(Numero)+1,1) FROM CERTProyecto");
+            $cmdCorrelativo->execute();
+            $resultCorrelativo = $cmdCorrelativo->fetchColumn();
+
+            array_push($array, $resultConcepto, $arrayEspecialidades, $date->format('Y-m-d'), $arrayUbigeo, $resultCorrelativo);
             return $array;
         } catch (Exception $ex) {
             return $ex->getMessage();
@@ -464,7 +475,7 @@ class ConceptoAdo
             $cmdConcepto->bindParam(8, $data["Observacion"], PDO::PARAM_STR);
             $cmdConcepto->bindParam(9, $data["Codigo"], PDO::PARAM_INT);
             $cmdConcepto->bindParam(10, $data["Estado"], PDO::PARAM_BOOL);
-            
+
             $cmdConcepto->execute();
             Database::getInstance()->getDb()->commit();
             return "inserted";

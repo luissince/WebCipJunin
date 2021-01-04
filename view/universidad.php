@@ -329,8 +329,6 @@ if (!isset($_SESSION['IdUsuario'])) {
                 }
             }
 
-
-
             function loadTableUniversidades(nombres) {
                 $.ajax({
                     url: "../app/controller/UniversidadController.php",
@@ -517,19 +515,23 @@ if (!isset($_SESSION['IdUsuario'])) {
                             "iduniversidad": idUniversidad,
                         },
                         beforeSend: function() {
-                            tools.AlertInfo("Universidad", "Procesando información.");
+                            $("#deleteUniversidad").modal("hide");
+                            tools.ModalAlertInfo("Universidad", "Procesando petición..");
                         },
                         success: function(result) {
                             if (result.estado == 1) {
-                                tools.AlertSuccess("Universidad", result.message);
-                                $("#deleteUniversidad").modal("hide");
+                                tools.ModalAlertSuccess("Universidad", result.message);
+                                loadInitUniversidades()
+                            } else if (result.estado == 2) {
+                                tools.ModalAlertWarning("Universidad", result.message);
+                            } else if (result.estado == 3) {
+                                tools.ModalAlertWarning("Universidad", result.message);
                             } else {
-                                tools.AlertWarning("Universidad", result.message);
+                                tools.ModalAlertWarning("Universidad", result.message);
                             }
                         },
                         error: function(error) {
-                            console.log(error);
-                            tools.AlertError("Universidad", "Error fatal: Comuniquese con el administrador del sistema");
+                            tools.ModalAlertError("Universidad", error.responseText);
                         }
                     });
                 })

@@ -114,7 +114,7 @@ if (!isset($_SESSION['IdUsuario'])) {
                     <div class="row">
                         <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
                             <div class="form-group">
-                                <button type="button" class="btn btn-danger" id="btnNuevo">
+                                <button type="button" class="btn btn-success" id="btnNuevo">
                                     <i class="fa fa-plus"></i> Nueva Empresa
                                 </button>
                                 <button class="btn btn-link" id="btnactualizar">
@@ -151,7 +151,7 @@ if (!isset($_SESSION['IdUsuario'])) {
                                         <th>Telefono</th>
                                         <th>Página Web</th>
                                         <th>Correo Electrónico</th>
-                                        <th colspan="2" style="padding-left: 10%;">Opciones</th>
+                                        <th colspan="2">Opciones</th>
                                     </thead>
                                     <tbody id="tbTable">
 
@@ -297,52 +297,63 @@ if (!isset($_SESSION['IdUsuario'])) {
                     beforeSend: function() {
                         tbTable.empty();
                         tbTable.append(
-                            '<tr class="text-center"><td colspan="7"><img src="./images/spiner.gif"/><p>Cargando información.</p></td></tr>'
+                            '<tr class="text-center"><td colspan="9"><img src="./images/spiner.gif"/><p>Cargando información.</p></td></tr>'
                         );
                         state = true;
-
+                        totalPaginacion = 0;
                     },
                     success: function(result) {
                         if (result.estado === 1) {
                             tbTable.empty();
-                            for (let empresa of result.empresas) {
+                            if (result.empresas.length == 0) {
+                                tbTable.append(
+                                    '<tr class="text-center"><td colspan="9"><p>No hay datos para mostrar.</p></td></tr>'
+                                );
 
-                                let btnUpdate =
-                                    '<button class="btn btn-warning btn-sm" onclick="updateEmpresas(\'' + empresa.idEmpresa + '\')">' +
-                                    '<i class="fa fa-wrench"></i> Editar' +
-                                    '</button>';
-                                let btnDelete =
-                                    '<button class="btn btn-danger btn-sm" onclick="deleteEmpresa(\'' + empresa.idEmpresa + '\')">' +
-                                    '<i class="fa fa-trash"></i> Eliminar' +
-                                    '</button>';
+                                $("#lblPaginaActual").html(paginacion);
+                                $("#lblPaginaSiguiente").html(totalPaginacion);
+                                state = false;
+                            } else {
 
-                                tbTable.append('<tr>' +
-                                    '<td style="text-align: center;color: #2270D1;">' +
-                                    '' + empresa.Id + '' +
-                                    '</td>' +
-                                    '<td>' + empresa.numeroRuc + '</td>' +
-                                    '<td>' + empresa.nombre + '</td>' +
-                                    '<td>' + empresa.direccion + '</td>' +
-                                    '<td>' + empresa.telefono + '</td>' +
-                                    '<td>' + empresa.paginaWeb + '</td>' +
-                                    '<td>' + empresa.email + '</td>' +
-                                    '<td style="text-align: right;">' +
-                                    '' + btnUpdate + '' +
-                                    '</td>' +
-                                    '<td>' +
-                                    '' + btnDelete +
-                                    '</td>' +
-                                    '</tr>');
+                                for (let empresa of result.empresas) {
+
+                                    let btnUpdate =
+                                        '<button class="btn btn-warning btn-sm" onclick="updateEmpresas(\'' + empresa.idEmpresa + '\')">' +
+                                        '<i class="fa fa-wrench"></i> Editar' +
+                                        '</button>';
+                                    let btnDelete =
+                                        '<button class="btn btn-danger btn-sm" onclick="deleteEmpresa(\'' + empresa.idEmpresa + '\')">' +
+                                        '<i class="fa fa-trash"></i> Eliminar' +
+                                        '</button>';
+
+                                    tbTable.append('<tr>' +
+                                        '<td style="text-align: center;color: #2270D1;">' +
+                                        '' + empresa.Id + '' +
+                                        '</td>' +
+                                        '<td>' + empresa.numeroRuc + '</td>' +
+                                        '<td>' + empresa.nombre + '</td>' +
+                                        '<td>' + empresa.direccion + '</td>' +
+                                        '<td>' + empresa.telefono + '</td>' +
+                                        '<td>' + empresa.paginaWeb + '</td>' +
+                                        '<td>' + empresa.email + '</td>' +
+                                        '<td style="text-align: right;">' +
+                                        '' + btnUpdate + '' +
+                                        '</td>' +
+                                        '<td>' +
+                                        '' + btnDelete +
+                                        '</td>' +
+                                        '</tr>');
+                                }
+                                totalPaginacion = parseInt(Math.ceil((parseFloat(result.total) / parseInt(
+                                    filasPorPagina))));
+                                $("#lblPaginaActual").html(paginacion);
+                                $("#lblPaginaSiguiente").html(totalPaginacion);
+                                state = false;
                             }
-                            totalPaginacion = parseInt(Math.ceil((parseFloat(result.total) / parseInt(
-                                filasPorPagina))));
-                            $("#lblPaginaActual").html(paginacion);
-                            $("#lblPaginaSiguiente").html(totalPaginacion);
-                            state = false;
                         } else {
                             tbTable.empty();
                             tbTable.append(
-                                '<tr class="text-center"><td colspan="7"><p>No se pudo cargar la información.</p></td></tr>'
+                                '<tr class="text-center"><td colspan="9"><p>No se pudo cargar la información.</p></td></tr>'
                             );
                             $("#lblPaginaActual").html(0);
                             $("#lblPaginaSiguiente").html(0);
@@ -353,7 +364,7 @@ if (!isset($_SESSION['IdUsuario'])) {
                         tbTable.empty();
                         console.log(error);
                         tbTable.append(
-                            '<tr class="text-center"><td colspan="7"><p>Se produjo un error, intente nuevamente.</p></td></tr>'
+                            '<tr class="text-center"><td colspan="9"><p>Se produjo un error, intente nuevamente.</p></td></tr>'
                         );
                         $("#lblPaginaActual").html(0);
                         $("#lblPaginaSiguiente").html(0);

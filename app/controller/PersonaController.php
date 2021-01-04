@@ -324,7 +324,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
     } else if ($_POST["type"] == "insertColegiatura") {
         $colegiatura["dni"] = $_POST["dni"];
         $colegiatura["sede"] = $_POST["sede"];
-        $colegiatura["principal"] = $_POST["principal"];
         $colegiatura["especialidad"] = $_POST["especialidad"];
         $colegiatura["fechacolegiacion"] = $_POST["fechacolegiacion"];
         $colegiatura["universidadegreso"] = $_POST["universidadegreso"];
@@ -492,7 +491,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
     } else if ($_POST["type"] == "updateColegiatura") {
         $colegiatura["idcolegiatura"] = $_POST["idColegiatura"];
         $colegiatura["sede"] = $_POST["sede"];
-        $colegiatura["principal"] = $_POST["principal"];
         $colegiatura["especialidad"] = $_POST["especialidad"];
         $colegiatura["fechacolegiacion"] = $_POST["fechacolegiacion"];
         $colegiatura["universidadegreso"] = $_POST["universidadegreso"];

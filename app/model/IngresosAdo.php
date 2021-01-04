@@ -722,7 +722,7 @@ class IngresosAdo
     {
         try {
             $arrayCertHabilidad = array();
-            $cmdCertHabilidad = Database::getInstance()->getDb()->prepare("SELECT p.idDNI, p.Nombres,p.Apellidos, e.Especialidad, ch.Numero, ch.Asunto, ch.Entidad, ch.Lugar, convert(VARCHAR, CAST(c.FechaColegiado AS DATE),103) AS FechaIncorporacion,
+            $cmdCertHabilidad = Database::getInstance()->getDb()->prepare("SELECT p.CIP,p.idDNI, p.Nombres,p.Apellidos, e.Especialidad, ch.Numero, ch.Asunto, ch.Entidad, ch.Lugar, convert(VARCHAR, CAST(c.FechaColegiado AS DATE),103) AS FechaIncorporacion,
             DATEPART(DAY, (convert(VARCHAR, CAST(c.FechaColegiado AS DATE),103))) AS FIDia, DATEPART(MONTH, (convert(VARCHAR, CAST(c.FechaColegiado AS DATE),103))) AS FIMes, 
             DATEPART(YEAR, (convert(VARCHAR, CAST(c.FechaColegiado AS DATE),103))) AS FIAnio, convert(VARCHAR, CAST(ch.Fecha AS DATE),103) AS FechaRegistro,
             DATEPART(DAY, (convert(VARCHAR, CAST(ch.Fecha AS DATE),103))) AS FRDia, DATEPART(MONTH, (convert(VARCHAR, CAST(ch.Fecha AS DATE),103))) AS FRMes, 
@@ -741,6 +741,7 @@ class IngresosAdo
             while ($row = $cmdCertHabilidad->fetch()) {
                 array_push($arrayCertHabilidad, array(
                     "idIngreso" => $row["idIngreso"],
+                    "cip" => $row["CIP"],
                     "dni" => $row["idDNI"],
                     "usuario" => $row["Nombres"],
                     "apellidos" => $row["Apellidos"],
@@ -774,7 +775,7 @@ class IngresosAdo
     {
         try {
             $arrayCertObra = array();
-            $cmdCertObra = Database::getInstance()->getDb()->prepare("SELECT p.idDNI, p.Nombres,p.Apellidos, e.Especialidad, cr.Numero, cr.Modalidad, cr.Propietario, cr.Proyecto, cr.Monto, u.Departamento,u.Provincia,u.Distrito, 
+            $cmdCertObra = Database::getInstance()->getDb()->prepare("SELECT p.CIP,p.idDNI, p.Nombres,p.Apellidos, e.Especialidad, cr.Numero, cr.Modalidad, cr.Propietario, cr.Proyecto, cr.Monto, u.Departamento,u.Provincia,u.Distrito, 
             convert(VARCHAR, CAST(c.FechaColegiado AS DATE),103) AS FechaIncorporacion, DATEPART(DAY, (convert(VARCHAR, CAST(c.FechaColegiado AS DATE),103))) AS FIDia, 
             DATEPART(MONTH, (convert(VARCHAR, CAST(c.FechaColegiado AS DATE),103))) AS FIMes, DATEPART(YEAR, (convert(VARCHAR, CAST(c.FechaColegiado AS DATE),103))) AS FIAnio, 
             convert(VARCHAR, CAST(cr.Fecha AS DATE),103) AS FechaRegistro, DATEPART(DAY, (convert(VARCHAR, CAST(cr.Fecha AS DATE),103))) AS FRDia, 
@@ -794,6 +795,7 @@ class IngresosAdo
             while ($row = $cmdCertObra->fetch()) {
                 array_push($arrayCertObra, array(
                     "idIngreso" => $row["idIngreso"],
+                    "cip" => $row["CIP"],
                     "dni" => $row["idDNI"],
                     "usuario" => $row["Nombres"],
                     "apellidos" => $row["Apellidos"],
@@ -831,7 +833,7 @@ class IngresosAdo
     {
         try {
             $arrayCertProyecto = array();
-            $cmdCertProyecto = Database::getInstance()->getDb()->prepare("SELECT p.idDNI, p.Nombres,p.Apellidos, e.Especialidad, cp.Numero, cp.Modalidad, cp.Propietario, cp.Proyecto, cp.Monto, u.Departamento, u.Provincia, u.Distrito, 
+            $cmdCertProyecto = Database::getInstance()->getDb()->prepare("SELECT p.CIP,p.idDNI, p.Nombres,p.Apellidos, e.Especialidad, cp.Numero, cp.Modalidad, cp.Propietario, cp.Proyecto, cp.Monto, u.Departamento, u.Provincia, u.Distrito, 
             ISNULL(cp.Adicional1,'N/D') AS Adicional1, ISNULL(cp.Adicional2,'N/D') AS Adicional2, convert(VARCHAR, CAST(c.FechaColegiado AS DATE),103) AS FechaIncorporacion, 
             DATEPART(DAY, (convert(VARCHAR, CAST(c.FechaColegiado AS DATE),103))) AS FIDia, DATEPART(MONTH, (convert(VARCHAR, CAST(c.FechaColegiado AS DATE),103))) AS FIMes, 
             DATEPART(YEAR, (convert(VARCHAR, CAST(c.FechaColegiado AS DATE),103))) AS FIAnio, convert(VARCHAR, CAST(cp.Fecha AS DATE),103) AS FechaRegistro, 
@@ -851,6 +853,7 @@ class IngresosAdo
             while ($row = $cmdCertProyecto->fetch()) {
                 array_push($arrayCertProyecto, array(
                     "idIngreso" => $row["idIngreso"],
+                    "cip" => $row["CIP"],
                     "dni" => $row["idDNI"],
                     "usuario" => $row["Nombres"],
                     "apellidos" => $row["Apellidos"],

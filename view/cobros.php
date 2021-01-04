@@ -302,18 +302,15 @@ if (!isset($_SESSION['IdUsuario'])) {
                                     <div class="modal-body">
                                         <div class="row">
                                             <div class="col-md-7" style="margin-right: 30px;">
-                                                <!-- <button id="btnCuotaNormal" type="button" class="btn btn-success">
+                                                <button id="btnCuotaNormal" type="button" class="btn btn-success">
                                                     <i class="fa fa-plus"></i> Ordinaria
                                                 </button>
-                                                <button id="btnCuotaAmnistia" type="button" class="btn btn-success">
+                                                <button id="btnCuotaAmnistia" type="button" class="btn btn-default">
                                                     <i class="fa fa-plus"></i> Amnistia
                                                 </button>
-                                                <button id="btnCuotaVitalicio" type="button" class="btn btn-success">
+                                                <button id="btnCuotaVitalicio" type="button" class="btn btn-default">
                                                     <i class="fa fa-plus"></i> Vitalicio
-                                                </button> -->
-                                                <select class="form-control" id="cbConcepto">
-
-                                                </select>
+                                                </button>
                                             </div>
                                             <div class="col-md-2 text-right">
                                                 <button id="btnAddCuota" type="button" class="btn btn-warning">
@@ -411,7 +408,7 @@ if (!isset($_SESSION['IdUsuario'])) {
                                             <div class="col-md-6">
                                                 <div class="form-group">
                                                     <label for="txtFechaCertificado">Fecha</label>
-                                                    <input type="date" class="form-control" id="txtFechaCertificado" disabled>
+                                                    <input type="date" class="form-control" id="txtFechaCertificado">
                                                 </div>
                                             </div>
                                             <div class="col-md-6">
@@ -1010,6 +1007,7 @@ if (!isset($_SESSION['IdUsuario'])) {
             //cuotas
             let cuotas = [];
             let countCurrentDate = 0;
+            let tipoCuotas = 0;
             let cuotasEstate = false;
             let cuotasInicio = "";
             let cuotasFin = "";
@@ -1061,13 +1059,6 @@ if (!isset($_SESSION['IdUsuario'])) {
                 // empresas asociadas al ingeniero
                 loadEmpresaPersona();
 
-                // añadir empresas asociadas al ingeniero
-                $("#btnAddEmpresa").click(function() {
-                    console.log("entro");
-                    $("#NuevaEmpresaPersona").modal("show");
-                });
-                // modelCobrosIngenieros.loadEmpresaPersona(idDNI);
-
                 //ingenieros
                 modelCobrosIngenieros.componentesIngenieros();
 
@@ -1088,6 +1079,12 @@ if (!isset($_SESSION['IdUsuario'])) {
 
                 //cobro
                 componentesRegistrarIngreso();
+
+                // añadir empresas asociadas al ingeniero
+                $("#btnAddEmpresa").click(function() {
+                    $("#NuevaEmpresaPersona").modal("show");
+                });
+                // modelCobrosIngenieros.loadEmpresaPersona(idDNI);
 
                 $("#btnCloseEmpresa").click(function() {
                     clearModalAddEmpresa();
@@ -1173,8 +1170,6 @@ if (!isset($_SESSION['IdUsuario'])) {
             function registrarIngreso() {
                 if ($("#cbComprobante").val() == '') {
                     tools.AlertWarning("Cobros", "Seleccione un comprobante para continuar.");
-                } else if ($("#cbCliente").val() == '') {
-                    tools.AlertWarning("Cobros", "Seleccione una empresa a facturar para continuar.");
                 } else if (arrayIngresos.length == 0) {
                     tools.AlertWarning("Cobros", "No hay conceptos para continuar.");
                 } else if (idDNI == 0) {
@@ -1190,7 +1185,7 @@ if (!isset($_SESSION['IdUsuario'])) {
                                 data: JSON.stringify({
                                     "idTipoDocumento": parseInt($("#cbComprobante").val()),
                                     "idCliente": idDNI,
-                                    "idEmpresaPersona": $("#cbCliente").val(),
+                                    "idEmpresaPersona": $("#cbCliente").val() == '' ? null : $("#cbCliente").val(),
                                     "idUsuario": 1,
                                     "estado": 'C',
                                     "estadoCuotas": cuotasEstate,
@@ -1212,9 +1207,10 @@ if (!isset($_SESSION['IdUsuario'])) {
                                     tools.ModalAlertInfo("Cobros", "Procesando petición..");
                                 },
                                 success: function(result) {
+
                                     if (result.estado === 1) {
                                         tools.ModalAlertSuccess("Cobros", result.mensaje);
-                                        openPdfComprobante(result.idIngreso);                                        
+                                        openPdfComprobante(result.idIngreso);
                                         $("#btnCertificado").attr('data-toggle', '');
                                         $("#btnCertificado").attr('aria-expanded', 'false');
                                         loadEmpresaPersona();
@@ -1354,7 +1350,7 @@ if (!isset($_SESSION['IdUsuario'])) {
             function cancelarIngreso() {
                 arrayIngresos.splice(0, arrayIngresos.length);
                 addIngresos();
-                
+
                 $("#lblCipSeleccionado").html("--");
                 $("#lblTipoIngenieroSeleccionado").html("--");
                 $("#lblDocumentSeleccionado").html("--");
@@ -1390,6 +1386,64 @@ if (!isset($_SESSION['IdUsuario'])) {
                 return ret;
             }
 
+            function clearModalAddEmpresa() {
+                loadEmpresaPersona();
+                $("#NuevaEmpresaPersona").modal("hide");
+                $("#txtRuc").val("")
+                $("#NombreComercial").val("")
+                $("#DireccionEmpresa").val("")
+                $("#Tlf_Celular").val("")
+                $("#Pagina_web").val("")
+                $("#Email_Empresa").val("")
+            }
+
+            function crudEmpresa() {
+                if ($("#txtRuc").val() == '') {
+                    $("#txtRuc").focus();
+                    tools.AlertWarning("Empresa", "Ingrese un ruc válido")
+                } else if ($("#NombreComercial").val() == "") {
+                    $("#NombreComercial").focus();
+                    tools.AlertWarning("Empresa", "Ingrese Nombre comercial")
+                } else if ($("#DireccionEmpresa").val() == "") {
+                    $("#DireccionEmpresa").focus();
+                    tools.AlertWarning("Empresa", "Ingrese dirección")
+                } else {
+                    tools.ModalDialog("Empresa", "¿Está seguro de continuar?", function(value) {
+                        if (value == true) {
+                            $.ajax({
+                                url: "../app/controller/EmpresaController.php",
+                                method: "POST",
+                                data: {
+                                    "type": "addEmpresa",
+                                    "idEmpresa": 0,
+                                    "ruc": $("#txtRuc").val(),
+                                    "nombre": $("#NombreComercial").val(),
+                                    "direccion": $("#DireccionEmpresa").val(),
+                                    "telefono": $("#Tlf_Celular").val(),
+                                    "web": $("#Pagina_web").val(),
+                                    "email": $("#Email_Empresa").val()
+                                },
+                                beforeSend: function() {
+                                    tools.ModalAlertInfo("Empresa", "Procesando petición..");
+                                },
+                                success: function(result) {
+                                    if (result.estado === 1) {
+                                        tools.ModalAlertSuccess("Empresa", result.mensaje);
+                                        clearModalAddEmpresa();
+                                    } else if (result.estado === 2) {
+                                        tools.ModalAlertWarning("Empresa", result.mensaje);
+                                    } else {
+                                        tools.ModalAlertWarning("Empresa", result.mensaje);
+                                    }
+                                },
+                                error: function(error) {
+                                    tools.ModalAlertError("Empresa", "Se produjo un error: " + error.responseText);
+                                }
+                            });
+                        }
+                    });
+                }
+            }
         </script>
     </body>
 

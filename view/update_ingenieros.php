@@ -50,20 +50,14 @@ if (!isset($_SESSION['IdUsuario'])) {
                                         <div class="col-md-12">
                                             <div class="form-group">
                                                 <label class="col-sm-4 control-label">Sede</label>
-                                                <div class="col-sm-4">
+                                                <div class="col-sm-8">
                                                     <select id="Sede" class="form-control">
                                                     </select>
                                                 </div>
-                                                <div class="checkbox col-sm-4">
-                                                    <label>
-                                                        <input type="checkbox" id="Principal">
-                                                        Principal
-                                                    </label>
-                                                </div>
                                             </div>
                                         </div>
-                                    </div>
-                                    <div class="row">
+                                    </div>                                    
+                                    <div class="row" style="padding-top: 0.5em;">
                                         <div class="col-md-12">
                                             <div class="form-group">
                                                 <label class="col-sm-4 control-label">Especialidad</label>
@@ -169,20 +163,14 @@ if (!isset($_SESSION['IdUsuario'])) {
                                         <div class="col-md-12">
                                             <div class="form-group">
                                                 <label class="col-sm-4 control-label">Sede</label>
-                                                <div class="col-sm-4">
+                                                <div class="col-sm-8">
                                                     <select id="ESede" class="form-control">
                                                     </select>
-                                                </div>
-                                                <div class="checkbox col-sm-4">
-                                                    <label>
-                                                        <input type="checkbox" id="EPrincipal">
-                                                        Principal
-                                                    </label>
                                                 </div>
                                             </div>
                                         </div>
                                     </div>
-                                    <div class="row">
+                                    <div class="row" style="padding-top: 0.5em;">
                                         <div class="col-md-12">
                                             <div class="form-group">
                                                 <label class="col-sm-4 control-label">Especialidad</label>
@@ -1581,6 +1569,7 @@ if (!isset($_SESSION['IdUsuario'])) {
                         } else if (!$('#Tramite').is(":checked") && $("#Codigo").val() == '' || !$('#Tramite').is(":checked") && $("#Codigo").val().length < 4) {
                             tools.AlertWarning("Advertencia", "Ingrese el número cip por favor.");
                         } else {
+                           
                             let formData = new FormData();
                             formData.append("type", "update");
                             formData.append("dni", $("#dni").val());

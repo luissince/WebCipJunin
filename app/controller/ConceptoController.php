@@ -98,7 +98,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
                     "estado" => 1,
                     "data" => $result[0],
                     "especialidades" => $result[1],
-                    "ultimopago"=>$result[2]
+                    "ultimopago" => $result[2],
+                    "numeracion" => $result[3],
                 ));
             } else {
                 echo json_encode(array(
@@ -113,8 +114,9 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
                     "estado" => 1,
                     "data" => $result[0],
                     "especialidades" => $result[1],
-                    "ultimopago"=>$result[2],
-                    "ubigeo"=>$result[3]
+                    "ultimopago" => $result[2],
+                    "ubigeo" => $result[3],
+                    "numeracion" => $result[4],
                 ));
             } else {
                 echo json_encode(array(
@@ -129,8 +131,9 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
                     "estado" => 1,
                     "data" => $result[0],
                     "especialidades" => $result[1],
-                    "ultimopago"=>$result[2],
-                    "ubigeo"=>$result[3]
+                    "ultimopago" => $result[2],
+                    "ubigeo" => $result[3],
+                    "numeracion" => $result[4],
                 ));
             } else {
                 echo json_encode(array(

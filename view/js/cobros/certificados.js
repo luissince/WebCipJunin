@@ -229,6 +229,8 @@ function Certificado() {
 
                     $("#lblCertificadoHabilidadEstado").addClass("text-success");
                     $("#lblCertificadoHabilidadEstado").append('<i class="fa fa-check"> </i> Se cargo correctamente lo datos.');
+
+                    $("#txtCorrelativoCertificado").val(result.numeracion);
                 } else {
                     $("#lblCertificadoHabilidadEstado").addClass("text-warning");
                     $("#lblCertificadoHabilidadEstado").append('<i class="fa fa-check"> </i> ' + result.message);
@@ -264,7 +266,6 @@ function Certificado() {
                 certificadoResidenciaObra = {}
             },
             success: function(result) {
-                console.log(result);
                 $("#modal-title-residencia-obra").empty();
                 $("#modal-title-residencia-obra").append('<i class="fa fa-plus"> </i> Certificado de Habilidad para Firmar de Contrato de Obra Pública o Residencia');
 
@@ -292,6 +293,8 @@ function Certificado() {
 
                     $("#lblCertificadoResidenciaObraEstado").addClass("text-success");
                     $("#lblCertificadoResidenciaObraEstado").append('<i class="fa fa-check"> </i> Se cargo correctamente lo datos.');
+
+                    $("#txtCertificadoNumeroObra").val(result.numeracion);
                 } else {
                     $("#lblCertificadoResidenciaObraEstado").addClass("text-warning");
                     $("#lblCertificadoResidenciaObraEstado").append('<i class="fa fa-check"> </i>' + result.message);
@@ -327,7 +330,6 @@ function Certificado() {
                 certificadoProyecto = {};
             },
             success: function(result) {
-                console.log(result);
                 $("#modal-title-certificado-proyecto").empty();
                 $("#modal-title-certificado-proyecto").append('<i class="fa fa-plus"> </i> Certificado de Proyecto');
                 if (result.estado == 1) {
@@ -355,6 +357,7 @@ function Certificado() {
                     $("#lblCertificadoProyectoEstado").addClass("text-success");
                     $("#lblCertificadoProyectoEstado").append('<i class="fa fa-check"> </i> Se cargo correctamente lo datos.');
 
+                    $("#txtNumeroCertificadoProyecto").val(result.numeracion);
                 } else {
                     $("#lblCertificadoProyectoEstado").addClass("text-warning");
                     $("#lblCertificadoProyectoEstado").append('<i class="fa fa-check"> </i> ' + result.message);
