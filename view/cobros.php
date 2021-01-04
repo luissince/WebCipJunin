@@ -1103,7 +1103,7 @@ if (!isset($_SESSION['IdUsuario'])) {
 
                 $("#cbComprobante").change(function() {
                     for (let i = 0; i < comprobantes.length; i++) {
-                        if (comprobantes[i].IdTipoComprobante == $(this).val()) {                           
+                        if (comprobantes[i].IdTipoComprobante == $(this).val()) {                                                  
                             if (comprobantes[i].UsarRuc == "1") {
                                 UsarRuc = true;
                             }else{
@@ -1191,7 +1191,7 @@ if (!isset($_SESSION['IdUsuario'])) {
                     tools.AlertWarning("Cobros", "No hay conceptos para continuar.");
                 } else if (idDNI == 0) {
                     tools.AlertWarning("Cobros", "No selecciono ningún ingeneniero para continuar.");
-                } else if (UsarRuc && $("#cbCliente").val() != '') {
+                } else if (UsarRuc && $("#cbCliente").val() == '') {
                     tools.AlertWarning("Cobros", "El comprobante requiere usar una empresa asociada.");
                     $("#cbCliente").focus();
                 } else {
