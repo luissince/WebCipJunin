@@ -1395,7 +1395,7 @@ if (!isset($_SESSION['IdUsuario'])) {
                 $("#tbHistorial").empty();
                 UsarRuc = false
                 for (let i = 0; i < comprobantes.length; i++) {
-                    if (comprobantes[i].IdTipoComprobante == $(this).val()) {
+                    if (comprobantes[i].IdTipoComprobante == $("#cbComprobante").val()) {
                         if (comprobantes[i].Predeterminado == "1") {
                             $("#cbComprobante").val(comprobantes[i].IdTipoComprobante)
                         }
