@@ -139,17 +139,40 @@ class ConceptoAdo
                     $fechaactual->modify('+ ' . $mes  . ' month');
                 }
 
-                if ($fechaactual >= $date) {
-                    $inicio = $date->modify('+ 1 month');
-                    if ($inicio <= $fechaactual) {
-                        while ($inicio <= $fechaactual) {
-                            array_push($array, array(
-                                "day" => $inicio->format('d'),
-                                "mes" => $inicio->format('m'),
-                                "year" => $inicio->format('Y'),
-                                "concepto" => $arryConcepto
-                            ));
-                            $inicio->modify('+ 1 month');
+                $cmdAltaColegiado = Database::getInstance()->getDb()->prepare("SELECT * FROM Persona AS  p
+                INNER JOIN Ingreso AS i ON i.idDNI = p.idDNI
+                INNER JOIN Cuota as c on c.idIngreso = i.idIngreso
+                WHERE i.idDNI = ? ");
+                $cmdAltaColegiado->bindParam(1, $ingeniero, PDO::PARAM_INT);
+                $cmdAltaColegiado->execute();
+                if ($cmdAltaColegiado->fetch()) {
+                    if ($fechaactual >= $date) {
+                        $inicio = $date->modify('+ 1 month');
+                        if ($inicio <= $fechaactual) {
+                            while ($inicio <= $fechaactual) {
+                                array_push($array, array(
+                                    "day" => $inicio->format('d'),
+                                    "mes" => $inicio->format('m'),
+                                    "year" => $inicio->format('Y'),
+                                    "concepto" => $arryConcepto
+                                ));
+                                $inicio->modify('+ 1 month');
+                            }
+                        }
+                    }
+                } else {
+                    if ($fechaactual >= $date) {
+                        $inicio = $date;
+                        if ($inicio <= $fechaactual) {
+                            while ($inicio <= $fechaactual) {
+                                array_push($array, array(
+                                    "day" => $inicio->format('d'),
+                                    "mes" => $inicio->format('m'),
+                                    "year" => $inicio->format('Y'),
+                                    "concepto" => $arryConcepto
+                                ));
+                                $inicio->modify('+ 1 month');
+                            }
                         }
                     }
                 }

@@ -6,20 +6,81 @@ function Cuotas() {
             if (idDNI == 0) {
                 tools.AlertWarning("Cuotas", "No selecciono ningún ingeniero para obtener sus cuotas.")
             } else {
-                $('#mdCuotas').modal('show');
-                tipoCuotas = 1;
-                loadCuotas(tipoCuotas);
-            }
+                if (tipoColegiado == "V") {
+                    $('#mdCuotas').modal('show');
 
+                    $("#lblCuotasMensaje").html("Cuotas de Vitalicio");
+
+                    $("#btnCuotaNormal").removeClass();
+                    $("#btnCuotaNormal").addClass("btn btn-default");
+
+                    $("#btnCuotaAmnistia").removeClass();
+                    $("#btnCuotaAmnistia").addClass("btn btn-default");
+
+                    $("#btnCuotaVitalicio").removeClass();
+                    $("#btnCuotaVitalicio").addClass("btn btn-success");
+
+                    tipoCuotas = 3;
+                    loadCuotas(tipoCuotas);
+
+                } else {
+                    $('#mdCuotas').modal('show');
+
+                    $("#lblCuotasMensaje").html("Cuotas Ordinarias");
+
+                    $("#btnCuotaNormal").removeClass();
+                    $("#btnCuotaNormal").addClass("btn btn-success");
+
+                    $("#btnCuotaAmnistia").removeClass();
+                    $("#btnCuotaAmnistia").addClass("btn btn-default");
+
+                    $("#btnCuotaVitalicio").removeClass();
+                    $("#btnCuotaVitalicio").addClass("btn btn-default");
+
+                    tipoCuotas = 1;
+                    loadCuotas(tipoCuotas);
+                }
+            }
         });
 
         $("#btnCuotas").keypress(function(event) {
             if (idDNI == 0) {
                 tools.AlertWarning("Cuotas", "No selecciono ningún ingeniero para obtener sus cuotas.")
             } else {
-                $('#mdCuotas').modal('show');
-                tipoCuotas = 1;
-                loadCuotas(tipoCuotas);
+                if (tipoColegiado == "V") {
+                    $('#mdCuotas').modal('show');
+
+                    $("#lblCuotasMensaje").html("Cuotas de Vitalicio");
+
+                    $("#btnCuotaNormal").removeClass();
+                    $("#btnCuotaNormal").addClass("btn btn-default");
+
+                    $("#btnCuotaAmnistia").removeClass();
+                    $("#btnCuotaAmnistia").addClass("btn btn-default");
+
+                    $("#btnCuotaVitalicio").removeClass();
+                    $("#btnCuotaVitalicio").addClass("btn btn-success");
+
+                    tipoCuotas = 3;
+                    loadCuotas(tipoCuotas);
+
+                } else {
+                    $('#mdCuotas').modal('show');
+
+                    $("#lblCuotasMensaje").html("Cuotas Ordinarias");
+
+                    $("#btnCuotaNormal").removeClass();
+                    $("#btnCuotaNormal").addClass("btn btn-success");
+
+                    $("#btnCuotaAmnistia").removeClass();
+                    $("#btnCuotaAmnistia").addClass("btn btn-default");
+
+                    $("#btnCuotaVitalicio").removeClass();
+                    $("#btnCuotaVitalicio").addClass("btn btn-default");
+
+                    tipoCuotas = 1;
+                    loadCuotas(tipoCuotas);
+                }
             }
             event.preventDefault();
         });
@@ -107,7 +168,7 @@ function Cuotas() {
             $("#btnCuotaVitalicio").addClass("btn btn-success");
 
             tipoCuotas = 3;
-            loadCuotas(3);
+            loadCuotas(tipoCuotas);
         });
 
         $("#btnCuotaVitalicio").keypress(function(event) {

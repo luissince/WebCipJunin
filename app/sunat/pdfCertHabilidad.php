@@ -56,7 +56,7 @@ if (!isset($_GET["idIngreso"])) {
                         font-family: "Arial";
                         font-size: 10pt;
                         color:#000000;
-                        padding-top:60px;
+                        padding-top:70px;
                     }
                     .header-two {
                         font-family: "Arial";
@@ -68,28 +68,28 @@ if (!isset($_GET["idIngreso"])) {
                         font-family: "Arial";
                         font-size: 10pt;
                         color:#000000;
-                        padding-top:213px;
+                        padding-top:209px;
                     }
                     .body-two {
                         font-family: "Arial";
                         font-size: 10pt;
                         color:#000000;
-                        padding-top:120px;
+                        padding-top:108px;
                     }
                     .footer-one {
                         font-family: "Arial";
                         font-size: 10pt;
                         color:#000000;
-                        padding-top:83px;
+                        padding-top:76px;
                         text-align: center; 
-                        padding-left: 400px;
+                        padding-left: 386px;
                     }
                     .footer-two {
                         font-family: "Arial";
                         font-size: 10pt;
                         color:#000000;
-                        padding-top:36px; 
-                        padding-left:320px;
+                        padding-top:34px;  
+                        padding-left:305px;
                     }
                 </style>
             </head>
@@ -103,7 +103,7 @@ if (!isset($_GET["idIngreso"])) {
                     </div>
                     <div style="padding-left:155px; padding-top:2px;">
                         <div style="width:150px; float:left;padding-left:10px;">'.$FechaIncorporacion.'</div>
-                        <div style="width:180px;padding-left:100px; float:left;">'.$Especialidad.'</div>
+                        <div style="width:360px;padding-left:100px; float:left;">'.$Especialidad.'</div>
                     </div>
                 </div>
                 <div class="header-two">
@@ -111,9 +111,9 @@ if (!isset($_GET["idIngreso"])) {
                     <div style="padding-left:120px; padding-top:5px; width: 510px;">'.$Entidad.'</div>
                     <div style="padding-left:120px; padding-top:5px; width: 700px;">
                         <div style="width:510px;float:left;">'.$Lugar.'</div>
-                        <div style="text-align:center; width:145px; padding-top: 17px;">
-                            <div style="width: 40px; float:right; padding-left:6px;">'.$AnioVencimiento.'</div>
-                            <div style="width: 50px; float:right; padding-left:6px;">'.$MesVencimiento.'</div>
+                        <div style="text-align:center; width:145px; padding-top: 12px;">
+                            <div style="width: 40px; float:right; padding-right:10px;">'.$AnioVencimiento.'</div>
+                            <div style="width: 50px; float:right; padding-right:1px;">'.$MesVencimiento.'</div>
                             <div style="width: 40px; float:right;">'.$DiaVencimiento.'</div>
                         </div>
                     </div>
@@ -129,24 +129,24 @@ if (!isset($_GET["idIngreso"])) {
                 <!--########################################################## Cuerpo del documento ###################################################-->
                 <div class="body-one">
                     <div style="padding-left:240px; padding-top: 4px;">'.$Nombreingeniero.' '.$Apellidosingeniero.'</div>
-                    <div style="padding-left:355px; padding-top:10px;">'.$ConsejoDepartamental.'</div>
-                    <div style="padding-left:355px; padding-top:15px; width: 700px;">
+                    <div style="padding-left:355px; padding-top:9px;">'.$ConsejoDepartamental.'</div>
+                    <div style="padding-left:355px; padding-top:14px; width: 700px;">
                         <div style="width: 150px; float:left;">'.$NumeroCIP.'</div>
                         <div style="width: 100px; float:left; padding-left:155px;">'.$FechaIncorporacion.'</div>
                     </div>
                     <div style="padding-left:240px; padding-top:12px;">'.$Especialidad.'</div>
                 </div>
                 <div class="body-two">
-                    <div style="padding-left:210px;">'.$Asunto.'</div>
-                    <div style="padding-left:210px; padding-top:25px;">'.$Entidad.'</div>
-                    <div style="padding-left:210px; padding-top:25px;">'.$Lugar.'</div>
+                    <div style="padding-left:230px;">'.$Asunto.'</div>
+                    <div style="padding-left:230px; padding-top:29px;">'.$Entidad.'</div>
+                    <div style="padding-left:230px; padding-top:26px;">'.$Lugar.'</div>
                 </div>
                 <!--######################################### Fin Cuerpo del documento ##################################################################-->
 
                 <!--################################################## Pie del Documento ###############################################################-->
                 <div class="footer-one">
                     <div style="width:50; float:left;">'.$DiaVencimiento.'</div>
-                    <div style="width:50; float:left;">'.$MesVencimiento.'</div>
+                    <div style="width:50; float:left; padding-left: 10px;">'.$MesVencimiento.'</div>
                     <div style="width:50; float:left; padding-left:5px;">'.$AnioVencimiento.'</div>
                 </div>
                 <div class="footer-two">
