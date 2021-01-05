@@ -258,15 +258,15 @@ function CobroIngenieros() {
                 tbHistorial.empty()
                 tbHistorial.append('<tr class="text-center"><td colspan="7"><img src="./images/spiner.gif"/><p>Cargando información.</p></td></tr>');
                 stateHistorial = true;
+                totalPaginacionHistorial = 0;
             },
             success: function(result) {
                 if (result.estado == 1) {
                     tbHistorial.empty()
                     if (result.historial.length == 0) {
                         tbHistorial.append('<tr class="text-center"><td colspan="7"><p>No hay datos para mostrar.</p></td></tr>');
-                        totalPaginacionHistorial = 0;
-                        $("#lblPaginaActual").html(paginacionHistorial);
-                        $("#lblPaginaSiguiente").html(totalPaginacionHistorial);
+                        $("#lblPaginaActual").html(0);
+                        $("#lblPaginaSiguiente").html(0);
                         stateHistorial = false;
                     } else {
                         for (let historial of result.historial) {
@@ -312,12 +312,16 @@ function CobroIngenieros() {
                 } else {
                     tbHistorial.empty()
                     tbHistorial.append('<tr class="text-center"><td colspan="7"><p>' + result.message + '</p></td></tr>');
+                    $("#lblPaginaActual").html(0);
+                    $("#lblPaginaSiguiente").html(0);
                     stateHistorial = false;
                 }
             },
             error: function(error) {
                 tbHistorial.empty()
                 tbHistorial.append('<tr class="text-center"><td colspan="7"><p>' + error.responseText + '</p></td></tr>');
+                $("#lblPaginaActual").html(0);
+                $("#lblPaginaSiguiente").html(0);
                 stateHistorial = false;
             }
         });
