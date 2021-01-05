@@ -38,9 +38,9 @@ if (!is_array($detalleventa)) {
 
 
         $client = new Client();
-        $client->setTipoDoc('1')
-                ->setNumDoc($ingreso->idDNI)
-                ->setRznSocial($ingreso->Apellidos . ' ' . $ingreso->Nombres);
+        $client->setTipoDoc($ingreso->TipoDocumento)
+                ->setNumDoc($ingreso->NumeroDocumento)
+                ->setRznSocial($ingreso->DatosPersona);
 
 
         $company = new Company();
@@ -66,7 +66,7 @@ if (!is_array($detalleventa)) {
                 ->setTipoDoc($ingreso->TipoComprobante)
                 ->setSerie($ingreso->Serie)
                 ->setCorrelativo($ingreso->Numeracion)
-                ->setFechaEmision(new DateTime($ingreso->FechaPago))
+                ->setFechaEmision(new DateTime($ingreso->FechaPago.'T'.$ingreso->HoraPago))
                 ->setTipoMoneda("PEN")
                 ->setCompany($company)
                 ->setClient($client)

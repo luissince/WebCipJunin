@@ -56,7 +56,7 @@ if (!isset($_SESSION['IdUsuario'])) {
                                                 </div>
                                             </div>
                                         </div>
-                                    </div>                                    
+                                    </div>
                                     <div class="row" style="padding-top: 0.5em;">
                                         <div class="col-md-12">
                                             <div class="form-group">
@@ -1307,14 +1307,14 @@ if (!isset($_SESSION['IdUsuario'])) {
                             <div class="row">
                                 <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
                                     <div class="form-group">
-                                        <label for="Ruc">RUC (opcional):</label>
-                                        <input id="Ruc" type="text" name="Ruc" class="form-control" placeholder="número de RUC">
+                                        <label for="Ruc">Dirección Principal:</label>
+                                        <input id="Ruc" type="text" name="Ruc" class="form-control" placeholder="Dirección de viviendan principal">
                                     </div>
                                 </div>
                                 <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
                                     <div class="form-group">
-                                        <label for="Razon_social">Razon social (opcional):</label>
-                                        <input id="Razon_social" type="text" name="Razon_social" class="form-control" placeholder="Razon social">
+                                        <label for="Razon_social">Télefono/Celular Prinpal:</label>
+                                        <input id="Razon_social" type="text" name="Razon_social" class="form-control" placeholder="N° de teléfono o celular principal">
                                     </div>
                                 </div>
                             </div>
@@ -1394,7 +1394,7 @@ if (!isset($_SESSION['IdUsuario'])) {
                                                         <th>F. Egreso</th>
                                                         <th>Universidad de titulo</th>
                                                         <th>F. Titulacion</th>
-                                                        <th>Resolución</th>                                                    
+                                                        <th>Resolución</th>
                                                         <th colspan="2" style="text-align: center;">Opciones</th>
                                                     </tr>
                                                 </thead>
@@ -1569,17 +1569,17 @@ if (!isset($_SESSION['IdUsuario'])) {
                         } else if (!$('#Tramite').is(":checked") && $("#Codigo").val() == '' || !$('#Tramite').is(":checked") && $("#Codigo").val().length < 4) {
                             tools.AlertWarning("Advertencia", "Ingrese el número cip por favor.");
                         } else {
-                           
+
                             let formData = new FormData();
                             formData.append("type", "update");
                             formData.append("dni", $("#dni").val());
-                            formData.append("nombres", $("#Nombres").val());
-                            formData.append("apellidos", $("#Apellidos").val());
+                            formData.append("nombres", $("#Nombres").val().trim().toUpperCase());
+                            formData.append("apellidos", $("#Apellidos").val().trim().toUpperCase());
                             formData.append("sexo", $("#Genero").val());
                             formData.append("nacimiento", $("#Nacimiento").val());
                             formData.append("estado_civil", $("#Estado_civil").val());
-                            formData.append("ruc", $("#Ruc").val());
-                            formData.append("rason_social", $("#Razon_social").val());
+                            formData.append("ruc", $("#Ruc").val().trim().toUpperCase());
+                            formData.append("rason_social", $("#Razon_social").val().trim());
                             formData.append("cip", $("#Codigo").val());
                             formData.append("condicion", $("#Condicion").val());
                             updatePersona(formData);

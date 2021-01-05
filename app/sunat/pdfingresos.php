@@ -12,37 +12,40 @@ if (!isset($_GET["idIngreso"])) {
     if (!is_array($detalleventa)) {
         echo $detalleventa;
     } else {
-        $ingreso = $detalleventa[0];
-        $detalleIngreso = $detalleventa[1];
-        $cuotas = $detalleventa[2];
-        $empresa = $detalleventa[3];
-        $totales = $detalleventa[4];
+        if (!isset($detalleventa[3])) {
+            echo 'Hay con valores nulos en el registro de empresa, por favor corregir.';
+        } else {
+            $ingreso = $detalleventa[0];
+            $detalleIngreso = $detalleventa[1];
+            $cuotas = $detalleventa[2];
+            $empresa = $detalleventa[3];
+            $totales = $detalleventa[4];
 
-        $rutaImage = "../../view/images/logologin.png";
-        $nombre = $empresa->RazonSocial;
-        $direccion = "Av. Centenario N° 604 - San Carlos - Huancayo - Junín";
-        $web = $empresa->PaginaWeb;
-        $email = $empresa->Email;
-        $telefono = "Tesorería 064-203033 Anexo 202";
-        $ruc = $empresa->NumeroDocumento;
+            $rutaImage = "../../view/images/logologin.png";
+            $nombre = $empresa->RazonSocial;
+            $direccion = $empresa->Domicilio;
+            $web = $empresa->PaginaWeb;
+            $email = $empresa->Email;
+            $telefono = "Tesorería " . $empresa->Telefono . " Anexo 202";
+            $ruc = $empresa->NumeroDocumento;
 
-        $gcl = new GenerateCoinToLetters();
+            $gcl = new GenerateCoinToLetters();
 
-        $textoCodBar =
-            '|' . $ruc
-            . '|' . $ingreso->TipoComprobante
-            . '|' . $ingreso->Serie
-            . '|' . $ingreso->Numeracion
-            . '|' . number_format(round($totales['totalimpuesto'], 2, PHP_ROUND_HALF_UP), 2, '.', '')
-            . '|' . number_format(round($totales['totalconimpuesto'], 2, PHP_ROUND_HALF_UP), 2, '.', '')
-            . '|' . $ingreso->FechaEmision
-            . '|' . $ingreso->TipoComprobante
-            . '|' . $ingreso->idDNI
-            . '|';
+            $textoCodBar =
+                '|' . $ruc
+                . '|' . $ingreso->TipoComprobante
+                . '|' . $ingreso->Serie
+                . '|' . $ingreso->Numeracion
+                . '|' . number_format(round($totales['totalimpuesto'], 2, PHP_ROUND_HALF_UP), 2, '.', '')
+                . '|' . number_format(round($totales['totalconimpuesto'], 2, PHP_ROUND_HALF_UP), 2, '.', '')
+                . '|' . $ingreso->FechaEmision
+                . '|' . $ingreso->TipoDocumento
+                . '|' . $ingreso->NumeroDocumento
+                . '|';
 
-        $qrCode = QrCode::png($textoCodBar, 'codbar.png', 'L', 4, 2);
+            $qrCode = QrCode::png($textoCodBar, 'codbar.png', 'L', 4, 2);
 
-        $html .= '<html>
+            $html .= '<html>
             <head>
                 <style>
                     body {
@@ -198,16 +201,16 @@ if (!isset($_GET["idIngreso"])) {
                     <div class="caja-two" >
                         <table  style="font-family: arial;" cellpadding="1" border="0">
                             <tr>
-                                <td style="line-height: 0px;padding:2px 0px;"><b>D.N.I</b></td>
+                                <td style="line-height: 0px;padding:2px 0px;"><b>' . $ingreso->NombreDocumento . '</b></td>
                                 <td style="line-height: 0px;padding:2px 0px;"><b>: </b> ' . $ingreso->idDNI . '</td>
                             </tr>
                             <tr>
-                                <td style="line-height: 0px;padding:2px 0px;"><b>Nombre</b></td>
+                                <td style="line-height: 0px;padding:2px 0px;"><b>' . $ingreso->TipoNombrePersona . '</b></td>
                                 <td style="line-height: 0px;padding:2px 0px;"><b>: </b>' . $ingreso->Apellidos . ' ' . $ingreso->Nombres . '</td>
                             </tr>
                             <tr>
                                 <td style="line-height: 0px;padding:2px 0px;"><b>Dirección</b></td>
-                                <td style="line-height: 0px;padding:2px 0px;"><b>:</b> </td>
+                                <td style="line-height: 0px;padding:2px 0px;"><b>: </b>'.$ingreso->Direccion.' </td>
                             </tr>
                             <tr>
                                 <td style="line-height: 0px;padding:2px 0px;"><b>Fecha Emisión</b></td>
@@ -216,8 +219,18 @@ if (!isset($_GET["idIngreso"])) {
                             <tr>
                                 <td style="line-height: 0px;padding:2px 0px;"><b>Moneda</b></td>
                                 <td style="line-height: 0px;padding:2px 0px;"><b>: </b>SOL-PEN</td>
-                            </tr>
-                        </table>
+                            </tr>';
+                            ?>
+                            <?php
+                            if ($ingreso->TipoDocumento == 6) {
+                                $html .= '<tr>
+                                            <td style="line-height: 0px;padding:2px 0px;"><b>Ref</b></td>
+                                            <td style="line-height: 0px;padding:2px 0px;"><b>:</b> N° Cip '.$ingreso->CIP.' - ING. '.$ingreso->Apellidos.' '.$ingreso->Nombres .'</td>
+                                            </tr>  ';
+                            }
+                            ?>
+                            <?php
+                            $html .= '</table>
                     </div>
                 </div>
                 <!--#####################Fin de la caja de informacion del cliente###################################-->
@@ -235,7 +248,7 @@ if (!isset($_GET["idIngreso"])) {
                             </tr>
                         </thead>
                         <tbody>';
-                            ?>
+?>
 
                             <?php foreach ($detalleIngreso as $value) {
                                 $cantidad = $value['Cantidad'];
@@ -256,7 +269,7 @@ if (!isset($_GET["idIngreso"])) {
                                     <td class="costt" align="right" style="background-color:#b72928;border: none;color:white;">' . number_format(round($importeNetoTotal, 2, PHP_ROUND_HALF_UP), 2, '.', '') . '</td>
                                 </tr>';
                             }
-                        $html .= '</tbody>
+                            $html .= '</tbody>
                     </table>
 
                     <div style="font-style: italic;font-weight: bold;padding:5px 0px;">' . (isset($cuotas->Pago) ? 'CUOTAS: ' . $cuotas->Pago : '') . '</div>
@@ -322,28 +335,29 @@ if (!isset($_GET["idIngreso"])) {
             </body>
         </html>';
 
-        $mpdf = new \Mpdf\Mpdf([
-            'margin_left' => 10,
-            'margin_right' => 10,
-            'margin_top' => 10,
-            'margin_bottom' => 10,
-            'margin_header' => 10,
-            'margin_footer' => 10,
-            'mode' => 'utf-8',
-            'format' => 'A4',
-            'orientation' => 'P'
-        ]);
+                            $mpdf = new \Mpdf\Mpdf([
+                                'margin_left' => 10,
+                                'margin_right' => 10,
+                                'margin_top' => 10,
+                                'margin_bottom' => 10,
+                                'margin_header' => 10,
+                                'margin_footer' => 10,
+                                'mode' => 'utf-8',
+                                'format' => 'A4',
+                                'orientation' => 'P'
+                            ]);
 
-        $mpdf->SetProtection(array('print'));
-        $mpdf->SetTitle($ingreso->Comprobante . " " . $ingreso->Serie . '-' . $ingreso->Numeracion . " CIP-JUNIN");
-        $mpdf->SetAuthor("SysSoftIntegra");
-        $mpdf->SetWatermarkText(($ingreso->Estado === "C" ? "PAGADO" : "ANULADO"));   // anulada
-        $mpdf->showWatermarkText = true;
-        $mpdf->watermark_font = 'DejaVuSansCondensed';
-        $mpdf->watermarkTextAlpha = $ingreso->Estado === "C" ? 0.1 : 0.5;
-        $mpdf->SetDisplayMode('fullpage');
-        $mpdf->WriteHTML($html);
-        // Output a PDF file directly to the browser
-        $mpdf->Output($ingreso->Comprobante . " " . $ingreso->Serie . '-' . $ingreso->Numeracion . " CIP-JUNIN.pdf", 'I');
-    }
-}
+                            $mpdf->SetProtection(array('print'));
+                            $mpdf->SetTitle($ingreso->Comprobante . " " . $ingreso->Serie . '-' . $ingreso->Numeracion . " CIP-JUNIN");
+                            $mpdf->SetAuthor("SysSoftIntegra");
+                            $mpdf->SetWatermarkText(($ingreso->Estado === "C" ? "PAGADO" : "ANULADO"));   // anulada
+                            $mpdf->showWatermarkText = true;
+                            $mpdf->watermark_font = 'DejaVuSansCondensed';
+                            $mpdf->watermarkTextAlpha = $ingreso->Estado === "C" ? 0.1 : 0.5;
+                            $mpdf->SetDisplayMode('fullpage');
+                            $mpdf->WriteHTML($html);
+                            // Output a PDF file directly to the browser
+                            $mpdf->Output($ingreso->Comprobante . " " . $ingreso->Serie . '-' . $ingreso->Numeracion . " CIP-JUNIN.pdf", 'I');
+                        }
+                    }
+                }
