@@ -109,7 +109,7 @@ function CobroIngenieros() {
                 totalPaginacion = 0;
                 tbIngenieros.empty();
                 tbIngenieros.append(
-                    '<tr class="text-center"><td colspan="8"><img src="./images/spiner.gif"/><p>cargando información.</p></td></tr>'
+                    '<tr class="text-center"><td colspan="9"><img src="./images/spiner.gif"/><p>cargando información.</p></td></tr>'
                 );
                 state = true;
             },
@@ -118,7 +118,7 @@ function CobroIngenieros() {
                     tbIngenieros.empty();
                     if (result.personas.length == 0) {
                         tbIngenieros.append(
-                            '<tr class="text-center"><td colspan="8"><p>No hay datos para mostrar.</p></td></tr>'
+                            '<tr class="text-center"><td colspan="9"><p>No hay datos para mostrar.</p></td></tr>'
                         );
                         $("#lblPaginaActual").html(paginacion);
                         $("#lblPaginaSiguiente").html(totalPaginacion);
@@ -126,13 +126,15 @@ function CobroIngenieros() {
                     } else {
                         for (let value of result.personas) {
                             tbIngenieros.append('<tr ondblclick="onSelectedIngeniero(\'' + value.Dni + '\')">' +
-                                '<td>' + value.Id + '</td>' +
-                                '<td>' + value.Cip + '</td>' +
-                                '<td>' + value.Dni + '</td>' +
-                                '<td>' + value.Ingeniero + '</td>' +
-                                '<td>' + value.Condicion + '</td>' +
-                                '<td>' + value.FechaUltimaCuota + '</td>' +
-                                '<td>' + (value.Deuda <= 0 ? '0 Cuotas' : value.Deuda + ' Cuota(s)') + '</td>' +
+                                '<td style="">' + value.Id + '</td>' +
+                                '<td style="">' + value.Cip + '</td>' +
+                                '<td style=" text-align: center;">' + value.Dni + '</td>' +
+                                '<td style=" font-size:12px;">' + value.Capitulo + '</td>' +
+                                '<td style=" font-size:14px;">' + value.Ingeniero + '</td>' +
+                                '<td style=" text-align: center;">' + value.Condicion + '</td>' +
+                                '<td style=" text-align: center;">' + value.FechaColegiado + '</td>' +
+                                '<td style=" text-align: center;"><b style="font-weight:bolder;font-family: Verdana,sans-serif; font-size:12px; color:#337ab7;">'+ value.FechaUltimaCuota + '</b></td>' +
+                                '<td style="text-align: center;"><b style="font-weight:bolder;font-family: Verdana,sans-serif; font-size:12px; color:#337ab7;">' + (value.Deuda <= 0 ? '0 Cuotas' : value.Deuda + ' Cuota(s)') + '</b></td>' +
                                 '</tr>');
                         }
                         totalPaginacion = parseInt(Math.ceil((parseFloat(result.total) / parseInt(
@@ -145,7 +147,7 @@ function CobroIngenieros() {
                 } else {
                     tbIngenieros.empty();
                     tbIngenieros.append(
-                        '<tr class="text-center"><td colspan="8"><p>No se pudo cargar la información.</p></td></tr>'
+                        '<tr class="text-center"><td colspan="9"><p>No se pudo cargar la información.</p></td></tr>'
                     );
                     $("#lblPaginaActual").html("0");
                     $("#lblPaginaSiguiente").html("0");
@@ -155,7 +157,7 @@ function CobroIngenieros() {
             error: function(error) {
                 tbIngenieros.empty();
                 tbIngenieros.append(
-                    '<tr class="text-center"><td colspan="8"><p>Se produjo un error, intente nuevamente.</p></td></tr>'
+                    '<tr class="text-center"><td colspan="9"><p>Se produjo un error, intente nuevamente.</p></td></tr>'
                 );
                 $("#lblPaginaActual").html("0");
                 $("#lblPaginaSiguiente").html("0");

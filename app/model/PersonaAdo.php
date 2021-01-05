@@ -75,46 +75,36 @@ class PersonaAdo
         try {
             $array = array();
             $arrayPersonas = array();
-            $comandoPersona = Database::getInstance()->getDb()->prepare("SELECT  
+            $comandoPersona = Database::getInstance()->getDb()->prepare("SELECT 
             CASE CIP
-            WHEN 'T' THEN 'Tramite'
-            ELSE CIP END
-            AS Cip,
-            dbo.Persona.idDNI as Dni,
-            dbo.Persona.Apellidos + ', ' + dbo.Persona.Nombres AS Ingeniero,
-            convert(varchar,cast(dbo.Colegiatura.FechaColegiado as date), 103) as FechaColegiado,
-            case dbo.Persona.Condicion
-            when 'T' then 'Transeunte'
-            when 'F' then 'Fallecido'
-            when 'R' then 'Retirado'
-            when 'V' then 'Vitalicio'
-            else 'Ordinario' 
-            end as Condicion,
-            convert(varchar,cast(ISNULL(dbo.ULTIMACuota.FechaUltimaCuota,dbo.Colegiatura.FechaColegiado) as date), 103) AS FechaUltimaCuota,
+                WHEN 'T' THEN 'Tramite'
+                ELSE CIP END AS Cip, 
+            dbo.Persona.idDNI as Dni, dbo.Capitulo.idCapitulo, dbo.Capitulo.Capitulo, dbo.Persona.Apellidos + ', ' + dbo.Persona.Nombres AS Ingeniero, 
             CASE dbo.Persona.Condicion
-            WHEN 'T' THEN 0
-            ELSE DATEDIFF(M, ISNULL(dbo.ULTIMACuota.FechaUltimaCuota, dbo.Colegiatura.FechaColegiado), GETDATE())
-            END
-            AS Deuda,
-            case
-            when CAST (DATEDIFF(M,ISNULL(dbo.ULTIMACuota.FechaUltimaCuota, dbo.Colegiatura.FechaColegiado) , GETDATE()) as int) <=0 then 'Habilitado'
-            else 'No Habilitado'
-            end as Habilidad
+                WHEN 'T' THEN 'Transeunte'
+                WHEN 'F' THEN 'Fallecido'
+                WHEN 'R' THEN 'Retirado'
+                WHEN 'V' THEN 'Vitalicio'
+                ELSE 'Ordinario' END AS Condicion,
+            CONVERT(VARCHAR,CAST(dbo.Colegiatura.FechaColegiado AS DATE), 103) AS FechaColegiado,
+            CONVERT(VARCHAR,CAST(ISNULL(dbo.ULTIMACuota.FechaUltimaCuota,dbo.Colegiatura.FechaColegiado) AS DATE), 103) AS FechaUltimaCuota, 
+            CASE dbo.Persona.Condicion
+                WHEN 'T' THEN 0
+                ELSE DATEDIFF(M, ISNULL(dbo.ULTIMACuota.FechaUltimaCuota, dbo.Colegiatura.FechaColegiado), GETDATE()) END AS Deuda,
+            CASE
+                WHEN CAST (DATEDIFF(M,ISNULL(dbo.ULTIMACuota.FechaUltimaCuota, dbo.Colegiatura.FechaColegiado) , GETDATE()) AS INT) <=0 THEN 'Habilitado'
+                ELSE 'No Habilitado' END AS Habilidad
             FROM dbo.Persona
-            LEFT OUTER JOIN
-                 dbo.Colegiatura ON dbo.Colegiatura.idDNI = dbo.Persona.idDNI
-                 AND dbo.Colegiatura.Principal = 1
-                 INNER JOIN
-                 dbo.Especialidad ON dbo.Especialidad.idEspecialidad = dbo.Colegiatura.idEspecialidad
-                 LEFT OUTER JOIN
-                 dbo.ULTIMACuota ON dbo.ULTIMACuota.idDNI = dbo.Persona.idDNI
-            where 
-            dbo.Persona.idDNI = ? 
-            or dbo.Persona.CIP = ? 
-            or dbo.Persona.Apellidos like concat(?,'%')
-            or dbo.Persona.Nombres like concat(?,'%')
-            order by dbo.Persona.Apellidos asc
-            offset ? rows fetch next ? rows only");
+            LEFT OUTER JOIN dbo.Colegiatura ON dbo.Colegiatura.idDNI = dbo.Persona.idDNI AND dbo.Colegiatura.Principal = 1
+            INNER JOIN dbo.Especialidad ON dbo.Especialidad.idEspecialidad = dbo.Colegiatura.idEspecialidad
+            LEFT OUTER JOIN dbo.ULTIMACuota ON dbo.ULTIMACuota.idDNI = dbo.Persona.idDNI
+            INNER JOIN dbo.Capitulo ON dbo.Capitulo.idCapitulo = dbo.Especialidad.idCapitulo 
+            WHERE  dbo.Persona.idDNI = ? 
+            OR dbo.Persona.CIP = ? 
+            OR dbo.Persona.Apellidos LIKE CONCAT(?,'%')
+            OR dbo.Persona.Nombres LIKE CONCAT(?,'%')
+            ORDER BY dbo.Persona.Apellidos ASC
+            offset ? ROWS FETCH NEXT ? ROWS only");
             $comandoPersona->bindParam(1, $search, PDO::PARAM_INT);
             $comandoPersona->bindParam(2, $search, PDO::PARAM_STR);
             $comandoPersona->bindParam(3, $search, PDO::PARAM_STR);
@@ -129,6 +119,7 @@ class PersonaAdo
                     'Id' => $count + $posicionPagina,
                     'Cip' => $row['Cip'],
                     'Dni' => $row['Dni'],
+                    'Capitulo' => $row['Capitulo'],
                     'Ingeniero' => $row['Ingeniero'],
                     'FechaColegiado' => $row['FechaColegiado'],
                     'Condicion' => $row['Condicion'],
