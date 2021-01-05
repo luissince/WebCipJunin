@@ -80,16 +80,16 @@ if (!isset($_GET["idIngreso"])) {
                         font-family: "Arial";
                         font-size: 10pt;
                         color:#000000;
-                        padding-top:80px;
+                        padding-top:76px;
                         text-align: center; 
-                        padding-left: 388px;
+                        padding-left: 386px;
                     }
                     .footer-two {
                         font-family: "Arial";
                         font-size: 10pt;
                         color:#000000;
-                        padding-top:34px; 
-                        padding-left:320px;
+                        padding-top:34px;  
+                        padding-left:305px;
                     }
                 </style>
             </head>
@@ -103,7 +103,7 @@ if (!isset($_GET["idIngreso"])) {
                     </div>
                     <div style="padding-left:155px; padding-top:2px;">
                         <div style="width:150px; float:left;padding-left:10px;">'.$FechaIncorporacion.'</div>
-                        <div style="width:180px;padding-left:100px; float:left;">'.$Especialidad.'</div>
+                        <div style="width:360px;padding-left:100px; float:left;">'.$Especialidad.'</div>
                     </div>
                 </div>
                 <div class="header-two">
@@ -137,9 +137,9 @@ if (!isset($_GET["idIngreso"])) {
                     <div style="padding-left:240px; padding-top:12px;">'.$Especialidad.'</div>
                 </div>
                 <div class="body-two">
-                    <div style="padding-left:215px;">'.$Asunto.'</div>
-                    <div style="padding-left:215px; padding-top:29px;">'.$Entidad.'</div>
-                    <div style="padding-left:215px; padding-top:26px;">'.$Lugar.'</div>
+                    <div style="padding-left:230px;">'.$Asunto.'</div>
+                    <div style="padding-left:230px; padding-top:29px;">'.$Entidad.'</div>
+                    <div style="padding-left:230px; padding-top:26px;">'.$Lugar.'</div>
                 </div>
                 <!--######################################### Fin Cuerpo del documento ##################################################################-->
 

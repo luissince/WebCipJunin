@@ -15,7 +15,7 @@ class IngresosAdo
             $array = array();
             $arrayIngresos = array();
             $cmdConcepto = Database::getInstance()->getDb()->prepare("SELECT i.idIngreso,
-            convert(VARCHAR, CAST(i.Fecha AS DATE),103) AS Fecha,i.Serie,i.NumRecibo,
+            convert(VARCHAR, CAST(i.Fecha AS DATE),103) AS Fecha,i.Hora,i.Serie,i.NumRecibo,
             i.Estado,p.CIP,p.idDNI,p.Apellidos,p.Nombres,sum(d.Monto) AS Total,
             isnull(i.Xmlsunat,'') as Xmlsunat,isnull(i.Xmldescripcion,'') as Xmldescripcion
             FROM Ingreso AS i INNER JOIN Persona AS p
@@ -59,6 +59,7 @@ class IngresosAdo
                     "id" => $count + $posicionPagina,
                     "idIngreso" => $row["idIngreso"],
                     "fecha" => $row["Fecha"],
+                    "hora" => $row["Hora"],
                     "serie" => $row["Serie"],
                     "numRecibo" => $row["NumRecibo"],
                     "estado" => $row["Estado"],

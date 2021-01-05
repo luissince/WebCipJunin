@@ -436,7 +436,7 @@ if (!isset($_SESSION['IdUsuario'])) {
                                         '' + ingresos.id + '' +
                                         '</td>' +
                                         '<td>' + btnAnular + ' ' + btnPdf + ' ' + btnDetalle + '</td>' +
-                                        '<td>' + ingresos.fecha + '</td>' +
+                                        '<td>' + ingresos.fecha + '<br>'+tools.getTimeForma(ingresos.hora,true)+ '</td>' +
                                         '<td>' + ingresos.serie + '-' + ingresos.numRecibo + '</td>' +
                                         '<td>' + ingresos.idDNI + '</br>' + ingresos.nombres + ' ' + ingresos.apellidos + '</td>' +
                                         '<td>' + (ingresos.estado == "C" ? '<span class="text-green">Pagado</span>' : '<span class="text-red">Anulado</span>') + '</td>' +
