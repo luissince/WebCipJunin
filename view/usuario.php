@@ -417,6 +417,7 @@ if (!isset($_SESSION['IdUsuario'])) {
                 $("#txtAddUsuario").val("")
                 $("#txtContrasena").val("")
                 $("#estado").val("1")
+                idUsuario=0;
             }
 
             function updateUsuario(id) {
@@ -449,7 +450,7 @@ if (!isset($_SESSION['IdUsuario'])) {
                                     "idUsuario": id
                                 },
                                 beforeSend: function() {
-
+                                    idUsuario=0;
                                 },
                                 success: function(result) {
                                     $("#modal-user-title").empty();
@@ -499,9 +500,9 @@ if (!isset($_SESSION['IdUsuario'])) {
                             },
                             beforeSend: function() {
                                 tools.ModalAlertInfo("Usuarios", "Procesando petición..");
+                                idUsuario=0;
                             },
-                            success: function(result) {
-                                console.log(result)
+                            success: function(result) {                             
                                 if (result.estado == 1) {
                                     tools.ModalAlertSuccess("Usuarios", result.message);
                                     loadInitUsuario();

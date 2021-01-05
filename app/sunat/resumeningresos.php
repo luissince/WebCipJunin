@@ -212,7 +212,7 @@ mpdf-->
     ]);
 
     $mpdf->SetProtection(array('print'));
-    $mpdf->SetTitle("Cip Junin");
+    $mpdf->SetTitle("CIPJUNIN");
     $mpdf->SetAuthor("SysSoftIntegra");
     $mpdf->SetWatermarkText("");
     $mpdf->showWatermarkText = true;

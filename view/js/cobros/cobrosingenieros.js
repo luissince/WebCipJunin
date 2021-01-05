@@ -178,6 +178,7 @@ function CobroIngenieros() {
                 $('#mdIngenieros').modal('hide');
                 $("#tbHistorial").empty();
                 idDNI = 0;
+                tipoColegiado = "";
                 tools.AlertInfo("Ingeniero", "En proceso de busqueda.", "toast-bottom-right");
                 $("#tbHistorial").append('<tr class="text-center"><td colspan="7"><img src="./images/spiner.gif"/><p>cargando información.</p></td></tr>');
             },
@@ -185,6 +186,7 @@ function CobroIngenieros() {
                 if (data.estado === 1) {
                     $("#tbHistorial").empty();
                     idDNI = data.persona.idDNI;
+                    tipoColegiado = data.persona.Condicion;
                     let Condicion = data.persona.Condicion ==
                         'T' ? 'Transeunte' :
                         data.persona.Condicion == 'F' ? 'Fallecido' :
@@ -206,6 +208,7 @@ function CobroIngenieros() {
                 } else {
                     $("#tbHistorial").empty();
                     idDNI = 0;
+                    tipoColegiado = "";
                     $("#lblCipSeleccionado").html("--");
                     $("#lblTipoIngenieroSeleccionado").html("--");
                     $("#lblDocumentSeleccionado").html("--");

@@ -112,7 +112,7 @@ mpdf-->
             <th width="7%" rowspan="2">Capítulo</th>        
             <th width="6%" rowspan="2">N° Cip</th>
             <th width="7%" rowspan="2">Condición</th>
-            <th width="15%" rowspan="2">Ingeniero</th>
+            <th width="13%" rowspan="2">Ingeniero</th>
             <th width="4%" rowspan="2">Año</th>
 
             <th width="22%" colspan="13">Cuotas al ISS CIP</th>
@@ -165,35 +165,35 @@ mpdf-->
             <td rowspan="1">' . $value["Ingeniero"] . '</td>
             <td rowspan="1" align="center">' . $value["Anno"] . '</td>            
 
-            <td>' . number_format(round($value["X1"], 2, PHP_ROUND_HALF_UP), 2, '.', '') . '</td>
-            <td>' . number_format(round($value["X2"], 2, PHP_ROUND_HALF_UP), 2, '.', '') . '</td>
-            <td>' . number_format(round($value["X3"], 2, PHP_ROUND_HALF_UP), 2, '.', '') . '</td>
-            <td>' . number_format(round($value["X4"], 2, PHP_ROUND_HALF_UP), 2, '.', '') . '</td>
-            <td>' . number_format(round($value["X5"], 2, PHP_ROUND_HALF_UP), 2, '.', '') . '</td>
-            <td>' . number_format(round($value["X6"], 2, PHP_ROUND_HALF_UP), 2, '.', '') . '</td>
-            <td>' . number_format(round($value["X7"], 2, PHP_ROUND_HALF_UP), 2, '.', '') . '</td>
-            <td>' . number_format(round($value["X8"], 2, PHP_ROUND_HALF_UP), 2, '.', '') . '</td>
-            <td>' . number_format(round($value["X9"], 2, PHP_ROUND_HALF_UP), 2, '.', '') . '</td>
-            <td>' . number_format(round($value["X10"], 2, PHP_ROUND_HALF_UP), 2, '.', '') . '</td>
-            <td>' . number_format(round($value["X11"], 2, PHP_ROUND_HALF_UP), 2, '.', '') . '</td>
-            <td>' . number_format(round($value["X12"], 2, PHP_ROUND_HALF_UP), 2, '.', '') . '</td>
-            <td>' . number_format(round($value["XZ"], 2, PHP_ROUND_HALF_UP), 2, '.', '') . '</td>
+            <td>' . number_format(round($value["X1"], 2, PHP_ROUND_HALF_UP), 1, '.', '') . '</td>
+            <td>' . number_format(round($value["X2"], 2, PHP_ROUND_HALF_UP), 1, '.', '') . '</td>
+            <td>' . number_format(round($value["X3"], 2, PHP_ROUND_HALF_UP), 1, '.', '') . '</td>
+            <td>' . number_format(round($value["X4"], 2, PHP_ROUND_HALF_UP), 1, '.', '') . '</td>
+            <td>' . number_format(round($value["X5"], 2, PHP_ROUND_HALF_UP), 1, '.', '') . '</td>
+            <td>' . number_format(round($value["X6"], 2, PHP_ROUND_HALF_UP), 1, '.', '') . '</td>
+            <td>' . number_format(round($value["X7"], 2, PHP_ROUND_HALF_UP), 1, '.', '') . '</td>
+            <td>' . number_format(round($value["X8"], 2, PHP_ROUND_HALF_UP), 1, '.', '') . '</td>
+            <td>' . number_format(round($value["X9"], 2, PHP_ROUND_HALF_UP), 1, '.', '') . '</td>
+            <td>' . number_format(round($value["X10"], 2, PHP_ROUND_HALF_UP), 1, '.', '') . '</td>
+            <td>' . number_format(round($value["X11"], 2, PHP_ROUND_HALF_UP), 1, '.', '') . '</td>
+            <td>' . number_format(round($value["X12"], 2, PHP_ROUND_HALF_UP), 1, '.', '') . '</td>
+            <td>' . number_format(round($value["XZ"], 2, PHP_ROUND_HALF_UP), 1, '.', '') . '</td>
 
-            <td>' . number_format(round($value["Y1"], 2, PHP_ROUND_HALF_UP), 2, '.', '') . '</td>
-            <td>' . number_format(round($value["Y2"], 2, PHP_ROUND_HALF_UP), 2, '.', '') . '</td>
-            <td>' . number_format(round($value["Y3"], 2, PHP_ROUND_HALF_UP), 2, '.', '') . '</td>
-            <td>' . number_format(round($value["Y4"], 2, PHP_ROUND_HALF_UP), 2, '.', '') . '</td>
-            <td>' . number_format(round($value["Y5"], 2, PHP_ROUND_HALF_UP), 2, '.', '') . '</td>
-            <td>' . number_format(round($value["Y6"], 2, PHP_ROUND_HALF_UP), 2, '.', '') . '</td>
-            <td>' . number_format(round($value["Y7"], 2, PHP_ROUND_HALF_UP), 2, '.', '') . '</td>
-            <td>' . number_format(round($value["Y8"], 2, PHP_ROUND_HALF_UP), 2, '.', '') . '</td>
-            <td>' . number_format(round($value["Y9"], 2, PHP_ROUND_HALF_UP), 2, '.', '') . '</td>
-            <td>' . number_format(round($value["Y10"], 2, PHP_ROUND_HALF_UP), 2, '.', '') . '</td>
-            <td>' . number_format(round($value["Y11"], 2, PHP_ROUND_HALF_UP), 2, '.', '') . '</td>
-            <td>' . number_format(round($value["Y12"], 2, PHP_ROUND_HALF_UP), 2, '.', '') . '</td>
-            <td>' . number_format(round($value["YZ"], 2, PHP_ROUND_HALF_UP), 2, '.', '') . '</td>
+            <td>' . number_format(round($value["Y1"], 2, PHP_ROUND_HALF_UP), 1, '.', '') . '</td>
+            <td>' . number_format(round($value["Y2"], 2, PHP_ROUND_HALF_UP), 1, '.', '') . '</td>
+            <td>' . number_format(round($value["Y3"], 2, PHP_ROUND_HALF_UP), 1, '.', '') . '</td>
+            <td>' . number_format(round($value["Y4"], 2, PHP_ROUND_HALF_UP), 1, '.', '') . '</td>
+            <td>' . number_format(round($value["Y5"], 2, PHP_ROUND_HALF_UP), 1, '.', '') . '</td>
+            <td>' . number_format(round($value["Y6"], 2, PHP_ROUND_HALF_UP), 1, '.', '') . '</td>
+            <td>' . number_format(round($value["Y7"], 2, PHP_ROUND_HALF_UP), 1, '.', '') . '</td>
+            <td>' . number_format(round($value["Y8"], 2, PHP_ROUND_HALF_UP), 1, '.', '') . '</td>
+            <td>' . number_format(round($value["Y9"], 2, PHP_ROUND_HALF_UP), 1, '.', '') . '</td>
+            <td>' . number_format(round($value["Y10"], 2, PHP_ROUND_HALF_UP), 1, '.', '') . '</td>
+            <td>' . number_format(round($value["Y11"], 2, PHP_ROUND_HALF_UP), 1, '.', '') . '</td>
+            <td>' . number_format(round($value["Y12"], 2, PHP_ROUND_HALF_UP), 1, '.', '') . '</td>
+            <td>' . number_format(round($value["YZ"], 2, PHP_ROUND_HALF_UP), 1, '.', '') . '</td>
 
-            <td>' . number_format(round($value["XYZ"], 2, PHP_ROUND_HALF_UP), 2, '.', '') . '</td>
+            <td>' . number_format(round($value["XYZ"], 2, PHP_ROUND_HALF_UP), 1, '.', '') . '</td>
         </tr>';
     }
 
@@ -241,7 +241,7 @@ mpdf-->
     ]);
 
     $mpdf->SetProtection(array('print'));
-    $mpdf->SetTitle("Cip Junin");
+    $mpdf->SetTitle("CIPJUNIN");
     $mpdf->SetAuthor("SysSoftIntegra");
     $mpdf->SetWatermarkText("");
     $mpdf->showWatermarkText = true;

@@ -786,7 +786,7 @@ if (!isset($_SESSION['IdUsuario'])) {
                                             <div class="col-md-6">
                                                 <div class="form-group">
                                                     <label for="txtIngeniero">Monto</label>
-                                                    <input type="number" class="form-control" id="txtMontoOtrosConceptos" placeholder="0.00" required="" disabled>
+                                                    <input type="number" class="form-control" id="txtMontoOtrosConceptos" placeholder="0.00" required="">
                                                 </div>
                                             </div>
                                         </div>
@@ -1046,6 +1046,7 @@ if (!isset($_SESSION['IdUsuario'])) {
             let filasPorPagina = 10;
 
             let idDNI = 0;
+            let tipoColegiado = "";
 
             let comprobantes = [];
             let UsarRuc = false;
@@ -1384,6 +1385,7 @@ if (!isset($_SESSION['IdUsuario'])) {
                 $("#txtIngenieroObra").val("");
                 $("#txtIngenieroProyecto").val("");
                 idDNI = 0;
+                tipoColegiado="";
                 cuotasEstate = false;
                 colegiaturaEstado = false;
                 certificadoHabilidadEstado = false;
