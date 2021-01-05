@@ -79,7 +79,7 @@ class PersonaAdo
             CASE CIP
                 WHEN 'T' THEN 'Tramite'
                 ELSE CIP END AS Cip, 
-            dbo.Persona.idDNI as Dni, dbo.Capitulo.idCapitulo, dbo.Capitulo.Capitulo, dbo.Persona.Apellidos + ', ' + dbo.Persona.Nombres AS Ingeniero, 
+            dbo.Persona.idDNI as Dni, dbo.Persona.Apellidos + ', ' + dbo.Persona.Nombres AS Ingeniero, 
             CASE dbo.Persona.Condicion
                 WHEN 'T' THEN 'Transeunte'
                 WHEN 'F' THEN 'Fallecido'
@@ -98,8 +98,8 @@ class PersonaAdo
             LEFT OUTER JOIN dbo.Colegiatura ON dbo.Colegiatura.idDNI = dbo.Persona.idDNI AND dbo.Colegiatura.Principal = 1
             INNER JOIN dbo.Especialidad ON dbo.Especialidad.idEspecialidad = dbo.Colegiatura.idEspecialidad
             LEFT OUTER JOIN dbo.ULTIMACuota ON dbo.ULTIMACuota.idDNI = dbo.Persona.idDNI
-            INNER JOIN dbo.Capitulo ON dbo.Capitulo.idCapitulo = dbo.Especialidad.idCapitulo 
-            WHERE  dbo.Persona.idDNI = ? 
+            --INNER JOIN dbo.Capitulo ON dbo.Capitulo.idCapitulo = dbo.Especialidad.idCapitulo 
+            WHERE  dbo.Persona.idDNI = ?
             OR dbo.Persona.CIP = ? 
             OR dbo.Persona.Apellidos LIKE CONCAT(?,'%')
             OR dbo.Persona.Nombres LIKE CONCAT(?,'%')
@@ -119,7 +119,6 @@ class PersonaAdo
                     'Id' => $count + $posicionPagina,
                     'Cip' => $row['Cip'],
                     'Dni' => $row['Dni'],
-                    'Capitulo' => $row['Capitulo'],
                     'Ingeniero' => $row['Ingeniero'],
                     'FechaColegiado' => $row['FechaColegiado'],
                     'Condicion' => $row['Condicion'],

@@ -129,11 +129,11 @@ function CobroIngenieros() {
                                 '<td style="">' + value.Id + '</td>' +
                                 '<td style="">' + value.Cip + '</td>' +
                                 '<td style=" text-align: center;">' + value.Dni + '</td>' +
-                                '<td style=" font-size:12px;">' + value.Capitulo + '</td>' +
+                                // '<td style=" font-size:12px;">' + value.Capitulo + '</td>' +
                                 '<td style=" font-size:14px;">' + value.Ingeniero + '</td>' +
                                 '<td style=" text-align: center;">' + value.Condicion + '</td>' +
                                 '<td style=" text-align: center;">' + value.FechaColegiado + '</td>' +
-                                '<td style=" text-align: center;"><b style="font-weight:bolder;font-family: Verdana,sans-serif; font-size:12px; color:#337ab7;">'+ value.FechaUltimaCuota + '</b></td>' +
+                                '<td style=" text-align: center;"><b style="font-weight:bolder;font-family: Verdana,sans-serif; font-size:12px; color:#337ab7;">' + value.FechaUltimaCuota + '</b></td>' +
                                 '<td style="text-align: center;"><b style="font-weight:bolder;font-family: Verdana,sans-serif; font-size:12px; color:#337ab7;">' + (value.Deuda <= 0 ? '0 Cuotas' : value.Deuda + ' Cuota(s)') + '</b></td>' +
                                 '</tr>');
                         }
@@ -157,7 +157,7 @@ function CobroIngenieros() {
             error: function(error) {
                 tbIngenieros.empty();
                 tbIngenieros.append(
-                    '<tr class="text-center"><td colspan="9"><p>Se produjo un error, intente nuevamente.</p></td></tr>'
+                    '<tr class="text-center"><td colspan="9"><p>' + error.responseText + '</p></td></tr>'
                 );
                 $("#lblPaginaActual").html("0");
                 $("#lblPaginaSiguiente").html("0");

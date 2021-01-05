@@ -150,7 +150,7 @@ if (!isset($_SESSION['IdUsuario'])) {
                                                             <th style="text-align: center; vertical-align: middle;">#</th>
                                                             <th style="text-align: center; vertical-align: middle;">Cip</th>
                                                             <th style="text-align: center; vertical-align: middle;">Dni</th>
-                                                            <th style="text-align: center; vertical-align: middle;">Capitulo</th>
+                                                            <!-- <th style="text-align: center; vertical-align: middle;">Capitulo</th> -->
                                                             <th style="text-align: center; vertical-align: middle;">Ingeniero</th>
                                                             <th style="text-align: center; vertical-align: middle;">Condición</th>
                                                             <th style="text-align: center; vertical-align: middle;">Fecha Colegiatura</th>
