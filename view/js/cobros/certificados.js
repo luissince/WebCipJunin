@@ -397,7 +397,9 @@ function Certificado() {
             certificadoHabilidad.asunto = $("#txtAsuntoCertificado").val().toUpperCase();
             certificadoHabilidad.entidad = $("#txtEntidadCertificado").val().toUpperCase();
             certificadoHabilidad.lugar = $("#txtLugarCertificado").val().toUpperCase();
+            certificadoHabilidad.ultimoPago = $("#txtFechaCertificado").val();
             certificadoHabilidad.anulado = 0;
+            console.log(certificadoHabilidad.ultimoPago)
             if (!validateDuplicate(certificadoHabilidad.idConcepto)) {
                 arrayIngresos.push({
                     "idConcepto": certificadoHabilidad.idConcepto,

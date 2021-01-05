@@ -740,8 +740,8 @@ class IngresosAdo
             ch.idIngreso from CERTHabilidad AS ch
             INNER JOIN Ingreso AS i ON i.idIngreso = ch.idIngreso
             INNER JOIN Persona AS p On p.idDNI = i.idDNI
-            INNER JOIN Especialidad AS e On e.idEspecialidad = ch.idColegiatura
-            INNER JOIN Colegiatura AS c ON c.idEspecialidad = ch.idColegiatura
+            INNER JOIN Colegiatura AS c ON c.idDNI = p.idDNI
+			INNER JOIN Especialidad AS e On e.idEspecialidad = c.idEspecialidad
             WHERE ch.idIngreso = ?");
             $cmdCertHabilidad->bindParam(1, $idIngreso, PDO::PARAM_INT);
             $cmdCertHabilidad->execute();

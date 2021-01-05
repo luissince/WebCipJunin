@@ -1,7 +1,7 @@
 function Otros() {
 
-    this.componentesOtros = function () {
-        $("#btnOtro").click(function () {
+    this.componentesOtros = function() {
+        $("#btnOtro").click(function() {
             if (idDNI == 0) {
                 tools.AlertWarning("Cuotas", "No selecciono ningún ingeniero para obtener peritajes.")
             } else {
@@ -10,24 +10,24 @@ function Otros() {
             }
         });
 
-        $("#btnOtro").keypress(function (event) {
+        $("#btnOtro").keypress(function(event) {
             if (event.keyCode === 13) {
                 $('#mdOtros').modal('show');
                 loadOtros();
             }
             event.preventDefault();
         });
-        $("#btnAceptarOtros").click(function () {
+        $("#btnAceptarOtros").click(function() {
             validateIngresoOtros();
         });
 
-        $("#btnAceptarOtros").keypress(function (event) {
+        $("#btnAceptarOtros").keypress(function(event) {
             if (event.keyCode === 13) {
                 validateIngresoOtros();
             }
             event.preventDefault();
         });
-        $("#cbOtrosConcepto").change(function (event) {
+        $("#cbOtrosConcepto").change(function(event) {
             $("#txtMontoOtrosConceptos").val($("#cbOtrosConcepto").find('option:selected').attr('id'))
         });
     }
@@ -40,12 +40,12 @@ function Otros() {
                 "type": "typecolegiatura",
                 "categoria": 100,
             },
-            beforeSend: function () {
+            beforeSend: function() {
                 $("#cbOtrosConcepto").empty();
                 $("#lblConceptos").empty();
                 $("#lblConceptos").append('Conceptos <img src="./images/spiner.gif" width="20"/>');
             },
-            success: function (result) {
+            success: function(result) {
                 if (result.estado === 1) {
                     $("#lblConceptos").empty();
                     $("#lblConceptos").css("color", "#333");
@@ -60,7 +60,7 @@ function Otros() {
                     $("#lblConceptos").append(result.message);
                 }
             },
-            error: function (error) {
+            error: function(error) {
                 $("#lblConceptos").empty();
                 $("#lblConceptos").css("color", "red");
                 $("#lblConceptos").append("Se produjo un error del servidor intente nuevamente.");
@@ -71,22 +71,26 @@ function Otros() {
     function validateIngresoOtros() {
         if ($("#cbOtrosConcepto").val() != "") {
             if ($("#txtCantidadOtrosConceptos").val() !== "") {
-                if (!validateDuplicate($("#cbOtrosConcepto").val())) {
-                    arrayIngresos.push({
-                        "idConcepto": parseInt($("#cbOtrosConcepto").val()),
-                        "categoria": 100,
-                        "cantidad": parseFloat($('#txtCantidadOtrosConceptos').val()),
-                        "concepto": $('#cbOtrosConcepto option:selected').html(),
-                        "precio": parseFloat($("#cbOtrosConcepto").find('option:selected').attr('id')),
-                        "monto": parseFloat($("#txtCantidadOtrosConceptos").val()) * parseFloat($("#cbOtrosConcepto").find('option:selected').attr('id'))
-                    });
-                    addIngresos();
-                    $('#mdOtros').modal('hide');
-                    $("#txtCantidadOtrosConceptos").val("1");
-                    $("#txtMontoOtrosConceptos").val("");
+                if (tools.isNumeric($("#txtMontoOtrosConceptos").val())) {
+                    if (!validateDuplicate($("#cbOtrosConcepto").val())) {
+                        arrayIngresos.push({
+                            "idConcepto": parseInt($("#cbOtrosConcepto").val()),
+                            "categoria": 100,
+                            "cantidad": parseFloat($('#txtCantidadOtrosConceptos').val()),
+                            "concepto": $('#cbOtrosConcepto option:selected').html(),
+                            "precio": parseFloat($("#txtMontoOtrosConceptos").val()),
+                            "monto": parseFloat($("#txtCantidadOtrosConceptos").val()) * parseFloat($("#txtMontoOtrosConceptos").val())
+                        });
+                        addIngresos();
+                        $('#mdOtros').modal('hide');
+                        $("#txtCantidadOtrosConceptos").val("1");
+                        $("#txtMontoOtrosConceptos").val("");
+                    } else {
+                        tools.AlertWarning("Ingresos Diversos", "Ya existe un concepto con los mismo datos.");
+                        $("#cbOtrosConcepto").focus().select();
+                    }
                 } else {
-                    tools.AlertWarning("Ingresos Diversos", "Ya existe un concepto con los mismo datos.");
-                    $("#cbOtrosConcepto").focus().select();
+                    tools.AlertWarning("Ingresos Diversos", "Debe ingresar un precio numérico")
                 }
             } else {
                 tools.AlertWarning("Ingresos Diversos", "Debe ingresar una cantidad mayor a cero")

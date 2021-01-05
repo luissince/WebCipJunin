@@ -109,7 +109,7 @@ function CobroIngenieros() {
                 totalPaginacion = 0;
                 tbIngenieros.empty();
                 tbIngenieros.append(
-                    '<tr class="text-center"><td colspan="8"><img src="./images/spiner.gif"/><p>cargando información.</p></td></tr>'
+                    '<tr class="text-center"><td colspan="9"><img src="./images/spiner.gif"/><p>cargando información.</p></td></tr>'
                 );
                 state = true;
             },
@@ -118,7 +118,7 @@ function CobroIngenieros() {
                     tbIngenieros.empty();
                     if (result.personas.length == 0) {
                         tbIngenieros.append(
-                            '<tr class="text-center"><td colspan="8"><p>No hay datos para mostrar.</p></td></tr>'
+                            '<tr class="text-center"><td colspan="9"><p>No hay datos para mostrar.</p></td></tr>'
                         );
                         $("#lblPaginaActual").html(paginacion);
                         $("#lblPaginaSiguiente").html(totalPaginacion);
@@ -126,13 +126,15 @@ function CobroIngenieros() {
                     } else {
                         for (let value of result.personas) {
                             tbIngenieros.append('<tr ondblclick="onSelectedIngeniero(\'' + value.Dni + '\')">' +
-                                '<td>' + value.Id + '</td>' +
-                                '<td>' + value.Cip + '</td>' +
-                                '<td>' + value.Dni + '</td>' +
-                                '<td>' + value.Ingeniero + '</td>' +
-                                '<td>' + value.Condicion + '</td>' +
-                                '<td>' + value.FechaUltimaCuota + '</td>' +
-                                '<td>' + (value.Deuda <= 0 ? '0 Cuotas' : value.Deuda + ' Cuota(s)') + '</td>' +
+                                '<td style="">' + value.Id + '</td>' +
+                                '<td style="">' + value.Cip + '</td>' +
+                                '<td style=" text-align: center;">' + value.Dni + '</td>' +
+                                // '<td style=" font-size:12px;">' + value.Capitulo + '</td>' +
+                                '<td style=" font-size:14px;">' + value.Ingeniero + '</td>' +
+                                '<td style=" text-align: center;">' + value.Condicion + '</td>' +
+                                '<td style=" text-align: center;">' + value.FechaColegiado + '</td>' +
+                                '<td style=" text-align: center;"><b style="font-weight:bolder;font-family: Verdana,sans-serif; font-size:12px; color:#337ab7;">' + value.FechaUltimaCuota + '</b></td>' +
+                                '<td style="text-align: center;"><b style="font-weight:bolder;font-family: Verdana,sans-serif; font-size:12px; color:#337ab7;">' + (value.Deuda <= 0 ? '0 Cuotas' : value.Deuda + ' Cuota(s)') + '</b></td>' +
                                 '</tr>');
                         }
                         totalPaginacion = parseInt(Math.ceil((parseFloat(result.total) / parseInt(
@@ -145,7 +147,7 @@ function CobroIngenieros() {
                 } else {
                     tbIngenieros.empty();
                     tbIngenieros.append(
-                        '<tr class="text-center"><td colspan="8"><p>No se pudo cargar la información.</p></td></tr>'
+                        '<tr class="text-center"><td colspan="9"><p>No se pudo cargar la información.</p></td></tr>'
                     );
                     $("#lblPaginaActual").html("0");
                     $("#lblPaginaSiguiente").html("0");
@@ -155,7 +157,7 @@ function CobroIngenieros() {
             error: function(error) {
                 tbIngenieros.empty();
                 tbIngenieros.append(
-                    '<tr class="text-center"><td colspan="8"><p>Se produjo un error, intente nuevamente.</p></td></tr>'
+                    '<tr class="text-center"><td colspan="9"><p>' + error.responseText + '</p></td></tr>'
                 );
                 $("#lblPaginaActual").html("0");
                 $("#lblPaginaSiguiente").html("0");
@@ -256,15 +258,15 @@ function CobroIngenieros() {
                 tbHistorial.empty()
                 tbHistorial.append('<tr class="text-center"><td colspan="7"><img src="./images/spiner.gif"/><p>Cargando información.</p></td></tr>');
                 stateHistorial = true;
+                totalPaginacionHistorial = 0;
             },
             success: function(result) {
                 if (result.estado == 1) {
                     tbHistorial.empty()
                     if (result.historial.length == 0) {
                         tbHistorial.append('<tr class="text-center"><td colspan="7"><p>No hay datos para mostrar.</p></td></tr>');
-                        totalPaginacionHistorial = 0;
-                        $("#lblPaginaActual").html(paginacionHistorial);
-                        $("#lblPaginaSiguiente").html(totalPaginacionHistorial);
+                        $("#lblPaginaActual").html(0);
+                        $("#lblPaginaSiguiente").html(0);
                         stateHistorial = false;
                     } else {
                         for (let historial of result.historial) {
@@ -310,12 +312,16 @@ function CobroIngenieros() {
                 } else {
                     tbHistorial.empty()
                     tbHistorial.append('<tr class="text-center"><td colspan="7"><p>' + result.message + '</p></td></tr>');
+                    $("#lblPaginaActual").html(0);
+                    $("#lblPaginaSiguiente").html(0);
                     stateHistorial = false;
                 }
             },
             error: function(error) {
                 tbHistorial.empty()
                 tbHistorial.append('<tr class="text-center"><td colspan="7"><p>' + error.responseText + '</p></td></tr>');
+                $("#lblPaginaActual").html(0);
+                $("#lblPaginaSiguiente").html(0);
                 stateHistorial = false;
             }
         });

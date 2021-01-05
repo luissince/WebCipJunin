@@ -107,7 +107,7 @@ if (!isset($_SESSION['IdUsuario'])) {
                     <!-- modal start ingenieros -->
                     <div class="row">
                         <div class="modal fade" id="mdIngenieros">
-                            <div class="modal-dialog modal-lg">
+                            <div class="modal-dialog modal-lg" style="width:1100px;">
                                 <div class="modal-content">
                                     <div class="modal-header">
                                         <button type="button" class="close" data-dismiss="modal">
@@ -145,15 +145,17 @@ if (!isset($_SESSION['IdUsuario'])) {
                                         <div class="row" style="overflow-x: auto; height:280px">
                                             <div class="col-md-12">
                                                 <table class="table table-striped table-hover table-bordered table-sm">
-                                                    <thead>
+                                                    <thead style="background: #337ab7;color: white;">
                                                         <tr>
-                                                            <th>#</th>
-                                                            <th>Cip</th>
-                                                            <th>Dni</th>
-                                                            <th>Ingeniero</th>
-                                                            <th>Condición</th>
-                                                            <th>Ultima Cuota</th>
-                                                            <th>Debe</th>
+                                                            <th style="text-align: center; vertical-align: middle;">#</th>
+                                                            <th style="text-align: center; vertical-align: middle;">Cip</th>
+                                                            <th style="text-align: center; vertical-align: middle;">Dni</th>
+                                                            <!-- <th style="text-align: center; vertical-align: middle;">Capitulo</th> -->
+                                                            <th style="text-align: center; vertical-align: middle;">Ingeniero</th>
+                                                            <th style="text-align: center; vertical-align: middle;">Condición</th>
+                                                            <th style="text-align: center; vertical-align: middle;">Fecha Colegiatura</th>
+                                                            <th style="text-align: center; vertical-align: middle;">Ultima Cuota</th>
+                                                            <th style="text-align: center; vertical-align: middle;">Debe</th>
                                                         </tr>
                                                     </thead>
                                                     <tbody id="tbIngenieros">
@@ -1057,6 +1059,7 @@ if (!isset($_SESSION['IdUsuario'])) {
             let modelOtros = new Otros();
 
             $(document).ready(function() {
+
                 // comprobantes
                 loadComprobantes();
 
