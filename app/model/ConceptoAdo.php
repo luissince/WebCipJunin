@@ -574,4 +574,19 @@ class ConceptoAdo
             return $ex->getMessage();
         }
     }
+
+    public static function validateCertNum($numero){
+        try{
+            $comandSelect = Database::getInstance()->getDb()->prepare("SELECT * FROM CERTHabilidad WHERE Numero = ?");
+            $comandSelect->bindParam(1, $numero, PDO::PARAM_INT);
+            $comandSelect->execute();
+            if($comandSelect->fetch()){
+                return true;
+            }else{
+                return false;
+            }
+        } catch (Exception $ex) {
+            return false;
+        }
+    }
 }

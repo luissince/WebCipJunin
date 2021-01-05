@@ -182,6 +182,17 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
                 "message" => $arrayUbigeo
             ));
         }
+    } else if ($_GET["type"] === "numCertHabilidad") {
+        $validate = ConceptoAdo::validateCertNum($_GET["numero"]);
+        if ($validate) {
+            echo json_encode(array(
+                "estado" => $validate
+            ));
+        } else {
+            echo json_encode(array(
+                "estado" => $validate
+            ));
+        }
     }
 } else if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     if ($_POST["type"] === "create") {
