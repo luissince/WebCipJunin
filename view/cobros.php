@@ -107,7 +107,7 @@ if (!isset($_SESSION['IdUsuario'])) {
                     <!-- modal start ingenieros -->
                     <div class="row">
                         <div class="modal fade" id="mdIngenieros">
-                            <div class="modal-dialog modal-lg" style="width:1100px;">
+                            <div class="modal-dialog modal-lg">
                                 <div class="modal-content">
                                     <div class="modal-header">
                                         <button type="button" class="close" data-dismiss="modal">

@@ -225,6 +225,10 @@ function Certificado() {
                     for (let especialidades of result.especialidades) {
                         $("#cbEspecialidadCertificado").append('<option value="' + especialidades.idEspecialidad + '">' + especialidades.Especialidad + '</option>');
                     }
+                    if (result.especialidades.length != 0) {
+                        $("select#cbEspecialidadCertificado").prop('selectedIndex', 1);
+                    }
+
                     $("#txtFechaCertificado").val(result.ultimopago);
 
                     $("#lblCertificadoHabilidadEstado").addClass("text-success");
@@ -283,6 +287,10 @@ function Certificado() {
                     for (let especialidades of result.especialidades) {
                         $("#cbEspecialidadObra").append('<option value="' + especialidades.idEspecialidad + '">' + especialidades.Especialidad + '</option>');
                     }
+                    if (result.especialidades.length != 0) {
+                        $("select#cbEspecialidadObra").prop('selectedIndex', 1);
+                    }
+
                     $("#txtFechaObra").val(result.ultimopago);
 
                     $("#cbDepartamentoObra").append('<option value="">- Seleccione un Ubigeo -</option>');
@@ -346,6 +354,10 @@ function Certificado() {
                     for (let especialidades of result.especialidades) {
                         $("#cbEspecialidadProyecto").append('<option value="' + especialidades.idEspecialidad + '">' + especialidades.Especialidad + '</option>');
                     }
+                    if (result.especialidades.length != 0) {
+                        $("select#cbEspecialidadProyecto").prop('selectedIndex', 1);
+                    }
+
                     $("#txtFechaProyecto").val(result.ultimopago);
 
                     $("#cbDepartamentoProyecto").append('<option value="">- Seleccione un Ubigeo -</option>');
@@ -399,24 +411,35 @@ function Certificado() {
             certificadoHabilidad.lugar = $("#txtLugarCertificado").val().toUpperCase();
             certificadoHabilidad.ultimoPago = $("#txtFechaCertificado").val();
             certificadoHabilidad.anulado = 0;
-            console.log(certificadoHabilidad.ultimoPago)
-            if (!validateDuplicate(certificadoHabilidad.idConcepto)) {
-                arrayIngresos.push({
-                    "idConcepto": certificadoHabilidad.idConcepto,
-                    "categoria": certificadoHabilidad.categoria,
-                    "cantidad": certificadoHabilidad.cantidad,
-                    "concepto": certificadoHabilidad.concepto,
-                    "precio": certificadoHabilidad.precio,
-                    "monto": certificadoHabilidad.precio * certificadoHabilidad.cantidad
-                });
-                addIngresos();
-                $('#mdCertHabilidad').modal('hide')
-                certificadoHabilidadEstado = true;
-                clearIngresosCertificadoHabilidad()
-            } else {
-                tools.AlertWarning("Certificado de Habilidad", "Ya existe un concepto con los mismo datos.");
-            }
+            validateCertHabilidadNum(certificadoHabilidad.numero);
         }
+    }
+
+    function validateCertHabilidadNum(numero) {
+        tools.AlertInfo("Certificado de Habilidad", "Validando numeración del certificado");
+        $.get("../app/controller/ConceptoController.php", { "type": "numCertHabilidad", "numero": numero }, function(data, status) {
+            if (data.estado == false) {
+                if (!validateDuplicate(certificadoHabilidad.idConcepto)) {
+                    arrayIngresos.push({
+                        "idConcepto": certificadoHabilidad.idConcepto,
+                        "categoria": certificadoHabilidad.categoria,
+                        "cantidad": certificadoHabilidad.cantidad,
+                        "concepto": certificadoHabilidad.concepto,
+                        "precio": certificadoHabilidad.precio,
+                        "monto": certificadoHabilidad.precio * certificadoHabilidad.cantidad
+                    });
+                    addIngresos();
+                    $('#mdCertHabilidad').modal('hide')
+                    certificadoHabilidadEstado = true;
+                    clearIngresosCertificadoHabilidad()
+                } else {
+                    tools.AlertWarning("Certificado de Habilidad", "Ya existe un concepto con los mismo datos.");
+                }
+            } else {
+                tools.AlertWarning("Certificado de Habilidad", "La numeración del certificado ya existe en los registros.");
+                $("#txtCorrelativoCertificado").focus();
+            }
+        });
     }
 
     function validateIngresosCertificadoResidenciaObra() {
@@ -451,6 +474,7 @@ function Certificado() {
             certificadoResidenciaObra.ubigeo = $("#cbDepartamentoObra").val();
             certificadoResidenciaObra.precio = parseFloat($("#txtMontoCobrarObra").val());
             certificadoResidenciaObra.monto = parseFloat($("#txtMontoCobrarObra").val());
+            certificadoResidenciaObra.ultimoPago = $("#txtFechaObra").val();
             certificadoResidenciaObra.anulado = 0;
 
             if (!validateDuplicate(certificadoResidenciaObra.idConcepto)) {
@@ -510,6 +534,7 @@ function Certificado() {
             certificadoProyecto.pasaje = $("#txtCalleProyecto").val().toUpperCase();
             certificadoProyecto.precio = parseFloat($("#txtMontoCobrarProyecto").val());
             certificadoProyecto.monto = parseFloat($("#txtMontoCobrarProyecto").val());
+            certificadoProyecto.ultimoPago = $("#txtFechaProyecto").val();
             certificadoProyecto.anulado = 0;
 
             if (!validateDuplicate(certificadoProyecto.idConcepto)) {
