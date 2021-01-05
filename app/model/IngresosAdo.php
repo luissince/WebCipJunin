@@ -632,15 +632,17 @@ class IngresosAdo
             $impuesto = 0;
 
             $cmdIngreso = Database::getInstance()->getDb()->prepare("SELECT 
-            i.idIngreso,t.CodigoAlterno as TipoComprobante,t.Nombre as Comprobante,
-            i.Serie,i.NumRecibo as Numeracion,
-            i.Fecha as FechaPago,convert(varchar,cast(i.Fecha as date), 103) as FechaEmision,
-            i.Estado,isnull(i.CodigoHash,'') as CodigoHash,
-            p.idDNI,p.CIP,p.Apellidos,p.Nombres
-            from Ingreso as i inner join Persona as p on i.idDNI = p.idDNI
-            inner join TipoComprobante as t 
-			on i.TipoComprobante = t.IdTipoComprobante
-            where i.idIngreso = ?");
+            i.idIngreso,t.CodigoAlterno AS TipoComprobante,t.Nombre AS Comprobante,
+            i.Serie,i.NumRecibo AS Numeracion,
+            i.Fecha AS FechaPago,i.Hora as HoraPago,CONVERT(VARCHAR,cast(i.Fecha AS DATE), 103) AS FechaEmision,
+            i.Estado,isnull(i.CodigoHash,'') AS CodigoHash,
+            case when not e.IdEmpresa is null then 6 else 1 end as TipoDocumento, case when not e.IdEmpresa is null then 'R.U.C' else 'D.N.I' end as NombreDocumento, case when not e.IdEmpresa is null then 'Razón Social' else 'Nombres' end as TipoNombrePersona,isnull(e.NumeroRuc,p.idDNI) as NumeroDocumento,isnull(e.Nombre,concat(p.Apellidos,' ',p.Nombres)) as DatosPersona,isnull(e.Direccion,p.RUC) as Direccion,
+			p.CIP,p.idDNI,p.Apellidos,p.Nombres
+            FROM Ingreso AS i 
+            INNER JOIN Persona AS p ON p.idDNI = i.idDNI
+			LEFT JOIN EmpresaPersona AS e ON e.IdEmpresa = i.idEmpresaPersona
+            INNER JOIN TipoComprobante AS t ON t.IdTipoComprobante = i.TipoComprobante 
+            WHERE i.idIngreso = ?");
             $cmdIngreso->bindParam(1, $idIngreso, PDO::PARAM_INT);
             $cmdIngreso->execute();
             $resultIngreso = $cmdIngreso->fetchObject();
@@ -669,18 +671,6 @@ class IngresosAdo
                     "Cantidad" => $row["Cantidad"],
                     "Total" => $row["Total"]
                 ));
-                // if (floatval($row["Total"]) > 0) {
-                //     $count++;
-                //     array_push($detalleventa, array(
-                //         "Id" => $count,
-                //         "idDetalle" => $row["idDetalle"],
-                //         "idIngreso" => $row["idIngreso"],
-                //         "Concepto" => $row["Concepto"],
-                //         "Precio" => $row["Precio"],
-                //         "Cantidad" => $row["Cantidad"],
-                //         "Total" => $row["Total"]
-                //     ));
-                // }
                 $preciobruto = $row["Precio"] / 1.0;
                 $totalsinimpuesto +=  $row["Cantidad"] * $preciobruto;
                 $impuesto += $row["Cantidad"] * ($preciobruto * (0.00 / 100.00));
@@ -704,7 +694,6 @@ class IngresosAdo
             Email,
             UsuarioSol,
             ClaveSol FROM Empresa");
-            $cmdEmpresa->bindParam(1, $idVenta, PDO::PARAM_STR);
             $cmdEmpresa->execute();
             $resultEmpresa = $cmdEmpresa->fetchObject();
 

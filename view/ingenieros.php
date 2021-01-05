@@ -98,14 +98,14 @@ if (!isset($_SESSION['IdUsuario'])) {
                                     <div class="row">
                                         <div class="col-md-6">
                                             <div class="form-group">
-                                                <label for="Ruc">RUC (opcional):</label>
-                                                <input id="Ruc" type="text" name="Ruc" class="form-control" placeholder="número de RUC" required="">
+                                                <label for="Ruc">Dirección Principal:</label>
+                                                <input id="Ruc" type="text" name="Ruc" class="form-control" placeholder="Dirección de viviendan principal" required="">
                                             </div>
                                         </div>
                                         <div class="col-md-6">
                                             <div class="form-group">
-                                                <label for="Razon_social">Razon social (opcional):</label>
-                                                <input id="Razon_social" type="text" name="Razon_social" class="form-control" placeholder="Razon social" required="">
+                                                <label for="Razon_social">Télefono/Celular Prinpal:</label>
+                                                <input id="Razon_social" type="text" name="Razon_social" class="form-control" placeholder="N° de teléfono o celular principal" required="">
                                             </div>
                                         </div>
                                     </div>
