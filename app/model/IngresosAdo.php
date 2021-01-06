@@ -132,6 +132,10 @@ class IngresosAdo
             $opcion = 1 AND ch.Entidad LIKE CONCAT(?,'%')
             OR
             $opcion = 1 AND ch.Lugar LIKE CONCAT(?,'%')
+            OR
+            $opcion = 1 AND p.idDNI = ?
+            OR
+            $opcion = 1 AND p.CIP = ?
             ORDER BY i.Fecha DESC,i.Hora DESC
             offset ? ROWS FETCH NEXT ? ROWS only");
             $cmdCertHabilidad->bindParam(1, $fechaInicio, PDO::PARAM_STR);
@@ -140,8 +144,10 @@ class IngresosAdo
             $cmdCertHabilidad->bindParam(4, $buscar, PDO::PARAM_STR);
             $cmdCertHabilidad->bindParam(5, $buscar, PDO::PARAM_STR);
             $cmdCertHabilidad->bindParam(6, $buscar, PDO::PARAM_STR);
-            $cmdCertHabilidad->bindParam(7, $posicionPagina, PDO::PARAM_INT);
-            $cmdCertHabilidad->bindParam(8, $filasPorPagina, PDO::PARAM_INT);
+            $cmdCertHabilidad->bindParam(7, $buscar, PDO::PARAM_STR);
+            $cmdCertHabilidad->bindParam(8, $buscar, PDO::PARAM_STR);
+            $cmdCertHabilidad->bindParam(9, $posicionPagina, PDO::PARAM_INT);
+            $cmdCertHabilidad->bindParam(10, $filasPorPagina, PDO::PARAM_INT);
             $cmdCertHabilidad->execute();
             $count = 0;
 
@@ -177,13 +183,19 @@ class IngresosAdo
             OR
             $opcion = 1 AND ch.Entidad LIKE CONCAT(?,'%')
             OR
-            $opcion = 1 AND ch.Lugar LIKE CONCAT(?,'%')");
+            $opcion = 1 AND ch.Lugar LIKE CONCAT(?,'%')
+            OR
+            $opcion = 1 AND p.idDNI = ?
+            OR
+            $opcion = 1 AND p.CIP = ?");
             $comandoTotal->bindParam(1, $fechaInicio, PDO::PARAM_STR);
             $comandoTotal->bindParam(2, $fechaFinal, PDO::PARAM_STR);
             $comandoTotal->bindParam(3, $buscar, PDO::PARAM_STR);
             $comandoTotal->bindParam(4, $buscar, PDO::PARAM_STR);
             $comandoTotal->bindParam(5, $buscar, PDO::PARAM_STR);
             $comandoTotal->bindParam(6, $buscar, PDO::PARAM_STR);
+            $comandoTotal->bindParam(7, $buscar, PDO::PARAM_STR);
+            $comandoTotal->bindParam(8, $buscar, PDO::PARAM_STR);
             $comandoTotal->execute();
             $resultTotal =  $comandoTotal->fetchColumn();
 

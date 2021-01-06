@@ -175,12 +175,14 @@ if (!isset($_SESSION['IdUsuario'])) {
                     }
                 });
 
-                $("#buscar").keyup(function() {
-                    if ($("#buscar").val().trim() != '') {
-                        if (!state) {
-                            paginacion = 1;
-                            loadTableIngresos(1, $("#buscar").val().trim(), "", "");
-                            opcion = 1;
+                $("#buscar").keyup(function(event) {
+                    if (event.keyCode === 13) {
+                        if ($("#buscar").val().trim() != '') {
+                            if (!state) {
+                                paginacion = 1;
+                                loadTableIngresos(1, $("#buscar").val().trim(), "", "");
+                                opcion = 1;
+                            }
                         }
                     }
                 });
@@ -229,12 +231,12 @@ if (!isset($_SESSION['IdUsuario'])) {
                             '<tr class="text-center"><td colspan="11"><img src="./images/spiner.gif"/><p>Cargando información.</p></td></tr>'
                         );
                         state = true;
-                        totalPaginacion=0;
+                        totalPaginacion = 0;
                     },
                     success: function(result) {
                         if (result.estado == 1) {
                             tbTable.empty();
-                            if ( result.data.length == 0) {
+                            if (result.data.length == 0) {
                                 tbTable.append(
                                     '<tr class="text-center"><td colspan="11"><p>No hay ingresos para mostrar.</p></td></tr>'
                                 );
@@ -242,7 +244,7 @@ if (!isset($_SESSION['IdUsuario'])) {
                                 $("#lblPaginaSiguiente").html(0);
                                 state = false;
                             } else {
-                                for (let ingresos of  result.data) {
+                                for (let ingresos of result.data) {
 
                                     let btnAnular = '<button class="btn btn-danger btn-xs" onclick="anularIngreso(\'' + ingresos.idIngreso + '\',\'' + ingresos.dni + '\')">' +
                                         '<i class="fa fa-ban"></i></br>Anular' +

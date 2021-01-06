@@ -372,7 +372,7 @@ if (!isset($_SESSION['IdUsuario'])) {
                 $("#buscar").on("keyup", function(event) {
                     if (event.keyCode === 13) {
                         paginacion = 1;
-                        loadTablePersonas($("#buscar").val());
+                        loadTablePersonas($("#buscar").val().trim());
                         opcion = 1;
                     }
                 });
@@ -439,7 +439,7 @@ if (!isset($_SESSION['IdUsuario'])) {
                         loadTablePersonas("");
                         break;
                     case 1:
-                        loadTablePersonas($("#buscar").val());
+                        loadTablePersonas($("#buscar").val().trim());
                         break;
                 }
             }
@@ -465,59 +465,69 @@ if (!isset($_SESSION['IdUsuario'])) {
                     beforeSend: function() {
                         tbTable.empty();
                         tbTable.append(
-                            '<tr class="text-center"><td colspan="9"><img src="./images/spiner.gif"/><p>cargando información.</p></td></tr>'
+                            '<tr class="text-center"><td colspan="10"><img src="./images/spiner.gif"/><p>cargando información.</p></td></tr>'
                         );
                         state = true;
+                        totalPaginacion = 0;
                     },
                     success: function(result) {
 
                         if (result.estado === 1) {
                             tbTable.empty();
-                            for (let persona of result.personas) {
-                                // let image = '<img src="images/masculino.png" width="30">';
-                                let btnHistorial = '<button class="btn btn-info btn-sm" onclick="onSelectedIngeniero(\'' + persona.idDNI + '\')">' +
-                                    '<i class="fa fa-eye"></i> Ver' +
-                                    '</button>';
+                            if (result.personas.length == 0) {
+                                tbTable.append(
+                                    '<tr class="text-center"><td colspan="10"><p>No hay datos para mostrar.</p></td></tr>'
+                                );
+                                $("#lblPaginaActual").html(0);
+                                $("#lblPaginaSiguiente").html(0);
+                                state = false;
+                            } else {
+                                for (let persona of result.personas) {
+                                    // let image = '<img src="images/masculino.png" width="30">';
+                                    let btnHistorial = '<button class="btn btn-info btn-sm" onclick="onSelectedIngeniero(\'' + persona.idDNI + '\')">' +
+                                        '<i class="fa fa-eye"></i> Ver' +
+                                        '</button>';
 
-                                let btnUpdate =
-                                    '<button class="btn btn-warning btn-sm" onclick="loadUpdateIngenieros(\'' +
-                                    persona.idDNI + '\')">' +
-                                    '<i class="fa fa-wrench"></i> Editar' +
-                                    '</button>';
+                                    let btnUpdate =
+                                        '<button class="btn btn-warning btn-sm" onclick="loadUpdateIngenieros(\'' +
+                                        persona.idDNI + '\')">' +
+                                        '<i class="fa fa-wrench"></i> Editar' +
+                                        '</button>';
 
-                                let estadoCivil = (persona.EstadoCivil == 'S') ? 'Soltero/a' :
-                                    (persona.EstadoCivil == 'C') ? 'Casado/a' :
-                                    (persona.EstadoCivil == 'V') ? 'Viudo/a' : 'Divorciado/a'
+                                    let estadoCivil = (persona.EstadoCivil == 'S') ? 'Soltero/a' :
+                                        (persona.EstadoCivil == 'C') ? 'Casado/a' :
+                                        (persona.EstadoCivil == 'V') ? 'Viudo/a' : 'Divorciado/a'
 
-                                let condicion = (persona.Condicion == 'O') ? 'Ordinario' :
-                                    (persona.Condicion == 'T') ? 'Transeunte' :
-                                    (persona.Condicion == 'F') ? 'Fallecido' :
-                                    (persona.Condicion == 'R') ? 'Retirado' : 'Vitalicio'
+                                    let condicion = (persona.Condicion == 'O') ? 'Ordinario' :
+                                        (persona.Condicion == 'T') ? 'Transeunte' :
+                                        (persona.Condicion == 'F') ? 'Fallecido' :
+                                        (persona.Condicion == 'R') ? 'Retirado' : 'Vitalicio'
 
-                                tbTable.append('<tr>' +
-                                    '<td style="text-align: center;color: #2270D1;">' + persona.Id + '</td>' +
-                                    '<td>' + persona.Cip + '</td>' +
-                                    '<td>' + persona.idDNI + '</td>' +
-                                    '<td>' + persona.Apellidos + ' ' + persona.Nombres + '</td>' +
-                                    '<td>' + persona.Sexo + '</td>' +
-                                    '<td>' + estadoCivil + '</td>' +
-                                    '<td>' + condicion + '</td>' +
-                                    '<td>' + 0 + '</td>' +
-                                    '<td>' + btnHistorial + '</td>' +
-                                    '<td>' +
-                                    '' + btnUpdate + '' +
-                                    '</td>' +
-                                    '</tr>');
+                                    tbTable.append('<tr>' +
+                                        '<td style="text-align: center;color: #2270D1;">' + persona.Id + '</td>' +
+                                        '<td>' + persona.Cip + '</td>' +
+                                        '<td>' + persona.idDNI + '</td>' +
+                                        '<td>' + persona.Apellidos + ' ' + persona.Nombres + '</td>' +
+                                        '<td>' + persona.Sexo + '</td>' +
+                                        '<td>' + estadoCivil + '</td>' +
+                                        '<td>' + condicion + '</td>' +
+                                        '<td>' + 0 + '</td>' +
+                                        '<td>' + btnHistorial + '</td>' +
+                                        '<td>' +
+                                        '' + btnUpdate + '' +
+                                        '</td>' +
+                                        '</tr>');
+                                }
+                                totalPaginacion = parseInt(Math.ceil((parseFloat(result.total) / parseInt(
+                                    filasPorPagina))));
+                                $("#lblPaginaActual").html(paginacion);
+                                $("#lblPaginaSiguiente").html(totalPaginacion);
+                                state = false;
                             }
-                            totalPaginacion = parseInt(Math.ceil((parseFloat(result.total) / parseInt(
-                                filasPorPagina))));
-                            $("#lblPaginaActual").html(paginacion);
-                            $("#lblPaginaSiguiente").html(totalPaginacion);
-                            state = false;
                         } else {
                             tbTable.empty();
                             tbTable.append(
-                                '<tr class="text-center"><td colspan="9"><p>' + result.message + '</p></td></tr>'
+                                '<tr class="text-center"><td colspan="10"><p>' + result.message + '</p></td></tr>'
                             );
                             $("#lblPaginaActual").html(0);
                             $("#lblPaginaSiguiente").html(0);
@@ -527,7 +537,7 @@ if (!isset($_SESSION['IdUsuario'])) {
                     error: function(error) {
                         tbTable.empty();
                         tbTable.append(
-                            '<tr class="text-center"><td colspan="9"><p>' + error.responseText + '</p></td></tr>'
+                            '<tr class="text-center"><td colspan="10"><p>' + error.responseText + '</p></td></tr>'
                         );
                         $("#lblPaginaActual").html(0);
                         $("#lblPaginaSiguiente").html(0);
