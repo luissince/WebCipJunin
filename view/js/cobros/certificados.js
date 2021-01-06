@@ -3,7 +3,7 @@ function Certificado() {
         //********************************************* */
         $("#btnCertificado").click(function() {
             if (idDNI == 0) {
-                tools.AlertWarning("Certificado", "No selecciono ningún ingeniero para obtener sus cuotas.")
+                tools.AlertWarning("Certificado", "No selecciono ningún ingeniero para obtener sus certificados.")
             } else {
                 $("#btnCertificado").attr('data-toggle', 'dropdown');
                 $("#btnCertificado").attr('aria-expanded', 'true');
@@ -229,7 +229,22 @@ function Certificado() {
                         $("select#cbEspecialidadCertificado").prop('selectedIndex', 1);
                     }
 
-                    $("#txtFechaCertificado").val(result.ultimopago);
+                    if (cuotasEstate) {
+                        if (tools.validateDate(cuotasFin)) {
+                            let fechaCertHabilidad = new Date(cuotasFin);
+                            fechaCertHabilidad.setDate(1);
+                            fechaCertHabilidad.setMonth(fechaCertHabilidad.getMonth() + 1);
+                            fechaCertHabilidad.setMonth(fechaCertHabilidad.getMonth() + 3);
+                            let year = fechaCertHabilidad.getFullYear();
+                            let month = (fechaCertHabilidad.getMonth() + 1) <= 9 ? "0" + (fechaCertHabilidad.getMonth() + 1) : (fechaCertHabilidad.getMonth() + 1);
+                            var lastDayOfMonth = new Date(year, month, 0);
+                            let date = lastDayOfMonth.getDate() <= 9 ? "0" + lastDayOfMonth.getDate() : lastDayOfMonth.getDate();
+                            let newDate = year + '-' + month + '-' + date;
+                            $("#txtFechaCertificado").val(newDate);
+                        }
+                    } else {
+                        $("#txtFechaCertificado").val(result.ultimopago);
+                    }
 
                     $("#lblCertificadoHabilidadEstado").addClass("text-success");
                     $("#lblCertificadoHabilidadEstado").append('<i class="fa fa-check"> </i> Se cargo correctamente lo datos.');
@@ -291,7 +306,22 @@ function Certificado() {
                         $("select#cbEspecialidadObra").prop('selectedIndex', 1);
                     }
 
-                    $("#txtFechaObra").val(result.ultimopago);
+                    if (cuotasEstate) {
+                        if (tools.validateDate(cuotasFin)) {
+                            let fechaCertHabilidad = new Date(cuotasFin);
+                            fechaCertHabilidad.setDate(1);
+                            fechaCertHabilidad.setMonth(fechaCertHabilidad.getMonth() + 1);
+                            fechaCertHabilidad.setMonth(fechaCertHabilidad.getMonth() + 3);
+                            let year = fechaCertHabilidad.getFullYear();
+                            let month = (fechaCertHabilidad.getMonth() + 1) <= 9 ? "0" + (fechaCertHabilidad.getMonth() + 1) : (fechaCertHabilidad.getMonth() + 1);
+                            var lastDayOfMonth = new Date(year, month, 0);
+                            let date = lastDayOfMonth.getDate() <= 9 ? "0" + lastDayOfMonth.getDate() : lastDayOfMonth.getDate();
+                            let newDate = year + '-' + month + '-' + date;
+                            $("#txtFechaObra").val(newDate);
+                        }
+                    } else {
+                        $("#txtFechaObra").val(result.ultimopago);
+                    }
 
                     $("#cbDepartamentoObra").append('<option value="">- Seleccione un Ubigeo -</option>');
                     for (let ubigeo of result.ubigeo) {
@@ -358,7 +388,22 @@ function Certificado() {
                         $("select#cbEspecialidadProyecto").prop('selectedIndex', 1);
                     }
 
-                    $("#txtFechaProyecto").val(result.ultimopago);
+                    if (cuotasEstate) {
+                        if (tools.validateDate(cuotasFin)) {
+                            let fechaCertHabilidad = new Date(cuotasFin);
+                            fechaCertHabilidad.setDate(1);
+                            fechaCertHabilidad.setMonth(fechaCertHabilidad.getMonth() + 1);
+                            fechaCertHabilidad.setMonth(fechaCertHabilidad.getMonth() + 3);
+                            let year = fechaCertHabilidad.getFullYear();
+                            let month = (fechaCertHabilidad.getMonth() + 1) <= 9 ? "0" + (fechaCertHabilidad.getMonth() + 1) : (fechaCertHabilidad.getMonth() + 1);
+                            var lastDayOfMonth = new Date(year, month, 0);
+                            let date = lastDayOfMonth.getDate() <= 9 ? "0" + lastDayOfMonth.getDate() : lastDayOfMonth.getDate();
+                            let newDate = year + '-' + month + '-' + date;
+                            $("#txtFechaProyecto").val(newDate);
+                        }
+                    } else {
+                        $("#txtFechaProyecto").val(result.ultimopago);
+                    }
 
                     $("#cbDepartamentoProyecto").append('<option value="">- Seleccione un Ubigeo -</option>');
                     for (let ubigeo of result.ubigeo) {
@@ -411,6 +456,7 @@ function Certificado() {
             certificadoHabilidad.lugar = $("#txtLugarCertificado").val().toUpperCase();
             certificadoHabilidad.ultimoPago = $("#txtFechaCertificado").val();
             certificadoHabilidad.anulado = 0;
+            console.log(certificadoHabilidad.ultimoPago)
             validateCertHabilidadNum(certificadoHabilidad.numero);
         }
     }

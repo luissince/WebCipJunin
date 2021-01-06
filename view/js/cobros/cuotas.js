@@ -251,7 +251,6 @@ function Cuotas() {
 
     function addCuotas() {
         countCurrentDate++;
-        console.log(countCurrentDate)
         loadCuotas(tipoCuotas);
     }
 
@@ -377,8 +376,8 @@ function Cuotas() {
         }
         if (cuotas.length > 0) {
             cuotasEstate = true;
-            cuotasInicio = cuotas[0].day + "/" + cuotas[0].mes + "/" + cuotas[0].year;
-            cuotasFin = cuotas[cuotas.length - 1].day + "/" + cuotas[cuotas.length - 1].mes + "/" + cuotas[cuotas.length - 1].year;
+            cuotasInicio = cuotas[0].year + "-" + cuotas[0].mes + "-" + cuotas[0].day;
+            cuotasFin = cuotas[cuotas.length - 1].year + "-" + cuotas[cuotas.length - 1].mes + "-" + cuotas[cuotas.length - 1].day;
         }
         addIngresos();
         $('#mdCuotas').modal('hide');

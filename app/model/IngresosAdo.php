@@ -389,7 +389,7 @@ class IngresosAdo
             $cmdIngreso->bindParam(6, $body["idUsuario"], PDO::PARAM_INT);
             $cmdIngreso->bindParam(7, $body["estado"], PDO::PARAM_STR);
             $cmdIngreso->execute();
-
+ 
             $idIngreso = Database::getInstance()->getDb()->lastInsertId();
 
             if ($body["estadoCuotas"] == true) {

@@ -1107,10 +1107,10 @@ if (!isset($_SESSION['IdUsuario'])) {
 
                 $("#cbComprobante").change(function() {
                     for (let i = 0; i < comprobantes.length; i++) {
-                        if (comprobantes[i].IdTipoComprobante == $(this).val()) {                                                  
+                        if (comprobantes[i].IdTipoComprobante == $(this).val()) {
                             if (comprobantes[i].UsarRuc == "1") {
                                 UsarRuc = true;
-                            }else{
+                            } else {
                                 UsarRuc = false;
                             }
                             break;
@@ -1267,15 +1267,18 @@ if (!isset($_SESSION['IdUsuario'])) {
                 let arrayRenderTable = [];
 
                 for (let value of arrayIngresos) {
+                    let cuotasFechas = cuotasEstate == true ? tools.getDateForma(cuotasInicio) + " al " + tools.getDateForma(cuotasFin) : '-';
+
                     if (!arrayRenderTable.find(ar => ar.categoria == value.categoria && value.categoria == 1 ||
                             ar.categoria == value.categoria && value.categoria == 2 ||
                             ar.categoria == value.categoria && value.categoria == 3 ||
                             ar.categoria == value.categoria && value.categoria == 4)) {
+
                         arrayRenderTable.push({
                             "idConcepto": parseInt(value.idConcepto),
                             "categoria": value.categoria,
                             "cantidad": value.cantidad,
-                            "concepto": value.categoria == 1 ? "Cuotas Ordinarias" : value.categoria == 4 ? "Colegiatura" : value.categoria == 2 ? "Cuotas de Administia" : value.categoria == 3 ? "Cuotas de Vitalicio" : value.concepto,
+                            "concepto": value.categoria == 1 ? "Cuotas Ordinarias(Del " + cuotasFechas + ")" : value.categoria == 4 ? "Colegiatura" : value.categoria == 2 ? "Cuotas de Administia(Del " + cuotasFechas + ")" : value.categoria == 3 ? "Cuotas de Vitalicio(Del " + cuotasFechas + ")" : value.concepto,
                             "precio": parseFloat(value.precio),
                             "monto": parseFloat(value.precio) * parseFloat(value.cantidad)
                         });
@@ -1286,7 +1289,7 @@ if (!isset($_SESSION['IdUsuario'])) {
                                 newConcepto.idConcepto = parseInt(value.idConcepto);
                                 newConcepto.categoria = parseInt(value.categoria);
                                 newConcepto.cantidad = newConcepto.cantidad;
-                                newConcepto.concepto = value.categoria == 1 ? "Cuotas Ordinarias" : value.categoria == 4 ? "Colegiatura" : value.categoria == 2 ? "Cuotas de Administia" : value.categoria == 3 ? "Cuotas de Vitalicio" : value.concepto;
+                                newConcepto.concepto = value.categoria == 1 ? "Cuotas Ordinarias(Del " + cuotasFechas + ")" : value.categoria == 4 ? "Colegiatura" : value.categoria == 2 ? "Cuotas de Administia(Del " + cuotasFechas + ")" : value.categoria == 3 ? "Cuotas de Vitalicio(Del " + cuotasFechas + ")" : value.concepto;
                                 newConcepto.precio += parseFloat(value.precio);
                                 newConcepto.monto = newConcepto.precio * newConcepto.cantidad;
                                 arrayRenderTable[i] = newConcepto;
@@ -1385,7 +1388,7 @@ if (!isset($_SESSION['IdUsuario'])) {
                 $("#txtIngenieroObra").val("");
                 $("#txtIngenieroProyecto").val("");
                 idDNI = 0;
-                tipoColegiado="";
+                tipoColegiado = "";
                 cuotasEstate = false;
                 colegiaturaEstado = false;
                 certificadoHabilidadEstado = false;
