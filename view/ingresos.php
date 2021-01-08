@@ -313,7 +313,7 @@ if (!isset($_SESSION['IdUsuario'])) {
                     }
                 });
 
-                $("#fechaInicio").on("change", function() {
+                $("#fechaFinal").on("change", function() {
                     if (tools.validateDate($("#fechaInicio").val()) && tools.validateDate($("#fechaFinal").val())) {
                         if (!state) {
                             paginacion = 1;
