@@ -3,9 +3,8 @@
 set_time_limit(300); //evita el error 20 segundos de peticion
 session_start();
 
-require __DIR__ . "/lib/phpspreadsheet/vendor/autoload.php";
-require_once __DIR__ . '/database/DataBaseConexion.php';
-include __DIR__ . "/ventas/VentasADO.php";
+require __DIR__ . './../vendor/autoload.php';
+include_once __DIR__ . './../model/IngresosAdo.php';
 
 use PhpOffice\PhpSpreadsheet\IOFactory;
 use PhpOffice\PhpSpreadsheet\Spreadsheet;
@@ -13,7 +12,7 @@ use PhpOffice\PhpSpreadsheet\Style\Fill;
 use PhpOffice\PhpSpreadsheet\Style\Alignment;
 use PhpOffice\PhpSpreadsheet\Style\Border;
 
-$ventas = VentasADO::GetReporteGenetalVentas($_GET["txtFechaInicial"], $_GET["txtFechaFinal"]);
+$ventas = IngresosAdo::GetReporteGenetalVentas($_GET["txtFechaInicial"], $_GET["txtFechaFinal"]);
 
 $documento = new Spreadsheet();
 $documento

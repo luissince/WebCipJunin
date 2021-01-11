@@ -9,25 +9,26 @@ header("Access-Control-Allow-Headers: Origin, X-Requested-With, Content-Type, Ac
 header('Access-Control-Allow-Methods: GET, POST, PUT, DELETE');
 header('Content-Type: application/json; charset=UTF-8');
 
-use Greenter\Model\Response\SummaryResult;
-use Greenter\Model\Sale\Document;
 use Greenter\Model\Company\Company;
 use Greenter\Model\Company\Address;
 use Greenter\Model\Summary\Summary;
 use Greenter\Model\Summary\SummaryDetail;
-use Greenter\Model\Summary\SummaryPerception;
 use Greenter\Ws\Services\SunatEndpoints;
 
-require __DIR__ . '/../vendor/autoload.php';
-include_once '../model/IngresosAdo.php';
+require __DIR__ . './../vendor/autoload.php';
+include_once __DIR__ . './../model/IngresosAdo.php';
 
 $util = Util::getInstance();
+$idIngreso = $_GET['idIngreso'];
 
-$idventa = $_GET['idIngreso'];
 $detalleventa = IngresosAdo::ObtenerIngresoXML($idIngreso);
-$cliente = $detalleventa[1];
-$empresa = $detalleventa[2];
-$totales = $detalleventa[3];
+
+$ingreso = $detalleventa[0];
+$detalleIngreso = $detalleventa[1];
+$cuotas = $detalleventa[2];
+$empresa = $detalleventa[3];
+$totales = $detalleventa[4];
+
 try {
     date_default_timezone_set('America/Lima');
     $currentDate = date('Y-m-d');
@@ -52,11 +53,11 @@ try {
 
     $detiail1 = new SummaryDetail();
     $detiail1->setTipoDoc('03')
-        ->setSerieNro($cliente->Serie . '-' . $cliente->Numeracion)
+        ->setSerieNro($ingreso->Serie . '-' . $ingreso->Numeracion)
         //->setSerieNro('BC01-72')
         ->setEstado('3') //Anulación
-        ->setClienteTipo($cliente->TipoDocumento)
-        ->setClienteNro($cliente->idDNI)
+        ->setClienteTipo($ingreso->TipoDocumento)
+        ->setClienteNro($ingreso->NumeroDocumento)
         ->setTotal(round($totales['totalconimpuesto'], 2, PHP_ROUND_HALF_UP))
         ->setMtoOperExoneradas(round($totales['totalsinimpuesto'], 2, PHP_ROUND_HALF_UP))
         ->setMtoIGV(round($totales['totalimpuesto'], 2, PHP_ROUND_HALF_UP));
@@ -68,12 +69,12 @@ try {
 
     $sum = new Summary();
     // Fecha Generacion menor que Fecha Resumen 
-    $sum->setFecGeneracion(new DateTime($cliente->FechaPago))
+    $sum->setFecGeneracion(new DateTime($ingreso->FechaPago))
         // $sum->setFecGeneracion(new DateTime("2020-10-26"))
         //COMO AGREGO LA FECH ACTUAL
         ->setFecResumen(new DateTime($currentDate))
         //->setCorrelativo($idCorrelativo)
-        ->setCorrelativo('1')
+        ->setCorrelativo('2')
         ->setCompany($company)
         ->setDetails([$detiail1]);
 
@@ -82,6 +83,7 @@ try {
 
     $res = $see->send($sum);
     $util->writeXml($sum, $see->getFactory()->getLastXml());
+    $hash = $util->getHashCode($sum);
     // primer codigo de error el enviar el resumen diario
     // cdogio = 0098 
     // El procesamiento del comprobante aún no ha terminado
@@ -93,17 +95,24 @@ try {
     //El comprobante B001-010674 fue anulado'
 
     if (!$res->isSuccess()) {
-        echo json_encode(array(
-            "state" => false,
-            "code" => $res->getError()->getCode(),
-            "description" => $res->getError()->getMessage()
-        ));
+        if ($res->getError()->getCode() === "0402") {
+            VentasADO::CambiarEstadoSunatResumen($idventa, $res->getError()->getCode(), $res->getError()->getMessage(), $hash);
+            echo json_encode(array(
+                "state" => false,
+                "code" => $res->getError()->getCode(),
+                "description" => $res->getError()->getMessage()
+            ));
+        } else {
+            echo json_encode(array(
+                "state" => false,
+                "code" => $res->getError()->getCode(),
+                "description" => $res->getError()->getMessage()
+            ));
+        }
     } else {
         $ticket = $res->getTicket();
         $res = $see->getStatus($ticket);
         if (!$res->isSuccess()) {
-            //echo $util->getErrorResponse($res->getError());
-            Database::getInstance()->getDb()->rollback();
             echo json_encode(array(
                 "state" => false,
                 "code" => $res->getError()->getCode(),

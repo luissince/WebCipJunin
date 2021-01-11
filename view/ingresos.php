@@ -535,7 +535,7 @@ if (!isset($_SESSION['IdUsuario'])) {
                 tools.ModalDialog("¿Realmente Deseas Anular el Documento?", "Se anulará el documento: " + comprobante + ", y se creará el siguiente resumen individual: RC-" + resumen + "-1, estás seguro de anular el documento? los cambios no se podrán revertir!", function(value) {
                     if (value == true) {
                         $.ajax({
-                            url: "./examples/resumen.php",
+                            url: "../app/examples/resumen.php",
                             method: "GET",
                             data: {
                                 "idIngreso": idIngreso
@@ -549,6 +549,7 @@ if (!isset($_SESSION['IdUsuario'])) {
                                 $("#modalAlert").modal('show');
                             },
                             success: function(result) {
+                                console.log(result)
                                 let object = result;
                                 if (object.state === true) {
                                     if (object.accept === true) {
@@ -573,6 +574,7 @@ if (!isset($_SESSION['IdUsuario'])) {
                                 }
                             },
                             error: function(error) {
+                                console.log(error)
                                 $("#alertIcon").empty();
                                 $("#alertIcon").append('<i class="fa fa-times-circle fa-3x text-danger "></i>');
                                 $("#alertText").html("Error en el momento de firmar el xml, intente nuevamente o comuníquese con su proveedor del sistema.");

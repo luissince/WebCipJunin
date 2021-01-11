@@ -1,4 +1,5 @@
 <?php
+/*
 date_default_timezone_set('America/Lima');
 $currentDate = date('Y-m-d');
 set_time_limit(300); //evita el error 20 segundos de peticion
@@ -174,3 +175,4 @@ if (is_array($ingresos)) {
 } else {
     echo $ingresos;
 }
+*/
