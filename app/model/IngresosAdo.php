@@ -648,7 +648,12 @@ class IngresosAdo
             i.Serie,i.NumRecibo AS Numeracion,
             i.Fecha AS FechaPago,i.Hora as HoraPago,CONVERT(VARCHAR,cast(i.Fecha AS DATE), 103) AS FechaEmision,
             i.Estado,isnull(i.CodigoHash,'') AS CodigoHash,
-            case when not e.IdEmpresa is null then 6 else 1 end as TipoDocumento, case when not e.IdEmpresa is null then 'R.U.C' else 'D.N.I' end as NombreDocumento, case when not e.IdEmpresa is null then 'Razón Social' else 'Nombres' end as TipoNombrePersona,isnull(e.NumeroRuc,p.idDNI) as NumeroDocumento,isnull(e.Nombre,concat(p.Apellidos,' ',p.Nombres)) as DatosPersona,isnull(e.Direccion,p.RUC) as Direccion,
+            case when not e.IdEmpresa is null then 6 else 1 end as TipoDocumento,
+            case when not e.IdEmpresa is null then 'R.U.C' else 'D.N.I' end as NombreDocumento,
+            case when not e.IdEmpresa is null then 'Razón Social' else 'Nombres' end as TipoNombrePersona,
+            isnull(e.NumeroRuc,p.idDNI) as NumeroDocumento,
+            isnull(e.Nombre,concat(p.Apellidos,' ',p.Nombres)) as DatosPersona,
+            isnull(e.Direccion,p.RUC) as Direccion,
 			p.CIP,p.idDNI,p.Apellidos,p.Nombres
             FROM Ingreso AS i 
             INNER JOIN Persona AS p ON p.idDNI = i.idDNI
