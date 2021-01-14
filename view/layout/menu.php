@@ -77,8 +77,17 @@
                 </li>';
                 }
                 if ($_SESSION["Permisos"][7]["ver"] == 1) {
-                    print '<li>
-                    <a href="./ingenieros.php"><i class="fa fa-user"></i> <span>Ingenieros</span></a>
+                    print '<li class="treeview" id="tab-ingenieros">
+                    <a href="#">
+                        <i class="fa fa-user"></i> <span>Ingenieros</span>
+                        <span class="pull-right-container">
+                            <i class="fa fa-angle-left" pull-right"></i>
+                        </span>
+                    </a>
+                    <ul class="treeview-menu">
+                        <li><a href="./ingenieros.php"><i class="fa fa-circle-o"></i>Lista</a></li>
+                        <li><a href="./habilidadIngeniero.php"><i class="fa fa-circle-o"></i>Habilidad</a></li>
+                    </ul>
                 </li>';
                 }
                 if ($_SESSION["Permisos"][10]["ver"] == 1) {

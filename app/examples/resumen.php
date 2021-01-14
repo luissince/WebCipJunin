@@ -78,7 +78,7 @@ try {
         ->setDetails([$detiail1]);
 
     // Envio a SUNAT.
-    $see = $util->getSee(SunatEndpoints::FE_PRODUCCION, $empresa->NumeroDocumento, $empresa->UsuarioSol, $empresa->ClaveSol);
+    $see = $util->getSee(SunatEndpoints::FE_BETA, $empresa->NumeroDocumento, $empresa->UsuarioSol, $empresa->ClaveSol);
 
     $res = $see->send($sum);
     $util->writeXml($sum, $see->getFactory()->getLastXml());

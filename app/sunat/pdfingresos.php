@@ -202,11 +202,11 @@ if (!isset($_GET["idIngreso"])) {
                         <table  style="font-family: arial;" cellpadding="1" border="0">
                             <tr>
                                 <td style="line-height: 0px;padding:2px 0px;"><b>' . $ingreso->NombreDocumento . '</b></td>
-                                <td style="line-height: 0px;padding:2px 0px;"><b>: </b> ' . $ingreso->idDNI . '</td>
+                                <td style="line-height: 0px;padding:2px 0px;"><b>: </b> ' . $ingreso->NumeroDocumento . '</td>
                             </tr>
                             <tr>
                                 <td style="line-height: 0px;padding:2px 0px;"><b>' . $ingreso->TipoNombrePersona . '</b></td>
-                                <td style="line-height: 0px;padding:2px 0px;"><b>: </b>' . $ingreso->Apellidos . ' ' . $ingreso->Nombres . '</td>
+                                <td style="line-height: 0px;padding:2px 0px;"><b>: </b>' . $ingreso->DatosPersona . '</td>
                             </tr>
                             <tr>
                                 <td style="line-height: 0px;padding:2px 0px;"><b>Dirección</b></td>

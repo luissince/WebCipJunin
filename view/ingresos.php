@@ -447,44 +447,22 @@ if (!isset($_SESSION['IdUsuario'])) {
                                     "idIngreso": idIngreso
                                 },
                                 beforeSend: function() {
-                                    $("#alertIcon").empty();
-                                    $("#alertIcon").append('<i class="fa fa-refresh fa-3x text-primary"></i>');
-                                    $("#alertText").html("Firmando xml y enviando a la sunat.");
-                                    $("#btnIconCloseModal").addClass('disabled pointer-events');
-                                    $("#btnButtonAcceptModal").addClass('disabled pointer-events');
-                                    $("#modalAlert").modal('show');
+                                    tools.ModalAlertInfo("Ventas", "Firmando xml y enviando a la sunat.");
                                 },
                                 success: function(result) {
                                     let object = result;
                                     if (object.state === true) {
                                         if (object.accept === true) {
-                                            $("#alertIcon").empty();
-                                            $("#alertIcon").append('<i class="fa fa-exclamation-circle fa-3x text-success"></i>');
-                                            $("#alertText").html("Resultado: Código " + object.code + " " + object.description);
-                                            $("#btnIconCloseModal").removeClass('disabled pointer-events');
-                                            $("#btnButtonAcceptModal").removeClass('disabled pointer-events');
-                                            //loadInitIngresos();
+                                            tools.ModalAlertSuccess("Ventas", "Resultado: Código " + object.code + " " + object.description);
                                         } else {
-                                            $("#alertIcon").empty();
-                                            $("#alertIcon").append('<i class="fa fa-warning fa-3x text-warning"></i>');
-                                            $("#alertText").html("Resultado: Código " + object.code + " " + object.description);
-                                            $("#btnIconCloseModal").removeClass('disabled pointer-events');
-                                            $("#btnButtonAcceptModal").removeClass('disabled pointer-events');
+                                            tools.ModalAlertWarning("Ventas", "Resultado: Código " + object.code + " " + object.description);
                                         }
                                     } else {
-                                        $("#alertIcon").empty();
-                                        $("#alertIcon").append('<i class="fa fa-warning fa-3x text-warning"></i>');
-                                        $("#alertText").html("Resultado: Código " + object.code + " " + object.description);
-                                        $("#btnIconCloseModal").removeClass('disabled pointer-events');
-                                        $("#btnButtonAcceptModal").removeClass('disabled pointer-events');
+                                        tools.ModalAlertWarning("Ventas", "Resultado: Código " + object.code + " " + object.description);
                                     }
                                 },
                                 error: function(error) {
-                                    $("#alertIcon").empty();
-                                    $("#alertIcon").append('<i class="fa fa-times-circle fa-3x text-danger "></i>');
-                                    $("#alertText").html("Error en el momento de firmar el xml, intente nuevamente o comuníquese con su proveedor del sistema.");
-                                    $("#btnIconCloseModal").removeClass('disabled pointer-events');
-                                    $("#btnButtonAcceptModal").removeClass('disabled pointer-events');
+                                    tools.ModalAlertError("Ventas", "Error en el momento de firmar el xml: " + error.responseText);
                                 }
                             });
                         }

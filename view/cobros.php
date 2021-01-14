@@ -1231,7 +1231,6 @@ if (!isset($_SESSION['IdUsuario'])) {
                                     tools.ModalAlertInfo("Cobros", "Procesando petición..");
                                 },
                                 success: function(result) {
-
                                     if (result.estado === 1) {
                                         tools.ModalAlertSuccess("Cobros", result.mensaje);
                                         openPdfComprobante(result.idIngreso);
@@ -1239,7 +1238,7 @@ if (!isset($_SESSION['IdUsuario'])) {
                                         $("#btnCertificado").attr('aria-expanded', 'false');
                                         loadEmpresaPersona();
                                         loadComprobantes();
-
+                                        
                                     } else {
                                         tools.ModalAlertWarning("Cobros", result.mensaje);
                                     }

@@ -1348,6 +1348,89 @@ class PersonaAdo
         }
     }
 
+    public static function getHabilidadIngeniero($search, $posicionPagina, $filasPorPagina)
+    {
+        try {
+            $array = array();
+            $arrayHabilidad = array();
+            $comandoHabilidad = Database::getInstance()->getDb()->prepare("SELECT 
+            CASE CIP
+                WHEN 'T' THEN 'Tramite'
+                ELSE CIP END AS Cip, 
+            dbo.Persona.idDNI as Dni, dbo.Persona.Apellidos + ', ' + dbo.Persona.Nombres AS Ingeniero, 
+            CASE dbo.Persona.Condicion
+                WHEN 'T' THEN 'Transeunte'
+                WHEN 'F' THEN 'Fallecido'
+                WHEN 'R' THEN 'Retirado'
+                WHEN 'V' THEN 'Vitalicio'
+                ELSE 'Ordinario' END AS Condicion,
+            CONVERT(VARCHAR,CAST(dbo.Colegiatura.FechaColegiado AS DATE), 103) AS FechaColegiado,
+            CONVERT(VARCHAR,CAST(ISNULL(dbo.ULTIMACuota.FechaUltimaCuota,dbo.Colegiatura.FechaColegiado) AS DATE), 103) AS FechaUltimaCuota, 
+            CASE dbo.Persona.Condicion
+                WHEN 'T' THEN 0
+                ELSE DATEDIFF(M, ISNULL(dbo.ULTIMACuota.FechaUltimaCuota, dbo.Colegiatura.FechaColegiado), GETDATE()) END AS Deuda,
+            CASE
+                WHEN CAST (DATEDIFF(M,ISNULL(dbo.ULTIMACuota.FechaUltimaCuota, dbo.Colegiatura.FechaColegiado) , GETDATE()) AS INT) <=0 THEN 'Habilitado'
+                ELSE 'No Habilitado' END AS Habilidad
+            FROM dbo.Persona
+            LEFT OUTER JOIN dbo.Colegiatura ON dbo.Colegiatura.idDNI = dbo.Persona.idDNI AND dbo.Colegiatura.Principal = 1
+            INNER JOIN dbo.Especialidad ON dbo.Especialidad.idEspecialidad = dbo.Colegiatura.idEspecialidad
+            LEFT OUTER JOIN dbo.ULTIMACuota ON dbo.ULTIMACuota.idDNI = dbo.Persona.idDNI
+            WHERE  dbo.Persona.idDNI = ? 
+            OR dbo.Persona.CIP = ? 
+            OR dbo.Persona.Apellidos LIKE CONCAT(?,'%')
+            OR dbo.Persona.Nombres LIKE CONCAT(?,'%')
+            ORDER BY dbo.Persona.Apellidos ASC
+            offset ? ROWS FETCH NEXT ? ROWS only");
+            $comandoHabilidad->bindParam(1, $search, PDO::PARAM_INT);
+            $comandoHabilidad->bindParam(2, $search, PDO::PARAM_STR);
+            $comandoHabilidad->bindParam(3, $search, PDO::PARAM_STR);
+            $comandoHabilidad->bindParam(4, $search, PDO::PARAM_STR);
+            $comandoHabilidad->bindParam(5, $posicionPagina, PDO::PARAM_INT);
+            $comandoHabilidad->bindParam(6, $filasPorPagina, PDO::PARAM_INT);
+            $comandoHabilidad->execute();
+            $count = 0;
+            while ($row = $comandoHabilidad->fetch()) {
+                $count++;
+                array_push($arrayHabilidad, array(
+                    'Id' => $count + $posicionPagina,
+                    'Cip' => $row['Cip'],
+                    'Dni' => $row['Dni'],
+                    'Ingeniero' => $row['Ingeniero'],
+                    'Condicion' => $row['Condicion'],
+                    'FechaColegiado' => $row['FechaColegiado'],
+                    'FechaUltimaCuota' => $row['FechaUltimaCuota'],
+                    'Deuda' => $row['Deuda'],
+                    'Habilidad' => $row['Habilidad']
+                ));
+            }
+
+            $comandoTotal = Database::getInstance()->getDb()->prepare("SELECT COUNT(*) FROM dbo.Persona
+             LEFT OUTER JOIN
+                  dbo.Colegiatura ON dbo.Colegiatura.idDNI = dbo.Persona.idDNI
+                  AND dbo.Colegiatura.Principal = 1
+                  INNER JOIN
+                  dbo.Especialidad ON dbo.Especialidad.idEspecialidad = dbo.Colegiatura.idEspecialidad
+                  LEFT OUTER JOIN
+                  dbo.ULTIMACuota ON dbo.ULTIMACuota.idDNI = dbo.Persona.idDNI
+                  WHERE dbo.Persona.idDNI = ? 
+                  or dbo.Persona.CIP = ? 
+                  or dbo.Persona.Apellidos like concat(?,'%')
+                  or dbo.Persona.Nombres like concat(?,'%')");
+            $comandoTotal->bindParam(1, $search, PDO::PARAM_INT);
+            $comandoTotal->bindParam(2, $search, PDO::PARAM_STR);
+            $comandoTotal->bindParam(3, $search, PDO::PARAM_STR);
+            $comandoTotal->bindParam(4, $search, PDO::PARAM_STR);
+            $comandoTotal->execute();
+            $resultTotal =  $comandoTotal->fetchColumn();
+
+            array_push($array, $arrayHabilidad, $resultTotal);
+            return $array;
+        } catch (Exception $ex) {
+            return $ex->getMessage();
+        }
+    }
+
     //Funciones Ruber
 
     public static function getCountConditionPerson()

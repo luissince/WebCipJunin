@@ -260,6 +260,23 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
                 "message" => $arrayPicture
             ));
         }
+    } else if ($_GET["type"] === 'habilidadIngeniero') {
+        $search = $_GET['search'];
+        $posicionPagina = $_GET['posicionPagina'];
+        $filasPorPagina = $_GET['filasPorPagina'];
+        $habilidad = PersonaAdo::getHabilidadIngeniero($search, intval($posicionPagina), intval($filasPorPagina));
+        if (is_array($habilidad)) {
+            echo json_encode(array(
+                "estado" => 1,
+                "habilidad" => $habilidad[0],
+                "total" => $habilidad[1]
+            ));
+        } else {
+            echo json_encode(array(
+                "estado" => 2,
+                "message" => $habilidad
+            ));
+        }
     }
 } else if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     if ($_POST["type"] == "update") {
