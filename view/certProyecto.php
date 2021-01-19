@@ -246,10 +246,10 @@ if (!isset($_SESSION['IdUsuario'])) {
                                 tbTable.empty();
                                 for (let ingresos of result.data) {
 
-                                    let btnAnular = '<button class="btn btn-danger btn-xs" onclick="anularIngreso(\'' + ingresos.idIngreso + '\',\'' + ingresos.dni + '\')">' +
-                                        '<i class="fa fa-ban"></i></br>Anular' +
-                                        '</button>';
-                                    let btnPdf = '<button class="btn btn-default btn-xs" onclick="openPdf(\'' + ingresos.idIngreso + '\')">' +
+                                    // let btnAnular = '<button class="btn btn-danger btn-xs" onclick="anularIngreso(\'' + ingresos.idIngreso + '\',\'' + ingresos.dni + '\')">' +
+                                    //     '<i class="fa fa-ban"></i></br>Anular' +
+                                    //     '</button>';
+                                    let btnPdf = '<button class="btn btn-danger btn-xs" onclick="openPdf(\'' + ingresos.idIngreso + '\')">' +
                                         '<i class="fa fa-file-pdf-o"></i></br>P.D.F' +
                                         '</button>';
 
@@ -257,7 +257,7 @@ if (!isset($_SESSION['IdUsuario'])) {
                                         '<td style="text-align: center;color: #2270D1;">' +
                                         '' + ingresos.id + '' +
                                         '</td>' +
-                                        '<td>' + btnAnular + ' ' + btnPdf + '</td>' +
+                                        '<td>' + btnPdf + '</td>' +
                                         '<td>' + ingresos.dni + '</br>' + ingresos.usuario + ' ' + ingresos.apellidos + '</td>' +
                                         '<td>' + ingresos.especialidad + '</td>' +
                                         '<td>' + ingresos.numCertificado + '</td>' +

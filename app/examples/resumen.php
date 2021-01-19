@@ -74,7 +74,7 @@ try {
         //COMO AGREGO LA FECH ACTUAL
         ->setFecResumen(new DateTime($currentDate))
         //->setCorrelativo($idCorrelativo)
-        ->setCorrelativo('2')
+        ->setCorrelativo('1')
         ->setCompany($company)
         ->setDetails([$detiail1]);
 

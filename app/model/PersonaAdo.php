@@ -159,9 +159,21 @@ class PersonaAdo
         try {
             $array = array();
             //trae informacion del usuario (por su dni)
-            $comandoPersona = Database::getInstance()->getDb()->prepare("SELECT p.idDNI, p.idUsuario, p.Nombres, p.Apellidos, p.Sexo, cast(p.FechaNac as date) as FechaNacimiento, 
-                                    p.EstadoCivil, p.FechaReg, p.RUC, p.CIP, p.Condicion, p.TEMP, p.RAZONSOCIAL
-                                    FROM Persona AS p  WHERE p.idDNI = ?");
+            $comandoPersona = Database::getInstance()->getDb()->prepare("SELECT 
+            p.idDNI, 
+            p.idUsuario,
+            p.Nombres, 
+            p.Apellidos, 
+            p.Sexo, 
+            cast(p.FechaNac as date) as FechaNacimiento, 
+            p.EstadoCivil, 
+            p.FechaReg, 
+            p.RUC, 
+            p.CIP, 
+            p.Condicion, 
+            p.TEMP, 
+            p.RAZONSOCIAL
+            FROM Persona AS p  WHERE p.idDNI = ?");
             $comandoPersona->bindParam(1, $idPersona, PDO::PARAM_STR);
             $comandoPersona->execute();
             $object = $comandoPersona->fetchObject();
@@ -178,6 +190,63 @@ class PersonaAdo
             }
 
             array_push($array, $object, $image);
+            return $array;
+        } catch (Exception $ex) {
+            return $ex->getMessage();
+        }
+    }
+
+    public static function getIdCobros($idPersona)
+    {
+        try {
+            $array = array();
+            //trae informacion del usuario (por su dni)
+            $comandoPersona = Database::getInstance()->getDb()->prepare("SELECT 
+            p.idDNI, 
+            p.idUsuario,
+            p.Nombres, 
+            p.Apellidos, 
+            p.Sexo, 
+            cast(p.FechaNac as date) as FechaNacimiento, 
+            p.EstadoCivil, 
+            p.FechaReg, 
+            p.RUC, 
+            p.CIP, 
+            p.Condicion, 
+            p.TEMP, 
+            p.RAZONSOCIAL
+            FROM Persona AS p  WHERE p.idDNI = ?");
+            $comandoPersona->bindParam(1, $idPersona, PDO::PARAM_STR);
+            $comandoPersona->execute();
+            $object = $comandoPersona->fetchObject();
+       
+            $cmdColegiatura = Database::getInstance()->getDb()->prepare("SELECT        
+            CAST(dbo.Colegiatura.FechaColegiado AS DATE) as FechaColegiado,
+            CAST(ISNULL(dbo.ULTIMACuota.FechaUltimaCuota,dbo.Colegiatura.FechaColegiado) AS DATE) AS UltimaCuota, 
+            CAST(DATEADD(MONTH,3,ISNULL(dbo.ULTIMACuota.FechaUltimaCuota,dbo.Colegiatura.FechaColegiado)) AS DATE) AS HabilitadoHasta     
+            FROM dbo.Persona
+            LEFT OUTER JOIN dbo.Colegiatura ON dbo.Colegiatura.idDNI = dbo.Persona.idDNI AND dbo.Colegiatura.Principal = 1
+            LEFT OUTER JOIN dbo.ULTIMACuota ON dbo.ULTIMACuota.idDNI = dbo.Persona.idDNI
+            WHERE dbo.Persona.idDNI = ? ");
+            $cmdColegiatura->bindParam(1, $idPersona, PDO::PARAM_STR);
+            $cmdColegiatura->execute(); 
+            $resultColegiatura = null;
+            if ($row = $cmdColegiatura->fetch()) {
+                $dateUltimaCuota = new DateTime($row['UltimaCuota']);
+                $dateHabilHasta = new DateTime($row['HabilitadoHasta']);
+                $resultColegiatura = (object)array("FechaColegiado"=>$row['FechaColegiado'], "UltimaCuota"=>$dateUltimaCuota->format("m/Y"),"HabilitadoHasta"=>$dateHabilHasta->format("m/Y"));
+            }               
+            
+            $cmdYears = Database::getInstance()->getDb()->prepare("SELECT 
+            datediff(year,c.FechaColegiado,getdate()) years
+			from Persona as p inner join Colegiatura as c
+			on p.idDNI = c.idDNI and c.Principal = 1
+            where p.idDNI = ?");
+            $cmdYears->bindParam(1, $idPersona, PDO::PARAM_STR);
+            $cmdYears->execute(); 
+            $resultYears =  $cmdYears->fetchColumn();
+
+            array_push($array, $object, $resultColegiatura, $resultYears);
             return $array;
         } catch (Exception $ex) {
             return $ex->getMessage();
@@ -1344,6 +1413,99 @@ class PersonaAdo
             return "eliminado";
         } catch (Exception $ex) {
             Database::getInstance()->getDb()->rollback();
+            return $ex->getMessage();
+        }
+    }
+
+    public static function getHabilidadIngeniero($opcion, $search, $tipoHabilidad, $posicionPagina, $filasPorPagina)
+    {
+        try {
+            $array = array();
+            $arrayHabilidad = array();
+            $comandoHabilidad = Database::getInstance()->getDb()->prepare("SELECT 
+            CASE CIP
+                WHEN 'T' THEN 'Tramite'
+                ELSE CIP END AS Cip, 
+            dbo.Persona.idDNI as Dni, dbo.Persona.Apellidos + ', ' + dbo.Persona.Nombres AS Ingeniero, 
+            CASE dbo.Persona.Condicion
+                WHEN 'T' THEN 'Transeunte'
+                WHEN 'F' THEN 'Fallecido'
+                WHEN 'R' THEN 'Retirado'
+                WHEN 'V' THEN 'Vitalicio'
+                ELSE 'Ordinario' END AS Condicion,
+            CAST(dbo.Colegiatura.FechaColegiado AS DATE)  AS FechaColegiado,
+            CAST(ISNULL(dbo.ULTIMACuota.FechaUltimaCuota,dbo.Colegiatura.FechaColegiado) AS DATE) AS FechaUltimaCuota,             
+            CASE
+                WHEN CAST (DATEDIFF(M,DATEADD(MONTH,3,ISNULL(dbo.ULTIMACuota.FechaUltimaCuota, dbo.Colegiatura.FechaColegiado)) , GETDATE()) AS INT) <=0 THEN 'Habilitado'
+                ELSE 'No Habilitado' END AS Habilidad,
+            CAST(DATEADD(MONTH,3,ISNULL(dbo.ULTIMACuota.FechaUltimaCuota,dbo.Colegiatura.FechaColegiado)) AS DATE) AS HabilitadoHasta           
+            FROM dbo.Persona
+            LEFT OUTER JOIN dbo.Colegiatura ON dbo.Colegiatura.idDNI = dbo.Persona.idDNI AND dbo.Colegiatura.Principal = 1
+            INNER JOIN dbo.Especialidad ON dbo.Especialidad.idEspecialidad = dbo.Colegiatura.idEspecialidad
+            LEFT OUTER JOIN dbo.ULTIMACuota ON dbo.ULTIMACuota.idDNI = dbo.Persona.idDNI
+            WHERE $opcion = 0
+            OR $opcion = 1 and dbo.Persona.idDNI = ? 
+            OR $opcion = 1 and dbo.Persona.CIP = ? 
+            OR $opcion = 1 and dbo.Persona.Apellidos LIKE CONCAT(?,'%')
+            OR $opcion = 1 and dbo.Persona.Nombres LIKE CONCAT(?,'%')
+            OR $opcion = 2 and $tipoHabilidad = 0
+            OR $opcion = 2 and $tipoHabilidad = 1 and CAST(DATEDIFF(M,DATEADD(MONTH,3,ISNULL(dbo.ULTIMACuota.FechaUltimaCuota, dbo.Colegiatura.FechaColegiado)) , GETDATE()) AS INT) <=0
+            OR $opcion = 2 and $tipoHabilidad = 2 and CAST(DATEDIFF(M,DATEADD(MONTH,3,ISNULL(dbo.ULTIMACuota.FechaUltimaCuota, dbo.Colegiatura.FechaColegiado)) , GETDATE()) AS INT) >0
+            ORDER BY dbo.Persona.Apellidos ASC
+            offset ? ROWS FETCH NEXT ? ROWS only");
+            $comandoHabilidad->bindParam(1, $search, PDO::PARAM_INT);
+            $comandoHabilidad->bindParam(2, $search, PDO::PARAM_STR);
+            $comandoHabilidad->bindParam(3, $search, PDO::PARAM_STR);
+            $comandoHabilidad->bindParam(4, $search, PDO::PARAM_STR);
+            $comandoHabilidad->bindParam(5, $posicionPagina, PDO::PARAM_INT);
+            $comandoHabilidad->bindParam(6, $filasPorPagina, PDO::PARAM_INT);
+            $comandoHabilidad->execute();
+            $count = 0;
+            while ($row = $comandoHabilidad->fetch()) {
+                $count++;
+                $dateFechaColegiado = new DateTime($row['FechaColegiado']);
+                $dateFechaUltimaCuota = new DateTime($row['FechaUltimaCuota']);
+                $dateHabilidadHasta = new DateTime($row['HabilitadoHasta']);
+                array_push($arrayHabilidad, array(
+                    'Id' => $count + $posicionPagina,
+                    'Cip' => $row['Cip'],
+                    'Dni' => $row['Dni'],
+                    'Ingeniero' => $row['Ingeniero'],
+                    'Condicion' => $row['Condicion'],
+                    'FechaColegiado' => $dateFechaColegiado->format("d/m/Y"),
+                    'FechaUltimaCuota' => $dateFechaUltimaCuota->format("m/Y"),
+                    'UltimaCuota' => $row['FechaUltimaCuota'],
+                    'Habilidad' => $row['Habilidad'],
+                    'HabilitadoHasta' =>  $dateHabilidadHasta->format("m/Y")
+                ));
+            }
+
+            $comandoTotal = Database::getInstance()->getDb()->prepare("SELECT COUNT(*) FROM dbo.Persona
+             LEFT OUTER JOIN
+                  dbo.Colegiatura ON dbo.Colegiatura.idDNI = dbo.Persona.idDNI
+                  AND dbo.Colegiatura.Principal = 1
+                  INNER JOIN
+                  dbo.Especialidad ON dbo.Especialidad.idEspecialidad = dbo.Colegiatura.idEspecialidad
+                  LEFT OUTER JOIN
+                  dbo.ULTIMACuota ON dbo.ULTIMACuota.idDNI = dbo.Persona.idDNI
+                  WHERE $opcion = 0
+                  or $opcion = 1 and dbo.Persona.idDNI = ? 
+                  or $opcion = 1 and dbo.Persona.CIP = ? 
+                  or $opcion = 1 and dbo.Persona.Apellidos like concat(?,'%')
+                  or $opcion = 1 and dbo.Persona.Nombres like concat(?,'%')
+                  or $opcion = 2 and $tipoHabilidad = 0
+                  or $opcion = 2 and $tipoHabilidad = 1 and CAST (DATEDIFF(M,DATEADD(MONTH,3,ISNULL(dbo.ULTIMACuota.FechaUltimaCuota, dbo.Colegiatura.FechaColegiado)) , GETDATE()) AS INT) <=0
+                  or $opcion = 2 and $tipoHabilidad = 2 and CAST(DATEDIFF(M,DATEADD(MONTH,3,ISNULL(dbo.ULTIMACuota.FechaUltimaCuota, dbo.Colegiatura.FechaColegiado)) , GETDATE()) AS INT) >0");
+            $comandoTotal->bindParam(1, $search, PDO::PARAM_INT);
+            $comandoTotal->bindParam(2, $search, PDO::PARAM_STR);
+            $comandoTotal->bindParam(3, $search, PDO::PARAM_STR);
+            $comandoTotal->bindParam(4, $search, PDO::PARAM_STR);
+            $comandoTotal->execute();
+            $resultTotal =  $comandoTotal->fetchColumn();
+
+            array_push($array, $arrayHabilidad, $resultTotal);
+            return $array;
+        } catch (Exception $ex) {
             return $ex->getMessage();
         }
     }

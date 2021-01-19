@@ -171,21 +171,23 @@ function CobroIngenieros() {
             url: "../app/controller/PersonaController.php",
             method: "GET",
             data: {
-                "type": "data",
+                "type": "datacobro",
                 "dni": idIngeniero
             },
             beforeSend: function() {
                 $('#mdIngenieros').modal('hide');
                 $("#tbHistorial").empty();
                 idDNI = 0;
+                cip = 0;
                 tipoColegiado = "";
-                tools.AlertInfo("Ingeniero", "En proceso de busqueda.", "toast-bottom-right");
+                tools.AlertInfo("Ingeniero", "En proceso de busqueda.");
                 $("#tbHistorial").append('<tr class="text-center"><td colspan="7"><img src="./images/spiner.gif"/><p>cargando información.</p></td></tr>');
             },
             success: function(data) {
                 if (data.estado === 1) {
                     $("#tbHistorial").empty();
                     idDNI = data.persona.idDNI;
+                    cip = data.persona.CIP;
                     tipoColegiado = data.persona.Condicion;
                     let Condicion = data.persona.Condicion ==
                         'T' ? 'Transeunte' :
@@ -195,35 +197,63 @@ function CobroIngenieros() {
                     $("#lblCipSeleccionado").html(data.persona.CIP);
                     $("#lblTipoIngenieroSeleccionado").html(Condicion);
                     $("#lblDocumentSeleccionado").html(data.persona.idDNI);
+
                     $("#lblDatosSeleccionado").html(data.persona.Apellidos + " " + data.persona.Nombres);
-                    $("#lblDireccionSeleccionado").html("");
+                    // $("#lblDireccionSeleccionado").html("");
+                    if (data.colegiatura != null) {
+                        $("#lblUltimoPago").html(data.colegiatura.UltimaCuota);
+                        $("#lblHabilHasta").html(data.colegiatura.HabilitadoHasta);
+                        $("#lblFechaColegiatura").html(data.colegiatura.FechaColegiado);
+                    }
+
+                    $("#lblYears").html(data.years + " años/" + Math.abs(data.years - 30))
+
+                    let porcentaje = (data.years * 100) / 30;
+                    if (data.years >= 30) {
+                        $("#lblProgress").removeClass()
+                        $("#lblProgress").addClass("progress-bar progress-bar-green");
+                        $("#lblProgress").css("width", "100%");
+                    } else {
+                        $("#lblProgress").removeClass()
+                        $("#lblProgress").addClass(porcentaje >= 0 && porcentaje <= 30 ? "progress-bar progress-bar-warning" : porcentaje > 30 && porcentaje <= 70 ? "progress-bar progress-bar-danger" : porcentaje > 70 && porcentaje < 100 ? "progress-bar progress-bar-info" : "progress-bar progress-bar-green");
+                        $("#lblProgress").css("width", porcentaje + "%");
+                    }
+
                     $("#txtIngenieroCertificado").val(data.persona.Apellidos + " " + data.persona.Nombres);
                     $("#txtIngenieroObra").val(data.persona.Apellidos + " " + data.persona.Nombres);
                     $("#txtIngenieroProyecto").val(data.persona.Apellidos + " " + data.persona.Nombres);
 
                     onSelectedHistorial(idDNI);
 
-                    tools.AlertSuccess("Ingeniero", "Los obtuvo los datos correctamente.", "toast-bottom-right");
+                    tools.AlertSuccess("Ingeniero", "Los obtuvo los datos correctamente.");
 
                 } else {
                     $("#tbHistorial").empty();
                     idDNI = 0;
+                    cip = 0;
                     tipoColegiado = "";
                     $("#lblCipSeleccionado").html("--");
                     $("#lblTipoIngenieroSeleccionado").html("--");
                     $("#lblDocumentSeleccionado").html("--");
                     $("#lblDatosSeleccionado").html("--");
-                    $("#lblDireccionSeleccionado").html("--");
+                    // $("#lblDireccionSeleccionado").html("--");
+                    $("#lblUltimoPago").html("--");
+                    $("#lblHabilHasta").html("--");
+                    $("#lblFechaColegiatura").html("--");
+                    $("#lblYears").html("0 años/0")
+                    $("#lblProgress").removeClass();
+                    $("#lblProgress").addClass("progress-bar");
+                    $("#lblProgress").css("width", "0%");
                     $("#txtIngenieroCertificado").val("");
                     $("#txtIngenieroObra").val("");
                     $("#txtIngenieroProyecto").val("");
 
-                    tools.AlertWarning("Ingeniero", "Se produjo un problema: " + data.message, "toast-bottom-right");
+                    tools.AlertWarning("Ingeniero", "Se produjo un problema: " + data.message);
                 }
             },
             error: function(error) {
                 $("#tbHistorial").empty();
-                tools.AlertError("Ingeniero", "Error en obtener los datos: " + error.responseText, "toast-bottom-right");
+                tools.AlertError("Ingeniero", "Error en obtener los datos: " + error.responseText);
             }
         });
     }

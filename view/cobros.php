@@ -888,24 +888,26 @@ if (!isset($_SESSION['IdUsuario'])) {
                                     </div>
                                     <div class="row">
                                         <div class="col-md-12">
-                                            <table class="table table-striped table-hover" style="border-width: 1px; border-style: dashed; border-color: #E31E25;">
-                                                <thead style="background-color: #FDB2B1;color: #B72928;">
-                                                    <th style="text-align: center;" width="5%">#</th>
-                                                    <th style="text-align: center;" width="10%">Recibo</th>
-                                                    <th style="text-align: center;" width="15%">Fecha de Cobro</th>
-                                                    <th style="text-align: center;" width="25%">Concepto</th>
-                                                    <th style="text-align: center;" width="15%">Monto</th>
-                                                    <th style="text-align: center;" width="30%">Observacion</th>
-                                                    <th style="text-align: center;" width="10%">Detalle</th>
-                                                </thead>
-                                                <tbody id="tbHistorial">
-                                                    <tr class="text-center">
-                                                        <td colspan="7">
-                                                            <p>No se ha seleccionado ningún ingeniero.</p>
-                                                        </td>
-                                                    </tr>
-                                                </tbody>
-                                            </table>
+                                            <div class="table-responsive">
+                                                <table class="table table-striped table-hover" style="border-width: 1px; border-style: dashed; border-color: #E31E25;">
+                                                    <thead style="background-color: #FDB2B1;color: #B72928;">
+                                                        <th style="text-align: center;" width="5%">#</th>
+                                                        <th style="text-align: center;" width="10%">Recibo</th>
+                                                        <th style="text-align: center;" width="15%">Fecha de Cobro</th>
+                                                        <th style="text-align: center;" width="25%">Concepto</th>
+                                                        <th style="text-align: center;" width="15%">Monto</th>
+                                                        <th style="text-align: center;" width="30%">Observacion</th>
+                                                        <th style="text-align: center;" width="10%">Detalle</th>
+                                                    </thead>
+                                                    <tbody id="tbHistorial">
+                                                        <tr class="text-center">
+                                                            <td colspan="7">
+                                                                <p>No se ha seleccionado ningún ingeniero.</p>
+                                                            </td>
+                                                        </tr>
+                                                    </tbody>
+                                                </table>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
@@ -969,17 +971,44 @@ if (!isset($_SESSION['IdUsuario'])) {
                                             </div>
                                         </div>
                                         <div class="col-md-12 text-left">
+                                            <div class="row">
+                                                <div class="col-md-6">
+                                                    <h5>Ultimo Pago</h5>
+                                                    <h5 class="text-primary description-header" id="lblUltimoPago">--</h5>
+                                                </div>
+                                                <div class="col-md-6">
+                                                    <h5>Hábil Hasta</h5>
+                                                    <h5 class="text-primary description-header" id="lblHabilHasta">--</h5>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-12 text-left">
                                             <h5>N° Documento</h5>
                                             <h5 id="lblDocumentSeleccionado">--</h5>
                                         </div>
                                         <div class="col-md-12 text-left">
                                             <h5>Ingeniero</h5>
-                                            <h5 id="lblDatosSeleccionado">--</h5>
+                                            <h4 id="lblDatosSeleccionado">--</h4>
                                         </div>
+
                                         <div class="col-md-12 text-left">
-                                            <h5>Dirección</h5>
-                                            <h5 id="lblDireccionSeleccionado">--</h5>
+                                            <h5>Fecha Colegiatura</h5>
+                                            <h5 id="lblFechaColegiatura">--</h5>
                                         </div>
+
+                                        <div class="col-md-12 ">
+                                            <div class="clearfix">
+                                                <span class="pull-left">30 AÑOS PARA VITALICO</span>
+                                                <span class="pull-right" id="lblYears">0 años/0</span>
+                                            </div>
+                                            <div class="progress xs">
+                                                <div class="progress-bar" style="width: 0%;" id="lblProgress"></div>
+                                            </div>
+                                            <!-- <h5>Fecha Colegiatura</h5>
+                                            progress-bar-green
+                                                    <h5 id="lblDireccionSeleccionado">--</h5> -->
+                                        </div>
+
                                     </div>
 
                                 </div>
@@ -1046,6 +1075,7 @@ if (!isset($_SESSION['IdUsuario'])) {
             let filasPorPagina = 10;
 
             let idDNI = 0;
+            let cip = 0;
             let tipoColegiado = "";
 
             let comprobantes = [];
@@ -1201,6 +1231,7 @@ if (!isset($_SESSION['IdUsuario'])) {
                 } else {
                     tools.ModalDialog("Cobros", "¿Está seguro de continuar?", function(value) {
                         if (value == true) {
+                            let cipupdate = cip;
                             $.ajax({
                                 url: "../app/controller/RegistrarIngresoController.php",
                                 method: "POST",
@@ -1231,7 +1262,6 @@ if (!isset($_SESSION['IdUsuario'])) {
                                     tools.ModalAlertInfo("Cobros", "Procesando petición..");
                                 },
                                 success: function(result) {
-
                                     if (result.estado === 1) {
                                         tools.ModalAlertSuccess("Cobros", result.mensaje);
                                         openPdfComprobante(result.idIngreso);
@@ -1239,7 +1269,9 @@ if (!isset($_SESSION['IdUsuario'])) {
                                         $("#btnCertificado").attr('aria-expanded', 'false');
                                         loadEmpresaPersona();
                                         loadComprobantes();
-
+                                        if (result.estadoCuotas == true) {
+                                            EnviarHabilidad(cipupdate, result.cuotasFin);
+                                        }
                                     } else {
                                         tools.ModalAlertWarning("Cobros", result.mensaje);
                                     }
@@ -1251,6 +1283,35 @@ if (!isset($_SESSION['IdUsuario'])) {
                         }
                     });
                 }
+            }
+
+            function EnviarHabilidad(cip, ultimopago) {
+                $.ajax({
+                    url: "http://cip-junin.org.pe/sistema/UpdateLastPago.php",
+                    method: "POST",
+                    dataType: "json",
+                    data: {
+                        "cip": cip,
+                        "UltimoPago": ultimopago
+                    },
+                    beforeSend: function() {
+                        tools.ModalAlertInfo("Cobros", "Actualizando su habilidad del Ingeniero...");
+                    },
+                    success: function(result) {
+                        if (result.estado == 1) {
+                            tools.ModalAlertSuccess("Cobros", result.mensaje);
+                        } else if (result.estado == 2) {
+                            tools.ModalAlertWarning("Cobros", result.mensaje);
+                        } else if (result.estado == 3) {
+                            tools.ModalAlertWarning("Cobros", result.mensaje);
+                        } else {
+                            tools.ModalAlertWarning("Cobros", result.mensaje);
+                        }
+                    },
+                    error: function(error) {
+                        tools.ModalAlertError("Cobros", "Error de conexión, actualize su habilidad desde el panel ingenieros/habilidad.");
+                    }
+                });
             }
 
             function openPdfComprobante(idIngreso) {
@@ -1383,11 +1444,19 @@ if (!isset($_SESSION['IdUsuario'])) {
                 $("#lblDocumentSeleccionado").html("--");
                 $("#lblEmpresaAFacturar").html("--");
                 $("#lblDatosSeleccionado").html("--");
-                $("#lblDireccionSeleccionado").html("--");
+                // $("#lblDireccionSeleccionado").html("--");
+                $("#lblUltimoPago").html("--");
+                $("#lblHabilHasta").html("--");
+                $("#lblFechaColegiatura").html("--");
+                $("#lblYears").html("0 años/0");
+                $("#lblProgress").removeClass();
+                $("#lblProgress").addClass("progress-bar");
+                $("#lblProgress").css("width", "0%");
                 $("#txtIngenieroCertificado").val("");
                 $("#txtIngenieroObra").val("");
                 $("#txtIngenieroProyecto").val("");
                 idDNI = 0;
+                cip = 0;
                 tipoColegiado = "";
                 cuotasEstate = false;
                 colegiaturaEstado = false;

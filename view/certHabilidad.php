@@ -165,7 +165,7 @@ if (!isset($_SESSION['IdUsuario'])) {
                     }
                 });
 
-                $("#fechaInicio").on("change", function() {
+                $("#fechaFinal").on("change", function() {
                     if (tools.validateDate($("#fechaInicio").val()) && tools.validateDate($("#fechaFinal").val())) {
                         if (!state) {
                             paginacion = 1;
@@ -246,18 +246,16 @@ if (!isset($_SESSION['IdUsuario'])) {
                             } else {
                                 for (let ingresos of result.data) {
 
-                                    let btnAnular = '<button class="btn btn-danger btn-xs" onclick="anularIngreso(\'' + ingresos.idIngreso + '\',\'' + ingresos.dni + '\')">' +
-                                        '<i class="fa fa-ban"></i></br>Anular' +
-                                        '</button>';
-                                    let btnPdf = '<button class="btn btn-default btn-xs" onclick="openPdf(\'' + ingresos.idIngreso + '\')">' +
+                                    // let btnAnular = '<button class="btn btn-danger btn-xs" onclick="anularIngreso(\'' + ingresos.idIngreso + '\',\'' + ingresos.dni + '\')">' +
+                                    //     '<i class="fa fa-ban"></i></br>Anular' +
+                                    //     '</button>';
+                                    let btnPdf = '<button class="btn btn-danger btn-xs" onclick="openPdf(\'' + ingresos.idIngreso + '\')">' +
                                         '<i class="fa fa-file-pdf-o"></i></br>P.D.F' +
                                         '</button>';
 
                                     tbTable.append('<tr>' +
-                                        '<td style="text-align: center;color: #2270D1;">' +
-                                        '' + ingresos.id + '' +
-                                        '</td>' +
-                                        '<td>' + btnAnular + ' ' + btnPdf + '</td>' +
+                                        '<td style="text-align: center;color: #2270D1;">' + ingresos.id + '</td>' +
+                                        '<td>' + btnPdf + '</td>' +
                                         '<td>' + ingresos.dni + '</br>' + ingresos.usuario + ' ' + ingresos.apellidos + '</td>' +
                                         '<td>' + ingresos.especialidad + '</td>' +
                                         '<td>' + ingresos.numCertificado + '</td>' +

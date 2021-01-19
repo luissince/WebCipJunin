@@ -389,7 +389,7 @@ class IngresosAdo
             $cmdIngreso->bindParam(6, $body["idUsuario"], PDO::PARAM_INT);
             $cmdIngreso->bindParam(7, $body["estado"], PDO::PARAM_STR);
             $cmdIngreso->execute();
- 
+
             $idIngreso = Database::getInstance()->getDb()->lastInsertId();
 
             if ($body["estadoCuotas"] == true) {
@@ -480,7 +480,7 @@ class IngresosAdo
             }
             Database::getInstance()->getDb()->commit();
 
-            array_push($array, "inserted", $idIngreso, $body["estadoCertificadoHabilidad"], $body["estadoCertificadoResidenciaObra"], $body["estadoCertificadoProyecto"]);
+            array_push($array, "inserted", $idIngreso, $body["estadoCertificadoHabilidad"], $body["estadoCertificadoResidenciaObra"], $body["estadoCertificadoProyecto"], $body["estadoCuotas"], $body["cuotasFin"]);
             return $array;
         } catch (PDOException $ex) {
             Database::getInstance()->getDb()->rollBack();
@@ -553,13 +553,13 @@ class IngresosAdo
                 $cmdDetalle->bindParam(1, $idIngreso, PDO::PARAM_INT);
                 $cmdDetalle->execute();
 
-                $cmdAnular = Database::getInstance()->getDb()->prepare("INSERT INTO Anulado(Tipo,idDocumento,idUsuario,Motivo,Fecha,Hora)VALUES('R',?,?,?,?,?)");
-                $cmdAnular->bindParam(1, $idIngreso, PDO::PARAM_INT);
-                $cmdAnular->bindParam(2, $idUsuario, PDO::PARAM_INT);
-                $cmdAnular->bindParam(3, $motivo, PDO::PARAM_STR);
-                $cmdAnular->bindParam(4, $fecha, PDO::PARAM_INT);
-                $cmdAnular->bindParam(5, $hora, PDO::PARAM_INT);
-                $cmdAnular->execute();
+                // $cmdAnular = Database::getInstance()->getDb()->prepare("INSERT INTO Anulado(Tipo,idDocumento,idUsuario,Motivo,Fecha,Hora)VALUES('R',?,?,?,?,?)");
+                // $cmdAnular->bindParam(1, $idIngreso, PDO::PARAM_INT);
+                // $cmdAnular->bindParam(2, $idUsuario, PDO::PARAM_INT);
+                // $cmdAnular->bindParam(3, $motivo, PDO::PARAM_STR);
+                // $cmdAnular->bindParam(4, $fecha, PDO::PARAM_INT);
+                // $cmdAnular->bindParam(5, $hora, PDO::PARAM_INT);
+                // $cmdAnular->execute();
 
                 Database::getInstance()->getDb()->commit();
                 return "deleted";
@@ -586,13 +586,13 @@ class IngresosAdo
                 $cmdDetalle->bindParam(1, $idIngreso, PDO::PARAM_INT);
                 $cmdDetalle->execute();
 
-                $cmdAnular = Database::getInstance()->getDb()->prepare("INSERT INTO Anulado(Tipo,idDocumento,idUsuario,Motivo,Fecha,Hora)VALUES('R',?,?,?,?,?)");
-                $cmdAnular->bindParam(1, $idIngreso, PDO::PARAM_INT);
-                $cmdAnular->bindParam(2, $idUsuario, PDO::PARAM_INT);
-                $cmdAnular->bindParam(3, $motivo, PDO::PARAM_STR);
-                $cmdAnular->bindParam(4, $fecha, PDO::PARAM_INT);
-                $cmdAnular->bindParam(5, $hora, PDO::PARAM_INT);
-                $cmdAnular->execute();
+                // $cmdAnular = Database::getInstance()->getDb()->prepare("INSERT INTO Anulado(Tipo,idDocumento,idUsuario,Motivo,Fecha,Hora)VALUES('R',?,?,?,?,?)");
+                // $cmdAnular->bindParam(1, $idIngreso, PDO::PARAM_INT);
+                // $cmdAnular->bindParam(2, $idUsuario, PDO::PARAM_INT);
+                // $cmdAnular->bindParam(3, $motivo, PDO::PARAM_STR);
+                // $cmdAnular->bindParam(4, $fecha, PDO::PARAM_INT);
+                // $cmdAnular->bindParam(5, $hora, PDO::PARAM_INT);
+                // $cmdAnular->execute();
 
                 Database::getInstance()->getDb()->commit();
                 return "deleted";
@@ -619,13 +619,13 @@ class IngresosAdo
                 $cmdDetalle->bindParam(1, $idIngreso, PDO::PARAM_INT);
                 $cmdDetalle->execute();
 
-                $cmdAnular = Database::getInstance()->getDb()->prepare("INSERT INTO Anulado(Tipo,idDocumento,idUsuario,Motivo,Fecha,Hora)VALUES('R',?,?,?,?,?)");
-                $cmdAnular->bindParam(1, $idIngreso, PDO::PARAM_INT);
-                $cmdAnular->bindParam(2, $idUsuario, PDO::PARAM_INT);
-                $cmdAnular->bindParam(3, $motivo, PDO::PARAM_STR);
-                $cmdAnular->bindParam(4, $fecha, PDO::PARAM_INT);
-                $cmdAnular->bindParam(5, $hora, PDO::PARAM_INT);
-                $cmdAnular->execute();
+                // $cmdAnular = Database::getInstance()->getDb()->prepare("INSERT INTO Anulado(Tipo,idDocumento,idUsuario,Motivo,Fecha,Hora)VALUES('R',?,?,?,?,?)");
+                // $cmdAnular->bindParam(1, $idIngreso, PDO::PARAM_INT);
+                // $cmdAnular->bindParam(2, $idUsuario, PDO::PARAM_INT);
+                // $cmdAnular->bindParam(3, $motivo, PDO::PARAM_STR);
+                // $cmdAnular->bindParam(4, $fecha, PDO::PARAM_INT);
+                // $cmdAnular->bindParam(5, $hora, PDO::PARAM_INT);
+                // $cmdAnular->execute();
 
                 Database::getInstance()->getDb()->commit();
                 return "deleted";
@@ -1089,8 +1089,80 @@ class IngresosAdo
             }
 
             return $arrayIngresos;
-        } catch (PDOException $ex) {
+        } catch (Exception $ex) {
             return $ex->getMessage();
+        }
+    }
+
+    public static function ReporteGeneralIngresosPorFechas($fechaInicio, $fechaFinal)
+    {
+        try {
+            $cmdDetalle = Database::getInstance()->getDb()->prepare("SELECT 
+            i.idIngreso,
+            isnull(a.Motivo,'') as MotivoAnulacion,
+            isnull(a.Fecha,'') as FechaAnulacion,
+            i.Serie,
+            i.NumRecibo,
+            convert(varchar, cast(i.Fecha as date), 103) as FechaPago,
+            i.Estado,
+            p.idDNI,
+            p.CIP,
+            p.Apellidos,
+            p.Nombres,
+            sum(d.Monto) as Total,
+            isnull(i.Xmlsunat,'') as Xmlsunat,
+            isnull(i.Xmldescripcion,'') as Xmldescripcion							
+            from Ingreso as i 
+                 inner join Persona as p on i.idDNI = p.idDNI
+                 inner join Detalle as d on d.idIngreso = i.idIngreso 
+                 inner join Concepto as c on d.idConcepto = c.idConcepto
+                 left join Anulado as a on a.idDocumento = i.idIngreso
+            where
+            cast(i.Fecha as date) between ? and ?
+            group by i.idIngreso,
+            i.Serie,
+            i.NumRecibo,
+            i.Fecha,
+            i.Estado,
+            p.idDNI,
+            p.CIP,
+            p.Apellidos,
+            p.Nombres,
+            i.Xmlsunat,
+            i.Xmldescripcion,
+            a.Motivo,
+            a.Fecha
+            order by CAST(i.Fecha as date) desc, i.NumRecibo desc");
+            $cmdDetalle->bindParam(1, $fechaInicio, PDO::PARAM_STR);
+            $cmdDetalle->bindParam(2, $fechaFinal, PDO::PARAM_STR);
+            $cmdDetalle->execute();
+
+            $arrayDetalle = array();
+            $count = 0;
+            while ($row = $cmdDetalle->fetch()) {
+                $count++;
+                array_push($arrayDetalle, array(
+                    "Id" => $count,
+                    "idIngreso" => $row["idIngreso"],
+                    "MotivoAnulacion" => $row["MotivoAnulacion"],
+                    "FechaAnulacion" => $row["FechaAnulacion"],
+                    "Serie" => $row["Serie"],
+                    "NumRecibo" => $row["NumRecibo"],
+                    "FechaPago" => $row["FechaPago"],
+                    "Estado" => $row["Estado"],
+                    "idDNI" => $row["idDNI"],
+                    "CIP" => $row["CIP"],
+                    "Apellidos" => $row["Apellidos"],
+                    "Nombres" => $row["Nombres"],
+                    "Total" => floatval($row["Total"]),
+                    "Xmlsunat" => $row["Xmlsunat"],
+                    "Xmldescripcion" => $row["Xmldescripcion"],
+                ));
+            }
+
+            return $arrayDetalle;
+        } catch (Exception $ex) {
+            return $ex;
         }
     }
 }

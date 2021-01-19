@@ -18,6 +18,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             "cerHabilidad" => $result[2],
             "cerObra" => $result[3],
             "cerProyecto" => $result[4],
+            "estadoCuotas" => $result[5],
+            "cuotasFin" => $result[6],
         ));
     }else{
         print json_encode(array(

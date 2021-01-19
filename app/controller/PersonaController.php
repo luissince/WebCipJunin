@@ -41,15 +41,30 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
                 "message" => $persona
             ));
         }
-    }else if($_GET["type"] === "historialpago"){
+    } else if ($_GET["type"] === "datacobro") {
+        $persona = PersonaAdo::getIdCobros($_GET["dni"]);
+        if (is_array($persona)) {
+            echo json_encode(array(
+                "estado" => 1,
+                "persona" => $persona[0],
+                "colegiatura" => $persona[1],
+                "years" => $persona[2],
+            ));
+        } else {
+            echo json_encode(array(
+                "estado" => 2,
+                "message" => $persona
+            ));
+        }
+    } else if ($_GET["type"] === "historialpago") {
         $posicionPagina = $_GET['posicionPagina'];
         $filasPorPagina = $_GET['filasPorPagina'];
-        $historial = PersonaAdo::getHistorialPagos($_GET["dni"],intval($posicionPagina), intval($filasPorPagina));
+        $historial = PersonaAdo::getHistorialPagos($_GET["dni"], intval($posicionPagina), intval($filasPorPagina));
         if (is_array($historial)) {
             echo json_encode(array(
                 "estado" => 1,
                 "historial" => $historial[0],
-                "total" =>$historial[1]
+                "total" => $historial[1]
             ));
         } else {
             echo json_encode(array(
@@ -260,6 +275,25 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
                 "message" => $arrayPicture
             ));
         }
+    } else if ($_GET["type"] === 'habilidadIngeniero') {
+        $search = $_GET['search'];
+        $opcion = $_GET['opcion'];
+        $tipoHabilidad = $_GET['tipoHabilidad'];
+        $posicionPagina = $_GET['posicionPagina'];
+        $filasPorPagina = $_GET['filasPorPagina'];
+        $habilidad = PersonaAdo::getHabilidadIngeniero($opcion, $search, intval($tipoHabilidad), intval($posicionPagina), intval($filasPorPagina));
+        if (is_array($habilidad)) {
+            echo json_encode(array(
+                "estado" => 1,
+                "habilidad" => $habilidad[0],
+                "total" => $habilidad[1]
+            ));
+        } else {
+            echo json_encode(array(
+                "estado" => 2,
+                "message" => $habilidad
+            ));
+        }
     }
 } else if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     if ($_POST["type"] == "update") {
@@ -310,7 +344,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
                 "estado" => 1,
                 "message" => "Se insertarron correctamente los datos"
             ));
-        }else if($result == "duplicate"){
+        } else if ($result == "duplicate") {
             echo json_encode(array(
                 "estado" => 3,
                 "message" => "El número de dni ya se encuentra registrado."
@@ -480,7 +514,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
         } else if ($result == "Duplicado") {
             echo json_encode(array(
                 "estado" => 3,
-                "message" =>  " La dirección: ". $correo["correo"] ." ya se encuentra registrado(a)"
+                "message" =>  " La dirección: " . $correo["correo"] . " ya se encuentra registrado(a)"
             ));
         } else {
             echo json_encode(array(

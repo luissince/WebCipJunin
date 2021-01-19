@@ -122,7 +122,7 @@ if (!isset($_SESSION['IdUsuario'])) {
                             <div class="form-group">
                                 <label>Generar excel</label>
                                 <div class="input-group">
-                                    <button class="btn btn-success" id="btnEnvioMasivo"><i class="fa fa-file-excel-o"></i> Excel por fechas</button>
+                                    <button class="btn btn-success" id="btnExcel"><i class="fa fa-file-excel-o"></i> Excel por fechas</button>
                                 </div>
                             </div>
                         </div>
@@ -262,6 +262,14 @@ if (!isset($_SESSION['IdUsuario'])) {
                         });
                     }
                     event.preventDefault();
+                });
+
+                $("#btnExcel").click(function() {
+                    if (tools.validateDate($("#fechaInicio").val()) && tools.validateDate($("#fechaFinal").val())) {
+                        if (!state) {
+                            openExcel($("#fechaInicio").val(),$("#fechaFinal").val());
+                        }
+                    }
                 });
 
                 $("#fechaInicio").on("change", function() {
@@ -529,6 +537,10 @@ if (!isset($_SESSION['IdUsuario'])) {
                         tools.ModalAlertError("Ventas", "Error en el momento de firmar el xml: " + error.responseText);
                     }
                 });
+            }
+
+            function openExcel(fechaInicio, fechaFinal) {
+                window.open("../app/sunat/excelventa.php?txtFechaInicial=" + fechaInicio + "&txtFechaFinal=" + fechaFinal, "_blank");
             }
 
             function openPdf(idIngreso) {
