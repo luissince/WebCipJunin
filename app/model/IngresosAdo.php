@@ -348,7 +348,7 @@ class IngresosAdo
         }
     }
 
-    private static function limitar_cadena($cadena, $limite, $sufijo)
+    public static function limitar_cadena($cadena, $limite, $sufijo)
     {
         if (strlen($cadena) > $limite) {
             return substr($cadena, 0, $limite) . $sufijo;
@@ -746,8 +746,8 @@ class IngresosAdo
             ch.idIngreso from CERTHabilidad AS ch
             INNER JOIN Ingreso AS i ON i.idIngreso = ch.idIngreso
             INNER JOIN Persona AS p On p.idDNI = i.idDNI
-            INNER JOIN Colegiatura AS c ON c.idDNI = p.idDNI
-			INNER JOIN Especialidad AS e On e.idEspecialidad = c.idEspecialidad
+            INNER JOIN Colegiatura AS c ON c.idDNI = p.idDNI AND  c.Principal = 1
+			INNER JOIN Especialidad AS e On e.idEspecialidad = ch.idColegiatura
             WHERE ch.idIngreso = ?");
             $cmdCertHabilidad->bindParam(1, $idIngreso, PDO::PARAM_INT);
             $cmdCertHabilidad->execute();

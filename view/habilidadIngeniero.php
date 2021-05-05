@@ -246,7 +246,7 @@ if (!isset($_SESSION['IdUsuario'])) {
                                     let ultimopago = habilidad.UltimaCuota;
                                     /* let ultimopago = (habilidad.FechaUltimaCuota).split('/').reverse().join('-');*/
 
-                                    let btnEnviar = '<button class="btn btn-warning btn-sm" onclick="actualizarHabilidad(\'' + habilidad.Cip + '\',\'' + ultimopago + '\')">' +
+                                    let btnEnviar = '<button class="btn btn-warning btn-sm" onclick="actualizarHabilidad(\'' + habilidad.Cip + '\',\''+habilidad.Apellidos+'\',\''+habilidad.Nombres+'\',\''+habilidad.CodigoCondicion+'\',\''+habilidad.Colegiatura+'\',\'' + ultimopago + '\',\''+habilidad.Especialidad+'\')">' +
                                         '<i class="fa  fa-history"></i> Actualizar' +
                                         '</button>';
 
@@ -254,7 +254,7 @@ if (!isset($_SESSION['IdUsuario'])) {
                                         '<td style="text-align: center;color: #2270D1;">' + habilidad.Id + '</td>' +
                                         '<td>' + habilidad.Cip + '</td>' +
                                         '<td>' + habilidad.Dni + '</td>' +
-                                        '<td>' + habilidad.Ingeniero + '</td>' +
+                                        '<td>' + habilidad.Apellidos+', '+ habilidad.Nombres+ '</td>' +
                                         '<td>' + habilidad.Condicion + '</td>' +
                                         '<td>' + habilidad.FechaColegiado + '</td>' +
                                         '<td>' + habilidad.FechaUltimaCuota + '</td>' +
@@ -312,17 +312,30 @@ if (!isset($_SESSION['IdUsuario'])) {
                 });
             }
 
-            function actualizarHabilidad(cip, ultimopago) {
+            function actualizarHabilidad(cip, apellidos, nombres, condicion, colegiatura,ultimopago,especialidad) {
+                // console.log(cip)
+                // console.log(apellidos)
+                // console.log(nombres)
+                // console.log(condicion)
+                // console.log(colegiatura)
+                // console.log(ultimopago)
+                // console.log(especialidad)
                 $.ajax({
                     url: "http://cip-junin.org.pe/sistema/UpdateLastPago.php",
                     method: "POST",
                     dataType: "json",
                     data: {
                         "cip": cip,
-                        "UltimoPago": ultimopago
+                        "apellidos": apellidos,
+                        "nombres": nombres,
+                        "condicion": condicion,
+                        "colegiatura": colegiatura,
+                        "ultimopago": ultimopago,
+                        "sede": "JUNIN",
+                        "especialidad": especialidad
                     },
                     beforeSend: function() {
-                        tools.ModalAlertInfo("Habilidad", "Actualizando su habilidad del Ingeniero...");
+                        tools.ModalAlertInfo("Habilidad", "Procesando petición...");
                     },
                     success: function(result) {
                         if (result.estado == 1) {

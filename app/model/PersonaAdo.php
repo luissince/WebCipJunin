@@ -219,7 +219,7 @@ class PersonaAdo
             $comandoPersona->bindParam(1, $idPersona, PDO::PARAM_STR);
             $comandoPersona->execute();
             $object = $comandoPersona->fetchObject();
-       
+
             $cmdColegiatura = Database::getInstance()->getDb()->prepare("SELECT        
             CAST(dbo.Colegiatura.FechaColegiado AS DATE) as FechaColegiado,
             CAST(ISNULL(dbo.ULTIMACuota.FechaUltimaCuota,dbo.Colegiatura.FechaColegiado) AS DATE) AS UltimaCuota, 
@@ -229,21 +229,21 @@ class PersonaAdo
             LEFT OUTER JOIN dbo.ULTIMACuota ON dbo.ULTIMACuota.idDNI = dbo.Persona.idDNI
             WHERE dbo.Persona.idDNI = ? ");
             $cmdColegiatura->bindParam(1, $idPersona, PDO::PARAM_STR);
-            $cmdColegiatura->execute(); 
+            $cmdColegiatura->execute();
             $resultColegiatura = null;
             if ($row = $cmdColegiatura->fetch()) {
                 $dateUltimaCuota = new DateTime($row['UltimaCuota']);
                 $dateHabilHasta = new DateTime($row['HabilitadoHasta']);
-                $resultColegiatura = (object)array("FechaColegiado"=>$row['FechaColegiado'], "UltimaCuota"=>$dateUltimaCuota->format("m/Y"),"HabilitadoHasta"=>$dateHabilHasta->format("m/Y"));
-            }               
-            
+                $resultColegiatura = (object)array("FechaColegiado" => $row['FechaColegiado'], "UltimaCuota" => $dateUltimaCuota->format("m/Y"), "HabilitadoHasta" => $dateHabilHasta->format("m/Y"));
+            }
+
             $cmdYears = Database::getInstance()->getDb()->prepare("SELECT 
             datediff(year,c.FechaColegiado,getdate()) years
 			from Persona as p inner join Colegiatura as c
 			on p.idDNI = c.idDNI and c.Principal = 1
             where p.idDNI = ?");
             $cmdYears->bindParam(1, $idPersona, PDO::PARAM_STR);
-            $cmdYears->execute(); 
+            $cmdYears->execute();
             $resultYears =  $cmdYears->fetchColumn();
 
             array_push($array, $object, $resultColegiatura, $resultYears);
@@ -1063,18 +1063,7 @@ class PersonaAdo
     {
         try {
             Database::getInstance()->getDb()->beginTransaction();
-
-            $cmdSelect = Database::getInstance()->getDb()->prepare('SELECT * FROM Colegiatura WHERE idColegiado <> ? AND UPPER(Resolucion) = UPPER(?)');
-            $cmdSelect->bindParam(1, $colegiatura['idcolegiatura'], PDO::PARAM_INT);
-            $cmdSelect->bindParam(2, $colegiatura['resolucion'], PDO::PARAM_STR);
-            $cmdSelect->execute();
-
-            if ($cmdSelect->fetch()) {
-                Database::getInstance()->getDb()->rollback();
-                return 'Duplicado';
-            } else {
-
-                $cmdUpdate = Database::getInstance()->getDb()->prepare("UPDATE Colegiatura SET
+            $cmdUpdate = Database::getInstance()->getDb()->prepare("UPDATE Colegiatura SET
                 idSede = ?,
                 idEspecialidad = ?, 
                 FechaColegiado = ?,
@@ -1085,20 +1074,19 @@ class PersonaAdo
                 Resolucion = ?
                 WHERE idColegiado = ?");
 
-                $cmdUpdate->bindParam(1, $colegiatura['sede'], PDO::PARAM_INT);
-                $cmdUpdate->bindParam(2, $colegiatura['especialidad'], PDO::PARAM_INT);
-                $cmdUpdate->bindParam(3, $colegiatura['fechacolegiacion'], PDO::PARAM_STR);
-                $cmdUpdate->bindParam(4, $colegiatura['universidadegreso'], PDO::PARAM_INT);
-                $cmdUpdate->bindParam(5, $colegiatura['fechaegreso'], PDO::PARAM_STR);
-                $cmdUpdate->bindParam(6, $colegiatura['universidadtitulacion'], PDO::PARAM_INT);
-                $cmdUpdate->bindParam(7, $colegiatura['fechatitulo'], PDO::PARAM_STR);
-                $cmdUpdate->bindParam(8, $colegiatura['resolucion'], PDO::PARAM_STR);
-                $cmdUpdate->bindParam(9, $colegiatura['idcolegiatura'], PDO::PARAM_INT);
+            $cmdUpdate->bindParam(1, $colegiatura['sede'], PDO::PARAM_INT);
+            $cmdUpdate->bindParam(2, $colegiatura['especialidad'], PDO::PARAM_INT);
+            $cmdUpdate->bindParam(3, $colegiatura['fechacolegiacion'], PDO::PARAM_STR);
+            $cmdUpdate->bindParam(4, $colegiatura['universidadegreso'], PDO::PARAM_INT);
+            $cmdUpdate->bindParam(5, $colegiatura['fechaegreso'], PDO::PARAM_STR);
+            $cmdUpdate->bindParam(6, $colegiatura['universidadtitulacion'], PDO::PARAM_INT);
+            $cmdUpdate->bindParam(7, $colegiatura['fechatitulo'], PDO::PARAM_STR);
+            $cmdUpdate->bindParam(8, $colegiatura['resolucion'], PDO::PARAM_STR);
+            $cmdUpdate->bindParam(9, $colegiatura['idcolegiatura'], PDO::PARAM_INT);
 
-                $cmdUpdate->execute();
-                Database::getInstance()->getDb()->commit();
-                return 'Actualizado';
-            }
+            $cmdUpdate->execute();
+            Database::getInstance()->getDb()->commit();
+            return 'Actualizado';
         } catch (Exception $ex) {
             Database::getInstance()->getDb()->rollback();
             return $ex->getMessage();
@@ -1426,13 +1414,17 @@ class PersonaAdo
             CASE CIP
                 WHEN 'T' THEN 'Tramite'
                 ELSE CIP END AS Cip, 
-            dbo.Persona.idDNI as Dni, dbo.Persona.Apellidos + ', ' + dbo.Persona.Nombres AS Ingeniero, 
+            dbo.Persona.idDNI as Dni, 
+            dbo.Persona.Apellidos ,
+            dbo.Persona.Nombres, 
+            dbo.Persona.Condicion as CodigoCondicion,
             CASE dbo.Persona.Condicion
                 WHEN 'T' THEN 'Transeunte'
                 WHEN 'F' THEN 'Fallecido'
                 WHEN 'R' THEN 'Retirado'
                 WHEN 'V' THEN 'Vitalicio'
                 ELSE 'Ordinario' END AS Condicion,
+            ISNULL(dbo.Especialidad.Especialidad,'NO ESPECIFICADO') AS Especialidad,
             CAST(dbo.Colegiatura.FechaColegiado AS DATE)  AS FechaColegiado,
             CAST(ISNULL(dbo.ULTIMACuota.FechaUltimaCuota,dbo.Colegiatura.FechaColegiado) AS DATE) AS FechaUltimaCuota,             
             CASE
@@ -1470,8 +1462,12 @@ class PersonaAdo
                     'Id' => $count + $posicionPagina,
                     'Cip' => $row['Cip'],
                     'Dni' => $row['Dni'],
-                    'Ingeniero' => $row['Ingeniero'],
+                    'Apellidos' => $row['Apellidos'],
+                    'Nombres' => $row['Nombres'],
                     'Condicion' => $row['Condicion'],
+                    'CodigoCondicion' => $row['CodigoCondicion'],
+                    'Especialidad' => $row['Especialidad'],
+                    'Colegiatura'=>$row['FechaColegiado'],
                     'FechaColegiado' => $dateFechaColegiado->format("d/m/Y"),
                     'FechaUltimaCuota' => $dateFechaUltimaCuota->format("m/Y"),
                     'UltimaCuota' => $row['FechaUltimaCuota'],

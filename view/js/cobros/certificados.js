@@ -606,9 +606,9 @@ function Certificado() {
     function clearIngresosCertificadoHabilidad() {
         $("#cbEspecialidadCertificado").val("")
         $("#txtCorrelativoCertificado").val("")
-        $("#txtAsuntoCertificado").val("")
-        $("#txtEntidadCertificado").val("")
-        $("#txtLugarCertificado").val("")
+        $("#txtAsuntoCertificado").val("EJERCICIO DE LA PROFESIÓN")
+        $("#txtEntidadCertificado").val("VARIOS")
+        $("#txtLugarCertificado").val("A NIVEL NACIONAL")
     }
 
     function clearIngresosCertificadoResidenciaObra() {

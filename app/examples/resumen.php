@@ -96,7 +96,7 @@ try {
 
     if (!$res->isSuccess()) {
         if ($res->getError()->getCode() === "0402") {
-            VentasADO::CambiarEstadoSunatResumen($idventa, $res->getError()->getCode(), $res->getError()->getMessage(), $hash);
+            IngresosAdo::CambiarEstadoSunatResumen($idventa, $res->getError()->getCode(), $res->getError()->getMessage(), $hash);
             echo json_encode(array(
                 "state" => false,
                 "code" => $res->getError()->getCode(),
@@ -123,17 +123,16 @@ try {
             $util->writeCdr($sum, $res->getCdrZip());
             // $util->showResponse($sum, $cdr);
             if (!$cdr->isAccepted()) {
-                VentasADO::CambiarEstadoSunatResumen($idventa, $cdr->getCode(), $cdr->getDescription(), $hash);
+                IngresosAdo::CambiarEstadoSunatResumen($idventa, $cdr->getCode(), $cdr->getDescription(), $hash);
                 echo json_encode(array(
                     "state" => $res->isSuccess(),
                     "accept" => $cdr->isAccepted(),
                     "id" => $cdr->getId(),
                     "code" => $cdr->getCode(),
                     "description" => $cdr->getDescription()
-                ));
-                Database::getInstance()->getDb()->commit();
+                ));                
             } else {
-                VentasADO::CambiarEstadoSunatResumen($idventa, $cdr->getCode(), $cdr->getDescription(), $hash);
+                IngresosAdo::CambiarEstadoSunatResumen($idventa, $cdr->getCode(), $cdr->getDescription(), $hash);
                 echo json_encode(array(
                     "state" => $res->isSuccess(),
                     "accept" => $cdr->isAccepted(),

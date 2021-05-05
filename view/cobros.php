@@ -416,7 +416,7 @@ if (!isset($_SESSION['IdUsuario'])) {
                                             <div class="col-md-6">
                                                 <div class="form-group">
                                                     <label for="txtCorrelativoCertificado">Certificado N°</label>
-                                                    <input type="text" class="form-control" id="txtCorrelativoCertificado" placeholder="0">
+                                                    <input type="text" class="form-control" id="txtCorrelativoCertificado"  placeholder="0">
                                                 </div>
                                             </div>
                                         </div>
@@ -424,13 +424,13 @@ if (!isset($_SESSION['IdUsuario'])) {
                                             <div class="col-md-6">
                                                 <div class="form-group">
                                                     <label for="txtAsuntoCertificado">Asunto</label>
-                                                    <input type="text" class="form-control" id="txtAsuntoCertificado" placeholder="Ingrese el asunto">
+                                                    <input type="text" class="form-control" id="txtAsuntoCertificado" value="EJERCICIO DE LA PROFESIÓN" placeholder="Ingrese el asunto">
                                                 </div>
                                             </div>
                                             <div class="col-md-6">
                                                 <div class="form-group">
                                                     <label for="txtEntidadCertificado">Entidad o Propietario</label>
-                                                    <input type="text" class="form-control" id="txtEntidadCertificado" placeholder="Ingrese la entidad o el propietario">
+                                                    <input type="text" class="form-control" id="txtEntidadCertificado" value="VARIOS"  placeholder="Ingrese la entidad o el propietario">
                                                 </div>
                                             </div>
                                         </div>
@@ -438,7 +438,7 @@ if (!isset($_SESSION['IdUsuario'])) {
                                             <div class="col-md-12">
                                                 <div class="form-group">
                                                     <label for="txtLugarCertificado">Lugar</label>
-                                                    <input type="text" class="form-control" id="txtLugarCertificado" placeholder="Ingrese el lugar">
+                                                    <input type="text" class="form-control" id="txtLugarCertificado" value="A NIVEL NACIONAL"  placeholder="Ingrese el lugar">
                                                 </div>
                                             </div>
                                         </div>

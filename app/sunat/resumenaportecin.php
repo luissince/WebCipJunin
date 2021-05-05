@@ -7,7 +7,7 @@ include_once('../model/IngresosAdo.php');
 
 $rutaImage = __DIR__ . "/../../view/images/logologin.png";
 $title = "RESUMEN DE APORTACIONES AL CIP NACIONAL";
-$fechaIngreso = "DE LA FECHA: 11/02/2020";
+$fechaIngreso = "DE LA FECHA: ". date("d-m-Y", strtotime($_GET["fechaInicial"]))." al ".date("d-m-Y", strtotime($_GET["fechaFinal"]));;
 $totalISSCIP = 0;
 $totalSOCIALCIP = 0;
 $resumen = IngresosAdo::ResumenAporteCIN($_GET["fechaInicial"],$_GET["fechaFinal"]);
