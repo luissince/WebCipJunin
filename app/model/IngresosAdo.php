@@ -35,11 +35,11 @@ class IngresosAdo
             WHERE
             $opcion = 0 AND i.Fecha BETWEEN ? AND ?
             OR
-            $opcion = 1 AND i.Serie = ?
+            $opcion = 1 AND i.Serie like CONCAT(?,'%')
             OR
-            $opcion = 1 AND i.NumRecibo = ?
+            $opcion = 1 AND i.NumRecibo like CONCAT(?,'%')
             OR
-            $opcion = 1 AND CONCAT(i.Serie,'-',i.NumRecibo) = ?
+            $opcion = 1 AND CONCAT(i.Serie,'-',i.NumRecibo) like CONCAT(?,'%')
             OR
             $opcion = 1 AND p.idDNI LIKE CONCAT(?,'%')
             OR
@@ -91,11 +91,11 @@ class IngresosAdo
             WHERE
             $opcion = 0 AND i.Fecha BETWEEN ? AND ?
             OR
-            $opcion = 1 AND i.Serie = ?
+            $opcion = 1 AND i.Serie like CONCAT(?,'%')
             OR
-            $opcion = 1 AND i.NumRecibo = ?
+            $opcion = 1 AND i.NumRecibo like CONCAT(?,'%')
             OR
-            $opcion = 1 AND CONCAT(i.Serie,'-',i.NumRecibo) = ?
+            $opcion = 1 AND CONCAT(i.Serie,'-',i.NumRecibo) like CONCAT(?,'%')
             OR
             $opcion = 1 AND p.idDNI LIKE CONCAT(?,'%')
             OR
@@ -1110,7 +1110,7 @@ class IngresosAdo
         }
     }
 
-    public static function ReporteGeneralIngresosPorFechas($fechaInicio, $fechaFinal)
+    public static function ReporteGeneralIngresosPorFechas($opcion,$fechaInicio, $fechaFinal, $comprobante)
     {
         try {
             $cmdDetalle = Database::getInstance()->getDb()->prepare("SELECT 
@@ -1134,7 +1134,9 @@ class IngresosAdo
                  inner join Concepto as c on d.idConcepto = c.idConcepto
                  left join Anulado as a on a.idDocumento = i.idIngreso
             where
-            cast(i.Fecha as date) between ? and ?
+            $opcion = 0 and cast(i.Fecha as date) between ? and ?
+            or
+            $opcion = 1 and i.TipoComprobante = ? and cast(i.Fecha as date) between ? and ? 
             group by i.idIngreso,
             i.Serie,
             i.NumRecibo,
@@ -1151,6 +1153,10 @@ class IngresosAdo
             order by CAST(i.Fecha as date) desc, i.NumRecibo desc");
             $cmdDetalle->bindParam(1, $fechaInicio, PDO::PARAM_STR);
             $cmdDetalle->bindParam(2, $fechaFinal, PDO::PARAM_STR);
+
+            $cmdDetalle->bindParam(3, $comprobante, PDO::PARAM_INT);
+            $cmdDetalle->bindParam(4, $fechaInicio, PDO::PARAM_STR);
+            $cmdDetalle->bindParam(5, $fechaFinal, PDO::PARAM_STR);
             $cmdDetalle->execute();
 
             $arrayDetalle = array();

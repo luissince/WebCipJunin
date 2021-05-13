@@ -1165,7 +1165,7 @@ if (!isset($_SESSION['IdUsuario'])) {
                         tools.AlertWarning("Ingenieros", "Ingrese un ruc en el campo.");
                         $("#txtRuc").focus();
                     } else if ($("#txtRuc").val().length !== 11) {
-                        tools.AlertWarning("Ingenieros", "El dni debe tener 11 caracteres.");
+                        tools.AlertWarning("Ingenieros", "El ruc debe tener 11 caracteres.");
                         $("#txtRuc").focus();
                     } else {
                         loadSunatApi($("#txtRuc").val());
@@ -1540,16 +1540,13 @@ if (!isset($_SESSION['IdUsuario'])) {
             }
 
             function crudEmpresa() {
-                if ($("#txtRuc").val() == '') {
+                if ($("#txtRuc").val().length != 11) {
                     $("#txtRuc").focus();
                     tools.AlertWarning("Empresa", "Ingrese un ruc válido")
                 } else if ($("#NombreComercial").val() == "") {
                     $("#NombreComercial").focus();
-                    tools.AlertWarning("Empresa", "Ingrese Nombre comercial")
-                } else if ($("#DireccionEmpresa").val() == "") {
-                    $("#DireccionEmpresa").focus();
-                    tools.AlertWarning("Empresa", "Ingrese dirección")
-                } else {
+                    tools.AlertWarning("Empresa", "Ingrese la razón social")
+                }  else {
                     tools.ModalDialog("Empresa", "¿Está seguro de continuar?", function(value) {
                         if (value == true) {
                             $.ajax({

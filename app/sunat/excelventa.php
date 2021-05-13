@@ -12,7 +12,7 @@ use PhpOffice\PhpSpreadsheet\Style\Fill;
 use PhpOffice\PhpSpreadsheet\Style\Alignment;
 use PhpOffice\PhpSpreadsheet\Style\Border;
 
-$ventas = IngresosAdo::ReporteGeneralIngresosPorFechas($_GET["txtFechaInicial"], $_GET["txtFechaFinal"]);
+$ventas = IngresosAdo::ReporteGeneralIngresosPorFechas(intval($_GET["opcion"]), $_GET["txtFechaInicial"], $_GET["txtFechaFinal"], intval($_GET["comprobante"]));
 
 if (!is_array($ventas)) {
     echo $ventas;

@@ -350,7 +350,7 @@ if (!isset($_SESSION['IdUsuario'])) {
                         loadTableIngresos(0, "", $("#fechaInicio").val(), $("#fechaFinal").val(), 0);
                         break;
                     case 1:
-                        loadTableIngresos(1, $("#buscar").val().trim(), "", "", );
+                        loadTableIngresos(1, $("#buscar").val().trim(), "", "", 0);
                         break;
                     case 2:
                         loadTableIngresos(2, "", "", "", $("#cbComprobantes").val());
@@ -595,7 +595,7 @@ if (!isset($_SESSION['IdUsuario'])) {
             }
 
             function openExcel(fechaInicio, fechaFinal) {
-                window.open("../app/sunat/excelventa.php?txtFechaInicial=" + fechaInicio + "&txtFechaFinal=" + fechaFinal, "_blank");
+                window.open("../app/sunat/excelventa.php?opcion=0&txtFechaInicial=" + fechaInicio + "&txtFechaFinal=" + fechaFinal + "&comprobante=0", "_blank");
             }
 
             function openPdf(idIngreso) {
