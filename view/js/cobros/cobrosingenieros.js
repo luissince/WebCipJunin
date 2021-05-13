@@ -132,9 +132,9 @@ function CobroIngenieros() {
                                 // '<td style=" font-size:12px;">' + value.Capitulo + '</td>' +
                                 '<td style=" font-size:14px;">' + value.Ingeniero + '</td>' +
                                 '<td style=" text-align: center;">' + value.Condicion + '</td>' +
-                                '<td style=" text-align: center;">' + value.FechaColegiado + '</td>' +
+                                '<td style=" text-align: center;" class="text-danger">' + value.FechaColegiado + '</td>' +
                                 '<td style=" text-align: center;"><b style="font-weight:bolder;font-family: Verdana,sans-serif; font-size:12px; color:#337ab7;">' + value.FechaUltimaCuota + '</b></td>' +
-                                '<td style="text-align: center;"><b style="font-weight:bolder;font-family: Verdana,sans-serif; font-size:12px; color:#337ab7;">' + (value.Deuda <= 0 ? '0 Cuotas' : value.Deuda + ' Cuota(s)') + '</b></td>' +
+                                '<td style="text-align: center;" class="text-success"><b style="font-weight:bolder;font-family: Verdana,sans-serif; font-size:12px;">' + (value.Deuda <= 0 ? '0 Cuotas' : value.Deuda + ' Cuota(s)') + '</b></td>' +
                                 '</tr>');
                         }
                         totalPaginacion = parseInt(Math.ceil((parseFloat(result.total) / parseInt(
@@ -203,7 +203,7 @@ function CobroIngenieros() {
                     if (data.colegiatura != null) {
                         $("#lblUltimoPago").html(data.colegiatura.UltimaCuota);
                         $("#lblHabilHasta").html(data.colegiatura.HabilitadoHasta);
-                        $("#lblFechaColegiatura").html(data.colegiatura.FechaColegiado);
+                        $("#lblFechaColegiatura").html(tools.getDateForma(data.colegiatura.FechaColegiado));
                     }
 
                     $("#lblYears").html(data.years + " años/" + Math.abs(data.years - 30))
