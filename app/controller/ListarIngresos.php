@@ -13,9 +13,10 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
         $buscar = $_GET['buscar'];
         $fechaInicio = $_GET['fechaInicio'];
         $fechaFinal = $_GET['fechaFinal'];
+        $comprobante = $_GET['comprobante'];
         $posicionPagina = $_GET['posicionPagina'];
         $filasPorPagina = $_GET['filasPorPagina'];
-        $result = IngresosAdo::ListarIngresos($opcion, $buscar, $fechaInicio, $fechaFinal, intval($posicionPagina), intval($filasPorPagina));
+        $result = IngresosAdo::ListarIngresos($opcion, $buscar, $fechaInicio, $fechaFinal, intval($comprobante),intval($posicionPagina), intval($filasPorPagina));
         if (is_array($result)) {
             print json_encode(array(
                 "estado" => 1,

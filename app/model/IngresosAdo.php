@@ -9,15 +9,25 @@ class IngresosAdo
     {
     }
 
-    public static function ListarIngresos($opcion, $buscar, $fechaInicio, $fechaFinal, $posicionPagina, $filasPorPagina)
+    public static function ListarIngresos($opcion, $buscar, $fechaInicio, $fechaFinal, $comprobante, $posicionPagina, $filasPorPagina)
     {
         try {
             $array = array();
             $arrayIngresos = array();
-            $cmdConcepto = Database::getInstance()->getDb()->prepare("SELECT i.idIngreso,
-            convert(VARCHAR, CAST(i.Fecha AS DATE),103) AS Fecha,i.Hora,i.Serie,i.NumRecibo,
-            i.Estado,p.CIP,p.idDNI,p.Apellidos,p.Nombres,sum(d.Monto) AS Total,
-            isnull(i.Xmlsunat,'') as Xmlsunat,isnull(i.Xmldescripcion,'') as Xmldescripcion
+            $cmdConcepto = Database::getInstance()->getDb()->prepare("SELECT 
+            i.idIngreso,
+            convert(VARCHAR, CAST(i.Fecha AS DATE),103) AS Fecha,
+            i.Hora,
+            i.Serie,
+            i.NumRecibo,
+            i.Estado,
+            p.CIP,
+            p.idDNI,
+            p.Apellidos,
+            p.Nombres,
+            sum(d.Monto) AS Total,
+            isnull(i.Xmlsunat,'') as Xmlsunat,
+            isnull(i.Xmldescripcion,'') as Xmldescripcion
             FROM Ingreso AS i INNER JOIN Persona AS p
             ON i.idDNI = p.idDNI
             INNER JOIN Detalle AS d 
@@ -25,17 +35,19 @@ class IngresosAdo
             WHERE
             $opcion = 0 AND i.Fecha BETWEEN ? AND ?
             OR
-            ($opcion = 1 AND i.Serie LIKE CONCAT(?,'%'))
+            $opcion = 1 AND i.Serie = ?
             OR
-            ($opcion = 1 AND i.NumRecibo LIKE CONCAT(?,'%'))
+            $opcion = 1 AND i.NumRecibo = ?
             OR
-            ($opcion = 1 AND CONCAT(i.Serie,'-',i.NumRecibo) LIKE CONCAT(?,'%'))
+            $opcion = 1 AND CONCAT(i.Serie,'-',i.NumRecibo) = ?
             OR
-            ($opcion = 1 AND p.idDNI LIKE CONCAT(?,'%'))
+            $opcion = 1 AND p.idDNI LIKE CONCAT(?,'%')
             OR
-            ($opcion = 1 AND p.Apellidos LIKE CONCAT(?,'%'))
+            $opcion = 1 AND p.Apellidos LIKE CONCAT(?,'%')
             OR
-            ($opcion = 1 AND p.Nombres LIKE CONCAT(?,'%'))
+            $opcion = 1 AND p.Nombres LIKE CONCAT(?,'%')
+            OR
+            $opcion = 2 AND i.TipoComprobante = ?
             GROUP BY i.idIngreso,i.Fecha,i.Hora,i.Serie,i.NumRecibo,i.Estado,
             p.CIP,p.idDNI,p.Apellidos,p.Nombres,i.Xmlsunat,i.Xmldescripcion
             ORDER BY i.Fecha DESC,i.Hora DESC
@@ -48,8 +60,9 @@ class IngresosAdo
             $cmdConcepto->bindParam(6, $buscar, PDO::PARAM_STR);
             $cmdConcepto->bindParam(7, $buscar, PDO::PARAM_STR);
             $cmdConcepto->bindParam(8, $buscar, PDO::PARAM_STR);
-            $cmdConcepto->bindParam(9, $posicionPagina, PDO::PARAM_INT);
-            $cmdConcepto->bindParam(10, $filasPorPagina, PDO::PARAM_INT);
+            $cmdConcepto->bindParam(9, $comprobante, PDO::PARAM_INT);
+            $cmdConcepto->bindParam(10, $posicionPagina, PDO::PARAM_INT);
+            $cmdConcepto->bindParam(11, $filasPorPagina, PDO::PARAM_INT);
             $cmdConcepto->execute();
             $count = 0;
 
@@ -78,17 +91,19 @@ class IngresosAdo
             WHERE
             $opcion = 0 AND i.Fecha BETWEEN ? AND ?
             OR
-            ($opcion = 1 AND i.Serie LIKE CONCAT(?,'%'))
+            $opcion = 1 AND i.Serie = ?
             OR
-            ($opcion = 1 AND i.NumRecibo LIKE CONCAT(?,'%'))
+            $opcion = 1 AND i.NumRecibo = ?
             OR
-            ($opcion = 1 AND CONCAT(i.Serie,'-',i.NumRecibo) LIKE CONCAT(?,'%'))
+            $opcion = 1 AND CONCAT(i.Serie,'-',i.NumRecibo) = ?
             OR
-            ($opcion = 1 AND p.idDNI LIKE CONCAT(?,'%'))
+            $opcion = 1 AND p.idDNI LIKE CONCAT(?,'%')
             OR
-            ($opcion = 1 AND p.Apellidos LIKE CONCAT(?,'%'))
+            $opcion = 1 AND p.Apellidos LIKE CONCAT(?,'%')
             OR
-            ($opcion = 1 AND p.Nombres LIKE CONCAT(?,'%'))");
+            $opcion = 1 AND p.Nombres LIKE CONCAT(?,'%')
+            OR
+            $opcion = 2 AND i.TipoComprobante = ?");
             $comandoTotal->bindParam(1, $fechaInicio, PDO::PARAM_STR);
             $comandoTotal->bindParam(2, $fechaFinal, PDO::PARAM_STR);
             $comandoTotal->bindParam(3, $buscar, PDO::PARAM_STR);
@@ -97,6 +112,7 @@ class IngresosAdo
             $comandoTotal->bindParam(6, $buscar, PDO::PARAM_STR);
             $comandoTotal->bindParam(7, $buscar, PDO::PARAM_STR);
             $comandoTotal->bindParam(8, $buscar, PDO::PARAM_STR);
+            $comandoTotal->bindParam(9, $comprobante, PDO::PARAM_INT);
             $comandoTotal->execute();
             $resultTotal =  $comandoTotal->fetchColumn();
 

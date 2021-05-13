@@ -103,12 +103,16 @@ if (!isset($_SESSION['IdUsuario'])) {
 
                     <div class="row">
                         <div class="col-md-3 col-sm-12 col-xs-12">
-                            <label>Fecha de inicio:</label>
-                            <input type="date" class="form-control pull-right" id="fechaInicio">
+                            <div class="form-group">
+                                <label>Fecha de inicio:</label>
+                                <input type="date" class="form-control pull-right" id="fechaInicio">
+                            </div>
                         </div>
                         <div class="col-md-3 col-sm-12 col-xs-12">
-                            <label>Fecha de fin:</label>
-                            <input type="date" class="form-control pull-right" id="fechaFinal">
+                            <div class="form-group">
+                                <label>Fecha de fin:</label>
+                                <input type="date" class="form-control pull-right" id="fechaFinal">
+                            </div>
                         </div>
                         <div class="col-md-3 col-sm-12 col-xs-12">
                             <div class="form-group">
@@ -130,10 +134,20 @@ if (!isset($_SESSION['IdUsuario'])) {
 
                     <div class="row">
                         <div class="col-md-6 col-sm-12 col-xs-12">
-                            <label>Filtrar comprobantes por serie, numeración o cliente</label>
-                            <input type="search" id="buscar" class="form-control" placeholder="Escribe para filtrar automaticamente" aria-describedby="search" value="">
+                            <div class="form-group">
+                                <label>Filtrar por serie, numeración o cliente(Presione Enter)</label>
+                                <input type="search" id="buscar" class="form-control" placeholder="Escribe para filtrar automaticamente" aria-describedby="search" value="">
+                            </div>
                         </div>
-                        <div class="col-md-6 col-sm-12 col-xs-12">
+                        <div class="col-md-3 col-sm-12 col-xs-12">
+                            <div class="form-group">
+                                <label>Comprobantes</label>
+                                <select class="form-control" id="cbComprobantes">
+                                    <option value="">- Seleccione -</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="col-md-3 col-sm-12 col-xs-12">
                             <div class="form-group">
                                 <label>Opción</label>
                                 <div class="input-group">
@@ -267,7 +281,7 @@ if (!isset($_SESSION['IdUsuario'])) {
                 $("#btnExcel").click(function() {
                     if (tools.validateDate($("#fechaInicio").val()) && tools.validateDate($("#fechaFinal").val())) {
                         if (!state) {
-                            openExcel($("#fechaInicio").val(),$("#fechaFinal").val());
+                            openExcel($("#fechaInicio").val(), $("#fechaFinal").val());
                         }
                     }
                 });
@@ -276,7 +290,7 @@ if (!isset($_SESSION['IdUsuario'])) {
                     if (tools.validateDate($("#fechaInicio").val()) && tools.validateDate($("#fechaFinal").val())) {
                         if (!state) {
                             paginacion = 1;
-                            loadTableIngresos(0, "", $("#fechaInicio").val(), $("#fechaFinal").val());
+                            loadTableIngresos(0, "", $("#fechaInicio").val(), $("#fechaFinal").val(), 0);
                             opcion = 0;
                         }
                     }
@@ -286,18 +300,20 @@ if (!isset($_SESSION['IdUsuario'])) {
                     if (tools.validateDate($("#fechaInicio").val()) && tools.validateDate($("#fechaFinal").val())) {
                         if (!state) {
                             paginacion = 1;
-                            loadTableIngresos(0, "", $("#fechaInicio").val(), $("#fechaFinal").val());
+                            loadTableIngresos(0, "", $("#fechaInicio").val(), $("#fechaFinal").val(), 0);
                             opcion = 0;
                         }
                     }
                 });
 
-                $("#buscar").keyup(function() {
-                    if ($("#buscar").val().trim() != '') {
-                        if (!state) {
-                            paginacion = 1;
-                            loadTableIngresos(1, $("#buscar").val().trim(), "", "");
-                            opcion = 1;
+                $("#buscar").keyup(function(event) {
+                    if (event.keyCode == 13) {
+                        if ($("#buscar").val().trim() != '') {
+                            if (!state) {
+                                paginacion = 1;
+                                loadTableIngresos(1, $("#buscar").val().trim(), "", "", 0);
+                                opcion = 1;
+                            }
                         }
                     }
                 });
@@ -313,6 +329,17 @@ if (!isset($_SESSION['IdUsuario'])) {
                     event.preventDefault();
                 });
 
+                $("#cbComprobantes").change(function() {
+                    if ($("#cbComprobantes").val() != '') {
+                        if (!state) {
+                            paginacion = 1;
+                            loadTableIngresos(2, "", "", "", $("#cbComprobantes").val());
+                            opcion = 2;
+                        }
+                    }
+                });
+
+                loadComprobantes();
                 loadInitIngresos();
 
             });
@@ -320,10 +347,13 @@ if (!isset($_SESSION['IdUsuario'])) {
             function onEventPaginacion() {
                 switch (opcion) {
                     case 0:
-                        loadTableIngresos(0, "", $("#fechaInicio").val(), $("#fechaFinal").val());
+                        loadTableIngresos(0, "", $("#fechaInicio").val(), $("#fechaFinal").val(), 0);
                         break;
                     case 1:
-                        loadTableIngresos(1, $("#buscar").val().trim(), "", "");
+                        loadTableIngresos(1, $("#buscar").val().trim(), "", "", );
+                        break;
+                    case 2:
+                        loadTableIngresos(2, "", "", "", $("#cbComprobantes").val());
                         break;
                 }
             }
@@ -332,13 +362,13 @@ if (!isset($_SESSION['IdUsuario'])) {
                 if (tools.validateDate($("#fechaInicio").val()) && tools.validateDate($("#fechaFinal").val())) {
                     if (!state) {
                         paginacion = 1;
-                        loadTableIngresos(0, "", $("#fechaInicio").val(), $("#fechaFinal").val());
+                        loadTableIngresos(0, "", $("#fechaInicio").val(), $("#fechaFinal").val(), 0);
                         opcion = 0;
                     }
                 }
             }
 
-            function loadTableIngresos(opcion, buscar, fechaInicio, fechaFinal) {
+            function loadTableIngresos(opcion, buscar, fechaInicio, fechaFinal, comprobante) {
                 $.ajax({
                     url: "../app/controller/ListarIngresos.php",
                     method: "GET",
@@ -348,6 +378,7 @@ if (!isset($_SESSION['IdUsuario'])) {
                         "buscar": buscar,
                         "fechaInicio": fechaInicio,
                         "fechaFinal": fechaFinal,
+                        "comprobante": comprobante,
                         "posicionPagina": ((paginacion - 1) * filasPorPagina),
                         "filasPorPagina": filasPorPagina
                     },
@@ -535,6 +566,30 @@ if (!isset($_SESSION['IdUsuario'])) {
                     },
                     error: function(error) {
                         tools.ModalAlertError("Ventas", "Error en el momento de firmar el xml: " + error.responseText);
+                    }
+                });
+            }
+
+            function loadComprobantes() {
+                $.ajax({
+                    url: "../app/controller/ComprobanteController.php",
+                    method: "GET",
+                    data: {
+                        "type": "comprobante"
+                    },
+                    beforeSend: function() {
+                        $("#cbComprobantes").empty();
+                        $("#cbComprobantes").append('<option value="">- Seleccione -</option>');
+                    },
+                    success: function(result) {
+                        if (result.estado == 1) {
+                            for (let value of result.data) {
+                                $("#cbComprobantes").append('<option value="' + value.IdTipoComprobante + '">' + value.Nombre + '</option>');
+                            }
+                        }
+                    },
+                    error: function(error) {
+
                     }
                 });
             }
