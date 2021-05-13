@@ -22,214 +22,226 @@ if (!isset($_SESSION['IdUsuario'])) {
             <!-- start menu -->
             <?php include('./layout/menu.php') ?>
             <!-- end menu -->
+
+            <!-- modal nuevo ingeniero  -->
+            <div class="row">
+                <div class="modal fade" id="confirmar">
+                    <div class="modal-dialog">
+                        <div class="modal-content">
+                            <div class="box box-default">
+                                <div class="box-body">
+                                    <div class="modal-header">
+                                        <button type="button" class="close" id="btnCloseIngeniero">
+                                            <i class="fa fa-close"></i>
+                                        </button>
+                                        <h4 class="modal-title">
+                                            <i class="fa fa-user-plus">
+                                            </i> Registrar Ingeniero
+                                        </h4>
+                                    </div>
+                                    <div class="modal-body">
+                                        <div class="row">
+                                            <div class="col-md-12 col-sm-12 col-xs-12">
+                                                <label for="dni">DNI: <i class="fa fa-fw fa-asterisk text-danger"></i></label>
+                                                <div class="form-group">
+                                                    <div class="input-group">
+                                                        <div class="input-group-btn">
+                                                            <button type="button" id="btnReniec" class="btn btn-default btn-flat"><img src="./images/reniec.png" width="16" height="16" /></button>
+                                                        </div>
+                                                        <input id="dni" type="text" name="Dni" class="form-control" placeholder="DNI" required="" minlength="8">
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-md-6">
+                                                <div class="form-group">
+                                                    <label for="Nombres">Nombres: <i class="fa fa-fw fa-asterisk text-danger"></i></label>
+                                                    <input id="Nombres" type="text" name="Nombres" class="form-control" placeholder="Nombres" required="">
+                                                </div>
+                                            </div>
+                                            <div class="col-md-6">
+                                                <div class="form-group">
+                                                    <label for="Apellidos">Apellidos: <i class="fa fa-fw fa-asterisk text-danger"></i></label>
+                                                    <input id="Apellidos" type="text" name="Apellidos" class="form-control" placeholder="Apellidos" required="">
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-md-4">
+                                                <div class="form-group">
+                                                    <label for="Genero">Genero: <i class="fa fa-fw fa-asterisk text-danger"></i></label>
+                                                    <select id="Genero" class="form-control">
+                                                        <option value="M">Maculino</option>
+                                                        <option value="F">Femenino</option>
+                                                    </select>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-4">
+                                                <div class="form-group">
+                                                    <label for="Nacimiento">Nacimiento: <i class="fa fa-fw fa-asterisk text-danger"></i></label>
+                                                    <input id="Nacimiento" type="date" name="Nacimiento" class="form-control" required="">
+                                                </div>
+                                            </div>
+                                            <div class="col-md-4">
+                                                <div class="form-group">
+                                                    <label for="Estado_civil">Estado civil: <i class="fa fa-fw fa-asterisk text-danger"></i></label>
+                                                    <select id="Estado_civil" class="form-control">
+                                                        <option value="S">Soltero/a</option>
+                                                        <option value="C">Casado/a</option>
+                                                        <option value="V">Viudo/a</option>
+                                                        <option value="D">Divorciado/a</option>
+                                                    </select>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div class="row">
+                                            <div class="col-md-6">
+                                                <div class="form-group">
+                                                    <label for="Ruc">Dirección Principal:</label>
+                                                    <input id="Ruc" type="text" name="Ruc" class="form-control" placeholder="Dirección de viviendan principal" required="">
+                                                </div>
+                                            </div>
+                                            <div class="col-md-6">
+                                                <div class="form-group">
+                                                    <label for="Razon_social">Télefono/Celular Prinpal:</label>
+                                                    <input id="Razon_social" type="text" name="Razon_social" class="form-control" placeholder="N° de teléfono o celular principal" required="">
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div class="row">
+                                            <div class="col-md-5">
+                                                <div class="form-group">
+                                                    <label for="Codigo">Codigo CIP: <i class="fa fa-fw fa-asterisk text-danger"></i></label>
+                                                    <input id="Codigo" type="number" name="Codigo" class="form-control" placeholder="Codigo" required="" disabled>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-2">
+                                                <div class="form-group">
+                                                    <label for="Condición">Nuevo </label>
+                                                    <div class="checkbox">
+                                                        <label>
+                                                            <input type="checkbox" id="cbTramite" checked> Tramite
+                                                        </label>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-5">
+                                                <div class="form-group">
+                                                    <label for="Condición">Condición: <i class="fa fa-fw fa-asterisk text-danger"></i></label>
+                                                    <select id="Condicion" class="form-control">
+                                                        <option value="O">ORDINARIO</option>
+                                                        <option value="T">TRANSEUNTE</option>
+                                                        <option value="F">FALLECIDO</option>
+                                                        <option value="R">RETIRADO</option>
+                                                        <option value="V">VITALICIO</option>
+                                                    </select>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        </form>
+                                    </div>
+                                    <div class="modal-footer">
+                                        <p class="text-left text-danger">Todos los campos marcados con <i class="fa fa-fw fa-asterisk text-danger"></i> son obligatorios</p>
+                                        <button type="submit" class="btn btn-danger" id="btnAceptarIngeniero">
+                                            <i class="fa fa-check"></i> Aceptar</button>
+                                        <button type="button" class="btn btn-primary" id="btnCancelarIngeniero">
+                                            <i class="fa fa-remove"></i> Cancelar</button>
+                                    </div>
+                                </div>
+                                <div id="divLoad">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- end modal new enginner -->
+
+            <!-- modal historial de un ingeniero -->
+            <div class="row">
+                <div class="modal fade" id="mostrarHistorial" data-backdrop="static">
+                    <div class="modal-dialog modal-lg">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <button type="button" class="close" data-dismiss="modal">
+                                    <i class="fa fa-close"></i>
+                                </button>
+                                <h4 class="modal-title">
+                                    <i class="fa fa-group">
+                                    </i> Historial de Pagos
+                                </h4>
+                            </div>
+                            <div class="modal-body">
+                                <div class="row">
+                                    <div class="col-md-4 col-sm-12 col-xs-12">
+                                        <div class="form-group">
+                                            <button class="btn btn-danger" id="btnIzquierdaHistorial">
+                                                <i class="fa fa-toggle-left"></i>
+                                            </button>
+                                            <span id="lblPaginaActualHistorial" class="font-weight-bold margin">0</span>
+                                            <span class="margin">a</span>
+                                            <span id="lblPaginSiguienteHistorial" class="font-weight-bold margin">0</span>
+                                            <button class="btn btn-danger" id="btnDerechaHistorial">
+                                                <i class="fa fa-toggle-right"></i>
+                                            </button>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6 col-sm-12 col-xs-12">
+                                        <div class="form-group">
+                                            <div class="input-group col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                                                <input type="search" class="form-control" aria-describedby="search">
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-2 col-sm-12 col-xs-12">
+                                        <div class="form-group">
+                                            <button id="btnBuscarIngeniero" class="btn btn-default">
+                                                <i class="fa fa-search"></i> Buscar
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <div class="table-responsive">
+                                            <table class="table table-striped table-hover table-sm">
+                                                <thead>
+                                                    <tr>
+                                                        <th>#</th>
+                                                        <th>Recibo</th>
+                                                        <th>Fecha</th>
+                                                        <th>Concepto</th>
+                                                        <th>Monto</th>
+                                                        <th>Observación</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody id="tbHistorial">
+
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-primary" data-dismiss="modal">
+                                    <i class="fa fa-remove"></i> Cerrar</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!--end modal history enginner  -->
+
             <!-- Content Wrapper. Contains page content -->
             <div class="content-wrapper" style="background-color: #FFFFFF;">
                 <!-- Main content -->
                 <section class="content-header">
                     <h3 class="no-margin">Ingenieros <small> Lista </small> </h3>
                 </section>
-
-                <!-- modal nuevo ingeniero  -->
-                <div class="row">
-                    <div class="modal fade" id="confirmar">
-                        <div class="modal-dialog">
-                            <div class="modal-content">
-                                <div class="modal-header">
-                                    <button type="button" class="close" id="btnCloseIngeniero">
-                                        <i class="fa fa-close"></i>
-                                    </button>
-                                    <h4 class="modal-title">
-                                        <i class="fa fa-user-plus">
-                                        </i> Registrar Ingeniero
-                                    </h4>
-                                </div>
-                                <div class="modal-body">
-                                    <div class="row">
-                                        <div class="col-md-12">
-                                            <div class="form-group">
-                                                <label for="dni">DNI: <i class="fa fa-fw fa-asterisk text-danger"></i></label>
-                                                <input id="dni" type="text" name="Dni" class="form-control" placeholder="DNI" required="" minlength="8">
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="row">
-                                        <div class="col-md-6">
-                                            <div class="form-group">
-                                                <label for="Nombres">Nombres: <i class="fa fa-fw fa-asterisk text-danger"></i></label>
-                                                <input id="Nombres" type="text" name="Nombres" class="form-control" placeholder="Nombres" required="">
-                                            </div>
-                                        </div>
-                                        <div class="col-md-6">
-                                            <div class="form-group">
-                                                <label for="Apellidos">Apellidos: <i class="fa fa-fw fa-asterisk text-danger"></i></label>
-                                                <input id="Apellidos" type="text" name="Apellidos" class="form-control" placeholder="Apellidos" required="">
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="row">
-                                        <div class="col-md-4">
-                                            <div class="form-group">
-                                                <label for="Genero">Genero: <i class="fa fa-fw fa-asterisk text-danger"></i></label>
-                                                <select id="Genero" class="form-control">
-                                                    <option value="M">Maculino</option>
-                                                    <option value="F">Femenino</option>
-                                                </select>
-                                            </div>
-                                        </div>
-                                        <div class="col-md-4">
-                                            <div class="form-group">
-                                                <label for="Nacimiento">Nacimiento: <i class="fa fa-fw fa-asterisk text-danger"></i></label>
-                                                <input id="Nacimiento" type="date" name="Nacimiento" class="form-control" required="">
-                                            </div>
-                                        </div>
-                                        <div class="col-md-4">
-                                            <div class="form-group">
-                                                <label for="Estado_civil">Estado civil: <i class="fa fa-fw fa-asterisk text-danger"></i></label>
-                                                <select id="Estado_civil" class="form-control">
-                                                    <option value="S">Soltero/a</option>
-                                                    <option value="C">Casado/a</option>
-                                                    <option value="V">Viudo/a</option>
-                                                    <option value="D">Divorciado/a</option>
-                                                </select>
-                                            </div>
-                                        </div>
-                                    </div>
-
-                                    <div class="row">
-                                        <div class="col-md-6">
-                                            <div class="form-group">
-                                                <label for="Ruc">Dirección Principal:</label>
-                                                <input id="Ruc" type="text" name="Ruc" class="form-control" placeholder="Dirección de viviendan principal" required="">
-                                            </div>
-                                        </div>
-                                        <div class="col-md-6">
-                                            <div class="form-group">
-                                                <label for="Razon_social">Télefono/Celular Prinpal:</label>
-                                                <input id="Razon_social" type="text" name="Razon_social" class="form-control" placeholder="N° de teléfono o celular principal" required="">
-                                            </div>
-                                        </div>
-                                    </div>
-
-                                    <div class="row">
-                                        <div class="col-md-5">
-                                            <div class="form-group">
-                                                <label for="Codigo">Codigo CIP: <i class="fa fa-fw fa-asterisk text-danger"></i></label>
-                                                <input id="Codigo" type="number" name="Codigo" class="form-control" placeholder="Codigo" required="" disabled>
-                                            </div>
-                                        </div>
-                                        <div class="col-md-2">
-                                            <div class="form-group">
-                                                <label for="Condición">Nuevo </label>
-                                                <div class="checkbox">
-                                                    <label>
-                                                        <input type="checkbox" id="cbTramite" checked> Tramite
-                                                    </label>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="col-md-5">
-                                            <div class="form-group">
-                                                <label for="Condición">Condición: <i class="fa fa-fw fa-asterisk text-danger"></i></label>
-                                                <select id="Condicion" class="form-control">
-                                                    <option value="O">ORDINARIO</option>
-                                                    <option value="T">TRANSEUNTE</option>
-                                                    <option value="F">FALLECIDO</option>
-                                                    <option value="R">RETIRADO</option>
-                                                    <option value="V">VITALICIO</option>
-                                                </select>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    </form>
-                                </div>
-                                <div class="modal-footer">
-                                    <p class="text-left text-danger">Todos los campos marcados con <i class="fa fa-fw fa-asterisk text-danger"></i> son obligatorios</p>
-                                    <button type="submit" class="btn btn-danger" id="btnAceptarIngeniero">
-                                        <i class="fa fa-check"></i> Aceptar</button>
-                                    <button type="button" class="btn btn-primary" id="btnCancelarIngeniero">
-                                        <i class="fa fa-remove"></i> Cancelar</button>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <!-- end modal new enginner -->
-
-                <!-- modal historial de un ingeniero -->
-                <div class="row">
-                    <div class="modal fade" id="mostrarHistorial" data-backdrop="static">
-                        <div class="modal-dialog modal-lg">
-                            <div class="modal-content">
-                                <div class="modal-header">
-                                    <button type="button" class="close" data-dismiss="modal">
-                                        <i class="fa fa-close"></i>
-                                    </button>
-                                    <h4 class="modal-title">
-                                        <i class="fa fa-group">
-                                        </i> Historial de Pagos
-                                    </h4>
-                                </div>
-                                <div class="modal-body">
-                                    <div class="row">
-                                        <div class="col-md-4 col-sm-12 col-xs-12">
-                                            <div class="form-group">
-                                                <button class="btn btn-danger" id="btnIzquierdaHistorial">
-                                                    <i class="fa fa-toggle-left"></i>
-                                                </button>
-                                                <span id="lblPaginaActualHistorial" class="font-weight-bold margin">0</span>
-                                                <span class="margin">a</span>
-                                                <span id="lblPaginSiguienteHistorial" class="font-weight-bold margin">0</span>
-                                                <button class="btn btn-danger" id="btnDerechaHistorial">
-                                                    <i class="fa fa-toggle-right"></i>
-                                                </button>
-                                            </div>
-                                        </div>
-                                        <div class="col-md-6 col-sm-12 col-xs-12">
-                                            <div class="form-group">
-                                                <div class="input-group col-lg-12 col-md-12 col-sm-12 col-xs-12">
-                                                    <input type="search" class="form-control" aria-describedby="search">
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="col-md-2 col-sm-12 col-xs-12">
-                                            <div class="form-group">
-                                                <button id="btnBuscarIngeniero" class="btn btn-default">
-                                                    <i class="fa fa-search"></i> Buscar
-                                                </button>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="row">
-                                        <div class="col-md-12">
-                                            <div class="table-responsive">
-                                                <table class="table table-striped table-hover table-sm">
-                                                    <thead>
-                                                        <tr>
-                                                            <th>#</th>
-                                                            <th>Recibo</th>
-                                                            <th>Fecha</th>
-                                                            <th>Concepto</th>
-                                                            <th>Monto</th>
-                                                            <th>Observación</th>
-                                                        </tr>
-                                                    </thead>
-                                                    <tbody id="tbHistorial">
-
-                                                    </tbody>
-                                                </table>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="modal-footer">
-                                    <button type="button" class="btn btn-primary" data-dismiss="modal">
-                                        <i class="fa fa-remove"></i> Cerrar</button>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <!--end modal history enginner  -->
 
                 <section class="content">
 
@@ -429,6 +441,26 @@ if (!isset($_SESSION['IdUsuario'])) {
                             onEventPaginacionHistorial();
                         }
                     }
+                });
+
+                $("#btnReniec").click(function() {
+                    if ($("#dni").val().trim() == '') {
+                        tools.AlertWarning("Ingenieros", "Ingrese un dni en el campo.");
+                        $("#dni").focus();
+                    } else if ($("#dni").val().length !== 8) {
+                        tools.AlertWarning("Ingenieros", "El dni debe tener 8 caracteres.");
+                        $("#dni").focus();
+                    } else {
+                        loadReniecApi($("#dni").val());
+                    }
+
+                });
+
+                $("#btnReniec").keypress(function(event) {
+                    if (event.keyCode == 13) {
+                        loadReniecApi($("#dni").val());
+                    }
+                    event.preventDefault();
                 });
 
             });
@@ -687,6 +719,28 @@ if (!isset($_SESSION['IdUsuario'])) {
                     loadTableHistorial(dni);
                     opcionHistorial = 0;
                 }
+            }
+
+            function loadReniecApi(numero) {
+                $.ajax({
+                    url: "https://dniruc.apisperu.com/api/v1/dni/" + numero + "?token=eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJlbWFpbCI6ImFsZXhhbmRlcl9keF8xMEBob3RtYWlsLmNvbSJ9.6TLycBwcRyW1d-f_hhCoWK1yOWG_HJvXo8b-EoS5MhE",
+                    type: "get",
+                    data: {},
+                    beforeSend: function() {
+                        $("#divLoad").addClass("overlay");
+                        $("#divLoad").append('<i class="fa fa-refresh fa-spin"></i>');
+                    },
+                    success: function(result) {
+                        $("#divLoad").removeClass("overlay");
+                        $("#divLoad").empty();
+                        $("#Nombres").val(result.nombres);
+                        $("#Apellidos").val(result.apellidoPaterno + " " + result.apellidoMaterno);
+                    },
+                    error: function(error) {
+                        $("#divLoad").removeClass("overlay");
+                        $("#divLoad").empty();
+                    }
+                });
             }
 
             function clearModalIngeniero() {

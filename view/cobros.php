@@ -21,16 +21,14 @@ if (!isset($_SESSION['IdUsuario'])) {
             <!-- start menu -->
             <?php include('./layout/menu.php') ?>
             <!-- end menu -->
-            <!-- Content Wrapper. Contains page content -->
-            <div class="content-wrapper" style="background-color: #FFFFFF;">
-                <!-- Main content -->
-                <section class="content">
 
-                    <!-- modal nueva Empresa  -->
-                    <div class="row">
-                        <div class="modal fade" id="NuevaEmpresaPersona">
-                            <div class="modal-dialog">
-                                <div class="modal-content">
+            <!-- modal nueva Empresa  -->
+            <div class="row">
+                <div class="modal fade" id="NuevaEmpresaPersona">
+                    <div class="modal-dialog">
+                        <div class="modal-content">
+                            <div class="box box-default">
+                                <div class="box-body">
                                     <div class="modal-header">
                                         <button type="button" class="close" id="btnCloseEmpresa">
                                             <i class="fa fa-close"></i>
@@ -42,10 +40,15 @@ if (!isset($_SESSION['IdUsuario'])) {
                                     </div>
                                     <div class="modal-body">
                                         <div class="row">
-                                            <div class="col-md-12">
+                                            <div class="col-md-12 col-sm-12 col-xs-12">
+                                                <label for="txtRuc">RUC: <i class="fa fa-fw fa-asterisk text-danger"></i></label>
                                                 <div class="form-group">
-                                                    <label for="txtRuc">RUC: <i class="fa fa-fw fa-asterisk text-danger"></i></label>
-                                                    <input id="txtRuc" type="number" class="form-control" placeholder="Ingrese ruc" required="" minlength="11">
+                                                    <div class="input-group">
+                                                        <div class="input-group-btn">
+                                                            <button type="button" id="btnSunat" class="btn btn-default btn-flat"><img src="./images/sunat_logo.png" width="16" height="16" /></button>
+                                                        </div>
+                                                        <input id="txtRuc" type="number" class="form-control" placeholder="Ingrese ruc" required="" minlength="11">
+                                                    </div>
                                                 </div>
                                             </div>
                                         </div>
@@ -99,185 +102,84 @@ if (!isset($_SESSION['IdUsuario'])) {
                                             <i class="fa fa-remove"></i> Cancelar</button>
                                     </div>
                                 </div>
-                            </div>
-                        </div>
-                    </div>
-                    <!-- end modal new Bussinees -->
-
-                    <!-- modal start ingenieros -->
-                    <div class="row">
-                        <div class="modal fade" id="mdIngenieros">
-                            <div class="modal-dialog modal-lg">
-                                <div class="modal-content">
-                                    <div class="modal-header">
-                                        <button type="button" class="close" data-dismiss="modal">
-                                            <i class="fa fa-close"></i>
-                                        </button>
-                                        <h4 class="modal-title">
-                                            <i class="fa fa-group">
-                                            </i> Lista de Ingenieros
-                                        </h4>
-                                    </div>
-                                    <div class="modal-body">
-                                        <div class="row" style="margin-bottom: 15px;">
-                                            <div class="col-md-4 col-sm-12 col-xs-12">
-                                                <button class="btn btn-danger" id="btnIzquierda">
-                                                    <i class="fa fa-toggle-left"></i>
-                                                </button>
-                                                <span id="lblPaginaActual" class="font-weight-bold margin">0</span>
-                                                <span class="margin">a</span>
-                                                <span id="lblPaginaSiguiente" class="font-weight-bold margin">0</span>
-                                                <button class="btn btn-danger" id="btnDerecha">
-                                                    <i class="fa fa-toggle-right"></i>
-                                                </button>
-                                            </div>
-                                            <div class="col-md-6 col-sm-12 col-xs-12">
-                                                <div class="input-group col-lg-12 col-md-12 col-sm-12 col-xs-12">
-                                                    <input type="search" id="txtBuscarIngeniero" class="form-control" placeholder="Buscar por información, n° cip o dni" aria-describedby="search">
-                                                </div>
-                                            </div>
-                                            <div class="col-md-2 col-sm-12 col-xs-12">
-                                                <button id="btnBuscarIngeniero" class="btn btn-default col-lg-12 col-md-12 col-sm-12 col-xs-12">
-                                                    <i class="fa fa-search"></i> Buscar
-                                                </button>
-                                            </div>
-                                        </div>
-                                        <div class="row" style="overflow-x: auto; height:280px">
-                                            <div class="col-md-12">
-                                                <table class="table table-striped table-hover table-bordered table-sm">
-                                                    <thead style="background: #337ab7;color: white;">
-                                                        <tr>
-                                                            <th style="text-align: center; vertical-align: middle;">#</th>
-                                                            <th style="text-align: center; vertical-align: middle;">Cip</th>
-                                                            <th style="text-align: center; vertical-align: middle;">Dni</th>
-                                                            <!-- <th style="text-align: center; vertical-align: middle;">Capitulo</th> -->
-                                                            <th style="text-align: center; vertical-align: middle;">Ingeniero</th>
-                                                            <th style="text-align: center; vertical-align: middle;">Condición</th>
-                                                            <th style="text-align: center; vertical-align: middle;">Fecha Colegiatura</th>
-                                                            <th style="text-align: center; vertical-align: middle;">Ultima Cuota</th>
-                                                            <th style="text-align: center; vertical-align: middle;">Debe</th>
-                                                        </tr>
-                                                    </thead>
-                                                    <tbody id="tbIngenieros">
-
-                                                    </tbody>
-                                                </table>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="modal-footer">
-                                        <div class="row">
-                                            <div class="col-lg-6 col-md-6 text-left">
-                                                <h5>
-                                                    <i class="fa fa-info text-danger"></i> <b class="text-success">Para seleccionar un ingeniero has doble click sobre la fila</b>
-                                                </h5>
-                                            </div>
-                                            <div class="col-lg-6 col-md-6">
-                                                <button type="button" class="btn btn-primary" data-dismiss="modal">
-                                                    <i class="fa fa-remove"></i> Cancelar</button>
-                                            </div>
-                                        </div>
-                                    </div>
+                                <div id="divLoad">
                                 </div>
                             </div>
                         </div>
                     </div>
-                    <!-- modal end ingenieros -->
+                </div>
+            </div>
+            <!-- end modal new Bussinees -->
 
-                    <!-- modal detalle del ingreso -->
-                    <div class="row">
-                        <div class="modal fade" id="mostrarDetalleIngreso" data-backdrop="static">
-                            <div class="modal-dialog">
-                                <div class="modal-content">
-                                    <div class="modal-header">
-                                        <button type="button" class="close" data-dismiss="modal">
-                                            <i class="fa fa-close"></i>
+            <!-- modal start ingenieros -->
+            <div class="row">
+                <div class="modal fade" id="mdIngenieros">
+                    <div class="modal-dialog modal-lg">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <button type="button" class="close" data-dismiss="modal">
+                                    <i class="fa fa-close"></i>
+                                </button>
+                                <h4 class="modal-title">
+                                    <i class="fa fa-group">
+                                    </i> Lista de Ingenieros
+                                </h4>
+                            </div>
+                            <div class="modal-body">
+                                <div class="row" style="margin-bottom: 15px;">
+                                    <div class="col-md-4 col-sm-12 col-xs-12">
+                                        <button class="btn btn-danger" id="btnIzquierda">
+                                            <i class="fa fa-toggle-left"></i>
                                         </button>
-                                        <h4 class="modal-title">
-                                            <i class="fa fa-group">
-                                            </i> Detalle del Ingreso
-                                        </h4>
+                                        <span id="lblPaginaActual" class="font-weight-bold margin">0</span>
+                                        <span class="margin">a</span>
+                                        <span id="lblPaginaSiguiente" class="font-weight-bold margin">0</span>
+                                        <button class="btn btn-danger" id="btnDerecha">
+                                            <i class="fa fa-toggle-right"></i>
+                                        </button>
                                     </div>
-                                    <div class="modal-body">
-                                        <div class="row">
-                                            <div class="col-md-12">
-                                                <div class="table-responsive">
-                                                    <table class="table table-striped table-hover table-sm">
-                                                        <thead>
-                                                            <tr>
-                                                                <th width="5%">#</th>
-                                                                <th width="50%">Concepto</th>
-                                                                <th width="15%">Precio</th>
-                                                                <th width="15%">Cantidad</th>
-                                                                <th width="15%">Importe</th>
-                                                            </tr>
-                                                        </thead>
-                                                        <tbody id="tbDetalleIngreso">
-
-                                                        </tbody>
-                                                    </table>
-                                                </div>
-                                            </div>
+                                    <div class="col-md-6 col-sm-12 col-xs-12">
+                                        <div class="input-group col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                                            <input type="search" id="txtBuscarIngeniero" class="form-control" placeholder="Buscar por información, n° cip o dni" aria-describedby="search">
                                         </div>
+                                    </div>
+                                    <div class="col-md-2 col-sm-12 col-xs-12">
+                                        <button id="btnBuscarIngeniero" class="btn btn-default col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                                            <i class="fa fa-search"></i> Buscar
+                                        </button>
+                                    </div>
+                                </div>
+                                <div class="row" style="overflow-x: auto; height:280px">
+                                    <div class="col-md-12">
+                                        <table class="table table-striped table-hover table-bordered table-sm">
+                                            <thead style="background: #337ab7;color: white;">
+                                                <tr>
+                                                    <th style="text-align: center; vertical-align: middle;">#</th>
+                                                    <th style="text-align: center; vertical-align: middle;">Cip</th>
+                                                    <th style="text-align: center; vertical-align: middle;">Dni</th>
+                                                    <!-- <th style="text-align: center; vertical-align: middle;">Capitulo</th> -->
+                                                    <th style="text-align: center; vertical-align: middle;">Ingeniero</th>
+                                                    <th style="text-align: center; vertical-align: middle;">Condición</th>
+                                                    <th style="text-align: center; vertical-align: middle;">Fecha Colegiatura</th>
+                                                    <th style="text-align: center; vertical-align: middle;">Ultima Cuota</th>
+                                                    <th style="text-align: center; vertical-align: middle;">Debe</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody id="tbIngenieros">
+
+                                            </tbody>
+                                        </table>
                                     </div>
                                 </div>
                             </div>
-                        </div>
-                    </div>
-                    <!--end modal history enginner  -->
-
-                    <!-- modal start colegiatura-->
-                    <div class="row">
-                        <div class="modal fade" id="mdColegiatura">
-                            <div class="modal-dialog modal-xl">
-                                <div class="modal-content">
-                                    <div class="modal-header">
-                                        <button type="button" class="close" data-dismiss="modal">
-                                            <i class="fa fa-close"></i>
-                                        </button>
-                                        <h4 class="modal-title">
-                                            <i class="fa fa-plus">
-                                            </i> Pago de Colegiatura
-                                        </h4>
+                            <div class="modal-footer">
+                                <div class="row">
+                                    <div class="col-lg-6 col-md-6 text-left">
+                                        <h5>
+                                            <i class="fa fa-info text-danger"></i> <b class="text-success">Para seleccionar un ingeniero has doble click sobre la fila</b>
+                                        </h5>
                                     </div>
-                                    <div class="modal-body">
-                                        <form role="form" class="no-padding">
-                                            <div class="box box-solid">
-                                                <div class="box-header no-padding">
-                                                    <div class="row">
-                                                        <div class="col-md-8 text-left border">
-                                                            <p>Concepto</p>
-                                                        </div>
-                                                        <div class="col-md-4 text-right">
-                                                            <p>Monto</p>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                                <div class="box-body no-padding text-center" id="ctnConceptos">
-                                                </div>
-                                            </div>
-                                            <div class="row no-padding">
-                                                <div class="col-md-6 text-right">
-                                                    <div class="checkbox no-margin">
-                                                        <label>
-                                                            <input type="checkbox"> Dono libro
-                                                        </label>
-                                                    </div>
-                                                </div>
-                                                <div class="col-md-6 no-padding">
-                                                    <div class="col-md-6 text-right">
-                                                        <span>Total:</span>
-                                                    </div>
-                                                    <div class="col-md-6 text-right">
-                                                        <span id="lblTotalColegiatura">0.00</span>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </form>
-                                    </div>
-                                    <div class="modal-footer">
-                                        <button type="button" class="btn btn-danger" id="btnAceptarColegiatura">
-                                            <i class="fa fa-check"></i> Aceptar</button>
+                                    <div class="col-lg-6 col-md-6">
                                         <button type="button" class="btn btn-primary" data-dismiss="modal">
                                             <i class="fa fa-remove"></i> Cancelar</button>
                                     </div>
@@ -285,523 +187,633 @@ if (!isset($_SESSION['IdUsuario'])) {
                             </div>
                         </div>
                     </div>
-                    <!-- modal end colegiatura-->
+                </div>
+            </div>
+            <!-- modal end ingenieros -->
 
-                    <!-- modal start cuotas -->
-                    <div class="row">
-                        <div class="modal fade" id="mdCuotas" data-backdrop="static">
-                            <div class="modal-dialog modal-xl">
-                                <div class="modal-content">
-                                    <div class="modal-header">
-                                        <button id="btnCloseCuotas" type="button" class="close">
-                                            <i class="fa fa-close"></i>
-                                        </button>
-                                        <h4 class="modal-title">
-                                            <i class="fa fa-plus">
-                                            </i> Pago de Cuotas
-                                        </h4>
-                                    </div>
-                                    <div class="modal-body">
-                                        <div class="row">
-                                            <div class="col-md-7" style="margin-right: 30px;">
-                                                <button id="btnCuotaNormal" type="button" class="btn btn-success">
-                                                    <i class="fa fa-plus"></i> Ordinaria
-                                                </button>
-                                                <button id="btnCuotaAmnistia" type="button" class="btn btn-default">
-                                                    <i class="fa fa-plus"></i> Amnistia
-                                                </button>
-                                                <button id="btnCuotaVitalicio" type="button" class="btn btn-default">
-                                                    <i class="fa fa-plus"></i> Vitalicio
-                                                </button>
-                                            </div>
-                                            <div class="col-md-2 text-right">
-                                                <button id="btnAddCuota" type="button" class="btn btn-warning">
-                                                    <i class="fa fa-plus"></i> Agregar
-                                                </button>
-                                            </div>
-                                            <div class="col-md-2 text-right">
-                                                <button id="btnDeleteCuota" type="button" class="btn btn-danger">
-                                                    <i class="fa fa-trash"></i> Eliminar
-                                                </button>
-                                            </div>
+            <!-- modal detalle del ingreso -->
+            <div class="row">
+                <div class="modal fade" id="mostrarDetalleIngreso" data-backdrop="static">
+                    <div class="modal-dialog">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <button type="button" class="close" data-dismiss="modal">
+                                    <i class="fa fa-close"></i>
+                                </button>
+                                <h4 class="modal-title">
+                                    <i class="fa fa-group">
+                                    </i> Detalle del Ingreso
+                                </h4>
+                            </div>
+                            <div class="modal-body">
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <div class="table-responsive">
+                                            <table class="table table-striped table-hover table-sm">
+                                                <thead>
+                                                    <tr>
+                                                        <th width="5%">#</th>
+                                                        <th width="50%">Concepto</th>
+                                                        <th width="15%">Precio</th>
+                                                        <th width="15%">Cantidad</th>
+                                                        <th width="15%">Importe</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody id="tbDetalleIngreso">
+
+                                                </tbody>
+                                            </table>
                                         </div>
-
-                                        <div class="row">
-                                            <div class="col-md-12 text-center" style="padding-top: 10px;">
-                                                <h4 class="text-info" id="lblCuotasMensaje">
-                                                    Cuotas Ordinarias
-                                                </h4>
-                                            </div>
-                                        </div>
-
-                                        <div class="row">
-                                            <div class="col-md-12" style="width:100%;  overflow-x: auto;height:260px">
-                                                <table class="table table-striped table-hover">
-                                                    <thead>
-                                                        <tr>
-                                                            <th width="70%">Cuota del Mes</th>
-                                                            <th width="15%">Monto</th>
-                                                        </tr>
-                                                    </thead>
-                                                    <tbody id="tbCuotas">
-
-                                                    </tbody>
-                                                </table>
-                                            </div>
-                                        </div>
-
-                                        <div class="row no-padding border" style="background-color: #337ab7;color:white;">
-                                            <div class="col-md-12 text-center">
-                                                <h4 id="lblTotalCuotas" class="no-margin margin-5px">TOTAL DE CUOTAS: 0.00</h4>
-                                                <h5 id="lblNumeroCuotas" class="no-margin margin-5px">CUOTAS DEL: 0/0000 al 00/0000</h5>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="modal-footer">
-                                        <button type="button" class="btn btn-danger" id="btnAceptarCuotas">
-                                            <i class="fa fa-check"></i> Aceptar</button>
-                                        <button type="button" class="btn btn-primary" id="btnCancelarCuotas">
-                                            <i class="fa fa-remove"></i> Cancelar</button>
                                     </div>
                                 </div>
                             </div>
                         </div>
                     </div>
-                    <!-- modal end cuotas -->
+                </div>
+            </div>
+            <!--end modal history enginner  -->
 
-                    <!-- modal start certificado -->
-                    <div class="row">
-                        <div class="modal fade" id="mdCertHabilidad" data-backdrop="static">
-                            <div class="modal-dialog modal-xl">
-                                <div class="modal-content">
-                                    <div class="modal-header">
-                                        <button type="button" class="close" id="btnCloseCertificado">
-                                            <i class="fa fa-close"></i>
-                                        </button>
-                                        <h4 class="modal-title" id="modal-title-certificado-habilidad">
-                                            <i class="fa fa-plus">
-                                            </i> Certificado de Habilidad
-                                        </h4>
+            <!-- modal start colegiatura-->
+            <div class="row">
+                <div class="modal fade" id="mdColegiatura">
+                    <div class="modal-dialog modal-xl">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <button type="button" class="close" data-dismiss="modal">
+                                    <i class="fa fa-close"></i>
+                                </button>
+                                <h4 class="modal-title">
+                                    <i class="fa fa-plus">
+                                    </i> Pago de Colegiatura
+                                </h4>
+                            </div>
+                            <div class="modal-body">
+                                <form role="form" class="no-padding">
+                                    <div class="box box-solid">
+                                        <div class="box-header no-padding">
+                                            <div class="row">
+                                                <div class="col-md-8 text-left border">
+                                                    <p>Concepto</p>
+                                                </div>
+                                                <div class="col-md-4 text-right">
+                                                    <p>Monto</p>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="box-body no-padding text-center" id="ctnConceptos">
+                                        </div>
                                     </div>
-                                    <div class="modal-body">
-
-                                        <div class="row">
-                                            <div class="col-md-12">
-                                                <label id="lblCertificadoHabilidadEstado"></label>
+                                    <div class="row no-padding">
+                                        <div class="col-md-6 text-right">
+                                            <div class="checkbox no-margin">
+                                                <label>
+                                                    <input type="checkbox"> Dono libro
+                                                </label>
                                             </div>
                                         </div>
-
-                                        <div class="row">
-                                            <div class="col-md-12">
-                                                <div class="form-group">
-                                                    <label for="txtIngenieroCertificado">Ingeniero(a)</label>
-                                                    <input type="text" class="form-control" id="txtIngenieroCertificado" placeholder="Datos completos del ingeniero" disabled>
-                                                </div>
+                                        <div class="col-md-6 no-padding">
+                                            <div class="col-md-6 text-right">
+                                                <span>Total:</span>
                                             </div>
-                                            <div class="col-md-12">
-                                                <div class="form-group">
-                                                    <label>Especialidad(es)</label>
-                                                    <select class="form-control" id="cbEspecialidadCertificado">
-                                                    </select>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="row">
-                                            <div class="col-md-6">
-                                                <div class="form-group">
-                                                    <label for="txtFechaCertificado">Fecha</label>
-                                                    <input type="date" class="form-control" id="txtFechaCertificado">
-                                                </div>
-                                            </div>
-                                            <div class="col-md-6">
-                                                <div class="form-group">
-                                                    <label for="txtCorrelativoCertificado">Certificado N°</label>
-                                                    <input type="text" class="form-control" id="txtCorrelativoCertificado"  placeholder="0">
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="row">
-                                            <div class="col-md-6">
-                                                <div class="form-group">
-                                                    <label for="txtAsuntoCertificado">Asunto</label>
-                                                    <input type="text" class="form-control" id="txtAsuntoCertificado" value="EJERCICIO DE LA PROFESIÓN" placeholder="Ingrese el asunto">
-                                                </div>
-                                            </div>
-                                            <div class="col-md-6">
-                                                <div class="form-group">
-                                                    <label for="txtEntidadCertificado">Entidad o Propietario</label>
-                                                    <input type="text" class="form-control" id="txtEntidadCertificado" value="VARIOS"  placeholder="Ingrese la entidad o el propietario">
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="row">
-                                            <div class="col-md-12">
-                                                <div class="form-group">
-                                                    <label for="txtLugarCertificado">Lugar</label>
-                                                    <input type="text" class="form-control" id="txtLugarCertificado" value="A NIVEL NACIONAL"  placeholder="Ingrese el lugar">
-                                                </div>
+                                            <div class="col-md-6 text-right">
+                                                <span id="lblTotalColegiatura">0.00</span>
                                             </div>
                                         </div>
                                     </div>
-                                    <div class="modal-footer">
-                                        <button type="button" class="btn btn-danger" id="btnAceptarCertificado">
-                                            <i class="fa fa-check"></i> Aceptar</button>
-                                        <button type="button" class="btn btn-primary" id="btnCancelarCertificado">
-                                            <i class="fa fa-remove"></i> Cancelar</button>
-                                    </div>
-                                </div>
+                                </form>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-danger" id="btnAceptarColegiatura">
+                                    <i class="fa fa-check"></i> Aceptar</button>
+                                <button type="button" class="btn btn-primary" data-dismiss="modal">
+                                    <i class="fa fa-remove"></i> Cancelar</button>
                             </div>
                         </div>
                     </div>
-                    <!-- modal end certificado -->
+                </div>
+            </div>
+            <!-- modal end colegiatura-->
 
-                    <!-- modal start certificado de residencia de obra -->
-                    <div class="row">
-                        <div class="modal fade" id="mdCertResidenciaObra" data-backdrop="static">
-                            <div class="modal-dialog modal-xl">
-                                <div class="modal-content">
-                                    <div class="modal-header">
-                                        <button type="button" class="close" id="btnCloseCertResidenciaObra">
-                                            <i class="fa fa-close"></i>
+            <!-- modal start cuotas -->
+            <div class="row">
+                <div class="modal fade" id="mdCuotas" data-backdrop="static">
+                    <div class="modal-dialog modal-xl">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <button id="btnCloseCuotas" type="button" class="close">
+                                    <i class="fa fa-close"></i>
+                                </button>
+                                <h4 class="modal-title">
+                                    <i class="fa fa-plus">
+                                    </i> Pago de Cuotas
+                                </h4>
+                            </div>
+                            <div class="modal-body">
+                                <div class="row">
+                                    <div class="col-md-7" style="margin-right: 30px;">
+                                        <button id="btnCuotaNormal" type="button" class="btn btn-success">
+                                            <i class="fa fa-plus"></i> Ordinaria
                                         </button>
-                                        <h4 class="modal-title" id="modal-title-residencia-obra">
-                                            <i class="fa fa-plus">
-                                            </i> Certificado de Habilidad para Firmar de Contrato de Obra Pública o Residencia
+                                        <button id="btnCuotaAmnistia" type="button" class="btn btn-default">
+                                            <i class="fa fa-plus"></i> Amnistia
+                                        </button>
+                                        <button id="btnCuotaVitalicio" type="button" class="btn btn-default">
+                                            <i class="fa fa-plus"></i> Vitalicio
+                                        </button>
+                                    </div>
+                                    <div class="col-md-2 text-right">
+                                        <button id="btnAddCuota" type="button" class="btn btn-warning">
+                                            <i class="fa fa-plus"></i> Agregar
+                                        </button>
+                                    </div>
+                                    <div class="col-md-2 text-right">
+                                        <button id="btnDeleteCuota" type="button" class="btn btn-danger">
+                                            <i class="fa fa-trash"></i> Eliminar
+                                        </button>
+                                    </div>
+                                </div>
+
+                                <div class="row">
+                                    <div class="col-md-12 text-center" style="padding-top: 10px;">
+                                        <h4 class="text-info" id="lblCuotasMensaje">
+                                            Cuotas Ordinarias
                                         </h4>
                                     </div>
-                                    <div class="modal-body">
+                                </div>
 
-                                        <div class="row">
-                                            <div class="col-md-12">
-                                                <label id="lblCertificadoResidenciaObraEstado"></label>
-                                            </div>
-                                        </div>
+                                <div class="row">
+                                    <div class="col-md-12" style="width:100%;  overflow-x: auto;height:260px">
+                                        <table class="table table-striped table-hover">
+                                            <thead>
+                                                <tr>
+                                                    <th width="70%">Cuota del Mes</th>
+                                                    <th width="15%">Monto</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody id="tbCuotas">
 
-
-                                        <div class="row">
-                                            <div class="col-md-12">
-                                                <div class="form-group">
-                                                    <label for="txtIngenieroObra">Ingeniero(a)</label>
-                                                    <input type="text" class="form-control" id="txtIngenieroObra" placeholder="Datos completos del ingeniero" disabled>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="row">
-                                            <div class="col-md-12">
-                                                <div class="form-group">
-                                                    <label>Especialidad(es)</label>
-                                                    <select class="form-control" id="cbEspecialidadObra">
-                                                    </select>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="row">
-                                            <div class="col-md-6">
-                                                <div class="form-group">
-                                                    <label for="txtFechaObra">Hábil Hasta</label>
-                                                    <input type="date" class="form-control" id="txtFechaObra">
-                                                </div>
-                                            </div>
-                                            <div class="col-md-6">
-                                                <div class="form-group">
-                                                    <label for="txtCertificadoNumeroObra">Certificado N°</label>
-                                                    <input type="text" class="form-control" id="txtCertificadoNumeroObra" placeholder="Número del Certificado">
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="row">
-                                            <div class="col-md-12">
-                                                <div class="form-group">
-                                                    <label for="txtModalidadObra">Modalidad</label>
-                                                    <input type="text" class="form-control" id="txtModalidadObra" placeholder="Ingrese la Modalidad">
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="row">
-                                            <div class="col-md-12">
-                                                <div class="form-group">
-                                                    <label for="txtProyectoObra">Proyecto</label>
-                                                    <input type="text" class="form-control" id="txtProyectoObra" placeholder="Ingrese el nombre del Proyecto">
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="row">
-                                            <div class="col-md-12">
-                                                <div class="form-group">
-                                                    <label for="txtPropietarioObra">Propietario</label>
-                                                    <input type="text" class="form-control" id="txtPropietarioObra" placeholder="Ingrese la Propiedad">
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="row">
-                                            <div class="col-md-12">
-                                                <div class="form-group">
-                                                    <label for="txtMontoContratoObra">Monto del Contrato:</label>
-                                                    <input type="text" class="form-control" id="txtMontoContratoObra" placeholder="0.00">
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="row">
-                                            <div class="col-md-12">
-                                                <div class="form-group">
-                                                    <label>Departamento/Provincia/Distrito</label>
-                                                    <select class="form-control select2" style="width: 100%;" id="cbDepartamentoObra">
-                                                    </select>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="row">
-                                            <div class="col-md-12">
-                                                <div class="form-group">
-                                                    <label for="txtMontoCobrarObra">Monto a Cobrar:</label>
-                                                    <input type="text" class="form-control" id="txtMontoCobrarObra" placeholder="0.00">
-                                                </div>
-                                            </div>
-                                        </div>
+                                            </tbody>
+                                        </table>
                                     </div>
-                                    <div class="modal-footer">
-                                        <button type="button" class="btn btn-danger" id="btnAceptarCertResidenciaObra">
-                                            <i class="fa fa-check"></i> Aceptar</button>
-                                        <button type="button" class="btn btn-primary" id="btnCloseCertRecidenciaObra">
-                                            <i class="fa fa-remove"></i> Cancelar</button>
+                                </div>
+
+                                <div class="row no-padding border" style="background-color: #337ab7;color:white;">
+                                    <div class="col-md-12 text-center">
+                                        <h4 id="lblTotalCuotas" class="no-margin margin-5px">TOTAL DE CUOTAS: 0.00</h4>
+                                        <h5 id="lblNumeroCuotas" class="no-margin margin-5px">CUOTAS DEL: 0/0000 al 00/0000</h5>
                                     </div>
                                 </div>
                             </div>
-                        </div>
-                    </div>
-                    <!-- modal end certificado de residencia de obra-->
-
-                    <!-- modal start certificado de proyecto -->
-                    <div class="row">
-                        <div class="modal fade" id="mdCertProyecto" data-backdrop="static">
-                            <div class="modal-dialog modal-xl">
-                                <div class="modal-content">
-                                    <div class="modal-header">
-                                        <button type="button" class="close" id="btnCloseCertProyecto">
-                                            <i class="fa fa-close"></i>
-                                        </button>
-                                        <h4 class="modal-title" id="modal-title-certificado-proyecto">
-                                            <i class="fa fa-plus">
-                                            </i> Certificado de Proyecto
-                                        </h4>
-                                    </div>
-                                    <div class="modal-body">
-
-                                        <div class="row">
-                                            <div class="col-md-12">
-                                                <label id="lblCertificadoProyectoEstado"></label>
-                                            </div>
-                                        </div>
-
-                                        <div class="row">
-                                            <div class="col-md-12">
-                                                <div class="form-group">
-                                                    <label for="txtIngenieroProyecto">Ingeniero(a)</label>
-                                                    <input type="text" class="form-control" id="txtIngenieroProyecto" placeholder="Datos completos del ingeniero" disabled>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="row">
-                                            <div class="col-md-12">
-                                                <div class="form-group">
-                                                    <label>Especialidad(es)</label>
-                                                    <select class="form-control" id="cbEspecialidadProyecto">
-                                                    </select>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="row">
-                                            <div class="col-md-6">
-                                                <div class="form-group">
-                                                    <label for="txtFechaProyecto">Hábil Hasta</label>
-                                                    <input type="date" class="form-control" id="txtFechaProyecto">
-                                                </div>
-                                            </div>
-                                            <div class="col-md-6">
-                                                <div class="form-group">
-                                                    <label for="txtNumeroCertificadoProyecto">Certificado N°</label>
-                                                    <input type="text" class="form-control" id="txtNumeroCertificadoProyecto" placeholder="Número del certificado">
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="row">
-                                            <div class="col-md-6">
-                                                <div class="form-group">
-                                                    <label for="txtModalidadProyecto">Modalidad</label>
-                                                    <input type="text" class="form-control" id="txtModalidadProyecto" placeholder="Ingrese la modalidad">
-                                                </div>
-                                            </div>
-                                            <div class="col-md-6">
-                                                <div class="form-group">
-                                                    <label for="txtPropietarioProyecto">Propietario</label>
-                                                    <input type="text" class="form-control" id="txtPropietarioProyecto" placeholder="Ingrese el propietario">
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="row">
-                                            <div class="col-md-12">
-                                                <div class="form-group">
-                                                    <label for="txtProyectoProyecto">Proyecto</label>
-                                                    <input type="text" class="form-control" id="txtProyectoProyecto" placeholder="Ingrese el nombre del proyecto">
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="row">
-                                            <div class="col-md-12">
-                                                <div class="form-group">
-                                                    <label for="txtMontoContratoProyecto">Monto de Contrato</label>
-                                                    <input type="text" class="form-control" id="txtMontoContratoProyecto" placeholder="0.00">
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="row">
-                                            <div class="col-md-12">
-                                                <div class="form-group">
-                                                    <label>Departamento/Provincia/Distrito</label>
-                                                    <select class="form-control select2" style="width: 100%;" id="cbDepartamentoProyecto">
-                                                    </select>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="row">
-                                            <div class="col-md-12">
-                                                <div class="form-group">
-                                                    <label for="txtUrbProyecto">Urb./A.A.H.H./PP.JJ/Asoc</label>
-                                                    <input type="text" class="form-control" id="txtUrbProyecto" placeholder="Urb./A.A.H.H./PP.JJ/Asoc">
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="row">
-                                            <div class="col-md-12">
-                                                <div class="form-group">
-                                                    <label for="txtCalleProyecto">Jr./Av./Calle/Pasaje</label>
-                                                    <input type="text" class="form-control" id="txtCalleProyecto" placeholder="Jr./Av./Calle/Pasaje">
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="row">
-                                            <div class="col-md-12">
-                                                <div class="form-group">
-                                                    <label for="txtMontoCobrarProyecto">Monto a Cobrar</label>
-                                                    <input type="text" class="form-control" id="txtMontoCobrarProyecto" placeholder="0.00">
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="modal-footer">
-                                        <button type="button" class="btn btn-danger" id="btnAceptarCertProyecto">
-                                            <i class="fa fa-check"></i> Aceptar</button>
-                                        <button type="button" class="btn btn-primary" id="btnCancelCertProyecto">
-                                            <i class="fa fa-remove"></i> Cancelar</button>
-                                    </div>
-                                </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-danger" id="btnAceptarCuotas">
+                                    <i class="fa fa-check"></i> Aceptar</button>
+                                <button type="button" class="btn btn-primary" id="btnCancelarCuotas">
+                                    <i class="fa fa-remove"></i> Cancelar</button>
                             </div>
                         </div>
                     </div>
-                    <!-- modal end certificado de proyecto -->
+                </div>
+            </div>
+            <!-- modal end cuotas -->
 
-                    <!-- modal start peritaje -->
-                    <div class="row">
-                        <div class="modal fade" id="mdPeritaje" data-backdrop="static">
-                            <div class="modal-dialog modal-xl">
-                                <div class="modal-content">
-                                    <div class="modal-header">
-                                        <button type="button" class="close" id="btnClosePeritaje">
-                                            <i class="fa fa-close"></i>
-                                        </button>
-                                        <h4 class="modal-title">
-                                            <i class="fa fa-plus">
-                                            </i> Peritaje
-                                        </h4>
+            <!-- modal start certificado -->
+            <div class="row">
+                <div class="modal fade" id="mdCertHabilidad" data-backdrop="static">
+                    <div class="modal-dialog modal-xl">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <button type="button" class="close" id="btnCloseCertificado">
+                                    <i class="fa fa-close"></i>
+                                </button>
+                                <h4 class="modal-title" id="modal-title-certificado-habilidad">
+                                    <i class="fa fa-plus">
+                                    </i> Certificado de Habilidad
+                                </h4>
+                            </div>
+                            <div class="modal-body">
+
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <label id="lblCertificadoHabilidadEstado"></label>
                                     </div>
-                                    <div class="modal-body">
+                                </div>
 
-                                        <div class="row">
-                                            <div class="col-md-12">
-                                                <label id="lblPeritajeEstado"></label>
-                                            </div>
-                                        </div>
-
-                                        <div class="row">
-                                            <div class="col-md-12">
-                                                <div class="form-group">
-                                                    <label for="txtDescripcionPeritaje">Descripción</label>
-                                                    <input type="text" class="form-control" id="txtDescripcionPeritaje" placeholder="Ingrese una descripción sobre el peritaje.">
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="row">
-                                            <div class="col-md-12">
-                                                <div class="form-group">
-                                                    <label for="txtMontoPeritaje">Monto</label>
-                                                    <input type="text" class="form-control" id="txtMontoPeritaje" placeholder="0.00">
-                                                </div>
-                                            </div>
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <div class="form-group">
+                                            <label for="txtIngenieroCertificado">Ingeniero(a)</label>
+                                            <input type="text" class="form-control" id="txtIngenieroCertificado" placeholder="Datos completos del ingeniero" disabled>
                                         </div>
                                     </div>
-                                    <div class="modal-footer">
-                                        <button type="button" class="btn btn-danger" id="btnAceptarPeritaje">
-                                            <i class="fa fa-check"></i> Aceptar</button>
-                                        <button type="button" class="btn btn-primary" id="btnCancelarPeritaje">
-                                            <i class="fa fa-remove"></i> Cancelar</button>
+                                    <div class="col-md-12">
+                                        <div class="form-group">
+                                            <label>Especialidad(es)</label>
+                                            <select class="form-control" id="cbEspecialidadCertificado">
+                                            </select>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            <label for="txtFechaCertificado">Fecha</label>
+                                            <input type="date" class="form-control" id="txtFechaCertificado">
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            <label for="txtCorrelativoCertificado">Certificado N°</label>
+                                            <input type="text" class="form-control" id="txtCorrelativoCertificado" placeholder="0">
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            <label for="txtAsuntoCertificado">Asunto</label>
+                                            <input type="text" class="form-control" id="txtAsuntoCertificado" value="EJERCICIO DE LA PROFESIÓN" placeholder="Ingrese el asunto">
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            <label for="txtEntidadCertificado">Entidad o Propietario</label>
+                                            <input type="text" class="form-control" id="txtEntidadCertificado" value="VARIOS" placeholder="Ingrese la entidad o el propietario">
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <div class="form-group">
+                                            <label for="txtLugarCertificado">Lugar</label>
+                                            <input type="text" class="form-control" id="txtLugarCertificado" value="A NIVEL NACIONAL" placeholder="Ingrese el lugar">
+                                        </div>
                                     </div>
                                 </div>
                             </div>
-                        </div>
-                    </div>
-                    <!-- modal end peritaje -->
-
-                    <!-- modal start otros -->
-                    <div class="row">
-                        <div class="modal fade" id="mdOtros" data-backdrop="static">
-                            <div class="modal-dialog modal-xl">
-                                <div class="modal-content">
-                                    <div class="modal-header">
-                                        <button type="button" class="close" data-dismiss="modal">
-                                            <i class="fa fa-close"></i>
-                                        </button>
-                                        <h4 class="modal-title">
-                                            <i class="fa fa-plus">
-                                            </i> Otros
-                                        </h4>
-                                    </div>
-                                    <div class="modal-body">
-                                        <div class="row">
-                                            <div class="col-md-12">
-                                                <div class="form-group">
-                                                    <label id="lblConceptos">Conceptos </label>
-                                                    <select class="form-control" id="cbOtrosConcepto">
-                                                        <option value="">- Seleccione -</option>
-                                                    </select>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="row">
-                                            <div class="col-md-6">
-                                                <div class="form-group">
-                                                    <label>Cantidad</label>
-                                                    <input type="number" class="form-control" id="txtCantidadOtrosConceptos" placeholder="0.00" value="1" min="1">
-                                                </div>
-                                            </div>
-                                            <div class="col-md-6">
-                                                <div class="form-group">
-                                                    <label for="txtIngeniero">Monto</label>
-                                                    <input type="number" class="form-control" id="txtMontoOtrosConceptos" placeholder="0.00" required="">
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="modal-footer">
-                                        <button type="button" class="btn btn-danger" id="btnAceptarOtros">
-                                            <i class="fa fa-check"></i> Aceptar</button>
-                                        <button type="button" class="btn btn-primary" data-dismiss="modal">
-                                            <i class="fa fa-remove"></i> Cancelar</button>
-                                    </div>
-                                </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-danger" id="btnAceptarCertificado">
+                                    <i class="fa fa-check"></i> Aceptar</button>
+                                <button type="button" class="btn btn-primary" id="btnCancelarCertificado">
+                                    <i class="fa fa-remove"></i> Cancelar</button>
                             </div>
                         </div>
                     </div>
-                    <!-- modal end otros -->
+                </div>
+            </div>
+            <!-- modal end certificado -->
+
+            <!-- modal start certificado de residencia de obra -->
+            <div class="row">
+                <div class="modal fade" id="mdCertResidenciaObra" data-backdrop="static">
+                    <div class="modal-dialog modal-xl">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <button type="button" class="close" id="btnCloseCertResidenciaObra">
+                                    <i class="fa fa-close"></i>
+                                </button>
+                                <h4 class="modal-title" id="modal-title-residencia-obra">
+                                    <i class="fa fa-plus">
+                                    </i> Certificado de Habilidad para Firmar de Contrato de Obra Pública o Residencia
+                                </h4>
+                            </div>
+                            <div class="modal-body">
+
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <label id="lblCertificadoResidenciaObraEstado"></label>
+                                    </div>
+                                </div>
+
+
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <div class="form-group">
+                                            <label for="txtIngenieroObra">Ingeniero(a)</label>
+                                            <input type="text" class="form-control" id="txtIngenieroObra" placeholder="Datos completos del ingeniero" disabled>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <div class="form-group">
+                                            <label>Especialidad(es)</label>
+                                            <select class="form-control" id="cbEspecialidadObra">
+                                            </select>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            <label for="txtFechaObra">Hábil Hasta</label>
+                                            <input type="date" class="form-control" id="txtFechaObra">
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            <label for="txtCertificadoNumeroObra">Certificado N°</label>
+                                            <input type="text" class="form-control" id="txtCertificadoNumeroObra" placeholder="Número del Certificado">
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <div class="form-group">
+                                            <label for="txtModalidadObra">Modalidad</label>
+                                            <input type="text" class="form-control" id="txtModalidadObra" placeholder="Ingrese la Modalidad">
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <div class="form-group">
+                                            <label for="txtProyectoObra">Proyecto</label>
+                                            <input type="text" class="form-control" id="txtProyectoObra" placeholder="Ingrese el nombre del Proyecto">
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <div class="form-group">
+                                            <label for="txtPropietarioObra">Propietario</label>
+                                            <input type="text" class="form-control" id="txtPropietarioObra" placeholder="Ingrese la Propiedad">
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <div class="form-group">
+                                            <label for="txtMontoContratoObra">Monto del Contrato:</label>
+                                            <input type="text" class="form-control" id="txtMontoContratoObra" placeholder="0.00">
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <div class="form-group">
+                                            <label>Departamento/Provincia/Distrito</label>
+                                            <select class="form-control select2" style="width: 100%;" id="cbDepartamentoObra">
+                                            </select>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <div class="form-group">
+                                            <label for="txtMontoCobrarObra">Monto a Cobrar:</label>
+                                            <input type="text" class="form-control" id="txtMontoCobrarObra" placeholder="0.00">
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-danger" id="btnAceptarCertResidenciaObra">
+                                    <i class="fa fa-check"></i> Aceptar</button>
+                                <button type="button" class="btn btn-primary" id="btnCloseCertRecidenciaObra">
+                                    <i class="fa fa-remove"></i> Cancelar</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- modal end certificado de residencia de obra-->
+
+            <!-- modal start certificado de proyecto -->
+            <div class="row">
+                <div class="modal fade" id="mdCertProyecto" data-backdrop="static">
+                    <div class="modal-dialog modal-xl">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <button type="button" class="close" id="btnCloseCertProyecto">
+                                    <i class="fa fa-close"></i>
+                                </button>
+                                <h4 class="modal-title" id="modal-title-certificado-proyecto">
+                                    <i class="fa fa-plus">
+                                    </i> Certificado de Proyecto
+                                </h4>
+                            </div>
+                            <div class="modal-body">
+
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <label id="lblCertificadoProyectoEstado"></label>
+                                    </div>
+                                </div>
+
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <div class="form-group">
+                                            <label for="txtIngenieroProyecto">Ingeniero(a)</label>
+                                            <input type="text" class="form-control" id="txtIngenieroProyecto" placeholder="Datos completos del ingeniero" disabled>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <div class="form-group">
+                                            <label>Especialidad(es)</label>
+                                            <select class="form-control" id="cbEspecialidadProyecto">
+                                            </select>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            <label for="txtFechaProyecto">Hábil Hasta</label>
+                                            <input type="date" class="form-control" id="txtFechaProyecto">
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            <label for="txtNumeroCertificadoProyecto">Certificado N°</label>
+                                            <input type="text" class="form-control" id="txtNumeroCertificadoProyecto" placeholder="Número del certificado">
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            <label for="txtModalidadProyecto">Modalidad</label>
+                                            <input type="text" class="form-control" id="txtModalidadProyecto" placeholder="Ingrese la modalidad">
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            <label for="txtPropietarioProyecto">Propietario</label>
+                                            <input type="text" class="form-control" id="txtPropietarioProyecto" placeholder="Ingrese el propietario">
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <div class="form-group">
+                                            <label for="txtProyectoProyecto">Proyecto</label>
+                                            <input type="text" class="form-control" id="txtProyectoProyecto" placeholder="Ingrese el nombre del proyecto">
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <div class="form-group">
+                                            <label for="txtMontoContratoProyecto">Monto de Contrato</label>
+                                            <input type="text" class="form-control" id="txtMontoContratoProyecto" placeholder="0.00">
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <div class="form-group">
+                                            <label>Departamento/Provincia/Distrito</label>
+                                            <select class="form-control select2" style="width: 100%;" id="cbDepartamentoProyecto">
+                                            </select>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <div class="form-group">
+                                            <label for="txtUrbProyecto">Urb./A.A.H.H./PP.JJ/Asoc</label>
+                                            <input type="text" class="form-control" id="txtUrbProyecto" placeholder="Urb./A.A.H.H./PP.JJ/Asoc">
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <div class="form-group">
+                                            <label for="txtCalleProyecto">Jr./Av./Calle/Pasaje</label>
+                                            <input type="text" class="form-control" id="txtCalleProyecto" placeholder="Jr./Av./Calle/Pasaje">
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <div class="form-group">
+                                            <label for="txtMontoCobrarProyecto">Monto a Cobrar</label>
+                                            <input type="text" class="form-control" id="txtMontoCobrarProyecto" placeholder="0.00">
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-danger" id="btnAceptarCertProyecto">
+                                    <i class="fa fa-check"></i> Aceptar</button>
+                                <button type="button" class="btn btn-primary" id="btnCancelCertProyecto">
+                                    <i class="fa fa-remove"></i> Cancelar</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- modal end certificado de proyecto -->
+
+            <!-- modal start peritaje -->
+            <div class="row">
+                <div class="modal fade" id="mdPeritaje" data-backdrop="static">
+                    <div class="modal-dialog modal-xl">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <button type="button" class="close" id="btnClosePeritaje">
+                                    <i class="fa fa-close"></i>
+                                </button>
+                                <h4 class="modal-title">
+                                    <i class="fa fa-plus">
+                                    </i> Peritaje
+                                </h4>
+                            </div>
+                            <div class="modal-body">
+
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <label id="lblPeritajeEstado"></label>
+                                    </div>
+                                </div>
+
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <div class="form-group">
+                                            <label for="txtDescripcionPeritaje">Descripción</label>
+                                            <input type="text" class="form-control" id="txtDescripcionPeritaje" placeholder="Ingrese una descripción sobre el peritaje.">
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <div class="form-group">
+                                            <label for="txtMontoPeritaje">Monto</label>
+                                            <input type="text" class="form-control" id="txtMontoPeritaje" placeholder="0.00">
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-danger" id="btnAceptarPeritaje">
+                                    <i class="fa fa-check"></i> Aceptar</button>
+                                <button type="button" class="btn btn-primary" id="btnCancelarPeritaje">
+                                    <i class="fa fa-remove"></i> Cancelar</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- modal end peritaje -->
+
+            <!-- modal start otros -->
+            <div class="row">
+                <div class="modal fade" id="mdOtros" data-backdrop="static">
+                    <div class="modal-dialog modal-xl">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <button type="button" class="close" data-dismiss="modal">
+                                    <i class="fa fa-close"></i>
+                                </button>
+                                <h4 class="modal-title">
+                                    <i class="fa fa-plus">
+                                    </i> Otros
+                                </h4>
+                            </div>
+                            <div class="modal-body">
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <div class="form-group">
+                                            <label id="lblConceptos">Conceptos </label>
+                                            <select class="form-control" id="cbOtrosConcepto">
+                                                <option value="">- Seleccione -</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            <label>Cantidad</label>
+                                            <input type="number" class="form-control" id="txtCantidadOtrosConceptos" placeholder="0.00" value="1" min="1">
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            <label for="txtIngeniero">Monto</label>
+                                            <input type="number" class="form-control" id="txtMontoOtrosConceptos" placeholder="0.00" required="">
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-danger" id="btnAceptarOtros">
+                                    <i class="fa fa-check"></i> Aceptar</button>
+                                <button type="button" class="btn btn-primary" data-dismiss="modal">
+                                    <i class="fa fa-remove"></i> Cancelar</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- modal end otros -->
+
+            <!-- Content Wrapper. Contains page content -->
+            <div class="content-wrapper" style="background-color: #FFFFFF;">
+                <!-- Main content -->
+                <section class="content">
 
                     <!-- <div class="row"> -->
                     <div class="row">
@@ -1146,6 +1158,26 @@ if (!isset($_SESSION['IdUsuario'])) {
                             break;
                         }
                     }
+                });
+
+                $("#btnSunat").click(function() {
+                    if ($("#txtRuc").val().trim() == '') {
+                        tools.AlertWarning("Ingenieros", "Ingrese un ruc en el campo.");
+                        $("#txtRuc").focus();
+                    } else if ($("#txtRuc").val().length !== 11) {
+                        tools.AlertWarning("Ingenieros", "El dni debe tener 11 caracteres.");
+                        $("#txtRuc").focus();
+                    } else {
+                        loadSunatApi($("#txtRuc").val());
+                    }
+
+                });
+
+                $("#btnSunat").keypress(function(event) {
+                    if (event.keyCode == 13) {
+                        loadSunatApi($("#txtRuc").val());
+                    }
+                    event.preventDefault();
                 });
 
             });
@@ -1553,6 +1585,29 @@ if (!isset($_SESSION['IdUsuario'])) {
                         }
                     });
                 }
+            }
+
+
+            function loadSunatApi(numero) {
+                $.ajax({
+                    url: "https://dniruc.apisperu.com/api/v1/ruc/" + numero + "?token=eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJlbWFpbCI6ImFsZXhhbmRlcl9keF8xMEBob3RtYWlsLmNvbSJ9.6TLycBwcRyW1d-f_hhCoWK1yOWG_HJvXo8b-EoS5MhE",
+                    type: "get",
+                    data: {},
+                    beforeSend: function() {
+                        $("#divLoad").addClass("overlay");
+                        $("#divLoad").append('<i class="fa fa-refresh fa-spin"></i>');
+                    },
+                    success: function(result) {
+                        $("#divLoad").removeClass("overlay");
+                        $("#divLoad").empty();
+                        $("#NombreComercial").val(result.razonSocial);
+                        $("#DireccionEmpresa").val(result.direccion);
+                    },
+                    error: function(error) {
+                        $("#divLoad").removeClass("overlay");
+                        $("#divLoad").empty();
+                    }
+                });
             }
         </script>
     </body>
