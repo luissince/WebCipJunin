@@ -9,10 +9,12 @@ require '../model/ConceptoAdo.php';
 
 if ($_SERVER['REQUEST_METHOD'] == 'GET') {
     if ($_GET["type"] === "alldata") {
+        $opcion = $_GET["opcion"];
+        $categoria = $_GET["categoria"];
         $nombres = $_GET['nombres'];
         $posicionPagina = $_GET['posicionPagina'];
         $filasPorPagina = $_GET['filasPorPagina'];
-        $conceptos = ConceptoAdo::getAll($nombres, intval($posicionPagina), intval($filasPorPagina));
+        $conceptos = ConceptoAdo::getAll($opcion, $categoria, $nombres, intval($posicionPagina), intval($filasPorPagina));
         if (is_array($conceptos)) {
             echo json_encode(array(
                 "estado" => 1,

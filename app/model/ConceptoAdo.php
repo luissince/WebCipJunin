@@ -10,7 +10,7 @@ class ConceptoAdo
     {
     }
 
-    public static function getAll($nombres, $posicionPagina, $filasPorPagina)
+    public static function getAll($opcion, $categoria, $nombres, $posicionPagina, $filasPorPagina)
     {
         try {
             $array = array();
@@ -28,12 +28,25 @@ class ConceptoAdo
             Estado, 
             Asignado
             FROM Concepto 
-            where Concepto like concat(?,'%') 
+            where 
+            ? = 0 
+            or
+            ? = 1 and Concepto like concat(?,'%') 
+            or
+            ? = 2 and Categoria = ?
             order by Categoria asc,Concepto asc,cast(Inicio as date) desc, cast(Fin as date) desc
             offset ? rows fetch next ? rows only");
-            $comandoConcepto->bindParam(1, $nombres, PDO::PARAM_STR);
-            $comandoConcepto->bindParam(2, $posicionPagina, PDO::PARAM_INT);
-            $comandoConcepto->bindParam(3, $filasPorPagina, PDO::PARAM_INT);
+
+            $comandoConcepto->bindParam(1, $opcion, PDO::PARAM_INT);
+
+            $comandoConcepto->bindParam(2, $opcion, PDO::PARAM_INT);
+            $comandoConcepto->bindParam(3, $nombres, PDO::PARAM_STR);
+
+            $comandoConcepto->bindParam(4, $opcion, PDO::PARAM_INT);
+            $comandoConcepto->bindParam(5, $categoria, PDO::PARAM_INT);
+
+            $comandoConcepto->bindParam(6, $posicionPagina, PDO::PARAM_INT);
+            $comandoConcepto->bindParam(7, $filasPorPagina, PDO::PARAM_INT);
             $comandoConcepto->execute();
             $count = 0;
             while ($row = $comandoConcepto->fetch()) {
@@ -55,8 +68,20 @@ class ConceptoAdo
             }
 
             $comandoTotal = Database::getInstance()->getDb()->prepare("SELECT COUNT(*) FROM Concepto 
-            where Concepto like concat(?,'%') ");
-            $comandoTotal->bindParam(1, $nombres, PDO::PARAM_STR);
+            where 
+            ? = 0 
+            or
+            ? = 1 and Concepto like concat(?,'%') 
+            or
+            ? = 2 and Categoria = ? ");
+            $comandoTotal->bindParam(1, $opcion, PDO::PARAM_INT);
+
+            $comandoTotal->bindParam(2, $opcion, PDO::PARAM_INT);
+            $comandoTotal->bindParam(3, $nombres, PDO::PARAM_STR);
+
+            $comandoTotal->bindParam(4, $opcion, PDO::PARAM_INT);
+            $comandoTotal->bindParam(5, $categoria, PDO::PARAM_INT);
+            
             $comandoTotal->execute();
             $resultTotal =  $comandoTotal->fetchColumn();
 
@@ -575,14 +600,15 @@ class ConceptoAdo
         }
     }
 
-    public static function validateCertNum($numero){
-        try{
+    public static function validateCertNum($numero)
+    {
+        try {
             $comandSelect = Database::getInstance()->getDb()->prepare("SELECT * FROM CERTHabilidad WHERE Numero = ?");
             $comandSelect->bindParam(1, $numero, PDO::PARAM_INT);
             $comandSelect->execute();
-            if($comandSelect->fetch()){
+            if ($comandSelect->fetch()) {
                 return true;
-            }else{
+            } else {
                 return false;
             }
         } catch (Exception $ex) {

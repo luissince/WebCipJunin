@@ -1,6 +1,5 @@
 <?php
-
-set_time_limit(300); //evita el error 20 segundos de peticion
+set_time_limit(500);
 session_start();
 
 require __DIR__ . "/lib/phpspreadsheet/vendor/autoload.php";

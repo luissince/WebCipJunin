@@ -22,6 +22,148 @@ if (!isset($_SESSION['IdUsuario'])) {
             <!-- start menu -->
             <?php include('./layout/menu.php') ?>
             <!-- end menu -->
+            <!-- Modal -->
+            <div class="row">
+                <div class="modal fade" id="confirmar">
+                    <div class="modal-dialog">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <button type="button" class="close" id="btnCloseModal">
+                                    <i class="fa fa-close"></i>
+                                </button>
+                                <h4 class="modal-title">
+                                    <i class="fa fa-list-alt">
+                                    </i> Registrar Concepto
+                                </h4>
+                            </div>
+                            <div class="modal-body">
+
+                                <div class="row">
+                                    <div class="col-md-8">
+                                        <div class="form-group">
+                                            <label for="categoria">Categoria: <i class="fa fa-fw fa-asterisk text-danger"></i></label>
+                                            <select id="cbCategoria" class="form-control">
+                                                <option value="0">- - Seleccione - -</option>
+                                                <option value="1">Cuota ordinaria</option>
+                                                <option value="2">Cuota ordinaria (Admistia)</option>
+                                                <option value="3">Cuota ordinaria (Vitalicio)</option>
+                                                <option value="4">Colegiatura</option>
+                                                <option value="5">Certificado de habilidad</option>
+                                                <option value="6">Certificado de residencia de obra</option>
+                                                <option value="7">Certificado de Proyecto</option>
+                                                <option value="8">Peritaje</option>
+                                                <option value="100">Ingresos Diversos</option>
+                                            </select>
+                                        </div>
+
+                                    </div>
+                                    <div class="col-md-4">
+                                        <div class="form-group">
+                                            <label for="codigo">Codigo: </label>
+                                            <input id="txtCodigo" type="text" name="codigo" class="form-control" placeholder="Codigo del concepto" required="">
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <div class="form-group">
+                                            <label for="concepto">Concepto: <i class="fa fa-fw fa-asterisk text-danger"></i></label>
+                                            <input id="txtConcepto" type="text" name="concepto" class="form-control" placeholder="Nombre del concepto" required="">
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-4 col-sm-12 col-xs-12">
+                                        <div class="form-group">
+                                            <label for="precio">Precio: <i class="fa fa-fw fa-asterisk text-danger"></i></label>
+                                            <input id="txtPrecio" type="number" name="precio" class="form-control" placeholder="Monto del concepto" required="">
+                                        </div>
+                                    </div>
+                                    <div class="col-md-4 col-sm-12 col-xs-12">
+                                        <div class="form-group">
+                                            <label for="fecha_inicio">Fecha Inicio: <i class="fa fa-fw fa-asterisk text-danger"></i></label>
+                                            <input id="txtFecha_inicio" type="date" name="fecha_inicio" class="form-control" required="">
+                                        </div>
+                                    </div>
+                                    <div class="col-md-4 col-sm-12 col-xs-12">
+                                        <div class="form-group">
+                                            <label for="fecha_fin">Fecha Fin: <i class="fa fa-fw fa-asterisk text-danger"></i></label>
+                                            <input id="txtFecha_fin" type="date" name="fecha_fin" class="form-control" required="">
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <p>Referido a: <i class="fa fa-fw fa-asterisk text-danger"></i></p>
+
+                                    </div>
+                                    <div class="col-md-6 col-sm-12 col-xs-12">
+                                        <div class="form-group">
+                                            <input type="radio" id="rbJunin" name="referido" value="" checked="checked">
+                                            <label for="rbJunin">CIP Junin</label>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6 col-sm-12 col-xs-12">
+                                        <div class="form-group">
+                                            <input type="radio" id="rbNacional" name="referido" value="1">
+                                            <label for="rbNacional">CIP Nacional</label>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <p>Modalidad de ingeniero: <i class="fa fa-fw fa-asterisk text-danger"></i></p>
+                                    </div>
+                                    <div class="col-md-6 col-sm-12 col-xs-12">
+                                        <div class="form-group">
+                                            <input type="radio" id="precio_ordinario" name="espesifico" value="0" checked="checked">
+                                            <label for="precio_ordinario">Precio Ordinario</label>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6 col-sm-12 col-xs-12">
+                                        <div class="form-group">
+                                            <input type="radio" id="precio_transeunte" name="espesifico" value="1">
+                                            <label for="precio_transeunte">Precio para Transeunte</label>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6 col-sm-12 col-xs-12">
+                                        <div class="form-group">
+                                            <input type="radio" id="precio_vitalicio" name="espesifico" value="2">
+                                            <label for="precio_vitalicio">Precio para Vitalicio</label>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6 col-sm-12 col-xs-12">
+                                        <div class="form-group">
+                                            <input type="radio" id="precio_variable" name="espesifico" value="128">
+                                            <label for="precio_variable">Precio Variable</label>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <div class="form-group">
+                                            <input type="checkbox" id="estado">
+                                            <label for="estado" id="lblEstado">Inactivo</label>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="modal-footer">
+                                <div class="col-md-6 col-sm-6 col-xs-12">
+                                    <p class="text-left text-danger">Todos los campos marcados con <i class="fa fa-fw fa-asterisk text-danger"></i> son obligatorios</p>
+                                </div>
+                                <div class="col-md-6 col-sm-6 col-xs-12">
+                                    <button type="button" class="btn btn-warning" id="btnAceptarModal">
+                                        <i class="fa fa-check"></i> Aceptar</button>
+                                    <button type="button" class="btn btn-primary" id="btnCancelarModal">
+                                        <i class="fa fa-remove"></i> Cancelar</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- Modal -->
             <!-- Content Wrapper. Contains page content -->
             <div class="content-wrapper" style="background-color: #FFFFFF;">
                 <!-- Main content -->
@@ -29,148 +171,7 @@ if (!isset($_SESSION['IdUsuario'])) {
                     <h3 class="no-margin"> Conceptos de cobros <small> Lista </small> </h3>
                 </section>
 
-                <!-- Modal -->
-                <div class="row">
-                    <div class="modal fade" id="confirmar">
-                        <div class="modal-dialog">
-                            <div class="modal-content">
-                                <div class="modal-header">
-                                    <button type="button" class="close" id="btnCloseModal">
-                                        <i class="fa fa-close"></i>
-                                    </button>
-                                    <h4 class="modal-title">
-                                        <i class="fa fa-list-alt">
-                                        </i> Registrar Concepto
-                                    </h4>
-                                </div>
-                                <div class="modal-body">
 
-                                    <div class="row">
-                                        <div class="col-md-8">
-                                            <div class="form-group">
-                                                <label for="categoria">Categoria: <i class="fa fa-fw fa-asterisk text-danger"></i></label>
-                                                <select id="cbCategoria" class="form-control">
-                                                    <option value="0">- - Seleccione - -</option>
-                                                    <option value="1">Cuota ordinaria</option>
-                                                    <option value="2">Cuota ordinaria (Admistia)</option>
-                                                    <option value="3">Cuota ordinaria (Vitalicio)</option>
-                                                    <option value="4">Colegiatura</option>
-                                                    <option value="5">Certificado de habilidad</option>
-                                                    <option value="6">Certificado de residencia de obra</option>
-                                                    <option value="7">Certificado de Proyecto</option>
-                                                    <option value="8">Peritaje</option>
-                                                    <option value="100">Ingresos Diversos</option>
-                                                </select>
-                                            </div>
-
-                                        </div>
-                                        <div class="col-md-4">
-                                            <div class="form-group">
-                                                <label for="codigo">Codigo: </label>
-                                                <input id="txtCodigo" type="text" name="codigo" class="form-control" placeholder="Codigo del concepto" required="">
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="row">
-                                        <div class="col-md-12">
-                                            <div class="form-group">
-                                                <label for="concepto">Concepto: <i class="fa fa-fw fa-asterisk text-danger"></i></label>
-                                                <input id="txtConcepto" type="text" name="concepto" class="form-control" placeholder="Nombre del concepto" required="">
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="row">
-                                        <div class="col-md-4 col-sm-12 col-xs-12">
-                                            <div class="form-group">
-                                                <label for="precio">Precio: <i class="fa fa-fw fa-asterisk text-danger"></i></label>
-                                                <input id="txtPrecio" type="number" name="precio" class="form-control" placeholder="Monto del concepto" required="">
-                                            </div>
-                                        </div>
-                                        <div class="col-md-4 col-sm-12 col-xs-12">
-                                            <div class="form-group">
-                                                <label for="fecha_inicio">Fecha Inicio: <i class="fa fa-fw fa-asterisk text-danger"></i></label>
-                                                <input id="txtFecha_inicio" type="date" name="fecha_inicio" class="form-control" required="">
-                                            </div>
-                                        </div>
-                                        <div class="col-md-4 col-sm-12 col-xs-12">
-                                            <div class="form-group">
-                                                <label for="fecha_fin">Fecha Fin: <i class="fa fa-fw fa-asterisk text-danger"></i></label>
-                                                <input id="txtFecha_fin" type="date" name="fecha_fin" class="form-control" required="">
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="row">
-                                        <div class="col-md-12">
-                                            <p>Referido a: <i class="fa fa-fw fa-asterisk text-danger"></i></p>
-
-                                        </div>
-                                        <div class="col-md-6 col-sm-12 col-xs-12">
-                                            <div class="form-group">
-                                                <input type="radio" id="rbJunin" name="referido" value="" checked="checked">
-                                                <label for="rbJunin">CIP Junin</label>
-                                            </div>
-                                        </div>
-                                        <div class="col-md-6 col-sm-12 col-xs-12">
-                                            <div class="form-group">
-                                                <input type="radio" id="rbNacional" name="referido" value="1">
-                                                <label for="rbNacional">CIP Nacional</label>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="row">
-                                        <div class="col-md-12">
-                                            <p>Modalidad de ingeniero: <i class="fa fa-fw fa-asterisk text-danger"></i></p>
-                                        </div>
-                                        <div class="col-md-6 col-sm-12 col-xs-12">
-                                            <div class="form-group">
-                                                <input type="radio" id="precio_ordinario" name="espesifico" value="0" checked="checked">
-                                                <label for="precio_ordinario">Precio Ordinario</label>
-                                            </div>
-                                        </div>
-                                        <div class="col-md-6 col-sm-12 col-xs-12">
-                                            <div class="form-group">
-                                                <input type="radio" id="precio_transeunte" name="espesifico" value="1">
-                                                <label for="precio_transeunte">Precio para Transeunte</label>
-                                            </div>
-                                        </div>
-                                        <div class="col-md-6 col-sm-12 col-xs-12">
-                                            <div class="form-group">
-                                                <input type="radio" id="precio_vitalicio" name="espesifico" value="2">
-                                                <label for="precio_vitalicio">Precio para Vitalicio</label>
-                                            </div>
-                                        </div>
-                                        <div class="col-md-6 col-sm-12 col-xs-12">
-                                            <div class="form-group">
-                                                <input type="radio" id="precio_variable" name="espesifico" value="128">
-                                                <label for="precio_variable">Precio Variable</label>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="row">
-                                        <div class="col-md-12">
-                                            <div class="form-group">
-                                                <input type="checkbox" id="estado">
-                                                <label for="estado" id="lblEstado">Inactivo</label>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="modal-footer">
-                                    <div class="col-md-6 col-sm-6 col-xs-12">
-                                        <p class="text-left text-danger">Todos los campos marcados con <i class="fa fa-fw fa-asterisk text-danger"></i> son obligatorios</p>
-                                    </div>
-                                    <div class="col-md-6 col-sm-6 col-xs-12">
-                                        <button type="button" class="btn btn-warning" id="btnAceptarModal">
-                                            <i class="fa fa-check"></i> Aceptar</button>
-                                        <button type="button" class="btn btn-primary" id="btnCancelarModal">
-                                            <i class="fa fa-remove"></i> Cancelar</button>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <!-- Modal -->
 
                 <section class="content">
 
@@ -192,19 +193,34 @@ if (!isset($_SESSION['IdUsuario'])) {
                             </div>
                         </div>
 
-                        <div class="col-md-6 col-sm-12 col-xs-12">
+                        <div class="col-md-3 col-sm-12 col-xs-12">
                             <div class="form-group">
-                                <input type="search" id="buscar" class="form-control" placeholder="Buscar por nombres del concepto" aria-describedby="search" value="">
+                                <select class="form-control" id="cbCategorias">
+                                    <option value="0">- Seleccione -</option>
+                                    <option value="1">Cuota ordinaria</option>
+                                    <option value="2">Cuota ordinaria (Admistia)</option>
+                                    <option value="3">Cuota ordinaria (Vitalicio)</option>
+                                    <option value="4">Colegiatura</option>
+                                    <option value="5">Certificado de habilidad</option>
+                                    <option value="6">Certificado de residencia de obra</option>
+                                    <option value="7">Certificado de Proyecto</option>
+                                    <option value="8">Peritaje</option>
+                                    <option value="100">Ingresos Diversos</option>
+                                </select>
                             </div>
                         </div>
 
-                        <div class="col-md-2 col-sm-12 col-xs-12">
+                        <div class="col-md-5 col-sm-12 col-xs-12">
                             <div class="form-group">
-                                <button type="button" class="btn btn-default">
-                                    <i class="fa fa-search"></i> Buscar
-                                </button>
+                                <div class="input-group">
+                                    <input type="search" id="buscar" class="form-control" placeholder="Buscar por nombres del concepto" aria-describedby="search" value="">
+                                    <div class="input-group-btn">
+                                        <button type="button" class="btn btn-primary" id="btnBuscar">Buscar</button>
+                                    </div>
+                                </div>
                             </div>
                         </div>
+
                     </div>
                     <div class="row">
                         <div class="col-md-12 col-sm-12 col-xs-12">
@@ -300,11 +316,32 @@ if (!isset($_SESSION['IdUsuario'])) {
                     loadInitConceptos()
                 });
 
-                $("#buscar").on("keyup", function(event) {
+                $("#buscar").keyup(function(event) {
                     if (event.keyCode === 13) {
+                        if (!state) {
+                            paginacion = 1;
+                            loadTableConceptos(1, 0, $("#buscar").val());
+                            opcion = 1;
+                        }
+                    }
+                });
+
+                $("#btnBuscar").click(function() {
+                    if (!state) {
                         paginacion = 1;
-                        loadTableConceptos($("#buscar").val());
+                        loadTableConceptos(1, 0, $("#buscar").val());
                         opcion = 1;
+                    }
+                });
+
+                $("#cbCategorias").change(function() {
+                    if ($("#cbCategorias").val() != '') {
+                        console.log("dd")
+                        if (!state) {
+                            paginacion = 1;
+                            loadTableConceptos(2, $("#cbCategorias").val(), "");
+                            opcion = 2;
+                        }
                     }
                 });
 
@@ -346,10 +383,13 @@ if (!isset($_SESSION['IdUsuario'])) {
             function onEventPaginacion() {
                 switch (opcion) {
                     case 0:
-                        loadTableConceptos("");
+                        loadTableConceptos(0, 0, "");
                         break;
                     case 1:
-                        loadTableConceptos($("#buscar").val());
+                        loadTableConceptos(1, 0, $("#buscar").val());
+                        break;
+                    case 2:
+                        loadTableConceptos(2, $("#cbCategorias").val(), "");
                         break;
                 }
             }
@@ -357,17 +397,19 @@ if (!isset($_SESSION['IdUsuario'])) {
             function loadInitConceptos() {
                 if (!state) {
                     paginacion = 1;
-                    loadTableConceptos("");
+                    loadTableConceptos(0, 0, "");
                     opcion = 0;
                 }
             }
 
-            function loadTableConceptos(nombres) {
+            function loadTableConceptos(opcion, categoria, nombres) {
                 $.ajax({
                     url: "../app/controller/ConceptoController.php",
                     method: "GET",
                     data: {
                         "type": "alldata",
+                        "opcion": opcion,
+                        "categoria": categoria,
                         "nombres": nombres,
                         "posicionPagina": ((paginacion - 1) * filasPorPagina),
                         "filasPorPagina": filasPorPagina

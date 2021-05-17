@@ -1,4 +1,5 @@
 <?php
+set_time_limit(500);
 
 define('_MPDF_PATH', '/lib');
 require_once('lib/mpdf/vendor/autoload.php');
