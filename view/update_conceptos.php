@@ -42,7 +42,11 @@ if (!isset($_SESSION['IdUsuario'])) {
                                                 <option value="1">Cuota ordinaria</option>
                                                 <option value="2">Cuota ordinaria (Admistia)</option>
                                                 <option value="3">Cuota ordinaria (Vitalicio)</option>
+                                                <option value="12">Cuota ordinaria (Resolución 15)</option>
                                                 <option value="4">Colegiatura</option>
+                                                <option value="9">Colegiatura otras modalidades</option>
+                                                <option value="10">Colegiatura por tesis local</option>
+                                                <option value="11">Colegiatura por tesis externa</option>
                                                 <option value="5">Certificado de habilidad</option>
                                                 <option value="6">Certificado de residencia de obra</option>
                                                 <option value="7">Certificado de Proyecto</option>
@@ -254,6 +258,18 @@ if (!isset($_SESSION['IdUsuario'])) {
                                 case "8":
                                     $("#categoria").val("8")
                                     break
+                                case "9":
+                                    $("#categoria").val("9")
+                                    break
+                                case "10":
+                                    $("#categoria").val("10")
+                                    break
+                                case "11":
+                                    $("#categoria").val("11")
+                                    break
+                                case "12":
+                                    $("#categoria").val("12")
+                                    break
                                 case "100":
                                     $("#categoria").val("100")
                                     break
@@ -308,7 +324,7 @@ if (!isset($_SESSION['IdUsuario'])) {
                         "Nose pudo cargar los datos correctamente, recargue la pantalla por favor.");
                 }
             }
-            
+
             function updateConcepto() {
                 if ($("#categoria").val() == "0") {
                     tools.AlertWarning("Advertencia", "Seleccione la categoría del concepto.");

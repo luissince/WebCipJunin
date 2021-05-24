@@ -287,7 +287,7 @@ if (!isset($_GET["idIngreso"])) {
                         </tr>         
                         <tr>
                             <td class="estado" width="50%"></td>
-                            <td class="totals" width="15%" align="right">Op.Exogeneradas: </td>
+                            <td class="totals" width="15%" align="right">Op.Exoneradas: </td>
                             <td class="cost" align="right" width="15%">S/ ' . number_format(round($totales['totalconimpuesto'], 2, PHP_ROUND_HALF_UP), 2, '.', '') . '</td>
                         </tr>            
                         <tr>

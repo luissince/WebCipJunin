@@ -10,7 +10,7 @@ class ConceptoAdo
     {
     }
 
-    public static function getAll($opcion, $categoria, $nombres, $posicionPagina, $filasPorPagina)
+    public static function getAll($opcion, $nombres, $categoria, $posicionPagina, $filasPorPagina)
     {
         try {
             $array = array();
@@ -29,14 +29,13 @@ class ConceptoAdo
             Asignado
             FROM Concepto 
             where 
-            ? = 0 
-            or
-            ? = 1 and Concepto like concat(?,'%') 
-            or
-            ? = 2 and Categoria = ?
+            ? = 0
+            OR
+            ? = 1 AND Concepto like concat(?,'%') 
+            OR
+            ? = 2 AND Categoria = ?
             order by Categoria asc,Concepto asc,cast(Inicio as date) desc, cast(Fin as date) desc
             offset ? rows fetch next ? rows only");
-
             $comandoConcepto->bindParam(1, $opcion, PDO::PARAM_INT);
 
             $comandoConcepto->bindParam(2, $opcion, PDO::PARAM_INT);
@@ -67,13 +66,14 @@ class ConceptoAdo
                 ));
             }
 
-            $comandoTotal = Database::getInstance()->getDb()->prepare("SELECT COUNT(*) FROM Concepto 
+            $comandoTotal = Database::getInstance()->getDb()->prepare("SELECT COUNT(*) 
+            FROM Concepto 
             where 
-            ? = 0 
-            or
-            ? = 1 and Concepto like concat(?,'%') 
-            or
-            ? = 2 and Categoria = ? ");
+            ? = 0
+            OR
+            ? = 1 AND Concepto like concat(?,'%') 
+            OR
+            ? = 2 AND Categoria = ?");
             $comandoTotal->bindParam(1, $opcion, PDO::PARAM_INT);
 
             $comandoTotal->bindParam(2, $opcion, PDO::PARAM_INT);
@@ -81,7 +81,6 @@ class ConceptoAdo
 
             $comandoTotal->bindParam(4, $opcion, PDO::PARAM_INT);
             $comandoTotal->bindParam(5, $categoria, PDO::PARAM_INT);
-            
             $comandoTotal->execute();
             $resultTotal =  $comandoTotal->fetchColumn();
 
@@ -209,13 +208,14 @@ class ConceptoAdo
         }
     }
 
-    public static function getColegiatura()
+    public static function getColegiatura($tipoCategoria)
     {
         try {
             $array = array();
-            $cmdColegiatura = "SELECT idConcepto,Categoria,Concepto,Precio FROM Concepto WHERE Categoria = 4 and Estado = 1 
+            $cmdColegiatura = "SELECT idConcepto,Categoria,Concepto,Precio FROM Concepto WHERE Categoria = ? and Estado = 1 
             ORDER BY Concepto ASC";
             $cmdConcepto = Database::getInstance()->getDb()->prepare($cmdColegiatura);
+            $cmdConcepto->bindParam(1, $tipoCategoria, PDO::PARAM_STR);
             $cmdConcepto->execute();
             while ($row = $cmdConcepto->fetch()) {
                 array_push($array, array(
@@ -521,7 +521,7 @@ class ConceptoAdo
             Asignado,
             Observacion,
             Codigo,
-            Estado            
+            Estado          
             )VALUES(?,?,?,?,?,?,?,?,?,?)");
 
             // $dateTimeInicio = date('Y-d-m H:i:s', strtotime($data["Inicio"]));
@@ -589,11 +589,19 @@ class ConceptoAdo
     {
         try {
             Database::getInstance()->getDb()->beginTransaction();
-            $comandSelect = Database::getInstance()->getDb()->prepare("DELETE FROM Concepto WHERE idConcepto = ?");
-            $comandSelect->bindParam(1, $concepto["idConcepto"], PDO::PARAM_INT);
-            $comandSelect->execute();
-            Database::getInstance()->getDb()->commit();
-            return "eliminado";
+            $cmdValidate = Database::getInstance()->getDb()->prepare("SELECT * FROM Detalle WHERE idConcepto = ?");
+            $cmdValidate->bindParam(1, $concepto["idConcepto"], PDO::PARAM_INT);
+            $cmdValidate->execute();
+            if ($cmdValidate->fetch()) {
+                Database::getInstance()->getDb()->rollback();
+                return "use";
+            } else {
+                $comandSelect = Database::getInstance()->getDb()->prepare("DELETE FROM Concepto WHERE idConcepto = ?");
+                $comandSelect->bindParam(1, $concepto["idConcepto"], PDO::PARAM_INT);
+                $comandSelect->execute();
+                Database::getInstance()->getDb()->commit();
+                return "eliminado";
+            }
         } catch (Exception $ex) {
             Database::getInstance()->getDb()->rollback();
             return $ex->getMessage();

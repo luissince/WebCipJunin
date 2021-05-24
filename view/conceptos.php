@@ -47,7 +47,11 @@ if (!isset($_SESSION['IdUsuario'])) {
                                                 <option value="1">Cuota ordinaria</option>
                                                 <option value="2">Cuota ordinaria (Admistia)</option>
                                                 <option value="3">Cuota ordinaria (Vitalicio)</option>
-                                                <option value="4">Colegiatura</option>
+                                                <option value="12">Cuota ordinaria (Resolución 15)</option>
+                                                <option value="4">Colegiatura ordinaria</option>
+                                                <option value="9">Colegiatura otras modalidades</option>
+                                                <option value="10">Colegiatura por tesis local</option>
+                                                <option value="11">Colegiatura por tesis externa</option>
                                                 <option value="5">Certificado de habilidad</option>
                                                 <option value="6">Certificado de residencia de obra</option>
                                                 <option value="7">Certificado de Proyecto</option>
@@ -196,11 +200,15 @@ if (!isset($_SESSION['IdUsuario'])) {
                         <div class="col-md-3 col-sm-12 col-xs-12">
                             <div class="form-group">
                                 <select class="form-control" id="cbCategorias">
-                                    <option value="0">- Seleccione -</option>
+                                    <option value="0">- - Seleccione - -</option>
                                     <option value="1">Cuota ordinaria</option>
                                     <option value="2">Cuota ordinaria (Admistia)</option>
                                     <option value="3">Cuota ordinaria (Vitalicio)</option>
-                                    <option value="4">Colegiatura</option>
+                                    <option value="12">Cuota ordinaria (Resolución 15)</option>
+                                    <option value="4">Colegiatura ordinaria</option>
+                                    <option value="9">Colegiatura otras modalidades</option>
+                                    <option value="10">Colegiatura por tesis local</option>
+                                    <option value="11">Colegiatura por tesis externa</option>
                                     <option value="5">Certificado de habilidad</option>
                                     <option value="6">Certificado de residencia de obra</option>
                                     <option value="7">Certificado de Proyecto</option>
@@ -589,6 +597,7 @@ if (!isset($_SESSION['IdUsuario'])) {
                 $("#lblEstado").html("Inactivo");
             }
 
+
             function DeleteConcepto(idConcepto) {
                 tools.ModalDialog("Concepto", "¿Está seguro de continuar?", function(value) {
                     if (value == true) {
@@ -600,18 +609,18 @@ if (!isset($_SESSION['IdUsuario'])) {
                                 "idconcepto": idConcepto,
                             },
                             beforeSend: function() {
-                                tools.AlertInfo("Concepto", "Procesando información.");
+                                tools.ModalAlertInfo("Concepto", "Procesando petición..");
                             },
                             success: function(result) {
                                 if (result.estado == 1) {
-                                    tools.AlertSuccess("Concepto", result.message);
+                                    tools.ModalAlertSuccess("Concepto", result.message);
                                     loadInitConceptos()
                                 } else {
-                                    tools.AlertWarning("Concepto", result.message);
+                                    tools.ModalAlertWarning("Concepto", result.message);
                                 }
                             },
                             error: function(error) {
-                                tools.AlertError("Concepto", "Error fatal: Comuniquese con el administrador del sistema");
+                                tools.ModalAlertError("Concepto", "Se produjo un error: " + error.responseText);
                             }
                         });
                     }

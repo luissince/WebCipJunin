@@ -9,12 +9,12 @@ require '../model/ConceptoAdo.php';
 
 if ($_SERVER['REQUEST_METHOD'] == 'GET') {
     if ($_GET["type"] === "alldata") {
-        $opcion = $_GET["opcion"];
-        $categoria = $_GET["categoria"];
+        $opcion = $_GET['opcion'];
         $nombres = $_GET['nombres'];
+        $categoria = $_GET['categoria'];
         $posicionPagina = $_GET['posicionPagina'];
         $filasPorPagina = $_GET['filasPorPagina'];
-        $conceptos = ConceptoAdo::getAll($opcion, $categoria, $nombres, intval($posicionPagina), intval($filasPorPagina));
+        $conceptos = ConceptoAdo::getAll(intval($opcion), $nombres, intval($categoria), intval($posicionPagina), intval($filasPorPagina));
         if (is_array($conceptos)) {
             echo json_encode(array(
                 "estado" => 1,
@@ -80,8 +80,21 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
                     "message" => $result
                 ));
             }
-        } else if (intval($_GET["categoria"]) === 4) {
-            $result = ConceptoAdo::getColegiatura();
+        } else if (intval($_GET["categoria"]) === 12) {
+            $result = ConceptoAdo::getCuotas($_GET["dni"], intval($_GET["categoria"]), intval($_GET["mes"]));
+            if (is_array($result)) {
+                echo json_encode(array(
+                    "estado" => 1,
+                    "data" => $result
+                ));
+            } else {
+                echo json_encode(array(
+                    "estado" => 0,
+                    "message" => $result
+                ));
+            }
+        } else if (intval($_GET["categoria"]) === 4 || intval($_GET["categoria"]) === 9 || intval($_GET["categoria"]) === 10 || intval($_GET["categoria"]) === 11) {
+            $result = ConceptoAdo::getColegiatura($_GET["categoria"]);
             if (is_array($result)) {
                 echo json_encode(array(
                     "estado" => 1,
@@ -252,7 +265,12 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
         if ($result == "eliminado") {
             echo json_encode(array(
                 "estado" => 1,
-                "message" => "Se eliminaron correctamente los datos"
+                "message" => "Se eliminó correctamente el concepto."
+            ));
+        } else  if ($result == "use") {
+            echo json_encode(array(
+                "estado" => 2,
+                "message" => "No se puede elimar el concepto porque esta ligado a un ingreso."
             ));
         } else {
             echo json_encode(array(
