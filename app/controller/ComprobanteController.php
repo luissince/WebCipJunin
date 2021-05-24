@@ -66,6 +66,20 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
                 "message" => $result,
             ));
         }
+    } else if ($_GET["type"] === "getNotasCredito") {
+        $result = ComprobanteAdo::getAllNotasCredito();
+
+        if (is_array($result)) {
+            echo json_encode(array(
+                "estado" => 1,
+                "comprobantes" => $result,
+            ));
+        } else {
+            echo json_encode(array(
+                "estado" => 2,
+                "message" => $result,
+            ));
+        }
     }
 } else if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     if ($_POST["type"] === "addComprobante") {
@@ -78,6 +92,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
         $data["Predeterminado"] = $_POST["predeterminado"];
         $data["Estado"] = $_POST["estado"];
         $data["UsaRuc"] = $_POST["usaRuc"];
+        $data["Asignado"] = $_POST["comprobanteAfiliado"];
 
         $result = ComprobanteAdo::RegistrarComprobante($data);
         if ($result === "Insertado") {

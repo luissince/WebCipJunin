@@ -39,6 +39,7 @@ if (!isset($_SESSION['IdUsuario'])) {
                                         <i class="fa fa-close"></i>
                                     </button>
                                     <h4 class="modal-title" id="modal-comprobante-title">
+                                        <i class="fa fa-file-text-o"></i> Registrar comprobante
                                     </h4>
                                 </div>
                                 <div class="modal-body">
@@ -107,6 +108,48 @@ if (!isset($_SESSION['IdUsuario'])) {
                                         </div>
                                     </div>
 
+                                    <div class="col-md-12" style="border-top: 1px solid #cacacb; margin: 5px 0 15px 0;">
+                                    </div>
+
+                                    <div class="row">
+                                        <div class="col-md-6">
+                                            <div class="form-group">
+                                                <label for="rbGuiaRemision">Comprobante para Guía de Remisión:</label>
+                                                <div class="radio">
+                                                    <label>
+                                                        <input type="radio" id="rbGuiaRemision" name="optionRadio">
+                                                        Si
+                                                    </label>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <div class="form-group">
+                                                <label for="rbFacturado">Comprobante Facturado:</label>
+                                                <div class="radio">
+                                                    <label>
+                                                        <input type="radio" id="rbFacturado" name="optionRadio">
+                                                        Si
+                                                    </label>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="row">
+                                        <div class="col-md-6">
+                                            <div class="form-group">
+                                                <label for="rbNotaCredito">Comprobante para Nota de crédito:</label>
+                                                <div class="radio">
+                                                    <label>
+                                                        <input type="radio" id="rbNotaCredito" name="optionRadio">
+                                                        Si
+                                                    </label>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
                                 </div>
                                 <div class="modal-footer">
                                     <p class="text-left text-danger">Todos los campos marcados con <i class="fa fa-fw fa-asterisk text-danger"></i> son obligatorios</p>
@@ -124,22 +167,15 @@ if (!isset($_SESSION['IdUsuario'])) {
                 <section class="content">
 
                     <div class="row">
-
-                        <div class="col-lg-4 col-md-4 col-sm-12 col-xs-12">
+                        <div class="col-lg-2 col-md-4 col-sm-12 col-xs-12">
                             <div class="form-group">
-                                <input type="search" id="buscar" class="form-control" placeholder="Buscar por Nombre o tipo de comprobante" aria-describedby="search" value="">
-                            </div>
-                        </div>
-
-                        <div class="col-lg-2 col-md-2 col-sm-12 col-xs-12">
-                            <div class="form-group">
-                                <button class="btn btn-default" id="btnSearch">
-                                    <i class="fa fa-search"></i> Buscar
+                                <button type="button" class="btn btn-success" id="btnNuevoComprobante">
+                                    <i class="fa fa-plus"></i> Nuevo Comprobante
                                 </button>
                             </div>
                         </div>
 
-                        <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
+                        <div class="col-lg-2 col-md-2 col-sm-12 col-xs-12">
                             <div class="form-group">
                                 <!-- <button type="button" class="btn btn-success" id="btnNuevo">
                                     <i class="fa fa-plus"></i> Nueva Empresa
@@ -149,6 +185,18 @@ if (!isset($_SESSION['IdUsuario'])) {
                                 </button>
                             </div>
                         </div>
+
+                        <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
+                            <div class="form-group">
+                                <div class="input-group">
+                                    <input type="search" id="txtBuscar" class="form-control" placeholder="Buscar por Nombre o tipo de comprobante" aria-describedby="search" value="">
+                                    <div class="input-group-btn">
+                                        <button type="button" class="btn btn-primary" id="btnSearch">Buscar</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
                     </div>
 
                     <div class="row">
@@ -220,6 +268,23 @@ if (!isset($_SESSION['IdUsuario'])) {
 
                 loadInitComprobantes();
 
+                $("#btnNuevoComprobante").click(function() {
+                    idComprobante = 0;
+                    $("#NuevoComprobante").modal("show");
+                    $("#modal-comprobante-title").empty()
+                    $("#modal-comprobante-title").append('<i class="fa fa-file-text-o"></i> Registrar comprobante')
+                });
+
+                $("#btnNuevoComprobante").keypress(function(event) {
+                    if (event.keyCode == 13) {
+                        idComprobante = 0;
+                        $("#NuevoComprobante").modal("show");
+                        $("#modal-comprobante-title").empty()
+                        $("#modal-comprobante-title").append('<i class="fa fa-file-text-o"></i> Registrar comprobante')
+                    }
+                    event.preventDefault();
+                });
+
                 $("#btnIzquierda").click(function() {
                     if (!state) {
                         if (paginacion > 1) {
@@ -242,17 +307,17 @@ if (!isset($_SESSION['IdUsuario'])) {
                     loadInitComprobantes();
                 });
 
-                $("#buscar").on("keyup", function(event) {
+                $("#txtBuscar").on("keyup", function(event) {
                     if (event.keyCode === 13) {
                         paginacion = 1;
-                        loadTableComprobante($("#buscar").val());
+                        loadTableComprobante($("#txtBuscar").val());
                         opcion = 1;
                     }
                 });
 
                 $("#btnSearch").click(function() {
                     paginacion = 1;
-                    loadTableComprobante($("#buscar").val());
+                    loadTableComprobante($("#txtBuscar").val());
                     opcion = 1;
                 });
 
@@ -284,7 +349,7 @@ if (!isset($_SESSION['IdUsuario'])) {
                         loadTableComprobante("");
                         break;
                     case 1:
-                        loadTableComprobante($("#buscar").val());
+                        loadTableComprobante($("#txtBuscar").val());
                         break;
                 }
             }
@@ -416,21 +481,21 @@ if (!isset($_SESSION['IdUsuario'])) {
                                     "codigoAlterno": $("#txtAlterno").val(),
                                     "predeterminado": $("#cbPredeterminado").is(":checked"),
                                     "estado": $("#cbEstado").is(":checked"),
-                                    "usaRuc": $("#cbUsaRuc").is(":checked")
+                                    "usaRuc": $("#cbUsaRuc").is(":checked"),
+                                    "comprobanteAfiliado": $("#rbGuiaRemision").is(":checked") ? 1 : $("#rbFacturado").is(":checked") ? 2 : $("#rbNotaCredito").is(":checked") ? 3 : 0,
                                 },
                                 beforeSend: function() {
-                                    tools.ModalAlertInfo("Comprobante", "Procesando petición..");
+                                    clearModalAddComprobante();
+                                    tools.ModalAlertInfo("Comprobante", "Procesando petición..");                                   
                                 },
                                 success: function(result) {
                                     if (result.estado === 1) {
                                         loadInitComprobantes();
-                                        clearModalAddComprobante();
                                         tools.ModalAlertSuccess("Comprobante", result.mensaje);
                                     } else if (result.estado === 2) {
                                         tools.ModalAlertWarning("Comprobante", result.mensaje);
                                     } else if (result.estado === 3) {
                                         loadInitComprobantes();
-                                        clearModalAddComprobante();
                                         tools.ModalAlertSuccess("Comprobante", result.mensaje);
                                     } else {
                                         tools.ModalAlertWarning("Comprobante", result.mensaje);
@@ -446,6 +511,7 @@ if (!isset($_SESSION['IdUsuario'])) {
             }
 
             function clearModalAddComprobante() {
+                $("#modal-comprobante-title").empty()
                 $("#NuevoComprobante").modal("hide");
                 $("#txtNombre").val("");
                 $("#txtSerie").val("");
@@ -454,7 +520,10 @@ if (!isset($_SESSION['IdUsuario'])) {
                 $("#cbPredeterminado").prop("checked", false);
                 $("#cbEstado").prop("checked", false);
                 $("#cbUsaRuc").prop("checked", false);
-                idEmpresa = 0;
+                $("#rbGuiaRemision").prop("checked", false);
+                $("#rbFacturado").prop("checked", false);
+                $("#rbNotaCredito").prop("checked", false);
+                idComprobante = 0;
             }
 
             function updateComprobante(id) {
@@ -469,7 +538,7 @@ if (!isset($_SESSION['IdUsuario'])) {
                         "idComprobante": id
                     },
                     beforeSend: function() {
-
+                      
                     },
                     success: function(result) {
                         $("#modal-comprobante-title").empty();
@@ -485,6 +554,17 @@ if (!isset($_SESSION['IdUsuario'])) {
                             $("#cbPredeterminado").prop("checked", comprobante.Predeterminado == 1 ? true : false);
                             $("#cbEstado").prop("checked", comprobante.Estado == 1 ? true : false);
                             $("#cbUsaRuc").prop("checked", comprobante.UsarRuc == 1 ? true : false);
+                            // $("#rbGuiaRemision").prop("checked", comprobante.ComprobanteAfiliado == 1 ? true : false);
+                            // $("#rbFacturado").prop("checked", comprobante.ComprobanteAfiliado == 2 ? true : false);
+                            // $("#rbNotaCredito").prop("checked", comprobante.ComprobanteAfiliado == 3 ? true : false);
+
+                            if (comprobante.ComprobanteAfiliado == "1") {
+                                $("#rbGuiaRemision").prop("checked", true);
+                            } else if (comprobante.ComprobanteAfiliado == "2") {
+                                $("#rbFacturado").prop("checked", true);
+                            } else if (comprobante.ComprobanteAfiliado == "3") {
+                                $("#rbNotaCredito").prop("checked", true);
+                            }
 
                             tools.AlertInfo("Información", "Se cargo correctamente los datos.");
                         } else {
@@ -498,37 +578,6 @@ if (!isset($_SESSION['IdUsuario'])) {
                     }
                 });
             }
-
-            // function deleteEmpresa(id) {
-            //     tools.ModalDialog("Usuarios", "¿Está seguro de eliminar la empresa?", function(value) {
-            //         if (value == true) {
-            //             $.ajax({
-            //                 url: "../app/controller/EmpresaController.php",
-            //                 method: "POST",
-            //                 data: {
-            //                     "type": "deleteEmpresa",
-            //                     "idEmpresa": id,
-            //                 },
-            //                 beforeSend: function() {
-            //                     tools.ModalAlertInfo("Empresas", "Procesando petición..");
-            //                 },
-            //                 success: function(result) {
-            //                     if (result.estado == 1) {
-            //                         tools.ModalAlertSuccess("Empresas", result.message);
-            //                         loadInitEmpresas();
-            //                         clearModalAddEmpresa();
-
-            //                     } else {
-            //                         tools.ModalAlertWarning("Empresas", result.message);
-            //                     }
-            //                 },
-            //                 error: function(error) {
-            //                     tools.ModalAlertError("Empresas", error.responseText);
-            //                 }
-            //             });
-            //         }
-            //     });
-            // }
         </script>
     </body>
 
