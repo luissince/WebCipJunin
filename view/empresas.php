@@ -22,92 +22,87 @@ if (!isset($_SESSION['IdUsuario'])) {
             <!-- start menu -->
             <?php include('./layout/menu.php') ?>
             <!-- end menu -->
-            <!-- Content Wrapper. Contains page content -->
-            <div class="content-wrapper" style="background-color: #FFFFFF;">
-                <!-- Main content -->
-                <section class="content-header">
-                    <h3 class="no-margin"> Empresas <small> Lista </small> </h3>
-                </section>
-
-                <!-- modal nueva Empresa  -->
-                <div class="row">
-                    <div class="modal fade" id="NuevaEmpresaPersona">
-                        <div class="modal-dialog">
-                            <div class="modal-content">
-                                <div class="modal-header">
-                                    <button type="button" class="close" id="btnCloseEmpresa">
-                                        <i class="fa fa-close"></i>
-                                    </button>
-                                    <!-- <h4 class="modal-title">
-                                            <i class="fa fa-building-o">
-                                            </i> Registrar Empresa
-                                        </h4> -->
-                                    <h4 class="modal-title" id="modal-empresa-title">
-                                    </h4>
+            <!-- modal nueva Empresa  -->
+            <div class="row">
+                <div class="modal fade" id="NuevaEmpresaPersona">
+                    <div class="modal-dialog">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <button type="button" class="close" id="btnCloseEmpresa">
+                                    <i class="fa fa-close"></i>
+                                </button>
+                                <h4 class="modal-title" id="modal-empresa-title">
+                                </h4>
+                            </div>
+                            <div class="modal-body">
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <div class="form-group">
+                                            <label for="txtRuc">RUC: <i class="fa fa-fw fa-asterisk text-danger"></i></label>
+                                            <input id="txtRuc" type="number" class="form-control" placeholder="Ingrese ruc" required="" minlength="11">
+                                        </div>
+                                    </div>
                                 </div>
-                                <div class="modal-body">
-                                    <div class="row">
-                                        <div class="col-md-12">
-                                            <div class="form-group">
-                                                <label for="txtRuc">RUC: <i class="fa fa-fw fa-asterisk text-danger"></i></label>
-                                                <input id="txtRuc" type="number" class="form-control" placeholder="Ingrese ruc" required="" minlength="11">
-                                            </div>
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <div class="form-group">
+                                            <label for="NombreComercial">Nombre/Razón Social: <i class="fa fa-fw fa-asterisk text-danger"></i></label>
+                                            <input id="NombreComercial" type="text" class="form-control" placeholder="Nombre Comercial" required="">
                                         </div>
                                     </div>
-                                    <div class="row">
-                                        <div class="col-md-12">
-                                            <div class="form-group">
-                                                <label for="NombreComercial">Nombre/Razón Social: <i class="fa fa-fw fa-asterisk text-danger"></i></label>
-                                                <input id="NombreComercial" type="text" class="form-control" placeholder="Nombre Comercial" required="">
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="row">
-                                        <div class="col-md-12">
-                                            <div class="form-group">
-                                                <label for="DireccionEmpresa">Dirección: <i class="fa fa-fw fa-asterisk text-danger"></i></label>
-                                                <input id="DireccionEmpresa" type="text" class="form-control" placeholder="Dirección" required="">
-                                            </div>
-                                        </div>
-                                    </div>
-
-                                    <div class="row">
-                                        <div class="col-md-6">
-                                            <div class="form-group">
-                                                <label for="Tlf_Celular">Telefono/Celular:</label>
-                                                <input id="Tlf_Celular" type="number" class="form-control" placeholder="telefono o celular" required="">
-                                            </div>
-                                        </div>
-                                        <div class="col-md-6">
-                                            <div class="form-group">
-                                                <label for="Pagina_web">Pagina Web:</label>
-                                                <input id="Pagina_web" type="text" class="form-control" placeholder="página web" required="">
-                                            </div>
-                                        </div>
-                                    </div>
-
-                                    <div class="row">
-                                        <div class="col-md-12">
-                                            <div class="form-group">
-                                                <label for="Email_Empresa">Correo Electrónico:</label>
-                                                <input id="Email_Empresa" type="text" class="form-control" placeholder="Correo electónico" required="">
-                                            </div>
-                                        </div>
-                                    </div>
-
                                 </div>
-                                <div class="modal-footer">
-                                    <p class="text-left text-danger">Todos los campos marcados con <i class="fa fa-fw fa-asterisk text-danger"></i> son obligatorios</p>
-                                    <button type="submit" class="btn btn-danger" id="btnAceptarAddEmpresa">
-                                        <i class="fa fa-check"></i> Aceptar</button>
-                                    <button type="button" class="btn btn-primary" id="btnCancelarAddEmpresa">
-                                        <i class="fa fa-remove"></i> Cancelar</button>
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <div class="form-group">
+                                            <label for="DireccionEmpresa">Dirección: <i class="fa fa-fw fa-asterisk text-danger"></i></label>
+                                            <input id="DireccionEmpresa" type="text" class="form-control" placeholder="Dirección" required="">
+                                        </div>
+                                    </div>
                                 </div>
+
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            <label for="Tlf_Celular">Telefono/Celular:</label>
+                                            <input id="Tlf_Celular" type="number" class="form-control" placeholder="telefono o celular" required="">
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            <label for="Pagina_web">Pagina Web:</label>
+                                            <input id="Pagina_web" type="text" class="form-control" placeholder="página web" required="">
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <div class="form-group">
+                                            <label for="Email_Empresa">Correo Electrónico:</label>
+                                            <input id="Email_Empresa" type="text" class="form-control" placeholder="Correo electónico" required="">
+                                        </div>
+                                    </div>
+                                </div>
+
+                            </div>
+                            <div class="modal-footer">
+                                <p class="text-left text-danger">Todos los campos marcados con <i class="fa fa-fw fa-asterisk text-danger"></i> son obligatorios</p>
+                                <button type="submit" class="btn btn-danger" id="btnAceptarAddEmpresa">
+                                    <i class="fa fa-check"></i> Aceptar</button>
+                                <button type="button" class="btn btn-primary" id="btnCancelarAddEmpresa">
+                                    <i class="fa fa-remove"></i> Cancelar</button>
                             </div>
                         </div>
                     </div>
                 </div>
-                <!-- end modal new Bussinees -->
+            </div>
+            <!-- end modal new Bussinees -->
+            <!-- Content Wrapper. Contains page content -->
+            <div class="content-wrapper" style="background-color: #FFFFFF;">
+                <!-- Main content -->
+                <section class="content-header">
+                    <h3 class="no-margin"> Entidades <small> Lista </small> </h3>
+                </section>
 
                 <section class="content">
 
@@ -116,7 +111,7 @@ if (!isset($_SESSION['IdUsuario'])) {
                         <div class="col-lg-2 col-md-2 col-sm-12 col-xs-12">
                             <div class="form-group">
                                 <button type="button" class="btn btn-success" id="btnNuevo">
-                                    <i class="fa fa-plus"></i> Nueva Empresa
+                                    <i class="fa fa-plus"></i> Nueva Entidad
                                 </button>
                             </div>
                         </div>
@@ -147,14 +142,15 @@ if (!isset($_SESSION['IdUsuario'])) {
                             <div class="table-responsive">
                                 <table class="table table-striped" style="border-width: 1px;border-style: dashed;border-color: #E31E25;">
                                     <thead style="background-color: #FDB2B1;color: #B72928;">
-                                        <th style="text-align: center;">#</th>
-                                        <th>Numero de Ruc</th>
-                                        <th>Nombre</th>
-                                        <th>Direccion</th>
-                                        <th>Telefono</th>
-                                        <th>Página Web</th>
-                                        <th>Correo Electrónico</th>
-                                        <th colspan="2">Opciones</th>
+                                        <th width="5%" class="text-center">#</th>
+                                        <th width="10%">Numero de Ruc</th>
+                                        <th width="15%">Nombre</th>
+                                        <th width="20%">Direccion</th>
+                                        <th width="10%">Telefono</th>
+                                        <th width="10%">Página Web</th>
+                                        <th width="10%">Correo Electrónico</th>
+                                        <th width="5%">Editar</th>
+                                        <th width="5%">Eliminar</th>
                                     </thead>
                                     <tbody id="tbTable">
 
@@ -253,7 +249,7 @@ if (!isset($_SESSION['IdUsuario'])) {
                     clearModalAddEmpresa();
                     $("#NuevaEmpresaPersona").modal("show")
                     $("#modal-empresa-title").empty()
-                    $("#modal-empresa-title").append('<i class="fa fa-building-o"></i> Registrar Empresa')
+                    $("#modal-empresa-title").append('<i class="fa fa-building-o"></i> Registrar Entidad')
                 })
 
                 $("#btnAceptarAddEmpresa").click(function() {
@@ -445,7 +441,7 @@ if (!isset($_SESSION['IdUsuario'])) {
             function updateEmpresas(id) {
                 $("#NuevaEmpresaPersona").modal("show");
                 $("#modal-empresa-title").empty()
-                $("#modal-empresa-title").append('<i class="fa fa-building-o"></i> Editar Empresa')
+                $("#modal-empresa-title").append('<i class="fa fa-building-o"></i> Editar Entidad')
                 $.ajax({
                     url: "../app/controller/EmpresaController.php",
                     method: "GET",
@@ -457,7 +453,7 @@ if (!isset($_SESSION['IdUsuario'])) {
                     success: function(result) {
                         console.log(result);
                         $("#modal-user-title").empty();
-                        $("#modal-user-title").append('<i class="fa fa-building-o"> </i> Editar Empresa');
+                        $("#modal-user-title").append('<i class="fa fa-building-o"> </i> Editar Entidad');
                         if (result.estado == 1) {
                             let empresa = result.empresa;
                             idEmpresa = id;

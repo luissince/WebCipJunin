@@ -248,7 +248,7 @@ if (!isset($_SESSION['IdUsuario'])) {
                     <div class="row">
                         <div class="col-md-2 col-sm-12 col-xs-12">
                             <div class="form-group">
-                                <button type="button" class="btn btn-danger" id="btnNuevoIngeniero">
+                                <button type="button" class="btn btn-success" id="btnNuevoIngeniero">
                                     <i class="fa fa-plus"></i> Nuevo Ingeniero
                                 </button>
                             </div>
@@ -264,15 +264,12 @@ if (!isset($_SESSION['IdUsuario'])) {
 
                         <div class="col-md-6 col-sm-12 col-xs-12">
                             <div class="form-group">
-                                <input type="search" id="buscar" class="form-control" placeholder="Buscar por nombres o apellidos" aria-describedby="search" value="">
-                            </div>
-                        </div>
-
-                        <div class="col-md-2 col-sm-12 col-xs-12">
-                            <div class="form-group">
-                                <button class="btn btn-default">
-                                    <i class="fa fa-search"></i> Buscar
-                                </button>
+                                <div class="input-group">
+                                    <input type="search" id="buscar" class="form-control" placeholder="Buscar por nombres o apellidos" aria-describedby="search" value="">
+                                    <div class="input-group-btn">
+                                        <button type="button" class="btn btn-primary" id="btnSearch">Buscar</button>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -291,7 +288,7 @@ if (!isset($_SESSION['IdUsuario'])) {
                                         <th>Condicion</th>
                                         <th>Colegiaturas</th>
                                         <th>Historial</th>
-                                        <th>Opciones</th>
+                                        <th>Editar</th>
                                     </thead>
                                     <tbody id="tbTable">
 

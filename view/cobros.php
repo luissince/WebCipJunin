@@ -35,7 +35,7 @@ if (!isset($_SESSION['IdUsuario'])) {
                                         </button>
                                         <h4 class="modal-title">
                                             <i class="fa fa-building-o">
-                                            </i> Registrar Empresa
+                                            </i> Registrar Entidad
                                         </h4>
                                     </div>
                                     <div class="modal-body">
@@ -948,7 +948,7 @@ if (!isset($_SESSION['IdUsuario'])) {
 
                                     <div class="row">
                                         <div class="col-md-12 col-sm-12 col-xs-12">
-                                            <h5>Empresa a Facturar</h5>
+                                            <h5>Entidad a Facturar</h5>
                                             <div class="form-group">
                                                 <div class="input-group">
                                                     <div class="input-group-btn">
@@ -1225,7 +1225,7 @@ if (!isset($_SESSION['IdUsuario'])) {
                     },
                     success: function(result) {
                         if (result.estado == 1) {
-                            $("#cbCliente").append('<option value="">- Seleccione Empresa -</option>');
+                            $("#cbCliente").append('<option value="">- Seleccione Entidad -</option>');
                             for (let value of result.data) {
                                 $("#cbCliente").append('<option value="' + value.IdEmpresa + '">' + value.RazonSocial + '</option>');
                             }

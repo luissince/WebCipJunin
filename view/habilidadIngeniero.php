@@ -34,11 +34,19 @@ if (!isset($_SESSION['IdUsuario'])) {
                             <div class="form-group">
                                 <div class="input-group">
                                     <input type="search" id="txtBuscar" class="form-control" placeholder="Buscar por n° cip, ° dni, nombres y/o apellidos" aria-describedby="search" value="">
+                                    <div class="input-group-btn">
+                                        <button type="button" class="btn btn-primary" id="btnBuscar">Buscar</button>
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- <div class="form-group">
+                                <div class="input-group">
+                                    <input type="search" id="txtBuscar" class="form-control" placeholder="Buscar por n° cip, ° dni, nombres y/o apellidos" aria-describedby="search" value="">
                                     <span class="input-group-btn">
                                         <button id="btnBuscar" type="button" class="btn btn-info btn-flat"><i class="fa fa-search"></i> Buscar</button>
                                     </span>
                                 </div>
-                            </div>
+                            </div> -->
                         </div>
 
                         <div class="col-lg-3 col-md-3 col-sm-12 col-xs-12">
@@ -246,7 +254,7 @@ if (!isset($_SESSION['IdUsuario'])) {
                                     let ultimopago = habilidad.UltimaCuota;
                                     /* let ultimopago = (habilidad.FechaUltimaCuota).split('/').reverse().join('-');*/
 
-                                    let btnEnviar = '<button class="btn btn-warning btn-sm" onclick="actualizarHabilidad(\'' + habilidad.Cip + '\',\''+habilidad.Apellidos+'\',\''+habilidad.Nombres+'\',\''+habilidad.CodigoCondicion+'\',\''+habilidad.Colegiatura+'\',\'' + ultimopago + '\',\''+habilidad.Especialidad+'\')">' +
+                                    let btnEnviar = '<button class="btn btn-warning btn-sm" onclick="actualizarHabilidad(\'' + habilidad.Cip + '\',\'' + habilidad.Apellidos + '\',\'' + habilidad.Nombres + '\',\'' + habilidad.CodigoCondicion + '\',\'' + habilidad.Colegiatura + '\',\'' + ultimopago + '\',\'' + habilidad.Especialidad + '\')">' +
                                         '<i class="fa  fa-history"></i> Actualizar' +
                                         '</button>';
 
@@ -254,7 +262,7 @@ if (!isset($_SESSION['IdUsuario'])) {
                                         '<td style="text-align: center;color: #2270D1;">' + habilidad.Id + '</td>' +
                                         '<td>' + habilidad.Cip + '</td>' +
                                         '<td>' + habilidad.Dni + '</td>' +
-                                        '<td>' + habilidad.Apellidos+', '+ habilidad.Nombres+ '</td>' +
+                                        '<td>' + habilidad.Apellidos + ', ' + habilidad.Nombres + '</td>' +
                                         '<td>' + habilidad.Condicion + '</td>' +
                                         '<td>' + habilidad.FechaColegiado + '</td>' +
                                         '<td>' + habilidad.FechaUltimaCuota + '</td>' +
@@ -312,7 +320,7 @@ if (!isset($_SESSION['IdUsuario'])) {
                 });
             }
 
-            function actualizarHabilidad(cip, apellidos, nombres, condicion, colegiatura,ultimopago,especialidad) {
+            function actualizarHabilidad(cip, apellidos, nombres, condicion, colegiatura, ultimopago, especialidad) {
                 // console.log(cip)
                 // console.log(apellidos)
                 // console.log(nombres)
