@@ -186,7 +186,9 @@ if (!isset($_SESSION['IdUsuario'])) {
                 <!-- /.content -->
             </div>
             <!-- /.content-wrapper -->
-
+            <!-- start footer -->
+            <?php include('./layout/footer.php') ?>
+            <!-- end footer -->
         </div>
         <!-- ./wrapper -->
         <script src="js/tools.js"></script>
@@ -322,9 +324,9 @@ if (!isset($_SESSION['IdUsuario'])) {
                                     '<td>' + usuario.Apellidos + '</td>' +
                                     '<td>' + usuario.Usuario + '</td>' +
                                     '<td>' + usuario.Rol + '</td>' +
-                                    '<td>' +( usuario.Estado == "1" ? '<label class="text-success">Activo<label>' : '<label class="text-danger">Inactivo</label>') + '</td>' +
-                                    '<td>' +  btnUpdate +'</td>' +
-                                    '<td>' + btnDelete +'</td>' +
+                                    '<td>' + (usuario.Estado == "1" ? '<label class="text-success">Activo<label>' : '<label class="text-danger">Inactivo</label>') + '</td>' +
+                                    '<td>' + btnUpdate + '</td>' +
+                                    '<td>' + btnDelete + '</td>' +
                                     '</tr>');
                             }
                             totalPaginacion = parseInt(Math.ceil((parseFloat(result.total) / parseInt(
@@ -417,7 +419,7 @@ if (!isset($_SESSION['IdUsuario'])) {
                 $("#txtAddUsuario").val("")
                 $("#txtContrasena").val("")
                 $("#estado").val("1")
-                idUsuario=0;
+                idUsuario = 0;
             }
 
             function updateUsuario(id) {
@@ -450,7 +452,7 @@ if (!isset($_SESSION['IdUsuario'])) {
                                     "idUsuario": id
                                 },
                                 beforeSend: function() {
-                                    idUsuario=0;
+                                    idUsuario = 0;
                                 },
                                 success: function(result) {
                                     $("#modal-user-title").empty();
@@ -500,9 +502,9 @@ if (!isset($_SESSION['IdUsuario'])) {
                             },
                             beforeSend: function() {
                                 tools.ModalAlertInfo("Usuarios", "Procesando petición..");
-                                idUsuario=0;
+                                idUsuario = 0;
                             },
-                            success: function(result) {                             
+                            success: function(result) {
                                 if (result.estado == 1) {
                                     tools.ModalAlertSuccess("Usuarios", result.message);
                                     loadInitUsuario();

@@ -22,46 +22,38 @@ if (!isset($_SESSION['IdUsuario'])) {
             <!-- start menu -->
             <?php include('./layout/menu.php') ?>
             <!-- end menu -->
-            <!-- Content Wrapper. Contains page content -->
-            <div class="content-wrapper" style="background-color: #FFFFFF;">
-                <!-- Main content -->
-                <section class="content-header">
-                    <h3 class="no-margin"> Ingresos <small> Lista </small> </h3>
-                </section>
+            <!-- modal detalle del ingreso -->
+            <div class="row">
+                <div class="modal fade" id="mostrarDetalleIngreso" data-backdrop="static">
+                    <div class="modal-dialog">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <button type="button" class="close" data-dismiss="modal">
+                                    <i class="fa fa-close"></i>
+                                </button>
+                                <h4 class="modal-title">
+                                    <i class="fa fa-group">
+                                    </i> Detalle del Ingreso
+                                </h4>
+                            </div>
+                            <div class="modal-body">
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <div class="table-responsive">
+                                            <table class="table table-striped table-hover table-sm">
+                                                <thead>
+                                                    <tr>
+                                                        <th width="5%">#</th>
+                                                        <th width="50%">Concepto</th>
+                                                        <th width="15%">Precio</th>
+                                                        <th width="15%">Cantidad</th>
+                                                        <th width="15%">Importe</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody id="tbDetalleIngreso">
 
-                <!-- modal detalle del ingreso -->
-                <div class="row">
-                    <div class="modal fade" id="mostrarDetalleIngreso" data-backdrop="static">
-                        <div class="modal-dialog">
-                            <div class="modal-content">
-                                <div class="modal-header">
-                                    <button type="button" class="close" data-dismiss="modal">
-                                        <i class="fa fa-close"></i>
-                                    </button>
-                                    <h4 class="modal-title">
-                                        <i class="fa fa-group">
-                                        </i> Detalle del Ingreso
-                                    </h4>
-                                </div>
-                                <div class="modal-body">
-                                    <div class="row">
-                                        <div class="col-md-12">
-                                            <div class="table-responsive">
-                                                <table class="table table-striped table-hover table-sm">
-                                                    <thead>
-                                                        <tr>
-                                                            <th width="5%">#</th>
-                                                            <th width="50%">Concepto</th>
-                                                            <th width="15%">Precio</th>
-                                                            <th width="15%">Cantidad</th>
-                                                            <th width="15%">Importe</th>
-                                                        </tr>
-                                                    </thead>
-                                                    <tbody id="tbDetalleIngreso">
-
-                                                    </tbody>
-                                                </table>
-                                            </div>
+                                                </tbody>
+                                            </table>
                                         </div>
                                     </div>
                                 </div>
@@ -69,37 +61,16 @@ if (!isset($_SESSION['IdUsuario'])) {
                         </div>
                     </div>
                 </div>
-                <!--end modal history enginner  -->
+            </div>
+            <!--end modal history enginner  -->
+            <!-- Content Wrapper. Contains page content -->
+            <div class="content-wrapper" style="background-color: #FFFFFF;">
+                <!-- Main content -->
+                <section class="content-header">
+                    <h3 class="no-margin"> Ingresos <small> Lista </small> </h3>
+                </section>
 
                 <section class="content">
-
-                    <div class="row">
-                        <div class="col-md-2 col-sm-12 col-xs-12">
-                            <div class="form-group">
-                                <label><img src="./images/sunat_logo.png" width="28" /> Estados SUNAT:</label>
-                            </div>
-                        </div>
-                        <div class="col-md-2 col-sm-12 col-xs-12">
-                            <div class="form-group">
-                                <label><img src="./images/accept.svg" width="28" /> Aceptado</label>
-                            </div>
-                        </div>
-                        <div class="col-md-2 col-sm-12 col-xs-12">
-                            <div class="form-group">
-                                <label><img src="./images/unable.svg" width="28" /> Rechazado</label>
-                            </div>
-                        </div>
-                        <div class="col-md-2 col-sm-12 col-xs-12">
-                            <div class="form-group">
-                                <label><img src="./images/reuse.svg" width="28" /> Pendiente de Envío</label>
-                            </div>
-                        </div>
-                        <div class="col-md-4 col-sm-12 col-xs-12">
-                            <div class="form-group">
-                                <label><img src="./images/error.svg" width="28" /> Comunicación de Baja (Anulado)</label>
-                            </div>
-                        </div>
-                    </div>
 
                     <div class="row">
                         <div class="col-md-3 col-sm-12 col-xs-12">
@@ -116,14 +87,6 @@ if (!isset($_SESSION['IdUsuario'])) {
                         </div>
                         <div class="col-md-3 col-sm-12 col-xs-12">
                             <div class="form-group">
-                                <label>Opción</label>
-                                <div class="input-group">
-                                    <button class="btn btn-primary" id="btnEnvioMasivo"><i class="fa fa-gg-circle"></i> Envío masivo a sunat</button>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-md-3 col-sm-12 col-xs-12">
-                            <div class="form-group">
                                 <label>Generar excel</label>
                                 <div class="input-group">
                                     <button class="btn btn-success" id="btnExcel"><i class="fa fa-file-excel-o"></i> Excel por fechas</button>
@@ -136,7 +99,12 @@ if (!isset($_SESSION['IdUsuario'])) {
                         <div class="col-md-6 col-sm-12 col-xs-12">
                             <div class="form-group">
                                 <label>Filtrar por serie, numeración o cliente(Presione Enter)</label>
-                                <input type="search" id="buscar" class="form-control" placeholder="Escribe para filtrar automaticamente" aria-describedby="search" value="">
+                                <div class="input-group">
+                                    <input type="search" id="buscar" class="form-control" placeholder="Escribe para filtrar automaticamente" aria-describedby="search" value="">
+                                    <div class="input-group-btn">
+                                        <button type="button" class="btn btn-primary" id="btnRecargar">Recargar</button>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                         <div class="col-md-3 col-sm-12 col-xs-12">
@@ -145,14 +113,6 @@ if (!isset($_SESSION['IdUsuario'])) {
                                 <select class="form-control" id="cbComprobantes">
                                     <option value="">- Seleccione -</option>
                                 </select>
-                            </div>
-                        </div>
-                        <div class="col-md-3 col-sm-12 col-xs-12">
-                            <div class="form-group">
-                                <label>Opción</label>
-                                <div class="input-group">
-                                    <button type="submit" class="btn btn-link" id="btnRecargar"><i class="fa fa-refresh"></i> Actualizar</button>
-                                </div>
                             </div>
                         </div>
                     </div>
@@ -169,8 +129,6 @@ if (!isset($_SESSION['IdUsuario'])) {
                                         <th style="width:15%;">Cliente</th>
                                         <th style="width:10%;">Estado</th>
                                         <th style="width:10%;">Total</th>
-                                        <th style="width:10%;">Estado Sunat</th>
-                                        <th style="width:20%;">Observaciones Sunat</th>
                                     </thead>
                                     <tbody id="tbTable">
 
@@ -385,7 +343,7 @@ if (!isset($_SESSION['IdUsuario'])) {
                     beforeSend: function() {
                         tbTable.empty();
                         tbTable.append(
-                            '<tr class="text-center"><td colspan="9"><img src="./images/spiner.gif"/><p>Cargando información.</p></td></tr>'
+                            '<tr class="text-center"><td colspan="7"><img src="./images/spiner.gif"/><p>Cargando información.</p></td></tr>'
                         );
                         arrayIngresos = [];
                         state = true;
@@ -397,7 +355,7 @@ if (!isset($_SESSION['IdUsuario'])) {
                             if (arrayIngresos.length == 0) {
                                 tbTable.empty();
                                 tbTable.append(
-                                    '<tr class="text-center"><td colspan="9"><p>No hay ingresos para mostrar.</p></td></tr>'
+                                    '<tr class="text-center"><td colspan="7"><p>No hay ingresos para mostrar.</p></td></tr>'
                                 );
                                 totalPaginacion = parseInt(Math.ceil((parseFloat(result.total) / parseInt(
                                     filasPorPagina))));
@@ -441,8 +399,6 @@ if (!isset($_SESSION['IdUsuario'])) {
                                         '<td>' + ingresos.idDNI + '</br>' + ingresos.nombres + ' ' + ingresos.apellidos + '</td>' +
                                         '<td>' + (ingresos.estado == "C" ? '<span class="text-green">Pagado</span>' : '<span class="text-red">Anulado</span>') + '</td>' +
                                         '<td>' + tools.formatMoney(ingresos.total) + '</td>' +
-                                        '<td style="text-align: center;">' + estadosunat + '</td>' +
-                                        '<td>' + observacionsunat + '</td>' +
                                         '</tr>'
                                     );
                                 }
@@ -455,7 +411,7 @@ if (!isset($_SESSION['IdUsuario'])) {
                         } else {
                             tbTable.empty();
                             tbTable.append(
-                                '<tr class="text-center"><td colspan="9"><p>' + result.mensaje + '</p></td></tr>'
+                                '<tr class="text-center"><td colspan="7"><p>' + result.mensaje + '</p></td></tr>'
                             );
                             $("#lblPaginaActual").html(0);
                             $("#lblPaginaSiguiente").html(0);
@@ -466,7 +422,7 @@ if (!isset($_SESSION['IdUsuario'])) {
                     error: function(error) {
                         tbTable.empty();
                         tbTable.append(
-                            '<tr class="text-center"><td colspan="9"><p>' + error.responseText + '</p></td></tr>'
+                            '<tr class="text-center"><td colspan="7"><p>' + error.responseText + '</p></td></tr>'
                         );
                         $("#lblPaginaActual").html(0);
                         $("#lblPaginaSiguiente").html(0);

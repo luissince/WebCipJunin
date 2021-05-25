@@ -1034,6 +1034,9 @@ if (!isset($_SESSION['IdUsuario'])) {
                 <!-- /.content -->
             </div>
             <!-- /.content-wrapper -->
+            <!-- start footer -->
+            <?php include('./layout/footer.php') ?>
+            <!-- end footer -->
         </div>
         <!-- ./wrapper -->
 
@@ -1546,7 +1549,7 @@ if (!isset($_SESSION['IdUsuario'])) {
                 } else if ($("#NombreComercial").val() == "") {
                     $("#NombreComercial").focus();
                     tools.AlertWarning("Empresa", "Ingrese la razón social")
-                }  else {
+                } else {
                     tools.ModalDialog("Empresa", "¿Está seguro de continuar?", function(value) {
                         if (value == true) {
                             $.ajax({

@@ -112,5 +112,20 @@
                 }
                 ?>
 
+              <li class="treeview" id="tab-menu-factura">
+                  <a href="">
+                      <i class="fa  fa-folder-open"></i><span>Facturacion</span>
+                      <span class="pull-right-container">
+                          <i class="fa fa-angle-left" pull-right"></i>
+                      </span>
+                  </a>
+                  <ul class="treeview-menu">
+                      <li id="tab-comprobantesElectronicos"><a href="comprobantesElectronicos.php"><i class="fa fa-circle-o"></i>Boleta/Factura</a></li>
+                      <li id="tab-notaCredito"><a href="notaCredito.php"><i class="fa fa-circle-o"></i>Nota Crédito</a></li>
+                      <li id="tab-notaDebito"><a href="notaDebito.php"><i class="fa fa-circle-o"></i>Nota Débito</a></li>
+                      <li id="tab-consultaComprobante"><a href="consultaComprobante.php"><i class="fa fa-circle-o"></i>Consultar Comprobante</a></li>
+                  </ul>
+              </li>
+
       </section>
   </aside>

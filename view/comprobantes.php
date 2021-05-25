@@ -249,7 +249,9 @@ if (!isset($_SESSION['IdUsuario'])) {
                 <!-- /.content -->
             </div>
             <!-- /.content-wrapper -->
-
+            <!-- start footer -->
+            <?php include('./layout/footer.php') ?>
+            <!-- end footer -->
         </div>
         <!-- ./wrapper -->
         <script src="js/tools.js"></script>
@@ -486,7 +488,7 @@ if (!isset($_SESSION['IdUsuario'])) {
                                 },
                                 beforeSend: function() {
                                     clearModalAddComprobante();
-                                    tools.ModalAlertInfo("Comprobante", "Procesando petición..");                                   
+                                    tools.ModalAlertInfo("Comprobante", "Procesando petición..");
                                 },
                                 success: function(result) {
                                     if (result.estado === 1) {
@@ -538,7 +540,7 @@ if (!isset($_SESSION['IdUsuario'])) {
                         "idComprobante": id
                     },
                     beforeSend: function() {
-                      
+
                     },
                     success: function(result) {
                         $("#modal-comprobante-title").empty();

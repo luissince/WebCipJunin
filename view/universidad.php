@@ -166,27 +166,30 @@ if (!isset($_SESSION['IdUsuario'])) {
                     <!-- end modal eliminar universidad -->
 
                     <div class="row">
-                        <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
+                        <div class="col-lg-2 col-md-2 col-sm-12 col-xs-12">
                             <div class="form-group">
                                 <button type="button" class="btn btn-success" id="btnNuevo">
                                     <i class="fa fa-plus"></i> Nueva universidad
                                 </button>
+                            </div>
+                        </div>
+
+                        <div class="col-lg-2 col-md-2 col-sm-12 col-xs-12">
+                            <div class="form-group">
                                 <button class="btn btn-link" id="btnactualizar">
                                     <i class="fa fa-refresh"></i> Actualizar..
                                 </button>
                             </div>
                         </div>
 
-                        <div class="col-lg-4 col-md-4 col-sm-12 col-xs-12">
+                        <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
                             <div class="form-group">
-                                <input type="search" id="buscar" class="form-control" placeholder="Buscar por Universidad o sigla" aria-describedby="search" value="">
-                            </div>
-                        </div>
-                        <div class="col-lg-2 col-md-2 col-sm-12 col-xs-12">
-                            <div class="form-group">
-                                <button class="btn btn-default" id="btnSearch">
-                                    <i class="fa fa-search"></i> Buscar
-                                </button>
+                                <div class="input-group">
+                                    <input type="search" id="buscar" class="form-control" placeholder="Buscar por Universidad o sigla" aria-describedby="search" value="">
+                                    <div class="input-group-btn">
+                                        <button type="button" class="btn btn-primary" id="btnSearch">Buscar</button>
+                                    </div>
+                                </div>
                             </div>
                         </div>
 
@@ -236,7 +239,9 @@ if (!isset($_SESSION['IdUsuario'])) {
                 <!-- /.content -->
             </div>
             <!-- /.content-wrapper -->
-
+            <!-- start footer -->
+            <?php include('./layout/footer.php') ?>
+            <!-- end footer -->
         </div>
         <!-- ./wrapper -->
         <script src="js/tools.js"></script>
