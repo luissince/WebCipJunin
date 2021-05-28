@@ -22,6 +22,84 @@ if (!isset($_SESSION['IdUsuario'])) {
             <!-- start menu -->
             <?php include('./layout/menu.php') ?>
             <!-- end menu -->
+            <!-- modal añadir usuario  -->
+            <div class="row">
+                <div class="modal fade" data-backdrop="static" id="mdAddUser">
+                    <div class="modal-dialog modal-xs">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <button type="button" class="close" id="btnCloseAddUser">
+                                    <i class="fa fa-close"></i>
+                                </button>
+                                <h4 class="modal-title" id="modal-user-title">
+                                </h4>
+                            </div>
+                            <div class="modal-body">
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <label for="Universidad" class="control-label">Nombres</label>
+                                        <div class="form-group">
+                                            <input id="txtAddNombres" type="text" class="form-control" placeholder="Ingrese su(s) nombre(s)" required="">
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <label for="Universidad" class="control-label">Apellidos</label>
+                                        <div class="form-group">
+                                            <input id="txtAddApellidos" type="text" class="form-control" placeholder="Ingrese sus apellidos" required="">
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <label for="Universidad" class="control-label">Usuario</label>
+                                        <div class="form-group">
+                                            <input id="txtAddUsuario" type="text" class="form-control" placeholder="Ingrese su usuario" required="">
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <label for="Universidad" class="control-label">Contraseña</label>
+                                        <div class="form-group">
+                                            <input id="txtContrasena" type="password" class="form-control" placeholder="Ingrese una contraseña" required="">
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            <label for="estado">Estado: </label>
+                                            <select id="estado" class="form-control">
+                                                <option value="1">Activo</option>
+                                                <option value="0">Inactivo</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            <label for="rol">Rol: </label>
+                                            <select id="rol" class="form-control">
+                                                <option value="">- Seleccione -</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-danger" id="btnAceptarAddUser">
+                                    <i class="fa fa-check"></i> Guardar</button>
+                                <button type="button" class="btn btn-primary" id="btnCancelAddUser">
+                                    <i class="fa fa-remove"></i> Cancelar</button>
+                            </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- end modal añadir usuario -->
             <!-- Content Wrapper. Contains page content -->
             <div class="content-wrapper" style="background-color: #FFFFFF;">
                 <!-- Main content -->
@@ -29,110 +107,33 @@ if (!isset($_SESSION['IdUsuario'])) {
                     <h3 class="no-margin"> Usuarios <small> Lista </small> </h3>
                 </section>
 
-                <!-- modal añadir usuario  -->
-                <div class="row">
-                    <div class="modal fade" data-backdrop="static" id="mdAddUser">
-                        <div class="modal-dialog modal-xs">
-                            <div class="modal-content">
-                                <div class="modal-header">
-                                    <button type="button" class="close" id="btnCloseAddUser">
-                                        <i class="fa fa-close"></i>
-                                    </button>
-                                    <h4 class="modal-title" id="modal-user-title">
-                                    </h4>
-                                </div>
-                                <div class="modal-body">
-                                    <div class="row">
-                                        <div class="col-md-12">
-                                            <label for="Universidad" class="control-label">Nombres</label>
-                                            <div class="form-group">
-                                                <input id="txtAddNombres" type="text" class="form-control" placeholder="Ingrese su(s) nombre(s)" required="">
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="row">
-                                        <div class="col-md-12">
-                                            <label for="Universidad" class="control-label">Apellidos</label>
-                                            <div class="form-group">
-                                                <input id="txtAddApellidos" type="text" class="form-control" placeholder="Ingrese sus apellidos" required="">
-                                            </div>
-                                        </div>
-                                    </div>
-
-                                    <div class="row">
-                                        <div class="col-md-12">
-                                            <label for="Universidad" class="control-label">Usuario</label>
-                                            <div class="form-group">
-                                                <input id="txtAddUsuario" type="text" class="form-control" placeholder="Ingrese su usuario" required="">
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="row">
-                                        <div class="col-md-12">
-                                            <label for="Universidad" class="control-label">Contraseña</label>
-                                            <div class="form-group">
-                                                <input id="txtContrasena" type="password" class="form-control" placeholder="Ingrese una contraseña" required="">
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="row">
-                                        <div class="col-md-6">
-                                            <div class="form-group">
-                                                <label for="estado">Estado: </label>
-                                                <select id="estado" class="form-control">
-                                                    <option value="1">Activo</option>
-                                                    <option value="0">Inactivo</option>
-                                                </select>
-                                            </div>
-                                        </div>
-                                        <div class="col-md-6">
-                                            <div class="form-group">
-                                                <label for="rol">Rol: </label>
-                                                <select id="rol" class="form-control">
-                                                    <option value="">- Seleccione -</option>
-                                                </select>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="modal-footer">
-                                    <button type="button" class="btn btn-danger" id="btnAceptarAddUser">
-                                        <i class="fa fa-check"></i> Guardar</button>
-                                    <button type="button" class="btn btn-primary" id="btnCancelAddUser">
-                                        <i class="fa fa-remove"></i> Cancelar</button>
-                                </div>
-                                </form>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <!-- end modal añadir usuario -->
-
                 <section class="content">
 
                     <div class="row">
-                        <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
+                        <div class="col-lg-2 col-md-2 col-sm-12 col-xs-12">
                             <div class="form-group">
                                 <button type="button" class="btn btn-success" id="btnNuevo">
                                     <i class="fa fa-plus"></i> Nuevo usuario
                                 </button>
+                            </div>
+                        </div>
+
+                        <div class="col-lg-2 col-md-2 col-sm-12 col-xs-12">
+                            <div class="form-group">
                                 <button class="btn btn-link" id="btnactualizar">
                                     <i class="fa fa-refresh"></i> Actualizar..
                                 </button>
                             </div>
                         </div>
 
-                        <div class="col-lg-4 col-md-4 col-sm-12 col-xs-12">
+                        <div class="col-md-6 col-sm-12 col-xs-12">
                             <div class="form-group">
-                                <input type="search" id="buscar" class="form-control" placeholder="Buscar por Nombre o Apellido" aria-describedby="search" value="">
-                            </div>
-                        </div>
-
-                        <div class="col-lg-2 col-md-2 col-sm-12 col-xs-12">
-                            <div class="form-group">
-                                <button class="btn btn-default" id="btnSearch">
-                                    <i class="fa fa-search"></i> Buscar
-                                </button>
+                                <div class="input-group">
+                                    <input type="search" id="buscar" class="form-control" placeholder="Buscar por Nombre o Apellido" aria-describedby="search" value="">
+                                    <div class="input-group-btn">
+                                        <button type="button" class="btn btn-primary" id="btnSearch">Buscar</button>
+                                    </div>
+                                </div>
                             </div>
                         </div>
 

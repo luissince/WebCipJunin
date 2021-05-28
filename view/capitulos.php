@@ -22,6 +22,136 @@ if (!isset($_SESSION['IdUsuario'])) {
             <!-- start menu -->
             <?php include('./layout/menu.php') ?>
             <!-- end menu -->
+            <!-- modal nuevo capitulo o especialidad  -->
+            <div class="row">
+                <div class="modal fade" id="confirmar" data-backdrop="static">
+                    <div class="modal-dialog">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <button type="button" class="close" id="close">
+                                    <i class="fa fa-close"></i>
+                                </button>
+                                <h4 class="modal-title">
+                                    <i class="fa fa-indent">
+                                    </i> Registrar Capitulo y/o Especialidad
+                                </h4>
+                            </div>
+                            <div class="modal-body">
+                                <form role="form">
+                                    <div class="row">
+                                        <div class="col-md-12">
+                                            <div class="form-group">
+                                                <input class="form-check-input" type="radio" name="RadioOptions" id="btnRadio1" checked>
+                                                <label class="form-check-label" for="btnRadio1" style="margin-left: 0.5em;">Nuevo Capitulo</label>
+
+                                                <input class="form-check-input" style="margin-left: 2em;" type="radio" name="RadioOptions" id="btnRadio2">
+                                                <label class="form-check-label" for="btnRadio2" style="margin-left: 0.5em;">Nueva Especialidad</label>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-md-6">
+                                            <div class="form-group">
+                                                <label for="txtCapitulo">Capitulo: <i class="fa fa-fw fa-asterisk text-danger"></i></label>
+                                                <input id="txtCapitulo" type="text" name="txtCapitulo" class="form-control" placeholder="Dijite el nuevo Capitulo" required="">
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-md-6">
+                                            <div class="form-group">
+                                                <label for="cbxCapitulo">Capitulo: <i class="fa fa-fw fa-asterisk text-danger"></i></label>
+                                                <select id="cbxCapitulo" class="form-control">
+                                                </select>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <div class="form-group">
+                                                <label for="txtEspecialidad">Especialidad: <i class="fa fa-fw fa-asterisk text-danger"></i></label>
+                                                <input id="txtEspecialidad" type="text" class="form-control" placeholder="Dijite la nueva Especialidad" required="">
+                                            </div>
+                                        </div>
+                                    </div>
+                                </form>
+                            </div>
+                            <div class="modal-footer">
+                                <p class="text-left text-danger">Todos los campos marcados con <i class="fa fa-fw fa-asterisk text-danger"></i> son obligatorios</p>
+                                <button type="submit" class="btn btn-warning" name="btnaceptar-Capitulo" id="btnaceptar-Capitulo">
+                                    <i class="fa fa-check"></i> Aceptar</button>
+                                <button type="button" class="btn btn-primary" id="cancel-nuevo">
+                                    <i class="fa fa-remove"></i> Cancelar</button>
+                            </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- end modal nuevo capitulo o especialidad -->
+            <!-- modal editar capitulo o especialidad  -->
+            <div class="row">
+                <div class="modal fade" id="editar" data-backdrop="static">
+                    <div class="modal-dialog">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <button type="button" class="close" id="close1">
+                                    <i class="fa fa-close"></i>
+                                </button>
+                                <h4 class="modal-title">
+                                    <i class="fa fa-indent">
+                                    </i> Editar Capitulo y/o Especialidad
+                                </h4>
+                            </div>
+                            <div class="modal-body">
+                                <form role="form">
+                                    <div class="row">
+                                        <div class="col-md-12">
+                                            <div class="form-group">
+                                                <input class="form-check-input" type="radio" name="RadioOptions" id="btnRadio01" checked>
+                                                <label class="form-check-label" for="btnRadio01" style="margin-left: 0.5em;">Editar Capitulo</label>
+
+                                                <input class="form-check-input" style="margin-left: 2em;" type="radio" name="RadioOptions" id="btnRadio02">
+                                                <label class="form-check-label" for="btnRadio02" style="margin-left: 0.5em;">Editar Especialidad</label>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-md-6">
+                                            <div class="form-group">
+                                                <label for="txtCapitulo1">Capitulo: <i class="fa fa-fw fa-asterisk text-danger"></i></label>
+                                                <input id="txtCapitulo1" type="text" name="txtCapitulo1" class="form-control" required="">
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-md-6">
+                                            <div class="form-group">
+                                                <label for="cbxCapitulo1">Capitulo: <i class="fa fa-fw fa-asterisk text-danger"></i></label>
+                                                <select id="cbxCapitulo1" class="form-control">
+                                                </select>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <div class="form-group">
+                                                <label for="txtEspecialidad1">Especialidad: <i class="fa fa-fw fa-asterisk text-danger"></i></label>
+                                                <input id="txtEspecialidad1" type="text" class="form-control" required="">
+                                            </div>
+                                        </div>
+                                    </div>
+                                </form>
+                            </div>
+                            <div class="modal-footer">
+                                <p class="text-left text-danger">Todos los campos marcados con <i class="fa fa-fw fa-asterisk text-danger"></i> son obligatorios</p>
+                                <button type="submit" class="btn btn-warning" name="btnaceptar-editar-Capitulo" id="btnaceptar-editar-Capitulo">
+                                    <i class="fa fa-check"></i> Aceptar</button>
+                                <button type="button" class="btn btn-primary" id="cancel-editar">
+                                    <i class="fa fa-remove"></i> Cancelar</button>
+                            </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- end modal editar capitulo o especialidad -->
             <!-- Content Wrapper. Contains page content -->
             <div class="content-wrapper" style="background-color: #FFFFFF;">
                 <!-- Main content -->
@@ -29,145 +159,13 @@ if (!isset($_SESSION['IdUsuario'])) {
                     <h3 class="no-margin"> Capitulos <small> Lista </small> </h3>
                 </section>
 
-                <!-- modal nuevo capitulo o especialidad  -->
-                <div class="row">
-                    <div class="modal fade" id="confirmar" data-backdrop="static">
-                        <div class="modal-dialog">
-                            <div class="modal-content">
-                                <div class="modal-header">
-                                    <button type="button" class="close" id="close">
-                                        <i class="fa fa-close"></i>
-                                    </button>
-                                    <h4 class="modal-title">
-                                        <i class="fa fa-indent">
-                                        </i> Registrar Capitulo y/o Especialidad
-                                    </h4>
-                                </div>
-                                <div class="modal-body">
-                                    <form role="form">
-                                        <div class="row">
-                                            <div class="col-md-12">
-                                                <div class="form-group">
-                                                    <input class="form-check-input" type="radio" name="RadioOptions" id="btnRadio1" checked>
-                                                    <label class="form-check-label" for="btnRadio1" style="margin-left: 0.5em;">Nuevo Capitulo</label>
-
-                                                    <input class="form-check-input" style="margin-left: 2em;" type="radio" name="RadioOptions" id="btnRadio2">
-                                                    <label class="form-check-label" for="btnRadio2" style="margin-left: 0.5em;">Nueva Especialidad</label>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="row">
-                                            <div class="col-md-6">
-                                                <div class="form-group">
-                                                    <label for="txtCapitulo">Capitulo: <i class="fa fa-fw fa-asterisk text-danger"></i></label>
-                                                    <input id="txtCapitulo" type="text" name="txtCapitulo" class="form-control" placeholder="Dijite el nuevo Capitulo" required="">
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="row">
-                                            <div class="col-md-6">
-                                                <div class="form-group">
-                                                    <label for="cbxCapitulo">Capitulo: <i class="fa fa-fw fa-asterisk text-danger"></i></label>
-                                                    <select id="cbxCapitulo" class="form-control">
-                                                    </select>
-                                                </div>
-                                            </div>
-                                            <div class="col-md-6">
-                                                <div class="form-group">
-                                                    <label for="txtEspecialidad">Especialidad: <i class="fa fa-fw fa-asterisk text-danger"></i></label>
-                                                    <input id="txtEspecialidad" type="text" class="form-control" placeholder="Dijite la nueva Especialidad" required="">
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </form>
-                                </div>
-                                <div class="modal-footer">
-                                    <p class="text-left text-danger">Todos los campos marcados con <i class="fa fa-fw fa-asterisk text-danger"></i> son obligatorios</p>
-                                    <button type="submit" class="btn btn-warning" name="btnaceptar-Capitulo" id="btnaceptar-Capitulo">
-                                        <i class="fa fa-check"></i> Aceptar</button>
-                                    <button type="button" class="btn btn-primary" id="cancel-nuevo">
-                                        <i class="fa fa-remove"></i> Cancelar</button>
-                                </div>
-                                </form>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <!-- end modal nuevo capitulo o especialidad -->
-
-                <!-- modal editar capitulo o especialidad  -->
-                <div class="row">
-                    <div class="modal fade" id="editar" data-backdrop="static">
-                        <div class="modal-dialog">
-                            <div class="modal-content">
-                                <div class="modal-header">
-                                    <button type="button" class="close" id="close1">
-                                        <i class="fa fa-close"></i>
-                                    </button>
-                                    <h4 class="modal-title">
-                                        <i class="fa fa-indent">
-                                        </i> Editar Capitulo y/o Especialidad
-                                    </h4>
-                                </div>
-                                <div class="modal-body">
-                                    <form role="form">
-                                        <div class="row">
-                                            <div class="col-md-12">
-                                                <div class="form-group">
-                                                    <input class="form-check-input" type="radio" name="RadioOptions" id="btnRadio01" checked>
-                                                    <label class="form-check-label" for="btnRadio01" style="margin-left: 0.5em;">Editar Capitulo</label>
-
-                                                    <input class="form-check-input" style="margin-left: 2em;" type="radio" name="RadioOptions" id="btnRadio02">
-                                                    <label class="form-check-label" for="btnRadio02" style="margin-left: 0.5em;">Editar Especialidad</label>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="row">
-                                            <div class="col-md-6">
-                                                <div class="form-group">
-                                                    <label for="txtCapitulo1">Capitulo: <i class="fa fa-fw fa-asterisk text-danger"></i></label>
-                                                    <input id="txtCapitulo1" type="text" name="txtCapitulo1" class="form-control" required="">
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="row">
-                                            <div class="col-md-6">
-                                                <div class="form-group">
-                                                    <label for="cbxCapitulo1">Capitulo: <i class="fa fa-fw fa-asterisk text-danger"></i></label>
-                                                    <select id="cbxCapitulo1" class="form-control">
-                                                    </select>
-                                                </div>
-                                            </div>
-                                            <div class="col-md-6">
-                                                <div class="form-group">
-                                                    <label for="txtEspecialidad1">Especialidad: <i class="fa fa-fw fa-asterisk text-danger"></i></label>
-                                                    <input id="txtEspecialidad1" type="text" class="form-control" required="">
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </form>
-                                </div>
-                                <div class="modal-footer">
-                                    <p class="text-left text-danger">Todos los campos marcados con <i class="fa fa-fw fa-asterisk text-danger"></i> son obligatorios</p>
-                                    <button type="submit" class="btn btn-warning" name="btnaceptar-editar-Capitulo" id="btnaceptar-editar-Capitulo">
-                                        <i class="fa fa-check"></i> Aceptar</button>
-                                    <button type="button" class="btn btn-primary" id="cancel-editar">
-                                        <i class="fa fa-remove"></i> Cancelar</button>
-                                </div>
-                                </form>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <!-- end modal editar capitulo o especialidad -->
-
                 <section class="content">
 
                     <div class="row">
-                        <div class="col-lg-4 col-md-4 col-sm-12 col-xs-12">
+                        <div class="col-lg-2 col-md-2 col-sm-12 col-xs-12">
                             <div class="form-group">
                                 <button type="button" class="btn btn-success" id="btnNuevo">
-                                    <i class="fa fa-plus"></i> Nuevo Capitulo y/o Especialidad
+                                    <i class="fa fa-plus"></i> Nuevo Cap./Espe.
                                 </button>
                             </div>
                         </div>

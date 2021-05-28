@@ -22,113 +22,111 @@ if (!isset($_SESSION['IdUsuario'])) {
             <!-- start menu -->
             <?php include('./layout/menu.php') ?>
             <!-- end menu -->
+            <!-- modal nuevo rol  -->
+            <div class="row">
+                <div class="modal fade" data-backdrop="static" id="confirmar">
+                    <div class="modal-dialog">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <button type="button" class="close" id="btnCloseRol">
+                                    <i class="fa fa-close"></i>
+                                </button>
+                                <h4 class="modal-title" id="modal-rol-title">
+                                </h4>
+                            </div>
+                            <div class="modal-body">
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <div class="form-group">
+                                            <label for="nombre">Nombre: <i class="fa fa-fw fa-asterisk text-danger"></i></label>
+                                            <input id="nombre" type="text" class="form-control" placeholder="Nombre del rol" required="" minlength="3">
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <div class="form-group">
+                                            <label for="descripcion">Descripción: <i class="fa fa-fw fa-asterisk text-danger"></i></label>
+                                            <input id="descripcion" type="text" class="form-control" placeholder="Descripción del rol" required="" minlength="3">
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            <label for="estado">Estado: </label>
+                                            <select id="estado" class="form-control">
+                                                <option value="1">Activo</option>
+                                                <option value="0">Inactivo</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="modal-footer">
+                                <p class="text-left text-danger">Todos los campos marcados con <i class="fa fa-fw fa-asterisk text-danger"></i> son obligatorios</p>
+                                <button type="submit" class="btn btn-danger" id="btnAceptarRol">
+                                    <i class="fa fa-check"></i> Guardar</button>
+                                <button type="button" class="btn btn-primary" id="btnCancelarRol">
+                                    <i class="fa fa-remove"></i> Cancelar</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- end modal new enginner -->
+            <!-- modal Modulo -->
+            <div class="row">
+                <div class="modal fade" data-backdrop="static" id="mostrarModulos">
+                    <div class="modal-dialog modal-lg">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <button type="button" class="close" data-dismiss="modal">
+                                    <i class="fa fa-close"></i>
+                                </button>
+                                <h4 class="modal-title">
+                                    <i class="fa fa-clone">
+                                    </i> Lista de Modulos
+                                </h4>
+                            </div>
+                            <div class="modal-body">
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <table class="table table-striped table-hover table-sm">
+                                            <thead>
+                                                <tr>
+                                                    <th width="5%">#</th>
+                                                    <th width="30%">Nombre</th>
+                                                    <th width="15%">Ver</th>
+                                                    <th width="15%">Crear</th>
+                                                    <th width="15%">Actualizar</th>
+                                                    <th width="15%">Eliminar</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody id="tbModulos">
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-warning" id="btnAceptarModulos">
+                                    <i class="fa fa-check"></i> Aceptar</button>
+                                <button type="button" class="btn btn-primary" data-dismiss="modal">
+                                    <i class="fa fa-remove"></i> Cancelar</button>
+                            </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!--end modal Modulo  -->
             <!-- Content Wrapper. Contains page content -->
             <div class="content-wrapper" style="background-color: #FFFFFF;">
                 <!-- Main content -->
                 <section class="content-header">
                     <h3 class="no-margin">Roles <small> Lista </small> </h3>
                 </section>
-
-                <!-- modal nuevo rol  -->
-                <div class="row">
-                    <div class="modal fade" data-backdrop="static" id="confirmar">
-                        <div class="modal-dialog">
-                            <div class="modal-content">
-                                <div class="modal-header">
-                                    <button type="button" class="close" id="btnCloseRol">
-                                        <i class="fa fa-close"></i>
-                                    </button>
-                                    <h4 class="modal-title" id="modal-rol-title">
-                                    </h4>
-                                </div>
-                                <div class="modal-body">
-                                    <div class="row">
-                                        <div class="col-md-12">
-                                            <div class="form-group">
-                                                <label for="nombre">Nombre: <i class="fa fa-fw fa-asterisk text-danger"></i></label>
-                                                <input id="nombre" type="text" class="form-control" placeholder="Nombre del rol" required="" minlength="3">
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="row">
-                                        <div class="col-md-12">
-                                            <div class="form-group">
-                                                <label for="descripcion">Descripción: <i class="fa fa-fw fa-asterisk text-danger"></i></label>
-                                                <input id="descripcion" type="text" class="form-control" placeholder="Descripción del rol" required="" minlength="3">
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="row">
-                                        <div class="col-md-6">
-                                            <div class="form-group">
-                                                <label for="estado">Estado: </label>
-                                                <select id="estado" class="form-control">
-                                                    <option value="1">Activo</option>
-                                                    <option value="0">Inactivo</option>
-                                                </select>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="modal-footer">
-                                    <p class="text-left text-danger">Todos los campos marcados con <i class="fa fa-fw fa-asterisk text-danger"></i> son obligatorios</p>
-                                    <button type="submit" class="btn btn-danger" id="btnAceptarRol">
-                                        <i class="fa fa-check"></i> Guardar</button>
-                                    <button type="button" class="btn btn-primary" id="btnCancelarRol">
-                                        <i class="fa fa-remove"></i> Cancelar</button>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <!-- end modal new enginner -->
-
-                <!-- modal Modulo -->
-                <div class="row">
-                    <div class="modal fade" data-backdrop="static" id="mostrarModulos">
-                        <div class="modal-dialog modal-lg">
-                            <div class="modal-content">
-                                <div class="modal-header">
-                                    <button type="button" class="close" data-dismiss="modal">
-                                        <i class="fa fa-close"></i>
-                                    </button>
-                                    <h4 class="modal-title">
-                                        <i class="fa fa-clone">
-                                        </i> Lista de Modulos
-                                    </h4>
-                                </div>
-                                <div class="modal-body">
-                                    <div class="row">
-                                        <div class="col-md-12">
-                                            <table class="table table-striped table-hover table-sm">
-                                                <thead>
-                                                    <tr>
-                                                        <th width="5%">#</th>
-                                                        <th width="30%">Nombre</th>
-                                                        <th width="15%">Ver</th>
-                                                        <th width="15%">Crear</th>
-                                                        <th width="15%">Actualizar</th>
-                                                        <th width="15%">Eliminar</th>
-                                                    </tr>
-                                                </thead>
-                                                <tbody id="tbModulos">
-                                                </tbody>
-                                            </table>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="modal-footer">
-                                    <button type="button" class="btn btn-warning" id="btnAceptarModulos">
-                                        <i class="fa fa-check"></i> Aceptar</button>
-                                    <button type="button" class="btn btn-primary" data-dismiss="modal">
-                                        <i class="fa fa-remove"></i> Cancelar</button>
-                                </div>
-                                </form>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <!--end modal Modulo  -->
 
                 <section class="content">
 
@@ -151,15 +149,12 @@ if (!isset($_SESSION['IdUsuario'])) {
 
                         <div class="col-md-6 col-sm-12 col-xs-12">
                             <div class="form-group">
-                                <input type="search" id="buscar" class="form-control" placeholder="Buscar por nombres del rol" aria-describedby="search" value="">
-                            </div>
-                        </div>
-
-                        <div class="col-md-2 col-sm-12 col-xs-12">
-                            <div class="form-group">
-                                <button class="btn btn-default">
-                                    <i class="fa fa-search"></i> Buscar
-                                </button>
+                                <div class="input-group">
+                                    <input type="search" id="buscar" class="form-control" placeholder="Buscar por nombres del rol" aria-describedby="search" value="">
+                                    <div class="input-group-btn">
+                                        <button type="button" class="btn btn-primary" id="btnbuscar">Buscar</button>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     </div>
