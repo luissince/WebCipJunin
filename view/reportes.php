@@ -90,6 +90,33 @@ if (!isset($_SESSION['IdUsuario'])) {
                                                 <div class="modal-body">
 
                                                     <div class="row">
+                                                        <div class="col-md-12">
+                                                            <div class="form-group">
+                                                                <div class="radio">
+                                                                    <label>
+                                                                        <input type="radio" name="optionsRadioAportes" id="brAportes" value="opcion1" checked="">
+                                                                        Todos los Registros
+                                                                    </label>
+                                                                </div>
+                                                            </div>
+                                                            <div class="form-group">
+                                                                <div class="radio">
+                                                                    <label>
+                                                                        <input type="radio" name="optionsRadioAportes" id="brAportesColegiado" value="opcion2">
+                                                                        Según el Colegiado
+                                                                    </label>
+                                                                </div>
+                                                            </div>
+                                                            <div class="form-group">
+                                                                <!-- <select class="form-control" id="cbIngeniero" disabled="">
+                                                                </select> -->
+                                                                <select class="form-control select2" id="cbIngeniero" style="width: 100%;" disabled="">
+                                                                </select>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+
+                                                    <div class="row">
                                                         <div class="col-md-6">
                                                             <div class="form-group">
                                                                 <label for="fi_AportesCIN">Fecha Inicio: <i class="fa fa-fw fa-asterisk text-danger"></i></label>
@@ -137,12 +164,14 @@ if (!isset($_SESSION['IdUsuario'])) {
                                                     <div class="row">
                                                         <div class="col-md-12">
                                                             <div class="form-group">
-                                                                <div class="radio" style="padding-bottom: 15px;">
+                                                                <div class="radio">
                                                                     <label>
                                                                         <input type="radio" name="optionsRadios" id="brComprobantes" value="opcion1" checked="">
                                                                         Todos los comprobantes
                                                                     </label>
                                                                 </div>
+                                                            </div>
+                                                            <div class="form-group">
                                                                 <div class="radio">
                                                                     <label>
                                                                         <input type="radio" name="optionsRadios" id="brTipoComprobantes" value="opcion2">
@@ -207,12 +236,14 @@ if (!isset($_SESSION['IdUsuario'])) {
                                                     <div class="row">
                                                         <div class="col-md-12">
                                                             <div class="form-group">
-                                                                <div class="radio" style="padding-bottom: 20px;">
+                                                                <div class="radio">
                                                                     <label>
                                                                         <input type="radio" name="optionsColegiado" id="brColegiados" value="opcion1" checked="">
                                                                         Todos los colegiados
                                                                     </label>
                                                                 </div>
+                                                            </div>
+                                                            <div class="form-group">
                                                                 <div class="radio">
                                                                     <label>
                                                                         <input type="radio" name="optionsColegiado" id="brColegiados_Categoria" value="opcion2">
@@ -230,16 +261,16 @@ if (!isset($_SESSION['IdUsuario'])) {
                                                                     <option value="F">Fallecido</option>
                                                                 </select>
                                                             </div>
-
                                                             <div class="form-group">
-                                                                <div class="radio">
-                                                                    <label>
-                                                                        <input type="radio" name="optionsColegiado" id="brColegiados_Categoria_Fecha" value="opcion3">
-                                                                        Según Categoría y fecha
-                                                                    </label>
+                                                                <div class="form-group">
+                                                                    <div class="radio">
+                                                                        <label>
+                                                                            <input type="radio" name="optionsColegiado" id="brColegiados_Categoria_Fecha" value="opcion3">
+                                                                            Según Categoría y fecha
+                                                                        </label>
+                                                                    </div>
                                                                 </div>
                                                             </div>
-
                                                             <div class="form-group">
                                                                 <select class="form-control" id="cbCategoriaColegiado2" disabled="">
                                                                     <option value="">- - Filtre por Categoria - -</option>
@@ -250,23 +281,22 @@ if (!isset($_SESSION['IdUsuario'])) {
                                                                     <option value="F">Fallecido</option>
                                                                 </select>
                                                             </div>
-
-
-                                                            <div class="row">
-                                                                <div class="col-md-6">
-                                                                    <div class="form-group">
-                                                                        <label for="fi_colegiado">Fecha Inicio: <i class="fa fa-fw fa-asterisk text-danger"></i></label>
-                                                                        <input id="fi_colegiado" type="date" name="fi_colegiado" class="form-control" required="">
+                                                            <div class="form-group">
+                                                                <div class="row">
+                                                                    <div class="col-md-6">
+                                                                        <div class="form-group">
+                                                                            <label for="fi_colegiado">Fecha Inicio: <i class="fa fa-fw fa-asterisk text-danger"></i></label>
+                                                                            <input id="fi_colegiado" type="date" name="fi_colegiado" class="form-control" required="">
+                                                                        </div>
                                                                     </div>
-                                                                </div>
-                                                                <div class="col-md-6">
-                                                                    <div class="form-group">
-                                                                        <label for="ff_colegiado">Fecha Fin: <i class="fa fa-fw fa-asterisk text-danger"></i></label>
-                                                                        <input id="ff_colegiado" type="date" name="ff_colegiado" class="form-control" required="">
+                                                                    <div class="col-md-6">
+                                                                        <div class="form-group">
+                                                                            <label for="ff_colegiado">Fecha Fin: <i class="fa fa-fw fa-asterisk text-danger"></i></label>
+                                                                            <input id="ff_colegiado" type="date" name="ff_colegiado" class="form-control" required="">
+                                                                        </div>
                                                                     </div>
                                                                 </div>
                                                             </div>
-
                                                         </div>
                                                     </div>
 
@@ -461,19 +491,48 @@ if (!isset($_SESSION['IdUsuario'])) {
                     $("#cbTipodeDocumento").removeAttr('disabled')
                 });
 
+                //Radio Buttons Aportes del CIN
+                $("#brAportes").click(function() {
+                    $("#cbIngeniero").attr('disabled', '')
+                });
+
+                $("#brAportesColegiado").click(function() {
+                    $("#cbIngeniero").removeAttr('disabled')
+                });
+
                 $("#btnAceptarAportesCIN").click(function() {
+                    let tipo = $("#brAportes").is(":checked") ? 0 : 1;
                     let fechaInicial = $("#fi_AportesCIN").val();
                     let fechaFinal = $("#ff_AportesCIN").val();
-                    if (fechaInicial != '' && fechaFinal != null) {
-                        window.open("../app/sunat/resumenaportecin.php?fechaInicial=" + fechaInicial + "&fechaFinal=" + fechaFinal, "_blank");
+                    let dni = $("#cbIngeniero").val();
+                    if (tools.validateDate(fechaInicial) && tools.validateDate(fechaFinal)) {
+                        if ($("#fi_AportesCIN").val() > $("#ff_AportesCIN").val()) {
+                            tools.AlertWarning("Aportes", "La fecha inicial no puede ser mayor que la fecha final")
+                            $("#fi_AportesCIN").focus();
+                        } else {
+                            window.open("../app/sunat/resumenaportecin.php?fechaInicial=" + fechaInicial + "&fechaFinal=" + fechaFinal + "&colegiado=" + dni + "&tipo=" + tipo, "_blank");
+                        }
+                    } else {
+                        tools.AlertWarning("Aportes", "Ingrese un rango de fecha válido");
+                        $("#fi_AportesCIN").focus();
                     }
                 });
 
                 $("#btnGenerarExcelAportesCIN").click(function() {
+                    let tipo = $("#brAportes").is(":checked") ? 0 : 1;
                     let fechaInicial = $("#fi_AportesCIN").val();
                     let fechaFinal = $("#ff_AportesCIN").val();
-                    if (fechaInicial != '' && fechaFinal != null) {
-                        window.open("../app/sunat/excelResumenAportenCIN.php?fechaInicial=" + fechaInicial + "&fechaFinal=" + fechaFinal, "_blank");
+                    let dni = $("#cbIngeniero").val();
+                    if (tools.validateDate(fechaInicial) && tools.validateDate(fechaFinal)) {
+                        if ($("#fi_AportesCIN").val() > $("#ff_AportesCIN").val()) {
+                            tools.AlertWarning("Aportes", "La fecha inicial no puede ser mayor que la fecha final")
+                            $("#fi_AportesCIN").focus();
+                        } else {
+                            window.open("../app/sunat/excelResumenAportenCIN.php?fechaInicial=" + fechaInicial + "&fechaFinal=" + fechaFinal + "&colegiado=" + dni + "&tipo=" + tipo, "_blank");
+                        }
+                    } else {
+                        tools.AlertWarning("Aportes", "Ingrese un rango de fecha válido");
+                        $("#fi_AportesCIN").focus();
                     }
                 });
 
@@ -568,6 +627,30 @@ if (!isset($_SESSION['IdUsuario'])) {
                     cleanModalComprobantes();
                 });
 
+                $('#cbIngeniero').select2({
+                    placeholder: "Buscar Ingeniero",
+
+                    ajax: {
+                        url: "../app/controller/ListarIngenierosController.php",
+                        type: "GET",
+                        dataType: 'json',
+                        delay: 250,
+                        data: function(params) {
+                            return {
+                                type: "alldata",
+                                search: params.term
+                            };
+                        },
+                        processResults: function(response) {
+                            return {
+                                results: response
+                            };
+                        },
+                        cache: true
+                    }
+                });
+
+                // loadPersona();
             });
 
             function tipoDeDocumento() {

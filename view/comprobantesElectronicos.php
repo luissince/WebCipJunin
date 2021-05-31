@@ -594,7 +594,7 @@ if (!isset($_SESSION['IdUsuario'])) {
             }
 
             function openExcel(fechaInicio, fechaFinal) {
-                window.open("../app/sunat/excelventa.php?opcion=0&txtFechaInicial=" + fechaInicio + "&txtFechaFinal=" + fechaFinal + "&comprobante=0", "_blank");
+                window.open("../app/sunat/excelventa.php?cbTipoDocumento=null&txtFechaInicial=" + fechaInicio + "&txtFechaFinal=" + fechaFinal + "&comprobante=0", "_blank");
             }
 
             function openPdf(idIngreso) {

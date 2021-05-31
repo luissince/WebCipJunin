@@ -1,5 +1,6 @@
 <?php
-set_time_limit(500);
+
+set_time_limit(300); //evita el error 20 segundos de peticion
 session_start();
 
 require __DIR__ . "/lib/phpspreadsheet/vendor/autoload.php";
@@ -11,7 +12,11 @@ use PhpOffice\PhpSpreadsheet\Style\Fill;
 use PhpOffice\PhpSpreadsheet\Style\Alignment;
 use PhpOffice\PhpSpreadsheet\Style\Border;
 
-$ventas = IngresosAdo::ReporteGeneralIngresosPorFechas(intval($_GET["opcion"]), $_GET["txtFechaInicial"], $_GET["txtFechaFinal"], intval($_GET["comprobante"]));
+if ($_GET["cbTipoDocumento"] == 'null') {
+    $ventas = IngresosAdo::ReporteGeneralIngresosPorFechas($_GET["txtFechaInicial"], $_GET["txtFechaFinal"]);
+} else {
+    $ventas = IngresosAdo::ReporteGeneralIngresosPorFechasyTipoDocumento($_GET["txtFechaInicial"], $_GET["txtFechaFinal"], $_GET["cbTipoDocumento"]);
+}
 
 if (!is_array($ventas)) {
     echo $ventas;
@@ -194,7 +199,12 @@ if (!is_array($ventas)) {
     $documento->getActiveSheet()->getColumnDimension('L')->setWidth(15);
     $documento->getActiveSheet()->getColumnDimension('M')->setWidth(15);
 
-    $nombreDelDocumento = "Reporte de Ingresos del " . $_GET["txtFechaInicial"] . " al " . $_GET["txtFechaFinal"] . ".xlsx";
+    if($_GET["cbTipoDocumento"] == 'null'){
+        $nombreDelDocumento = "Reporte de Ingresos del " . $_GET["txtFechaInicial"] . " al " . $_GET["txtFechaFinal"] . ".xlsx";
+    } else{
+        $nombreDelDocumento = "Reporte de ". $_GET["nombreComprobante"] ."(s) del " . $_GET["txtFechaInicial"] . " al " . $_GET["txtFechaFinal"] . ".xlsx";
+    }
+    
     // Redirect output to a client’s web browser (Xlsx)
     header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
     header('Content-Disposition: attachment;filename=' . $nombreDelDocumento);

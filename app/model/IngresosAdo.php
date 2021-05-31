@@ -1055,62 +1055,114 @@ class IngresosAdo
         }
     }
 
-    public static function ResumenAporteCIN($fechaInicio, $fechaFinal)
+    public static function ResumenAporteCIN($data)
     {
         try {
             $arrayIngresos = array();
-            $cmdConcepto = Database::getInstance()->getDb()->prepare("{CALL Sp_Resumen_CipNacional(?,?)}");
-            $cmdConcepto->bindParam(1, $fechaInicio, PDO::PARAM_STR);
-            $cmdConcepto->bindParam(2, $fechaFinal, PDO::PARAM_STR);
-            $cmdConcepto->execute();
-            $count = 0;
+            if ($data['Opcion'] == 0) {
+                $cmdConcepto = Database::getInstance()->getDb()->prepare("SELECT  Persona.CIP, 
+                MAX (CASE WHEN Concepto.Concepto = 'Cuotas al ISS CIP'
+                        THEN  Concepto.Concepto
+                        ELSE 'Cuotas al ISS CIP'      
+                    END) AS Concepto1,
+                Max (CASE WHEN Concepto.Concepto = 'Cuotas Sociales CIP'
+                        THEN  Concepto.Concepto	
+                        ELSE 'Cuotas Sociales CIP'     
+                    END) AS Concepto2, 
+                Ingreso.idIngreso, Cuota.FechaIni,Cuota.FechaFin,Ingreso.Fecha,Ingreso.idDNI,Persona.Condicion, Persona.Apellidos+' '+Persona.Nombres AS Ingeniero,
+                Especialidad.Especialidad,Capitulo.Capitulo,
+                --MAX(CASE WHEN Condicion='V' and Concepto.concepto <> 'Cuotas Sociales CIP' THEN 0 ELSE Monto2 END) AS Monto2,
+                --MAX(Monto1) AS Monto1,
+                MAX(CASE WHEN Concepto.Concepto = 'Cuotas al ISS CIP'
+                        THEN  Detalle.Monto/Detalle.Cantidad 
+                        ELSE 0		    
+                    END) AS Monto1,	
+                MAX(CASE WHEN Concepto.Concepto = 'Cuotas Sociales CIP'
+                        THEN  Detalle.Monto/Detalle.Cantidad 
+                        ELSE 0		      
+                    END) AS Monto2
+                FROM Ingreso
+                INNER JOIN Cuota ON Cuota.idIngreso=Ingreso.idIngreso
+                INNER JOIN Detalle ON Detalle.idIngreso=Ingreso.idIngreso
+                INNER JOIN Concepto ON Concepto.idConcepto=Detalle.idConcepto 	
+                INNER JOIN Persona ON Persona.idDNI=Ingreso.idDNI
+                INNER JOIN Colegiatura ON Colegiatura.idDNI=PERSONA.idDNI AND Colegiatura.Principal=1
+                INNER JOIN Especialidad ON Especialidad.idEspecialidad = Colegiatura.idEspecialidad
+                INNER JOIN Capitulo ON Capitulo.idCapitulo = Especialidad.idCapitulo
+                WHERE Ingreso.Fecha  BETWEEN ? AND ? AND Ingreso.Estado<>'A'
+                AND (Concepto.Concepto = 'Cuotas al ISS CIP' or Concepto.Concepto =  'Cuotas Sociales CIP')
+                GROUP BY Persona.CIP, Concepto.Concepto, Ingreso.idIngreso, Ingreso.idDNI,Persona.Condicion, Persona.Apellidos+' '+Persona.Nombres,
+                Cuota.FechaIni,Cuota.FechaFin,Ingreso.Fecha,Especialidad.Especialidad,Capitulo.Capitulo
+                ORDER BY Persona.Apellidos+' '+Persona.Nombres ASC");
+                $cmdConcepto->bindParam(1, $data['FechaInicial'], PDO::PARAM_STR);
+                $cmdConcepto->bindParam(2, $data['FechaFinal'], PDO::PARAM_STR);
+                $cmdConcepto->execute();
+            } else {
+                $cmdConcepto = Database::getInstance()->getDb()->prepare("SELECT  Persona.CIP, 
+                MAX (CASE WHEN Concepto.Concepto = 'Cuotas al ISS CIP'
+                    THEN  Concepto.Concepto
+                    ELSE 'Cuotas al ISS CIP'      
+                END) AS Concepto1,
+                Max (CASE WHEN Concepto.Concepto = 'Cuotas Sociales CIP'
+                    THEN  Concepto.Concepto	
+                    ELSE 'Cuotas Sociales CIP'     
+                END) AS Concepto2, 
+                Ingreso.idIngreso, Cuota.FechaIni,Cuota.FechaFin,Ingreso.Fecha,Ingreso.idDNI,Persona.Condicion, Persona.Apellidos+' '+Persona.Nombres AS Ingeniero,
+                Especialidad.Especialidad,Capitulo.Capitulo,
+                --MAX(CASE WHEN Condicion='V' and Concepto.concepto <> 'Cuotas Sociales CIP' THEN 0 ELSE Monto2 END) AS Monto2,
+                --MAX(Monto1) AS Monto1,
+                MAX(CASE WHEN Concepto.Concepto = 'Cuotas al ISS CIP'
+                    THEN  Detalle.Monto/Detalle.Cantidad 
+                    ELSE 0		    
+                END) AS Monto1,	
+                MAX(CASE WHEN Concepto.Concepto = 'Cuotas Sociales CIP'
+                    THEN  Detalle.Monto/Detalle.Cantidad 
+                    ELSE 0		      
+                END) AS Monto2
+                FROM Ingreso
+                INNER JOIN Cuota ON Cuota.idIngreso=Ingreso.idIngreso
+                INNER JOIN Detalle ON Detalle.idIngreso=Ingreso.idIngreso
+                INNER JOIN Concepto ON Concepto.idConcepto=Detalle.idConcepto 	
+                INNER JOIN Persona ON Persona.idDNI=Ingreso.idDNI
+                INNER JOIN Colegiatura ON Colegiatura.idDNI=PERSONA.idDNI AND Colegiatura.Principal=1
+                INNER JOIN Especialidad ON Especialidad.idEspecialidad = Colegiatura.idEspecialidad
+                INNER JOIN Capitulo ON Capitulo.idCapitulo = Especialidad.idCapitulo
+                WHERE Persona.idDNI = ? AND Ingreso.Fecha  BETWEEN ? AND ? AND Ingreso.Estado<>'A'
+                AND (Concepto.Concepto = 'Cuotas al ISS CIP' or Concepto.Concepto =  'Cuotas Sociales CIP')
+                GROUP BY Persona.CIP, Concepto.Concepto, Ingreso.idIngreso, Ingreso.idDNI,Persona.Condicion, Persona.Apellidos+' '+Persona.Nombres,
+                Cuota.FechaIni,Cuota.FechaFin,Ingreso.Fecha,Especialidad.Especialidad,Capitulo.Capitulo
+                ORDER BY Persona.Apellidos+' '+Persona.Nombres ASC");
+                $cmdConcepto->bindParam(1, $data['Colegiado'], PDO::PARAM_STR);
+                $cmdConcepto->bindParam(2, $data['FechaInicial'], PDO::PARAM_STR);
+                $cmdConcepto->bindParam(3, $data['FechaFinal'], PDO::PARAM_STR);
+                $cmdConcepto->execute();
+            }
 
-            while ($row = $cmdConcepto->fetch()) {
-                $count++;
-                array_push($arrayIngresos, array(
-                    "Id" => $count,
-                    "Capitulo" => $row["Capitulo"],
-                    "CIP" => $row["CIP"],
-                    "Condicion" => ($row["Condicion"] == "F" ? "FALLECIDO" : $row["Condicion"] == "R" ? "RETIRADO" : $row["Condicion"] == "V" ? "VITALICIO" : "ORDINARIO"),
-                    "Ingeniero" => $row["Ingeniero"],
-                    "Anno" => $row["Anno"],
-                    "X1" => $row["EneroX"],
-                    "X2" => $row["FebreroX"],
-                    "X3" => $row["MarzoX"],
-                    "X4" => $row["AbrilX"],
-                    "X5" => $row["MayoX"],
-                    "X6" => $row["JunioX"],
-                    "X7" => $row["JulioX"],
-                    "X8" => $row["AgostoX"],
-                    "X9" => $row["SetiembreX"],
-                    "X10" => $row["OctubreX"],
-                    "X11" => $row["NoviembreX"],
-                    "X12" => $row["DiciembreX"],
-                    "XZ" => $row["Total_ISS_CIP"],
-                    "Y1" => $row["EneroY"],
-                    "Y2" => $row["FebreroY"],
-                    "Y3" => $row["MarzoY"],
-                    "Y4" => $row["AbrilY"],
-                    "Y5" => $row["MayoY"],
-                    "Y6" => $row["JunioY"],
-                    "Y7" => $row["JulioY"],
-                    "Y8" => $row["AgostoY"],
-                    "Y9" => $row["SetiembreY"],
-                    "Y10" => $row["OctubreY"],
-                    "Y11" => $row["NoviembreY"],
-                    "Y12" => $row["DiciembreY"],
-                    "YZ" => $row["Total_Cuotas_CIP"],
-                    "XYZ" => $row["Suma Total"]
-                ));
+
+            while ($row = $cmdConcepto->fetch(PDO::FETCH_ASSOC)) {
+                array_push($arrayIngresos, $row);
             }
 
             return $arrayIngresos;
         } catch (Exception $ex) {
             return $ex->getMessage();
         }
+    }   
+
+    
+    public static function isValidate($array, $objec)
+    {
+        $ret = false;
+        foreach ($array as $value) {
+            if ($value["idDNI"] == $objec["idDNI"] && $value["Year"] == $objec["Year"]) {
+                $ret = true;
+                break;
+            }
+        }
+        return $ret;
     }
 
-    public static function ReporteGeneralIngresosPorFechas($opcion,$fechaInicio, $fechaFinal, $comprobante)
+    public static function ReporteGeneralIngresosPorFechas($fechaInicio, $fechaFinal)
     {
         try {
             $cmdDetalle = Database::getInstance()->getDb()->prepare("SELECT 
@@ -1134,9 +1186,7 @@ class IngresosAdo
                  inner join Concepto as c on d.idConcepto = c.idConcepto
                  left join Anulado as a on a.idDocumento = i.idIngreso
             where
-            $opcion = 0 and cast(i.Fecha as date) between ? and ?
-            or
-            $opcion = 1 and i.TipoComprobante = ? and cast(i.Fecha as date) between ? and ? 
+            cast(i.Fecha as date) between ? and ?
             group by i.idIngreso,
             i.Serie,
             i.NumRecibo,
@@ -1153,10 +1203,6 @@ class IngresosAdo
             order by CAST(i.Fecha as date) desc, i.NumRecibo desc");
             $cmdDetalle->bindParam(1, $fechaInicio, PDO::PARAM_STR);
             $cmdDetalle->bindParam(2, $fechaFinal, PDO::PARAM_STR);
-
-            $cmdDetalle->bindParam(3, $comprobante, PDO::PARAM_INT);
-            $cmdDetalle->bindParam(4, $fechaInicio, PDO::PARAM_STR);
-            $cmdDetalle->bindParam(5, $fechaFinal, PDO::PARAM_STR);
             $cmdDetalle->execute();
 
             $arrayDetalle = array();
@@ -1187,4 +1233,81 @@ class IngresosAdo
             return $ex;
         }
     }
+
+    public static function ReporteGeneralIngresosPorFechasyTipoDocumento($fechaInicio, $fechaFinal, $tipoDocumento)
+    {
+        try {
+            $cmdDetalle = Database::getInstance()->getDb()->prepare("SELECT 
+            i.idIngreso,
+            isnull(a.Motivo,'') as MotivoAnulacion,
+            isnull(a.Fecha,'') as FechaAnulacion,
+            i.TipoComprobante,
+            i.Serie,
+            i.NumRecibo,
+            convert(varchar, cast(i.Fecha as date), 103) as FechaPago,
+            i.Estado,
+            p.idDNI,
+            p.CIP,
+            p.Apellidos,
+            p.Nombres,
+            sum(d.Monto) as Total,
+            isnull(i.Xmlsunat,'') as Xmlsunat,
+            isnull(i.Xmldescripcion,'') as Xmldescripcion							
+            from Ingreso as i 
+                 inner join Persona as p on i.idDNI = p.idDNI
+                 inner join Detalle as d on d.idIngreso = i.idIngreso 
+                 inner join Concepto as c on d.idConcepto = c.idConcepto
+                 left join Anulado as a on a.idDocumento = i.idIngreso
+            where
+            (cast(i.Fecha as date) between ? and ?) and i.TipoComprobante = ?
+            group by i.idIngreso,
+            i.TipoComprobante,
+            i.Serie,
+            i.NumRecibo,
+            i.Fecha,
+            i.Estado,
+            p.idDNI,
+            p.CIP,
+            p.Apellidos,
+            p.Nombres,
+            i.Xmlsunat,
+            i.Xmldescripcion,
+            a.Motivo,
+            a.Fecha
+            order by CAST(i.Fecha as date) desc, i.NumRecibo desc");
+            $cmdDetalle->bindParam(1, $fechaInicio, PDO::PARAM_STR);
+            $cmdDetalle->bindParam(2, $fechaFinal, PDO::PARAM_STR);
+            $cmdDetalle->bindParam(3, $tipoDocumento, PDO::PARAM_STR);
+            $cmdDetalle->execute();
+
+            $arrayDetalle = array();
+            $count = 0;
+            while ($row = $cmdDetalle->fetch()) {
+                $count++;
+                array_push($arrayDetalle, array(
+                    "Id" => $count,
+                    "idIngreso" => $row["idIngreso"],
+                    "MotivoAnulacion" => $row["MotivoAnulacion"],
+                    "FechaAnulacion" => $row["FechaAnulacion"],
+                    "Serie" => $row["Serie"],
+                    "NumRecibo" => $row["NumRecibo"],
+                    "FechaPago" => $row["FechaPago"],
+                    "Estado" => $row["Estado"],
+                    "idDNI" => $row["idDNI"],
+                    "CIP" => $row["CIP"],
+                    "Apellidos" => $row["Apellidos"],
+                    "Nombres" => $row["Nombres"],
+                    "Total" => floatval($row["Total"]),
+                    "Xmlsunat" => $row["Xmlsunat"],
+                    "Xmldescripcion" => $row["Xmldescripcion"],
+                ));
+            }
+
+            return $arrayDetalle;
+        } catch (Exception $ex) {
+            return $ex;
+        }
+    }
+
+    
 }

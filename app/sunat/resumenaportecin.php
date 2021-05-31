@@ -1,20 +1,143 @@
 <?php
-set_time_limit(500);
 
 define('_MPDF_PATH', '/lib');
 require_once('lib/mpdf/vendor/autoload.php');
 require_once("lib/phpqrcode/qrlib.php");
 include_once('../model/IngresosAdo.php');
+ini_set('max_execution_time', '300');
+ini_set("pcre.backtrack_limit", "10000000");
+ini_set('memory_limit', '-1');
 
 $rutaImage = __DIR__ . "/../../view/images/logologin.png";
 $title = "RESUMEN DE APORTACIONES AL CIP NACIONAL";
-$fechaIngreso = "DE LA FECHA: ". date("d-m-Y", strtotime($_GET["fechaInicial"]))." al ".date("d-m-Y", strtotime($_GET["fechaFinal"]));;
+$subtitle = "DE LA FECHA: " . date("d-m-Y", strtotime($_GET["fechaInicial"])) . " al " . date("d-m-Y", strtotime($_GET["fechaFinal"]));;
 $totalISSCIP = 0;
 $totalSOCIALCIP = 0;
-$resumen = IngresosAdo::ResumenAporteCIN($_GET["fechaInicial"],$_GET["fechaFinal"]);
+
+$data['FechaInicial'] = $_GET['fechaInicial'];
+$data['FechaFinal'] = $_GET['fechaFinal'];
+$data['Colegiado'] = $_GET['colegiado'];
+$data['Opcion'] = $_GET['tipo'];
+
+$resumen = IngresosAdo::ResumenAporteCIN($data);
+
 if (!is_array($resumen)) {
     echo $resumen;
 } else {
+
+    $arrayresumen = array();
+
+    foreach ($resumen as $value) {
+        $fechaIni = new DateTime($value["FechaIni"]);
+        $fechaFin = new DateTime($value["FechaFin"]);
+
+        while ($fechaIni <= $fechaFin) {
+            array_push($arrayresumen, array(
+                "CIP" => $value["CIP"],
+                "idIngreso" => $value["idIngreso"],
+                "idDNI" => $value["idDNI"],
+                "Condicion" => $value["Condicion"],
+                "Ingeniero" => $value["Ingeniero"],
+                "Especialidad" => $value["Especialidad"],
+                "Capitulo" => $value["Capitulo"],
+                "Year" => $fechaIni->format("Y"),
+
+                "Concepto1" => $value["Concepto1"],
+                "Monto1" => floatval($value["Monto1"]),
+                "EneroX" => $fechaIni->format("m") == 1 ? floatval($value["Monto1"]) : 0,
+                "FebreroX" => $fechaIni->format("m") == 2 ? floatval($value["Monto1"]) : 0,
+                "MarzoX" => $fechaIni->format("m") == 3 ? floatval($value["Monto1"]) : 0,
+                "AbrilX" => $fechaIni->format("m") == 4 ? floatval($value["Monto1"]) : 0,
+                "MayoX" => $fechaIni->format("m") == 5 ? floatval($value["Monto1"]) : 0,
+                "JunioX" => $fechaIni->format("m") == 6 ? floatval($value["Monto1"]) : 0,
+                "JulioX" => $fechaIni->format("m") == 7 ? floatval($value["Monto1"]) : 0,
+                "AgostoX" => $fechaIni->format("m") == 8 ? floatval($value["Monto1"]) : 0,
+                "SetiembreX" => $fechaIni->format("m") == 9 ? floatval($value["Monto1"]) : 0,
+                "OctubreX" => $fechaIni->format("m") == 10 ? floatval($value["Monto1"]) : 0,
+                "NoviembreX" => $fechaIni->format("m") == 11 ? floatval($value["Monto1"]) : 0,
+                "DiciembreX" => $fechaIni->format("m") == 12 ? floatval($value["Monto1"]) : 0,
+                "SumaConcepto1" => floatval($value["Monto1"]),
+
+                "Concepto2" => $value["Concepto2"],
+                "Monto2" => floatval($value["Monto2"]),
+                "EneroY" => $fechaIni->format("m") == 1 ? floatval($value["Monto2"]) : 0,
+                "FebreroY" => $fechaIni->format("m") == 2 ? floatval($value["Monto2"]) : 0,
+                "MarzoY" => $fechaIni->format("m") == 3 ? floatval($value["Monto2"]) : 0,
+                "AbrilY" => $fechaIni->format("m") == 4 ? floatval($value["Monto2"]) : 0,
+                "MayoY" => $fechaIni->format("m") == 5 ? floatval($value["Monto2"]) : 0,
+                "JunioY" => $fechaIni->format("m") == 6 ? floatval($value["Monto2"]) : 0,
+                "JulioY" => $fechaIni->format("m") == 7 ? floatval($value["Monto2"]) : 0,
+                "AgostoY" => $fechaIni->format("m") == 8 ? floatval($value["Monto2"]) : 0,
+                "SetiembreY" => $fechaIni->format("m") == 9 ? floatval($value["Monto2"]) : 0,
+                "OctubreY" => $fechaIni->format("m") == 10 ? floatval($value["Monto2"]) : 0,
+                "NoviembreY" => $fechaIni->format("m") == 11 ? floatval($value["Monto2"]) : 0,
+                "DiciembreY" => $fechaIni->format("m") == 12 ? floatval($value["Monto2"]) : 0,
+                "SumaConcepto2" => floatval($value["Monto2"]),
+
+            ));
+            $fechaIni->modify('+ 1 month');
+        }
+    }
+
+    $arraynuevo = array();
+
+
+    foreach ($arrayresumen as $value) {
+        if (IngresosAdo::isValidate($arraynuevo, $value)) {
+            for ($i = 0; $i < count($arraynuevo); $i++) {
+                if ($arraynuevo[$i]["idDNI"] == $value["idDNI"] && $arraynuevo[$i]["Year"] == $value["Year"]) {
+                    $arraynuevo[$i] = array(
+                        "CIP" => $value["CIP"],
+                        "idIngreso" => $value["idIngreso"],
+                        "idDNI" => $value["idDNI"],
+                        "Condicion" => $value["Condicion"],
+                        "Ingeniero" => $value["Ingeniero"],
+                        "Especialidad" => $value["Especialidad"],
+                        "Capitulo" => $value["Capitulo"],
+                        "Year" => $value["Year"],
+
+                        "Concepto1" => $value["Concepto1"],
+                        "Monto1" => $value["Monto1"] == 0 ? $arraynuevo[$i]["Monto1"] : $value["Monto1"],
+                        "EneroX" =>  $value["EneroX"] == 0 ? $arraynuevo[$i]["EneroX"] : $value["EneroX"],
+                        "FebreroX" =>  $value["FebreroX"] == 0 ? $arraynuevo[$i]["FebreroX"] : $value["FebreroX"],
+                        "MarzoX" =>  $value["MarzoX"] == 0 ? $arraynuevo[$i]["MarzoX"] : $value["MarzoX"],
+                        "AbrilX" =>  $value["AbrilX"] == 0 ? $arraynuevo[$i]["AbrilX"] : $value["AbrilX"],
+                        "MayoX" =>  $value["MayoX"] == 0 ? $arraynuevo[$i]["MayoX"] : $value["MayoX"],
+                        "JunioX" =>  $value["JunioX"] == 0 ? $arraynuevo[$i]["JunioX"] : $value["JunioX"],
+                        "JulioX" =>  $value["JulioX"] == 0 ? $arraynuevo[$i]["JulioX"] : $value["JulioX"],
+                        "AgostoX" =>  $value["AgostoX"] == 0 ? $arraynuevo[$i]["AgostoX"] : $value["AgostoX"],
+                        "SetiembreX" =>  $value["SetiembreX"] == 0 ? $arraynuevo[$i]["SetiembreX"] : $value["SetiembreX"],
+                        "OctubreX" => $value["OctubreX"] == 0 ? $arraynuevo[$i]["OctubreX"] : $value["OctubreX"],
+                        "NoviembreX" => $value["NoviembreX"] == 0 ? $arraynuevo[$i]["NoviembreX"] : $value["NoviembreX"],
+                        "DiciembreX" => $value["DiciembreX"] == 0 ? $arraynuevo[$i]["DiciembreX"] : $value["DiciembreX"],
+                        "SumaConcepto1" => $arraynuevo[$i]["SumaConcepto1"] + $value["SumaConcepto1"],
+
+                        "Concepto2" => $value["Concepto2"],
+                        "Monto2" => $value["Monto2"] == 0 ? $arraynuevo[$i]["Monto2"]  : $value["Monto2"],
+                        "EneroY" => $value["EneroY"] == 0 ? $arraynuevo[$i]["EneroY"] : $value["EneroY"],
+                        "FebreroY" => $value["FebreroY"] == 0 ? $arraynuevo[$i]["FebreroY"] : $value["FebreroY"],
+                        "MarzoY" => $value["MarzoY"] == 0 ? $arraynuevo[$i]["MarzoY"] : $value["MarzoY"],
+                        "AbrilY" => $value["AbrilY"] == 0 ? $arraynuevo[$i]["AbrilY"] : $value["AbrilY"],
+                        "MayoY" => $value["MayoY"] == 0 ? $arraynuevo[$i]["MayoY"] : $value["MayoY"],
+                        "JunioY" => $value["JunioY"] == 0 ? $arraynuevo[$i]["JunioY"] : $value["JunioY"],
+                        "JulioY" => $value["JulioY"] == 0 ? $arraynuevo[$i]["JulioY"] : $value["JulioY"],
+                        "AgostoY" => $value["AgostoY"] == 0 ? $arraynuevo[$i]["AgostoY"] : $value["AgostoY"],
+                        "SetiembreY" => $value["SetiembreY"] == 0 ? $arraynuevo[$i]["SetiembreY"] : $value["SetiembreY"],
+                        "OctubreY" => $value["OctubreY"] == 0 ? $arraynuevo[$i]["OctubreY"] : $value["OctubreY"],
+                        "NoviembreY" => $value["NoviembreY"] == 0 ? $arraynuevo[$i]["NoviembreY"] : $value["NoviembreY"],
+                        "DiciembreY" => $value["DiciembreY"] == 0 ? $arraynuevo[$i]["DiciembreY"] : $value["DiciembreY"],
+                        "SumaConcepto2" => $arraynuevo[$i]["SumaConcepto2"] + $value["SumaConcepto2"],
+                    );
+                    break;
+                }
+            }
+        } else {
+            array_push($arraynuevo, $value);
+        }
+    }
+
+
+
     $html = '
 <html>
 <head>
@@ -100,7 +223,7 @@ mpdf-->
             </span>
             <br>
             <span style="font-size: 10pt; color: black; font-family: sans;">
-                ' . $fechaIngreso . ' 
+                ' . $subtitle . ' 
         </span>
         </td>
     </tr>
@@ -154,48 +277,70 @@ mpdf-->
     ';
 ?>
     <?php
-    foreach ($resumen as $value) {
-        $totalISSCIP += $value["XZ"];
-        $totalSOCIALCIP += $value["YZ"];
+    $count = 0;
+    foreach ($arraynuevo as $value) {
+
+        $totalISSCIP += $value["SumaConcepto1"];
+        $totalSOCIALCIP += $value["SumaConcepto2"];
+
+        switch ($value["Condicion"]) {
+            case "V":
+                $condicion = "VITALICIO";
+                break;
+            case "R":
+                $condicion = "RETIRADO";
+                break;
+            case "F":
+                $condicion = "FALLECIDO";
+                break;
+            case "T":
+                $condicion = "TRANSEUNTE";
+                break;
+            default:
+                $condicion = "ORDINARIO";
+                break;
+        }
+
+        $count++;
+
         $html .= '
         <tr>            
-            <td rowspan="1" align="center">' . $value["Id"] . '</td>
-            <td rowspan="1">' . $value["Capitulo"] . '</td>
-            <td rowspan="1">' . $value["CIP"] . '</td>       
-            <td rowspan="1">' . $value["Condicion"] . '</td>     
-            <td rowspan="1">' . $value["Ingeniero"] . '</td>
-            <td rowspan="1" align="center">' . $value["Anno"] . '</td>            
+             <td rowspan="1" align="center">' . $count . '</td>
+             <td rowspan="1">' . $value["Capitulo"] . '</td>
+             <td rowspan="1">' . $value["CIP"] . '</td>       
+           <td rowspan="1">' . $condicion . '</td>     
+           <td rowspan="1">' . $value["Ingeniero"] . '</td>
+           <td rowspan="1" align="center">' . $value["Year"] . '</td>            
+          <td>' . number_format(round($value["EneroX"], 2, PHP_ROUND_HALF_UP), 1, '.', '') . '</td>
+           <td>' . number_format(round($value["FebreroX"], 2, PHP_ROUND_HALF_UP), 1, '.', '') . '</td>
+             <td>' . number_format(round($value["MarzoX"], 2, PHP_ROUND_HALF_UP), 1, '.', '') . '</td>
+       <td>' . number_format(round($value["AbrilX"], 2, PHP_ROUND_HALF_UP), 1, '.', '') . '</td>
+           <td>' . number_format(round($value["MayoX"], 2, PHP_ROUND_HALF_UP), 1, '.', '') . '</td>
+             <td>' . number_format(round($value["JunioX"], 2, PHP_ROUND_HALF_UP), 1, '.', '') . '</td>
+             <td>' . number_format(round($value["JulioX"], 2, PHP_ROUND_HALF_UP), 1, '.', '') . '</td>
+             <td>' . number_format(round($value["AgostoX"], 2, PHP_ROUND_HALF_UP), 1, '.', '') . '</td>
+             <td>' . number_format(round($value["SetiembreX"], 2, PHP_ROUND_HALF_UP), 1, '.', '') . '</td>
+             <td>' . number_format(round($value["OctubreX"], 2, PHP_ROUND_HALF_UP), 1, '.', '') . '</td>
+             <td>' . number_format(round($value["NoviembreX"], 2, PHP_ROUND_HALF_UP), 1, '.', '') . '</td>
+             <td>' . number_format(round($value["DiciembreX"], 2, PHP_ROUND_HALF_UP), 1, '.', '') . '</td>
+             <td>' . number_format(round($value["SumaConcepto1"], 2, PHP_ROUND_HALF_UP), 1, '.', '') . '</td>
 
-            <td>' . number_format(round($value["X1"], 2, PHP_ROUND_HALF_UP), 1, '.', '') . '</td>
-            <td>' . number_format(round($value["X2"], 2, PHP_ROUND_HALF_UP), 1, '.', '') . '</td>
-            <td>' . number_format(round($value["X3"], 2, PHP_ROUND_HALF_UP), 1, '.', '') . '</td>
-            <td>' . number_format(round($value["X4"], 2, PHP_ROUND_HALF_UP), 1, '.', '') . '</td>
-            <td>' . number_format(round($value["X5"], 2, PHP_ROUND_HALF_UP), 1, '.', '') . '</td>
-            <td>' . number_format(round($value["X6"], 2, PHP_ROUND_HALF_UP), 1, '.', '') . '</td>
-            <td>' . number_format(round($value["X7"], 2, PHP_ROUND_HALF_UP), 1, '.', '') . '</td>
-            <td>' . number_format(round($value["X8"], 2, PHP_ROUND_HALF_UP), 1, '.', '') . '</td>
-            <td>' . number_format(round($value["X9"], 2, PHP_ROUND_HALF_UP), 1, '.', '') . '</td>
-            <td>' . number_format(round($value["X10"], 2, PHP_ROUND_HALF_UP), 1, '.', '') . '</td>
-            <td>' . number_format(round($value["X11"], 2, PHP_ROUND_HALF_UP), 1, '.', '') . '</td>
-            <td>' . number_format(round($value["X12"], 2, PHP_ROUND_HALF_UP), 1, '.', '') . '</td>
-            <td>' . number_format(round($value["XZ"], 2, PHP_ROUND_HALF_UP), 1, '.', '') . '</td>
+             <td>' . number_format(round($value["EneroY"], 2, PHP_ROUND_HALF_UP), 1, '.', '') . '</td>
+             <td>' . number_format(round($value["FebreroY"], 2, PHP_ROUND_HALF_UP), 1, '.', '') . '</td>
+             <td>' . number_format(round($value["MarzoY"], 2, PHP_ROUND_HALF_UP), 1, '.', '') . '</td>
+             <td>' . number_format(round($value["AbrilY"], 2, PHP_ROUND_HALF_UP), 1, '.', '') . '</td>
+             <td>' . number_format(round($value["MayoY"], 2, PHP_ROUND_HALF_UP), 1, '.', '') . '</td>
+             <td>' . number_format(round($value["JunioY"], 2, PHP_ROUND_HALF_UP), 1, '.', '') . '</td>
+             <td>' . number_format(round($value["JulioY"], 2, PHP_ROUND_HALF_UP), 1, '.', '') . '</td>
+             <td>' . number_format(round($value["AgostoY"], 2, PHP_ROUND_HALF_UP), 1, '.', '') . '</td>    
+             <td>' . number_format(round($value["SetiembreY"], 2, PHP_ROUND_HALF_UP), 1, '.', '') . '</td>
+             <td>' . number_format(round($value["OctubreY"], 2, PHP_ROUND_HALF_UP), 1, '.', '') . '</td>
+             <td>' . number_format(round($value["NoviembreY"], 2, PHP_ROUND_HALF_UP), 1, '.', '') . '</td>
+            <td>' . number_format(round($value["DiciembreY"], 2, PHP_ROUND_HALF_UP), 1, '.', '') . '</td>
+             <td>' . number_format(round($value["SumaConcepto2"], 2, PHP_ROUND_HALF_UP), 1, '.', '') . '</td>
 
-            <td>' . number_format(round($value["Y1"], 2, PHP_ROUND_HALF_UP), 1, '.', '') . '</td>
-            <td>' . number_format(round($value["Y2"], 2, PHP_ROUND_HALF_UP), 1, '.', '') . '</td>
-            <td>' . number_format(round($value["Y3"], 2, PHP_ROUND_HALF_UP), 1, '.', '') . '</td>
-            <td>' . number_format(round($value["Y4"], 2, PHP_ROUND_HALF_UP), 1, '.', '') . '</td>
-            <td>' . number_format(round($value["Y5"], 2, PHP_ROUND_HALF_UP), 1, '.', '') . '</td>
-            <td>' . number_format(round($value["Y6"], 2, PHP_ROUND_HALF_UP), 1, '.', '') . '</td>
-            <td>' . number_format(round($value["Y7"], 2, PHP_ROUND_HALF_UP), 1, '.', '') . '</td>
-            <td>' . number_format(round($value["Y8"], 2, PHP_ROUND_HALF_UP), 1, '.', '') . '</td>
-            <td>' . number_format(round($value["Y9"], 2, PHP_ROUND_HALF_UP), 1, '.', '') . '</td>
-            <td>' . number_format(round($value["Y10"], 2, PHP_ROUND_HALF_UP), 1, '.', '') . '</td>
-            <td>' . number_format(round($value["Y11"], 2, PHP_ROUND_HALF_UP), 1, '.', '') . '</td>
-            <td>' . number_format(round($value["Y12"], 2, PHP_ROUND_HALF_UP), 1, '.', '') . '</td>
-            <td>' . number_format(round($value["YZ"], 2, PHP_ROUND_HALF_UP), 1, '.', '') . '</td>
-
-            <td>' . number_format(round($value["XYZ"], 2, PHP_ROUND_HALF_UP), 1, '.', '') . '</td>
-        </tr>';
+             <td>' . number_format(round($value["SumaConcepto1"] + $value["SumaConcepto2"], 2, PHP_ROUND_HALF_UP), 1, '.', '') . '</td>
+         </tr>';
     }
 
     ?>
