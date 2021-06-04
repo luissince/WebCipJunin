@@ -7,14 +7,14 @@ function CobroIngenieros() {
     let filasPorPaginacionHistorial = 10;
     let tbHistorial = $("#tbHistorial");
 
-    this.componentesIngenieros = function() {
+    this.componentesIngenieros = function () {
 
-        $("#btnIngenieros").click(function(event) {
+        $("#btnIngenieros").click(function (event) {
             $('#mdIngenieros').modal('show');
             loadInitIngenieros();
         });
 
-        $("#btnIngenieros").keypress(function(event) {
+        $("#btnIngenieros").keypress(function (event) {
             if (event.keyCode === 13) {
                 $('#mdIngenieros').modal('show');
                 loadInitIngenieros();
@@ -22,11 +22,11 @@ function CobroIngenieros() {
             event.preventDefault();
         });
 
-        $('#mdIngenieros').on('shown.bs.modal', function() {
+        $('#mdIngenieros').on('shown.bs.modal', function () {
             $('#txtBuscarIngeniero').focus();
         });
 
-        $("#txtBuscarIngeniero").on("keyup", function(event) {
+        $("#txtBuscarIngeniero").on("keyup", function (event) {
             if (event.keyCode === 13) {
                 if (!state) {
                     paginacion = 1;
@@ -36,7 +36,26 @@ function CobroIngenieros() {
             }
         });
 
-        $("#btnIzquierda").click(function() {
+        $("#btnBuscarIngeniero").click(function () {
+            if (!state) {
+                paginacion = 1;
+                loadIngenieros($("#txtBuscarIngeniero").val());
+                opcion = 1;
+            }
+        });
+
+        $("#btnBuscarIngeniero").keypress(function (event) {
+            if (event.keyCode == 13) {
+                if (!state) {
+                    paginacion = 1;
+                    loadIngenieros($("#txtBuscarIngeniero").val());
+                    opcion = 1;
+                }
+            }
+            event.preventDefault();
+        });
+
+        $("#btnIzquierda").click(function () {
             if (!state) {
                 if (paginacion > 1) {
                     paginacion--;
@@ -45,7 +64,7 @@ function CobroIngenieros() {
             }
         });
 
-        $("#btnDerecha").click(function() {
+        $("#btnDerecha").click(function () {
             if (!state) {
                 if (paginacion < totalPaginacion) {
                     paginacion++;
@@ -56,7 +75,7 @@ function CobroIngenieros() {
 
         //-------------------------------------------------------------------------
 
-        $("#btnIzquierdaHistorial").click(function() {
+        $("#btnIzquierdaHistorial").click(function () {
             if (!stateHistorial) {
                 if (paginacionHistorial > 1) {
                     paginacionHistorial--;
@@ -65,7 +84,7 @@ function CobroIngenieros() {
             }
         });
 
-        $("#btnDerechaHistorial").click(function() {
+        $("#btnDerechaHistorial").click(function () {
             if (!stateHistorial) {
                 if (paginacionHistorial < totalPaginacionHistorial) {
                     paginacionHistorial++;
@@ -105,7 +124,7 @@ function CobroIngenieros() {
                 "posicionPagina": ((paginacion - 1) * filasPorPagina),
                 "filasPorPagina": filasPorPagina
             },
-            beforeSend: function() {
+            beforeSend: function () {
                 totalPaginacion = 0;
                 tbIngenieros.empty();
                 tbIngenieros.append(
@@ -113,7 +132,7 @@ function CobroIngenieros() {
                 );
                 state = true;
             },
-            success: function(result) {
+            success: function (result) {
                 if (result.estado === 1) {
                     tbIngenieros.empty();
                     if (result.personas.length == 0) {
@@ -154,7 +173,7 @@ function CobroIngenieros() {
                     state = false;
                 }
             },
-            error: function(error) {
+            error: function (error) {
                 tbIngenieros.empty();
                 tbIngenieros.append(
                     '<tr class="text-center"><td colspan="9"><p>' + error.responseText + '</p></td></tr>'
@@ -166,7 +185,7 @@ function CobroIngenieros() {
         });
     }
 
-    onSelectedIngeniero = function(idIngeniero) {
+    onSelectedIngeniero = function (idIngeniero) {
         $.ajax({
             url: "../app/controller/PersonaController.php",
             method: "GET",
@@ -174,7 +193,7 @@ function CobroIngenieros() {
                 "type": "datacobro",
                 "dni": idIngeniero
             },
-            beforeSend: function() {
+            beforeSend: function () {
                 $('#mdIngenieros').modal('hide');
                 $("#tbHistorial").empty();
                 idDNI = 0;
@@ -183,7 +202,7 @@ function CobroIngenieros() {
                 tools.AlertInfo("Ingeniero", "En proceso de busqueda.");
                 $("#tbHistorial").append('<tr class="text-center"><td colspan="7"><img src="./images/spiner.gif"/><p>cargando información.</p></td></tr>');
             },
-            success: function(data) {
+            success: function (data) {
                 if (data.estado === 1) {
                     $("#tbHistorial").empty();
                     idDNI = data.persona.idDNI;
@@ -192,8 +211,8 @@ function CobroIngenieros() {
                     let Condicion = data.persona.Condicion ==
                         'T' ? 'Transeunte' :
                         data.persona.Condicion == 'F' ? 'Fallecido' :
-                        data.persona.Condicion == 'R' ? 'Retirado' :
-                        data.persona.Condicion == 'V' ? 'Vitalicio' : 'Ordinario';
+                            data.persona.Condicion == 'R' ? 'Retirado' :
+                                data.persona.Condicion == 'V' ? 'Vitalicio' : 'Ordinario';
                     $("#lblCipSeleccionado").html(data.persona.CIP);
                     $("#lblTipoIngenieroSeleccionado").html(Condicion);
                     $("#lblDocumentSeleccionado").html(data.persona.idDNI);
@@ -206,10 +225,10 @@ function CobroIngenieros() {
                         $("#lblFechaColegiatura").html(tools.getDateForma(data.colegiatura.FechaColegiado));
                     }
 
-                    $("#lblYears").html(data.years + " años/" + Math.abs(data.years - 30))
+                    $("#lblYears").html(data.years + " AÑOS PARA SER VITALICO( " + tools.getDateForma(data.date) + " )")
 
-                    let porcentaje = (data.years * 100) / 30;
-                    if (data.years >= 30) {
+                    let porcentaje = Math.abs(((data.years - 30) * 100) / 30);
+                    if (data.years <= 0) {
                         $("#lblProgress").removeClass()
                         $("#lblProgress").addClass("progress-bar progress-bar-green");
                         $("#lblProgress").css("width", "100%");
@@ -240,7 +259,7 @@ function CobroIngenieros() {
                     $("#lblUltimoPago").html("--");
                     $("#lblHabilHasta").html("--");
                     $("#lblFechaColegiatura").html("--");
-                    $("#lblYears").html("0 años/0")
+                    $("#lblYears").html("0 años")
                     $("#lblProgress").removeClass();
                     $("#lblProgress").addClass("progress-bar");
                     $("#lblProgress").css("width", "0%");
@@ -251,7 +270,7 @@ function CobroIngenieros() {
                     tools.AlertWarning("Ingeniero", "Se produjo un problema: " + data.message);
                 }
             },
-            error: function(error) {
+            error: function (error) {
                 $("#tbHistorial").empty();
                 tools.AlertError("Ingeniero", "Error en obtener los datos: " + error.responseText);
             }
@@ -284,13 +303,13 @@ function CobroIngenieros() {
                 "posicionPagina": ((paginacionHistorial - 1) * filasPorPaginacionHistorial),
                 "filasPorPagina": filasPorPaginacionHistorial
             },
-            beforeSend: function() {
+            beforeSend: function () {
                 tbHistorial.empty()
                 tbHistorial.append('<tr class="text-center"><td colspan="7"><img src="./images/spiner.gif"/><p>Cargando información.</p></td></tr>');
                 stateHistorial = true;
                 totalPaginacionHistorial = 0;
             },
-            success: function(result) {
+            success: function (result) {
                 if (result.estado == 1) {
                     tbHistorial.empty()
                     if (result.historial.length == 0) {
@@ -347,7 +366,7 @@ function CobroIngenieros() {
                     stateHistorial = false;
                 }
             },
-            error: function(error) {
+            error: function (error) {
                 tbHistorial.empty()
                 tbHistorial.append('<tr class="text-center"><td colspan="7"><p>' + error.responseText + '</p></td></tr>');
                 $("#lblPaginaActual").html(0);
@@ -357,7 +376,7 @@ function CobroIngenieros() {
         });
     }
 
-    detalleIngresoIdIngreso = function(idIngreso) {
+    detalleIngresoIdIngreso = function (idIngreso) {
         $("#mostrarDetalleIngreso").modal("show");
         $.ajax({
             url: "../app/controller/IngresoController.php",
@@ -366,12 +385,12 @@ function CobroIngenieros() {
                 "type": "detalleingreso",
                 "idIngreso": idIngreso,
             },
-            beforeSend: function() {
+            beforeSend: function () {
                 $("#tbDetalleIngreso").empty();
                 $("#tbDetalleIngreso").append('<tr class="text-center"><td colspan="5"><img src="./images/spiner.gif"/><p>Cargando información.</p></td></tr>');
 
             },
-            success: function(result) {
+            success: function (result) {
                 if (result.estado == 1) {
                     $("#tbDetalleIngreso").empty();
                     if (result.detalles.length == 0) {
@@ -392,7 +411,7 @@ function CobroIngenieros() {
                     $("#tbDetalleIngreso").append('<tr class="text-center"><td colspan="5"><p>' + result.message + '</p></td></tr>');
                 }
             },
-            error: function(error) {
+            error: function (error) {
                 $("#tbDetalleIngreso").append('<tr class="text-center"><td colspan="5"><p>' + error.responseText + '</p></td></tr>');
 
             }

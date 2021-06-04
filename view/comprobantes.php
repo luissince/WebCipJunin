@@ -400,6 +400,10 @@ if (!isset($_SESSION['IdUsuario'])) {
                                         '<button class="btn btn-warning btn-sm" onclick="updateComprobante(\'' + comprobante.IdTipoComprobante + '\')">' +
                                         '<i class="fa fa-wrench"></i> Editar' +
                                         '</button>';
+
+                                    let predeterminado = comprobante.Predeterminado == "SI" ? '<span class="text-success">' + comprobante.Predeterminado + '</span>' : '<span class="text-danger">' + comprobante.Predeterminado + '</span>';
+
+                                    let estado = comprobante.Estado == "ACTIVO" ? '<span class="text-primary">' + comprobante.Estado + '</span>' : '<span class="text-danger">' + comprobante.Estado + '</span>';
                                     // let btnDelete =
                                     //     '<button class="btn btn-danger btn-sm" onclick="deleteComprobate(\'' + comprobante.IdTipoComprobante + '\')">' +
                                     //     '<i class="fa fa-trash"></i> Eliminar' +
@@ -413,8 +417,8 @@ if (!isset($_SESSION['IdUsuario'])) {
                                         '<td>' + comprobante.Serie + '</td>' +
                                         '<td>' + comprobante.Numeracion + '</td>' +
                                         '<td>' + comprobante.CodigoAlterno + '</td>' +
-                                        '<td>' + comprobante.Predeterminado + '</td>' +
-                                        '<td>' + comprobante.Estado + '</td>' +
+                                        '<td>' + predeterminado + '</td>' +
+                                        '<td>' + estado + '</td>' +
                                         '<td>' + comprobante.Usa_ruc + '</td>' +
                                         '<td style="text-align: left;">' +
                                         btnUpdate +

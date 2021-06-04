@@ -172,6 +172,9 @@ if (!isset($_SESSION['IdUsuario'])) {
                 <!-- /.content -->
             </div>
             <!-- /.content-wrapper -->
+            <!-- start footer -->
+            <?php include('./layout/footer.php') ?>
+            <!-- end footer -->
         </div>
         <!-- ./wrapper -->
         <script src="js/tools.js"></script>

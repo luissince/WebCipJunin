@@ -1528,17 +1528,18 @@ if (!isset($_SESSION['IdUsuario'])) {
                                 </div>
                             </div>
                         </div>
-                        <div id="divLoad">                       
+                        <div id="divLoad">
                         </div>
                     </div>
                 </section>
             </div>
             <!-- Fin de la actualizacion del ingeniero-->
-
             <!-- /.content -->
+            <!-- start footer -->
+            <?php include('./layout/footer.php') ?>
+            <!-- end footer -->
         </div>
         <!-- /.content-wrapper -->
-
         <!-- ./wrapper -->
         <script src="js/tools.js"></script>
         <script src="js/actualizaringeniero/colegiatura.js"></script>

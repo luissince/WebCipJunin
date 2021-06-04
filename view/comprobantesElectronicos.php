@@ -406,10 +406,7 @@ if (!isset($_SESSION['IdUsuario'])) {
                             } else {
                                 tbTable.empty();
                                 for (let ingresos of arrayIngresos) {
-
-                                    let btnAnular = '<button class="btn btn-danger btn-xs" onclick="anularIngreso(\'' + ingresos.idIngreso + '\')">' +
-                                        '<i class="fa fa-ban"></i></br>Anular' +
-                                        '</button>';
+                                   
                                     let btnPdf = '<button class="btn btn-default btn-xs" onclick="openPdf(\'' + ingresos.idIngreso + '\')">' +
                                         '<i class="fa fa-file-pdf-o"></i></br>P.D.F' +
                                         '</button>';
@@ -638,43 +635,6 @@ if (!isset($_SESSION['IdUsuario'])) {
                     error: function(error) {
                         $("#tbDetalleIngreso").append('<tr class="text-center"><td colspan="5"><p>' + error.responseText + '</p></td></tr>');
 
-                    }
-                });
-            }
-
-            function anularIngreso(idIngreso) {
-                tools.ModalDialogInputText("Ingreso", "¿Está seguro de anular el comprobante?", function(value) {
-                    if (value.dismiss == "cancel") {} else if (value.value.length == 0) {
-                        tools.ModalAlertWarning("Ingreso", "No ingreso ningún motivo :(");
-                    } else {
-                        $.ajax({
-                            url: "../app/controller/IngresoController.php",
-                            method: 'POST',
-                            data: {
-                                "type": "deleteIngreso",
-                                "idIngreso": idIngreso,
-                                "idUsuario": 1,
-                                "motivo": value.value.toUpperCase(),
-                                "fecha": tools.getCurrentDate(),
-                                "hora": tools.getCurrentTime()
-                            },
-                            beforeSend: function() {
-                                tools.ModalAlertInfo("Ingreso", "Procesando petición..");
-                            },
-                            success: function(result) {
-                                if (result.estado == 1) {
-                                    tools.ModalAlertSuccess("Ingreso", result.message);
-                                    loadInitIngresos();
-                                } else if (result.estado == 2) {
-                                    tools.ModalAlertWarning("Ingreso", result.message);
-                                } else {
-                                    tools.ModalAlertWarning("Ingreso", result.message);
-                                }
-                            },
-                            error: function(error) {
-                                tools.ModalAlertError("Ingreso", "Se produjo un error: " + error.responseText);
-                            }
-                        });
                     }
                 });
             }

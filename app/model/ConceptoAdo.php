@@ -139,7 +139,7 @@ class ConceptoAdo
                 $cmdConceptos = Database::getInstance()->getDb()->prepare($cmdConceptos);
                 $cmdConceptos->bindParam(1, $categoria, PDO::PARAM_INT);
                 $cmdConceptos->execute();
-
+ 
                 $arryConcepto = array();
                 while ($rowc = $cmdConceptos->fetch()) {
                     array_push($arryConcepto, array(

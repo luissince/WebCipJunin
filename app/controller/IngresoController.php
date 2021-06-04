@@ -30,7 +30,13 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
                 "estado" => 1,
                 "message" => "Se anuló el ingreso correctamente."
             ));
-        }elseif($result == "anulado"){
+        }elseif($result == "nodata"){
+            echo json_encode(array(
+                "estado" => 3,
+                "message" => "Nose puedo obtener el registro, intente nuevamente porfavor."
+            ));
+        }
+        elseif($result == "anulado"){
             echo json_encode(array(
                 "estado" => 2,
                 "message" => "El comprobante ya se encuentra anulado."

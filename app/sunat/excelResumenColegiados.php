@@ -12,10 +12,44 @@ use PhpOffice\PhpSpreadsheet\Style\Fill;
 use PhpOffice\PhpSpreadsheet\Style\Alignment;
 use PhpOffice\PhpSpreadsheet\Style\Border;
 
-$data['condicion'] = $_GET['condicion'];
+$getCodicion = $_GET['condicion'];
+
+if ($_GET["opcion"] == 1 || $_GET["opcion"] == 2) {
+    if ($getCodicion == "T") {
+        $condicion =  'TRANSEUNTE';
+    } else if ($getCodicion == "O") {
+        $condicion =  'ORDINARIO';
+    } else if ($getCodicion == "V") {
+        $condicion =  'VITALICIO';
+    } else if ($getCodicion == "R") {
+        $condicion =  'RETIRADO';
+    } else {
+        $condicion =  'FALLECIDO';
+    }
+}
+
+
+if ($_GET["opcion"] == 1) {
+    $subtitle = "REPORTE GENERAL DE COLEGIADOS";
+} else if ($_GET["opcion"] == 2) {
+    $subtitle = "REPORTE DE COLEGIADOS - CONDICIÓN " . $condicion;
+} else if ($_GET["opcion"] == 3) {
+    if ($getCodicion == "1") {
+        $condicion =  "25 AÑOS";
+    } else if ($getCodicion == "2") {
+        $condicion =  "30 AÑOS";
+    } else {
+        $condicion =  "50 AÑOS";
+    }
+    $subtitle = "REPORTE DE COLEGIADOS QUE VAN A CUMPLIR " . $condicion . " DEL AÑO " . $_GET["fiColegiado"];
+}
+
+
+$data['condicion'] = $getCodicion;
 $data['fiColegiado'] = $_GET['fiColegiado'];
 $data['ffColegiado'] = $_GET['ffColegiado'];
 $data['opcion'] = $_GET['opcion'];
+
 
 $listarColegiados = ListarIngenierosAdo::allIngenieros($data);
 
@@ -57,7 +91,7 @@ if (!is_array($listarColegiados)) {
 
     $documento->setActiveSheetIndex(0)->mergeCells('A1:I1');
     $documento->setActiveSheetIndex(0)
-        ->setCellValue("A1", "REPORTE GENERAL DE COLEGIADOS DEL CIP-JUNIN");
+        ->setCellValue("A1",  $subtitle);
 
     $documento->getActiveSheet()->getStyle('A2:I2')->applyFromArray(array(
         'borders' => array(
@@ -79,84 +113,112 @@ if (!is_array($listarColegiados)) {
         )
     ));
 
-    $documento->setActiveSheetIndex(0)
-        ->setCellValue("A2", "N°")
-        ->setCellValue("B2", "DNI")
-        ->setCellValue("C2", "N° CIP")
-        ->setCellValue("D2", "APELLIDOS")
-        ->setCellValue("E2", "NOMBRES")
-        ->setCellValue("F2", "CONDICION")
-        ->setCellValue("G2", "FECHA COLEGIADO")
-        ->setCellValue("H2", "CAPITULO")
-        ->setCellValue("I2", "ESPECIALIDAD");
-
-    $cel = 3;
-    foreach ($listarColegiados as $key => $value) {
-        $documento->getActiveSheet()->getStyle('A' . $cel . ':I' . $cel . '')->applyFromArray(array(
-            'fill' => array(
-                'type' => Fill::FILL_SOLID,
-                'color' => array('rgb' => 'E5E4E2')
-            ),
-            'font'  => array(
-                'bold'  =>  false
-            ),
-            'alignment' => array(
-                'horizontal' => Alignment::HORIZONTAL_LEFT
-            )
-        ));
-
-        // if ($value["Estado"] === "C") {
-        //     $documento->getActiveSheet()->getStyle('A' . $cel . ':K' . $cel . '')->applyFromArray(array(
-        //         'font'  => array(
-        //             'bold'  =>  false,
-        //             'color' => array('rgb' => '000000')
-        //         ),
-        //         'alignment' => array(
-        //             'horizontal' => Alignment::HORIZONTAL_LEFT
-        //         )
-        //     ));
-        //     $documento->getActiveSheet()->getStyle("L" . $cel)->getNumberFormat()->setFormatCode('0.00');
-        //     $documento->getActiveSheet()->getStyle("M" . $cel)->getNumberFormat()->setFormatCode('0.00');
-
-        //     $documento->setActiveSheetIndex(0)
-        //         ->setCellValue("A" . $cel,  strval($value["Id"]))
-        //         ->setCellValue("B" . $cel, strval($value["MotivoAnulacion"]))
-        //         ->setCellValue("C" . $cel, strval($value["FechaAnulacion"]))
-        //         ->setCellValue("D" . $cel, strval($value["Serie"]))
-        //         ->setCellValue("E" . $cel, strval($value["NumRecibo"]))
-        //         ->setCellValue("F" . $cel, strval($value["FechaPago"]))
-        //         ->setCellValue("G" . $cel, strval($value["Estado"]))
-        //         ->setCellValue("H" . $cel, strval($value["idDNI"]))
-        //         ->setCellValue("I" . $cel, strval($value["CIP"]))
-        //         ->setCellValue("J" . $cel, strval($value["Apellidos"]))
-        //         ->setCellValue("K" . $cel, strval($value["Nombres"]))
-        //         ->setCellValue("L" . $cel, strval($value["Total"]))
-        //         ->setCellValue("M" . $cel, strval(0));
-        // } else {
-        $documento->getActiveSheet()->getStyle('F' . $cel . ':G' . $cel . '')->applyFromArray(array(
-            'font'  => array(
-                'bold'  =>  false,
-                'color' => array('rgb' => '000000')
-            ),
-            'alignment' => array(
-                'horizontal' => Alignment::HORIZONTAL_CENTER
-            )
-        ));
-
+    if ($data['opcion'] == 1 || $data['opcion'] == 2) {
         $documento->setActiveSheetIndex(0)
-            ->setCellValue("A" . $cel,  strval($value["Id"]))
-            ->setCellValue("B" . $cel, strval($value["idDNI"]))
-            ->setCellValue("C" . $cel, strval($value["CIP"]))
-            ->setCellValue("D" . $cel, strval($value["Apellidos"]))
-            ->setCellValue("E" . $cel, strval($value["Nombres"]))
-            ->setCellValue("F" . $cel, strval($value["Condicion"]))
-            ->setCellValue("G" . $cel, strval($value["FechaColegiado"]))
-            ->setCellValue("H" . $cel, strval($value["Capitulo"]))
-            ->setCellValue("I" . $cel, strval($value["Especialidad"]));
-        // }
-
-        $cel++;
+            ->setCellValue("A2", "N°")
+            ->setCellValue("B2", "DNI")
+            ->setCellValue("C2", "N° CIP")
+            ->setCellValue("D2", "APELLIDOS")
+            ->setCellValue("E2", "NOMBRES")
+            ->setCellValue("F2", "CONDICION")
+            ->setCellValue("G2", "FECHA COLEGIADO")
+            ->setCellValue("H2", "CAPITULO")
+            ->setCellValue("I2", "ESPECIALIDAD");
+    } else {
+        $documento->setActiveSheetIndex(0)
+            ->setCellValue("A2", "N°")
+            ->setCellValue("B2", "DNI")
+            ->setCellValue("C2", "N° CIP")
+            ->setCellValue("D2", "APELLIDOS")
+            ->setCellValue("E2", "NOMBRES")
+            ->setCellValue("F2", "CAPITULO")
+            ->setCellValue("G2", "CONDICION")
+            ->setCellValue("H2", "FECHA COLEGIADO")
+            ->setCellValue("I2", "FECHA QUE CUMPLE SUS" . $condicion);
     }
+
+    $count = 0;
+    $cel = 3;
+    if ($data['opcion'] == 1 || $data['opcion'] == 2) {
+        foreach ($listarColegiados as $key => $value) {
+            $count++;
+            $documento->getActiveSheet()->getStyle('A' . $cel . ':I' . $cel . '')->applyFromArray(array(
+                'fill' => array(
+                    'type' => Fill::FILL_SOLID,
+                    'color' => array('rgb' => 'E5E4E2')
+                ),
+                'font'  => array(
+                    'bold'  =>  false
+                ),
+                'alignment' => array(
+                    'horizontal' => Alignment::HORIZONTAL_LEFT
+                )
+            ));
+
+            $documento->getActiveSheet()->getStyle('F' . $cel . ':G' . $cel . '')->applyFromArray(array(
+                'font'  => array(
+                    'bold'  =>  false,
+                    'color' => array('rgb' => '000000')
+                ),
+                'alignment' => array(
+                    'horizontal' => Alignment::HORIZONTAL_CENTER
+                )
+            ));
+
+
+            $documento->setActiveSheetIndex(0)
+                ->setCellValue("A" . $cel,  strval($count))
+                ->setCellValue("B" . $cel, strval($value["idDNI"]))
+                ->setCellValue("C" . $cel, strval($value["CIP"]))
+                ->setCellValue("D" . $cel, strval($value["Apellidos"]))
+                ->setCellValue("E" . $cel, strval($value["Nombres"]))
+                ->setCellValue("F" . $cel, strval($value["Condicion"]))
+                ->setCellValue("G" . $cel, strval($value["FechaColegiado"]))
+                ->setCellValue("H" . $cel, strval($value["Capitulo"]))
+                ->setCellValue("I" . $cel, strval($value["Especialidad"]));
+            $cel++;
+        }
+    } else {
+        foreach ($listarColegiados as $key => $value) {
+            $count++;
+            $documento->getActiveSheet()->getStyle('A' . $cel . ':I' . $cel . '')->applyFromArray(array(
+                'fill' => array(
+                    'type' => Fill::FILL_SOLID,
+                    'color' => array('rgb' => 'E5E4E2')
+                ),
+                'font'  => array(
+                    'bold'  =>  false
+                ),
+                'alignment' => array(
+                    'horizontal' => Alignment::HORIZONTAL_LEFT
+                )
+            ));
+
+            $documento->getActiveSheet()->getStyle('F' . $cel . ':G' . $cel . '')->applyFromArray(array(
+                'font'  => array(
+                    'bold'  =>  false,
+                    'color' => array('rgb' => '000000')
+                ),
+                'alignment' => array(
+                    'horizontal' => Alignment::HORIZONTAL_CENTER
+                )
+            ));
+
+
+            $documento->setActiveSheetIndex(0)
+                ->setCellValue("A" . $cel,  strval($count))
+                ->setCellValue("B" . $cel, strval($value["idDNI"]))
+                ->setCellValue("C" . $cel, strval($value["CIP"]))
+                ->setCellValue("D" . $cel, strval($value["Apellidos"]))
+                ->setCellValue("E" . $cel, strval($value["Nombres"]))
+                ->setCellValue("F" . $cel, strval($value["Capitulo"]))
+                ->setCellValue("G" . $cel, strval($value["Condicion"]))
+                ->setCellValue("H" . $cel, strval($value["FechaColegiado"]))
+                ->setCellValue("I" . $cel, strval($value["Cumple"]));
+            $cel++;
+        }
+    }
+
 
     //Ancho de las columnas
     $documento->getActiveSheet()->getColumnDimension('A')->setWidth(7);
@@ -169,19 +231,10 @@ if (!is_array($listarColegiados)) {
     $documento->getActiveSheet()->getColumnDimension('H')->setWidth(20);
     $documento->getActiveSheet()->getColumnDimension('I')->setWidth(35);
 
-    $condicion = $_GET['condicion'] = 'T' ? 'Transeunte' : $_GET['condicion'] = 'O' ? 'Ordinario' : $_GET['condicion'] = 'V' ? 'Vitalicio' : $_GET['condicion'] = 'R' ? 'Retirado' : 'Fallecido';
-
-    if ($_GET["opcion"] == 1) {
-        $nombreDelDocumento = "Reporte de Colegiados .xlsx";
-    } else if ($_GET["opcion"] == 2){
-        $nombreDelDocumento = "Reporte de Colegiados - Condicion_".$condicion.".xlsx";
-    } else if($_GET["opcion"] == 3){
-        $nombreDelDocumento = "Reporte de Colegiados - Condicion_".$condicion." desde la fecha ".$_GET['fiColegiado']." hasta ".$_GET['ffColegiado'].".xlsx";
-    }
 
     // Redirect output to a client’s web browser (Xlsx)
     header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
-    header('Content-Disposition: attachment;filename=' . $nombreDelDocumento);
+    header('Content-Disposition: attachment;filename=' .  $subtitle . ".xlsx");
     header('Cache-Control: max-age=0');
     // If you're serving to IE 9, then the following may be needed
     header('Cache-Control: max-age=1');

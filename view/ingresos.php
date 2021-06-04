@@ -622,8 +622,6 @@ if (!isset($_SESSION['IdUsuario'])) {
                                 if (result.estado == 1) {
                                     tools.ModalAlertSuccess("Ingreso", result.message);
                                     loadInitIngresos();
-                                } else if (result.estado == 2) {
-                                    tools.ModalAlertWarning("Ingreso", result.message);
                                 } else {
                                     tools.ModalAlertWarning("Ingreso", result.message);
                                 }

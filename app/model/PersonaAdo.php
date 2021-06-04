@@ -238,7 +238,7 @@ class PersonaAdo
             }
 
             $cmdYears = Database::getInstance()->getDb()->prepare("SELECT 
-            datediff(year,c.FechaColegiado,getdate()) years
+            datediff(year,getdate(),dateadd(month,c.MesAumento,dateadd(year,30,c.FechaColegiado)))
 			from Persona as p inner join Colegiatura as c
 			on p.idDNI = c.idDNI and c.Principal = 1
             where p.idDNI = ?");
@@ -246,7 +246,16 @@ class PersonaAdo
             $cmdYears->execute();
             $resultYears =  $cmdYears->fetchColumn();
 
-            array_push($array, $object, $resultColegiatura, $resultYears);
+            $cmdDate = Database::getInstance()->getDb()->prepare("SELECT 
+            dateadd(month,c.MesAumento,dateadd(year,30,c.FechaColegiado))
+			from Persona as p inner join Colegiatura as c
+			on p.idDNI = c.idDNI and c.Principal = 1
+            where p.idDNI = ?");
+            $cmdDate->bindParam(1, $idPersona, PDO::PARAM_STR);
+            $cmdDate->execute();
+            $resultDate =  $cmdDate->fetchColumn();
+
+            array_push($array, $object, $resultColegiatura, $resultYears, $resultDate);
             return $array;
         } catch (Exception $ex) {
             return $ex->getMessage();
@@ -831,16 +840,18 @@ class PersonaAdo
                 if ($cmdSelect->fetch()) {
                     $comandoInsert = Database::getInstance()->getDb()->prepare("INSERT INTO Colegiatura (
                         idDNI,
-                         idSede,
-                          idEspecialidad, 
-                          FechaColegiado,
-                          idUnivesidadEgreso, 
-                          FechaEgreso,
-                          idUniversidad,
-                          FechaTitulacion,
-                          Resolucion, 
-                          Principal)
-                    VALUES(?,?,?,?,?,?,?,?,?,0)");
+                        idSede,
+                        idEspecialidad, 
+                        FechaColegiado,
+                        idUnivesidadEgreso, 
+                        FechaEgreso,
+                        idUniversidad,
+                        FechaTitulacion,
+                        Resolucion, 
+                        Principal,
+                        Resolucion15,
+                        MesAumento)
+                    VALUES(?,?,?,?,?,?,?,?,?,0,0,0)");
 
                     $comandoInsert->bindParam(1, $colegiatura['dni'], PDO::PARAM_STR);
                     $comandoInsert->bindParam(2, $colegiatura['sede'], PDO::PARAM_INT);
@@ -858,16 +869,18 @@ class PersonaAdo
                 } else {
                     $comandoInsert = Database::getInstance()->getDb()->prepare("INSERT INTO Colegiatura (
                         idDNI,
-                         idSede,
-                          idEspecialidad, 
-                          FechaColegiado,
-                          idUnivesidadEgreso, 
-                          FechaEgreso,
-                          idUniversidad,
-                          FechaTitulacion,
-                          Resolucion, 
-                          Principal)
-                    VALUES(?,?,?,?,?,?,?,?,?,1)");
+                        idSede,
+                        idEspecialidad, 
+                        FechaColegiado,
+                        idUnivesidadEgreso, 
+                        FechaEgreso,
+                        idUniversidad,
+                        FechaTitulacion,
+                        Resolucion, 
+                        Principal,
+                        Resolucion15,
+                        MesAumento)
+                    VALUES(?,?,?,?,?,?,?,?,?,1,0,0)");
 
                     $comandoInsert->bindParam(1, $colegiatura['dni'], PDO::PARAM_STR);
                     $comandoInsert->bindParam(2, $colegiatura['sede'], PDO::PARAM_INT);
@@ -1467,7 +1480,7 @@ class PersonaAdo
                     'Condicion' => $row['Condicion'],
                     'CodigoCondicion' => $row['CodigoCondicion'],
                     'Especialidad' => $row['Especialidad'],
-                    'Colegiatura'=>$row['FechaColegiado'],
+                    'Colegiatura' => $row['FechaColegiado'],
                     'FechaColegiado' => $dateFechaColegiado->format("d/m/Y"),
                     'FechaUltimaCuota' => $dateFechaUltimaCuota->format("m/Y"),
                     'UltimaCuota' => $row['FechaUltimaCuota'],

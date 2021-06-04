@@ -1,7 +1,7 @@
 function Certificado() {
-    this.componentesCertificado = function() {
+    this.componentesCertificado = function () {
         //********************************************* */
-        $("#btnCertificado").click(function() {
+        $("#btnCertificado").click(function () {
             if (idDNI == 0) {
                 tools.AlertWarning("Certificado", "No selecciono ningún ingeniero para obtener sus certificados.")
             } else {
@@ -12,12 +12,12 @@ function Certificado() {
 
         /****************************************************/
         //-----CERTIFICADO DE HABILIDAD
-        $("#btnCertHabilidad").click(function() {
+        $("#btnCertHabilidad").click(function () {
             $('#mdCertHabilidad').modal('show');
             loadCertificadoHabilidad(idDNI);
         });
 
-        $("#btnCertHabilidad").keypress(function(event) {
+        $("#btnCertHabilidad").keypress(function (event) {
             if (event.keyCode === 13) {
                 $('#mdCertHabilidad').modal('show');
                 loadCertificadoHabilidad(idDNI);
@@ -25,7 +25,7 @@ function Certificado() {
             event.preventDefault();
         });
 
-        $("#txtCorrelativoCertificado").keypress(function(event) {
+        $("#txtCorrelativoCertificado").keypress(function (event) {
             var key = window.Event ? event.which : event.keyCode;
             var c = String.fromCharCode(key);
             if ((c < '0' || c > '9') && (c != '\b')) {
@@ -33,35 +33,35 @@ function Certificado() {
             }
         });
 
-        $("#btnAceptarCertificado").click(function() {
+        $("#btnAceptarCertificado").click(function () {
             validateIngresosCertificadoHabilidad();
         });
 
-        $("#btnAceptarCertificado").keypress(function(event) {
+        $("#btnAceptarCertificado").keypress(function (event) {
             if (event.keyCode === 13) {
                 validateIngresosCertificadoHabilidad();
             }
             event.preventDefault();
         });
 
-        $("#btnCancelarCertificado").click(function() {
+        $("#btnCancelarCertificado").click(function () {
             $('#mdCertHabilidad').modal('hide');
             clearIngresosCertificadoHabilidad()
         });
 
-        $("#btnCloseCertificado").click(function() {
+        $("#btnCloseCertificado").click(function () {
             $('#mdCertHabilidad').modal('hide');
             clearIngresosCertificadoHabilidad()
         });
 
         /****************************************************/
         //-----CERTIFICADO DE HABILIDAD OBRA PUBLICA O RESIDENCIA
-        $("#btnCertResidenciaObra").click(function() {
+        $("#btnCertResidenciaObra").click(function () {
             $('#mdCertResidenciaObra').modal('show');
             loadCertificadoObra(idDNI);
         });
 
-        $("#btnCertResidenciaObra").keypress(function(event) {
+        $("#btnCertResidenciaObra").keypress(function (event) {
             if (event.keyCode === 13) {
                 $('#mdCertResidenciaObra').modal('show');
                 loadCertificadoObra(idDNI);
@@ -69,7 +69,7 @@ function Certificado() {
             event.preventDefault();
         });
 
-        $("#txtCertificadoNumeroObra").keypress(function(event) {
+        $("#txtCertificadoNumeroObra").keypress(function (event) {
             var key = window.Event ? event.which : event.keyCode;
             var c = String.fromCharCode(key);
             if ((c < '0' || c > '9') && (c != '\b')) {
@@ -77,7 +77,7 @@ function Certificado() {
             }
         });
 
-        $("#txtMontoContratoObra").keypress(function(event) {
+        $("#txtMontoContratoObra").keypress(function (event) {
             var key = window.Event ? event.which : event.keyCode;
             var c = String.fromCharCode(key);
             if ((c < '0' || c > '9') && (c != '\b') && (c != '.')) {
@@ -88,7 +88,7 @@ function Certificado() {
             }
         });
 
-        $("#txtMontoCobrarObra").keypress(function(event) {
+        $("#txtMontoCobrarObra").keypress(function (event) {
             var key = window.Event ? event.which : event.keyCode;
             var c = String.fromCharCode(key);
             if ((c < '0' || c > '9') && (c != '\b') && (c != '.')) {
@@ -100,35 +100,35 @@ function Certificado() {
         });
 
 
-        $("#btnAceptarCertResidenciaObra").click(function() {
+        $("#btnAceptarCertResidenciaObra").click(function () {
             validateIngresosCertificadoResidenciaObra();
         });
 
-        $("#btnAceptarCertResidenciaObra").keypress(function(event) {
+        $("#btnAceptarCertResidenciaObra").keypress(function (event) {
             if (event.keyCode === 13) {
                 validateIngresosCertificadoResidenciaObra();
             }
             event.preventDefault();
         });
 
-        $("#btnCloseCertResidenciaObra").click(function() {
+        $("#btnCloseCertResidenciaObra").click(function () {
             $('#mdCertResidenciaObra').modal('hide');
             clearIngresosCertificadoResidenciaObra();
         });
 
-        $("#btnCloseCertRecidenciaObra").click(function() {
+        $("#btnCloseCertRecidenciaObra").click(function () {
             $('#mdCertResidenciaObra').modal('hide');
             clearIngresosCertificadoResidenciaObra();
         });
 
         /****************************************************/
         //-----CERTIFICADO DE PROYECTO
-        $("#btnCertProyecto").click(function() {
+        $("#btnCertProyecto").click(function () {
             $('#mdCertProyecto').modal('show');
             loadCertificadoProyecto(idDNI);
         });
 
-        $("#btnCertProyecto").keypress(function(event) {
+        $("#btnCertProyecto").keypress(function (event) {
             if (event.keyCode === 13) {
                 $('#mdCertProyecto').modal('show');
                 loadCertificadoProyecto(idDNI);
@@ -136,7 +136,7 @@ function Certificado() {
             event.preventDefault();
         });
 
-        $("#txtNumeroCertificadoProyecto").keypress(function(event) {
+        $("#txtNumeroCertificadoProyecto").keypress(function (event) {
             var key = window.Event ? event.which : event.keyCode;
             var c = String.fromCharCode(key);
             if ((c < '0' || c > '9') && (c != '\b')) {
@@ -144,7 +144,7 @@ function Certificado() {
             }
         });
 
-        $("#txtMontoContratoProyecto").keypress(function(event) {
+        $("#txtMontoContratoProyecto").keypress(function (event) {
             var key = window.Event ? event.which : event.keyCode;
             var c = String.fromCharCode(key);
             if ((c < '0' || c > '9') && (c != '\b') && (c != '.')) {
@@ -155,7 +155,7 @@ function Certificado() {
             }
         });
 
-        $("#txtMontoCobrarProyecto").keypress(function(event) {
+        $("#txtMontoCobrarProyecto").keypress(function (event) {
             var key = window.Event ? event.which : event.keyCode;
             var c = String.fromCharCode(key);
             if ((c < '0' || c > '9') && (c != '\b') && (c != '.')) {
@@ -166,23 +166,23 @@ function Certificado() {
             }
         });
 
-        $("#btnAceptarCertProyecto").click(function() {
+        $("#btnAceptarCertProyecto").click(function () {
             validateIngresosCertificadoProyecto()
         });
 
-        $("#btnAceptarCertProyecto").keypress(function(event) {
+        $("#btnAceptarCertProyecto").keypress(function (event) {
             if (event.keyCode === 13) {
                 validateIngresosCertificadoProyecto()
             }
             event.preventDefault();
         });
 
-        $("#btnCloseCertProyecto").click(function() {
+        $("#btnCloseCertProyecto").click(function () {
             $('#mdCertProyecto').modal('hide');
             clearIngresoCertificadoProyecto();
         });
 
-        $("#btnCancelCertProyecto").click(function() {
+        $("#btnCancelCertProyecto").click(function () {
             $('#mdCertProyecto').modal('hide');
             clearIngresoCertificadoProyecto();
         });
@@ -200,7 +200,7 @@ function Certificado() {
                 "categoria": 5,
                 "Dni": $dni,
             },
-            beforeSend: function() {
+            beforeSend: function () {
                 $("#cbEspecialidadCertificado").empty();
                 $("#modal-title-certificado-habilidad").append('<img src="./images/spiner.gif" width="25" height="25" style="margin-left: 10px;"/>');
 
@@ -208,7 +208,7 @@ function Certificado() {
                 $("#lblCertificadoHabilidadEstado").empty();
                 certificadoHabilidad = {}
             },
-            success: function(result) {
+            success: function (result) {
                 $("#modal-title-certificado-habilidad").empty();
                 $("#modal-title-certificado-habilidad").append('<i class="fa fa-plus"> </i> Certificado de Habilidad');
                 if (result.estado == 1) {
@@ -221,12 +221,18 @@ function Certificado() {
                         "monto": parseFloat(result.data.Precio),
                         "ultimoPago": result.ultimopago
                     };
+
                     $("#cbEspecialidadCertificado").append('<option value="">- Seleccione -</option>');
                     for (let especialidades of result.especialidades) {
                         $("#cbEspecialidadCertificado").append('<option value="' + especialidades.idEspecialidad + '">' + especialidades.Especialidad + '</option>');
                     }
+
                     if (result.especialidades.length != 0) {
                         $("select#cbEspecialidadCertificado").prop('selectedIndex', 1);
+                    }
+
+                    if (result.especialidades.length > 1) {
+                        $("#lblEspecialidadCertificado").html('Especialidad(es) <em class=" text-primary text-bold small"><i class="fa fa-info-circle"></i> Tiene más de 2 especialidades</em>');
                     }
 
                     if (cuotasEstate) {
@@ -256,7 +262,7 @@ function Certificado() {
                     $("#cbEspecialidadCertificado").append('<option value="">- Seleccione -</option>');
                 }
             },
-            error: function(error) {
+            error: function (error) {
                 $("#modal-title-certificado-habilidad").empty();
                 $("#modal-title-certificado-habilidad").append('<i class="fa fa-plus"></i> Certificado de Habilidad');
                 $("#cbEspecialidadCertificado").append('<option value="">- Seleccione -</option>');
@@ -275,7 +281,7 @@ function Certificado() {
                 "categoria": 6,
                 "Dni": $dni,
             },
-            beforeSend: function() {
+            beforeSend: function () {
                 $("#cbEspecialidadObra").empty();
                 $("#cbDepartamentoObra").empty();
                 $("#modal-title-residencia-obra").append('<img src="./images/spiner.gif" width="25" height="25" style="margin-left: 10px;"/>');
@@ -284,7 +290,7 @@ function Certificado() {
                 $("#lblCertificadoResidenciaObraEstado").empty();
                 certificadoResidenciaObra = {}
             },
-            success: function(result) {
+            success: function (result) {
                 $("#modal-title-residencia-obra").empty();
                 $("#modal-title-residencia-obra").append('<i class="fa fa-plus"> </i> Certificado de Habilidad para Firmar de Contrato de Obra Pública o Residencia');
 
@@ -304,6 +310,10 @@ function Certificado() {
                     }
                     if (result.especialidades.length != 0) {
                         $("select#cbEspecialidadObra").prop('selectedIndex', 1);
+                    }
+
+                    if (result.especialidades.length > 1) {
+                        $("#lblEspecialidadObra").html('Especialidad(es) <em class=" text-primary text-bold small"><i class="fa fa-info-circle"></i> Tiene más de 2 especialidades</em>');
                     }
 
                     if (cuotasEstate) {
@@ -339,7 +349,7 @@ function Certificado() {
                     $("#cbEspecialidadObra").append('<option value="">- Seleccione -</option>');
                 }
             },
-            error: function(error) {
+            error: function (error) {
                 $("#modal-title-residencia-obra").empty();
                 $("#modal-title-residencia-obra").append('<i class="fa fa-plus"> </i> Certificado de Habilidad para Firmar de Contrato de Obra Pública o Residencia');
                 $("#cbEspecialidadObra").append('<option value="">- Seleccione -</option>');
@@ -358,7 +368,7 @@ function Certificado() {
                 "categoria": 7,
                 "Dni": $dni,
             },
-            beforeSend: function() {
+            beforeSend: function () {
                 $("#cbEspecialidadProyecto").empty();
                 $("#cbDepartamentoProyecto").empty();
                 $("#modal-title-certificado-proyecto").append('<img src="./images/spiner.gif" width="25" height="25" style="margin-left: 10px;"/>');
@@ -367,7 +377,7 @@ function Certificado() {
                 $("#lblCertificadoProyectoEstado").empty();
                 certificadoProyecto = {};
             },
-            success: function(result) {
+            success: function (result) {
                 $("#modal-title-certificado-proyecto").empty();
                 $("#modal-title-certificado-proyecto").append('<i class="fa fa-plus"> </i> Certificado de Proyecto');
                 if (result.estado == 1) {
@@ -386,6 +396,10 @@ function Certificado() {
                     }
                     if (result.especialidades.length != 0) {
                         $("select#cbEspecialidadProyecto").prop('selectedIndex', 1);
+                    }
+
+                    if (result.especialidades.length > 1) {
+                        $("#lblEspecialidadProyecto").html('Especialidad(es) <em class=" text-primary text-bold small"><i class="fa fa-info-circle"></i> Tiene más de 2 especialidades</em>');
                     }
 
                     if (cuotasEstate) {
@@ -421,7 +435,7 @@ function Certificado() {
                     $("#cbEspecialidadProyecto").append('<option value="">- Seleccione -</option>');
                 }
             },
-            error: function(error) {
+            error: function (error) {
                 $("#modal-title-certificado-proyecto").empty();
                 $("#modal-title-certificado-proyecto").append('<i class="fa fa-plus"> </i> Certificado de Proyecto');
                 $("#cbEspecialidadProyecto").append('<option value="">- Seleccione -</option>');
@@ -455,15 +469,14 @@ function Certificado() {
             certificadoHabilidad.entidad = $("#txtEntidadCertificado").val().toUpperCase();
             certificadoHabilidad.lugar = $("#txtLugarCertificado").val().toUpperCase();
             certificadoHabilidad.ultimoPago = $("#txtFechaCertificado").val();
-            certificadoHabilidad.anulado = 0;
-            console.log(certificadoHabilidad.ultimoPago)
+            certificadoHabilidad.anulado = 0;            
             validateCertHabilidadNum(certificadoHabilidad.numero);
         }
     }
 
     function validateCertHabilidadNum(numero) {
         tools.AlertInfo("Certificado de Habilidad", "Validando numeración del certificado");
-        $.get("../app/controller/ConceptoController.php", { "type": "numCertHabilidad", "numero": numero }, function(data, status) {
+        $.get("../app/controller/ConceptoController.php", { "type": "numCertHabilidad", "numero": numero }, function (data, status) {
             if (data.estado == false) {
                 if (!validateDuplicate(certificadoHabilidad.idConcepto)) {
                     arrayIngresos.push({
@@ -606,6 +619,7 @@ function Certificado() {
     function clearIngresosCertificadoHabilidad() {
         $("#cbEspecialidadCertificado").val("")
         $("#txtCorrelativoCertificado").val("")
+        $("#lblEspecialidadCertificado").html('Especialidad(es)');
         $("#txtAsuntoCertificado").val("EJERCICIO DE LA PROFESIÓN")
         $("#txtEntidadCertificado").val("VARIOS")
         $("#txtLugarCertificado").val("A NIVEL NACIONAL")
@@ -613,6 +627,7 @@ function Certificado() {
 
     function clearIngresosCertificadoResidenciaObra() {
         $("#cbEspecialidadObra").val("")
+        $("#lblEspecialidadObra").html('Especialidad(es)');
         $("#txtFechaObra").val("")
         $("#txtCertificadoNumeroObra").val("")
         $("#txtModalidadObra").val("")
@@ -625,6 +640,7 @@ function Certificado() {
 
     function clearIngresoCertificadoProyecto() {
         $("#cbEspecialidadProyecto").val("")
+        $("#lblEspecialidadProyecto").html('Especialidad(es)');
         $("#txtFechaProyecto").val("")
         $("#txtNumeroCertificadoProyecto").val("")
         $("#txtModalidadProyecto").val("")

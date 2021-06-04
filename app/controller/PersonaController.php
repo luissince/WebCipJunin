@@ -49,6 +49,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
                 "persona" => $persona[0],
                 "colegiatura" => $persona[1],
                 "years" => $persona[2],
+                "date" => $persona[3],
             ));
         } else {
             echo json_encode(array(

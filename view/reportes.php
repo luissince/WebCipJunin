@@ -22,6 +22,286 @@ if (!isset($_SESSION['IdUsuario'])) {
             <!-- start menu -->
             <?php include('./layout/menu.php') ?>
             <!-- end menu -->
+
+            <!-- Modal Resumen de ingresos -->
+            <div class="row">
+                <div class="modal fade" id="linkListaIngresos">
+                    <div class="modal-dialog">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <button type="button" class="close" data-dismiss="modal">
+                                    <i class="fa fa-close"></i>
+                                </button>
+                                <h4 class="modal-title">
+                                    <i class="fa fa-file-pdf-o"></i> Resumen de Ingresos Filtros
+                                </h4>
+                            </div>
+                            <div class="modal-body">
+
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            <label for="fi_ingresos">Fecha Inicio: <i class="fa fa-fw fa-asterisk text-danger"></i></label>
+                                            <input id="fi_ingresos" type="date" name="fi_ingresos" class="form-control" required="">
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            <label for="ff_ingresos">Fecha Fin: <i class="fa fa-fw fa-asterisk text-danger"></i></label>
+                                            <input id="ff_ingresos" type="date" name="ff_ingresos" class="form-control" required="">
+                                        </div>
+                                    </div>
+                                </div>
+
+                            </div>
+                            <div class="modal-footer">
+                                <button type="submit" class="btn btn-danger" name="btnAceptarIngresos" data-dismiss="modal" id="btnAceptarIngresos">
+                                    <i class="fa fa-check"></i> Aceptar</button>
+                                <button type="button" class="btn btn-primary" data-dismiss="modal">
+                                    <i class="fa fa-remove"></i> Cancelar</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Modal Resumen de Aportes del CIN -->
+            <div class="row">
+                <div class="modal fade" id="linkListaResumenCIN">
+                    <div class="modal-dialog">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <button type="button" class="close" data-dismiss="modal">
+                                    <i class="fa fa-close"></i>
+                                </button>
+                                <h4 class="modal-title">
+                                    <i class="fa fa-file-pdf-o"></i> Aportes del CIN Filtros
+                                </h4>
+                            </div>
+                            <div class="modal-body">
+
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <div class="form-group">
+                                            <div class="radio">
+                                                <label>
+                                                    <input type="radio" name="optionsRadioAportes" id="brAportes" value="opcion1" checked="">
+                                                    Todos los Registros
+                                                </label>
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <div class="radio">
+                                                <label>
+                                                    <input type="radio" name="optionsRadioAportes" id="brAportesColegiado" value="opcion2">
+                                                    Según el Colegiado
+                                                </label>
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <!-- <select class="form-control" id="cbIngeniero" disabled="">
+                                                                </select> -->
+                                            <select class="form-control select2" id="cbIngeniero" style="width: 100%;" disabled="">
+                                            </select>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            <label for="fi_AportesCIN">Fecha Inicio: <i class="fa fa-fw fa-asterisk text-danger"></i></label>
+                                            <input id="fi_AportesCIN" type="date" name="fi_AportesCIN" class="form-control" required="">
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            <label for="ff_AportesCIN">Fecha Fin: <i class="fa fa-fw fa-asterisk text-danger"></i></label>
+                                            <input id="ff_AportesCIN" type="date" name="ff_AportesCIN" class="form-control" required="">
+                                        </div>
+                                    </div>
+                                </div>
+
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-success" id="btnGenerarExcelAportesCIN">
+                                    <i class="fa fa-file-excel-o"></i> Excel</button>
+                                <button type="submit" class="btn btn-danger" name="btnAceptarAportesCIN" id="btnAceptarAportesCIN">
+                                    <i class="fa fa-file-pdf-o"></i> Pdf</button>
+                                <button type="button" class="btn btn-primary" data-dismiss="modal">
+                                    <i class="fa fa-remove"></i> Cancelar</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- end Modal -->
+
+            <!-- Modal Reportes de Comprobantes emitidos -->
+            <div class="row">
+                <div class="modal fade" id="ComprobantesEmitidos">
+                    <div class="modal-dialog">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <button type="button" class="close" data-dismiss="modal" id="closeModalComprobantes">
+                                    <i class="fa fa-close"></i>
+                                </button>
+                                <h4 class="modal-title">
+                                    <i class="fa fa-file-pdf-o"></i> Reporte de Comprobantes Emitidos
+                                </h4>
+                            </div>
+                            <div class="modal-body">
+
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <div class="form-group">
+                                            <div class="radio">
+                                                <label>
+                                                    <input type="radio" name="optionsRadios" id="brComprobantes" value="opcion1" checked="">
+                                                    Todos los comprobantes
+                                                </label>
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <div class="radio">
+                                                <label>
+                                                    <input type="radio" name="optionsRadios" id="brTipoComprobantes" value="opcion2">
+                                                    Según el tipo de documento
+                                                </label>
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <select class="form-control" id="cbTipodeDocumento" disabled="">
+                                            </select>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            <label for="fi_comprobantes">Fecha Inicio: <i class="fa fa-fw fa-asterisk text-danger"></i></label>
+                                            <input id="fi_comprobantes" type="date" name="fi_comprobantes" class="form-control" required="">
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            <label for="ff_comprobantes">Fecha Fin: <i class="fa fa-fw fa-asterisk text-danger"></i></label>
+                                            <input id="ff_comprobantes" type="date" name="ff_ingresos" class="form-control" required="">
+                                        </div>
+                                    </div>
+                                </div>
+
+                            </div>
+                            <div class="modal-footer">
+                                <div class="col-md-12">
+                                    <button type="button" class="btn btn-success" id="btnGenerarExcel">
+                                        <i class="fa fa-file-excel-o"></i> Excel</button>
+                                    <button type="button" class="btn btn-danger" id="btnGenerarPdf">
+                                        <i class="fa fa-file-pdf-o"></i> Pdf</button>
+                                    <button type="button" class="btn btn-primary" id="btnCancelar">
+                                        <i class="fa fa-remove"></i> Cancelar</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- end Modal -->
+
+            <!-- Modal Lista de Colegiados -->
+            <div class="row">
+                <div class="modal fade" id="mdListadeColegiados">
+                    <div class="modal-dialog">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <button type="button" class="close" data-dismiss="modal" id="closeModalColegiado">
+                                    <i class="fa fa-close"></i>
+                                </button>
+                                <h4 class="modal-title">
+                                    <i class="fa fa-file-pdf-o"></i> Reporte de Colegiados
+                                </h4>
+                            </div>
+                            <div class="modal-body">
+
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <div class="form-group">
+                                            <div class="radio">
+                                                <label>
+                                                    <input type="radio" name="optionsColegiado" id="brColegiados" value="opcion1" checked="">
+                                                    Todos los colegiados
+                                                </label>
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <div class="radio">
+                                                <label>
+                                                    <input type="radio" name="optionsColegiado" id="brColegiados_Categoria" value="opcion2">
+                                                    Según su Categoria
+                                                </label>
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <select id="cbCategoriaColegiado1" class="form-control" disabled="">
+                                                <option value="">- - Filtre por Categoria - -</option>
+                                                <option value="T">Transeunte</option>
+                                                <option value="O">Ordinario</option>
+                                                <option value="V">Vitalicio</option>
+                                                <option value="R">Retirado</option>
+                                                <option value="F">Fallecido</option>
+                                            </select>
+                                        </div>
+                                        <div class="form-group">
+                                            <div class="form-group">
+                                                <div class="radio">
+                                                    <label>
+                                                        <input type="radio" name="optionsColegiado" id="brColegiados_Categoria_Fecha" value="opcion3">
+                                                        Colegiados que cumplen(25 años, 30 años y 50 años)
+                                                    </label>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <select class="form-control" id="cbCategoriaColegiado2" disabled="">
+                                                <option value="">- - Filtre el año - -</option>
+                                                <option value="1">25 Años</option>
+                                                <option value="2">30 Años</option>
+                                                <option value="3">50 Años</option>
+                                            </select>
+                                        </div>
+                                        <div class="form-group">
+                                            <div class="row">
+                                                <div class="col-md-12">
+                                                    <div class="form-group">
+                                                        <label for="fi_colegiado">Fecha de Busqueda: <i class="fa fa-fw fa-asterisk text-danger"></i></label>
+                                                        <select class="form-control" id="fi_colegiado">
+                                                            <option value="">- - Seleccione el Año - -</option>
+                                                        </select>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                            </div>
+                            <div class="modal-footer">
+                                <div class="col-md-12">
+                                    <button type="button" class="btn btn-success" id="btnGenerarExcelColegiado">
+                                        <i class="fa fa-file-excel-o"></i> Excel</button>
+                                    <button type="button" class="btn btn-danger" id="btnGenerarPdfColegiado">
+                                        <i class="fa fa-file-pdf-o"></i> Pdf</button>
+                                    <button type="button" class="btn btn-primary" id="btnCancelarColegiado">
+                                        <i class="fa fa-remove"></i> Cancelar</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- end Modal -->
+
             <!-- Content Wrapper. Contains page content -->
             <div class="content-wrapper" style="background-color: #FFFFFF;">
                 <!-- Main content -->
@@ -31,294 +311,7 @@ if (!isset($_SESSION['IdUsuario'])) {
                         <div class="col-lg-12 col-md-12">
                             <div class="panel panel-default">
                                 <div class="panel-heading"> <i class="fa fa-user"></i> Reportes</div>
-
-                                <!-- Modal Resumen de ingresos -->
-                                <div class="row">
-                                    <div class="modal fade" id="linkListaIngresos">
-                                        <div class="modal-dialog">
-                                            <div class="modal-content">
-                                                <div class="modal-header">
-                                                    <button type="button" class="close" data-dismiss="modal">
-                                                        <i class="fa fa-close"></i>
-                                                    </button>
-                                                    <h4 class="modal-title">
-                                                        <i class="fa fa-file-pdf-o"></i> Resumen de Ingresos Filtros
-                                                    </h4>
-                                                </div>
-                                                <div class="modal-body">
-
-                                                    <div class="row">
-                                                        <div class="col-md-6">
-                                                            <div class="form-group">
-                                                                <label for="fi_ingresos">Fecha Inicio: <i class="fa fa-fw fa-asterisk text-danger"></i></label>
-                                                                <input id="fi_ingresos" type="date" name="fi_ingresos" class="form-control" required="">
-                                                            </div>
-                                                        </div>
-                                                        <div class="col-md-6">
-                                                            <div class="form-group">
-                                                                <label for="ff_ingresos">Fecha Fin: <i class="fa fa-fw fa-asterisk text-danger"></i></label>
-                                                                <input id="ff_ingresos" type="date" name="ff_ingresos" class="form-control" required="">
-                                                            </div>
-                                                        </div>
-                                                    </div>
-
-                                                </div>
-                                                <div class="modal-footer">
-                                                    <button type="submit" class="btn btn-danger" name="btnAceptarIngresos" data-dismiss="modal" id="btnAceptarIngresos">
-                                                        <i class="fa fa-check"></i> Aceptar</button>
-                                                    <button type="button" class="btn btn-primary" data-dismiss="modal">
-                                                        <i class="fa fa-remove"></i> Cancelar</button>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-
-                                <!-- Modal Resumen de Aportes del CIN -->
-                                <div class="row">
-                                    <div class="modal fade" id="linkListaResumenCIN">
-                                        <div class="modal-dialog">
-                                            <div class="modal-content">
-                                                <div class="modal-header">
-                                                    <button type="button" class="close" data-dismiss="modal">
-                                                        <i class="fa fa-close"></i>
-                                                    </button>
-                                                    <h4 class="modal-title">
-                                                        <i class="fa fa-file-pdf-o"></i> Aportes del CIN Filtros
-                                                    </h4>
-                                                </div>
-                                                <div class="modal-body">
-
-                                                    <div class="row">
-                                                        <div class="col-md-12">
-                                                            <div class="form-group">
-                                                                <div class="radio">
-                                                                    <label>
-                                                                        <input type="radio" name="optionsRadioAportes" id="brAportes" value="opcion1" checked="">
-                                                                        Todos los Registros
-                                                                    </label>
-                                                                </div>
-                                                            </div>
-                                                            <div class="form-group">
-                                                                <div class="radio">
-                                                                    <label>
-                                                                        <input type="radio" name="optionsRadioAportes" id="brAportesColegiado" value="opcion2">
-                                                                        Según el Colegiado
-                                                                    </label>
-                                                                </div>
-                                                            </div>
-                                                            <div class="form-group">
-                                                                <!-- <select class="form-control" id="cbIngeniero" disabled="">
-                                                                </select> -->
-                                                                <select class="form-control select2" id="cbIngeniero" style="width: 100%;" disabled="">
-                                                                </select>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-
-                                                    <div class="row">
-                                                        <div class="col-md-6">
-                                                            <div class="form-group">
-                                                                <label for="fi_AportesCIN">Fecha Inicio: <i class="fa fa-fw fa-asterisk text-danger"></i></label>
-                                                                <input id="fi_AportesCIN" type="date" name="fi_AportesCIN" class="form-control" required="">
-                                                            </div>
-                                                        </div>
-                                                        <div class="col-md-6">
-                                                            <div class="form-group">
-                                                                <label for="ff_AportesCIN">Fecha Fin: <i class="fa fa-fw fa-asterisk text-danger"></i></label>
-                                                                <input id="ff_AportesCIN" type="date" name="ff_AportesCIN" class="form-control" required="">
-                                                            </div>
-                                                        </div>
-                                                    </div>
-
-                                                </div>
-                                                <div class="modal-footer">
-                                                    <button type="button" class="btn btn-success" id="btnGenerarExcelAportesCIN">
-                                                        <i class="fa fa-file-excel-o"></i> Excel</button>
-                                                    <button type="submit" class="btn btn-danger" name="btnAceptarAportesCIN" id="btnAceptarAportesCIN">
-                                                        <i class="fa fa-file-pdf-o"></i> Pdf</button>
-                                                    <button type="button" class="btn btn-primary" data-dismiss="modal">
-                                                        <i class="fa fa-remove"></i> Cancelar</button>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                                <!-- end Modal -->
-
-                                <!-- Modal Reportes de Comprobantes emitidos -->
-                                <div class="row">
-                                    <div class="modal fade" id="ComprobantesEmitidos">
-                                        <div class="modal-dialog">
-                                            <div class="modal-content">
-                                                <div class="modal-header">
-                                                    <button type="button" class="close" data-dismiss="modal" id="closeModalComprobantes">
-                                                        <i class="fa fa-close"></i>
-                                                    </button>
-                                                    <h4 class="modal-title">
-                                                        <i class="fa fa-file-pdf-o"></i> Reporte de Comprobantes Emitidos
-                                                    </h4>
-                                                </div>
-                                                <div class="modal-body">
-
-                                                    <div class="row">
-                                                        <div class="col-md-12">
-                                                            <div class="form-group">
-                                                                <div class="radio">
-                                                                    <label>
-                                                                        <input type="radio" name="optionsRadios" id="brComprobantes" value="opcion1" checked="">
-                                                                        Todos los comprobantes
-                                                                    </label>
-                                                                </div>
-                                                            </div>
-                                                            <div class="form-group">
-                                                                <div class="radio">
-                                                                    <label>
-                                                                        <input type="radio" name="optionsRadios" id="brTipoComprobantes" value="opcion2">
-                                                                        Según el tipo de documento
-                                                                    </label>
-                                                                </div>
-                                                            </div>
-                                                            <div class="form-group">
-                                                                <select class="form-control" id="cbTipodeDocumento" disabled="">
-                                                                </select>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-
-                                                    <div class="row">
-                                                        <div class="col-md-6">
-                                                            <div class="form-group">
-                                                                <label for="fi_comprobantes">Fecha Inicio: <i class="fa fa-fw fa-asterisk text-danger"></i></label>
-                                                                <input id="fi_comprobantes" type="date" name="fi_comprobantes" class="form-control" required="">
-                                                            </div>
-                                                        </div>
-                                                        <div class="col-md-6">
-                                                            <div class="form-group">
-                                                                <label for="ff_comprobantes">Fecha Fin: <i class="fa fa-fw fa-asterisk text-danger"></i></label>
-                                                                <input id="ff_comprobantes" type="date" name="ff_ingresos" class="form-control" required="">
-                                                            </div>
-                                                        </div>
-                                                    </div>
-
-                                                </div>
-                                                <div class="modal-footer">
-                                                    <div class="col-md-12">
-                                                        <button type="button" class="btn btn-success" id="btnGenerarExcel">
-                                                            <i class="fa fa-file-excel-o"></i> Excel</button>
-                                                        <button type="button" class="btn btn-danger" id="btnGenerarPdf">
-                                                            <i class="fa fa-file-pdf-o"></i> Pdf</button>
-                                                        <button type="button" class="btn btn-primary" id="btnCancelar">
-                                                            <i class="fa fa-remove"></i> Cancelar</button>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                                <!-- end Modal -->
-
-                                <!-- Modal Lista de Colegiados -->
-                                <div class="row">
-                                    <div class="modal fade" id="mdListadeColegiados">
-                                        <div class="modal-dialog">
-                                            <div class="modal-content">
-                                                <div class="modal-header">
-                                                    <button type="button" class="close" data-dismiss="modal" id="closeModalColegiado">
-                                                        <i class="fa fa-close"></i>
-                                                    </button>
-                                                    <h4 class="modal-title">
-                                                        <i class="fa fa-file-pdf-o"></i> Reporte de Colegiados
-                                                    </h4>
-                                                </div>
-                                                <div class="modal-body">
-
-                                                    <div class="row">
-                                                        <div class="col-md-12">
-                                                            <div class="form-group">
-                                                                <div class="radio">
-                                                                    <label>
-                                                                        <input type="radio" name="optionsColegiado" id="brColegiados" value="opcion1" checked="">
-                                                                        Todos los colegiados
-                                                                    </label>
-                                                                </div>
-                                                            </div>
-                                                            <div class="form-group">
-                                                                <div class="radio">
-                                                                    <label>
-                                                                        <input type="radio" name="optionsColegiado" id="brColegiados_Categoria" value="opcion2">
-                                                                        Según su Categoria
-                                                                    </label>
-                                                                </div>
-                                                            </div>
-                                                            <div class="form-group">
-                                                                <select id="cbCategoriaColegiado1" class="form-control" disabled="">
-                                                                    <option value="">- - Filtre por Categoria - -</option>
-                                                                    <option value="T">Transeunte</option>
-                                                                    <option value="O">Ordinario</option>
-                                                                    <option value="V">Vitalicio</option>
-                                                                    <option value="R">Retirado</option>
-                                                                    <option value="F">Fallecido</option>
-                                                                </select>
-                                                            </div>
-                                                            <div class="form-group">
-                                                                <div class="form-group">
-                                                                    <div class="radio">
-                                                                        <label>
-                                                                            <input type="radio" name="optionsColegiado" id="brColegiados_Categoria_Fecha" value="opcion3">
-                                                                            Según Categoría y fecha
-                                                                        </label>
-                                                                    </div>
-                                                                </div>
-                                                            </div>
-                                                            <div class="form-group">
-                                                                <select class="form-control" id="cbCategoriaColegiado2" disabled="">
-                                                                    <option value="">- - Filtre por Categoria - -</option>
-                                                                    <option value="T">Transeunte</option>
-                                                                    <option value="O">Ordinario</option>
-                                                                    <option value="V">Vitalicio</option>
-                                                                    <option value="R">Retirado</option>
-                                                                    <option value="F">Fallecido</option>
-                                                                </select>
-                                                            </div>
-                                                            <div class="form-group">
-                                                                <div class="row">
-                                                                    <div class="col-md-6">
-                                                                        <div class="form-group">
-                                                                            <label for="fi_colegiado">Fecha Inicio: <i class="fa fa-fw fa-asterisk text-danger"></i></label>
-                                                                            <input id="fi_colegiado" type="date" name="fi_colegiado" class="form-control" required="">
-                                                                        </div>
-                                                                    </div>
-                                                                    <div class="col-md-6">
-                                                                        <div class="form-group">
-                                                                            <label for="ff_colegiado">Fecha Fin: <i class="fa fa-fw fa-asterisk text-danger"></i></label>
-                                                                            <input id="ff_colegiado" type="date" name="ff_colegiado" class="form-control" required="">
-                                                                        </div>
-                                                                    </div>
-                                                                </div>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-
-                                                </div>
-                                                <div class="modal-footer">
-                                                    <div class="col-md-12">
-                                                        <button type="button" class="btn btn-success" id="btnGenerarExcelColegiado">
-                                                            <i class="fa fa-file-excel-o"></i> Excel</button>
-                                                        <button type="button" class="btn btn-danger" id="btnGenerarPdfColegiado">
-                                                            <i class="fa fa-file-pdf-o"></i> Pdf</button>
-                                                        <button type="button" class="btn btn-primary" id="btnCancelarColegiado">
-                                                            <i class="fa fa-remove"></i> Cancelar</button>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                                <!-- end Modal -->
-
                                 <div class="panel-body">
-
                                     <div class="row">
                                         <div class="col-lg-1 col-md-1 col-sm-12 col-xs-12"></div>
                                         <div class="col-lg-10 col-md-10 col-sm-12 col-xs-12">
@@ -427,10 +420,11 @@ if (!isset($_SESSION['IdUsuario'])) {
                 });
 
                 //Reporte de colegiados
-                $("#fi_colegiado").val(tools.getCurrentDate())
-                $("#ff_colegiado").val(tools.getCurrentDate())
+                for (let i = 2000; i < 3500; i++) {
+                    $("#fi_colegiado").append('<option value="' + (i + 1) + '">' + (i + 1) + '</option>');
+                }
+                $("#fi_colegiado").val(tools.getCurrentYear());
                 $("#fi_colegiado").prop('disabled', true)
-                $("#ff_colegiado").prop('disabled', true)
 
                 //Resumen de ingresos
                 $("#fi_ingresos").val(tools.getCurrentDate())
@@ -463,7 +457,6 @@ if (!isset($_SESSION['IdUsuario'])) {
                     $("#cbCategoriaColegiado2").attr('disabled', true)
                     $("#cbCategoriaColegiado2").val('')
                     $("#fi_colegiado").prop('disabled', true)
-                    $("#ff_colegiado").prop('disabled', true)
                 });
 
                 $("#brColegiados_Categoria").click(function() {
@@ -471,7 +464,6 @@ if (!isset($_SESSION['IdUsuario'])) {
                     $("#cbCategoriaColegiado2").val('')
                     $("#cbCategoriaColegiado2").attr('disabled', true)
                     $("#fi_colegiado").prop('disabled', true)
-                    $("#ff_colegiado").prop('disabled', true)
                 });
 
                 $("#brColegiados_Categoria_Fecha").click(function() {
@@ -479,7 +471,6 @@ if (!isset($_SESSION['IdUsuario'])) {
                     $("#cbCategoriaColegiado1").val('')
                     $("#cbCategoriaColegiado1").attr('disabled', true)
                     $("#fi_colegiado").prop('disabled', false)
-                    $("#ff_colegiado").prop('disabled', false)
                 });
 
                 //Radio Buttons Reporte de comprobante emitidos
@@ -500,6 +491,8 @@ if (!isset($_SESSION['IdUsuario'])) {
                     $("#cbIngeniero").removeAttr('disabled')
                 });
 
+
+                //Buttons Export Documents de Colegiados---------------------------------------------------------------------------------------
                 $("#btnAceptarAportesCIN").click(function() {
                     let tipo = $("#brAportes").is(":checked") ? 0 : 1;
                     let fechaInicial = $("#fi_AportesCIN").val();
@@ -536,7 +529,7 @@ if (!isset($_SESSION['IdUsuario'])) {
                     }
                 });
 
-                //Buttons Export Documents de Colegiados
+                //Buttons Export Documents de Colegiados---------------------------------------------------------------------------------------
                 $("#btnGenerarExcelColegiado").click(function() {
                     if ($("#brColegiados").is(':checked')) {
                         openExcelColegiado('', '', '', 1);
@@ -548,16 +541,14 @@ if (!isset($_SESSION['IdUsuario'])) {
                             openExcelColegiado($("#cbCategoriaColegiado1").val(), '', '', 2);
                         }
                     } else if ($("#brColegiados_Categoria_Fecha").is(':checked')) {
-                        if (tools.validateDate($("#fi_colegiado").val()) && tools.validateDate($("#ff_colegiado").val())) {
-                            if ($("#fi_colegiado").val() > $("#ff_colegiado").val()) {
-                                tools.AlertWarning("reportes", "La fecha inicial no puede ser mayor que la fecha final")
-                                $("#fi_colegiado").focus();
-                            } else {
-                                openExcelColegiado($("#cbCategoriaColegiado2").val(), $("#fi_colegiado").val(), $("#ff_colegiado").val(), 3);
-                            }
-                        } else {
-                            tools.AlertWarning("Colegiados", "Ingrese un rango de fecha válido")
+                        if ($("#cbCategoriaColegiado2").val() == '') {
+                            tools.AlertWarning("Colegiados", "Seleccione el año a filtrar")
+                            $("#cbCategoriaColegiado2").focus();
+                        } else if ($("#fi_colegiado").val() == "") {
+                            tools.AlertWarning("Colegiados", "Seleccione un año")
                             $("#fi_colegiado").focus();
+                        } else {
+                            openExcelColegiado($("#cbCategoriaColegiado2").val(), $("#fi_colegiado").val(), '', 3);
                         }
                     }
                 });
@@ -573,21 +564,19 @@ if (!isset($_SESSION['IdUsuario'])) {
                             openPDFColegiado($("#cbCategoriaColegiado1").val(), '', '', 2);
                         }
                     } else if ($("#brColegiados_Categoria_Fecha").is(':checked')) {
-                        if (tools.validateDate($("#fi_colegiado").val()) && tools.validateDate($("#ff_colegiado").val())) {
-                            if ($("#fi_colegiado").val() > $("#ff_colegiado").val()) {
-                                tools.AlertWarning("reportes", "La fecha inicial no puede ser mayor que la fecha final")
-                                $("#fi_colegiado").focus();
-                            } else {
-                                openPDFColegiado($("#cbCategoriaColegiado2").val(), $("#fi_colegiado").val(), $("#ff_colegiado").val(), 3);
-                            }
-                        } else {
-                            tools.AlertWarning("Colegiados", "Ingrese un rango de fecha válido")
+                        if ($("#cbCategoriaColegiado2").val() == '') {
+                            tools.AlertWarning("Colegiados", "Seleccione el año a filtrar")
+                            $("#cbCategoriaColegiado2").focus();
+                        } else if ($("#fi_colegiado").val() == "") {
+                            tools.AlertWarning("Colegiados", "Seleccione un año")
                             $("#fi_colegiado").focus();
+                        } else {
+                            openPDFColegiado($("#cbCategoriaColegiado2").val(), $("#fi_colegiado").val(), '', 3);
                         }
                     }
                 });
 
-                //Buttons Export Document de comprobante emitidos
+                //Buttons Export Document de comprobante emitidos---------------------------------------------------------------------------------------
                 $("#btnGenerarExcel").click(function() {
                     if (tools.validateDate($("#fi_comprobantes").val()) && tools.validateDate($("#ff_comprobantes").val())) {
                         if ($("#fi_comprobantes").val() > $("#ff_comprobantes").val()) {
@@ -650,7 +639,6 @@ if (!isset($_SESSION['IdUsuario'])) {
                     }
                 });
 
-                // loadPersona();
             });
 
             function tipoDeDocumento() {
@@ -713,12 +701,10 @@ if (!isset($_SESSION['IdUsuario'])) {
 
             function openExcelColegiado(condicion, fiColegiado, ffColegiado, opcion) {
                 window.open("../app/sunat/excelResumenColegiados.php?condicion=" + condicion + "&fiColegiado=" + fiColegiado + "&ffColegiado=" + ffColegiado + "&opcion=" + opcion, "_blank");
-                cleanModalColegiado();
             }
 
             function openPDFColegiado(condicion, fiColegiado, ffColegiado, opcion) {
                 window.open("../app/sunat/resumenColegiados.php?condicion=" + condicion + "&fiColegiado=" + fiColegiado + "&ffColegiado=" + ffColegiado + "&opcion=" + opcion, "_blank");
-                cleanModalColegiado();
             }
 
             function cleanModalColegiado() {
@@ -730,8 +716,8 @@ if (!isset($_SESSION['IdUsuario'])) {
                 $("#cbCategoriaColegiado1").val('')
                 $("#cbCategoriaColegiado2").attr('disabled', '')
                 $("#cbCategoriaColegiado2").val('')
-                $("#fi_colegiado").val(tools.getCurrentDate())
-                $("#ff_colegiado").val(tools.getCurrentDate())
+                $("#fi_colegiado").val(tools.getCurrentYear());
+                $("#fi_colegiado").prop('disabled', true)
             }
 
             function cleanModalComprobantes() {

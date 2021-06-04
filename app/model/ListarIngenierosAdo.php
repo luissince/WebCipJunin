@@ -10,7 +10,11 @@ class ListarIngenierosAdo
         try {
 
             if ($data['opcion'] == 1) {
-                $cmdSelect = Database::getInstance()->getDb()->prepare("SELECT p.idDNI, p.CIP, p.Apellidos, p.Nombres, p.Condicion AS idCondicion,
+                $cmdSelect = Database::getInstance()->getDb()->prepare("SELECT 
+                p.idDNI, 
+                p.CIP, 
+                p.Apellidos, 
+                p.Nombres, 
                 CASE 
                 WHEN p.Condicion = 'T' THEN 'TRANSEUNTE' 
                 WHEN p.Condicion = 'O' THEN 'ORDINARIO'  
@@ -18,7 +22,7 @@ class ListarIngenierosAdo
                 WHEN p.Condicion = 'R' THEN 'RETIRADO' 
                 WHEN p.Condicion = 'F' THEN 'FALLECIDO'
                 ELSE 'ORDINARIO' END AS Condicion,
-                c.FechaColegiado,
+                CONVERT(VARCHAR,CAST(c.FechaColegiado AS DATE), 103) AS FechaColegiado,
                 ca.Capitulo,
                 e.Especialidad  
                 from Persona AS p
@@ -30,7 +34,10 @@ class ListarIngenierosAdo
                 ");
                 $cmdSelect->execute();
             } else if ($data['opcion'] == 2) {
-                $cmdSelect = Database::getInstance()->getDb()->prepare("SELECT p.idDNI, p.CIP, p.Apellidos, p.Nombres, p.Condicion AS idCondicion,
+                $cmdSelect = Database::getInstance()->getDb()->prepare("SELECT 
+                p.idDNI, 
+                p.CIP, p.Apellidos, 
+                p.Nombres, 
                 CASE 
                 WHEN p.Condicion = 'T' THEN 'TRANSEUNTE'  
                 WHEN p.Condicion = 'O' THEN 'ORDINARIO'  
@@ -38,7 +45,7 @@ class ListarIngenierosAdo
                 WHEN p.Condicion = 'R' THEN 'RETIRADO'  
                 WHEN p.Condicion = 'F' THEN 'FALLECIDO'
                 ELSE 'ORDINARIO' END AS Condicion,
-                c.FechaColegiado,
+                CONVERT(VARCHAR,CAST(c.FechaColegiado AS DATE), 103) AS FechaColegiado,
                 ca.Capitulo,
                 e.Especialidad  
                 FROM Persona AS p
@@ -49,7 +56,19 @@ class ListarIngenierosAdo
                 $cmdSelect->bindParam(1, $data['condicion'], PDO::PARAM_STR);
                 $cmdSelect->execute();
             } else if ($data['opcion'] == 3) {
-                $cmdSelect = Database::getInstance()->getDb()->prepare("SELECT p.idDNI, p.CIP, p.Apellidos, p.Nombres, p.Condicion AS idCondicion,
+                if ($data['condicion'] == "1") {
+                    $condicion =  25;
+                } else if ($data['condicion'] == "2") {
+                    $condicion =  30;
+                } else {
+                    $condicion =  50;
+                }
+
+                $cmdSelect = Database::getInstance()->getDb()->prepare("SELECT 
+                p.idDNI,
+                p.CIP,
+                p.Apellidos, 
+                p.Nombres,            
                 CASE 
                 WHEN p.Condicion = 'T' THEN 'TRANSEUNTE'  
                 WHEN p.Condicion = 'O' THEN 'ORDINARIO'  
@@ -57,35 +76,24 @@ class ListarIngenierosAdo
                 WHEN p.Condicion = 'R' THEN 'RETIRADO'  
                 WHEN p.Condicion = 'F' THEN 'FALLECIDO'
                 ELSE 'ORDINARIO' END AS Condicion,
-                c.FechaColegiado,
+                CONVERT(VARCHAR,CAST(c.FechaColegiado AS DATE), 103) AS FechaColegiado,
+                CONVERT(VARCHAR,CAST(CONVERT(date,dateadd(month,c.MesAumento,dateadd(year, $condicion,c.FechaColegiado))) AS DATE), 103) AS Cumple,
                 ca.Capitulo,
                 e.Especialidad  
                 FROM Persona AS p
                 inner join Colegiatura as c on c.Principal = 1 AND P.idDNI = C.idDNI
                 inner join Especialidad AS e on e.idEspecialidad = c.idEspecialidad
                 inner join Capitulo as ca on ca.idCapitulo = e.idCapitulo
-                WHERE p.Condicion = UPPER(?) AND (c.FechaColegiado BETWEEN ? AND ?)");
-                $cmdSelect->bindParam(1,  $data['condicion'], PDO::PARAM_STR);
+                WHERE year(convert(date,dateadd(month,c.MesAumento,dateadd(year,?,c.FechaColegiado)))) = ?
+                ORDER BY CONVERT(date,dateadd(month,c.MesAumento,dateadd(year, $condicion,c.FechaColegiado))) ASC");
+                $cmdSelect->bindParam(1,  $condicion, PDO::PARAM_INT);
                 $cmdSelect->bindParam(2,  $data['fiColegiado'], PDO::PARAM_STR);
-                $cmdSelect->bindParam(3,  $data['ffColegiado'], PDO::PARAM_STR);
                 $cmdSelect->execute();
             }
 
             $arrayIngenieros = array();
-            $count = 0;
-            while ($row = $cmdSelect->fetch()) {
-                $count++;
-                array_push($arrayIngenieros, array(
-                    'Id' => $count,
-                    'idDNI' => $row['idDNI'],
-                    'CIP' => $row['CIP'],
-                    'Apellidos' => $row['Apellidos'],
-                    'Nombres' => $row['Nombres'],
-                    'Condicion' => $row['Condicion'],
-                    'FechaColegiado' => $row['FechaColegiado'],
-                    'Capitulo' => $row['Capitulo'],
-                    'Especialidad' => $row['Especialidad']
-                ));
+            while ($row = $cmdSelect->fetch(PDO::FETCH_ASSOC)) {
+                array_push($arrayIngenieros, $row);
             }
             return $arrayIngenieros;
         } catch (Exception $ex) {

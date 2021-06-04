@@ -10,16 +10,36 @@ ini_set('memory_limit', '-1');
 
 $rutaImage = __DIR__ . "/../../view/images/logologin.png";
 $title = "RESUMEN DE COLEGIADOS DEL CIP NACIONAL";
-
 $getCodicion = $_GET['condicion'];
-$condicion = $_GET['condicion'] = 'T' ? 'TRANSEUNTE' : $_GET['condicion'] = 'O' ? 'ORDINARIO' : $_GET['condicion'] = 'V' ? 'VITALICIO' : $_GET['condicion'] = 'R' ? 'RETIRADO' : 'FALLECIDO';
+
+if ($_GET["opcion"] == 1 || $_GET["opcion"] == 2) {
+    if ($getCodicion == "T") {
+        $condicion =  'TRANSEUNTE';
+    } else if ($getCodicion == "O") {
+        $condicion =  'ORDINARIO';
+    } else if ($getCodicion == "V") {
+        $condicion =  'VITALICIO';
+    } else if ($getCodicion == "R") {
+        $condicion =  'RETIRADO';
+    } else {
+        $condicion =  'FALLECIDO';
+    }
+}
+
 
 if ($_GET["opcion"] == 1) {
     $subtitle = "REPORTE GENERAL DE COLEGIADOS";
-} else if ($_GET["opcion"] == 2){
-    $subtitle = "REPORTE DE COLEGIADOS - CONDICIÓN ".$condicion;
-} else if($_GET["opcion"] == 3){
-    $subtitle = "REPORTE DE COLEGIADOS - CONDICIÓN ".$condicion." DE LA FECHA: ". date("d-m-Y", strtotime($_GET["fiColegiado"]))." al ".date("d-m-Y", strtotime($_GET["ffColegiado"]));
+} else if ($_GET["opcion"] == 2) {
+    $subtitle = "REPORTE DE COLEGIADOS - CONDICIÓN " . $condicion;
+} else if ($_GET["opcion"] == 3) {
+    if ($getCodicion == "1") {
+        $condicion =  "25 AÑOS";
+    } else if ($getCodicion == "2") {
+        $condicion =  "30 AÑOS";
+    } else {
+        $condicion =  "50 AÑOS";
+    }
+    $subtitle = "REPORTE DE COLEGIADOS QUE VAN A CUMPLIR " . $condicion . " DEL AÑO " . $_GET["fiColegiado"];
 }
 
 $data['condicion'] = $getCodicion;
@@ -30,7 +50,7 @@ $data['opcion'] = $_GET['opcion'];
 $listarColegiados = ListarIngenierosAdo::allIngenieros($data);
 
 if (!is_array($listarColegiados)) {
-print $listarColegiados;
+    print $listarColegiados;
 } else {
     $html = '
 <html>
@@ -122,12 +142,15 @@ mpdf-->
     </tr>
 </table>
 <br />
-<table class="items" width="100%" style="font-size: 9pt; border-collapse: collapse; " cellpadding="8">
+'; ?>
+<?php
+    if ($data['opcion'] == 1 || $data['opcion'] == 2) {
+        $html .= '<table class="items" width="100%" style="font-size: 8pt; border-collapse: collapse; " cellpadding="8">
     <thead>
         <tr>   
-            <th width="10%" >N°</th>  
-            <th width="10%" >DNI</th>        
-            <th width="10%" >N° Cip</th>
+            <th width="5%" >N°</th>  
+            <th width="8%" >DNI</th>        
+            <th width="8%" >N° Cip</th>
             <th width="10%" >APELLIDOS</th>
             <th width="10%" >NOMBRES</th>
             <th width="10%" >CONDICION</th>
@@ -139,22 +162,62 @@ mpdf-->
     </thead>
     <tbody>
     ';
-?>
-    <?php
-    foreach ($listarColegiados as $value) {
-        $html .= '
-        <tr>            
-            <td align="center">' . $value["Id"] . '</td>
-            <td >' . $value["idDNI"] . '</td>
-            <td >' . $value["CIP"] . '</td>       
-            <td >' . $value["Apellidos"] . '</td>
-            <td >' . $value["Nombres"] . '</td>     
-            <td >' . $value["Condicion"] . '</td>
-            <td  align="center">' . $value["FechaColegiado"] . '</td>
-            <td >' . $value["Capitulo"] . '</td>
-            <td >' . $value["Especialidad"] . '</td>
-        </tr>';
+    } else {
+        $html .= '<table class="items" width="100%" style="font-size: 8pt; border-collapse: collapse; " cellpadding="8">
+        <thead>
+            <tr>   
+                <th width="5%" >N°</th>  
+                <th width="8%" >DNI</th>        
+                <th width="8%" >N° Cip</th>
+                <th width="15%" >APELLIDOS Y NOMBRES</th>
+                <th width="10%" >CAPITULO</th>
+                <th width="10%" >CONDICION</th>                
+                <th width="10%" >FECHA COLEGIADO</th>
+                <th width="10%" >FECHA QUE CUMPLE SUS ' . $condicion . '</th>
+    
+            </tr>
+        </thead>
+        <tbody>
+        ';
     }
+?>
+    
+    <?php
+    if ($data['opcion'] == 1 || $data['opcion'] == 2) {
+        $count = 0;
+        foreach ($listarColegiados as $value) {
+            $count++;
+            $html .= '
+            <tr>            
+                <td align="center">' .  $count . '</td>
+                <td >' . $value["idDNI"] . '</td>
+                <td >' . $value["CIP"] . '</td>       
+                <td >' . $value["Apellidos"] . '</td>
+                <td >' . $value["Nombres"] . '</td>     
+                <td >' . $value["Condicion"] . '</td>
+                <td  align="center">' . $value["FechaColegiado"] . '</td>
+                <td >' . $value["Capitulo"] . '</td>
+                <td >' . $value["Especialidad"] . '</td>
+            </tr>';
+        }
+    } else {
+        $count = 0;
+        foreach ($listarColegiados as $value) {
+            $count++;
+            $html .= '
+            <tr>            
+                <td align="center">' .  $count . '</td>
+                <td  align="left">' . $value["idDNI"] . '</td>
+                <td  align="left">' . $value["CIP"] . '</td>       
+                <td  align="left">' . $value["Apellidos"] . '<br>' . $value["Nombres"] . '</td>  
+                <td  align="left">' . $value["Capitulo"] . '</td>
+                <td  align="center">' . $value["Condicion"] . '</td>                
+                <td  align="center">' . $value["FechaColegiado"] . '</td>
+                <td  align="center">' . $value["Cumple"] . '</td>
+            </tr>';
+        }
+    }
+
 
     ?>
     <?php
@@ -192,10 +255,10 @@ mpdf-->
     $mpdf->WriteHTML($html);
 
     if ($_GET["opcion"] == 1) {
-        $mpdf->Output("Reporte General De Colegiados.pdf",'I');
-    } else if ($_GET["opcion"] == 2){
-        $mpdf->Output("Reporte Colegiados - Condición_".$condicion.".pdf",'I');
-    } else if($_GET["opcion"] == 3){
-        $mpdf->Output("Reporte Colegiados - Condición_".$condicion." De La Fecha: ".date("d-m-Y", strtotime($_GET["fiColegiado"]))." al ".date("d-m-Y", strtotime($_GET["ffColegiado"])).".pdf",'I');
+        $mpdf->Output("Reporte General De Colegiados.pdf", 'I');
+    } else if ($_GET["opcion"] == 2) {
+        $mpdf->Output("Reporte Colegiados - Condición_" . $condicion . ".pdf", 'I');
+    } else if ($_GET["opcion"] == 3) {
+        $mpdf->Output("Reporte Colegiados - Condición_" . $condicion . " De La Fecha: " . date("d-m-Y", strtotime($_GET["fiColegiado"])) . " al " . date("d-m-Y", strtotime($_GET["ffColegiado"])) . ".pdf", 'I');
     }
 }

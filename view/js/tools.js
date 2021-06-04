@@ -29,7 +29,7 @@ function Tools() {
 
     this.getTimeForma = function(value, option) {
         let ar = value.split(":");
-        let hr = ar[0];
+        let hr = parseInt(ar[0]);
         let min = parseInt(ar[1]);
         let arsec = ar[2].split(".");
         let sec = parseInt(arsec[0]);
@@ -95,6 +95,16 @@ function Tools() {
         return formatted_time;
     }
 
+    this.getCurrentMonth = function() {
+        let today = new Date();
+        return (today.getMonth() + 1);
+    }
+
+    this.getCurrentYear = function() {
+        let today = new Date();
+        return today.getFullYear();
+    }
+    
     this.diasEnUnMes = function(mes, year) {
         mes = mes.toUpperCase();
         var meses = ["ENERO", "FEBRERO", "MARZO", "ABRIL", "MAYO", "JUNIO", "JULIO", "AGOSTO", "SEPTIEMBRE", "OCTUBRE", "NOVIEMBRE", "DICIEMBRE"];

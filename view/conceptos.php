@@ -343,8 +343,7 @@ if (!isset($_SESSION['IdUsuario'])) {
                 });
 
                 $("#cbCategorias").change(function() {
-                    if ($("#cbCategorias").val() != '') {
-                        console.log("dd")
+                    if ($("#cbCategorias").val() != '') {                        
                         if (!state) {
                             paginacion = 1;
                             loadTableConceptos(2, $("#cbCategorias").val(), "");
@@ -460,11 +459,16 @@ if (!isset($_SESSION['IdUsuario'])) {
                                     let categoria = (concepto.Categoria == '1') ? 'Cuota ordinaria' :
                                         (concepto.Categoria == '2') ? 'Cuota ordinaria (Admistia)' :
                                         (concepto.Categoria == '3') ? 'Cuota ordinaria (Vitalicio)' :
-                                        (concepto.Categoria == '4') ? 'Colegiatura' :
+                                        (concepto.Categoria == '4') ? 'Colegiatura Ordinaria' :
                                         (concepto.Categoria == '5') ? 'Certificado de habilidad' :
                                         (concepto.Categoria == '6') ? 'Certificado de residencia de obra' :
                                         (concepto.Categoria == '7') ? 'Certificado de proyecto' :
-                                        (concepto.Categoria == '8') ? 'Peritaje' : 'Ingresos Diversos';
+                                        (concepto.Categoria == '8') ? 'Peritaje' :
+                                        (concepto.Categoria == '9') ? 'Colegiatura otras Modalidades' :
+                                        (concepto.Categoria == '10') ? 'Colegiatura por Tesis' :
+                                        (concepto.Categoria == '11') ? 'Colegiatura pro Tesis Externo' :
+                                        (concepto.Categoria == '12') ? 'Cuota ordinaria (Resolución N° 15)' :
+                                         'Ingresos Diversos';
 
                                     let propiedad =
                                         concepto.Propiedad == "48" || concepto.Propiedad == "16" ? "Se deriva al CIP NACIONAL" :
