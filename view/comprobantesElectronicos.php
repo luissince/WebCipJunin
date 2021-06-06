@@ -161,8 +161,10 @@ if (!isset($_SESSION['IdUsuario'])) {
                             <div class="table-responsive">
                                 <table class="table table-striped" style="border-width: 1px;border-style: dashed;border-color: #E31E25;">
                                     <thead style="background-color: #FDB2B1;color: #B72928;">
-                                        <th style="width:5%;">#</th>
-                                        <th style="width:10%;">Opciones</th>
+                                        <th style="width:5%;" class="text-center">#</th>
+                                        <th style="width:5%;">Bajar</th>
+                                        <th style="width:5%;">P.D.F</th>
+                                        <th style="width:5%;">Detalle</th>
                                         <th style="width:10%;">Fecha</th>
                                         <th style="width:10%;">Comprobante</th>
                                         <th style="width:15%;">Cliente</th>
@@ -384,7 +386,7 @@ if (!isset($_SESSION['IdUsuario'])) {
                     beforeSend: function() {
                         tbTable.empty();
                         tbTable.append(
-                            '<tr class="text-center"><td colspan="9"><img src="./images/spiner.gif"/><p>Cargando información.</p></td></tr>'
+                            '<tr class="text-center"><td colspan="11"><img src="./images/spiner.gif"/><p>Cargando información.</p></td></tr>'
                         );
                         arrayIngresos = [];
                         state = true;
@@ -396,7 +398,7 @@ if (!isset($_SESSION['IdUsuario'])) {
                             if (arrayIngresos.length == 0) {
                                 tbTable.empty();
                                 tbTable.append(
-                                    '<tr class="text-center"><td colspan="9"><p>No hay ingresos para mostrar.</p></td></tr>'
+                                    '<tr class="text-center"><td colspan="11"><p>No hay ingresos para mostrar.</p></td></tr>'
                                 );
                                 totalPaginacion = parseInt(Math.ceil((parseFloat(result.total) / parseInt(
                                     filasPorPagina))));
@@ -406,32 +408,35 @@ if (!isset($_SESSION['IdUsuario'])) {
                             } else {
                                 tbTable.empty();
                                 for (let ingresos of arrayIngresos) {
-                                   
-                                    let btnPdf = '<button class="btn btn-default btn-xs" onclick="openPdf(\'' + ingresos.idIngreso + '\')">' +
-                                        '<i class="fa fa-file-pdf-o"></i></br>P.D.F' +
-                                        '</button>';
-                                    let btnDetalle = '<button class="btn btn-warning btn-xs" onclick="openDetalle(\'' + ingresos.idIngreso + '\')">' +
-                                        '<i class="fa fa-eye"></i></br>Detalle' +
+
+                                    let resumen = '<button class="btn btn-default btn-xs" onclick="resumenDiarioXml(\'' + ingresos.idIngreso + '\',\'' + ingresos.serie + "-" + ingresos.numRecibo + '\',\'' + tools.getDateYYMMDD(ingresos.fecha) + '\')"><img src="./images/documentoanular.svg" width="26" /></button>';
+                                    let comunicacion = '<button class="btn btn-default btn-xs" onclick="comunicacionBajaXml(\'' + ingresos.idIngreso + '\',\'' + ingresos.serie + "-" + ingresos.numRecibo + '\')"><img src="./images/documentoanular.svg" width="26" /></button>';
+                                    let btnAnular = ingresos.serie.toUpperCase().includes("B") ? resumen : comunicacion;
+
+                                    let btnPdf = '<button class="btn btn-danger btn-xs" onclick="openPdf(\'' + ingresos.idIngreso + '\')">' +
+                                        '<i class="fa fa-file-pdf-o" style="font-size:25px;"></i></br>' +
                                         '</button>';
 
-                                    let estadosunat = ingresos.estado === "C" ?
+                                    let btnDetalle = '<button class="btn btn-warning btn-xs" onclick="openDetalle(\'' + ingresos.idIngreso + '\')">' +
+                                        '<i class="fa fa-eye" style="font-size:25px;"></i></br>' +
+                                        '</button>';
+
+                                    let estadosunat = ingresos.estado === "A" ?
+                                        '<button class="btn btn-default btn-xs" onclick="facturarXml(\'' + ingresos.idIngreso + '\',\'' + ingresos.estado + '\')"><img src="./images/error.svg" width="26" /></button>' :
                                         (ingresos.xmlsunat === "" ?
-                                            '<button class="btn btn-default btn-xs" onclick="facturarXml(\'' + ingresos.idIngreso + '\',\'' + ingresos.estado + '\')"><img src="./images/reuse.svg" width="30" /></button>' :
+                                            '<button class="btn btn-default btn-xs" onclick="facturarXml(\'' + ingresos.idIngreso + '\',\'' + ingresos.estado + '\')"><img src="./images/reuse.svg" width="26" /></button>' :
                                             ingresos.xmlsunat === "0" ?
-                                            '<button class="btn btn-default btn-xs"><img src="./images/accept.svg" width="30"/></button>' :
-                                            '<button class="btn btn-default btn-xs" onclick="facturarXml(\'' + ingresos.idIngreso + '\',\'' + ingresos.estado + '\')"><img src="./images/unable.svg" width="30"/></button>') :
-                                        (ingresos.xmlsunat === "" ?
-                                            '<button class="btn btn-default btn-xs" onclick="resumenDiarioXml(\'' + ingresos.idIngreso + '\',\'' + ingresos.serie + "-" + ingresos.numRecibo + '\',\'' + tools.getDateYYMMDD(ingresos.fecha) + '\')"><img src="./images/reuse.svg" width="30" /></button>' :
-                                            '<button class="btn btn-default btn-xs"><img src="./images/error.svg" width="30"/></button>');
+                                            '<button class="btn btn-default btn-xs"><img src="./images/accept.svg" width="26"/></button>' :
+                                            '<button class="btn btn-default btn-xs" onclick="facturarXml(\'' + ingresos.idIngreso + '\',\'' + ingresos.estado + '\')"><img src="./images/unable.svg" width="26"/></button>');
 
                                     let observacionsunat =
                                         (ingresos.xmldescripcion === "" ? "Por Generar Xml y Enviar" : ingresos.xmldescripcion);
 
                                     tbTable.append('<tr>' +
-                                        '<td style="text-align: center;color: #2270D1;">' +
-                                        '' + ingresos.id + '' +
-                                        '</td>' +
-                                        '<td>' + btnPdf + ' ' + btnDetalle + '</td>' +
+                                        '<td class="text-center text-primary">' + ingresos.id + '</td>' +
+                                        '<td>' + btnAnular + '</td>' +
+                                        '<td>' + btnPdf + '</td>' +
+                                        '<td>' + btnDetalle + '</td>' +
                                         '<td>' + ingresos.fecha + '<br>' + tools.getTimeForma(ingresos.hora, true) + '</td>' +
                                         '<td>' + ingresos.serie + '-' + ingresos.numRecibo + '</td>' +
                                         '<td>' + ingresos.idDNI + '</br>' + ingresos.nombres + ' ' + ingresos.apellidos + '</td>' +
@@ -451,7 +456,7 @@ if (!isset($_SESSION['IdUsuario'])) {
                         } else {
                             tbTable.empty();
                             tbTable.append(
-                                '<tr class="text-center"><td colspan="9"><p>' + result.mensaje + '</p></td></tr>'
+                                '<tr class="text-center"><td colspan="11"><p>' + result.mensaje + '</p></td></tr>'
                             );
                             $("#lblPaginaActual").html(0);
                             $("#lblPaginaSiguiente").html(0);
@@ -462,7 +467,7 @@ if (!isset($_SESSION['IdUsuario'])) {
                     error: function(error) {
                         tbTable.empty();
                         tbTable.append(
-                            '<tr class="text-center"><td colspan="9"><p>' + error.responseText + '</p></td></tr>'
+                            '<tr class="text-center"><td colspan="11"><p>' + error.responseText + '</p></td></tr>'
                         );
                         $("#lblPaginaActual").html(0);
                         $("#lblPaginaSiguiente").html(0);
@@ -482,22 +487,23 @@ if (!isset($_SESSION['IdUsuario'])) {
                                     "idIngreso": idIngreso
                                 },
                                 beforeSend: function() {
-                                    tools.ModalAlertInfo("Ventas", "Firmando xml y enviando a la sunat.");
+                                    tools.ModalAlertInfo("Ingreso", "Firmando xml y enviando a la sunat.");
                                 },
                                 success: function(result) {
                                     let object = result;
                                     if (object.state === true) {
                                         if (object.accept === true) {
-                                            tools.ModalAlertSuccess("Ventas", "Resultado: Código " + object.code + " " + object.description);
+                                            tools.ModalAlertSuccess("Ingreso", "Resultado: Código " + object.code + " " + object.description);
+                                            onEventPaginacion();
                                         } else {
-                                            tools.ModalAlertWarning("Ventas", "Resultado: Código " + object.code + " " + object.description);
+                                            tools.ModalAlertWarning("Ingreso", "Resultado: Código " + object.code + " " + object.description);
                                         }
                                     } else {
-                                        tools.ModalAlertWarning("Ventas", "Resultado: Código " + object.code + " " + object.description);
+                                        tools.ModalAlertWarning("Ingreso", "Resultado: Código " + object.code + " " + object.description);
                                     }
                                 },
                                 error: function(error) {
-                                    tools.ModalAlertError("Ventas", "Error en el momento de firmar el xml: " + error.responseText);
+                                    tools.ModalAlertError("Ingreso", "Error en el momento de firmar el xml: " + error.responseText);
                                 }
                             });
                         }
@@ -506,37 +512,72 @@ if (!isset($_SESSION['IdUsuario'])) {
             }
 
             function resumenDiarioXml(idIngreso, comprobante, resumen) {
-                tools.ModalDialog("¿Realmente Deseas Anular el Documento?", "Se anulará el documento: " + comprobante + ", y se creará el siguiente resumen individual: RC-" + resumen + "-1, estás seguro de anular el documento? los cambios no se podrán revertir!", function(value) {
+                tools.ModalDialog("Emitir resumen díario", "¿Se anulará el documento: " + comprobante + ", y se creará el siguiente resumen individual: RC-" + resumen + "-1, estás seguro de anular el documento? los cambios no se podrán revertir!", function(value) {
                     if (value == true) {
                         $.ajax({
-                            url: "./examples/resumen.php",
+                            url: "../app/examples/resumen.php",
                             method: "GET",
                             data: {
                                 "idIngreso": idIngreso
                             },
                             beforeSend: function() {
-                                tools.ModalAlertInfo("Ventas", "Firmando xml y enviando a la sunat.");
+                                tools.ModalAlertInfo("Ingreso", "Firmando xml y enviando a la sunat.");
                             },
                             success: function(result) {
                                 let object = result;
                                 if (object.state === true) {
                                     if (object.accept === true) {
-                                        tools.ModalAlertSuccess("Ventas", "Resultado: Código " + object.code + " " + object.description);
+                                        tools.ModalAlertSuccess("Ingreso", "Resultado: Código " + object.code + " " + object.description);
+                                        onEventPaginacion();
                                     } else {
-                                        tools.ModalAlertWarning("Ventas", "Resultado: Código " + object.code + " " + object.description);
+                                        tools.ModalAlertWarning("Ingreso", "Resultado: Código " + object.code + " " + object.description);
                                     }
                                 } else {
-                                    tools.ModalAlertWarning("Ventas", "Resultado: Código " + object.code + " " + object.description);
+                                    tools.ModalAlertWarning("Ingreso", "Resultado: Código " + object.code + " " + object.description);
                                 }
                             },
                             error: function(error) {
-                                tools.ModalAlertError("Ventas", "Error en el momento de firmar el xml: " + error.responseText);
+                                tools.ModalAlertError("Ingreso", "Error en el momento de firmar el xml: " + error.responseText);
                             }
                         });
 
                     }
                 });
             }
+
+            function comunicacionBajaXml(idIngreso, comprobante) {
+                tools.ModalDialog("Emitir comunicación de baja", "¿Se anulará el documento " + comprobante + "?", function(value) {
+                    if (value == true) {
+                        $.ajax({
+                            url: "../app/examples/comunicacionbaja.php",
+                            method: "GET",
+                            data: {
+                                "idIngreso": idIngreso
+                            },
+                            beforeSend: function() {
+                                tools.ModalAlertInfo("Ingreso", "Firmando xml y enviando a la sunat.");
+                            },
+                            success: function(result) {
+                                let object = result;
+                                if (object.state === true) {
+                                    if (object.accept === true) {
+                                        tools.ModalAlertSuccess("Ingreso", "Resultado: Código " + object.code + " " + object.description);
+                                        onEventPaginacion();
+                                    } else {
+                                        tools.ModalAlertWarning("Ingreso", "Resultado: Código " + object.code + " " + object.description);
+                                    }
+                                } else {
+                                    tools.ModalAlertWarning("Ingreso", "Resultado: Código " + object.code + " " + object.description);
+                                }
+                            },
+                            error: function(error) {
+                                tools.ModalAlertError("Ingreso", "Error en el momento de firmar el xml: " + error.responseText);
+                            }
+                        });
+                    }
+                });
+            }
+
 
             function firmaMasivaXml(idIngreso) {
                 $.ajax({
@@ -546,22 +587,22 @@ if (!isset($_SESSION['IdUsuario'])) {
                         "idIngreso": idIngreso
                     },
                     beforeSend: function() {
-                        tools.ModalAlertInfo("Ventas", "Firmando xml y enviando a la sunat.");
+                        tools.ModalAlertInfo("Ingreso", "Firmando xml y enviando a la sunat.");
                     },
                     success: function(result) {
                         let object = result;
                         if (object.state === true) {
                             if (object.accept === true) {
-                                tools.ModalAlertSuccess("Ventas", "Resultado: Código " + object.code + " " + object.description);
+                                tools.ModalAlertSuccess("Ingreso", "Resultado: Código " + object.code + " " + object.description);
                             } else {
-                                tools.ModalAlertWarning("Ventas", "Resultado: Código " + object.code + " " + object.description);
+                                tools.ModalAlertWarning("Ingreso", "Resultado: Código " + object.code + " " + object.description);
                             }
                         } else {
-                            tools.ModalAlertWarning("Ventas", "Resultado: Código " + object.code + " " + object.description);
+                            tools.ModalAlertWarning("Ingreso", "Resultado: Código " + object.code + " " + object.description);
                         }
                     },
                     error: function(error) {
-                        tools.ModalAlertError("Ventas", "Error en el momento de firmar el xml: " + error.responseText);
+                        tools.ModalAlertError("Ingreso", "Error en el momento de firmar el xml: " + error.responseText);
                     }
                 });
             }

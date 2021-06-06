@@ -16,8 +16,8 @@ use Greenter\Model\Sale\SaleDetail;
 use Greenter\Model\Sale\Legend;
 use Greenter\Ws\Services\SunatEndpoints;
 
-require __DIR__.'./../vendor/autoload.php';
-include_once __DIR__.'./../model/IngresosAdo.php';
+require __DIR__ . './../vendor/autoload.php';
+include_once __DIR__ . './../model/IngresosAdo.php';
 
 $util = Util::getInstance();
 $idIngreso = $_GET['idIngreso'];
@@ -66,12 +66,12 @@ if (!is_array($detalleventa)) {
                 ->setTipoDoc($ingreso->TipoComprobante)
                 ->setSerie($ingreso->Serie)
                 ->setCorrelativo($ingreso->Numeracion)
-                ->setFechaEmision(new DateTime($ingreso->FechaPago.'T'.$ingreso->HoraPago))
+                ->setFechaEmision(new DateTime($ingreso->FechaPago . 'T' . $ingreso->HoraPago))
                 ->setTipoMoneda("PEN")
                 ->setCompany($company)
                 ->setClient($client)
-                //->setMtoOperGravadas(round($totales['totalsinimpuesto'], 2, PHP_ROUND_HALF_UP)) //5.10
-                ->setMtoOperExoneradas(round($totales['totalsinimpuesto'], 2, PHP_ROUND_HALF_UP)) //5.10
+                ->setMtoOperGravadas(round($totales['opgravada'], 2, PHP_ROUND_HALF_UP)) //5.10
+                ->setMtoOperExoneradas(round($totales['opexonerada'], 2, PHP_ROUND_HALF_UP)) //5.10
                 ->setMtoIGV(round($totales['totalimpuesto'], 2, PHP_ROUND_HALF_UP)) //0.92
                 ->setTotalImpuestos(round($totales['totalimpuesto'], 2, PHP_ROUND_HALF_UP)) //0.92
                 ->setValorVenta(round($totales['totalsinimpuesto'], 2, PHP_ROUND_HALF_UP)) //5.10
@@ -100,7 +100,7 @@ if (!is_array($detalleventa)) {
                         ->setMtoBaseIgv($importeBrutoTotal) //18 50*2
                         ->setPorcentajeIgv(round($impuesto, 0, PHP_ROUND_HALF_UP)) //18
                         ->setIgv($impuestoTotal) //18 9*2
-                        ->setTipAfeIgv('20') //10-igv - 20-exogenerada
+                        ->setTipAfeIgv($value['Codigo']) //10-igv - 20-exogenerada
                         ->setTotalImpuestos($impuestoTotal) //18 9*2
                         ->setMtoValorVenta($importeBrutoTotal) //100 = 50*2
                         ->setMtoValorUnitario(round($precioBruto, 2, PHP_ROUND_HALF_UP)) //50

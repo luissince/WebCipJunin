@@ -6,8 +6,7 @@ function Tools() {
     }
 
     this.getDateYYMMDD = function(value) {
-        var parts = value.split("/");
-        console.log(value)
+        var parts = value.split("/");    
         return parts[0] + parts[1] + parts[2];
     }
 

@@ -97,6 +97,7 @@ if (!isset($_GET["idIngreso"])) {
                     .caja-four{
                         display: block; float:left; width: 33%;   height: 110px; padding-top: 10px;
                     }
+
                     .detalle-compra{
                         margin-top:10px;
                         width: 100%;
@@ -105,54 +106,12 @@ if (!isset($_GET["idIngreso"])) {
                     p {	
                         margin: 0pt; 
                     }
-                    table.items {
-	                    border: 1px solid #000000;
-                    }
-                    td { 
-                        vertical-align: center; 
-                    }
-                    .items td {
-	                    border-left: 0px solid #E11E1E;
-                    }
-                    table thead td { 
-                        background-color: #B4B6B4;
-	                    text-align: center;
-	                    border: 1px solid #000000;
-	                    font-variant: small-caps;
-                    }
-                    table tbody td{
-                        text-align: center;
-	                    font-variant: small-caps;
-                    }
-                    .items td.blanktotal {
-                        border: 1px solid #000000;
-                        background-color: #FFFFFF;
-                        border-top: 1px solid #000000;
-                        border-right: 1px solid #000000;
-                    }
-                    .items td.totals {
-                        text-align: right;
+
+                    .totals{
                         padding:5px;
+                        font-weight:normal;
                     }
-                    .items td.simbolo{
 
-                    }
-                    .items td.costt {            
-                        text-align: "." center;
-
-                    }
-                    .items td.cost {           
-                        text-align: center;
-                        font-weight: bold;
-                    }
-                    .items td.qr {
-                        border: 0px;
-                    }
-                    .items td.estado {
-                        border: 0px;
-                        text-align:center;
-                        font-size: 16px;
-                    }
                     footer {
                         color: #000000;
                         width: 100%;
@@ -165,6 +124,35 @@ if (!isset($_GET["idIngreso"])) {
                         content: "";
                         clear: both;
                     }
+
+                    .th-white{
+                        background-color:#b72928;
+                        border: none;
+                        color:white;
+                        font-weight: bold;
+                    }
+
+                    .th-dark{
+                        background-color:#cccccc;
+                        border: none;
+                        color:black;
+                        font-weight: bold;
+                    }
+
+                    .td-white{
+                        background-color:#b72928;
+                        border: none;
+                        color:white;
+                        vertical-align:middle;
+                    }
+
+                    .td-dark{
+                        background-color:#cccccc;
+                        border: none;
+                        color:black;
+                        vertical-align:middle;
+                    }
+
     
                 </style>
             </head>
@@ -210,7 +198,7 @@ if (!isset($_GET["idIngreso"])) {
                             </tr>
                             <tr>
                                 <td style="line-height: 0px;padding:2px 0px;"><b>Dirección</b></td>
-                                <td style="line-height: 0px;padding:2px 0px;"><b>: </b>'.$ingreso->Direccion.' </td>
+                                <td style="line-height: 0px;padding:2px 0px;"><b>: </b>' . $ingreso->Direccion . ' </td>
                             </tr>
                             <tr>
                                 <td style="line-height: 0px;padding:2px 0px;"><b>Fecha Emisión</b></td>
@@ -220,12 +208,12 @@ if (!isset($_GET["idIngreso"])) {
                                 <td style="line-height: 0px;padding:2px 0px;"><b>Moneda</b></td>
                                 <td style="line-height: 0px;padding:2px 0px;"><b>: </b>SOL-PEN</td>
                             </tr>';
-                            ?>
+?>
                             <?php
                             if ($ingreso->TipoDocumento == 6) {
                                 $html .= '<tr>
                                             <td style="line-height: 0px;padding:2px 0px;"><b>Ref</b></td>
-                                            <td style="line-height: 0px;padding:2px 0px;"><b>:</b> N° Cip '.$ingreso->CIP.' - ING. '.$ingreso->Apellidos.' '.$ingreso->Nombres .'</td>
+                                            <td style="line-height: 0px;padding:2px 0px;"><b>:</b> N° Cip ' . $ingreso->CIP . ' - ING. ' . $ingreso->Apellidos . ' ' . $ingreso->Nombres . '</td>
                                             </tr>  ';
                             }
                             ?>
@@ -237,22 +225,23 @@ if (!isset($_GET["idIngreso"])) {
 
                 <!--##################### Inicio detalle de la compra ###################################-->
                 <div class="detalle-compra" >
-                    <table class="items" width="100%" style="font-family:Arial;font-size: 11pt; border: none; border-collapse: collapse;" cellpadding="6">
+                    <table width="100%" style="font-family:Arial;font-size: 16px; border: none; border-collapse: collapse;" cellpadding="6">
                         <thead>
                             <tr>
-                                <td width="5%" style="background-color:#b72928;border: none;color:white;font-weight: bold;">Ítem</td>                    
-                                <td width="50%" style="background-color:#cccccc;border: none;color:black;font-weight: bold;text-aligh:left;">Concepto</td>
-                                <td width="15%" style="background-color:#e6e6e6;border: none;color:black;font-weight: bold;">Cantidad</td>                    
-                                <td width="15%" style="background-color:#cccccc;border: none;color:black;font-weight: bold;">P. Unitario</td>
-                                <td width="15%" style="background-color:#b72928;border: none;color:white;font-weight: bold;">Importe</td>
+                                <th width="10%" class="th-white">Ítem</td>                    
+                                <th width="50%" class="th-dark">Concepto</td>
+                                <th width="15%" class="th-dark">Cantidad</td>                    
+                                <th width="15%" class="th-dark">P. Unitario</td>
+                                <th width="25%" class="th-dark">Afect.</td>
+                                <th width="15%" class="th-white">Importe</td>
                             </tr>
                         </thead>
                         <tbody>';
-?>
+                            ?>
 
                             <?php foreach ($detalleIngreso as $value) {
                                 $cantidad = $value['Cantidad'];
-                                $impuesto = 0;
+                                $impuesto = $value['Valor'];
                                 $precioBruto = $value['Precio'];
 
                                 $impuestoGenerado = $precioBruto * ($impuesto / 100.00);
@@ -262,11 +251,12 @@ if (!isset($_GET["idIngreso"])) {
                                 $importeNetoTotal = $importeBrutoTotal + $impuestoTotal;
                                 $html .= '
                                 <tr>
-                                    <td align="center" style="background-color:#b72928;border: none;color:white;">' . $value['Id'] . '</td>
-                                    <td align="center" style="background-color:#cccccc;border: none;color:black;">' . $value['Concepto'] . '</td>
-                                    <td class="costt" align="right" style="background-color:#e6e6e6;border: none;color:black;">' . round($cantidad, 2, PHP_ROUND_HALF_UP) . '</td>
-                                    <td class="costt" align="right" style="background-color:#cccccc;border: none;color:black;">' . number_format(round($importeNeto, 2, PHP_ROUND_HALF_UP), 2, '.', '') . '</td>
-                                    <td class="costt" align="right" style="background-color:#b72928;border: none;color:white;">' . number_format(round($importeNetoTotal, 2, PHP_ROUND_HALF_UP), 2, '.', '') . '</td>
+                                    <td align="center" class="td-white">' . $value['Id'] . '</td>
+                                    <td align="center" class="td-dark">' . $value['Concepto'] . '</td>
+                                    <td align="right" class="td-dark">' . round($cantidad, 2, PHP_ROUND_HALF_UP) . '</td>
+                                    <td align="right" class="td-dark">' . number_format(round($importeNeto, 2, PHP_ROUND_HALF_UP), 2, '.', '') . '</td>
+                                    <td align="center" class="td-dark">' . $value["Nombre"] . '</td>
+                                    <td align="right" class="td-white">' . number_format(round($importeNetoTotal, 2, PHP_ROUND_HALF_UP), 2, '.', '') . '</td>
                                 </tr>';
                             }
                             $html .= '</tbody>
@@ -274,42 +264,44 @@ if (!isset($_GET["idIngreso"])) {
 
                     <div style="font-style: italic;font-weight: bold;padding:5px 0px;">' . (isset($cuotas->Pago) ? 'CUOTAS: ' . $cuotas->Pago : '') . '</div>
        
-                    <table class="items" style="font-family:Arial;font-size: 11pt; border-collapse: collapse; border: 0px;margin-bottom:10px;" width="100%">
-                        <tr>
-                            <td class="estado" width="50%"></td>
-                            <td class="totals" width="15%" align="right">Op.Gravadas:</td>
-                            <td class="cost" align="right" width="15%">S/ 0.00</td>
-                        </tr>  
-                        <tr>
-                            <td class="estado" width="50%"></td>    
-                            <td class="totals" width="15%" align="right">Op.Gratuitas: </td>
-                            <td class="cost" align="right" width="15%">S/ 0.00</td>
-                        </tr>         
-                        <tr>
-                            <td class="estado" width="50%"></td>
-                            <td class="totals" width="15%" align="right">Op.Exoneradas: </td>
-                            <td class="cost" align="right" width="15%">S/ ' . number_format(round($totales['totalconimpuesto'], 2, PHP_ROUND_HALF_UP), 2, '.', '') . '</td>
-                        </tr>            
-                        <tr>
-                            <td class="estado" width="50%"></td>
-                            <td class="totals" width="15%" align="right">Op.Inafectas: </td>
-                            <td class="cost" align="right" width="15%">S/ 0.00</td>
-                        </tr>
-                        <tr>
-                            <td class="estado" width="50%"></td>
-                            <td class="totals" width="15%" align="right">Descuentos: </td>
-                            <td class="cost" align="right" width="15%">S/ 0.00</td>
-                        </tr>
-                        <tr>
-                            <td class="estado" width="50%"></td>
-                            <td class="totals" width="15%" align="right">Igv(18%). </td>
-                            <td class="cost" align="right" width="15%">S/ 0.00</td>
-                        </tr>
-                        <tr>
-                            <td class="estado" width="50%"></td>
-                            <td class="totals" width="15%" align="right">Importe Total:</td>
-                            <td class="cost" align="right" width="15%">S/ ' . number_format(round($totales['totalconimpuesto'], 2, PHP_ROUND_HALF_UP), 2, '.', '') . '</td>
-                        </tr>
+                    <table style="font-family:Arial;font-size: 14px; border-collapse: collapse; border: 0px;margin-bottom:10px;" width="100%">
+                        <thead>
+                            <tr>
+                                <th class="estado" width="50%"></td>
+                                <th class="totals" width="15%" align="right">Op.Gravadas:</td>
+                                <th class="cost" align="right" width="15%">S/ ' . number_format(round($totales['opgravada'], 2, PHP_ROUND_HALF_UP), 2, '.', '') . '</td>
+                            </tr>  
+                            <tr>
+                                <th class="estado" width="50%"></td>    
+                                <th class="totals" width="15%" align="right">Op.Gratuitas: </td>
+                                <th class="cost" align="right" width="15%">S/ 0.00</td>
+                            </tr>         
+                            <tr>
+                                <th class="estado" width="50%"></td>
+                                <th class="totals" width="15%" align="right">Op.Exoneradas: </td>
+                                <th class="cost" align="right" width="15%">S/ ' . number_format(round($totales['opexonerada'], 2, PHP_ROUND_HALF_UP), 2, '.', '') . '</td>
+                            </tr>            
+                            <tr>
+                                <th class="estado" width="50%"></td>
+                                <th class="totals" width="15%" align="right">Op.Inafectas: </td>
+                                <th class="cost" align="right" width="15%">S/ 0.00</td>
+                            </tr>
+                            <tr>
+                                <th class="estado" width="50%"></td>
+                                <th class="totals" width="15%" align="right">Descuentos: </td>
+                                <th class="cost" align="right" width="15%">S/ 0.00</td>
+                            </tr>
+                            <tr>
+                                <th class="estado" width="50%"></td>
+                                <th class="totals" width="15%" align="right">Igv(18%). </td>
+                                <th class="cost" align="right" width="15%">S/ ' . number_format(round($totales['totalimpuesto'], 2, PHP_ROUND_HALF_UP), 2, '.', '') . '</td>
+                            </tr>
+                            <tr>
+                                <th class="estado" width="50%"></td>
+                                <th class="totals" width="15%" align="right">Importe Total:</td>
+                                <th class="cost" align="right" width="15%">S/ ' . number_format(round($totales['totalconimpuesto'], 2, PHP_ROUND_HALF_UP), 2, '.', '') . '</td>
+                            </tr>
+                        </thead>                        
                     </table>
  
                     <div style="border-top: 1px solid #000000">

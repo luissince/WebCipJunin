@@ -701,12 +701,18 @@ class IngresosAdo
         try {
             $array = array();
             $totalsinimpuesto = 0;
+            $opegravada =  0;
+            $opeexogenerada = 0;
             $impuesto = 0;
 
             $cmdIngreso = Database::getInstance()->getDb()->prepare("SELECT 
-            i.idIngreso,t.CodigoAlterno AS TipoComprobante,t.Nombre AS Comprobante,
+            i.idIngreso,
+            t.CodigoAlterno AS TipoComprobante,
+            t.Nombre AS Comprobante,
             i.Serie,i.NumRecibo AS Numeracion,
-            i.Fecha AS FechaPago,i.Hora as HoraPago,CONVERT(VARCHAR,cast(i.Fecha AS DATE), 103) AS FechaEmision,
+            i.Fecha AS FechaPago,
+            i.Hora as HoraPago,
+            CONVERT(VARCHAR,cast(i.Fecha AS DATE), 103) AS FechaEmision,
             i.Estado,isnull(i.CodigoHash,'') AS CodigoHash,
             case when not e.IdEmpresa is null then 6 else 1 end as TipoDocumento,
             case when not e.IdEmpresa is null then 'R.U.C' else 'D.N.I' end as NombreDocumento,
@@ -714,7 +720,11 @@ class IngresosAdo
             isnull(e.NumeroRuc,p.idDNI) as NumeroDocumento,
             isnull(e.Nombre,concat(p.Apellidos,' ',p.Nombres)) as DatosPersona,
             isnull(e.Direccion,p.RUC) as Direccion,
-			p.CIP,p.idDNI,p.Apellidos,p.Nombres
+			p.CIP,
+            p.idDNI,
+            p.Apellidos,
+            p.Nombres,
+            ISNULL(i.Correlativo,0) as Correlativo
             FROM Ingreso AS i 
             INNER JOIN Persona AS p ON p.idDNI = i.idDNI
 			LEFT JOIN EmpresaPersona AS e ON e.IdEmpresa = i.idEmpresaPersona
@@ -724,14 +734,19 @@ class IngresosAdo
             $cmdIngreso->execute();
             $resultIngreso = $cmdIngreso->fetchObject();
 
-            $cmdDetail = Database::getInstance()->getDb()->prepare("SELECT d.idDetalle,
+            $cmdDetail = Database::getInstance()->getDb()->prepare("SELECT 
+            d.idDetalle,
             d.idIngreso,c.Concepto,            
-            (d.Monto/d.Cantidad) as Precio,
+            (d.Monto/d.Cantidad) AS Precio,
             d.Cantidad,
-            d.Monto as Total
-            from Detalle as d inner join Concepto as c on d.idConcepto = c.idConcepto
-            inner join Ingreso as i on d.idIngreso = i.idIngreso 
-            where d.idIngreso  = ?");
+            d.Monto AS Total,
+            i.Nombre,
+            i.Valor,
+            i.Codigo
+            FROM Detalle AS d 
+            INNER JOIN Concepto AS c ON d.idConcepto = c.idConcepto
+            INNER JOIN Impuesto AS i ON i.IdImpuesto = c.IdImpuesto
+            WHERE d.idIngreso  = ?");
             $cmdDetail->bindParam(1, $idIngreso, PDO::PARAM_INT);
             $cmdDetail->execute();
             $count = 0;
@@ -746,12 +761,27 @@ class IngresosAdo
                     "Concepto" => $row["Concepto"],
                     "Precio" => $row["Precio"],
                     "Cantidad" => $row["Cantidad"],
-                    "Total" => $row["Total"]
+                    "Total" => $row["Total"],
+                    "Nombre" => $row["Nombre"],
+                    "Valor" => $row["Valor"],
+                    "Codigo" => $row["Codigo"],
                 ));
-                $preciobruto = $row["Precio"] / 1.0;
-                $totalsinimpuesto +=  $row["Cantidad"] * $preciobruto;
-                $impuesto += $row["Cantidad"] * ($preciobruto * (0.00 / 100.00));
+                $cantidad = $row["Cantidad"];
+                $valorImpuesto = $row['Valor'];
+                $preciobruto = $row['Precio'] / (($valorImpuesto / 100.00) + 1);
+
+                $opegravada +=  $valorImpuesto == 0 ? 0 : $cantidad * $preciobruto;
+                $opeexogenerada += $valorImpuesto == 0 ? $cantidad * $preciobruto : 0;
+
+                $totalsinimpuesto += $cantidad * $preciobruto;
+                $impuesto += $cantidad  * ($preciobruto * ($valorImpuesto / 100.00));
             }
+
+            $cmdCorrelativo = Database::getInstance()->getDb()->prepare("SELECT 
+            MAX(ISNULL(Correlativo,0)) as Correlativo 
+            FROM Ingreso WHERE FechaCorrelativo = CAST(GETDATE() AS DATE)");
+            $cmdCorrelativo->execute();
+            $resultCorrelativo = $cmdCorrelativo->fetchColumn();
 
             $cmdCuotas = Database::getInstance()->getDb()->prepare("SELECT CONCAT(DATENAME (MONTH, DATEADD(MONTH, MONTH(FechaIni) - 1, '1900-01-01')),' ', 
 	        YEAR(FechaIni),' a ',DATENAME (MONTH, DATEADD(MONTH, MONTH(FechaFin) - 1, '1900-01-01')),' ',
@@ -774,11 +804,21 @@ class IngresosAdo
             $cmdEmpresa->execute();
             $resultEmpresa = $cmdEmpresa->fetchObject();
 
-            array_push($array, $resultIngreso, $detalleIngreso, $resultCuotas, $resultEmpresa, array(
-                "totalsinimpuesto" => $totalsinimpuesto,
-                "totalimpuesto" => $impuesto,
-                "totalconimpuesto" => $totalsinimpuesto + $impuesto,
-            ));
+            array_push(
+                $array,
+                $resultIngreso,
+                $detalleIngreso,
+                $resultCuotas,
+                $resultEmpresa,
+                array(
+                    "opgravada" => $opegravada,
+                    "opexonerada" =>   $opeexogenerada,
+                    "totalsinimpuesto" => $totalsinimpuesto,
+                    "totalimpuesto" => $impuesto,
+                    "totalconimpuesto" => $totalsinimpuesto + $impuesto,
+                ),
+                $resultCorrelativo
+            );
             return $array;
         } catch (Exception $ex) {
             return $ex->getMessage();
@@ -982,16 +1022,24 @@ class IngresosAdo
         }
     }
 
-    public static function CambiarEstadoSunatResumen($idVenta, $codigo, $descripcion, $hash)
+    public static function CambiarEstadoSunatResumen($idIngreso, $codigo, $descripcion, $hash, $correlativo, $fechaCorrelativo)
     {
         try {
             Database::getInstance()->getDb()->beginTransaction();
-            $comando = Database::getInstance()->getDb()->prepare("UPDATE Ingreso SET 
-            Xmlsunat = ? , Xmldescripcion = ?, CodigoHash = ? WHERE idIngreso = ?");
+            $comando = Database::getInstance()->getDb()->prepare("UPDATE 
+            Ingreso SET 
+            Xmlsunat = ? , 
+            Xmldescripcion = ?, 
+            CodigoHash = ?,
+            Correlativo = ?,
+            FechaCorrelativo = ? 
+            WHERE idIngreso = ?");
             $comando->bindParam(1, $codigo, PDO::PARAM_STR);
             $comando->bindParam(2, $descripcion, PDO::PARAM_STR);
             $comando->bindParam(3, $hash, PDO::PARAM_STR);
-            $comando->bindParam(4, $idVenta, PDO::PARAM_STR);
+            $comando->bindParam(4, $correlativo, PDO::PARAM_INT);
+            $comando->bindParam(5, $fechaCorrelativo, PDO::PARAM_STR);
+            $comando->bindParam(6, $idIngreso, PDO::PARAM_INT);
             $comando->execute();
             Database::getInstance()->getDb()->commit();
             return "updated";
@@ -1000,6 +1048,7 @@ class IngresosAdo
             return $ex->getMessage();
         }
     }
+
 
     public static function DetalleIngresoPorIdIngreso($idIngreso)
     {

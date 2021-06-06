@@ -1,5 +1,4 @@
 <?php
-
 /**
  * Created by PhpStorm.
  * User: Giansalex
@@ -17,22 +16,22 @@ use Greenter\Model\Company\Company;
 
 class SharedStore
 {
-    public function getCompany($ruc,$nomcomercial,$razonsocial,$ubigeo,$departamento,$provincia,$distrito,$direccion,$telefono,$email): Company
+    public function getCompany(): Company
     {
         return (new Company())
-            ->setRuc($ruc)
-            ->setNombreComercial($nomcomercial)
-            ->setRazonSocial($razonsocial)
+            ->setRuc('20548033030')
+            ->setNombreComercial('LEAT SAC')
+            ->setRazonSocial('INVERSIONES LEONARDO ENRIQUE ARRIOLA TICLLA S.A.C.')
             ->setAddress((new Address())
-                ->setUbigueo($ubigeo)
-                ->setDistrito($distrito)
-                ->setProvincia($provincia)
-                ->setDepartamento($departamento)
+                ->setUbigueo('150115')
+                ->setDistrito('LA VICTORIA')
+                ->setProvincia('LIMA')
+                ->setDepartamento('LIMA')
                 ->setUrbanizacion('')
                 ->setCodLocal('0000')
-                ->setDireccion($direccion))
-            ->setEmail($telefono)
-            ->setTelephone($email);
+                ->setDireccion('JR. PROLONGACION FRANCIA NRO. 1726 URB. SAN GERMAN LIMA - LIMA - LA VICTORIA'))
+            ->setEmail('admin@greenter.com')
+            ->setTelephone('01-234455');
     }
 
     public function getClientPerson(): Client
@@ -60,8 +59,8 @@ class SharedStore
 
         return $client;
     }
-
-    public function getClientRuc(): Client
+    
+     public function getClientRuc(): Client
     {
         $client = new Client();
         $client->setTipoDoc('6')
