@@ -18,7 +18,7 @@ class IngresosAdo
             i.idIngreso,
             convert(VARCHAR, CAST(i.Fecha AS DATE),103) AS Fecha,
             i.Hora,
-            i.Serie,
+            i.Serie, 
             i.NumRecibo,
             i.Estado,
             p.CIP,

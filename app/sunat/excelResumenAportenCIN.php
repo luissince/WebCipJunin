@@ -1,7 +1,8 @@
 <?php
 
-set_time_limit(500); //evita el error 20 segundos de peticion
-session_start();
+ini_set('max_execution_time', '300');
+ini_set("pcre.backtrack_limit", "10000000");
+ini_set('memory_limit', '-1');
 
 require __DIR__ . "/lib/phpspreadsheet/vendor/autoload.php";
 include_once('../model/IngresosAdo.php');
@@ -12,8 +13,7 @@ use PhpOffice\PhpSpreadsheet\Style\Fill;
 use PhpOffice\PhpSpreadsheet\Style\Alignment;
 use PhpOffice\PhpSpreadsheet\Style\Border;
 
-$title = "RESUMEN DE APORTACIONES AL CIP NACIONAL";
-$fechaIngreso = "DE LA FECHA: " . date("d-m-Y", strtotime($_GET["fechaInicial"])) . " al " . date("d-m-Y", strtotime($_GET["fechaFinal"]));
+$fechaIngreso = "RESUMEN DE APORTACIONES AL CIP NACIONAL DE LA FECHA: " . date("d-m-Y", strtotime($_GET["fechaInicial"])) . " al " . date("d-m-Y", strtotime($_GET["fechaFinal"]));
 
 $totalISSCIP = 0;
 $totalSOCIALCIP = 0;
@@ -172,7 +172,7 @@ if (!is_array($resumen)) {
         )
     ));
     $documento->setActiveSheetIndex(0)->mergeCells('A1:AG1');
-    $documento->setActiveSheetIndex(0)->setCellValue("A1", "RESUMEN DE APORTACIONES AL CIP NACIONAL");
+    $documento->setActiveSheetIndex(0)->setCellValue("A1", $fechaIngreso);
 
     $documento->setActiveSheetIndex(0)->mergeCells('A2:A3');
     $documento->setActiveSheetIndex(0)->mergeCells('B2:B3');
@@ -356,11 +356,9 @@ if (!is_array($resumen)) {
     $documento->getActiveSheet()->getColumnDimension('AG')->setWidth(5);
 
 
-    $nombreDelDocumento = "Reporte de Aportaciones al CIP Nacional.xlsx";
-
     // Redirect output to a client’s web browser (Xlsx)
     header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
-    header('Content-Disposition: attachment;filename=' . $nombreDelDocumento);
+    header('Content-Disposition: attachment;filename=' . $fechaIngreso.'.xlsx');
     header('Cache-Control: max-age=0');
     // If you're serving to IE 9, then the following may be needed
     header('Cache-Control: max-age=1');

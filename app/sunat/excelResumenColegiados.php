@@ -1,7 +1,8 @@
 <?php
+ini_set('max_execution_time', '300');
+ini_set("pcre.backtrack_limit", "10000000");
+ini_set('memory_limit', '-1');
 
-set_time_limit(300); //evita el error 20 segundos de peticion
-session_start();
 
 require __DIR__ . "/lib/phpspreadsheet/vendor/autoload.php";
 include_once('../model/ListarIngenierosAdo.php');

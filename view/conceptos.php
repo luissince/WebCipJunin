@@ -24,7 +24,7 @@ if (!isset($_SESSION['IdUsuario'])) {
             <!-- end menu -->
             <!-- Modal -->
             <div class="row">
-                <div class="modal fade" id="confirmar">
+                <div class="modal fade" data-backdrop="static" id="modalNuevoConcepto">
                     <div class="modal-dialog">
                         <div class="modal-content">
                             <div class="modal-header">
@@ -37,6 +37,17 @@ if (!isset($_SESSION['IdUsuario'])) {
                                 </h4>
                             </div>
                             <div class="modal-body">
+
+                                <div class="modal-overlay d-none" id="divOverlayModal">
+                                    <div class="modal-overlay-content">
+                                        <div>
+                                            <i class="fa fa-refresh fa-spin"></i>
+                                        </div>
+                                        <div>
+                                            <label id="lblOverlayModal">Cargando información...</label>
+                                        </div>
+                                    </div>
+                                </div>
 
                                 <div class="row">
                                     <div class="col-md-8">
@@ -104,13 +115,13 @@ if (!isset($_SESSION['IdUsuario'])) {
                                     <div class="col-md-6 col-sm-12 col-xs-12">
                                         <div class="form-group">
                                             <input type="radio" id="rbJunin" name="referido" value="" checked="checked">
-                                            <label for="rbJunin">CIP Junin</label>
+                                            <label for="rbJunin"> CIP Junin</label>
                                         </div>
                                     </div>
                                     <div class="col-md-6 col-sm-12 col-xs-12">
                                         <div class="form-group">
                                             <input type="radio" id="rbNacional" name="referido" value="1">
-                                            <label for="rbNacional">CIP Nacional</label>
+                                            <label for="rbNacional"> CIP Nacional</label>
                                         </div>
                                     </div>
                                 </div>
@@ -121,25 +132,37 @@ if (!isset($_SESSION['IdUsuario'])) {
                                     <div class="col-md-6 col-sm-12 col-xs-12">
                                         <div class="form-group">
                                             <input type="radio" id="precio_ordinario" name="espesifico" value="0" checked="checked">
-                                            <label for="precio_ordinario">Precio Ordinario</label>
+                                            <label for="precio_ordinario"> Precio Ordinario</label>
                                         </div>
                                     </div>
                                     <div class="col-md-6 col-sm-12 col-xs-12">
                                         <div class="form-group">
                                             <input type="radio" id="precio_transeunte" name="espesifico" value="1">
-                                            <label for="precio_transeunte">Precio para Transeunte</label>
+                                            <label for="precio_transeunte"> Precio para Transeunte</label>
                                         </div>
                                     </div>
                                     <div class="col-md-6 col-sm-12 col-xs-12">
                                         <div class="form-group">
                                             <input type="radio" id="precio_vitalicio" name="espesifico" value="2">
-                                            <label for="precio_vitalicio">Precio para Vitalicio</label>
+                                            <label for="precio_vitalicio"> Precio para Vitalicio</label>
                                         </div>
                                     </div>
                                     <div class="col-md-6 col-sm-12 col-xs-12">
                                         <div class="form-group">
                                             <input type="radio" id="precio_variable" name="espesifico" value="128">
-                                            <label for="precio_variable">Precio Variable</label>
+                                            <label for="precio_variable"> Precio Variable</label>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <p>Impuesto: <i class="fa fa-fw fa-asterisk text-danger"></i></p>
+                                    </div>
+                                    <div class="col-md-6 col-sm-12 col-xs-12">
+                                        <div class="form-group">
+                                            <select class="form-control" id="cbImpuesto">
+                                                <option value="">- - Seleccione - -</option>
+                                            </select>
                                         </div>
                                     </div>
                                 </div>
@@ -235,15 +258,17 @@ if (!isset($_SESSION['IdUsuario'])) {
                             <div class="table-responsive">
                                 <table class="table table-striped" style="border-width: 1px;border-style: dashed;border-color: #E31E25;">
                                     <thead style="background-color: #FDB2B1;color: #B72928;">
-                                        <th style="text-align: center;">#</th>
-                                        <th>Codigo</th>
-                                        <th>Categoria</th>
-                                        <th>Concepto</th>
-                                        <th>Precio</th>
-                                        <th>Especificación</th>
-                                        <th>Asignado</th>
-                                        <th>Estado</th>
-                                        <th colspan="2" style="text-align: center;">Opciones</th>
+                                        <th width="5%" class="text-center">#</th>
+                                        <th width="10%">Codigo</th>
+                                        <th width="10%">Categoria</th>
+                                        <th width="15%">Concepto</th>
+                                        <th width="10%">Precio</th>
+                                        <th width="10%">Especificación</th>
+                                        <th width="10%">Asignado</th>
+                                        <th width="10%">Impuesto</th>
+                                        <th width="5%">Estado</th>
+                                        <th width="5%">Editar</th>
+                                        <th width="5%">Eliminar</th>
                                     </thead>
                                     <tbody id="tbTable">
 
@@ -343,7 +368,7 @@ if (!isset($_SESSION['IdUsuario'])) {
                 });
 
                 $("#cbCategorias").change(function() {
-                    if ($("#cbCategorias").val() != '') {                        
+                    if ($("#cbCategorias").val() != '') {
                         if (!state) {
                             paginacion = 1;
                             loadTableConceptos(2, $("#cbCategorias").val(), "");
@@ -352,25 +377,30 @@ if (!isset($_SESSION['IdUsuario'])) {
                     }
                 });
 
-                //-------------------------------------------------------------------
+                //--------------------- abrir modal de nuevo concepto ---------------------------------------------------
                 $("#btnNuevo").click(function() {
-                    $("#confirmar").modal("show");
+                    loadModalNuevoConcepto();
                 });
 
                 $("#btnNuevo").on("keyup", function(event) {
                     if (event.keyCode === 13) {
-                        $("#confirmar").modal("show");
+                        loadModalNuevoConcepto();
                     }
+                    event.preventDefault();
                 });
 
                 $("#btnAceptarModal").click(function() {
-                    validateInsertConcepto();
+                    insertConcepto();
                 });
 
                 $("#btnAceptarModal").on("keyup", function(event) {
                     if (event.keyCode === 13) {
-                        validateInsertConcepto();
+                        insertConcepto();
                     }
+                });
+
+                $("#modalNuevoConcepto").on("shown.bs.modal", function() {
+                    $("#cbCategoria").focus();
                 });
 
                 $("#btnCancelarModal").click(function() {
@@ -424,7 +454,7 @@ if (!isset($_SESSION['IdUsuario'])) {
                     beforeSend: function() {
                         tbTable.empty();
                         tbTable.append(
-                            '<tr class="text-center"><td colspan="9"><img src="./images/spiner.gif"/><p>cargando información.</p></td></tr>'
+                            '<tr class="text-center"><td colspan="11"><img src="./images/spiner.gif"/><p>cargando información.</p></td></tr>'
                         );
                         state = true;
 
@@ -435,7 +465,7 @@ if (!isset($_SESSION['IdUsuario'])) {
                             if (lista.length == 0) {
                                 tbTable.empty();
                                 tbTable.append(
-                                    '<tr class="text-center"><td colspan="9"><p>No hay conceptos para mostrar.</p></td></tr>'
+                                    '<tr class="text-center"><td colspan="11"><p>No hay conceptos para mostrar.</p></td></tr>'
                                 );
                                 totalPaginacion = parseInt(Math.ceil((parseFloat(result.total) / parseInt(
                                     filasPorPagina))));
@@ -448,13 +478,11 @@ if (!isset($_SESSION['IdUsuario'])) {
                                     let btnUpdate =
                                         '<button class="btn btn-warning btn-sm" onclick="loadUpdateConceptos(\'' +
                                         concepto.idConcepto + '\')">' +
-                                        '<i class="fa fa-edit"></i> Editar' +
-                                        '</button>';
+                                        '<i class="fa fa-edit"></i> </button>';
                                     let btndelete = '<button class="btn btn-danger btn-sm" onclick="DeleteConcepto(\'' + concepto.idConcepto + '\')">' +
-                                        '<i class="fa fa-trash"></i> Eliminar' +
-                                        '</button>';
+                                        '<i class="fa fa-trash"></i> </button>';
 
-                                    let estado = '<span class="' + (concepto.Estado == true ? "label label-success" : "label label-danger") + '">' + (concepto.Estado == true ? "Activo" : "Inactivo") + '</span>';
+                                    let Estado = '<span class="' + (concepto.Estado == true ? "label label-success" : "label label-danger") + '">' + (concepto.Estado == true ? "Activo" : "Inactivo") + '</span>';
 
                                     let categoria = (concepto.Categoria == '1') ? 'Cuota ordinaria' :
                                         (concepto.Categoria == '2') ? 'Cuota ordinaria (Admistia)' :
@@ -468,7 +496,7 @@ if (!isset($_SESSION['IdUsuario'])) {
                                         (concepto.Categoria == '10') ? 'Colegiatura por Tesis' :
                                         (concepto.Categoria == '11') ? 'Colegiatura pro Tesis Externo' :
                                         (concepto.Categoria == '12') ? 'Cuota ordinaria (Resolución N° 15)' :
-                                         'Ingresos Diversos';
+                                        'Ingresos Diversos';
 
                                     let propiedad =
                                         concepto.Propiedad == "48" || concepto.Propiedad == "16" ? "Se deriva al CIP NACIONAL" :
@@ -477,23 +505,24 @@ if (!isset($_SESSION['IdUsuario'])) {
                                     //0 cip junin
                                     //48 cip nacional
 
+                                    let Impuesto = concepto.Impuesto;
+
                                     let Asinador = concepto.Asignado == "0" ? "Precio Ordinario" :
                                         concepto.Asignado == "1" ? "Precio Transeunte" :
                                         concepto.Asignado == "2" ? "Precio Vitalicio" : "Precio Variable";
 
                                     tbTable.append('<tr>' +
-                                        '<td style="text-align: center;color: #2270D1;">' +
-                                        '' + concepto.Id + '' +
-                                        '</td>' +
-                                        '<td>' + concepto.Codigo + '</td>' +
-                                        '<td>' + categoria + '</td>' +
-                                        '<td>' + concepto.Concepto + '</td>' +
-                                        '<td>' + concepto.Precio + '</td>' +
-                                        '<td> ' + propiedad + '</td>' +
-                                        '<td>' + Asinador + '</td>' +
-                                        '<td>' + estado + '</td>' +
-                                        '<td style="text-align:right ">' + btnUpdate + '</td>' +
-                                        '<td>' + btndelete + '</td>' +
+                                        '<td class="text-center text-primary">' + concepto.Id + '</td>' +
+                                        '<td class="text-left">' + concepto.Codigo + '</td>' +
+                                        '<td class="text-left">' + categoria + '</td>' +
+                                        '<td class="text-left">' + concepto.Concepto + '</td>' +
+                                        '<td class="text-left">' + concepto.Precio + '</td>' +
+                                        '<td class="text-left">' + propiedad + '</td>' +
+                                        '<td class="text-left">' + Asinador + '</td>' +
+                                        '<td class="text-left">' + Impuesto + '</td>' +
+                                        '<td class="text-center">' + Estado + '</td>' +
+                                        '<td class="text-center">' + btnUpdate + '</td>' +
+                                        '<td class="text-center">' + btndelete + '</td>' +
                                         '</tr>');
                                 }
                                 totalPaginacion = parseInt(Math.ceil((parseFloat(result.total) / parseInt(
@@ -506,7 +535,7 @@ if (!isset($_SESSION['IdUsuario'])) {
                         } else {
                             tbTable.empty();
                             tbTable.append(
-                                '<tr class="text-center"><td colspan="9"><p>No se pudo cargar la información.</p></td></tr>'
+                                '<tr class="text-center"><td colspan="11"><p>' + result.message + '</p></td></tr>'
                             );
                             $("#lblPaginaActual").html(0);
                             $("#lblPaginaSiguiente").html(0);
@@ -517,7 +546,7 @@ if (!isset($_SESSION['IdUsuario'])) {
                     error: function(error) {
                         tbTable.empty();
                         tbTable.append(
-                            '<tr class="text-center"><td colspan="9"><p>Se produjo un error, intente nuevamente o cumuníquese con su administrador.</p></td></tr>'
+                            '<tr class="text-center"><td colspan="11"><p>' + error.responseText + '</p></td></tr>'
                         );
                         $("#lblPaginaActual").html(0);
                         $("#lblPaginaSiguiente").html(0);
@@ -530,21 +559,57 @@ if (!isset($_SESSION['IdUsuario'])) {
                 location.href = "update_conceptos.php?idConcepto=" + idConcepto
             }
 
-            function validateInsertConcepto() {
-                insertConcepto();
+
+            function loadModalNuevoConcepto() {
+                $("#modalNuevoConcepto").modal("show");
+                $.ajax({
+                    url: "../app/controller/ImpuestoController.php",
+                    method: "GET",
+                    data: {
+                        "type": "allForComboBox"
+                    },
+                    beforeSend: function() {
+                        $("#cbImpuesto").empty();
+                        $("#divOverlayModal").removeClass("d-none");
+                        $("#lblOverlayModal").html("Cargando información...");
+                    },
+                    success: function(result) {
+                        if (result.estado == 1) {
+                            $("#cbImpuesto").append('<option value="">- - Seleccione - -</option>');
+                            for (let value of result.data) {
+                                $("#cbImpuesto").append("<option value=" + value.IdImpuesto + ">" + value.Nombre + "</option>");
+                            }
+                            $("#divOverlayModal").addClass("d-none");
+                        } else {
+                            $("#lblOverlayModal").html(result.mensaje);
+                        }
+                    },
+                    error: function(error) {
+                        $("#lblOverlayModal").html(error.responseText);
+                    }
+                });
             }
 
             function insertConcepto() {
+
                 if ($("#cbCategoria").val() == "0") {
                     tools.AlertWarning("Advertencia", "Seleccione la categoría del concepto.");
+                    $("#cbCategoria").focus();
                 } else if ($("#txtConcepto").val() == '' || $("#txtConcepto").val().length < 2) {
                     tools.AlertWarning("Advertencia", "Ingrese el nombre del concepto.");
+                    $("#txtConcepto").focus();
                 } else if ($("#txtPrecio").val() == '' || $("#txtPrecio").val().length == 0) {
                     tools.AlertWarning("Advertencia", "Ingrese el precio del concepto.");
+                    $("#txtPrecio").focus();
                 } else if ($("#txtFecha_inicio").val() == '') {
                     tools.AlertWarning("Advertencia", "Seleccione la fecha de inicio.");
+                    $("#txtFecha_inicio").focus();
                 } else if ($("#txtFecha_fin").val() == '') {
                     tools.AlertWarning("Advertencia", "Seleccione la fecha de fin.");
+                    $("#txtFecha_fin").focus();
+                } else if ($('#cbImpuesto option').length != 0 && $("#cbImpuesto").val() == "") {
+                    tools.AlertWarning("Advertencia", "Seleccione el impuesto a incluir.");
+                    $("#cbImpuesto").focus();
                 } else {
                     tools.ModalDialog("Conceptos", "¿Está seguro de continuar?", function(value) {
                         if (value == true) {
@@ -563,16 +628,15 @@ if (!isset($_SESSION['IdUsuario'])) {
                                     "Observacion": "",
                                     "Codigo": $("#txtCodigo").val(),
                                     "Estado": $("#estado").is(":checked"),
+                                    "Impuesto": $("#cbImpuesto").val()
                                 },
-                                beforeEnd: function() {
+                                beforeSend: function() {
                                     clearModalConcepto();
                                     tools.ModalAlertInfo("Conceptos", "Procesando petición..");
                                 },
                                 success: function(result) {
                                     if (result.estado == 1) {
-                                        tools.AlertSuccess("Mensaje", result.message)
                                         tools.ModalAlertSuccess("Conceptos", result.message);
-                                        $("#confirmar").modal('hide');
                                         loadInitConceptos()
                                     } else {
                                         tools.ModalAlertWarning("Conceptos", result.message);
@@ -588,16 +652,17 @@ if (!isset($_SESSION['IdUsuario'])) {
             }
 
             function clearModalConcepto() {
-                $("#confirmar").modal("hide");
+                $("#modalNuevoConcepto").modal("hide");
                 $("#cbCategoria").val(0);
-                $("#txtCodigo").val(null);
-                $("#txtConcepto").val(null);
-                $("#txtPrecio").val(null);
-                $("#txtFecha_inicio").val('');
-                $("#txtFecha_fin").val('');
+                $("#txtCodigo").val("");
+                $("#txtConcepto").val("");
+                $("#txtPrecio").val("");
+                $("#txtFecha_inicio").val(null);
+                $("#txtFecha_fin").val(null);
                 $("#rbJunin").prop('checked', 'checked');
                 $("#precio_ordinario").prop('checked', 'checked');
                 $("#estado").prop('checked', false);
+                $("#cbImpuesto").empty();
                 $("#lblEstado").html("Inactivo");
             }
 

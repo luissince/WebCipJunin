@@ -16,26 +16,27 @@ class ConceptoAdo
             $array = array();
             $arrayConcepto = array();
             $comandoConcepto = Database::getInstance()->getDb()->prepare("SELECT 
-            idConcepto,
-            Categoria,
-            Concepto,
-            Precio,
-            Propiedad,
-            convert(varchar,cast(Inicio as date), 103) as Inicio,
-            convert(varchar,cast(Fin as date), 103) as Fin,
-            Observacion,
-            Codigo,
-            Estado, 
-            Asignado
-            FROM Concepto 
-            where 
+            c.idConcepto,
+            c.Categoria,
+            c.Concepto,
+            c.Precio,
+            c.Propiedad,
+            CONVERT(VARCHAR,CAST(Inicio AS DATE), 103) AS Inicio,
+            CONVERT(VARCHAR,CAST(Fin AS DATE), 103) AS Fin,
+            c.Observacion,
+            c.Codigo,
+            c.Estado, 
+            c.Asignado,
+            i.Nombre AS Impuesto
+            FROM Concepto AS c INNER JOIN Impuesto AS i ON i.IdImpuesto = c.IdImpuesto
+            WHERE 
             ? = 0
             OR
-            ? = 1 AND Concepto like concat(?,'%') 
+            ? = 1 AND c.Concepto LIKE CONCAT(?,'%') 
             OR
-            ? = 2 AND Categoria = ?
-            order by Categoria asc,Concepto asc,cast(Inicio as date) desc, cast(Fin as date) desc
-            offset ? rows fetch next ? rows only");
+            ? = 2 AND c.Categoria = ?
+            ORDER BY c.Categoria ASC,c.Concepto ASC,CAST(c.Inicio AS DATE) DESC, CAST(c.Fin AS DATE) DESC
+            OFFSET ? ROWS FETCH NEXT ? ROWS ONLY");
             $comandoConcepto->bindParam(1, $opcion, PDO::PARAM_INT);
 
             $comandoConcepto->bindParam(2, $opcion, PDO::PARAM_INT);
@@ -63,15 +64,16 @@ class ConceptoAdo
                     "Codigo" => $row["Codigo"],
                     "Estado" => $row["Estado"],
                     "Asignado" => $row["Asignado"],
+                    "Impuesto"=>$row["Impuesto"]
                 ));
             }
 
             $comandoTotal = Database::getInstance()->getDb()->prepare("SELECT COUNT(*) 
-            FROM Concepto 
-            where 
+            FROM Concepto AS c INNER JOIN Impuesto AS i ON i.IdImpuesto = c.IdImpuesto 
+            WHERE 
             ? = 0
             OR
-            ? = 1 AND Concepto like concat(?,'%') 
+            ? = 1 AND Concepto LIKE concat(?,'%') 
             OR
             ? = 2 AND Categoria = ?");
             $comandoTotal->bindParam(1, $opcion, PDO::PARAM_INT);
@@ -94,8 +96,8 @@ class ConceptoAdo
     public static function getId($idConcepto)
     {
         try {
-            $object = null;
-            $comandoConcepto = Database::getInstance()->getDb()->prepare("SELECT 
+            $array = array();
+            $cmdConcepto = Database::getInstance()->getDb()->prepare("SELECT 
                 idConcepto,
                 Categoria,
                 Concepto,
@@ -106,12 +108,20 @@ class ConceptoAdo
                 Observacion,
                 Codigo,
                 Estado,
-                Asignado       
+                Asignado,
+                IdImpuesto       
             FROM Concepto WHERE idConcepto = ?");
-            $comandoConcepto->bindParam(1, $idConcepto, PDO::PARAM_STR);
-            $comandoConcepto->execute();
-            $object = $comandoConcepto->fetchObject();
-            return $object;
+            $cmdConcepto->bindParam(1, $idConcepto, PDO::PARAM_STR);
+            $cmdConcepto->execute();
+            $object = $cmdConcepto->fetchObject();
+
+            $cmdImpuesto = Database::getInstance()->getDb()->prepare("SELECT IdImpuesto,Nombre FROM Impuesto");
+            $cmdImpuesto->execute();
+            $impuestos = $cmdImpuesto->fetchAll(PDO::FETCH_ASSOC);
+
+            array_push($array, $object, $impuestos);
+
+            return $array;
         } catch (Exception $ex) {
             return $ex->getMessage();
         }
@@ -139,7 +149,7 @@ class ConceptoAdo
                 $cmdConceptos = Database::getInstance()->getDb()->prepare($cmdConceptos);
                 $cmdConceptos->bindParam(1, $categoria, PDO::PARAM_INT);
                 $cmdConceptos->execute();
- 
+
                 $arryConcepto = array();
                 while ($rowc = $cmdConceptos->fetch()) {
                     array_push($arryConcepto, array(
@@ -521,8 +531,9 @@ class ConceptoAdo
             Asignado,
             Observacion,
             Codigo,
-            Estado          
-            )VALUES(?,?,?,?,?,?,?,?,?,?)");
+            Estado,
+            IdImpuesto          
+            )VALUES(?,?,?,?,?,?,?,?,?,?,?)");
 
             // $dateTimeInicio = date('Y-d-m H:i:s', strtotime($data["Inicio"]));
             // $dateTimeFin = date('Y-d-m H:i:s', strtotime($data["Fin"]));
@@ -537,6 +548,7 @@ class ConceptoAdo
             $cmdConcepto->bindParam(8, $data["Observacion"], PDO::PARAM_STR);
             $cmdConcepto->bindParam(9, $data["Codigo"], PDO::PARAM_INT);
             $cmdConcepto->bindParam(10, $data["Estado"], PDO::PARAM_BOOL);
+            $cmdConcepto->bindParam(11, $data["Impuesto"], PDO::PARAM_INT);
 
             $cmdConcepto->execute();
             Database::getInstance()->getDb()->commit();
@@ -562,7 +574,8 @@ class ConceptoAdo
             Observacion = ?,
             Codigo = ?,
             Estado = ?,
-            Asignado =?
+            Asignado =?,
+            IdImpuesto =?
             WHERE idConcepto = ?");
 
             $cmdConcepto->bindParam(1, $data["Categoria"], PDO::PARAM_INT);
@@ -575,7 +588,8 @@ class ConceptoAdo
             $cmdConcepto->bindParam(8, $data["Codigo"], PDO::PARAM_INT);
             $cmdConcepto->bindParam(9, $data["Estado"], PDO::PARAM_STR);
             $cmdConcepto->bindParam(10, $data["Asignado"], PDO::PARAM_INT);
-            $cmdConcepto->bindParam(11, $data["IdConcepto"], PDO::PARAM_INT);
+            $cmdConcepto->bindParam(11, $data["Impuesto"], PDO::PARAM_INT);
+            $cmdConcepto->bindParam(12, $data["IdConcepto"], PDO::PARAM_INT);
             $cmdConcepto->execute();
             Database::getInstance()->getDb()->commit();
             return "updated";

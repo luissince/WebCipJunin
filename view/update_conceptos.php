@@ -144,6 +144,19 @@ if (!isset($_SESSION['IdUsuario'])) {
 
                                 <div class="row">
                                     <div class="col-md-12">
+                                        <p>Impuesto: <i class="fa fa-fw fa-asterisk text-danger"></i></p>
+                                    </div>
+                                    <div class="col-md-6 col-sm-12 col-xs-12">
+                                        <div class="form-group">
+                                            <select class="form-control" id="cbImpuesto">
+                                                <option value="">- - Seleccione - -</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="row">
+                                    <div class="col-md-12">
                                         <p>Estado: <i class="fa fa-fw fa-asterisk text-danger"></i></p>
                                     </div>
                                     <div class="col-md-12">
@@ -234,7 +247,6 @@ if (!isset($_SESSION['IdUsuario'])) {
                     success: function(result) {
                         spiner.remove()
                         if (result.estado === 1) {
-                            console.log(result)
                             let concepto = result.object;
                             switch (concepto.Categoria) {
                                 case "1":
@@ -303,6 +315,12 @@ if (!isset($_SESSION['IdUsuario'])) {
                                 $("#rbNacional").prop("checked", true);
                             }
 
+                            $("#cbImpuesto").append('<option value="">- - Seleccione - -</option>');
+                            for (let value of result.impuestos) {
+                                $("#cbImpuesto").append('<option value="' + value.IdImpuesto + '">' + value.Nombre + '</option>');
+                            }
+                            $("#cbImpuesto").val(concepto.IdImpuesto);
+
                             $("#estado").prop("checked", concepto.Estado == 0 ? false : true);
                             $("#lblEstado").html($("#estado").is(":checked") ? "Activo" : "Inactivo");
                             tools.AlertInfo("Información", "Se cargo correctamente los datos.");
@@ -331,14 +349,22 @@ if (!isset($_SESSION['IdUsuario'])) {
             function updateConcepto() {
                 if ($("#categoria").val() == "0") {
                     tools.AlertWarning("Advertencia", "Seleccione la categoría del concepto.");
+                    $("#categoria").focus();
                 } else if ($("#concepto").val() == '' || $("#concepto").val().length < 2) {
                     tools.AlertWarning("Advertencia", "Ingrese el nombre del concepto.");
+                    $("#concepto").focus();
                 } else if ($("#precio").val() == '' || $("#precio").val().length == 0) {
                     tools.AlertWarning("Advertencia", "Ingrese el precio del concepto.");
+                    $("#precio").focus();
                 } else if ($("#fecha_inicio").val() == '') {
                     tools.AlertWarning("Advertencia", "Seleccione la fecha de inicio.");
+                    $("#fecha_inicio").focus();
                 } else if ($("#fecha_inicio").val() == '') {
                     tools.AlertWarning("Advertencia", "Seleccione la fecha de fin.");
+                    $("#fecha_inicio").focus();
+                } else if ($('#cbImpuesto option').length != 0 && $("#cbImpuesto").val() == "") {
+                    tools.AlertWarning("Advertencia", "Seleccione el impuesto a incluir.");
+                    $("#cbImpuesto").focus();
                 } else {
                     tools.ModalDialog("Conceptos", "¿Está seguro de continuar?", function(value) {
                         if (value == true) {
@@ -358,8 +384,9 @@ if (!isset($_SESSION['IdUsuario'])) {
                                     "Codigo": $("#codigo").val(),
                                     "Estado": $("#estado").is(":checked"),
                                     "Asignado": $("#precio_ordinario").is(":checked") ? 0 : $("#precio_transeunte").is(":checked") ? 1 : $("#precio_vitalicio").is(":checked") ? 2 : 3,
+                                    "Impuesto": $("#cbImpuesto").val()
                                 },
-                                beforeEnd: function() {
+                                beforeSend: function() {
                                     $("#btnaceptar").empty();
                                     $("#btnaceptar").append('<img src="./images/spiner.gif" width="25" height="25" />')
                                 },

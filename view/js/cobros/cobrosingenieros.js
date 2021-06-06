@@ -225,14 +225,14 @@ function CobroIngenieros() {
                         $("#lblFechaColegiatura").html(tools.getDateForma(data.colegiatura.FechaColegiado));
                     }
 
-                    $("#lblYears").html(data.years + " AÑOS PARA SER VITALICO( " + tools.getDateForma(data.date) + " )")
-
                     let porcentaje = Math.abs(((data.years - 30) * 100) / 30);
                     if (data.years <= 0) {
+                        $("#lblYears").html("30 AÑOS CUMPLIDOS")
                         $("#lblProgress").removeClass()
                         $("#lblProgress").addClass("progress-bar progress-bar-green");
                         $("#lblProgress").css("width", "100%");
                     } else {
+                        $("#lblYears").html(data.years + " AÑOS PARA SER VITALICO( " + tools.getDateForma(data.date) + " )")
                         $("#lblProgress").removeClass()
                         $("#lblProgress").addClass(porcentaje >= 0 && porcentaje <= 30 ? "progress-bar progress-bar-warning" : porcentaje > 30 && porcentaje <= 70 ? "progress-bar progress-bar-danger" : porcentaje > 70 && porcentaje < 100 ? "progress-bar progress-bar-info" : "progress-bar progress-bar-green");
                         $("#lblProgress").css("width", porcentaje + "%");

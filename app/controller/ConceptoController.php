@@ -28,16 +28,17 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
             ));
         }
     } else if ($_GET["type"] === "data") {
-        $concepto = ConceptoAdo::getId($_GET["idConcepto"]);
-        if (is_object($concepto)) {
+        $result = ConceptoAdo::getId($_GET["idConcepto"]);
+        if (is_array($result)) {
             echo json_encode(array(
                 "estado" => 1,
-                "object" => $concepto
+                "object" => $result[0],
+                "impuestos" => $result[1]
             ));
         } else {
             echo json_encode(array(
                 "estado" => 2,
-                "message" => $concepto
+                "message" => $result
             ));
         }
     } else if ($_GET["type"] === "typecolegiatura") {
@@ -221,6 +222,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
         $data["Observacion"] = $_POST["Observacion"];
         $data["Codigo"] = $_POST["Codigo"];
         $data["Estado"] = $_POST["Estado"];
+        $data["Impuesto"] = $_POST["Impuesto"];
         $result = ConceptoAdo::insert($data);
         if ($result == "inserted") {
             echo json_encode(array(
@@ -245,6 +247,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
         $data["Codigo"] = $_POST["Codigo"];
         $data["Estado"] = $_POST["Estado"];
         $data["Asignado"] = $_POST["Asignado"];
+        $data["Impuesto"] = $_POST["Impuesto"];
         $result = ConceptoAdo::update($data);
         if ($result == "updated") {
             echo json_encode(array(
