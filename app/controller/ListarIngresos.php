@@ -14,9 +14,10 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
         $fechaInicio = $_GET['fechaInicio'];
         $fechaFinal = $_GET['fechaFinal'];
         $comprobante = $_GET['comprobante'];
+        $estado = $_GET['estado'];
         $posicionPagina = $_GET['posicionPagina'];
         $filasPorPagina = $_GET['filasPorPagina'];
-        $result = IngresosAdo::ListarIngresos($opcion, $buscar, $fechaInicio, $fechaFinal, intval($comprobante),intval($posicionPagina), intval($filasPorPagina));
+        $result = IngresosAdo::ListarIngresos($opcion, $buscar, $fechaInicio, $fechaFinal, intval($comprobante), $estado, intval($posicionPagina), intval($filasPorPagina));
         if (is_array($result)) {
             print json_encode(array(
                 "estado" => 1,
@@ -56,8 +57,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
         $fechaFinal = $_GET['fechaFinal'];
         $posicionPagina = $_GET['posicionPagina'];
         $filasPorPagina = $_GET['filasPorPagina'];
-        $result = IngresosAdo::ListarCertificadosProyecto($opcion, $buscar, $fechaInicio, $fechaFinal,intval($posicionPagina), intval($filasPorPagina));
-        if (is_array($result)) { 
+        $result = IngresosAdo::ListarCertificadosProyecto($opcion, $buscar, $fechaInicio, $fechaFinal, intval($posicionPagina), intval($filasPorPagina));
+        if (is_array($result)) {
             print json_encode(array(
                 "estado" => 1,
                 "data" => $result[0],
@@ -76,7 +77,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
         $fechaFinal = $_GET['fechaFinal'];
         $posicionPagina = $_GET['posicionPagina'];
         $filasPorPagina = $_GET['filasPorPagina'];
-        $result = IngresosAdo::ListarCertificadosObra($opcion, $buscar, $fechaInicio, $fechaFinal,intval($posicionPagina), intval($filasPorPagina));
+        $result = IngresosAdo::ListarCertificadosObra($opcion, $buscar, $fechaInicio, $fechaFinal, intval($posicionPagina), intval($filasPorPagina));
         if (is_array($result)) {
             print json_encode(array(
                 "estado" => 1,

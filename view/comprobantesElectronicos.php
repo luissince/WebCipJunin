@@ -103,32 +103,38 @@ if (!isset($_SESSION['IdUsuario'])) {
                     <div class="row">
                         <div class="col-md-3 col-sm-12 col-xs-12">
                             <div class="form-group">
-                                <label>Fecha de inicio:</label>
+                                <label>Fecha de inicio(Entre Fechas):</label>
                                 <input type="date" class="form-control pull-right" id="fechaInicio">
                             </div>
                         </div>
                         <div class="col-md-3 col-sm-12 col-xs-12">
                             <div class="form-group">
-                                <label>Fecha de fin:</label>
+                                <label>Fecha de fin(Entre Fechas):</label>
                                 <input type="date" class="form-control pull-right" id="fechaFinal">
                             </div>
                         </div>
+
                         <div class="col-md-3 col-sm-12 col-xs-12">
                             <div class="form-group">
-                                <label>Opción</label>
-                                <div class="input-group">
-                                    <button class="btn btn-primary" id="btnEnvioMasivo"><i class="fa fa-gg-circle"></i> Envío masivo a sunat</button>
-                                </div>
+                                <label>Comprobantes(Con Fechas):</label>
+                                <select class="form-control" id="cbComprobantes">
+                                    <option value="">- Seleccione -</option>
+                                </select>
                             </div>
                         </div>
+
                         <div class="col-md-3 col-sm-12 col-xs-12">
                             <div class="form-group">
-                                <label>Generar excel</label>
-                                <div class="input-group">
-                                    <button class="btn btn-success" id="btnExcel"><i class="fa fa-file-excel-o"></i> Excel por fechas</button>
-                                </div>
+                                <label>Estado(Con Fechas):</label>
+                                <select class="form-control" id="cbEstado">
+                                    <option value="">- Seleccione -</option>
+                                    <option value="C">Cobrado</option>
+                                    <option value="A">Anulado</option>
+                                </select>
                             </div>
                         </div>
+
+
                     </div>
 
                     <div class="row">
@@ -147,10 +153,19 @@ if (!isset($_SESSION['IdUsuario'])) {
 
                         <div class="col-md-3 col-sm-12 col-xs-12">
                             <div class="form-group">
-                                <label>Comprobantes</label>
-                                <select class="form-control" id="cbComprobantes">
-                                    <option value="">- Seleccione -</option>
-                                </select>
+                                <label>Opción</label>
+                                <div class="input-group">
+                                    <button class="btn btn-primary" id="btnEnvioMasivo"><i class="fa fa-gg-circle"></i> Envío masivo a sunat</button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-md-3 col-sm-12 col-xs-12">
+                            <div class="form-group">
+                                <label>Generar excel</label>
+                                <div class="input-group">
+                                    <button class="btn btn-success" id="btnExcel"><i class="fa fa-file-excel-o"></i> Excel por fechas</button>
+                                </div>
                             </div>
                         </div>
 
@@ -303,7 +318,7 @@ if (!isset($_SESSION['IdUsuario'])) {
                     if (tools.validateDate($("#fechaInicio").val()) && tools.validateDate($("#fechaFinal").val())) {
                         if (!state) {
                             paginacion = 1;
-                            loadTableIngresos(0, "", $("#fechaInicio").val(), $("#fechaFinal").val(), 0);
+                            loadTableIngresos(0, "", $("#fechaInicio").val(), $("#fechaFinal").val(), 0, "");
                             opcion = 0;
                         }
                     }
@@ -313,7 +328,7 @@ if (!isset($_SESSION['IdUsuario'])) {
                     if (tools.validateDate($("#fechaInicio").val()) && tools.validateDate($("#fechaFinal").val())) {
                         if (!state) {
                             paginacion = 1;
-                            loadTableIngresos(0, "", $("#fechaInicio").val(), $("#fechaFinal").val(), 0);
+                            loadTableIngresos(0, "", $("#fechaInicio").val(), $("#fechaFinal").val(), 0, "");
                             opcion = 0;
                         }
                     }
@@ -324,7 +339,7 @@ if (!isset($_SESSION['IdUsuario'])) {
                         if ($("#buscar").val().trim() != '') {
                             if (!state) {
                                 paginacion = 1;
-                                loadTableIngresos(1, $("#buscar").val().trim(), "", "", 0);
+                                loadTableIngresos(1, $("#buscar").val().trim(), "", "", 0, "");
                                 opcion = 1;
                             }
                         }
@@ -346,8 +361,18 @@ if (!isset($_SESSION['IdUsuario'])) {
                     if ($("#cbComprobantes").val() != '') {
                         if (!state) {
                             paginacion = 1;
-                            loadTableIngresos(2, "", "", "", $("#cbComprobantes").val());
+                            loadTableIngresos(2, "", $("#fechaInicio").val(), $("#fechaFinal").val(), $("#cbComprobantes").val(), "");
                             opcion = 2;
+                        }
+                    }
+                });
+
+                $("#cbEstado").change(function() {
+                    if (tools.validateDate($("#fechaInicio").val()) && tools.validateDate($("#fechaFinal").val()) && $("#cbEstado").val() != '') {
+                        if (!state) {
+                            paginacion = 1;
+                            loadTableIngresos(3, "", $("#fechaInicio").val(), $("#fechaFinal").val(), 0, $("#cbEstado").val());
+                            opcion = 3;
                         }
                     }
                 });
@@ -360,13 +385,16 @@ if (!isset($_SESSION['IdUsuario'])) {
             function onEventPaginacion() {
                 switch (opcion) {
                     case 0:
-                        loadTableIngresos(0, "", $("#fechaInicio").val(), $("#fechaFinal").val(), 0);
+                        loadTableIngresos(0, "", $("#fechaInicio").val(), $("#fechaFinal").val(), 0, "");
                         break;
                     case 1:
-                        loadTableIngresos(1, $("#buscar").val().trim(), "", "", 0);
+                        loadTableIngresos(1, $("#buscar").val().trim(), "", "", 0, "");
                         break;
                     case 2:
-                        loadTableIngresos(2, "", "", "", $("#cbComprobantes").val());
+                        loadTableIngresos(2, "", $("#fechaInicio").val(), $("#fechaFinal").val(), $("#cbComprobantes").val(), "");
+                        break;
+                    case 3:
+                        loadTableIngresos(3, "", $("#fechaInicio").val(), $("#fechaFinal").val(), 0, $("#cbEstado").val());
                         break;
                 }
             }
@@ -375,13 +403,13 @@ if (!isset($_SESSION['IdUsuario'])) {
                 if (tools.validateDate($("#fechaInicio").val()) && tools.validateDate($("#fechaFinal").val())) {
                     if (!state) {
                         paginacion = 1;
-                        loadTableIngresos(0, "", $("#fechaInicio").val(), $("#fechaFinal").val(), 0);
+                        loadTableIngresos(0, "", $("#fechaInicio").val(), $("#fechaFinal").val(), 0, "");
                         opcion = 0;
                     }
                 }
             }
 
-            function loadTableIngresos(opcion, buscar, fechaInicio, fechaFinal, comprobante) {
+            function loadTableIngresos(opcion, buscar, fechaInicio, fechaFinal, comprobante, estado) {
                 $.ajax({
                     url: "../app/controller/ListarIngresos.php",
                     method: "GET",
@@ -392,6 +420,7 @@ if (!isset($_SESSION['IdUsuario'])) {
                         "fechaInicio": fechaInicio,
                         "fechaFinal": fechaFinal,
                         "comprobante": comprobante,
+                        "estado": estado,
                         "posicionPagina": ((paginacion - 1) * filasPorPagina),
                         "filasPorPagina": filasPorPagina
                     },
@@ -452,7 +481,7 @@ if (!isset($_SESSION['IdUsuario'])) {
                                         '<td>' + ingresos.fecha + '<br>' + tools.getTimeForma(ingresos.hora, true) + '</td>' +
                                         '<td>' + ingresos.serie + '-' + ingresos.numRecibo + '</td>' +
                                         '<td>' + ingresos.idDNI + '</br>' + ingresos.nombres + ' ' + ingresos.apellidos + '</td>' +
-                                        '<td>' + (ingresos.estado == "C" ? '<span class="text-green">Pagado</span>' : '<span class="text-red">Anulado</span>') + '</td>' +
+                                        '<td>' + (ingresos.estado == "C" ? '<span class="text-green">Cobrado</span>' : '<span class="text-red">Anulado</span>') + '</td>' +
                                         '<td>' + tools.formatMoney(ingresos.total) + '</td>' +
                                         '<td style="text-align: center;">' + estadosunat + '</td>' +
                                         '<td>' + observacionsunat + '</td>' +

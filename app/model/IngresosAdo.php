@@ -9,7 +9,7 @@ class IngresosAdo
     {
     }
 
-    public static function ListarIngresos($opcion, $buscar, $fechaInicio, $fechaFinal, $comprobante, $posicionPagina, $filasPorPagina)
+    public static function ListarIngresos($opcion, $buscar, $fechaInicio, $fechaFinal, $comprobante, $estado, $posicionPagina, $filasPorPagina)
     {
         try {
             $array = array();
@@ -47,7 +47,9 @@ class IngresosAdo
             OR
             $opcion = 1 AND p.Nombres LIKE CONCAT(?,'%')
             OR
-            $opcion = 2 AND i.TipoComprobante = ?
+            $opcion = 2 AND i.TipoComprobante = ? AND i.Fecha BETWEEN ? AND ?
+            OR
+            $opcion = 3 AND i.Estado = ? AND i.Fecha BETWEEN ? AND ?
             GROUP BY i.idIngreso,i.Fecha,i.Hora,i.Serie,i.NumRecibo,i.Estado,
             p.CIP,p.idDNI,p.Apellidos,p.Nombres,i.Xmlsunat,i.Xmldescripcion
             ORDER BY i.Fecha DESC,i.Hora DESC
@@ -61,8 +63,13 @@ class IngresosAdo
             $cmdConcepto->bindParam(7, $buscar, PDO::PARAM_STR);
             $cmdConcepto->bindParam(8, $buscar, PDO::PARAM_STR);
             $cmdConcepto->bindParam(9, $comprobante, PDO::PARAM_INT);
-            $cmdConcepto->bindParam(10, $posicionPagina, PDO::PARAM_INT);
-            $cmdConcepto->bindParam(11, $filasPorPagina, PDO::PARAM_INT);
+            $cmdConcepto->bindParam(10, $fechaInicio, PDO::PARAM_STR);
+            $cmdConcepto->bindParam(11, $fechaFinal, PDO::PARAM_STR);
+            $cmdConcepto->bindParam(12, $estado, PDO::PARAM_STR);
+            $cmdConcepto->bindParam(13, $fechaInicio, PDO::PARAM_STR);
+            $cmdConcepto->bindParam(14, $fechaFinal, PDO::PARAM_STR);
+            $cmdConcepto->bindParam(15, $posicionPagina, PDO::PARAM_INT);
+            $cmdConcepto->bindParam(16, $filasPorPagina, PDO::PARAM_INT);
             $cmdConcepto->execute();
             $count = 0;
 
@@ -103,7 +110,9 @@ class IngresosAdo
             OR
             $opcion = 1 AND p.Nombres LIKE CONCAT(?,'%')
             OR
-            $opcion = 2 AND i.TipoComprobante = ?");
+            $opcion = 2 AND i.TipoComprobante = ? AND i.Fecha BETWEEN ? AND ?
+            OR
+            $opcion = 3 AND i.Estado = ? AND i.Fecha BETWEEN ? AND ?");
             $comandoTotal->bindParam(1, $fechaInicio, PDO::PARAM_STR);
             $comandoTotal->bindParam(2, $fechaFinal, PDO::PARAM_STR);
             $comandoTotal->bindParam(3, $buscar, PDO::PARAM_STR);
@@ -113,6 +122,11 @@ class IngresosAdo
             $comandoTotal->bindParam(7, $buscar, PDO::PARAM_STR);
             $comandoTotal->bindParam(8, $buscar, PDO::PARAM_STR);
             $comandoTotal->bindParam(9, $comprobante, PDO::PARAM_INT);
+            $comandoTotal->bindParam(10, $fechaInicio, PDO::PARAM_STR);
+            $comandoTotal->bindParam(11, $fechaFinal, PDO::PARAM_STR);
+            $comandoTotal->bindParam(12, $estado, PDO::PARAM_STR);
+            $comandoTotal->bindParam(13, $fechaInicio, PDO::PARAM_STR);
+            $comandoTotal->bindParam(14, $fechaFinal, PDO::PARAM_STR);
             $comandoTotal->execute();
             $resultTotal =  $comandoTotal->fetchColumn();
 
