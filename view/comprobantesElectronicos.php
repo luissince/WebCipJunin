@@ -256,6 +256,12 @@ if (!isset($_SESSION['IdUsuario'])) {
                                     if (ingresos.xmlsunat !== "0") {
                                         firmaMasivaXml(ingresos.idIngreso);
                                     }
+                                } else {
+                                    if (ingresos.serie.toUpperCase().includes("B")) {
+                                        resumenDiarioMasivoXml(ingresos.idIngreso);
+                                    } else {
+                                        comunicacionBajaMasivoXml(ingresos.idIngreso);
+                                    }
                                 }
                             }
                         }
@@ -270,6 +276,12 @@ if (!isset($_SESSION['IdUsuario'])) {
                                     if (ingresos.estado == "C") {
                                         if (ingresos.xmlsunat !== "0") {
                                             firmaMasivaXml(ingresos.idIngreso);
+                                        }
+                                    } else {
+                                        if (ingresos.serie.toUpperCase().includes("B")) {
+                                            resumenDiarioMasivoXml(ingresos.idIngreso);
+                                        } else {
+                                            comunicacionBajaMasivoXml(ingresos.idIngreso);
                                         }
                                     }
                                 }
@@ -479,34 +491,32 @@ if (!isset($_SESSION['IdUsuario'])) {
             function facturarXml(idIngreso, estado) {
                 tools.ModalDialog("Ingreso", "¿Está seguro de continuar con el envío?", function(value) {
                     if (value == true) {
-                        if (estado === "C") {
-                            $.ajax({
-                                url: "../app/examples/boleta.php",
-                                method: "GET",
-                                data: {
-                                    "idIngreso": idIngreso
-                                },
-                                beforeSend: function() {
-                                    tools.ModalAlertInfo("Ingreso", "Firmando xml y enviando a la sunat.");
-                                },
-                                success: function(result) {
-                                    let object = result;
-                                    if (object.state === true) {
-                                        if (object.accept === true) {
-                                            tools.ModalAlertSuccess("Ingreso", "Resultado: Código " + object.code + " " + object.description);
-                                            onEventPaginacion();
-                                        } else {
-                                            tools.ModalAlertWarning("Ingreso", "Resultado: Código " + object.code + " " + object.description);
-                                        }
+                        $.ajax({
+                            url: "../app/examples/boleta.php",
+                            method: "GET",
+                            data: {
+                                "idIngreso": idIngreso
+                            },
+                            beforeSend: function() {
+                                tools.ModalAlertInfo("Ingreso", "Firmando xml y enviando a la sunat.");
+                            },
+                            success: function(result) {
+                                let object = result;
+                                if (object.state === true) {
+                                    if (object.accept === true) {
+                                        tools.ModalAlertSuccess("Ingreso", "Resultado: Código " + object.code + " " + object.description);
+                                        onEventPaginacion();
                                     } else {
                                         tools.ModalAlertWarning("Ingreso", "Resultado: Código " + object.code + " " + object.description);
                                     }
-                                },
-                                error: function(error) {
-                                    tools.ModalAlertError("Ingreso", "Error en el momento de firmar el xml: " + error.responseText);
+                                } else {
+                                    tools.ModalAlertWarning("Ingreso", "Resultado: Código " + object.code + " " + object.description);
                                 }
-                            });
-                        }
+                            },
+                            error: function(error) {
+                                tools.ModalAlertError("Ingreso", "Error en el momento de firmar el xml: " + error.responseText);
+                            }
+                        });
                     }
                 });
             }
@@ -582,6 +592,62 @@ if (!isset($_SESSION['IdUsuario'])) {
             function firmaMasivaXml(idIngreso) {
                 $.ajax({
                     url: "../app/examples/boleta.php",
+                    method: "GET",
+                    data: {
+                        "idIngreso": idIngreso
+                    },
+                    beforeSend: function() {
+                        tools.ModalAlertInfo("Ingreso", "Firmando xml y enviando a la sunat.");
+                    },
+                    success: function(result) {
+                        let object = result;
+                        if (object.state === true) {
+                            if (object.accept === true) {
+                                tools.ModalAlertSuccess("Ingreso", "Resultado: Código " + object.code + " " + object.description);
+                            } else {
+                                tools.ModalAlertWarning("Ingreso", "Resultado: Código " + object.code + " " + object.description);
+                            }
+                        } else {
+                            tools.ModalAlertWarning("Ingreso", "Resultado: Código " + object.code + " " + object.description);
+                        }
+                    },
+                    error: function(error) {
+                        tools.ModalAlertError("Ingreso", "Error en el momento de firmar el xml: " + error.responseText);
+                    }
+                });
+            }
+
+            function resumenDiarioMasivoXml(idIngreso) {
+                $.ajax({
+                    url: "../app/examples/resumen.php",
+                    method: "GET",
+                    data: {
+                        "idIngreso": idIngreso
+                    },
+                    beforeSend: function() {
+                        tools.ModalAlertInfo("Ingreso", "Firmando xml y enviando a la sunat.");
+                    },
+                    success: function(result) {
+                        let object = result;
+                        if (object.state === true) {
+                            if (object.accept === true) {
+                                tools.ModalAlertSuccess("Ingreso", "Resultado: Código " + object.code + " " + object.description);
+                            } else {
+                                tools.ModalAlertWarning("Ingreso", "Resultado: Código " + object.code + " " + object.description);
+                            }
+                        } else {
+                            tools.ModalAlertWarning("Ingreso", "Resultado: Código " + object.code + " " + object.description);
+                        }
+                    },
+                    error: function(error) {
+                        tools.ModalAlertError("Ingreso", "Error en el momento de firmar el xml: " + error.responseText);
+                    }
+                });
+            }
+
+            function comunicacionBajaMasivoXml(idIngreso) {
+                $.ajax({
+                    url: "../app/examples/comunicacionbaja.php",
                     method: "GET",
                     data: {
                         "idIngreso": idIngreso

@@ -514,7 +514,7 @@ if (!isset($_SESSION['IdUsuario'])) {
 
             });
 
-            function loadComprobantes() {               
+            function loadComprobantes() {
                 $.ajax({
                     url: "../app/controller/ComprobanteController.php",
                     method: "GET",
@@ -533,7 +533,7 @@ if (!isset($_SESSION['IdUsuario'])) {
                                 $("#cbComprobante").append('<option value="' + value.IdTipoComprobante + '">' + value.Nombre + '</option>')
                             }
                             for (let value of comprobantes) {
-                                if(value.Predeterminado == "1"){
+                                if (value.Predeterminado == "1") {
                                     $("#cbComprobante").val(value.IdTipoComprobante);
                                     break;
                                 }
@@ -872,18 +872,19 @@ if (!isset($_SESSION['IdUsuario'])) {
                 peritajeEstado = {};
                 $("#btnCertificado").attr('aria-expanded', 'false');
                 $("#tbHistorial").empty();
-                UsarRuc = false
+                UsarRuc = false;              
                 for (let i = 0; i < comprobantes.length; i++) {
-                    if (comprobantes[i].IdTipoComprobante == $("#cbComprobante").val()) {
-                        if (comprobantes[i].Predeterminado == "1") {
-                            $("#cbComprobante").val(comprobantes[i].IdTipoComprobante)
-                        }
-                        if (comprobantes[i].UsarRuc == "1") {
-                            UsarRuc = true;
-                        }
-                        break;
+                    if (comprobantes[i].Predeterminado == "1") {
+                        $("#cbComprobante").val(comprobantes[i].IdTipoComprobante)
                     }
+                    if (comprobantes[i].UsarRuc == "1") {
+                        UsarRuc = true;
+                    } else {
+                        UsarRuc = false;
+                    }
+                    break;
                 }
+             
 
             }
 
