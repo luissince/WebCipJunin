@@ -1227,310 +1227,316 @@ if (!isset($_SESSION['IdUsuario'])) {
                 <section class="content">
                     <!-- *******************************************************-->
                     <!-- actualizacion del ingeniero-->
-                    <div class="box box-default">
-                        <div class="box-body">
+                    <div class="modal-overlay d-none" id="divLoad">
+                        <div class="modal-overlay-content">
+                            <div>
+                                <i class="fa fa-refresh fa-spin"></i>
+                            </div>
+                            <div>
+                                <label id="lblOverlayModal">Cargando información...</label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-lg-4 col-md-3 col-sm-12 col-xs-12 text-center">
                             <div class="row">
-                                <div class="col-lg-4 col-md-3 col-sm-12 col-xs-12 text-center">
-                                    <div class="row">
-                                        <div class="form-group">
-                                            <img class="img-responsive img-thumbnail" style="width: 160px;height:150px;" id="lblImagen">
-                                        </div>
+                                <div class="form-group">
+                                    <img class="img-responsive img-thumbnail" style="width: 160px;height:150px;" id="lblImagen">
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="form-group">
+                                    <label for="SubirImagen" class="btn btn-warning">Subir imagen</label>
+                                    <input type="file" id="SubirImagen" style="display:none" accept="image/png, image/jpeg, image/gif, image/svg">
+                                </div>
+                                <div class="form-group">
+                                    <label class="btn btn-dark">Quitar imagen</label>
+                                </div>
+                                <div>
+                                    <div class="form-group">
+                                        <button class="btn btn-success" id="guardarImagen">Guardar</button>
                                     </div>
-                                    <div class="row">
-                                        <div class="form-group">
-                                            <label for="SubirImagen" class="btn btn-warning">Subir imagen</label>
-                                            <input type="file" id="SubirImagen" style="display:none" accept="image/png, image/jpeg, image/gif, image/svg">
-                                        </div>
-                                        <div class="form-group">
-                                            <label class="btn btn-dark">Quitar imagen</label>
-                                        </div>
-                                        <div>
-                                            <div class="form-group">
-                                                <button class="btn btn-success" id="guardarImagen">Guardar</button>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-lg-8 col-md-9 col-sm-12 col-xs-12">
+                            <div class="row">
+                                <div class="col-md-12 col-sm-12 col-xs-12">
+                                    <label for="dni">DNI: <i class="fa fa-fw fa-asterisk text-danger"></i></label>
+                                    <div class="form-group">
+                                        <div class="input-group">
+                                            <div class="input-group-btn">
+                                                <button type="button" id="btnReniec" class="btn btn-default btn-flat"><img src="./images/reniec.png" width="16" height="16" /></button>
                                             </div>
+                                            <input id="dni" type="text" name="Dni" class="form-control" placeholder="DNI" required="" minlength="8" maxlength="8" value="<?php echo  $_GET["idPersona"]; ?>">
                                         </div>
                                     </div>
                                 </div>
-                                <div class="col-lg-8 col-md-9 col-sm-12 col-xs-12">
-                                    <div class="row">
-                                        <div class="col-md-12 col-sm-12 col-xs-12">
-                                            <label for="dni">DNI: <i class="fa fa-fw fa-asterisk text-danger"></i></label>
-                                            <div class="form-group">
-                                                <div class="input-group">
-                                                    <div class="input-group-btn">
-                                                        <button type="button" id="btnReniec" class="btn btn-default btn-flat"><img src="./images/reniec.png" width="16" height="16" /></button>
-                                                    </div>
-                                                    <input id="dni" type="text" name="Dni" class="form-control" placeholder="DNI" required="" minlength="8" maxlength="8" value="<?php echo  $_GET["idPersona"]; ?>">
-                                                </div>
-                                            </div>
-                                        </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
+                                    <div class="form-group">
+                                        <label for="Nombres">Nombres: <i class="fa fa-fw fa-asterisk text-danger"></i></label>
+                                        <input id="Nombres" type="text" name="Nombres" class="form-control" placeholder="Nombres" required="">
                                     </div>
-                                    <div class="row">
-                                        <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
-                                            <div class="form-group">
-                                                <label for="Nombres">Nombres: <i class="fa fa-fw fa-asterisk text-danger"></i></label>
-                                                <input id="Nombres" type="text" name="Nombres" class="form-control" placeholder="Nombres" required="">
-                                            </div>
-                                        </div>
-                                        <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
-                                            <div class="form-group">
-                                                <label for="Apellidos">Apellidos: <i class="fa fa-fw fa-asterisk text-danger"></i></label>
-                                                <input id="Apellidos" type="text" name="Apellidos" class="form-control" placeholder="Apellidos" required="">
-                                            </div>
-                                        </div>
+                                </div>
+                                <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
+                                    <div class="form-group">
+                                        <label for="Apellidos">Apellidos: <i class="fa fa-fw fa-asterisk text-danger"></i></label>
+                                        <input id="Apellidos" type="text" name="Apellidos" class="form-control" placeholder="Apellidos" required="">
                                     </div>
+                                </div>
+                            </div>
 
-                                    <div class="row">
-                                        <div class="col-lg-4 col-md-4 col-sm-12 col-xs-12">
-                                            <div class="form-group">
-                                                <label for="Genero">Genero: <i class="fa fa-fw fa-asterisk text-danger"></i></label>
-                                                <select id="Genero" class="form-control">
-                                                    <option value="M">Maculino</option>
-                                                    <option value="F">Femenino</option>
-                                                </select>
-                                            </div>
-                                        </div>
-                                        <div class="col-lg-4 col-md-4 col-sm-12 col-xs-12">
-                                            <div class="form-group">
-                                                <label for="Nacimiento">Nacimiento: <i class="fa fa-fw fa-asterisk text-danger"></i></label>
-                                                <input id="Nacimiento" type="date" name="Nacimiento" class="form-control" required="">
-                                            </div>
-                                        </div>
-                                        <div class="col-lg-4 col-md-4 col-sm-12 col-xs-12">
-                                            <div class="form-group">
-                                                <label for="Estado_civil">Estado civil: <i class="fa fa-fw fa-asterisk text-danger"></i></label>
-                                                <select id="Estado_civil" class="form-control">
-                                                    <option value="S">Soltero/a</option>
-                                                    <option value="C">Casado/a</option>
-                                                    <option value="V">Viudo/a</option>
-                                                    <option value="D">Divorciado/a</option>
-                                                </select>
-                                            </div>
-                                        </div>
+                            <div class="row">
+                                <div class="col-lg-4 col-md-4 col-sm-12 col-xs-12">
+                                    <div class="form-group">
+                                        <label for="Genero">Genero: <i class="fa fa-fw fa-asterisk text-danger"></i></label>
+                                        <select id="Genero" class="form-control">
+                                            <option value="M">Maculino</option>
+                                            <option value="F">Femenino</option>
+                                        </select>
                                     </div>
-
-                                    <div class="row">
-                                        <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
-                                            <div class="form-group">
-                                                <label for="Ruc">Dirección Principal:</label>
-                                                <input id="Ruc" type="text" name="Ruc" class="form-control" placeholder="Dirección de viviendan principal">
-                                            </div>
-                                        </div>
-                                        <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
-                                            <div class="form-group">
-                                                <label for="Razon_social">Télefono/Celular Prinpal:</label>
-                                                <input id="Razon_social" type="text" name="Razon_social" class="form-control" placeholder="N° de teléfono o celular principal">
-                                            </div>
-                                        </div>
+                                </div>
+                                <div class="col-lg-4 col-md-4 col-sm-12 col-xs-12">
+                                    <div class="form-group">
+                                        <label for="Nacimiento">Nacimiento: <i class="fa fa-fw fa-asterisk text-danger"></i></label>
+                                        <input id="Nacimiento" type="date" name="Nacimiento" class="form-control" required="">
                                     </div>
-
-                                    <div class="row">
-                                        <div class="col-lg-5 col-md-5 col-sm-5 col-xs-5">
-                                            <div class="form-group">
-                                                <label for="Codigo">Codigo CIP: <i class="fa fa-fw fa-asterisk text-danger"></i></label>
-                                                <input id="Codigo" type="number" name="Codigo" class="form-control" placeholder="Codigo" required="">
-                                            </div>
-                                        </div>
-                                        <div class="col-lg-2 col-md-2 col-sm-2 col-xs-2">
-                                            <div class="form-group">
-                                                <label for="Tramite">Nuevo:</label>
-                                                <div class="checkbox">
-                                                    <label>
-                                                        <input type="checkbox" id="Tramite"> Tramite
-                                                    </label>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="col-lg-5 col-md-5 col-sm-12 col-xs-12">
-                                            <div class="form-group">
-                                                <label for="Condicion">Condición: <i class="fa fa-fw fa-asterisk text-danger"></i></label>
-                                                <select id="Condicion" class="form-control">
-                                                    <option value="O">ORDINARIO</option>
-                                                    <option value="T">TRANSEUNTE</option>
-                                                    <option value="F">FALLECIDO</option>
-                                                    <option value="R">RETIRADO</option>
-                                                    <option value="V">VITALICIO</option>
-                                                </select>
-                                            </div>
-                                        </div>
+                                </div>
+                                <div class="col-lg-4 col-md-4 col-sm-12 col-xs-12">
+                                    <div class="form-group">
+                                        <label for="Estado_civil">Estado civil: <i class="fa fa-fw fa-asterisk text-danger"></i></label>
+                                        <select id="Estado_civil" class="form-control">
+                                            <option value="S">Soltero/a</option>
+                                            <option value="C">Casado/a</option>
+                                            <option value="V">Viudo/a</option>
+                                            <option value="D">Divorciado/a</option>
+                                        </select>
                                     </div>
                                 </div>
                             </div>
 
                             <div class="row">
                                 <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
-                                    <p class="text-left text-danger">Todos los campos marcados con <i class="fa fa-fw fa-asterisk text-danger"></i> son obligatorios</p>
+                                    <div class="form-group">
+                                        <label for="Ruc">Dirección Principal:</label>
+                                        <input id="Ruc" type="text" name="Ruc" class="form-control" placeholder="Dirección de viviendan principal">
+                                    </div>
                                 </div>
-                                <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12 text-right">
-                                    <button type="button" class="btn btn-danger" name="btnAceptar" id="btnaceptar">
-                                        <i class="fa fa-check"></i> Editar</button>
-                                    <button type="button" class="btn btn-primary" data-dismiss="modal" name="btncancelar" id="btncancelar">
-                                        <i class="fa fa-remove"></i> Cancelar</button>
+                                <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
+                                    <div class="form-group">
+                                        <label for="Razon_social">Télefono/Celular Prinpal:</label>
+                                        <input id="Razon_social" type="text" name="Razon_social" class="form-control" placeholder="N° de teléfono o celular principal">
+                                    </div>
                                 </div>
                             </div>
 
-                            <div class="row" style="margin-top: 15px;">
-                                <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-                                    <!--FORMULARIOS INFERIORES-->
-                                    <div class="nav-tabs-custom">
-                                        <ul class="nav nav-tabs">
-                                            <li class="active"><a href="#tab_1" data-toggle="tab" aria-expanded="true">Colegiatura</a></li>
-                                            <li class=""><a href="#tab_2" data-toggle="tab" aria-expanded="false">Domicilios</a></li>
-                                            <li class=""><a href="#tab_3" data-toggle="tab" aria-expanded="false">Telefonos</a></li>
-                                            <li class=""><a href="#tab_4" data-toggle="tab" aria-expanded="false">Conyuge</a></li>
-                                            <li class=""><a href="#tab_5" data-toggle="tab" aria-expanded="false">Experiencia</a></li>
-                                            <li class=""><a href="#tab_6" data-toggle="tab" aria-expanded="false">Grados y Estudios</a></li>
-                                            <li class=""><a href="#tab_7" data-toggle="tab" aria-expanded="false">Correo y Web</a></li>
-                                            <li class="pull-right"><button class="btn btn-success btn-sm" id="btnNuevo"><i class="fa fa-plus"></i> Nuevo</button></li>
-                                        </ul>
-                                        <div class="tab-content">
-                                            <!-- /.tab-pane -->
-                                            <div class="tab-pane active" id="tab_1">
-                                                <div class="table-responsive">
-                                                    <table class="table table-striped table-hover" style="border-width: 1px; border-style: dashed; border-color: #E31E25;">
-                                                        <thead style="background-color: #FDB2B1; color: #B72928;">
-                                                            <tr>
-                                                                <th>#</th>
-                                                                <th>Sede</th>
-                                                                <th>Capitulo</th>
-                                                                <th>Especialidad</th>
-                                                                <th>F. Colegiado</th>
-                                                                <th>Universidad de egreso</th>
-                                                                <th>F. Egreso</th>
-                                                                <th>Universidad de titulo</th>
-                                                                <th>F. Titulacion</th>
-                                                                <th>Resolución</th>
-                                                                <th colspan="2" style="text-align: center;">Opciones</th>
-                                                            </tr>
-                                                        </thead>
-                                                        <tbody id="tbColegiaturas">
-
-                                                        </tbody>
-                                                    </table>
-                                                </div>
-                                            </div>
-                                            <!-- /.tab-pane -->
-                                            <div class="tab-pane" id="tab_2">
-                                                <div class="table-responsive">
-                                                    <table class="table table-striped table-hover table-sm" style="border-width: 1px; border-style: dashed; border-color: #E31E25;">
-                                                        <thead style="background-color: #FDB2B1; color: #B72928;">
-                                                            <tr>
-                                                                <th>#</th>
-                                                                <th>Tipo</th>
-                                                                <th>Direccion</th>
-                                                                <th>Ubigeo</th>
-                                                                <th style="text-align: center;">Opciones</th>
-                                                            </tr>
-                                                        </thead>
-                                                        <tbody id="tbDomicilio">
-
-                                                        </tbody>
-                                                    </table>
-                                                </div>
-                                            </div>
-                                            <!-- /.tab-pane -->
-                                            <div class="tab-pane" id="tab_3">
-                                                <div class="table-responsive">
-                                                    <table class="table table-striped table-hover table-sm" style="border-width: 1px; border-style: dashed; border-color: #E31E25;">
-                                                        <thead style="background-color: #FDB2B1; color: #B72928;">
-                                                            <tr>
-                                                                <th>#</th>
-                                                                <th>Tipo</th>
-                                                                <th>Numero</th>
-                                                                <th style="text-align: center;">Opciones</th>
-                                                            </tr>
-                                                        </thead>
-                                                        <tbody id="tbTelefono">
-
-                                                        </tbody>
-                                                    </table>
-                                                </div>
-                                            </div>
-                                            <!-- /.tab-pane -->
-                                            <div class="tab-pane" id="tab_4">
-                                                <div class="table-responsive">
-                                                    <table class="table table-striped table-hover table-sm" style="border-width: 1px; border-style: dashed; border-color: #E31E25;">
-                                                        <thead style="background-color: #FDB2B1; color: #B72928;">
-                                                            <tr>
-                                                                <th>#</th>
-                                                                <th>Nombre Completo</th>
-                                                                <th>Hijos</th>
-                                                                <th style="text-align: center;">Opciones</th>
-                                                            </tr>
-                                                        </thead>
-                                                        <tbody id="tbConyuge">
-
-                                                        </tbody>
-                                                    </table>
-                                                </div>
-                                            </div>
-                                            <!-- /.tab-pane -->
-                                            <div class="tab-pane" id="tab_5">
-                                                <div class="table-responsive">
-                                                    <table class="table table-striped table-hover table-sm" style="border-width: 1px; border-style: dashed; border-color: #E31E25;">
-                                                        <thead style="background-color: #FDB2B1; color: #B72928;">
-                                                            <tr>
-                                                                <th>#</th>
-                                                                <th>Entidad</th>
-                                                                <th>Experiencia Profesional</th>
-                                                                <th>Fecha Inicio</th>
-                                                                <th>Fecha Fin</th>
-                                                                <th style="text-align: center;">Opciones</th>
-                                                            </tr>
-                                                        </thead>
-                                                        <tbody id="tbExperiencia">
-
-                                                        </tbody>
-                                                    </table>
-                                                </div>
-                                            </div>
-                                            <!-- /.tab-pane -->
-                                            <div class="tab-pane" id="tab_6">
-                                                <div class="table-responsive">
-                                                    <table class="table table-striped table-hover table-sm" style="border-width: 1px; border-style: dashed; border-color: #E31E25;">
-                                                        <thead style="background-color: #FDB2B1; color: #B72928;">
-                                                            <tr>
-                                                                <th>#</th>
-                                                                <th>Grado</th>
-                                                                <th>Materia</th>
-                                                                <th>Universidad</th>
-                                                                <th>Fecha</th>
-                                                                <th style="text-align: center;">Opciones</th>
-                                                            </tr>
-                                                        </thead>
-                                                        <tbody id="tbGradosyExperiencia">
-
-                                                        </tbody>
-                                                    </table>
-                                                </div>
-                                            </div>
-                                            <!-- /.tab-pane -->
-                                            <div class="tab-pane" id="tab_7">
-                                                <div class="table-responsive">
-                                                    <table class="table table-striped table-hover table-sm" style="border-width: 1px; border-style: dashed; border-color: #E31E25;">
-                                                        <thead style="background-color: #FDB2B1; color: #B72928;">
-                                                            <tr>
-                                                                <th>#</th>
-                                                                <th>Tipo</th>
-                                                                <th>Direccion</th>
-                                                                <th style="text-align: center;">Opciones</th>
-                                                            </tr>
-                                                        </thead>
-                                                        <tbody id="tbGradosyWeb">
-
-                                                        </tbody>
-                                                    </table>
-                                                </div>
-                                            </div>
+                            <div class="row">
+                                <div class="col-lg-5 col-md-5 col-sm-5 col-xs-5">
+                                    <div class="form-group">
+                                        <label for="Codigo">Codigo CIP: <i class="fa fa-fw fa-asterisk text-danger"></i></label>
+                                        <input id="Codigo" type="number" name="Codigo" class="form-control" placeholder="Codigo" required="">
+                                    </div>
+                                </div>
+                                <div class="col-lg-2 col-md-2 col-sm-2 col-xs-2">
+                                    <div class="form-group">
+                                        <label for="Tramite">Nuevo:</label>
+                                        <div class="checkbox">
+                                            <label>
+                                                <input type="checkbox" id="Tramite"> Tramite
+                                            </label>
                                         </div>
-                                        <!-- /.tab-content -->
+                                    </div>
+                                </div>
+                                <div class="col-lg-5 col-md-5 col-sm-12 col-xs-12">
+                                    <div class="form-group">
+                                        <label for="Condicion">Condición: <i class="fa fa-fw fa-asterisk text-danger"></i></label>
+                                        <select id="Condicion" class="form-control">
+                                            <option value="O">ORDINARIO</option>
+                                            <option value="T">TRANSEUNTE</option>
+                                            <option value="F">FALLECIDO</option>
+                                            <option value="R">RETIRADO</option>
+                                            <option value="V">VITALICIO</option>
+                                        </select>
                                     </div>
                                 </div>
                             </div>
                         </div>
-                        <div id="divLoad">
+                    </div>
+
+                    <div class="row">
+                        <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
+                            <p class="text-left text-danger">Todos los campos marcados con <i class="fa fa-fw fa-asterisk text-danger"></i> son obligatorios</p>
+                        </div>
+                        <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12 text-right">
+                            <button type="button" class="btn btn-danger" name="btnAceptar" id="btnaceptar">
+                                <i class="fa fa-check"></i> Editar</button>
+                            <button type="button" class="btn btn-primary" data-dismiss="modal" name="btncancelar" id="btncancelar">
+                                <i class="fa fa-remove"></i> Cancelar</button>
                         </div>
                     </div>
+
+                    <div class="row" style="margin-top: 15px;">
+                        <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                            <!--FORMULARIOS INFERIORES-->
+                            <div class="nav-tabs-custom">
+                                <ul class="nav nav-tabs">
+                                    <li class="active"><a href="#tab_1" data-toggle="tab" aria-expanded="true">Colegiatura</a></li>
+                                    <li class=""><a href="#tab_2" data-toggle="tab" aria-expanded="false">Domicilios</a></li>
+                                    <li class=""><a href="#tab_3" data-toggle="tab" aria-expanded="false">Telefonos</a></li>
+                                    <li class=""><a href="#tab_4" data-toggle="tab" aria-expanded="false">Conyuge</a></li>
+                                    <li class=""><a href="#tab_5" data-toggle="tab" aria-expanded="false">Experiencia</a></li>
+                                    <li class=""><a href="#tab_6" data-toggle="tab" aria-expanded="false">Grados y Estudios</a></li>
+                                    <li class=""><a href="#tab_7" data-toggle="tab" aria-expanded="false">Correo y Web</a></li>
+                                    <li class="pull-right"><button class="btn btn-success btn-sm" id="btnNuevo"><i class="fa fa-plus"></i> Nuevo</button></li>
+                                </ul>
+                                <div class="tab-content">
+                                    <!-- /.tab-pane -->
+                                    <div class="tab-pane active" id="tab_1">
+                                        <div class="table-responsive">
+                                            <table class="table table-striped table-hover" style="border-width: 1px; border-style: dashed; border-color: #E31E25;">
+                                                <thead style="background-color: #FDB2B1; color: #B72928;">
+                                                    <tr>
+                                                        <th>#</th>
+                                                        <th>Sede</th>
+                                                        <th>Capitulo</th>
+                                                        <th>Especialidad</th>
+                                                        <th>F. Colegiado</th>
+                                                        <th>Universidad de egreso</th>
+                                                        <th>F. Egreso</th>
+                                                        <th>Universidad de titulo</th>
+                                                        <th>F. Titulacion</th>
+                                                        <th>Resolución</th>
+                                                        <th colspan="2" style="text-align: center;">Opciones</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody id="tbColegiaturas">
+
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    </div>
+                                    <!-- /.tab-pane -->
+                                    <div class="tab-pane" id="tab_2">
+                                        <div class="table-responsive">
+                                            <table class="table table-striped table-hover table-sm" style="border-width: 1px; border-style: dashed; border-color: #E31E25;">
+                                                <thead style="background-color: #FDB2B1; color: #B72928;">
+                                                    <tr>
+                                                        <th>#</th>
+                                                        <th>Tipo</th>
+                                                        <th>Direccion</th>
+                                                        <th>Ubigeo</th>
+                                                        <th style="text-align: center;">Opciones</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody id="tbDomicilio">
+
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    </div>
+                                    <!-- /.tab-pane -->
+                                    <div class="tab-pane" id="tab_3">
+                                        <div class="table-responsive">
+                                            <table class="table table-striped table-hover table-sm" style="border-width: 1px; border-style: dashed; border-color: #E31E25;">
+                                                <thead style="background-color: #FDB2B1; color: #B72928;">
+                                                    <tr>
+                                                        <th>#</th>
+                                                        <th>Tipo</th>
+                                                        <th>Numero</th>
+                                                        <th style="text-align: center;">Opciones</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody id="tbTelefono">
+
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    </div>
+                                    <!-- /.tab-pane -->
+                                    <div class="tab-pane" id="tab_4">
+                                        <div class="table-responsive">
+                                            <table class="table table-striped table-hover table-sm" style="border-width: 1px; border-style: dashed; border-color: #E31E25;">
+                                                <thead style="background-color: #FDB2B1; color: #B72928;">
+                                                    <tr>
+                                                        <th>#</th>
+                                                        <th>Nombre Completo</th>
+                                                        <th>Hijos</th>
+                                                        <th style="text-align: center;">Opciones</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody id="tbConyuge">
+
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    </div>
+                                    <!-- /.tab-pane -->
+                                    <div class="tab-pane" id="tab_5">
+                                        <div class="table-responsive">
+                                            <table class="table table-striped table-hover table-sm" style="border-width: 1px; border-style: dashed; border-color: #E31E25;">
+                                                <thead style="background-color: #FDB2B1; color: #B72928;">
+                                                    <tr>
+                                                        <th>#</th>
+                                                        <th>Entidad</th>
+                                                        <th>Experiencia Profesional</th>
+                                                        <th>Fecha Inicio</th>
+                                                        <th>Fecha Fin</th>
+                                                        <th style="text-align: center;">Opciones</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody id="tbExperiencia">
+
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    </div>
+                                    <!-- /.tab-pane -->
+                                    <div class="tab-pane" id="tab_6">
+                                        <div class="table-responsive">
+                                            <table class="table table-striped table-hover table-sm" style="border-width: 1px; border-style: dashed; border-color: #E31E25;">
+                                                <thead style="background-color: #FDB2B1; color: #B72928;">
+                                                    <tr>
+                                                        <th>#</th>
+                                                        <th>Grado</th>
+                                                        <th>Materia</th>
+                                                        <th>Universidad</th>
+                                                        <th>Fecha</th>
+                                                        <th style="text-align: center;">Opciones</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody id="tbGradosyExperiencia">
+
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    </div>
+                                    <!-- /.tab-pane -->
+                                    <div class="tab-pane" id="tab_7">
+                                        <div class="table-responsive">
+                                            <table class="table table-striped table-hover table-sm" style="border-width: 1px; border-style: dashed; border-color: #E31E25;">
+                                                <thead style="background-color: #FDB2B1; color: #B72928;">
+                                                    <tr>
+                                                        <th>#</th>
+                                                        <th>Tipo</th>
+                                                        <th>Direccion</th>
+                                                        <th style="text-align: center;">Opciones</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody id="tbGradosyWeb">
+
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    </div>
+                                </div>
+                                <!-- /.tab-content -->
+                            </div>
+                        </div>
+                    </div>
+
                 </section>
             </div>
             <!-- Fin de la actualizacion del ingeniero-->
@@ -1916,21 +1922,18 @@ if (!isset($_SESSION['IdUsuario'])) {
             function loadReniecApi(numero) {
                 $.ajax({
                     url: "https://dniruc.apisperu.com/api/v1/dni/" + numero + "?token=eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJlbWFpbCI6ImFsZXhhbmRlcl9keF8xMEBob3RtYWlsLmNvbSJ9.6TLycBwcRyW1d-f_hhCoWK1yOWG_HJvXo8b-EoS5MhE",
-                    type: "get",
+                    type: "GET",
                     data: {},
                     beforeSend: function() {
-                        $("#divLoad").addClass("overlay");
-                        $("#divLoad").append('<i class="fa fa-refresh fa-spin"></i>');
+                        $("#divLoad").removeClass("d-none");
                     },
                     success: function(result) {
-                        $("#divLoad").removeClass("overlay");
-                        $("#divLoad").empty();
+                        $("#divLoad").addClass("d-none");                    
                         $("#Nombres").val(result.nombres);
                         $("#Apellidos").val(result.apellidoPaterno + " " + result.apellidoMaterno);
                     },
                     error: function(error) {
-                        $("#divLoad").removeClass("overlay");
-                        $("#divLoad").empty();
+                        $("#divLoad").addClass("d-none");
                     }
                 });
             }

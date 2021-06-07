@@ -110,23 +110,25 @@ if (!isset($_SESSION['IdUsuario'])) {
                 <section class="content">
 
                     <div class="row">
-                        <div class="col-lg-2 col-md-2 col-sm-12 col-xs-12">
+                        <div class="col-lg-2 col-md-3 col-sm-12 col-xs-12">
+                            <label>Nuevo Usuario.</label>
                             <div class="form-group">
                                 <button type="button" class="btn btn-success" id="btnNuevo">
-                                    <i class="fa fa-plus"></i> Nuevo usuario
+                                    <i class="fa fa-plus"></i> Agregar Usuario
                                 </button>
                             </div>
                         </div>
 
-                        <div class="col-lg-2 col-md-2 col-sm-12 col-xs-12">
+                        <div class="col-lg-2 col-md-3 col-sm-12 col-xs-12">
+                            <label>Opción.</label>
                             <div class="form-group">
-                                <button class="btn btn-link" id="btnactualizar">
-                                    <i class="fa fa-refresh"></i> Actualizar..
-                                </button>
+                                <button class="btn btn-default" id="btnactualizar">
+                                    <i class="fa fa-refresh"></i> Recargar </button>
                             </div>
                         </div>
 
-                        <div class="col-md-6 col-sm-12 col-xs-12">
+                        <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
+                            <label>Filtrar por nombres, apellidos y rol.</label>
                             <div class="form-group">
                                 <div class="input-group">
                                     <input type="search" id="buscar" class="form-control" placeholder="Buscar por Nombre o Apellido" aria-describedby="search" value="">
@@ -144,13 +146,16 @@ if (!isset($_SESSION['IdUsuario'])) {
                             <div class="table-responsive">
                                 <table class="table table-striped" style="border-width: 1px;border-style: dashed;border-color: #E31E25;">
                                     <thead style="background-color: #FDB2B1;color: #B72928;">
-                                        <th style="text-align: center;">#</th>
-                                        <th>Nombre</th>
-                                        <th>Apellido</th>
-                                        <th>Usuario</th>
-                                        <th>Rol</th>
-                                        <th>Estado</th>
-                                        <th colspan="2" style="padding-left: 10%;">Opciones</th>
+                                        <tr>
+                                            <th wid class="text-center">#</th>
+                                            <th>Nombre</th>
+                                            <th>Apellido</th>
+                                            <th>Usuario</th>
+                                            <th>Rol</th>
+                                            <th>Estado</th>
+                                            <th class="text-center">Editar</th>
+                                            <th class="text-center">Eliminar</th>
+                                        </tr>
                                     </thead>
                                     <tbody id="tbTable">
 
@@ -298,7 +303,7 @@ if (!isset($_SESSION['IdUsuario'])) {
                     beforeSend: function() {
                         tbTable.empty();
                         tbTable.append(
-                            '<tr class="text-center"><td colspan="6"><img src="./images/spiner.gif"/><p>Cargando información.</p></td></tr>'
+                            '<tr class="text-center"><td colspan="8"><img src="./images/spiner.gif"/><p>Cargando información.</p></td></tr>'
                         );
                         state = true;
                     },
@@ -308,26 +313,24 @@ if (!isset($_SESSION['IdUsuario'])) {
                             for (let usuario of result.usuarios) {
 
                                 let btnUpdate =
-                                    '<button class="btn btn-warning btn-sm" onclick="updateUsuario(\'' + usuario.idUsuario + '\',\'' +
+                                    '<button class="btn btn-warning btn-xs" onclick="updateUsuario(\'' + usuario.idUsuario + '\',\'' +
                                     usuario.Nombres + '\',\'' + usuario.Apellidos + '\',\'' + usuario.Usuario + '\',\'' + usuario.Clave + '\')">' +
-                                    '<i class="fa fa-wrench"></i> Editar' +
+                                    '<i class="fa fa-wrench" style="font-size:25px;"></i> ' +
                                     '</button>';
                                 let btnDelete =
-                                    '<button class="btn btn-danger btn-sm" onclick="deleteUser(\'' + usuario.idUsuario + '\')">' +
-                                    '<i class="fa fa-trash"></i> Eliminar' +
+                                    '<button class="btn btn-danger btn-xs" onclick="deleteUser(\'' + usuario.idUsuario + '\')">' +
+                                    '<i class="fa fa-trash" style="font-size:25px;"></i> ' +
                                     '</button>';
 
                                 tbTable.append('<tr>' +
-                                    '<td style="text-align: center;color: #2270D1;">' +
-                                    '' + usuario.Id + '' +
-                                    '</td>' +
-                                    '<td>' + usuario.Nombres + '</td>' +
-                                    '<td>' + usuario.Apellidos + '</td>' +
-                                    '<td>' + usuario.Usuario + '</td>' +
-                                    '<td>' + usuario.Rol + '</td>' +
-                                    '<td>' + (usuario.Estado == "1" ? '<label class="text-success">Activo<label>' : '<label class="text-danger">Inactivo</label>') + '</td>' +
-                                    '<td>' + btnUpdate + '</td>' +
-                                    '<td>' + btnDelete + '</td>' +
+                                    '<td class="text-center text-primary">' + usuario.Id + '</td>' +
+                                    '<td class="text-left">' + usuario.Nombres + '</td>' +
+                                    '<td class="text-left">' + usuario.Apellidos + '</td>' +
+                                    '<td class="text-left">' + usuario.Usuario + '</td>' +
+                                    '<td class="text-left">' + usuario.Rol + '</td>' +
+                                    '<td class="text-left">' + (usuario.Estado == "1" ? '<label class="text-success">Activo<label>' : '<label class="text-danger">Inactivo</label>') + '</td>' +
+                                    '<td class="text-center">' + btnUpdate + '</td>' +
+                                    '<td class="text-center">' + btnDelete + '</td>' +
                                     '</tr>');
                             }
                             totalPaginacion = parseInt(Math.ceil((parseFloat(result.total) / parseInt(
@@ -338,7 +341,7 @@ if (!isset($_SESSION['IdUsuario'])) {
                         } else {
                             tbTable.empty();
                             tbTable.append(
-                                '<tr class="text-center"><td colspan="6"><p>No se pudo cargar la información.</p></td></tr>'
+                                '<tr class="text-center"><td colspan="8"><p>' + result.message + '</p></td></tr>'
                             );
                             $("#lblPaginaActual").html(0);
                             $("#lblPaginaSiguiente").html(0);
@@ -348,7 +351,7 @@ if (!isset($_SESSION['IdUsuario'])) {
                     error: function(error) {
                         tbTable.empty();
                         tbTable.append(
-                            '<tr class="text-center"><td colspan="6"><p>Se produjo un error, intente nuevamente.</p></td></tr>'
+                            '<tr class="text-center"><td colspan="8"><p>' + error.responseText + '</p></td></tr>'
                         );
                         $("#lblPaginaActual").html(0);
                         $("#lblPaginaSiguiente").html(0);

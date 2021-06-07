@@ -198,29 +198,30 @@ if (!isset($_SESSION['IdUsuario'])) {
                     <h3 class="no-margin"> Conceptos de cobros <small> Lista </small> </h3>
                 </section>
 
-
-
                 <section class="content">
 
                     <div class="row">
                         <div class="col-md-2 col-sm-12 col-xs-12">
+                            <label>Nuevo Concepto.</label>
                             <div class="form-group">
                                 <!-- <button type="button" class="btn btn-danger" data-toggle="modal" data-target="#confirmar"> -->
                                 <button type="button" class="btn btn-success" id="btnNuevo">
-                                    <i class="fa fa-plus"></i> Nuevo Concepto
+                                    <i class="fa fa-plus"></i> Agregar Concepto
                                 </button>
                             </div>
                         </div>
 
                         <div class="col-md-2 col-sm-12 col-xs-12">
+                            <label>Opción.</label>
                             <div class="form-group">
-                                <button type="button" class="btn btn-link" id="btnactualizar">
-                                    <i class="fa fa-refresh"></i> Actualizar..
+                                <button type="button" class="btn btn-default" id="btnactualizar">
+                                    <i class="fa fa-refresh"></i> Recargar
                                 </button>
                             </div>
                         </div>
 
                         <div class="col-md-3 col-sm-12 col-xs-12">
+                            <label>Categoría.</label>
                             <div class="form-group">
                                 <select class="form-control" id="cbCategorias">
                                     <option value="0">- - Seleccione - -</option>
@@ -242,6 +243,7 @@ if (!isset($_SESSION['IdUsuario'])) {
                         </div>
 
                         <div class="col-md-5 col-sm-12 col-xs-12">
+                            <label>Filtrar por categoría, concepto.</label>
                             <div class="form-group">
                                 <div class="input-group">
                                     <input type="search" id="buscar" class="form-control" placeholder="Buscar por nombres del concepto" aria-describedby="search" value="">
@@ -259,7 +261,7 @@ if (!isset($_SESSION['IdUsuario'])) {
                                 <table class="table table-striped" style="border-width: 1px;border-style: dashed;border-color: #E31E25;">
                                     <thead style="background-color: #FDB2B1;color: #B72928;">
                                         <th width="5%" class="text-center">#</th>
-                                        <th width="10%">Codigo</th>
+                                        <th width="7%">Codigo</th>
                                         <th width="10%">Categoria</th>
                                         <th width="15%">Concepto</th>
                                         <th width="10%">Precio</th>
@@ -476,11 +478,11 @@ if (!isset($_SESSION['IdUsuario'])) {
                                 tbTable.empty();
                                 for (let concepto of lista) {
                                     let btnUpdate =
-                                        '<button class="btn btn-warning btn-sm" onclick="loadUpdateConceptos(\'' +
+                                        '<button class="btn btn-warning btn-xs" onclick="loadUpdateConceptos(\'' +
                                         concepto.idConcepto + '\')">' +
-                                        '<i class="fa fa-edit"></i> </button>';
-                                    let btndelete = '<button class="btn btn-danger btn-sm" onclick="DeleteConcepto(\'' + concepto.idConcepto + '\')">' +
-                                        '<i class="fa fa-trash"></i> </button>';
+                                        '<i class="fa fa-edit" style="font-size:25px;"></i> </button>';
+                                    let btndelete = '<button class="btn btn-danger btn-xs" onclick="DeleteConcepto(\'' + concepto.idConcepto + '\')">' +
+                                        '<i class="fa fa-trash" style="font-size:25px;"></i> </button>';
 
                                     let Estado = '<span class="' + (concepto.Estado == true ? "label label-success" : "label label-danger") + '">' + (concepto.Estado == true ? "Activo" : "Inactivo") + '</span>';
 

@@ -155,10 +155,38 @@ class UsuarioAdo
         }
     }
 
+    public static function updatePerfil($idUsuario, $usuario, $clave)
+    {
+        try {
+            Database::getInstance()->getDb()->beginTransaction();
+            $comandoInsert = Database::getInstance()->getDb()->prepare("UPDATE Usuario SET Usuario=?,Clave=? WHERE idUsuario = ?");
+            $comandoInsert->bindParam(1, $usuario, PDO::PARAM_STR);
+            $comandoInsert->bindParam(2, $clave, PDO::PARAM_STR);
+            $comandoInsert->bindParam(3, $idUsuario, PDO::PARAM_INT);
+            $comandoInsert->execute();
+            Database::getInstance()->getDb()->commit();
+            return "update";
+        } catch (Exception $ex) {
+            Database::getInstance()->getDb()->rollback();
+            return $ex->getMessage();
+        }
+    }
+
     public static function getUsuarioById($idUsuario)
     {
         try {
-            $cmdLogin = Database::getInstance()->getDb()->prepare("SELECT * FROM Usuario WHERE idUsuario = ? ");
+            $cmdLogin = Database::getInstance()->getDb()->prepare("SELECT 
+            u.idUsuario,
+            u.Nombres,
+            u.Apellidos,
+            u.Usuario,
+            u.Clave,
+            u.Rol,
+            u.Estado,
+            u.Sistema,
+            r.Nombre as RolNombre 
+            FROM Usuario AS u INNER JOIN Rol AS r ON r.idRol = u.Rol
+            WHERE u.idUsuario = ? ");
             $cmdLogin->bindParam(1, $idUsuario, PDO::PARAM_INT);
             $cmdLogin->execute();
             $result = $cmdLogin->fetchObject();
@@ -172,31 +200,56 @@ class UsuarioAdo
     {
         try {
             $array = array();
-            $cmdLogin = Database::getInstance()->getDb()->prepare("SELECT u.idUsuario,u.Nombres,u.Apellidos,u.Usuario,u.Rol,r.Nombre,u.Estado,u.Sistema FROM Usuario as u  inner join Rol as r
-            on u.Rol = r.idRol 
-            WHERE u.Usuario = ? AND u.Clave = ? AND u.Estado = 1");
-            $cmdLogin->bindParam(1, $usuario, PDO::PARAM_STR);
-            $cmdLogin->bindParam(2, $clave, PDO::PARAM_STR);
-            $cmdLogin->execute();
-            $usuario = $cmdLogin->fetchObject();
-            if ($usuario) {
-                $cmdPermisos = Database::getInstance()->getDb()->prepare("SELECT * FROM Permiso where idRol = ?");
-                $cmdPermisos->bindParam(1, $usuario->Rol, PDO::PARAM_INT);
-                $cmdPermisos->execute();
-                $arrayPermisos = array();
-                while ($row = $cmdPermisos->fetch()) {
-                    array_push($arrayPermisos, array(
-                        "idModulo" => $row["idModulo"],
-                        "ver" => $row["ver"],
-                        "crear" => $row["crear"],
-                        "actualizar" => $row["actualizar"],
-                        "eliminar" => $row["eliminar"]
-                    ));
+            $cmdValidateUsuario = Database::getInstance()->getDb()->prepare("SELECT * FROM Usuario WHERE Usuario = ? ");
+            $cmdValidateUsuario->bindParam(1, $usuario, PDO::PARAM_STR);
+            $cmdValidateUsuario->execute();
+            if ($cmdValidateUsuario->fetch()) {
+
+                $cmdValidateClave = Database::getInstance()->getDb()->prepare("SELECT * FROM Usuario WHERE Usuario = ? AND Clave = ? ");
+                $cmdValidateClave->bindParam(1, $usuario, PDO::PARAM_STR);
+                $cmdValidateClave->bindParam(2, $clave, PDO::PARAM_STR);
+                $cmdValidateClave->execute();
+                if ($cmdValidateClave->fetch()) {
+                    $cmdLogin = Database::getInstance()->getDb()->prepare("SELECT 
+                    u.idUsuario,
+                    u.Nombres,
+                    u.Apellidos,
+                    u.Usuario,
+                    u.Rol,
+                    r.Nombre,
+                    u.Estado,
+                    u.Sistema 
+                    FROM Usuario AS u  INNER JOIN Rol AS r
+                    ON u.Rol = r.idRol 
+                    WHERE u.Usuario = ? AND u.Clave = ? AND u.Estado = 1");
+                    $cmdLogin->bindParam(1, $usuario, PDO::PARAM_STR);
+                    $cmdLogin->bindParam(2, $clave, PDO::PARAM_STR);
+                    $cmdLogin->execute();
+                    $usuario = $cmdLogin->fetchObject();
+                    if ($usuario) {
+                        $cmdPermisos = Database::getInstance()->getDb()->prepare("SELECT * FROM Permiso where idRol = ?");
+                        $cmdPermisos->bindParam(1, $usuario->Rol, PDO::PARAM_INT);
+                        $cmdPermisos->execute();
+                        $arrayPermisos = array();
+                        while ($row = $cmdPermisos->fetch()) {
+                            array_push($arrayPermisos, array(
+                                "idModulo" => $row["idModulo"],
+                                "ver" => $row["ver"],
+                                "crear" => $row["crear"],
+                                "actualizar" => $row["actualizar"],
+                                "eliminar" => $row["eliminar"]
+                            ));
+                        }
+                        array_push($array, $usuario, $arrayPermisos);
+                        return $array;
+                    } else {
+                        return "disable";
+                    }
+                } else {
+                    return "nopassword";
                 }
-                array_push($array, $usuario, $arrayPermisos);
-                return $array;
             } else {
-                return false;
+                return "nouser";
             }
         } catch (Exception $ex) {
             return $ex->getMessage();

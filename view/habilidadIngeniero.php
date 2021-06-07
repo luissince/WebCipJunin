@@ -30,7 +30,8 @@ if (!isset($_SESSION['IdUsuario'])) {
                 <section class="content">
                     <div class="row">
 
-                        <div class="col-lg-7 col-md-7 col-sm-12 col-xs-12">
+                        <div class="col-lg-7 col-md-6 col-sm-12 col-xs-12">
+                            <label>Filtrar por cip,dni, apellidos y nombres.</label>
                             <div class="form-group">
                                 <div class="input-group">
                                     <input type="search" id="txtBuscar" class="form-control" placeholder="Buscar por n° cip, ° dni, nombres y/o apellidos" aria-describedby="search" value="">
@@ -50,6 +51,7 @@ if (!isset($_SESSION['IdUsuario'])) {
                         </div>
 
                         <div class="col-lg-3 col-md-3 col-sm-12 col-xs-12">
+                            <label>Habilidad.</label>
                             <div class="form-group">
                                 <select class="form-control" id="cbTipoHabilidad">
                                     <option value="0">- Todos -</option>
@@ -59,7 +61,8 @@ if (!isset($_SESSION['IdUsuario'])) {
                             </div>
                         </div>
 
-                        <div class="col-lg-2 col-md-2 col-sm-12 col-xs-12">
+                        <div class="col-lg-2 col-md-3 col-sm-12 col-xs-12">
+                            <label>Opción.</label>
                             <div class="form-group">
                                 <button class="btn btn-success" id="btnEnvioMasivo">
                                     <i class="fa fa-paper-plane"></i> Envio Masivo
@@ -74,16 +77,16 @@ if (!isset($_SESSION['IdUsuario'])) {
                             <div class="table-responsive">
                                 <table class="table table-striped" style="border-width: 1px;border-style: dashed;border-color: #E31E25;">
                                     <thead style="background-color: #FDB2B1;color: #B72928;">
-                                        <th style="text-align: center;">#</th>
-                                        <th>Cip</th>
-                                        <th>Dni</th>
-                                        <th>Ingeniero</th>
-                                        <th>Condicion</th>
-                                        <th>Fecha Colegiado</th>
-                                        <th>Fecha Ult. Cuota</th>
-                                        <th>Habilidad</th>
-                                        <th>Habilitado Hasta</th>
-                                        <th>Opciones</th>
+                                        <th width="5%" class="text-center">#</th>
+                                        <th width="7%">Cip</th>
+                                        <th width="7%">Dni</th>
+                                        <th width="20%">Colegiado</th>
+                                        <th width="10%">Condicion</th>
+                                        <th width="10%">Fecha Colegiado</th>
+                                        <th width="10%">Fecha Ult. Cuota</th>
+                                        <th width="10%">Habilidad</th>
+                                        <th width="10%">Habilitado Hasta</th>
+                                        <th width="5%" class="text-center">Actualizar</th>
                                     </thead>
                                     <tbody id="tbTableHabilidad">
 
@@ -254,12 +257,12 @@ if (!isset($_SESSION['IdUsuario'])) {
                                     let ultimopago = habilidad.UltimaCuota;
                                     /* let ultimopago = (habilidad.FechaUltimaCuota).split('/').reverse().join('-');*/
 
-                                    let btnEnviar = '<button class="btn btn-warning btn-sm" onclick="actualizarHabilidad(\'' + habilidad.Cip + '\',\'' + habilidad.Apellidos + '\',\'' + habilidad.Nombres + '\',\'' + habilidad.CodigoCondicion + '\',\'' + habilidad.Colegiatura + '\',\'' + ultimopago + '\',\'' + habilidad.Especialidad + '\')">' +
-                                        '<i class="fa  fa-history"></i> Actualizar' +
+                                    let btnEnviar = '<button class="btn btn-warning btn-xs" onclick="actualizarHabilidad(\'' + habilidad.Cip + '\',\'' + habilidad.Apellidos + '\',\'' + habilidad.Nombres + '\',\'' + habilidad.CodigoCondicion + '\',\'' + habilidad.Colegiatura + '\',\'' + ultimopago + '\',\'' + habilidad.Especialidad + '\')">' +
+                                        '<i class="fa  fa-history" style="font-size:25px;"></i> ' +
                                         '</button>';
 
                                     tbTable.append('<tr>' +
-                                        '<td style="text-align: center;color: #2270D1;">' + habilidad.Id + '</td>' +
+                                        '<td class="text-center text-primary">' + habilidad.Id + '</td>' +
                                         '<td>' + habilidad.Cip + '</td>' +
                                         '<td>' + habilidad.Dni + '</td>' +
                                         '<td>' + habilidad.Apellidos + ', ' + habilidad.Nombres + '</td>' +
@@ -268,7 +271,7 @@ if (!isset($_SESSION['IdUsuario'])) {
                                         '<td>' + habilidad.FechaUltimaCuota + '</td>' +
                                         '<td>' + (habilidad.Habilidad == 'Habilitado' ? '<label class="text-primary text-bold">' + habilidad.Habilidad + '</label>' : '<label class="text-danger">' + habilidad.Habilidad + '</label>') + '</td>' +
                                         '<td>' + habilidad.HabilitadoHasta + '</td>' +
-                                        '<td>' + btnEnviar + '</td>' +
+                                        '<td class="text-center">' + btnEnviar + '</td>' +
                                         '</tr>');
                                 }
                                 totalPaginacion = parseInt(Math.ceil((parseFloat(result.total) / parseInt(

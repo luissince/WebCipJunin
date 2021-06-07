@@ -32,23 +32,29 @@ if (!isset($_SESSION['IdUsuario'])) {
                 <section class="content">
 
                     <div class="row">
-                        <div class="col-md-3 col-sm-12 col-xs-12">
-                            <label>Fecha de inicio:</label>
-                            <input type="date" class="form-control pull-right" id="fechaInicio">
-                        </div>
-                        <div class="col-md-3 col-sm-12 col-xs-12">
-                            <label>Fecha de fin:</label>
-                            <input type="date" class="form-control pull-right" id="fechaFinal">
-                        </div>
-                        <div class="col-md-3 col-sm-12 col-xs-12">
-                            <label>Buscar</label>
-                            <input type="search" id="buscar" class="form-control" placeholder="Escribe para filtrar automaticamente" aria-describedby="search" value="">
-                        </div>
-                        <div class="col-md-3 col-sm-12 col-xs-12">
+                        <div class="col-lg-3 col-md-6 col-sm-12 col-xs-12">
+                            <label>Fecha de inicio.</label>
                             <div class="form-group">
-                                <label>Opción</label>
+                                <input type="date" class="form-control" id="fechaInicio">
+                            </div>
+                        </div>
+                        <div class="col-lg-3 col-md-6 col-sm-12 col-xs-12">
+                            <label>Fecha de fin.</label>
+                            <div class="form-group">
+                                <input type="date" class="form-control" id="fechaFinal">
+                            </div>
+                        </div>
+                        <div class="col-lg-4 col-md-6 col-sm-12 col-xs-12">
+                            <label>Filtrar por colegiado, N° certificado.</label>
+                            <div class="form-group">
+                                <input type="search" id="buscar" class="form-control" placeholder="Escribe para filtrar automaticamente" aria-describedby="search" value="">
+                            </div>
+                        </div>
+                        <div class="col-lg-2 col-md-6 col-sm-12 col-xs-12">
+                            <label>Opción</label>
+                            <div class="form-group">
                                 <div class="input-group">
-                                    <button type="submit" class="btn btn-link" id="btnRecargar"><i class="fa fa-refresh"></i> Actualizar</button>
+                                    <button type="submit" class="btn btn-default" id="btnRecargar"><i class="fa fa-refresh"></i> Recargar</button>
                                 </div>
                             </div>
                         </div>
@@ -59,9 +65,9 @@ if (!isset($_SESSION['IdUsuario'])) {
                             <div class="table-responsive">
                                 <table class="table table-striped" style="border-width: 1px;border-style: dashed;border-color: #E31E25;">
                                     <thead style="background-color: #FDB2B1;color: #B72928;">
-                                        <th style="width:3%;">#</th>
-                                        <th style="width:7%;">Opciones</th>
-                                        <th style="width:10%;">Usuario</th>
+                                        <th style="width:5%;">#</th>
+                                        <th style="width:5%;">P.D.F</th>
+                                        <th style="width:10%;">Colegiado</th>
                                         <th style="width:12%;">Especialidad</th>
                                         <th style="width:5%;">N° Cert.</th>
                                         <th style="width:5%;">Estado</th>
@@ -70,8 +76,8 @@ if (!isset($_SESSION['IdUsuario'])) {
                                         <th style="width:12%;">Proyecto</th>
                                         <th style="width:4%;">Monto</th>
                                         <th style="width:13%;">Lugar</th>
-                                        <th style="width:7%;">Fecha Pago</th>
-                                        <th style="width:7%;">Fecha Venc.</th>
+                                        <th style="width:10%;">Fecha Pago</th>
+                                        <th style="width:10%;">Fecha Venc.</th>
                                     </thead>
                                     <tbody id="tbTable">
 
@@ -250,13 +256,11 @@ if (!isset($_SESSION['IdUsuario'])) {
                                     //     '<i class="fa fa-ban"></i></br>Anular' +
                                     //     '</button>';
                                     let btnPdf = '<button class="btn btn-danger btn-xs" onclick="openPdf(\'' + ingresos.idIngreso + '\')">' +
-                                        '<i class="fa fa-file-pdf-o"></i></br>P.D.F' +
+                                        '<i class="fa fa-file-pdf-o" style="font-size:25px;"></i>' +
                                         '</button>';
 
                                     tbTable.append('<tr>' +
-                                        '<td style="text-align: center;color: #2270D1;">' +
-                                        '' + ingresos.id + '' +
-                                        '</td>' +
+                                        '<td class="text-center text-primary">' + ingresos.id + '</td>' +
                                         '<td>' + btnPdf + '</td>' +
                                         '<td>' + ingresos.dni + '</br>' + ingresos.usuario + ' ' + ingresos.apellidos + '</td>' +
                                         '<td>' + ingresos.especialidad + '</td>' +

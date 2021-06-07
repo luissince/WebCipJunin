@@ -167,26 +167,26 @@ if (!isset($_SESSION['IdUsuario'])) {
                 <section class="content">
 
                     <div class="row">
-                        <div class="col-lg-2 col-md-4 col-sm-12 col-xs-12">
+                        <div class="col-lg-2 col-md-3 col-sm-12 col-xs-12">
+                            <label>Nuevo Comprobante.</label>
                             <div class="form-group">
                                 <button type="button" class="btn btn-success" id="btnNuevoComprobante">
-                                    <i class="fa fa-plus"></i> Nuevo Comprobante
+                                    <i class="fa fa-plus"></i> Agregar 
                                 </button>
                             </div>
                         </div>
 
-                        <div class="col-lg-2 col-md-2 col-sm-12 col-xs-12">
+                        <div class="col-lg-2 col-md-3 col-sm-12 col-xs-12">
+                            <label>Opción.</label>
                             <div class="form-group">
-                                <!-- <button type="button" class="btn btn-success" id="btnNuevo">
-                                    <i class="fa fa-plus"></i> Nueva Empresa
-                                </button> -->
-                                <button class="btn btn-link" id="btnactualizar">
-                                    <i class="fa fa-refresh"></i> Actualizar..
+                                <button class="btn btn-default" id="btnactualizar">
+                                    <i class="fa fa-refresh"></i> Recargar
                                 </button>
                             </div>
                         </div>
 
                         <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
+                            <label>Filtrar por nombre, serie y numeración.</label>
                             <div class="form-group">
                                 <div class="input-group">
                                     <input type="search" id="txtBuscar" class="form-control" placeholder="Buscar por Nombre o tipo de comprobante" aria-describedby="search" value="">
@@ -204,15 +204,15 @@ if (!isset($_SESSION['IdUsuario'])) {
                             <div class="table-responsive">
                                 <table class="table table-striped" style="border-width: 1px;border-style: dashed;border-color: #E31E25;">
                                     <thead style="background-color: #FDB2B1;color: #B72928;">
-                                        <th style="text-align: center;">#</th>
-                                        <th>Nombre</th>
-                                        <th>Serie</th>
-                                        <th>Numeración</th>
-                                        <th>Código Alterno</th>
-                                        <th>Predeterminado</th>
-                                        <th>Estado</th>
-                                        <th>Usa Ruc</th>
-                                        <th>Opciones</th>
+                                        <th width="5%" class="text-center">#</th>
+                                        <th width="20%">Nombre</th>
+                                        <th width="10%">Serie</th>
+                                        <th width="10%">Numeración</th>
+                                        <th width="10%">Código Alterno</th>
+                                        <th width="10%">Predeterminado</th>
+                                        <th width="10%">Estado</th>
+                                        <th width="10%">Usa Ruc</th>
+                                        <th width="5%" class="text-center">Editar</th>
                                     </thead>
                                     <tbody id="tbTable">
 
@@ -397,8 +397,8 @@ if (!isset($_SESSION['IdUsuario'])) {
                                 for (let comprobante of result.data) {
 
                                     let btnUpdate =
-                                        '<button class="btn btn-warning btn-sm" onclick="updateComprobante(\'' + comprobante.IdTipoComprobante + '\')">' +
-                                        '<i class="fa fa-wrench"></i> Editar' +
+                                        '<button class="btn btn-warning btn-xs" onclick="updateComprobante(\'' + comprobante.IdTipoComprobante + '\')">' +
+                                        '<i class="fa fa-wrench" style="font-size:25px;"></i> ' +
                                         '</button>';
 
                                     let predeterminado = comprobante.Predeterminado == "SI" ? '<span class="text-success">' + comprobante.Predeterminado + '</span>' : '<span class="text-danger">' + comprobante.Predeterminado + '</span>';
@@ -410,9 +410,7 @@ if (!isset($_SESSION['IdUsuario'])) {
                                     //     '</button>';
 
                                     tbTable.append('<tr>' +
-                                        '<td style="text-align: center;color: #2270D1;">' +
-                                        '' + comprobante.Id + '' +
-                                        '</td>' +
+                                        '<td class="text-center text-primary">' + comprobante.Id + '</td>' +
                                         '<td>' + comprobante.Nombre + '</td>' +
                                         '<td>' + comprobante.Serie + '</td>' +
                                         '<td>' + comprobante.Numeracion + '</td>' +
@@ -420,9 +418,7 @@ if (!isset($_SESSION['IdUsuario'])) {
                                         '<td>' + predeterminado + '</td>' +
                                         '<td>' + estado + '</td>' +
                                         '<td>' + comprobante.Usa_ruc + '</td>' +
-                                        '<td style="text-align: left;">' +
-                                        btnUpdate +
-                                        '</td>' +
+                                        '<td class="text-center">' + btnUpdate + '</td>' +
                                         // '<td>' +
                                         // '' + btnDelete +
                                         // '</td>' +

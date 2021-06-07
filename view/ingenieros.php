@@ -28,131 +28,136 @@ if (!isset($_SESSION['IdUsuario'])) {
                 <div class="modal fade" id="confirmar">
                     <div class="modal-dialog">
                         <div class="modal-content">
-                            <div class="box box-default">
-                                <div class="box-body">
-                                    <div class="modal-header">
-                                        <button type="button" class="close" id="btnCloseIngeniero">
-                                            <i class="fa fa-close"></i>
-                                        </button>
-                                        <h4 class="modal-title">
-                                            <i class="fa fa-user-plus">
-                                            </i> Registrar Ingeniero
-                                        </h4>
-                                    </div>
-                                    <div class="modal-body">
-                                        <div class="row">
-                                            <div class="col-md-12 col-sm-12 col-xs-12">
-                                                <label for="dni">DNI: <i class="fa fa-fw fa-asterisk text-danger"></i></label>
-                                                <div class="form-group">
-                                                    <div class="input-group">
-                                                        <div class="input-group-btn">
-                                                            <button type="button" id="btnReniec" class="btn btn-default btn-flat"><img src="./images/reniec.png" width="16" height="16" /></button>
-                                                        </div>
-                                                        <input id="dni" type="text" name="Dni" class="form-control" placeholder="DNI" required="" minlength="8">
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="row">
-                                            <div class="col-md-6">
-                                                <div class="form-group">
-                                                    <label for="Nombres">Nombres: <i class="fa fa-fw fa-asterisk text-danger"></i></label>
-                                                    <input id="Nombres" type="text" name="Nombres" class="form-control" placeholder="Nombres" required="">
-                                                </div>
-                                            </div>
-                                            <div class="col-md-6">
-                                                <div class="form-group">
-                                                    <label for="Apellidos">Apellidos: <i class="fa fa-fw fa-asterisk text-danger"></i></label>
-                                                    <input id="Apellidos" type="text" name="Apellidos" class="form-control" placeholder="Apellidos" required="">
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="row">
-                                            <div class="col-md-4">
-                                                <div class="form-group">
-                                                    <label for="Genero">Genero: <i class="fa fa-fw fa-asterisk text-danger"></i></label>
-                                                    <select id="Genero" class="form-control">
-                                                        <option value="M">Maculino</option>
-                                                        <option value="F">Femenino</option>
-                                                    </select>
-                                                </div>
-                                            </div>
-                                            <div class="col-md-4">
-                                                <div class="form-group">
-                                                    <label for="Nacimiento">Nacimiento: <i class="fa fa-fw fa-asterisk text-danger"></i></label>
-                                                    <input id="Nacimiento" type="date" name="Nacimiento" class="form-control" required="">
-                                                </div>
-                                            </div>
-                                            <div class="col-md-4">
-                                                <div class="form-group">
-                                                    <label for="Estado_civil">Estado civil: <i class="fa fa-fw fa-asterisk text-danger"></i></label>
-                                                    <select id="Estado_civil" class="form-control">
-                                                        <option value="S">Soltero/a</option>
-                                                        <option value="C">Casado/a</option>
-                                                        <option value="V">Viudo/a</option>
-                                                        <option value="D">Divorciado/a</option>
-                                                    </select>
-                                                </div>
-                                            </div>
-                                        </div>
 
-                                        <div class="row">
-                                            <div class="col-md-6">
-                                                <div class="form-group">
-                                                    <label for="Ruc">Dirección Principal:</label>
-                                                    <input id="Ruc" type="text" name="Ruc" class="form-control" placeholder="Dirección de viviendan principal" required="">
-                                                </div>
-                                            </div>
-                                            <div class="col-md-6">
-                                                <div class="form-group">
-                                                    <label for="Razon_social">Télefono/Celular Prinpal:</label>
-                                                    <input id="Razon_social" type="text" name="Razon_social" class="form-control" placeholder="N° de teléfono o celular principal" required="">
-                                                </div>
-                                            </div>
+                            <div class="modal-header">
+                                <button type="button" class="close" id="btnCloseIngeniero">
+                                    <i class="fa fa-close"></i>
+                                </button>
+                                <h4 class="modal-title">
+                                    <i class="fa fa-user-plus">
+                                    </i> Registrar Ingeniero
+                                </h4>
+                            </div>
+                            <div class="modal-body">
+                                <div class="modal-overlay d-none" id="divLoad">
+                                    <div class="modal-overlay-content">
+                                        <div>
+                                            <i class="fa fa-refresh fa-spin"></i>
                                         </div>
-
-                                        <div class="row">
-                                            <div class="col-md-5">
-                                                <div class="form-group">
-                                                    <label for="Codigo">Codigo CIP: <i class="fa fa-fw fa-asterisk text-danger"></i></label>
-                                                    <input id="Codigo" type="number" name="Codigo" class="form-control" placeholder="Codigo" required="" disabled>
-                                                </div>
-                                            </div>
-                                            <div class="col-md-2">
-                                                <div class="form-group">
-                                                    <label for="Condición">Nuevo </label>
-                                                    <div class="checkbox">
-                                                        <label>
-                                                            <input type="checkbox" id="cbTramite" checked> Tramite
-                                                        </label>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            <div class="col-md-5">
-                                                <div class="form-group">
-                                                    <label for="Condición">Condición: <i class="fa fa-fw fa-asterisk text-danger"></i></label>
-                                                    <select id="Condicion" class="form-control">
-                                                        <option value="O">ORDINARIO</option>
-                                                        <option value="T">TRANSEUNTE</option>
-                                                        <option value="F">FALLECIDO</option>
-                                                        <option value="R">RETIRADO</option>
-                                                        <option value="V">VITALICIO</option>
-                                                    </select>
-                                                </div>
-                                            </div>
+                                        <div>
+                                            <label id="lblOverlayModal">Cargando información...</label>
                                         </div>
-                                        </form>
-                                    </div>
-                                    <div class="modal-footer">
-                                        <p class="text-left text-danger">Todos los campos marcados con <i class="fa fa-fw fa-asterisk text-danger"></i> son obligatorios</p>
-                                        <button type="submit" class="btn btn-danger" id="btnAceptarIngeniero">
-                                            <i class="fa fa-check"></i> Aceptar</button>
-                                        <button type="button" class="btn btn-primary" id="btnCancelarIngeniero">
-                                            <i class="fa fa-remove"></i> Cancelar</button>
                                     </div>
                                 </div>
-                                <div id="divLoad">
+                                <div class="row">
+                                    <div class="col-md-12 col-sm-12 col-xs-12">
+                                        <label for="dni">DNI: <i class="fa fa-fw fa-asterisk text-danger"></i></label>
+                                        <div class="form-group">
+                                            <div class="input-group">
+                                                <div class="input-group-btn">
+                                                    <button type="button" id="btnReniec" class="btn btn-default btn-flat"><img src="./images/reniec.png" width="16" height="16" /></button>
+                                                </div>
+                                                <input id="dni" type="text" name="Dni" class="form-control" placeholder="DNI" required="" minlength="8">
+                                            </div>
+                                        </div>
+                                    </div>
                                 </div>
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            <label for="Nombres">Nombres: <i class="fa fa-fw fa-asterisk text-danger"></i></label>
+                                            <input id="Nombres" type="text" name="Nombres" class="form-control" placeholder="Nombres" required="">
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            <label for="Apellidos">Apellidos: <i class="fa fa-fw fa-asterisk text-danger"></i></label>
+                                            <input id="Apellidos" type="text" name="Apellidos" class="form-control" placeholder="Apellidos" required="">
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-4">
+                                        <div class="form-group">
+                                            <label for="Genero">Genero: <i class="fa fa-fw fa-asterisk text-danger"></i></label>
+                                            <select id="Genero" class="form-control">
+                                                <option value="M">Maculino</option>
+                                                <option value="F">Femenino</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <div class="form-group">
+                                            <label for="Nacimiento">Nacimiento: <i class="fa fa-fw fa-asterisk text-danger"></i></label>
+                                            <input id="Nacimiento" type="date" name="Nacimiento" class="form-control" required="">
+                                        </div>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <div class="form-group">
+                                            <label for="Estado_civil">Estado civil: <i class="fa fa-fw fa-asterisk text-danger"></i></label>
+                                            <select id="Estado_civil" class="form-control">
+                                                <option value="S">Soltero/a</option>
+                                                <option value="C">Casado/a</option>
+                                                <option value="V">Viudo/a</option>
+                                                <option value="D">Divorciado/a</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            <label for="Ruc">Dirección Principal:</label>
+                                            <input id="Ruc" type="text" name="Ruc" class="form-control" placeholder="Dirección de viviendan principal" required="">
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            <label for="Razon_social">Télefono/Celular Prinpal:</label>
+                                            <input id="Razon_social" type="text" name="Razon_social" class="form-control" placeholder="N° de teléfono o celular principal" required="">
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="row">
+                                    <div class="col-md-5">
+                                        <div class="form-group">
+                                            <label for="Codigo">Codigo CIP: <i class="fa fa-fw fa-asterisk text-danger"></i></label>
+                                            <input id="Codigo" type="number" name="Codigo" class="form-control" placeholder="Codigo" required="" disabled>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-2">
+                                        <div class="form-group">
+                                            <label for="Condición">Nuevo </label>
+                                            <div class="checkbox">
+                                                <label>
+                                                    <input type="checkbox" id="cbTramite" checked> Tramite
+                                                </label>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-5">
+                                        <div class="form-group">
+                                            <label for="Condición">Condición: <i class="fa fa-fw fa-asterisk text-danger"></i></label>
+                                            <select id="Condicion" class="form-control">
+                                                <option value="O">ORDINARIO</option>
+                                                <option value="T">TRANSEUNTE</option>
+                                                <option value="F">FALLECIDO</option>
+                                                <option value="R">RETIRADO</option>
+                                                <option value="V">VITALICIO</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                </div>
+                                </form>
+                            </div>
+                            <div class="modal-footer">
+                                <p class="text-left text-danger">Todos los campos marcados con <i class="fa fa-fw fa-asterisk text-danger"></i> son obligatorios</p>
+                                <button type="submit" class="btn btn-danger" id="btnAceptarIngeniero">
+                                    <i class="fa fa-check"></i> Aceptar</button>
+                                <button type="button" class="btn btn-primary" id="btnCancelarIngeniero">
+                                    <i class="fa fa-remove"></i> Cancelar</button>
                             </div>
                         </div>
                     </div>
@@ -246,23 +251,26 @@ if (!isset($_SESSION['IdUsuario'])) {
                 <section class="content">
 
                     <div class="row">
-                        <div class="col-md-2 col-sm-12 col-xs-12">
+                        <div class="col-lg-2 col-md-3 col-sm-12 col-xs-12">
+                            <label>Nuevo Ingeniero.</label>
                             <div class="form-group">
                                 <button type="button" class="btn btn-success" id="btnNuevoIngeniero">
-                                    <i class="fa fa-plus"></i> Nuevo Ingeniero
+                                    <i class="fa fa-plus"></i> Agregar Ingeniero
                                 </button>
                             </div>
                         </div>
 
-                        <div class="col-md-2 col-sm-12 col-xs-12">
+                        <div class="col-lg-2 col-md-3 col-sm-12 col-xs-12">
+                            <label>Opción.</label>
                             <div class="form-group">
-                                <button class="btn btn-link" id="btnactualizar">
-                                    <i class="fa fa-refresh"></i> Actualizar..
+                                <button class="btn btn-default" id="btnactualizar">
+                                    <i class="fa fa-refresh"></i> Recargar
                                 </button>
                             </div>
                         </div>
 
-                        <div class="col-md-6 col-sm-12 col-xs-12">
+                        <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
+                            <label>Filtrar por cip, dni, apellidos y nombres.</label>
                             <div class="form-group">
                                 <div class="input-group">
                                     <input type="search" id="buscar" class="form-control" placeholder="Buscar por nombres o apellidos" aria-describedby="search" value="">
@@ -279,16 +287,16 @@ if (!isset($_SESSION['IdUsuario'])) {
                             <div class="table-responsive">
                                 <table class="table table-striped" style="border-width: 1px;border-style: dashed;border-color: #E31E25;">
                                     <thead style="background-color: #FDB2B1;color: #B72928;">
-                                        <th style="text-align: center;">#</th>
-                                        <th>Cip</th>
-                                        <th>Dni</th>
-                                        <th>Apellidos y Nombres</th>
-                                        <th>Sexo</th>
-                                        <th>Estado Civil</th>
-                                        <th>Condicion</th>
-                                        <th>Colegiaturas</th>
-                                        <th>Historial</th>
-                                        <th>Editar</th>
+                                        <th width="5%" class="text-center">#</th>
+                                        <th width="7%">Cip</th>
+                                        <th width="7%">Dni</th>
+                                        <th width="20%">Apellidos y Nombres</th>
+                                        <th width="10%">Sexo</th>
+                                        <th width="10%">Estado Civil</th>
+                                        <th width="10%">Condicion</th>
+                                        <th width="10%">Colegiaturas</th>
+                                        <th width="5%" class="text-center">Historial</th>
+                                        <th width="5%" class="text-center">Editar</th>
                                     </thead>
                                     <tbody id="tbTable">
 
@@ -393,13 +401,11 @@ if (!isset($_SESSION['IdUsuario'])) {
 
                 //-------------------------------------------------------------------------
 
-                $("#btnCloseIngeniero").click(function() {
-                    $("#confirmar").modal("hide")
+                $("#btnCloseIngeniero").click(function() {                   
                     clearModalIngeniero()
                 });
 
-                $("#btnCancelarIngeniero").click(function() {
-                    $("#confirmar").modal("hide")
+                $("#btnCancelarIngeniero").click(function() {               
                     clearModalIngeniero()
                 });
 
@@ -513,14 +519,14 @@ if (!isset($_SESSION['IdUsuario'])) {
                             } else {
                                 for (let persona of result.personas) {
                                     // let image = '<img src="images/masculino.png" width="30">';
-                                    let btnHistorial = '<button class="btn btn-info btn-sm" onclick="onSelectedIngeniero(\'' + persona.idDNI + '\')">' +
-                                        '<i class="fa fa-eye"></i> Ver' +
+                                    let btnHistorial = '<button class="btn btn-info btn-xs" onclick="onSelectedIngeniero(\'' + persona.idDNI + '\')">' +
+                                        '<i class="fa fa-eye" style="font-size:25px;"></i> ' +
                                         '</button>';
 
                                     let btnUpdate =
-                                        '<button class="btn btn-warning btn-sm" onclick="loadUpdateIngenieros(\'' +
+                                        '<button class="btn btn-warning btn-xs" onclick="loadUpdateIngenieros(\'' +
                                         persona.idDNI + '\')">' +
-                                        '<i class="fa fa-wrench"></i> Editar' +
+                                        '<i class="fa fa-wrench" style="font-size:25px;"></i> ' +
                                         '</button>';
 
                                     let estadoCivil = (persona.EstadoCivil == 'S') ? 'Soltero/a' :
@@ -533,7 +539,7 @@ if (!isset($_SESSION['IdUsuario'])) {
                                         (persona.Condicion == 'R') ? 'Retirado' : 'Vitalicio'
 
                                     tbTable.append('<tr>' +
-                                        '<td style="text-align: center;color: #2270D1;">' + persona.Id + '</td>' +
+                                        '<td class="text-center text-primary">' + persona.Id + '</td>' +
                                         '<td>' + persona.Cip + '</td>' +
                                         '<td>' + persona.idDNI + '</td>' +
                                         '<td>' + persona.Apellidos + ' ' + persona.Nombres + '</td>' +
@@ -599,8 +605,7 @@ if (!isset($_SESSION['IdUsuario'])) {
                                 "cip": cip,
                                 "condicion": condicion,
                             },
-                            beforeSend: function() {
-                                $("#confirmar").modal("hide")
+                            beforeSend: function() {                             
                                 clearModalIngeniero();
                                 tools.ModalAlertInfo("Ingeniero", "Procesando petición..");
                             },
@@ -724,23 +729,22 @@ if (!isset($_SESSION['IdUsuario'])) {
                     type: "get",
                     data: {},
                     beforeSend: function() {
-                        $("#divLoad").addClass("overlay");
-                        $("#divLoad").append('<i class="fa fa-refresh fa-spin"></i>');
+                        $("#divLoad").removeClass("d-none");
+                        $("#lblOverlayModal").html("Cargando información...");
                     },
                     success: function(result) {
-                        $("#divLoad").removeClass("overlay");
-                        $("#divLoad").empty();
+                        $("#divLoad").addClass("d-none");
                         $("#Nombres").val(result.nombres);
                         $("#Apellidos").val(result.apellidoPaterno + " " + result.apellidoMaterno);
                     },
                     error: function(error) {
-                        $("#divLoad").removeClass("overlay");
-                        $("#divLoad").empty();
+                        $("#lblOverlayModal").html(error.responseText);
                     }
                 });
             }
 
             function clearModalIngeniero() {
+                $("#confirmar").modal("hide")
                 $("#dni").val("")
                 $("#Nombres").val("")
                 $("#Apellidos").val("")

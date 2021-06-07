@@ -35,11 +35,26 @@ if (!isset($_SESSION['IdUsuario'])) {
                                 </h4>
                             </div>
                             <div class="modal-body">
+                                <div class="modal-overlay d-none" id="divLoad">
+                                    <div class="modal-overlay-content">
+                                        <div>
+                                            <i class="fa fa-refresh fa-spin"></i>
+                                        </div>
+                                        <div>
+                                            <label id="lblOverlayModal">Cargando información...</label>
+                                        </div>
+                                    </div>
+                                </div>
                                 <div class="row">
                                     <div class="col-md-12">
                                         <div class="form-group">
                                             <label for="txtRuc">RUC: <i class="fa fa-fw fa-asterisk text-danger"></i></label>
-                                            <input id="txtRuc" type="number" class="form-control" placeholder="Ingrese ruc" required="" minlength="11">
+                                            <div class="input-group">
+                                                <div class="input-group-btn">
+                                                    <button type="button" id="btnSunat" class="btn btn-default btn-flat"><img src="./images/sunat_logo.png" width="16" height="16"></button>
+                                                </div>
+                                                <input id="txtRuc" type="number" class="form-control" placeholder="Ingrese ruc" required="" minlength="11">
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
@@ -108,26 +123,29 @@ if (!isset($_SESSION['IdUsuario'])) {
 
                     <div class="row">
 
-                        <div class="col-lg-2 col-md-2 col-sm-12 col-xs-12">
+                        <div class="col-lg-2 col-md-3 col-sm-12 col-xs-12">
+                            <label>Nueva Entidad.</label>
                             <div class="form-group">
                                 <button type="button" class="btn btn-success" id="btnNuevo">
-                                    <i class="fa fa-plus"></i> Nueva Entidad
+                                    <i class="fa fa-plus"></i> Agregar Entidad
                                 </button>
                             </div>
                         </div>
 
-                        <div class="col-lg-2 col-md-2 col-sm-12 col-xs-12">
+                        <div class="col-lg-2 col-md-3 col-sm-12 col-xs-12">
+                            <label>Opción.</label>
                             <div class="form-group">
-                                <button class="btn btn-link" id="btnactualizar">
-                                    <i class="fa fa-refresh"></i> Actualizar..
+                                <button class="btn btn-default" id="btnactualizar">
+                                    <i class="fa fa-refresh"></i> Recargar
                                 </button>
                             </div>
                         </div>
 
                         <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
+                            <label>Filtrar por razón social.</label>
                             <div class="form-group">
                                 <div class="input-group">
-                                    <input type="search" id="buscar" class="form-control" placeholder="Buscar por Nombre o Apellido" aria-describedby="search" value="">
+                                    <input type="search" id="buscar" class="form-control" placeholder="Buscar..." aria-describedby="search" value="">
                                     <div class="input-group-btn">
                                         <button type="button" class="btn btn-primary" id="btnSearch">Buscar</button>
                                     </div>
@@ -232,16 +250,25 @@ if (!isset($_SESSION['IdUsuario'])) {
 
                 $("#buscar").on("keyup", function(event) {
                     if (event.keyCode === 13) {
-                        paginacion = 1;
-                        loadTableEmpresa($("#buscar").val());
-                        opcion = 1;
+                        if ($("#buscar").val() != '') {
+                            if (!state) {
+                                paginacion = 1;
+                                loadTableEmpresa($("#buscar").val());
+                                opcion = 1;
+                            }
+                        }
+
                     }
                 });
 
                 $("#btnSearch").click(function() {
-                    paginacion = 1;
-                    loadTableEmpresa($("#buscar").val());
-                    opcion = 1;
+                    if ($("#buscar").val() != '') {
+                        if (!state) {
+                            paginacion = 1;
+                            loadTableEmpresa($("#buscar").val());
+                            opcion = 1;
+                        }
+                    }
                 });
 
                 //---------------------------------------------------------------------------
@@ -264,6 +291,33 @@ if (!isset($_SESSION['IdUsuario'])) {
                     clearModalAddEmpresa()
                 });
 
+                $("#btnSunat").click(function() {
+                    if ($("#txtRuc").val().trim() == '') {
+                        tools.AlertWarning("Ingenieros", "Ingrese un ruc en el campo.");
+                        $("#txtRuc").focus();
+                    } else if ($("#txtRuc").val().length !== 11) {
+                        tools.AlertWarning("Ingenieros", "El ruc debe tener 11 caracteres.");
+                        $("#txtRuc").focus();
+                    } else {
+                        loadSunatApi($("#txtRuc").val());
+                    }
+
+                });
+
+                $("#btnSunat").keypress(function(event) {
+                    if (event.keyCode == 13) {
+                        if ($("#txtRuc").val().trim() == '') {
+                            tools.AlertWarning("Ingenieros", "Ingrese un ruc en el campo.");
+                            $("#txtRuc").focus();
+                        } else if ($("#txtRuc").val().length !== 11) {
+                            tools.AlertWarning("Ingenieros", "El ruc debe tener 11 caracteres.");
+                            $("#txtRuc").focus();
+                        } else {
+                            loadSunatApi($("#txtRuc").val());
+                        }
+                    }
+                    event.preventDefault();
+                });
             });
 
             function onEventPaginacion() {
@@ -319,30 +373,24 @@ if (!isset($_SESSION['IdUsuario'])) {
                                 for (let empresa of result.empresas) {
 
                                     let btnUpdate =
-                                        '<button class="btn btn-warning btn-sm" onclick="updateEmpresas(\'' + empresa.idEmpresa + '\')">' +
-                                        '<i class="fa fa-wrench"></i> Editar' +
+                                        '<button class="btn btn-warning btn-xs" onclick="updateEmpresas(\'' + empresa.idEmpresa + '\')">' +
+                                        '<i class="fa fa-edit" style="font-size:25px;"></i>' +
                                         '</button>';
                                     let btnDelete =
-                                        '<button class="btn btn-danger btn-sm" onclick="deleteEmpresa(\'' + empresa.idEmpresa + '\')">' +
-                                        '<i class="fa fa-trash"></i> Eliminar' +
+                                        '<button class="btn btn-danger btn-xs" onclick="deleteEmpresa(\'' + empresa.idEmpresa + '\')">' +
+                                        '<i class="fa fa-trash" style="font-size:25px;"></i>' +
                                         '</button>';
 
                                     tbTable.append('<tr>' +
-                                        '<td style="text-align: center;color: #2270D1;">' +
-                                        '' + empresa.Id + '' +
-                                        '</td>' +
+                                        '<td class="text-center text-primary">' + empresa.Id + '</td>' +
                                         '<td>' + empresa.numeroRuc + '</td>' +
                                         '<td>' + empresa.nombre + '</td>' +
                                         '<td>' + empresa.direccion + '</td>' +
                                         '<td>' + empresa.telefono + '</td>' +
                                         '<td>' + empresa.paginaWeb + '</td>' +
                                         '<td>' + empresa.email + '</td>' +
-                                        '<td style="text-align: right;">' +
-                                        '' + btnUpdate + '' +
-                                        '</td>' +
-                                        '<td>' +
-                                        '' + btnDelete +
-                                        '</td>' +
+                                        '<td>' + btnUpdate + '</td>' +
+                                        '<td>' + btnDelete + '</td>' +
                                         '</tr>');
                                 }
                                 totalPaginacion = parseInt(Math.ceil((parseFloat(result.total) / parseInt(
@@ -504,6 +552,26 @@ if (!isset($_SESSION['IdUsuario'])) {
                                 tools.ModalAlertError("Empresas", error.responseText);
                             }
                         });
+                    }
+                });
+            }
+
+            function loadSunatApi(numero) {
+                $.ajax({
+                    url: "https://dniruc.apisperu.com/api/v1/ruc/" + numero + "?token=eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJlbWFpbCI6ImFsZXhhbmRlcl9keF8xMEBob3RtYWlsLmNvbSJ9.6TLycBwcRyW1d-f_hhCoWK1yOWG_HJvXo8b-EoS5MhE",
+                    type: "get",
+                    data: {},
+                    beforeSend: function() {
+                        $("#divLoad").removeClass("d-none");
+                    },
+                    success: function(result) {
+                        $("#divLoad").addClass("d-none");
+                        $("#divLoad").empty();
+                        $("#NombreComercial").val(result.razonSocial);
+                        $("#DireccionEmpresa").val(result.direccion);
+                    },
+                    error: function(error) {
+                        $("#divLoad").addClass("d-none");
                     }
                 });
             }

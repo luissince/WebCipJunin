@@ -103,20 +103,20 @@ if (!isset($_SESSION['IdUsuario'])) {
                     <div class="row">
                         <div class="col-md-3 col-sm-12 col-xs-12">
                             <div class="form-group">
-                                <label>Fecha de inicio(Entre Fechas):</label>
+                                <label>Fecha de inicio(Entre Fechas).</label>
                                 <input type="date" class="form-control pull-right" id="fechaInicio">
                             </div>
                         </div>
                         <div class="col-md-3 col-sm-12 col-xs-12">
                             <div class="form-group">
-                                <label>Fecha de fin(Entre Fechas):</label>
+                                <label>Fecha de fin(Entre Fechas).</label>
                                 <input type="date" class="form-control pull-right" id="fechaFinal">
                             </div>
                         </div>
 
                         <div class="col-md-3 col-sm-12 col-xs-12">
                             <div class="form-group">
-                                <label>Comprobantes(Con Fechas):</label>
+                                <label>Comprobantes(Con Fechas).</label>
                                 <select class="form-control" id="cbComprobantes">
                                     <option value="">- Seleccione -</option>
                                 </select>
@@ -125,7 +125,7 @@ if (!isset($_SESSION['IdUsuario'])) {
 
                         <div class="col-md-3 col-sm-12 col-xs-12">
                             <div class="form-group">
-                                <label>Estado(Con Fechas):</label>
+                                <label>Estado(Con Fechas).</label>
                                 <select class="form-control" id="cbEstado">
                                     <option value="">- Seleccione -</option>
                                     <option value="C">Cobrado</option>
@@ -141,11 +141,11 @@ if (!isset($_SESSION['IdUsuario'])) {
 
                         <div class="col-md-6 col-sm-12 col-xs-12">
                             <div class="form-group">
-                                <label>Filtrar por serie, numeración o cliente(Presione Enter)</label>
+                                <label>Filtrar por serie, numeración o colegiado(Presione Enter).</label>
                                 <div class="input-group">
-                                    <input type="search" id="buscar" class="form-control" placeholder="Escribe para filtrar automaticamente" aria-describedby="search" value="">
+                                    <input type="search" id="txtBuscar" class="form-control" placeholder="Escribe para filtrar automaticamente" aria-describedby="search" value="">
                                     <div class="input-group-btn">
-                                        <button type="button" class="btn btn-primary" id="btnRecargar">Buscar</button>
+                                        <button type="button" class="btn btn-primary" id="btnBuscar">Buscar</button>
                                     </div>
                                 </div>
                             </div>
@@ -153,21 +153,31 @@ if (!isset($_SESSION['IdUsuario'])) {
 
                         <div class="col-md-3 col-sm-12 col-xs-12">
                             <div class="form-group">
-                                <label>Opción</label>
+                                <label>Opción.</label>
                                 <div class="input-group">
-                                    <button class="btn btn-primary" id="btnEnvioMasivo"><i class="fa fa-gg-circle"></i> Envío masivo a sunat</button>
+                                    <button type="button" class="btn btn-default" id="btnRecargar"><i class="fa fa-refresh"></i> Recargar</button>
                                 </div>
                             </div>
                         </div>
 
+
                         <div class="col-md-3 col-sm-12 col-xs-12">
+                            <div class="form-group">
+                                <label>Envío masivo.</label>
+                                <div class="input-group">
+                                    <button class="btn btn-danger" id="btnEnvioMasivo"><i class="fa fa-gg-circle"></i> Envío masivo a sunat</button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- <div class="col-md-3 col-sm-12 col-xs-12">
                             <div class="form-group">
                                 <label>Generar excel</label>
                                 <div class="input-group">
                                     <button class="btn btn-success" id="btnExcel"><i class="fa fa-file-excel-o"></i> Excel por fechas</button>
                                 </div>
                             </div>
-                        </div>
+                        </div> -->
 
                     </div>
 
@@ -182,7 +192,7 @@ if (!isset($_SESSION['IdUsuario'])) {
                                         <th style="width:5%;">Detalle</th>
                                         <th style="width:10%;">Fecha</th>
                                         <th style="width:10%;">Comprobante</th>
-                                        <th style="width:15%;">Cliente</th>
+                                        <th style="width:15%;">Colegiado</th>
                                         <th style="width:10%;">Estado</th>
                                         <th style="width:10%;">Total</th>
                                         <th style="width:10%;">Estado Sunat</th>
@@ -334,12 +344,34 @@ if (!isset($_SESSION['IdUsuario'])) {
                     }
                 });
 
-                $("#buscar").keyup(function(event) {
+                $("#txtBuscar").keyup(function(event) {
                     if (event.keyCode == 13) {
-                        if ($("#buscar").val().trim() != '') {
+                        if ($("#txtBuscar").val().trim() != '') {
                             if (!state) {
                                 paginacion = 1;
-                                loadTableIngresos(1, $("#buscar").val().trim(), "", "", 0, "");
+                                loadTableIngresos(1, $("#txtBuscar").val().trim(), "", "", 0, "");
+                                opcion = 1;
+                            }
+                        }
+                    }
+                });
+
+                $("#btnBuscar").click(function() {
+                    if ($("#txtBuscar").val().trim() != '') {
+                        if (!state) {
+                            paginacion = 1;
+                            loadTableIngresos(1, $("#txtBuscar").val().trim(), "", "", 0, "");
+                            opcion = 1;
+                        }
+                    }
+                });
+
+                $("#btnBuscar").keypress(function(event) {
+                    if (event.keyCode == 13) {
+                        if ($("#txtBuscar").val().trim() != '') {
+                            if (!state) {
+                                paginacion = 1;
+                                loadTableIngresos(1, $("#txtBuscar").val().trim(), "", "", 0, "");
                                 opcion = 1;
                             }
                         }
@@ -388,7 +420,7 @@ if (!isset($_SESSION['IdUsuario'])) {
                         loadTableIngresos(0, "", $("#fechaInicio").val(), $("#fechaFinal").val(), 0, "");
                         break;
                     case 1:
-                        loadTableIngresos(1, $("#buscar").val().trim(), "", "", 0, "");
+                        loadTableIngresos(1, $("#txtBuscar").val().trim(), "", "", 0, "");
                         break;
                     case 2:
                         loadTableIngresos(2, "", $("#fechaInicio").val(), $("#fechaFinal").val(), $("#cbComprobantes").val(), "");

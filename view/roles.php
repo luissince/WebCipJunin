@@ -131,23 +131,26 @@ if (!isset($_SESSION['IdUsuario'])) {
                 <section class="content">
 
                     <div class="row">
-                        <div class="col-md-2 col-sm-12 col-xs-12">
+                        <div class="col-lg-2 col-md-3 col-sm-12 col-xs-12">
+                            <label>Nuevo Rol.</label>
                             <div class="form-group">
                                 <button id="btnNuevoRol" type="button" class="btn btn-success" style="margin-right: 10px;">
-                                    <i class="fa fa-plus"></i> Nuevo Rol
+                                    <i class="fa fa-plus"></i> Agregar Rol
                                 </button>
                             </div>
                         </div>
 
-                        <div class="col-md-2 col-sm-12 col-xs-12">
+                        <div class="col-lg-2 col-md-3 col-sm-12 col-xs-12">
+                            <label>Opción.</label>
                             <div class="form-group">
-                                <button class="btn btn-link" id="btnactualizar">
-                                    <i class="fa fa-refresh"></i> Actualizar..
+                                <button class="btn btn-default" id="btnactualizar">
+                                    <i class="fa fa-refresh"></i> Recargar
                                 </button>
                             </div>
                         </div>
 
-                        <div class="col-md-6 col-sm-12 col-xs-12">
+                        <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
+                            <label>Filtrar por nombre del rol.</label>
                             <div class="form-group">
                                 <div class="input-group">
                                     <input type="search" id="buscar" class="form-control" placeholder="Buscar por nombres del rol" aria-describedby="search" value="">
@@ -168,9 +171,9 @@ if (!isset($_SESSION['IdUsuario'])) {
                                         <th width="20%">Nombre</th>
                                         <th width="30%">Descripción</th>
                                         <th width="15%">Estado</th>
-                                        <th width="10%">Modulos</th>
-                                        <th width="10%">Editar</th>
-                                        <th width="10%">Eliminar</th>
+                                        <th width="5%">Modulos</th>
+                                        <th width="5%">Editar</th>
+                                        <th width="5%">Eliminar</th>
                                     </thead>
                                     <tbody id="tbTable">
                                     </tbody>
@@ -335,18 +338,18 @@ if (!isset($_SESSION['IdUsuario'])) {
                             } else {
                                 for (let rol of result.roles) {
                                     let btnModulos =
-                                        '<button class="btn btn-info btn-sm" onclick="loadTableModulos(\'' + rol.IdRol + '\')">' +
-                                        '<i class="fa fa-eye"></i> Permisos' +
+                                        '<button class="btn btn-info btn-xs" onclick="loadTableModulos(\'' + rol.IdRol + '\')">' +
+                                        '<i class="fa fa-eye" style="font-size:25px;"></i> ' +
                                         '</button>';
 
                                     let btnUpdate =
-                                        '<button class="btn btn-warning btn-sm" onclick="loadDataRol(\'' + rol.IdRol + '\')">' +
-                                        '<i class="fa fa-edit"></i> Editar' +
+                                        '<button class="btn btn-warning btn-xs" onclick="loadDataRol(\'' + rol.IdRol + '\')">' +
+                                        '<i class="fa fa-edit" style="font-size:25px;"></i>' +
                                         '</button>';
 
                                     let btnDelete =
-                                        '<button class="btn btn-danger btn-sm" onclick="eliminarRol(\'' + rol.IdRol + '\')">' +
-                                        '<i class="fa fa-trash"></i> Eliminar' +
+                                        '<button class="btn btn-danger btn-xs" onclick="eliminarRol(\'' + rol.IdRol + '\')">' +
+                                        '<i class="fa fa-trash" style="font-size:25px;"></i> ' +
                                         '</button>';
 
                                     let estado = rol.Estado == 1 ? 'Activo' : 'Inactivo'

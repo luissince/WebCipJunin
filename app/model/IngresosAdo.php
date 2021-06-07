@@ -814,7 +814,8 @@ class IngresosAdo
             PaginaWeb,
             Email,
             UsuarioSol,
-            ClaveSol FROM Empresa");
+            ClaveSol
+            FROM Empresa");
             $cmdEmpresa->execute();
             $resultEmpresa = $cmdEmpresa->fetchObject();
 

@@ -43,10 +43,20 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
                 "estado" => 1,
                 "datos" => $result[0],
             ));
-        } else if ($result == false) {
+        } else if ($result == "disable") {
             echo json_encode(array(
                 "estado" => 2,
-                "message" => "El usuario y/u contraseña son incorrectas o se encuentra con estado inactivo.",
+                "message" => "El usuario esta inactivo.",
+            ));
+        } else if ($result == "nopassword") {
+            echo json_encode(array(
+                "estado" => 3,
+                "message" => "La contraseña es incorrecta.",
+            ));
+        } else if ($result == "nouser") {
+            echo json_encode(array(
+                "estado" => 4,
+                "message" => "El usuario es incorrecto.",
             ));
         } else {
             echo json_encode(array(
@@ -118,10 +128,23 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
                 "estado" => 3,
                 "message" => "No se puede eliminar porque se encuentra activo.",
             ));
-        }else if ($result == "ingreso") {
+        } else if ($result == "ingreso") {
             echo json_encode(array(
                 "estado" => 4,
                 "message" => "No se puede eliminar el usuario porque ligado ingresos.",
+            ));
+        } else {
+            echo json_encode(array(
+                "estado" => 0,
+                "message" =>  $result,
+            ));
+        }
+    } else if ($_POST["type"] == "updatePerfil") {
+        $result = UsuarioAdo::updatePerfil($_POST["idUsuario"], $_POST["usuario"], $_POST["clave"]);
+        if ($result == "update") {
+            echo json_encode(array(
+                "estado" => 1,
+                "message" =>  "Se actualizó correctamente los cambios.",
             ));
         } else {
             echo json_encode(array(

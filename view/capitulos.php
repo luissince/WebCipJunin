@@ -162,23 +162,26 @@ if (!isset($_SESSION['IdUsuario'])) {
                 <section class="content">
 
                     <div class="row">
-                        <div class="col-lg-2 col-md-2 col-sm-12 col-xs-12">
+                        <div class="col-lg-2 col-md-3 col-sm-12 col-xs-12">
+                            <label>Nuevo Cap./Espe.</label>
                             <div class="form-group">
                                 <button type="button" class="btn btn-success" id="btnNuevo">
-                                    <i class="fa fa-plus"></i> Nuevo Cap./Espe.
+                                    <i class="fa fa-plus"></i> Agregar Cap./Espe.
                                 </button>
                             </div>
                         </div>
 
-                        <div class="col-lg-2 col-md-2 col-sm-12 col-xs-12">
+                        <div class="col-lg-2 col-md-3 col-sm-12 col-xs-12">
+                            <label>Opción.</label>
                             <div class="form-group">
-                                <button class="btn btn-link" id="btnactualizar">
-                                    <i class="fa fa-refresh"></i> Actualizar..
+                                <button class="btn btn-default" id="btnactualizar">
+                                    <i class="fa fa-refresh"></i> Recargar
                                 </button>
                             </div>
                         </div>
 
                         <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
+                            <label>Filtrar por capítulo o especialidad.</label>
                             <div class="form-group">
                                 <div class="input-group">
                                     <input type="search" id="buscar" class="form-control" placeholder="Buscar por Capitulo o Especialidad" aria-describedby="search" value="">
@@ -195,12 +198,12 @@ if (!isset($_SESSION['IdUsuario'])) {
                             <div class="table-responsive">
                                 <table class="table table-striped" style="border-width: 1px;border-style: dashed;border-color: #E31E25;">
                                     <thead style="background-color: #FDB2B1;color: #B72928;">
-                                        <th style="text-align: center;">#</th>
-                                        <th>Capitulo</th>
-                                        <th>Especialidad</th>
-                                        <th>Editar</th>
-                                        <th>Eliminar Capit.</th>
-                                        <th>Eliminar Espec.</th>
+                                        <th width="5%" class="text-center">#</th>
+                                        <th width="20%">Capitulo</th>
+                                        <th width="20%">Especialidad</th>
+                                        <th width="5%" class="text-center">Editar</th>
+                                        <th width="5%" class="text-center">Elim. Capit.</th>
+                                        <th width="5%" class="text-center">Elim. Espec.</th>
                                     </thead>
                                     <tbody id="tbTable">
 
@@ -397,30 +400,28 @@ if (!isset($_SESSION['IdUsuario'])) {
                                 for (let especialidad of result.especialidades) {
 
                                     let btnUpdate =
-                                        '<button class="btn btn-warning btn-sm" onclick="updateCapituloModal(\'' +
+                                        '<button class="btn btn-warning btn-xs" onclick="updateCapituloModal(\'' +
                                         especialidad.idCapitulo + '\',\'' + especialidad.Capitulo + '\',\'' + especialidad.idEspecialidad + '\',\'' + especialidad.Especialidad + '\')">' +
-                                        '<i class="fa fa-wrench"></i> Editar' +
+                                        '<i class="fa fa-wrench" style="font-size:25px;"></i>' +
                                         '</button>';
 
                                     let btnDeleteCapitulo =
-                                        '<button class="btn btn-danger btn-sm" onclick="deleteCapitulo(\'' + especialidad.idCapitulo + '\')">' +
-                                        '<i class="fa fa-trash"></i> Eliminar' +
+                                        '<button class="btn btn-danger btn-xs" onclick="deleteCapitulo(\'' + especialidad.idCapitulo + '\')">' +
+                                        '<i class="fa fa-trash" style="font-size:25px;"></i> ' +
                                         '</button>';
 
                                     let btnDeleteEspecialidad =
-                                        '<button class="btn btn-danger btn-sm" onclick="deleteEspecialidad(\'' + especialidad.idEspecialidad + '\')">' +
-                                        '<i class="fa fa-trash"></i> Eliminar' +
+                                        '<button class="btn btn-danger btn-xs" onclick="deleteEspecialidad(\'' + especialidad.idEspecialidad + '\')">' +
+                                        '<i class="fa fa-trash" style="font-size:25px;"></i> ' +
                                         '</button>';
 
                                     tbTable.append('<tr>' +
-                                        '<td style="text-align: center;color: #2270D1;">' +
-                                        '' + especialidad.Id + '' +
-                                        '</td>' +
+                                        '<td class="text-center text-primary">' + especialidad.Id + '</td>' +
                                         '<td>' + especialidad.Capitulo + '</td>' +
                                         '<td>' + especialidad.Especialidad + '</td>' +
-                                        '<td>' + btnUpdate + '</td>' +
-                                        '<td>' + btnDeleteCapitulo + '</td>' +
-                                        '<td>' + btnDeleteEspecialidad + '</td>' +
+                                        '<td class="text-center">' + btnUpdate + '</td>' +
+                                        '<td class="text-center">' + btnDeleteCapitulo + '</td>' +
+                                        '<td class="text-center">' + btnDeleteEspecialidad + '</td>' +
                                         '</tr>');
                                 }
                                 totalPaginacion = parseInt(Math.ceil((parseFloat(result.total) / parseInt(

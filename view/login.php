@@ -17,6 +17,7 @@ if (isset($_SESSION['IdUsuario'])) {
         <section class="content">
             <style type="text/css">
                 #caja {
+                    max-width: 1024px;
                     min-height: 410px;
                     background-color: #FFFFFF;
                     box-shadow: 0 0 15px rgba(0, 0, 0, 0.15), 0 0 1px 1px rgba(0, 0, 0, 0.1);
@@ -28,7 +29,7 @@ if (isset($_SESSION['IdUsuario'])) {
                 <div class="col-lg-2 col-md-2 col-sm-12 col-xs-12"></div>
                 <div class="col-lg-8 col-md-8 col-sm-12 col-xs-12" id="caja">
                     <div class="row d-flex justify-content-center text-center">
-                        <div class="col-md-2 col-sm-4 col-xs-12" style="display:flex;justify-content:center;">
+                        <div class="col-md-2 col-sm-4 col-xs-12" style="display:flex;justify-content:center;padding:10px;">
                             <img src="images/logologin.png" class="img-responsive" width="120">
                         </div>
                         <div class="col-md-10 col-sm-8 col-xs-12" style="display:flex;flex-direction:column;justify-content:center;align-items:center;">
@@ -96,19 +97,34 @@ if (isset($_SESSION['IdUsuario'])) {
         <script src="js/tools.js"></script>
         <script>
             let tools = new Tools();
-            let state = false;
 
             $(document).ready(function() {
 
-                $("#btnIngresar").click(function() {
-                    login()
-                })
-
-                $("#txtClave").keydown(function(e) {
-                    if (e.keyCode === 13) {
-                        login()
-                    }
+                $("#txtUsuario").keydown(function(event) {
+                    if (event.keyCode == 13) {
+                        login();
+                        event.preventDefault();
+                    }                   
                 });
+
+                $("#txtClave").keydown(function(event) {
+                    if (event.keyCode == 13) {
+                        login();
+                        event.preventDefault();
+                    }                   
+                });
+
+                $("#btnIngresar").click(function() {
+                    login();
+                });
+
+                $("#btnIngresar").keypress(function(event) {
+                    if (event.keyCode == 13) {
+                        login();
+                    }
+                    event.preventDefault();
+                });
+
             })
 
             function login() {
@@ -129,43 +145,41 @@ if (isset($_SESSION['IdUsuario'])) {
                             "clave": $("#txtClave").val()
                         },
                         beforeSend: function() {
-                            state = true;
                             tools.ModalAlertInfo("Login", "Procesando petición..");
                         },
-                        success: function(result) {
-                            console.log(result)
+                        success: function(result) {                           
                             if (result.estado === 1) {
                                 let dato = result.datos;
                                 tools.ModalAlertSuccess("Login", "Los datos son correctos su sesión va iniciar en 2 segundos.");
 
                                 tools.AlertSuccess('Login', 'Bienvenido al Sistema ' + dato.Apellidos + ' ' + dato
                                     .Nombres)
-                                state = false;
                                 setTimeout(function() {
                                     location.href = "../view/home.php"
                                 }, 1000);
                             } else if (result.estado === 2) {
-                                tools.ModalAlertWarning("Login", result.message);
-
-                                $("#txtUsuario").val('')
-                                $("#txtClave").val('')
                                 $("#txtUsuario").focus();
-                                state = false;
+                                tools.ModalAlertWarning("Login", result.message);
+                            } else if (result.estado === 3) {
+                                $("#txtClave").val('')
+                                $("#txtClave").focus();
+                                tools.ModalAlertWarning("Login", result.message);
+                            } else if (result.estado === 4) {
+                                $("#txtUsuario").val('')
+                                $("#txtUsuario").focus();
+                                tools.ModalAlertWarning("Login", result.message);
                             } else {
-                                tools.ModalAlertWarning("Login", result.message);
-
                                 $("#txtUsuario").val('')
                                 $("#txtClave").val('')
                                 $("#txtUsuario").focus();
-                                state = false;
+                                tools.ModalAlertWarning("Login", result.message);
                             }
                         },
                         error: function(error) {
-                            tools.ModalAlertError("Login", error.responseText);
                             $("#txtUsuario").val('')
                             $("#txtClave").val('')
                             $("#txtUsuario").focus();
-                            state = false;
+                            tools.ModalAlertError("Login", error.responseText);
                         }
                     });
                 }

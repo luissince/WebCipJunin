@@ -507,7 +507,15 @@ if (!isset($_SESSION['IdUsuario'])) {
 
                 $("#btnSunat").keypress(function(event) {
                     if (event.keyCode == 13) {
-                        loadSunatApi($("#txtRuc").val());
+                        if ($("#txtRuc").val().trim() == '') {
+                            tools.AlertWarning("Ingenieros", "Ingrese un ruc en el campo.");
+                            $("#txtRuc").focus();
+                        } else if ($("#txtRuc").val().length !== 11) {
+                            tools.AlertWarning("Ingenieros", "El ruc debe tener 11 caracteres.");
+                            $("#txtRuc").focus();
+                        } else {
+                            loadSunatApi($("#txtRuc").val());
+                        }
                     }
                     event.preventDefault();
                 });
@@ -872,7 +880,7 @@ if (!isset($_SESSION['IdUsuario'])) {
                 peritajeEstado = {};
                 $("#btnCertificado").attr('aria-expanded', 'false');
                 $("#tbHistorial").empty();
-                UsarRuc = false;              
+                UsarRuc = false;
                 for (let i = 0; i < comprobantes.length; i++) {
                     if (comprobantes[i].Predeterminado == "1") {
                         $("#cbComprobante").val(comprobantes[i].IdTipoComprobante)
@@ -884,7 +892,7 @@ if (!isset($_SESSION['IdUsuario'])) {
                     }
                     break;
                 }
-             
+
 
             }
 
