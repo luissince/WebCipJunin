@@ -64,7 +64,7 @@ class ConceptoAdo
                     "Codigo" => $row["Codigo"],
                     "Estado" => $row["Estado"],
                     "Asignado" => $row["Asignado"],
-                    "Impuesto"=>$row["Impuesto"]
+                    "Impuesto" => $row["Impuesto"]
                 ));
             }
 
@@ -246,19 +246,20 @@ class ConceptoAdo
         try {
             $array = array();
 
-            $cmdIngeniero = Database::getInstance()->getDb()->prepare("SELECT * FROM Persona WHERE idDNI = ? AND Condicion = 'T' ");
+            $cmdIngeniero = Database::getInstance()->getDb()->prepare("SELECT Condicion FROM Persona WHERE idDNI = ?");
             $cmdIngeniero->bindParam(1, $dni, PDO::PARAM_STR);
             $cmdIngeniero->execute();
+            $resultIngeniero = $cmdIngeniero->fetch(PDO::FETCH_ASSOC);
 
-            if (!$cmdIngeniero->fetch()) {
-                $cmdConcepto = Database::getInstance()->getDb()->prepare("SELECT idConcepto,Categoria,Concepto,Precio FROM Concepto WHERE Categoria = 5 AND Estado = 1 AND Asignado = 0");
+            if ($resultIngeniero["Condicion"] == "T") {
+                $cmdConcepto = Database::getInstance()->getDb()->prepare("SELECT idConcepto,Categoria,Concepto,Precio FROM Concepto WHERE Categoria = 5 AND Estado = 1 AND Asignado = 1");
                 $cmdConcepto->execute();
                 $resultConcepto = $cmdConcepto->fetchObject();
                 if (!$resultConcepto) {
                     throw new Exception('No se encontro ningún concepto para obtener.');
                 }
             } else {
-                $cmdConcepto = Database::getInstance()->getDb()->prepare("SELECT idConcepto,Categoria,Concepto,Precio FROM Concepto WHERE Categoria = 5 AND Estado = 1 AND Asignado = 1");
+                $cmdConcepto = Database::getInstance()->getDb()->prepare("SELECT idConcepto,Categoria,Concepto,Precio FROM Concepto WHERE Categoria = 5 AND Estado = 1 AND Asignado = 0");
                 $cmdConcepto->execute();
                 $resultConcepto = $cmdConcepto->fetchObject();
                 if (!$resultConcepto) {
@@ -297,8 +298,14 @@ class ConceptoAdo
             $resultPago = $cmdUltimoPago->fetchColumn();
 
             $date = new DateTime($resultPago);
-            $date->modify('+3 month');
-            $date->modify('last day of this month');
+            if ($resultIngeniero["Condicion"] == "V") {
+                $date->modify('+9 month');
+                $date->modify('last day of this month');
+            } else {
+                $date->modify('+3 month');
+                $date->modify('last day of this month');
+            }
+
 
             $cmdCorrelativo = Database::getInstance()->getDb()->prepare("SELECT ISNULL(MAX(Numero)+1,1) FROM CERTHabilidad");
             $cmdCorrelativo->execute();
@@ -315,6 +322,11 @@ class ConceptoAdo
     {
         try {
             $array = array();
+
+            $cmdIngeniero = Database::getInstance()->getDb()->prepare("SELECT Condicion FROM Persona WHERE idDNI = ?");
+            $cmdIngeniero->bindParam(1, $dni, PDO::PARAM_STR);
+            $cmdIngeniero->execute();
+            $resultIngeniero = $cmdIngeniero->fetch(PDO::FETCH_ASSOC);
 
             $cmdConcepto = Database::getInstance()->getDb()->prepare("SELECT idConcepto,Categoria,Concepto, Precio FROM Concepto WHERE Categoria = 6 AND Estado = 1");
             $cmdConcepto->execute();
@@ -353,8 +365,13 @@ class ConceptoAdo
             $resultPago = $cmdUltimoPago->fetchColumn();
 
             $date = new DateTime($resultPago);
-            $date->modify('+3 month');
-            $date->modify('last day of this month');
+            if ($resultIngeniero["Condicion"] == "V") {
+                $date->modify('+9 month');
+                $date->modify('last day of this month');
+            } else {
+                $date->modify('+3 month');
+                $date->modify('last day of this month');
+            }
 
             $arrayUbigeo = array();
             $cmdUbigeo = Database::getInstance()->getDb()->prepare(" SELECT idUbigeo, CONCAT(Departamento, ' - ', Provincia, ' - ', 
@@ -387,6 +404,11 @@ class ConceptoAdo
     {
         try {
             $array = array();
+
+            $cmdIngeniero = Database::getInstance()->getDb()->prepare("SELECT Condicion FROM Persona WHERE idDNI = ?");
+            $cmdIngeniero->bindParam(1, $dni, PDO::PARAM_STR);
+            $cmdIngeniero->execute();
+            $resultIngeniero = $cmdIngeniero->fetch(PDO::FETCH_ASSOC);
 
             $cmdConcepto = Database::getInstance()->getDb()->prepare("SELECT idConcepto,Categoria,Concepto, Precio FROM Concepto WHERE Categoria = 7 AND Estado = 1");
             $cmdConcepto->execute();
@@ -425,8 +447,13 @@ class ConceptoAdo
             $resultPago = $cmdUltimoPago->fetchColumn();
 
             $date = new DateTime($resultPago);
-            $date->modify('+3 month');
-            $date->modify('last day of this month');
+            if ($resultIngeniero["Condicion"] == "V") {
+                $date->modify('+9 month');
+                $date->modify('last day of this month');
+            } else {
+                $date->modify('+3 month');
+                $date->modify('last day of this month');
+            }
 
             $arrayUbigeo = array();
             $cmdUbigeo = Database::getInstance()->getDb()->prepare(" SELECT idUbigeo, CONCAT(Departamento, ' - ', Provincia, ' - ', 

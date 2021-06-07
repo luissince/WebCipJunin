@@ -266,6 +266,13 @@ if (!isset($_SESSION['IdUsuario'])) {
                     updateModules();
                 });
 
+                $("#btnAceptarModulos").keypress(function(event) {
+                    if (event.keyCode == 13) {
+                        updateModules();
+                    }
+                    event.preventDefault();
+                });
+
                 //-------------------------------------------------------
                 $("#btnNuevoRol").click(function() {
                     $("#confirmar").modal("show");
@@ -397,8 +404,10 @@ if (!isset($_SESSION['IdUsuario'])) {
             function insertRol() {
                 if ($("#nombre").val() == '' || $("#nombre").val().length < 3) {
                     tools.AlertWarning("Advertencia", "Ingrese un nombre de rol por favor.");
+                    $("#nombre").focus();
                 } else if ($("#descripcion").val() == '') {
                     tools.AlertWarning("Advertencia", "Ingrese una descripción por favor.");
+                    $("#descripcion").focus();
                 } else {
                     tools.ModalDialog("Roles", "¿Está seguro de continuar?", function(value) {
                         if (value == true) {

@@ -41,7 +41,7 @@
                         <!-- Menu Footer-->
                         <li class="user-footer">
                             <div class="pull-left">
-                                <a href="#" class="btn btn-default btn-flat"> <i class="fa fa-cogs"></i> Cambiar
+                                <a href="perfil.php" class="btn btn-default btn-flat"> <i class="fa fa-cogs"></i> Cambiar
                                     Clave</a>
                             </div>
                             <div class="pull-right">

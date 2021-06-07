@@ -37,7 +37,7 @@ if (!isset($_SESSION['IdUsuario'])) {
                             <div class="modal-body">
                                 <div class="row">
                                     <div class="col-md-12">
-                                        <label for="Universidad" class="control-label">Nombres</label>
+                                        <label for="txtAddNombres" class="control-label">Nombres</label>
                                         <div class="form-group">
                                             <input id="txtAddNombres" type="text" class="form-control" placeholder="Ingrese su(s) nombre(s)" required="">
                                         </div>
@@ -45,7 +45,7 @@ if (!isset($_SESSION['IdUsuario'])) {
                                 </div>
                                 <div class="row">
                                     <div class="col-md-12">
-                                        <label for="Universidad" class="control-label">Apellidos</label>
+                                        <label for="txtAddApellidos" class="control-label">Apellidos</label>
                                         <div class="form-group">
                                             <input id="txtAddApellidos" type="text" class="form-control" placeholder="Ingrese sus apellidos" required="">
                                         </div>
@@ -54,7 +54,7 @@ if (!isset($_SESSION['IdUsuario'])) {
 
                                 <div class="row">
                                     <div class="col-md-12">
-                                        <label for="Universidad" class="control-label">Usuario</label>
+                                        <label for="txtAddUsuario" class="control-label">Usuario</label>
                                         <div class="form-group">
                                             <input id="txtAddUsuario" type="text" class="form-control" placeholder="Ingrese su usuario" required="">
                                         </div>
@@ -62,9 +62,14 @@ if (!isset($_SESSION['IdUsuario'])) {
                                 </div>
                                 <div class="row">
                                     <div class="col-md-12">
-                                        <label for="Universidad" class="control-label">Contraseña</label>
+                                        <label for="txtClave" class="control-label">Contraseña</label>
                                         <div class="form-group">
-                                            <input id="txtContrasena" type="password" class="form-control" placeholder="Ingrese una contraseña" required="">
+                                            <div class="input-group">
+                                                <input id="txtClave" type="password" class="form-control" placeholder="Ingrese una contraseña" required="">
+                                                <div class="input-group-btn">
+                                                    <button type="button" class="btn btn-success" id="btnView"><i class="fa fa-eye"></i></button>
+                                                </div>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
@@ -212,6 +217,18 @@ if (!isset($_SESSION['IdUsuario'])) {
             $(document).ready(function() {
 
                 loadInitUsuario();
+
+                $("#btnView").click(function() {
+                    $("#txtClave").attr("type", $("#txtClave").prop("type") == "text" ? "password" : "text");
+                });
+
+                $("#btnView").keypress(function(event) {
+                    if (event.keyCode == 13) {
+                        $("#txtClave").attr("type", $("#txtClave").prop("type") == "text" ? "password" : "text");
+                    }
+                    event.preventDefault();
+                });
+
 
                 $("#btnIzquierda").click(function() {
                     if (!state) {
@@ -370,9 +387,9 @@ if (!isset($_SESSION['IdUsuario'])) {
                 } else if ($("#txtAddUsuario").val() == '') {
                     tools.AlertWarning('Usuario', "Ingrese su usuario para el ingreso");
                     $("#txtAddUsuario").focus();
-                } else if ($("#txtContrasena").val() == '') {
+                } else if ($("#txtClave").val() == '') {
                     tools.AlertWarning('Usuario', "Digite una contraseña para el ingreso");
-                    $("#txtContrasena").focus();
+                    $("#txtClave").focus();
                 } else if ($("#rol").val() == '') {
                     tools.AlertWarning('Usuario', "Seleccione un rol");
                     $("#rol").focus();
@@ -388,7 +405,7 @@ if (!isset($_SESSION['IdUsuario'])) {
                                     "nombres": $("#txtAddNombres").val(),
                                     "apellidos": $("#txtAddApellidos").val(),
                                     "usuarios": $("#txtAddUsuario").val(),
-                                    "contrasena": $("#txtContrasena").val(),
+                                    "contrasena": $("#txtClave").val(),
                                     "rol": $("#rol").val(),
                                     "estado": $("#estado").val()
                                 },
@@ -416,13 +433,14 @@ if (!isset($_SESSION['IdUsuario'])) {
             }
 
             function clearModalUsuario() {
-                $("#mdAddUser").modal("hide")
-                $("#modal-user-title").empty()
-                $("#txtAddNombres").val("")
-                $("#txtAddApellidos").val("")
-                $("#txtAddUsuario").val("")
-                $("#txtContrasena").val("")
-                $("#estado").val("1")
+                $("#mdAddUser").modal("hide");
+                $("#modal-user-title").empty();
+                $("#txtAddNombres").val("");
+                $("#txtAddApellidos").val("");
+                $("#txtAddUsuario").val("");
+                $("#txtClave").val("");
+                $("#txtClave").attr("type", "password");
+                $("#estado").val("1");
                 idUsuario = 0;
             }
 
@@ -466,7 +484,7 @@ if (!isset($_SESSION['IdUsuario'])) {
                                         $("#txtAddNombres").val(result.object.Nombres);
                                         $("#txtAddApellidos").val(result.object.Apellidos);
                                         $("#txtAddUsuario").val(result.object.Usuario);
-                                        $("#txtContrasena").val(result.object.Clave);
+                                        $("#txtClave").val(result.object.Clave);
                                         $("#rol").val(result.object.Rol);
                                         $("#estado").val(result.object.Estado);
                                         tools.AlertInfo("Información", "Se cargo correctamente los datos.");

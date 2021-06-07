@@ -109,7 +109,7 @@ class RolAdo
 
                     $idRol = Database::getInstance()->getDb()->lastInsertId();
                     $comandoPermisos = Database::getInstance()->getDb()->prepare("INSERT INTO Permiso (idRol, idModulo, ver,crear,actualizar,eliminar) VALUES (?,?,?,?,?,?)");
-                    for ($i = 0; $i < 10; $i++) {
+                    for ($i = 0; $i < 13; $i++) {
                         $comandoPermisos->execute(array($idRol, ($i + 1), 0, 0, 0, 0));
                     }
                     Database::getInstance()->getDb()->commit();
@@ -134,13 +134,13 @@ class RolAdo
                 Database::getInstance()->getDb()->rollback();
                 return "usuario";
             } else {
-                $cmdRol = Database::getInstance()->getDb()->prepare("DELETE FROM Rol WHERE idRol = ?");
-                $cmdRol->bindParam(1, $idRol, PDO::PARAM_STR);
-                $cmdRol->execute();
-
                 $cmdPermiso = Database::getInstance()->getDb()->prepare("DELETE FROM Permiso WHERE idRol = ?");
                 $cmdPermiso->bindParam(1, $idRol, PDO::PARAM_STR);
                 $cmdPermiso->execute();
+
+                $cmdRol = Database::getInstance()->getDb()->prepare("DELETE FROM Rol WHERE idRol = ?");
+                $cmdRol->bindParam(1, $idRol, PDO::PARAM_STR);
+                $cmdRol->execute();            
 
                 Database::getInstance()->getDb()->commit();
                 return "deleted";

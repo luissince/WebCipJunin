@@ -237,10 +237,11 @@ function Certificado() {
 
                     if (cuotasEstate) {
                         if (tools.validateDate(cuotasFin)) {
+                            let mes = tipoColegiado == "V" ? 9 : 3;
                             let fechaCertHabilidad = new Date(cuotasFin);
                             fechaCertHabilidad.setDate(1);
                             fechaCertHabilidad.setMonth(fechaCertHabilidad.getMonth() + 1);
-                            fechaCertHabilidad.setMonth(fechaCertHabilidad.getMonth() + 3);
+                            fechaCertHabilidad.setMonth(fechaCertHabilidad.getMonth() + mes);
                             let year = fechaCertHabilidad.getFullYear();
                             let month = (fechaCertHabilidad.getMonth() + 1) <= 9 ? "0" + (fechaCertHabilidad.getMonth() + 1) : (fechaCertHabilidad.getMonth() + 1);
                             var lastDayOfMonth = new Date(year, month, 0);
@@ -319,9 +320,10 @@ function Certificado() {
                     if (cuotasEstate) {
                         if (tools.validateDate(cuotasFin)) {
                             let fechaCertHabilidad = new Date(cuotasFin);
+                            let mes = tipoColegiado == "V" ? 9 : 3;
                             fechaCertHabilidad.setDate(1);
                             fechaCertHabilidad.setMonth(fechaCertHabilidad.getMonth() + 1);
-                            fechaCertHabilidad.setMonth(fechaCertHabilidad.getMonth() + 3);
+                            fechaCertHabilidad.setMonth(fechaCertHabilidad.getMonth() + mes);
                             let year = fechaCertHabilidad.getFullYear();
                             let month = (fechaCertHabilidad.getMonth() + 1) <= 9 ? "0" + (fechaCertHabilidad.getMonth() + 1) : (fechaCertHabilidad.getMonth() + 1);
                             var lastDayOfMonth = new Date(year, month, 0);
@@ -405,9 +407,10 @@ function Certificado() {
                     if (cuotasEstate) {
                         if (tools.validateDate(cuotasFin)) {
                             let fechaCertHabilidad = new Date(cuotasFin);
+                            let mes = tipoColegiado == "V" ? 9 : 3;
                             fechaCertHabilidad.setDate(1);
                             fechaCertHabilidad.setMonth(fechaCertHabilidad.getMonth() + 1);
-                            fechaCertHabilidad.setMonth(fechaCertHabilidad.getMonth() + 3);
+                            fechaCertHabilidad.setMonth(fechaCertHabilidad.getMonth() + mes);
                             let year = fechaCertHabilidad.getFullYear();
                             let month = (fechaCertHabilidad.getMonth() + 1) <= 9 ? "0" + (fechaCertHabilidad.getMonth() + 1) : (fechaCertHabilidad.getMonth() + 1);
                             var lastDayOfMonth = new Date(year, month, 0);
@@ -469,7 +472,7 @@ function Certificado() {
             certificadoHabilidad.entidad = $("#txtEntidadCertificado").val().toUpperCase();
             certificadoHabilidad.lugar = $("#txtLugarCertificado").val().toUpperCase();
             certificadoHabilidad.ultimoPago = $("#txtFechaCertificado").val();
-            certificadoHabilidad.anulado = 0;            
+            certificadoHabilidad.anulado = 0;
             validateCertHabilidadNum(certificadoHabilidad.numero);
         }
     }

@@ -31,7 +31,7 @@
               <?php
                 if ($_SESSION["Permisos"][0]["ver"] == 1) {
                     print '<li id="tab-home">
-                    <a href="./"><i class="fa fa-home"></i> <span>Inicio</span></a>
+                    <a href="./home.php"><i class="fa fa-home"></i> <span>Inicio</span></a>
                 </li>';
                 }
 
@@ -90,19 +90,9 @@
                     </ul>
                 </li>';
                 }
-                if ($_SESSION["Permisos"][10]["ver"] == 1) {
-                    print '<li id="tab-empresas">
-                    <a href="./empresas.php"><i class="fa fa-building-o"></i> <span>Entidades</span></a>
-                </li>';
-                }
                 if ($_SESSION["Permisos"][8]["ver"] == 1) {
                     print '<li id="tab-cobros">
                     <a href="./cobros.php"><i class="fa fa-money"></i><span>Cobros</span></a>
-                </li>';
-                }
-                if ($_SESSION["Permisos"][11]["ver"] == 1) {
-                    print '<li id="tab-comprobantes">
-                    <a href="./comprobantes.php"><i class="fa fa-file-text-o"></i><span>Comprobantes</span></a>
                 </li>';
                 }
                 if ($_SESSION["Permisos"][9]["ver"] == 1) {
@@ -110,23 +100,36 @@
                     <a href="./reportes.php"><i class="fa fa-bar-chart"></i><span>Reportes</span></a>
                 </li>';
                 }
+                if ($_SESSION["Permisos"][10]["ver"] == 1) {
+                    print '<li id="tab-empresas">
+                    <a href="./empresas.php"><i class="fa fa-building-o"></i> <span>Entidades</span></a>
+                </li>';
+                }
+                if ($_SESSION["Permisos"][11]["ver"] == 1) {
+                    print '<li id="tab-comprobantes">
+                    <a href="./comprobantes.php"><i class="fa fa-file-text-o"></i><span>Comprobantes</span></a>
+                </li>';
+                }
+                if ($_SESSION["Permisos"][12]["ver"] == 1) {
+                    print '<li class="treeview" id="tab-menu-factura">
+                    <a href="">
+                        <i class="fa fa-folder-open"></i><span>Facturacion</span>
+                        <span class="pull-right-container">
+                            <i class="fa fa-angle-left pull-right"></i>
+                        </span>
+                    </a>
+                    <ul class="treeview-menu">
+                        <li id="tab-comprobantesElectronicos"><a href="comprobantesElectronicos.php"><i class="fa fa-circle-o"></i>Boleta/Factura</a></li>
+                        <li id="tab-notaCredito"><a href="notaCredito.php"><i class="fa fa-circle-o"></i>Nota Crédito</a></li>
+                        <li id="tab-notaDebito"><a href="notaDebito.php"><i class="fa fa-circle-o"></i>Nota Débito</a></li>
+                        <li id="tab-consultaComprobante"><a href="consultaComprobante.php"><i class="fa fa-circle-o"></i>Consultar Comprobante</a></li>
+                        <li id="tab-configEmpresa"><a href="configEmpresa.php"><i class="fa fa-circle-o"></i>Empresa</a></li>
+                    </ul>
+                </li>';
+                }
                 ?>
 
-              <li class="treeview" id="tab-menu-factura">
-                  <a href="">
-                      <i class="fa fa-folder-open"></i><span>Facturacion</span>
-                      <span class="pull-right-container">
-                          <i class="fa fa-angle-left pull-right"></i>
-                      </span>
-                  </a>
-                  <ul class="treeview-menu">
-                      <li id="tab-comprobantesElectronicos"><a href="comprobantesElectronicos.php"><i class="fa fa-circle-o"></i>Boleta/Factura</a></li>
-                      <li id="tab-notaCredito"><a href="notaCredito.php"><i class="fa fa-circle-o"></i>Nota Crédito</a></li>
-                      <li id="tab-notaDebito"><a href="notaDebito.php"><i class="fa fa-circle-o"></i>Nota Débito</a></li>
-                      <li id="tab-consultaComprobante"><a href="consultaComprobante.php"><i class="fa fa-circle-o"></i>Consultar Comprobante</a></li>
-                      <li id="tab-configEmpresa"><a href="configEmpresa.php"><i class="fa fa-circle-o"></i>Empresa</a></li>
-                  </ul>
-              </li>
+
 
       </section>
   </aside>
