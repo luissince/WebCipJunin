@@ -290,7 +290,7 @@ if (!isset($_SESSION['IdUsuario'])) {
                                         <th width="5%" class="text-center">#</th>
                                         <th width="7%">Cip</th>
                                         <th width="7%">Dni</th>
-                                        <th width="20%">Apellidos y Nombres</th>
+                                        <th width="21%">Apellidos y Nombres</th>
                                         <th width="10%">Sexo</th>
                                         <th width="10%">Estado Civil</th>
                                         <th width="10%">Condicion</th>
@@ -526,7 +526,7 @@ if (!isset($_SESSION['IdUsuario'])) {
                                     let btnUpdate =
                                         '<button class="btn btn-warning btn-xs" onclick="loadUpdateIngenieros(\'' +
                                         persona.idDNI + '\')">' +
-                                        '<i class="fa fa-wrench" style="font-size:25px;"></i> ' +
+                                        '<i class="fa fa-edit" style="font-size:25px;"></i> ' +
                                         '</button>';
 
                                     let estadoCivil = (persona.EstadoCivil == 'S') ? 'Soltero/a' :

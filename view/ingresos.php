@@ -145,11 +145,11 @@ if (!isset($_SESSION['IdUsuario'])) {
                                         <th style="width:5%;">Anular</th>
                                         <th style="width:5%;">P.D.F</th>
                                         <th style="width:5%;">Detalle</th>
-                                        <th style="width:10%;">Fecha</th>
-                                        <th style="width:10%;">Comprobante</th>
-                                        <th style="width:15%;">Colegiado</th>
-                                        <th style="width:10%;">Estado</th>
-                                        <th style="width:10%;">Total</th>
+                                        <th style="width:13%;">Fecha</th>
+                                        <th style="width:13%;">Comprobante</th>
+                                        <th style="width:30%;">Colegiado</th>
+                                        <th style="width:12%;">Estado</th>
+                                        <th style="width:12%;">Total</th>
                                     </thead>
                                     <tbody id="tbTable">
 
@@ -354,7 +354,7 @@ if (!isset($_SESSION['IdUsuario'])) {
 
             function loadTableIngresos(opcion, buscar, fechaInicio, fechaFinal, comprobante, estado) {
                 $.ajax({
-                    url: "../app/controller/ListarIngresos.php",
+                    url: "../app/controller/IngresoController.php",
                     method: "GET",
                     data: {
                         "type": "allIngresos",
@@ -407,13 +407,13 @@ if (!isset($_SESSION['IdUsuario'])) {
                                         (ingresos.xmldescripcion === "" ? "Por Generar Xml y Enviar" : ingresos.xmldescripcion);
 
                                     tbTable.append('<tr>' +
-                                        '<td style="text-align: center;color: #2270D1;">' + ingresos.id + '</td>' +
+                                        '<td class="text-center text-primary">' + ingresos.id + '</td>' +
                                         '<td>' + btnAnular + '</td>' +
                                         '<td>' + btnPdf + '</td>' +
                                         '<td>' + btnDetalle + '</td>' +
                                         '<td>' + ingresos.fecha + '<br>' + tools.getTimeForma(ingresos.hora, true) + '</td>' +
                                         '<td>' + ingresos.serie + '-' + ingresos.numRecibo + '</td>' +
-                                        '<td>' + ingresos.idDNI + '</br>' + ingresos.nombres + ' ' + ingresos.apellidos + '</td>' +
+                                        '<td>' + ingresos.numeroDocumento + '</br>' + ingresos.persona + '</td>' +
                                         '<td>' + (ingresos.estado == "C" ? '<span class="text-green">Pagado</span>' : '<span class="text-red">Anulado</span>') + '</td>' +
                                         '<td>' + tools.formatMoney(ingresos.total) + '</td>' +
                                         '</tr>'

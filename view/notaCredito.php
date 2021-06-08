@@ -21,6 +21,47 @@ if (!isset($_SESSION['IdUsuario'])) {
             <!-- start menu -->
             <?php include('./layout/menu.php') ?>
             <!-- end menu -->
+            <!-- modal detalle del ingreso -->
+            <div class="row">
+                <div class="modal fade" id="mostrarDetalleNotaCredito" data-backdrop="static">
+                    <div class="modal-dialog">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <button type="button" class="close" data-dismiss="modal">
+                                    <i class="fa fa-close"></i>
+                                </button>
+                                <h4 class="modal-title">
+                                    <i class="fa fa-group">
+                                    </i> Detalle de la Nota de Crédito
+                                </h4>
+                            </div>
+                            <div class="modal-body">
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <div class="table-responsive">
+                                            <table class="table table-striped table-hover table-sm">
+                                                <thead>
+                                                    <tr>
+                                                        <th width="5%">#</th>
+                                                        <th width="30%">Concepto</th>
+                                                        <th width="15%">Precio</th>
+                                                        <th width="15%">Cantidad</th>
+                                                        <th width="15%">Afectación</th>
+                                                        <th width="15%">Importe</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody id="tbDetalleNotaCredito">
+
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
             <!-- Content Wrapper. Contains page content -->
             <div class="content-wrapper" style="background-color: #FFFFFF;">
                 <!-- Main content -->
@@ -71,26 +112,22 @@ if (!isset($_SESSION['IdUsuario'])) {
 
                     <div class="row">
                         <div class="col-md-3 col-sm-12 col-xs-12">
-                            <label>Fecha de inicio:</label>
-                            <input type="date" class="form-control pull-right" id="fechaInicio">
-                        </div>
-                        <div class="col-md-3 col-sm-12 col-xs-12">
-                            <label>Fecha de fin:</label>
-                            <input type="date" class="form-control pull-right" id="fechaFinal">
-                        </div>
-                        <div class="col-md-3 col-sm-12 col-xs-12">
+                            <label>Fecha de inicio.</label>
                             <div class="form-group">
-                                <label>Opción</label>
-                                <div class="input-group">
-                                    <button class="btn btn-primary" id="btnEnvioMasivo"><i class="fa fa-gg-circle"></i> Envío masivo a sunat</button>
-                                </div>
+                                <input type="date" class="form-control" id="fechaInicio">
                             </div>
                         </div>
                         <div class="col-md-3 col-sm-12 col-xs-12">
+                            <label>Fecha de fin.</label>
                             <div class="form-group">
-                                <label>Generar excel</label>
+                                <input type="date" class="form-control" id="fechaFinal">
+                            </div>
+                        </div>
+                        <div class="col-md-3 col-sm-12 col-xs-12">
+                            <label>Envío masivo.</label>
+                            <div class="form-group">
                                 <div class="input-group">
-                                    <button class="btn btn-success" id="btnExcel"><i class="fa fa-file-excel-o"></i> Excel por fechas</button>
+                                    <button class="btn btn-danger" id="btnEnvioMasivo"><i class="fa fa-gg-circle"></i> Envío masivo a sunat</button>
                                 </div>
                             </div>
                         </div>
@@ -98,14 +135,21 @@ if (!isset($_SESSION['IdUsuario'])) {
 
                     <div class="row">
                         <div class="col-md-6 col-sm-12 col-xs-12">
-                            <label>Filtrar comprobantes por serie, numeración o cliente</label>
-                            <input type="search" id="buscar" class="form-control" placeholder="Escribe para filtrar automaticamente" aria-describedby="search" value="">
+                            <label>Filtrar por serie, numeración o colegiado(Presione Enter).</label>
+                            <div class="form-group">
+                                <div class="input-group">
+                                    <input type="search" id="txtBuscar" class="form-control" placeholder="Escribe para filtrar automaticamente" aria-describedby="search" value="">
+                                    <div class="input-group-btn">
+                                        <button type="button" class="btn btn-primary" id="btnBuscar">Buscar</button>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                         <div class="col-md-6 col-sm-12 col-xs-12">
+                            <label>Opción.</label>
                             <div class="form-group">
-                                <label>Opción</label>
                                 <div class="input-group">
-                                    <button type="submit" class="btn btn-link" id="btnRecargar"><i class="fa fa-refresh"></i> Actualizar</button>
+                                    <button type="submit" class="btn btn-default" id="btnRecargar"><i class="fa fa-refresh"></i> Actualizar</button>
                                 </div>
                             </div>
                         </div>
@@ -116,15 +160,15 @@ if (!isset($_SESSION['IdUsuario'])) {
                             <div class="table-responsive">
                                 <table class="table table-striped" style="border-width: 1px;border-style: dashed;border-color: #E31E25;">
                                     <thead style="background-color: #FDB2B1;color: #B72928;">
-                                        <th style="width:2%;">#</th>
-                                        <th style="width:7%;">Opciones</th>
-                                        <th style="width:10%;">Tipo de Nota Credito</th>
-                                        <th style="width:7%;">Fecha Registro</th>
+                                        <th style="width:5%;" class="text-center">#</th>
+                                        <th style="width:5%;">P.D.F</th>
+                                        <th style="width:5%;">Detalle</th>
+                                        <th style="width:10%;">Fecha</th>
                                         <th style="width:10%;">Comprobante</th>
-                                        <th style="width:25%;">Cliente</th>
-                                        <th style="width:13%;">Motivo</th>
+                                        <th style="width:15%;">Colegiado</th>
+                                        <th style="width:10%;">Modificado</th>
                                         <th style="width:5%;">Total</th>
-                                        <th style="width:5%;">Estado Sunat</th>
+                                        <th style="width:10%;" class="text-center">Estado Sunat</th>
                                         <th style="width:15%;">Observaciones Sunat</th>
                                     </thead>
                                     <tbody id="tbTable">
@@ -174,17 +218,11 @@ if (!isset($_SESSION['IdUsuario'])) {
             let tbTable = $("#tbTable");
 
             $(document).ready(function() {
+
+
                 $("#fechaInicio").val(tools.getCurrentDate());
 
                 $("#fechaFinal").val(tools.getCurrentDate());
-
-                // $("#btnExcel").click(function() {
-                //     if (tools.validateDate($("#fechaInicio").val()) && tools.validateDate($("#fechaFinal").val())) {
-                //         if (!state) {
-                //             openExcel($("#fechaInicio").val(), $("#fechaFinal").val());
-                //         }
-                //     }
-                // });
 
                 $("#btnIzquierda").click(function() {
                     if (!state) {
@@ -208,8 +246,8 @@ if (!isset($_SESSION['IdUsuario'])) {
                     if (tools.validateDate($("#fechaInicio").val()) && tools.validateDate($("#fechaFinal").val())) {
                         if (!state) {
                             paginacion = 1;
-                            loadTableNotasCredito(0, "", $("#fechaInicio").val(), $("#fechaFinal").val());
-                            opcion = 0;
+                            loadTableNotasCredito(1, "", $("#fechaInicio").val(), $("#fechaFinal").val());
+                            opcion = 1;
                         }
                     }
                 });
@@ -218,20 +256,45 @@ if (!isset($_SESSION['IdUsuario'])) {
                     if (tools.validateDate($("#fechaInicio").val()) && tools.validateDate($("#fechaFinal").val())) {
                         if (!state) {
                             paginacion = 1;
-                            loadTableNotasCredito(0, "", $("#fechaInicio").val(), $("#fechaFinal").val());
-                            opcion = 0;
+                            loadTableNotasCredito(1, "", $("#fechaInicio").val(), $("#fechaFinal").val());
+                            opcion = 1;
                         }
                     }
                 });
 
-                $("#buscar").keyup(function() {
-                    if ($("#buscar").val().trim() != '') {
-                        if (!state) {
-                            paginacion = 1;
-                            loadTableNotasCredito(1, $("#buscar").val().trim(), "", "");
-                            opcion = 1;
+                $("#txtBuscar").keyup(function() {
+                    if (event.keyCode == 13) {
+                        if ($("#txtBuscar").val().trim() != '') {
+                            if (!state) {
+                                paginacion = 1;
+                                loadTableNotasCredito(2, $("#txtBuscar").val().trim(), "", "");
+                                opcion = 2;
+                            }
                         }
                     }
+                });
+
+                $("#btnBuscar").click(function(event) {
+                    if ($("#txtBuscar").val().trim() != '') {
+                        if (!state) {
+                            paginacion = 1;
+                            loadTableNotasCredito(2, $("#txtBuscar").val().trim(), "", "");
+                            opcion = 2;
+                        }
+                    }
+                });
+
+                $("#btnBuscar").keypress(function(event) {
+                    if (event.keyCode == 13) {
+                        if ($("#txtBuscar").val().trim() != '') {
+                            if (!state) {
+                                paginacion = 1;
+                                loadTableNotasCredito(2, $("#txtBuscar").val().trim(), "", "");
+                                opcion = 2;
+                            }
+                        }
+                    }
+                    event.preventDefault();
                 });
 
                 $("#btnRecargar").click(function() {
@@ -245,8 +308,6 @@ if (!isset($_SESSION['IdUsuario'])) {
                     event.preventDefault();
                 });
 
-                $("#contacto").append('<option> - seleccione un contacto -</option>')
-
                 $("#nuevaNotaCredito").click(function() {
                     window.location.href = "nuevaNotaCredito.php"
                 });
@@ -258,32 +319,33 @@ if (!isset($_SESSION['IdUsuario'])) {
             });
 
             function listarNotasCredito() {
-                if (tools.validateDate($("#fechaInicio").val()) && tools.validateDate($("#fechaFinal").val())) {
-                    if (!state) {
-                        paginacion = 1;
-                        loadTableNotasCredito(0, "", $("#fechaInicio").val(), $("#fechaFinal").val());
-                        opcion = 0;
-                    }
+                if (!state) {
+                    paginacion = 1;
+                    loadTableNotasCredito(0, "", "", "");
+                    opcion = 0;
                 }
             }
 
             function onEventPaginacion() {
                 switch (opcion) {
                     case 0:
-                        loadTableNotasCredito(0, "", $("#fechaInicio").val(), $("#fechaFinal").val());
+                        loadTableNotasCredito(0, "", "", "");
                         break;
                     case 1:
-                        loadTableNotasCredito(1, $("#buscar").val().trim(), "", "");
+                        loadTableNotasCredito(1, "", $("#fechaInicio").val(), $("#fechaFinal").val());
+                        break;
+                    case 2:
+                        loadTableNotasCredito(2, $("#txtBuscar").val().trim(), "", "");
                         break;
                 }
             }
 
             function loadTableNotasCredito(opcion, buscar, fechaInicio, fechaFinal) {
                 $.ajax({
-                    url: "../app/controller/ListarIngresos.php",
+                    url: "../app/controller/NotaCreditoController.php",
                     method: "GET",
                     data: {
-                        "type": "allNotasCredito",
+                        "type": "all",
                         "opcion": opcion,
                         "buscar": buscar,
                         "fechaInicio": fechaInicio,
@@ -296,61 +358,55 @@ if (!isset($_SESSION['IdUsuario'])) {
                         tbTable.append(
                             '<tr class="text-center"><td colspan="10"><img src="./images/spiner.gif"/><p>Cargando información.</p></td></tr>'
                         );
+                        totalPaginacion = 0;
                         arrayIngresos = [];
                         state = true;
                     },
                     success: function(result) {
-
                         if (result.estado == 1) {
-
-                            console.log(result.data);
                             arrayIngresos = result.data;
                             if (arrayIngresos.length == 0) {
                                 tbTable.empty();
                                 tbTable.append(
-                                    '<tr class="text-center"><td colspan="10"><p>No hay ingresos para mostrar.</p></td></tr>'
+                                    '<tr class="text-center"><td colspan="10"><p>No hay comprobantes para mostrar.</p></td></tr>'
                                 );
-                                totalPaginacion = parseInt(Math.ceil((parseFloat(result.total) / parseInt(
-                                    filasPorPagina))));
                                 $("#lblPaginaActual").html("0");
-                                $("#lblPaginaSiguiente").html(totalPaginacion);
+                                $("#lblPaginaSiguiente").html(0);
                                 state = false;
                             } else {
                                 tbTable.empty();
-                                for (let ingresos of arrayIngresos) {
+                                for (let notacredito of arrayIngresos) {
 
-                                    let btnPdf = '<button class="btn btn-default btn-xs" onclick="openPdf(\'' + ingresos.idNotaCredito + '\')">' +
-                                        '<i class="fa fa-file-pdf-o"></i></br>P.D.F' +
+                                    let btnPdf = '<button class="btn btn-danger btn-xs" onclick="openPdf(\'' + notacredito.idNotaCredito + '\')">' +
+                                        '<i class="fa fa-file-pdf-o" style="font-size:25px;"></i></br>' +
                                         '</button>';
-                                    let btnDetalle = '<button class="btn btn-warning btn-xs" onclick="openDetalle(\'' + ingresos.idNotaCredito + '\')">' +
-                                        '<i class="fa fa-eye"></i></br>Detalle' +
+                                    let btnDetalle = '<button class="btn btn-warning btn-xs" onclick="openDetalle(\'' + notacredito.idNotaCredito + '\')">' +
+                                        '<i class="fa fa-eye" style="font-size:25px;"></i></br>' +
                                         '</button>';
 
-                                    let motivo = ingresos.motivoNotaCredito == 1 ? 'Anulación de la operación' :
-                                        ingresos.motivoNotaCredito == 1 ? 'Anulación de la operación' :
-                                        ingresos.motivoNotaCredito == 2 ? 'Anulación por error en el ruc' :
-                                        ingresos.motivoNotaCredito == 3 ? 'Corrección por error en la descripción' :
-                                        ingresos.motivoNotaCredito == 4 ? 'Descuento global' :
-                                        ingresos.motivoNotaCredito == 5 ? 'Descuento por ítem' :
-                                        ingresos.motivoNotaCredito == 6 ? 'Devolución total' :
-                                        ingresos.motivoNotaCredito == 7 ? 'Devolución por ítem' :
-                                        ingresos.motivoNotaCredito == 8 ? 'Bonificación' :
-                                        ingresos.motivoNotaCredito == 9 ? 'Disminución en el valor' :
-                                        ingresos.motivoNotaCredito == 10 ? 'Otros Conceptos' : 'Ajustes de operaciones de exportación'
+                                    let estadosunat =
+                                        (notacredito.Xmlsunat === "" ?
+                                            '<button class="btn btn-default btn-xs" onclick="facturarXml(\'' + notacredito.idNotaCredito + '\')"><img src="./images/reuse.svg" width="26" /></button>' :
+                                            notacredito.Xmlsunat === "0" ?
+                                            '<button class="btn btn-default btn-xs"><img src="./images/accept.svg" width="26"/></button>' :
+                                            '<button class="btn btn-default btn-xs" onclick="facturarXml(\'' + notacredito.idNotaCredito + '\')"><img src="./images/unable.svg" width="26"/></button>');
+
+
+                                    let observacionsunat =
+                                        (notacredito.Xmldescripcion === "" ? "Por Generar Xml y Enviar" : notacredito.Xmldescripcion);
+
 
                                     tbTable.append('<tr>' +
-                                        '<td style="text-align: center;color: #2270D1;">' +
-                                        '' + ingresos.id + '' +
-                                        '</td>' +
+                                        '<td class="text-center text-primary">' + notacredito.id + '</td>' +
+                                        '<td>' + btnPdf + '</td>' +
                                         '<td>' + btnDetalle + '</td>' +
-                                        '<td>' + ingresos.tipoNotaCredito + '</td>' +
-                                        '<td>' + ingresos.fechadeRegistro + '<br>' + tools.getTimeForma(ingresos.hora, true) + '</td>' +
-                                        '<td>' + ingresos.serie + '-' + ingresos.correlativo + '</td>' +
-                                        '<td>' + ingresos.numeroDocIdent + '</br>' + ingresos.nombres + '</td>' +
-                                        '<td>' + motivo +
-                                        '<td>' + tools.formatMoney(ingresos.total) + '</td>' +
-                                        '<td style="text-align: center;">' + 'estadosunat' + '</td>' +
-                                        '<td>' + 'observacionsunat' + '</td>' +
+                                        '<td>' + notacredito.FechadeRegistro + '</td>' +
+                                        '<td>' + notacredito.Serie + '-' + notacredito.NumRecibo + '</td>' +
+                                        '<td>' + notacredito.NumeroDocumento + '<br>' + notacredito.Persona + '</td>' +
+                                        '<td>' + notacredito.SerieModificado + '-' + notacredito.NumeracionModificado + '</td>' +
+                                        '<td>' + tools.formatMoney(notacredito.Total) + '</td>' +
+                                        '<td class="text-center">' + estadosunat + '</td>' +
+                                        '<td>' + observacionsunat + '</td>' +
                                         '</tr>'
                                     );
                                 }
@@ -363,7 +419,7 @@ if (!isset($_SESSION['IdUsuario'])) {
                         } else {
                             tbTable.empty();
                             tbTable.append(
-                                '<tr class="text-center"><td colspan="10"><p>' + result.mensaje + '</p></td></tr>'
+                                '<tr class="text-center"><td colspan="10"><p>' + result.message + '</p></td></tr>'
                             );
                             $("#lblPaginaActual").html(0);
                             $("#lblPaginaSiguiente").html(0);
@@ -382,6 +438,86 @@ if (!isset($_SESSION['IdUsuario'])) {
                     }
                 });
             }
+
+            function facturarXml(idNotaCredito) {
+                tools.ModalDialog("Ingreso", "¿Está seguro de continuar con el envío?", function(value) {
+                    if (value == true) {
+                        $.ajax({
+                            url: "../app/examples/notacredito.php",
+                            method: "GET",
+                            data: {
+                                "idNotaCredito": idNotaCredito
+                            },
+                            beforeSend: function() {
+                                tools.ModalAlertInfo("Nota de Crédito", "Firmando xml y enviando a la sunat.");
+                            },
+                            success: function(result) {
+                                let object = result;
+                                if (object.state === true) {
+                                    if (object.accept === true) {
+                                        tools.ModalAlertSuccess("Nota de Crédito", "Resultado: Código " + object.code + " " + object.description);
+                                        onEventPaginacion();
+                                    } else {
+                                        tools.ModalAlertWarning("Nota de Crédito", "Resultado: Código " + object.code + " " + object.description);
+                                    }
+                                } else {
+                                    tools.ModalAlertWarning("Nota de Crédito", "Resultado: Código " + object.code + " " + object.description);
+                                }
+                            },
+                            error: function(error) {
+                                tools.ModalAlertError("Nota de Crédito", "Error en el momento de firmar el xml: " + error.responseText);
+                            }
+                        });
+                    }
+                });
+            }
+
+            function openPdf(idNotaCredito) {
+                window.open("../app/sunat/pdfnotacredito.php?idNotaCredito=" + idNotaCredito, "_blank");
+            }
+
+            function openDetalle(idNotaCredito) {
+                $("#mostrarDetalleNotaCredito").modal("show");
+                $.ajax({
+                    url: "../app/controller/NotaCreditoController.php",
+                    method: "GET",
+                    data: {
+                        "type": "detalleNotaCreedito",
+                        "idNotaCredito": idNotaCredito,
+                    },
+                    beforeSend: function() {
+                        $("#tbDetalleNotaCredito").empty();
+                        $("#tbDetalleNotaCredito").append('<tr class="text-center"><td colspan="6"><img src="./images/spiner.gif"/><p>Cargando información.</p></td></tr>');
+
+                    },
+                    success: function(result) {
+                        if (result.estado == 1) {
+                            $("#tbDetalleNotaCredito").empty();
+                            if (result.detalles.length == 0) {
+                                $("#tbDetalleNotaCredito").append('<tr class="text-center"><td colspan="6"><p>No hay datos para Mostrar</p></td></tr>');
+                            } else {
+                                for (let detalle of result.detalles) {
+                                    $("#tbDetalleNotaCredito").append('<tr>' +
+                                        '<td>' + detalle.Id + '</td>' +
+                                        '<td>' + detalle.Concepto + '</td>' +
+                                        '<td>' + tools.formatMoney(detalle.Precio) + '</td>' +
+                                        '<td>' + tools.formatMoney(detalle.Cantidad) + '</td>' +
+                                        '<td>' + detalle.Nombre + '</td>' +
+                                        '<td>' + tools.formatMoney(detalle.Total) + '</td>' +
+                                        '</tr>');
+                                }
+                            }
+                        } else {
+                            $("#tbDetalleNotaCredito").append('<tr class="text-center"><td colspan="6"><p>' + result.message + '</p></td></tr>');
+                        }
+                    },
+                    error: function(error) {
+                        $("#tbDetalleNotaCredito").append('<tr class="text-center"><td colspan="6"><p>' + error.responseText + '</p></td></tr>');
+                    }
+                });
+            }
+
+            
         </script>
     </body>
 

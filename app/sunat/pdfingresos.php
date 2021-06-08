@@ -225,14 +225,13 @@ if (!isset($_GET["idIngreso"])) {
 
                 <!--##################### Inicio detalle de la compra ###################################-->
                 <div class="detalle-compra" >
-                    <table width="100%" style="font-family:Arial;font-size: 16px; border: none; border-collapse: collapse;" cellpadding="6">
+                    <table width="100%" style="font-family:Arial;font-size: 14px; border: none; border-collapse: collapse;" cellpadding="6">
                         <thead>
                             <tr>
                                 <th width="10%" class="th-white">Ítem</td>                    
                                 <th width="50%" class="th-dark">Concepto</td>
                                 <th width="15%" class="th-dark">Cantidad</td>                    
-                                <th width="15%" class="th-dark">P. Unitario</td>
-                                <th width="25%" class="th-dark">Afect.</td>
+                                <th width="15%" class="th-dark">P. Unitario</td>                         
                                 <th width="15%" class="th-white">Importe</td>
                             </tr>
                         </thead>
@@ -242,8 +241,9 @@ if (!isset($_GET["idIngreso"])) {
                             <?php foreach ($detalleIngreso as $value) {
                                 $cantidad = $value['Cantidad'];
                                 $impuesto = $value['Valor'];
-                                $precioBruto = $value['Precio'];
+                                $precioVenta = $value['Precio'];
 
+                                $precioBruto = $precioVenta / (($impuesto / 100.00) + 1);
                                 $impuestoGenerado = $precioBruto * ($impuesto / 100.00);
                                 $impuestoTotal = $impuestoGenerado * $cantidad;
                                 $importeBrutoTotal = $precioBruto * $cantidad;
@@ -254,8 +254,7 @@ if (!isset($_GET["idIngreso"])) {
                                     <td align="center" class="td-white">' . $value['Id'] . '</td>
                                     <td align="center" class="td-dark">' . $value['Concepto'] . '</td>
                                     <td align="right" class="td-dark">' . round($cantidad, 2, PHP_ROUND_HALF_UP) . '</td>
-                                    <td align="right" class="td-dark">' . number_format(round($importeNeto, 2, PHP_ROUND_HALF_UP), 2, '.', '') . '</td>
-                                    <td align="center" class="td-dark">' . $value["Nombre"] . '</td>
+                                    <td align="right" class="td-dark">' . number_format(round($importeNeto, 2, PHP_ROUND_HALF_UP), 2, '.', '') . '</td>                                   
                                     <td align="right" class="td-white">' . number_format(round($importeNetoTotal, 2, PHP_ROUND_HALF_UP), 2, '.', '') . '</td>
                                 </tr>';
                             }

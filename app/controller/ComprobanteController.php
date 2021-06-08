@@ -66,20 +66,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
                 "message" => $result,
             ));
         }
-    } else if ($_GET["type"] === "getNotasCredito") {
-        $result = ComprobanteAdo::getAllNotasCredito();
-
-        if (is_array($result)) {
-            echo json_encode(array(
-                "estado" => 1,
-                "comprobantes" => $result,
-            ));
-        } else {
-            echo json_encode(array(
-                "estado" => 2,
-                "message" => $result,
-            ));
-        }
     }
 } else if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     if ($_POST["type"] === "addComprobante") {
@@ -100,19 +86,19 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
                 "estado" => 1,
                 "mensaje" => "Se completo correctamento el ingreso.",
             ));
-        } else if ($result === "Duplicado") {
+        }  else if ($result === "Actualizado") {
             echo json_encode(array(
                 "estado" => 2,
-                "mensaje" => "El comprobante ya se encuentra registrado",
+                "mensaje" => "El comprobante se actualizó correctamente.",
             ));
-        } else if ($result === "Actualizado") {
+        } else if ($result === "Serie") {
             echo json_encode(array(
                 "estado" => 3,
-                "mensaje" => "El comprobante se  actualizó correctamente",
+                "mensaje" => "Hay un comprobante con la misma serie.",
             ));
-        } else {
+        }  else {
             echo json_encode(array(
-                "estado" => 4,
+                "estado" => 0,
                 "mensaje" => $result
             ));
         }

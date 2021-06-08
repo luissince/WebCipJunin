@@ -40,8 +40,9 @@ if (!is_array($detalleventa)) {
         $client = new Client();
         $client->setTipoDoc($ingreso->TipoDocumento)
                 ->setNumDoc($ingreso->NumeroDocumento)
-                ->setRznSocial($ingreso->DatosPersona);
-
+                ->setRznSocial($ingreso->DatosPersona)
+                ->setAddress((new Address())
+                        ->setDireccion($ingreso->Direccion));
 
         $company = new Company();
         $company->setRuc($empresa->NumeroDocumento)
@@ -83,9 +84,10 @@ if (!is_array($detalleventa)) {
 
         foreach ($detalleIngreso as $value) {
                 $cantidad = $value['Cantidad'];
-                $impuesto = 0;
-                $precioBruto = $value['Precio'];
+                $impuesto = $value['Valor'];
+                $precioVenta = $value['Precio'];
 
+                $precioBruto = $precioVenta / (($impuesto / 100.00) + 1);
                 $impuestoGenerado = $precioBruto * ($impuesto / 100.00);
                 $impuestoTotal = $impuestoGenerado * $cantidad;
                 $importeBrutoTotal = $precioBruto * $cantidad;

@@ -8,9 +8,6 @@ use Greenter\Data\SharedStore;
 use Greenter\Model\DocumentInterface;
 use Greenter\Model\Response\CdrResponse;
 use Greenter\Model\Sale\SaleDetail;
-use Greenter\Report\HtmlReport;
-use Greenter\Report\PdfReport;
-use Greenter\Report\Resolver\DefaultTemplateResolver;
 use Greenter\Report\XmlUtils;
 use Greenter\See;
 
@@ -122,48 +119,6 @@ final class Util
         file_put_contents($fileDir . DIRECTORY_SEPARATOR . $filename, $content);
     }
 
-    public function getPdf(DocumentInterface $document): ?string
-    {
-        $html = new HtmlReport('', [
-            'cache' => __DIR__ . '/../cache',
-            'strict_variables' => true,
-        ]);
-        $resolver = new DefaultTemplateResolver();
-        $template = $resolver->getTemplate($document);
-        $html->setTemplate($template);
-
-        $render = new PdfReport($html);
-        $render->setOptions([
-            'no-outline',
-            'print-media-type',
-            'viewport-size' => '1280x1024',
-            'page-width' => '21cm',
-            'page-height' => '29.7cm',
-            'footer-html' => __DIR__ . '/../resources/footer.html',
-        ]);
-        $binPath = self::getPathBin();
-        if (file_exists($binPath)) {
-            $render->setBinPath($binPath);
-        }
-        $hash = $this->getHash($document);
-        $params = self::getParametersPdf();
-        $params['system']['hash'] = $hash;
-        $params['user']['footer'] = '<div>consulte en <a href="https://github.com/giansalex/sufel">sufel.com</a></div>';
-
-        $pdf = $render->render($document, $params);
-
-        if ($pdf === null) {
-            $error = $render->getExporter()->getError();
-            echo 'Error: ' . $error;
-            exit();
-        }
-
-        // Write html
-        $this->writeFile($document->getName() . '.html', $render->getHtml());
-
-        return $pdf;
-    }
-
     public function getHashCode(DocumentInterface $document): ?string
     {
         $hash = $this->getHash($document);
@@ -228,28 +183,6 @@ final class Util
         return (new XmlUtils())->getHashSign($xml);
     }
 
-    /**
-     * @return array<string, array>
-     */
-    private static function getParametersPdf(): array
-    {
-        $logo = file_get_contents(__DIR__ . '/../resources/logo.png');
-
-        return [
-            'system' => [
-                'logo' => $logo,
-                'hash' => ''
-            ],
-            'user' => [
-                'resolucion' => '212321',
-                'header' => 'Telf: <b>(056) 123375</b>',
-                'extras' => [
-                    ['name' => 'CONDICION DE PAGO', 'value' => 'Efectivo'],
-                    ['name' => 'VENDEDOR', 'value' => 'GITHUB SELLER'],
-                ],
-            ]
-        ];
-    }
 
     public function ConvertirNumerosLetras($valor,$simbolo)
     {

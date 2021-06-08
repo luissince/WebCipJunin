@@ -220,7 +220,7 @@ if (!isset($_SESSION['IdUsuario'])) {
 
             function loadTableIngresos(opcion, buscar, fechaInicio, fechaFinal) {
                 $.ajax({
-                    url: "../app/controller/ListarIngresos.php",
+                    url: "../app/controller/IngresoController.php",
                     method: "GET",
                     data: {
                         "type": "allCertHabilidad",

@@ -34,7 +34,7 @@ if (!is_array($ventas)) {
 
     $documento->getActiveSheet()->setTitle("Ingresos");
 
-    $documento->getActiveSheet()->getStyle('A1:M1')->applyFromArray(array(
+    $documento->getActiveSheet()->getStyle('A1:L1')->applyFromArray(array(
         'borders' => array(
             'outline' => array(
                 'borderStyle' => Border::BORDER_THIN,
@@ -54,11 +54,11 @@ if (!is_array($ventas)) {
         )
     ));
 
-    $documento->setActiveSheetIndex(0)->mergeCells('A1:M1');
+    $documento->setActiveSheetIndex(0)->mergeCells('A1:L1');
     $documento->setActiveSheetIndex(0)
         ->setCellValue("A1", "REPORTE GENERAL DE INGRESOS DE CIP-JUNIN");
 
-    $documento->getActiveSheet()->getStyle('K2:M2')->applyFromArray(array(
+    $documento->getActiveSheet()->getStyle('J2:L2')->applyFromArray(array(
         'borders' => array(
             'outline' => array(
                 'borderStyle' => Border::BORDER_THIN,
@@ -78,11 +78,11 @@ if (!is_array($ventas)) {
         )
     ));
     $documento->setActiveSheetIndex(0)
-        ->setCellValue("K2", "FECHA")
-        ->setCellValue("L2", $_GET["txtFechaInicial"])
-        ->setCellValue("M2", $_GET["txtFechaFinal"]);
+        ->setCellValue("J2", "FECHA")
+        ->setCellValue("K2", $_GET["txtFechaInicial"])
+        ->setCellValue("L2", $_GET["txtFechaFinal"]);
 
-    $documento->getActiveSheet()->getStyle('A3:M3')->applyFromArray(array(
+    $documento->getActiveSheet()->getStyle('A3:L3')->applyFromArray(array(
         'fill' => array(
             'type' => Fill::FILL_SOLID,
             'color' => array('rgb' => 'E5E4E2')
@@ -103,16 +103,15 @@ if (!is_array($ventas)) {
         ->setCellValue("E3", "NUMERACIÓN")
         ->setCellValue("F3", "FECHA INGRESO")
         ->setCellValue("G3", "ESTADO")
-        ->setCellValue("H3", "NUM. DNI")
-        ->setCellValue("I3", "NUM. CIP")
-        ->setCellValue("J3", "APELLIDOS")
-        ->setCellValue("k3", "NOMBRES")
-        ->setCellValue("L3", "MONTO")
-        ->setCellValue("M3", "MONTO ANULADO");
+        ->setCellValue("H3", "NUM. CIP")
+        ->setCellValue("I3", "NUM. DNI/RUC")
+        ->setCellValue("J3", "PERSONA")
+        ->setCellValue("K3", "MONTO")
+        ->setCellValue("L3", "MONTO ANULADO");
 
     $cel = 4;
     foreach ($ventas as $key => $value) {
-        $documento->getActiveSheet()->getStyle('A' . $cel . ':K' . $cel . '')->applyFromArray(array(
+        $documento->getActiveSheet()->getStyle('A' . $cel . ':J' . $cel . '')->applyFromArray(array(
             'fill' => array(
                 'type' => Fill::FILL_SOLID,
                 'color' => array('rgb' => 'E5E4E2')
@@ -126,7 +125,7 @@ if (!is_array($ventas)) {
         ));
 
         if ($value["Estado"] === "C") {
-            $documento->getActiveSheet()->getStyle('A' . $cel . ':K' . $cel . '')->applyFromArray(array(
+            $documento->getActiveSheet()->getStyle('A' . $cel . ':J' . $cel . '')->applyFromArray(array(
                 'font'  => array(
                     'bold'  =>  false,
                     'color' => array('rgb' => '000000')
@@ -135,8 +134,8 @@ if (!is_array($ventas)) {
                     'horizontal' => Alignment::HORIZONTAL_LEFT
                 )
             ));
+            $documento->getActiveSheet()->getStyle("K" . $cel)->getNumberFormat()->setFormatCode('0.00');
             $documento->getActiveSheet()->getStyle("L" . $cel)->getNumberFormat()->setFormatCode('0.00');
-            $documento->getActiveSheet()->getStyle("M" . $cel)->getNumberFormat()->setFormatCode('0.00');
 
             $documento->setActiveSheetIndex(0)
                 ->setCellValue("A" . $cel,  strval($value["Id"]))
@@ -146,14 +145,13 @@ if (!is_array($ventas)) {
                 ->setCellValue("E" . $cel, strval($value["NumRecibo"]))
                 ->setCellValue("F" . $cel, strval($value["FechaPago"]))
                 ->setCellValue("G" . $cel, strval($value["Estado"]))
-                ->setCellValue("H" . $cel, strval($value["idDNI"]))
-                ->setCellValue("I" . $cel, strval($value["CIP"]))
-                ->setCellValue("J" . $cel, strval($value["Apellidos"]))
-                ->setCellValue("K" . $cel, strval($value["Nombres"]))
-                ->setCellValue("L" . $cel, strval($value["Total"]))
-                ->setCellValue("M" . $cel, strval(0));
+                ->setCellValue("H" . $cel, strval($value["CIP"]))
+                ->setCellValue("I" . $cel, strval($value["NumeroDocumento"]))
+                ->setCellValue("J" . $cel, strval($value["Persona"]))
+                ->setCellValue("K" . $cel, strval($value["Total"]))
+                ->setCellValue("L" . $cel, strval(0));
         } else {
-            $documento->getActiveSheet()->getStyle('A' . $cel . ':K' . $cel . '')->applyFromArray(array(
+            $documento->getActiveSheet()->getStyle('A' . $cel . ':J' . $cel . '')->applyFromArray(array(
                 'font'  => array(
                     'bold'  =>  false,
                     'color' => array('rgb' => 'd10505')
@@ -162,8 +160,8 @@ if (!is_array($ventas)) {
                     'horizontal' => Alignment::HORIZONTAL_LEFT
                 )
             ));
+            $documento->getActiveSheet()->getStyle("K" . $cel)->getNumberFormat()->setFormatCode('0.00');
             $documento->getActiveSheet()->getStyle("L" . $cel)->getNumberFormat()->setFormatCode('0.00');
-            $documento->getActiveSheet()->getStyle("M" . $cel)->getNumberFormat()->setFormatCode('0.00');
 
             $documento->setActiveSheetIndex(0)
                 ->setCellValue("A" . $cel,  strval($value["Id"]))
@@ -173,12 +171,11 @@ if (!is_array($ventas)) {
                 ->setCellValue("E" . $cel, strval($value["NumRecibo"]))
                 ->setCellValue("F" . $cel, strval($value["FechaPago"]))
                 ->setCellValue("G" . $cel, strval($value["Estado"]))
-                ->setCellValue("H" . $cel, strval($value["idDNI"]))
-                ->setCellValue("I" . $cel, strval($value["CIP"]))
-                ->setCellValue("J" . $cel, strval($value["Apellidos"]))
-                ->setCellValue("K" . $cel, strval($value["Nombres"]))
-                ->setCellValue("L" . $cel, strval(0))
-                ->setCellValue("M" . $cel, strval($value["Total"]));
+                ->setCellValue("H" . $cel, strval($value["CIP"]))
+                ->setCellValue("I" . $cel, strval($value["NumeroDocumento"]))
+                ->setCellValue("J" . $cel, strval($value["Persona"]))
+                ->setCellValue("K" . $cel, strval(0))
+                ->setCellValue("L" . $cel, strval($value["Total"]));
         }
 
         $cel++;
@@ -194,10 +191,9 @@ if (!is_array($ventas)) {
     $documento->getActiveSheet()->getColumnDimension('G')->setWidth(15);
     $documento->getActiveSheet()->getColumnDimension('H')->setWidth(15);
     $documento->getActiveSheet()->getColumnDimension('I')->setWidth(15);
-    $documento->getActiveSheet()->getColumnDimension('J')->setWidth(20);
-    $documento->getActiveSheet()->getColumnDimension('K')->setWidth(20);
+    $documento->getActiveSheet()->getColumnDimension('J')->setWidth(30);
+    $documento->getActiveSheet()->getColumnDimension('K')->setWidth(15);
     $documento->getActiveSheet()->getColumnDimension('L')->setWidth(15);
-    $documento->getActiveSheet()->getColumnDimension('M')->setWidth(15);
 
     if($_GET["cbTipoDocumento"] == 'null'){
         $nombreDelDocumento = "Reporte de Ingresos del " . $_GET["txtFechaInicial"] . " al " . $_GET["txtFechaFinal"] . ".xlsx";

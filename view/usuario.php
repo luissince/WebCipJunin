@@ -332,7 +332,7 @@ if (!isset($_SESSION['IdUsuario'])) {
                                 let btnUpdate =
                                     '<button class="btn btn-warning btn-xs" onclick="updateUsuario(\'' + usuario.idUsuario + '\',\'' +
                                     usuario.Nombres + '\',\'' + usuario.Apellidos + '\',\'' + usuario.Usuario + '\',\'' + usuario.Clave + '\')">' +
-                                    '<i class="fa fa-wrench" style="font-size:25px;"></i> ' +
+                                    '<i class="fa fa-edit" style="font-size:25px;"></i> ' +
                                     '</button>';
                                 let btnDelete =
                                     '<button class="btn btn-danger btn-xs" onclick="deleteUser(\'' + usuario.idUsuario + '\')">' +

@@ -64,7 +64,7 @@ if (!isset($_SESSION['IdUsuario'])) {
             </div>
             <!--end modal history enginner  -->
             <!-- Content Wrapper. Contains page content -->
-            <div class="content-wrapper" style="background-color: #FFFFFF;">
+            <div class="content-wrapper" >
                 <!-- Main content -->
                 <section class="content-header">
                     <h3 class="no-margin"> Comprobantes(Boletas, Facturas) <small> Lista </small> </h3>
@@ -104,13 +104,13 @@ if (!isset($_SESSION['IdUsuario'])) {
                         <div class="col-md-3 col-sm-12 col-xs-12">
                             <div class="form-group">
                                 <label>Fecha de inicio(Entre Fechas).</label>
-                                <input type="date" class="form-control pull-right" id="fechaInicio">
+                                <input type="date" class="form-control" id="fechaInicio">
                             </div>
                         </div>
                         <div class="col-md-3 col-sm-12 col-xs-12">
                             <div class="form-group">
                                 <label>Fecha de fin(Entre Fechas).</label>
-                                <input type="date" class="form-control pull-right" id="fechaFinal">
+                                <input type="date" class="form-control" id="fechaFinal">
                             </div>
                         </div>
 
@@ -133,7 +133,6 @@ if (!isset($_SESSION['IdUsuario'])) {
                                 </select>
                             </div>
                         </div>
-
 
                     </div>
 
@@ -443,7 +442,7 @@ if (!isset($_SESSION['IdUsuario'])) {
 
             function loadTableIngresos(opcion, buscar, fechaInicio, fechaFinal, comprobante, estado) {
                 $.ajax({
-                    url: "../app/controller/ListarIngresos.php",
+                    url: "../app/controller/IngresoController.php",
                     method: "GET",
                     data: {
                         "type": "allIngresos",
@@ -512,7 +511,7 @@ if (!isset($_SESSION['IdUsuario'])) {
                                         '<td>' + btnDetalle + '</td>' +
                                         '<td>' + ingresos.fecha + '<br>' + tools.getTimeForma(ingresos.hora, true) + '</td>' +
                                         '<td>' + ingresos.serie + '-' + ingresos.numRecibo + '</td>' +
-                                        '<td>' + ingresos.idDNI + '</br>' + ingresos.nombres + ' ' + ingresos.apellidos + '</td>' +
+                                        '<td>' + ingresos.numeroDocumento + '</br>' + ingresos.persona  + '</td>' +
                                         '<td>' + (ingresos.estado == "C" ? '<span class="text-green">Cobrado</span>' : '<span class="text-red">Anulado</span>') + '</td>' +
                                         '<td>' + tools.formatMoney(ingresos.total) + '</td>' +
                                         '<td style="text-align: center;">' + estadosunat + '</td>' +

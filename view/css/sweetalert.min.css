@@ -443,12 +443,12 @@ body.swal2-no-backdrop>.swal2-shown.swal2-bottom-right {
 
 .swal2-popup.swal2-toast .swal2-title {
     max-width: 300px;
-    font-size: 16px;
+    font-size: 22px;
     text-align: left;
 }
 
 .swal2-popup.swal2-toast .swal2-content {
-    font-size: 14px;
+    font-size: 16px;
     text-align: left;
 }
 
@@ -581,8 +581,8 @@ body.swal2-no-backdrop>.swal2-shown.swal2-bottom-right {
 }
 
 .swal2-popup .swal2-title {
-    color: #1e1d1d;
-    font-size: 17px;
+    color: #212529;
+    font-size: 22px;
     text-align: center;
     font-weight: 600;
     text-transform: none;
@@ -717,7 +717,7 @@ body.swal2-no-backdrop>.swal2-shown.swal2-bottom-right {
     margin: 0;
     padding: 0;
     line-height: normal;
-    color: rgb(30, 29, 29);
+    color: #212529;
     word-wrap: break-word;
 }
 

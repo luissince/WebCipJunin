@@ -22,16 +22,15 @@ class IngresosAdo
             i.NumRecibo,
             i.Estado,
             p.CIP,
-            p.idDNI,
-            p.Apellidos,
-            p.Nombres,
+            isnull(e.NumeroRuc,p.idDNI) as numeroDocumento,
+            isnull(e.Nombre,concat(p.Apellidos,' ', p.Nombres)) as persona,
             sum(d.Monto) AS Total,
             isnull(i.Xmlsunat,'') as Xmlsunat,
             isnull(i.Xmldescripcion,'') as Xmldescripcion
-            FROM Ingreso AS i INNER JOIN Persona AS p
-            ON i.idDNI = p.idDNI
-            INNER JOIN Detalle AS d 
-            ON d.idIngreso = i.idIngreso
+            FROM Ingreso AS i 
+            INNER JOIN Persona AS p ON i.idDNI = p.idDNI
+            LEFT JOIN EmpresaPersona AS e ON e.IdEmpresa = i.idEmpresaPersona
+            INNER JOIN Detalle AS d ON d.idIngreso = i.idIngreso
             WHERE
             $opcion = 0 AND i.Fecha BETWEEN ? AND ?
             OR
@@ -41,17 +40,17 @@ class IngresosAdo
             OR
             $opcion = 1 AND CONCAT(i.Serie,'-',i.NumRecibo) like CONCAT(?,'%')
             OR
-            $opcion = 1 AND p.idDNI LIKE CONCAT(?,'%')
+            $opcion = 1 AND isnull(e.NumeroRuc,p.idDNI) LIKE CONCAT(?,'%')
             OR
-            $opcion = 1 AND p.Apellidos LIKE CONCAT(?,'%')
+            $opcion = 1 AND isnull(e.Nombre,p.Apellidos) LIKE CONCAT(?,'%')
             OR
-            $opcion = 1 AND p.Nombres LIKE CONCAT(?,'%')
+            $opcion = 1 AND isnull(e.Nombre,p.Nombres)  LIKE CONCAT(?,'%')
             OR
             $opcion = 2 AND i.TipoComprobante = ? AND i.Fecha BETWEEN ? AND ?
             OR
             $opcion = 3 AND i.Estado = ? AND i.Fecha BETWEEN ? AND ?
             GROUP BY i.idIngreso,i.Fecha,i.Hora,i.Serie,i.NumRecibo,i.Estado,
-            p.CIP,p.idDNI,p.Apellidos,p.Nombres,i.Xmlsunat,i.Xmldescripcion
+            p.CIP,p.idDNI,p.Apellidos,p.Nombres,e.NumeroRuc,e.Nombre,i.Xmlsunat,i.Xmldescripcion
             ORDER BY i.Fecha DESC,i.Hora DESC
             offset ? ROWS FETCH NEXT ? ROWS only");
             $cmdConcepto->bindParam(1, $fechaInicio, PDO::PARAM_STR);
@@ -84,17 +83,18 @@ class IngresosAdo
                     "numRecibo" => $row["NumRecibo"],
                     "estado" => $row["Estado"],
                     "cip" => $row["CIP"],
-                    "idDNI" => $row["idDNI"],
-                    "apellidos" => $row["Apellidos"],
-                    "nombres" => $row["Nombres"],
+                    "numeroDocumento" => $row["numeroDocumento"],
+                    "persona" => $row["persona"],
                     "total" => $row["Total"],
                     "xmlsunat" => $row["Xmlsunat"],
                     "xmldescripcion" => IngresosAdo::limitar_cadena($row["Xmldescripcion"], 100, "..."),
                 ));
             }
 
-            $comandoTotal = Database::getInstance()->getDb()->prepare("SELECT COUNT(*) AS Total FROM Ingreso AS i INNER JOIN Persona AS p
-            ON i.idDNI = p.idDNI
+            $comandoTotal = Database::getInstance()->getDb()->prepare("SELECT COUNT(*) AS Total 
+            FROM Ingreso AS i 
+            INNER JOIN Persona AS p ON i.idDNI = p.idDNI
+            LEFT JOIN EmpresaPersona AS e ON e.IdEmpresa = i.idEmpresaPersona
             WHERE
             $opcion = 0 AND i.Fecha BETWEEN ? AND ?
             OR
@@ -104,11 +104,11 @@ class IngresosAdo
             OR
             $opcion = 1 AND CONCAT(i.Serie,'-',i.NumRecibo) like CONCAT(?,'%')
             OR
-            $opcion = 1 AND p.idDNI LIKE CONCAT(?,'%')
+            $opcion = 1 AND isnull(e.NumeroRuc,p.idDNI) LIKE CONCAT(?,'%')
             OR
-            $opcion = 1 AND p.Apellidos LIKE CONCAT(?,'%')
+            $opcion = 1 AND isnull(e.NumeroRuc,p.Apellidos) LIKE CONCAT(?,'%')
             OR
-            $opcion = 1 AND p.Nombres LIKE CONCAT(?,'%')
+            $opcion = 1 AND isnull(e.NumeroRuc,p.Nombres)  LIKE CONCAT(?,'%')
             OR
             $opcion = 2 AND i.TipoComprobante = ? AND i.Fecha BETWEEN ? AND ?
             OR
@@ -611,105 +611,6 @@ class IngresosAdo
         }
     }
 
-    public static function EliminarCertHabilidad($idIngreso, $idUsuario, $fecha, $hora, $motivo)
-    {
-        try {
-            Database::getInstance()->getDb()->beginTransaction();
-
-            $cmdValidate = Database::getInstance()->getDb()->prepare("SELECT * FROM CERTHabilidad WHERE idIngreso = ? AND  Anulado = '1'");
-            $cmdValidate->bindParam(1, $idIngreso, PDO::PARAM_INT);
-            $cmdValidate->execute();
-            if ($cmdValidate->fetch()) {
-                Database::getInstance()->getDb()->rollBack();
-                return "anulado";
-            } else {
-                $cmdDetalle = Database::getInstance()->getDb()->prepare("UPDATE CERTHabilidad SET Anulado = 1 WHERE idIngreso = ?");
-                $cmdDetalle->bindParam(1, $idIngreso, PDO::PARAM_INT);
-                $cmdDetalle->execute();
-
-                // $cmdAnular = Database::getInstance()->getDb()->prepare("INSERT INTO Anulado(Tipo,idDocumento,idUsuario,Motivo,Fecha,Hora)VALUES('R',?,?,?,?,?)");
-                // $cmdAnular->bindParam(1, $idIngreso, PDO::PARAM_INT);
-                // $cmdAnular->bindParam(2, $idUsuario, PDO::PARAM_INT);
-                // $cmdAnular->bindParam(3, $motivo, PDO::PARAM_STR);
-                // $cmdAnular->bindParam(4, $fecha, PDO::PARAM_INT);
-                // $cmdAnular->bindParam(5, $hora, PDO::PARAM_INT);
-                // $cmdAnular->execute();
-
-                Database::getInstance()->getDb()->commit();
-                return "deleted";
-            }
-        } catch (PDOException $ex) {
-            Database::getInstance()->getDb()->rollBack();
-            return $ex->getMessage();
-        }
-    }
-
-    public static function EliminarCertObra($idIngreso, $idUsuario, $fecha, $hora, $motivo)
-    {
-        try {
-            Database::getInstance()->getDb()->beginTransaction();
-
-            $cmdValidate = Database::getInstance()->getDb()->prepare("SELECT * FROM CERTResidencia WHERE idIngreso = ? AND  Anulado = '1'");
-            $cmdValidate->bindParam(1, $idIngreso, PDO::PARAM_INT);
-            $cmdValidate->execute();
-            if ($cmdValidate->fetch()) {
-                Database::getInstance()->getDb()->rollBack();
-                return "anulado";
-            } else {
-                $cmdDetalle = Database::getInstance()->getDb()->prepare("UPDATE CERTResidencia SET Anulado = 1 WHERE idIngreso = ?");
-                $cmdDetalle->bindParam(1, $idIngreso, PDO::PARAM_INT);
-                $cmdDetalle->execute();
-
-                // $cmdAnular = Database::getInstance()->getDb()->prepare("INSERT INTO Anulado(Tipo,idDocumento,idUsuario,Motivo,Fecha,Hora)VALUES('R',?,?,?,?,?)");
-                // $cmdAnular->bindParam(1, $idIngreso, PDO::PARAM_INT);
-                // $cmdAnular->bindParam(2, $idUsuario, PDO::PARAM_INT);
-                // $cmdAnular->bindParam(3, $motivo, PDO::PARAM_STR);
-                // $cmdAnular->bindParam(4, $fecha, PDO::PARAM_INT);
-                // $cmdAnular->bindParam(5, $hora, PDO::PARAM_INT);
-                // $cmdAnular->execute();
-
-                Database::getInstance()->getDb()->commit();
-                return "deleted";
-            }
-        } catch (PDOException $ex) {
-            Database::getInstance()->getDb()->rollBack();
-            return $ex->getMessage();
-        }
-    }
-
-    public static function EliminarCertProyecto($idIngreso, $idUsuario, $fecha, $hora, $motivo)
-    {
-        try {
-            Database::getInstance()->getDb()->beginTransaction();
-
-            $cmdValidate = Database::getInstance()->getDb()->prepare("SELECT * FROM CERTProyecto WHERE idIngreso = ? AND  Anulado = '1'");
-            $cmdValidate->bindParam(1, $idIngreso, PDO::PARAM_INT);
-            $cmdValidate->execute();
-            if ($cmdValidate->fetch()) {
-                Database::getInstance()->getDb()->rollBack();
-                return "anulado";
-            } else {
-                $cmdDetalle = Database::getInstance()->getDb()->prepare("UPDATE CERTProyecto SET Anulado = 1 WHERE idIngreso = ?");
-                $cmdDetalle->bindParam(1, $idIngreso, PDO::PARAM_INT);
-                $cmdDetalle->execute();
-
-                // $cmdAnular = Database::getInstance()->getDb()->prepare("INSERT INTO Anulado(Tipo,idDocumento,idUsuario,Motivo,Fecha,Hora)VALUES('R',?,?,?,?,?)");
-                // $cmdAnular->bindParam(1, $idIngreso, PDO::PARAM_INT);
-                // $cmdAnular->bindParam(2, $idUsuario, PDO::PARAM_INT);
-                // $cmdAnular->bindParam(3, $motivo, PDO::PARAM_STR);
-                // $cmdAnular->bindParam(4, $fecha, PDO::PARAM_INT);
-                // $cmdAnular->bindParam(5, $hora, PDO::PARAM_INT);
-                // $cmdAnular->execute();
-
-                Database::getInstance()->getDb()->commit();
-                return "deleted";
-            }
-        } catch (PDOException $ex) {
-            Database::getInstance()->getDb()->rollBack();
-            return $ex->getMessage();
-        }
-    }
-
     public static function ObtenerIngresoXML($idIngreso)
     {
         try {
@@ -723,7 +624,8 @@ class IngresosAdo
             i.idIngreso,
             t.CodigoAlterno AS TipoComprobante,
             t.Nombre AS Comprobante,
-            i.Serie,i.NumRecibo AS Numeracion,
+            i.Serie,
+            i.NumRecibo AS Numeracion,
             i.Fecha AS FechaPago,
             i.Hora as HoraPago,
             CONVERT(VARCHAR,cast(i.Fecha AS DATE), 103) AS FechaEmision,
@@ -735,7 +637,7 @@ class IngresosAdo
             isnull(e.Nombre,concat(p.Apellidos,' ',p.Nombres)) as DatosPersona,
             isnull(e.Direccion,p.RUC) as Direccion,
 			p.CIP,
-            p.idDNI,
+            p.idDNI, 
             p.Apellidos,
             p.Nombres,
             ISNULL(i.Correlativo,0) as Correlativo
@@ -1064,7 +966,6 @@ class IngresosAdo
         }
     }
 
-
     public static function DetalleIngresoPorIdIngreso($idIngreso)
     {
         try {
@@ -1257,7 +1158,6 @@ class IngresosAdo
         }
     }
 
-
     public static function isValidate($array, $objec)
     {
         $ret = false;
@@ -1281,18 +1181,18 @@ class IngresosAdo
             i.NumRecibo,
             convert(varchar, cast(i.Fecha as date), 103) as FechaPago,
             i.Estado,
-            p.idDNI,
             p.CIP,
-            p.Apellidos,
-            p.Nombres,
+            isnull(e.NumeroRuc,p.idDNI) as NumeroDocumento,            
+            isnull(e.Nombre, concat(p.Apellidos,' ',p.Nombres)) as Persona,
             sum(d.Monto) as Total,
             isnull(i.Xmlsunat,'') as Xmlsunat,
             isnull(i.Xmldescripcion,'') as Xmldescripcion							
             from Ingreso as i 
-                 inner join Persona as p on i.idDNI = p.idDNI
-                 inner join Detalle as d on d.idIngreso = i.idIngreso 
-                 inner join Concepto as c on d.idConcepto = c.idConcepto
-                 left join Anulado as a on a.idDocumento = i.idIngreso
+            inner join Persona as p on i.idDNI = p.idDNI
+            left join EmpresaPersona AS e ON e.IdEmpresa = i.idEmpresaPersona 
+            inner join Detalle as d on d.idIngreso = i.idIngreso 
+            inner join Concepto as c on d.idConcepto = c.idConcepto
+            left join Anulado as a on a.idDocumento = i.idIngreso
             where
             cast(i.Fecha as date) between ? and ?
             group by i.idIngreso,
@@ -1304,6 +1204,8 @@ class IngresosAdo
             p.CIP,
             p.Apellidos,
             p.Nombres,
+            e.NumeroRuc,
+            e.Nombre,
             i.Xmlsunat,
             i.Xmldescripcion,
             a.Motivo,
@@ -1326,10 +1228,9 @@ class IngresosAdo
                     "NumRecibo" => $row["NumRecibo"],
                     "FechaPago" => $row["FechaPago"],
                     "Estado" => $row["Estado"],
-                    "idDNI" => $row["idDNI"],
+                    "NumeroDocumento" => $row["NumeroDocumento"],
                     "CIP" => $row["CIP"],
-                    "Apellidos" => $row["Apellidos"],
-                    "Nombres" => $row["Nombres"],
+                    "Persona" => $row["Persona"],
                     "Total" => floatval($row["Total"]),
                     "Xmlsunat" => $row["Xmlsunat"],
                     "Xmldescripcion" => $row["Xmldescripcion"],
@@ -1354,18 +1255,18 @@ class IngresosAdo
             i.NumRecibo,
             convert(varchar, cast(i.Fecha as date), 103) as FechaPago,
             i.Estado,
-            p.idDNI,
             p.CIP,
-            p.Apellidos,
-            p.Nombres,
+            isnull(e.NumeroRuc,p.idDNI) as NumeroDocumento,            
+            isnull(e.Nombre, concat(p.Apellidos,' ',p.Nombres)) as Persona,
             sum(d.Monto) as Total,
             isnull(i.Xmlsunat,'') as Xmlsunat,
             isnull(i.Xmldescripcion,'') as Xmldescripcion							
             from Ingreso as i 
-                 inner join Persona as p on i.idDNI = p.idDNI
-                 inner join Detalle as d on d.idIngreso = i.idIngreso 
-                 inner join Concepto as c on d.idConcepto = c.idConcepto
-                 left join Anulado as a on a.idDocumento = i.idIngreso
+            inner join Persona as p on i.idDNI = p.idDNI
+            left join EmpresaPersona AS e ON e.IdEmpresa = i.idEmpresaPersona 
+            inner join Detalle as d on d.idIngreso = i.idIngreso 
+            inner join Concepto as c on d.idConcepto = c.idConcepto
+            left join Anulado as a on a.idDocumento = i.idIngreso
             where
             (cast(i.Fecha as date) between ? and ?) and i.TipoComprobante = ?
             group by i.idIngreso,
@@ -1378,6 +1279,8 @@ class IngresosAdo
             p.CIP,
             p.Apellidos,
             p.Nombres,
+            e.NumeroRuc,
+            e.Nombre,
             i.Xmlsunat,
             i.Xmldescripcion,
             a.Motivo,
@@ -1401,10 +1304,9 @@ class IngresosAdo
                     "NumRecibo" => $row["NumRecibo"],
                     "FechaPago" => $row["FechaPago"],
                     "Estado" => $row["Estado"],
-                    "idDNI" => $row["idDNI"],
+                    "NumeroDocumento" => $row["NumeroDocumento"],
                     "CIP" => $row["CIP"],
-                    "Apellidos" => $row["Apellidos"],
-                    "Nombres" => $row["Nombres"],
+                    "Persona" => $row["Persona"],
                     "Total" => floatval($row["Total"]),
                     "Xmlsunat" => $row["Xmlsunat"],
                     "Xmldescripcion" => $row["Xmldescripcion"],
@@ -1414,6 +1316,147 @@ class IngresosAdo
             return $arrayDetalle;
         } catch (Exception $ex) {
             return $ex;
+        }
+    }
+
+
+    public static function ObtenerIngresoForNotaCredito($comprobante)
+    {
+        try {
+            $array = array();
+
+            $arrayNotaCredito = array();
+            $cmdNotaCredito = Database::getInstance()->getDb()->prepare("SELECT IdTipoComprobante,Nombre FROM TipoComprobante WHERE Estado = 1 and ComprobanteAfiliado = 3");
+            $cmdNotaCredito->execute();
+
+            while ($row = $cmdNotaCredito->fetch()) {
+                array_push($arrayNotaCredito, array(
+                    "IdTipoComprobante" => $row["IdTipoComprobante"],
+                    "Nombre" => $row["Nombre"]
+                ));
+            }
+
+            $arrayFacturado = array();
+            $cmdFacturado = Database::getInstance()->getDb()->prepare("SELECT IdTipoComprobante,Nombre FROM TipoComprobante WHERE Estado = 1 and ComprobanteAfiliado = 2");
+            $cmdFacturado->execute();
+            while ($row = $cmdFacturado->fetch()) {
+                array_push($arrayFacturado, array(
+                    "IdTipoComprobante" => $row["IdTipoComprobante"],
+                    "Nombre" => $row["Nombre"],
+                ));
+            }
+
+            $arrayMotivo = array();
+            $cmdMotivoAnulacion = Database::getInstance()->getDb()->prepare("SELECT IdTablaMotivoAnulacion,Nombre FROM TablaMotivoAnulacion");
+            $cmdMotivoAnulacion->execute();
+            while ($row = $cmdMotivoAnulacion->fetch()) {
+                array_push($arrayMotivo, $row);
+            }
+
+
+            $cmdIngreso = Database::getInstance()->getDb()->prepare("SELECT 
+            i.idIngreso,
+            t.IdTipoComprobante AS TipoComprobante,
+            t.Nombre AS Comprobante,
+            i.Serie,i.NumRecibo AS Numeracion,
+            i.Fecha AS FechaPago,
+            i.Hora as HoraPago,
+            isnull(e.IdEmpresa,p.idDNI) as IdPersona,
+            case when not e.IdEmpresa is null then 6 else 1 end as TipoDocumento,
+            isnull(e.NumeroRuc,p.idDNI) as NumeroDocumento,
+            isnull(e.Nombre,concat(p.Apellidos,' ',p.Nombres)) as DatosPersona,
+            isnull(e.Direccion,p.RUC) as Direccion
+            FROM Ingreso AS i 
+            INNER JOIN Persona AS p ON p.idDNI = i.idDNI
+			LEFT JOIN EmpresaPersona AS e ON e.IdEmpresa = i.idEmpresaPersona
+            INNER JOIN TipoComprobante AS t ON t.IdTipoComprobante = i.TipoComprobante          
+            WHERE CONCAT(i.Serie,'-', i.NumRecibo) = ? AND i.Estado = 'C' ");
+            $cmdIngreso->bindParam(1, $comprobante, PDO::PARAM_STR);
+            $cmdIngreso->execute();
+            $resultIngreso = $cmdIngreso->fetchObject();
+
+            if (!is_object($resultIngreso)) {
+                throw new Exception("No se puedo encontrar el comprobante, ingrese correctamente la serie y numeración.");
+            }
+
+            $detalleIngreso = array();
+            $cmdDetail = Database::getInstance()->getDb()->prepare("SELECT 
+            d.idConcepto,
+            c.Concepto,            
+            (d.Monto/d.Cantidad) AS Precio,
+            d.Cantidad,
+            d.Monto AS Total,
+            i.Valor
+            FROM Detalle AS d 
+            INNER JOIN Concepto AS c ON d.idConcepto = c.idConcepto
+            INNER JOIN Impuesto AS i ON i.IdImpuesto = c.IdImpuesto
+            WHERE d.idIngreso  = ?");
+            $cmdDetail->bindParam(1, $resultIngreso->idIngreso, PDO::PARAM_INT);
+            $cmdDetail->execute();
+            while ($row = $cmdDetail->fetch(PDO::FETCH_ASSOC)) {
+                array_push($detalleIngreso, array(
+                    "idConcepto" => $row["idConcepto"],
+                    "Concepto" => $row["Concepto"],
+                    "Cantidad" => floatval($row["Cantidad"]),
+                    "Precio" => floatval($row["Precio"]),
+                    "Total" => floatval($row["Total"]),
+                    "Valor" => floatval($row["Valor"])
+                ));
+            }
+
+            array_push($array, $arrayNotaCredito, $arrayFacturado, $arrayMotivo, $resultIngreso,  $detalleIngreso);
+            return $array;
+        } catch (Exception $ex) {
+            return $ex->getMessage();
+        }
+    }
+
+    public static function Notificaciones()
+    {
+        try {
+            $array = array();
+
+            $cmdIngreso = Database::getInstance()->getDb()->prepare("SELECT 
+            td.Nombre,       
+            CASE i.Estado WHEN 'A' THEN 'Dar de Baja' ELSE 'Por Declarar' END AS Estado,
+            count(i.Serie) AS Cantidad
+            FROM Ingreso AS i
+            INNER JOIN TipoComprobante AS td ON td.IdTipoComprobante = i.TipoComprobante
+            WHERE
+            ISNULL(i.Xmlsunat,'') <> '0' AND ISNULL(i.Xmlsunat,'') <> '1032'	           
+            GROUP BY td.Nombre,i.Estado ");
+            $cmdIngreso->execute();
+            while ($row = $cmdIngreso->fetch()) {
+                array_push($array, array(
+                    "Nombre" => $row["Nombre"],
+                    "Estado" => $row["Estado"],
+                    "Cantidad" => $row["Cantidad"]
+                ));
+            }
+
+            $cmdNotaCredito  = Database::getInstance()->getDb()->prepare("SELECT 
+            td.Nombre,        
+            'Por Declarar' AS Estado,
+            count(nc.Serie) AS Cantidad
+            FROM NotaCredito AS nc
+            INNER JOIN TipoComprobante AS td ON td.IdTipoComprobante = nc.TipoComprobante
+            WHERE
+            ISNULL(nc.Xmlsunat,'') <> '0' AND ISNULL(nc.Xmlsunat,'') <> '1032'	           
+            GROUP BY td.Nombre");
+            $cmdNotaCredito->execute();
+            while ($row = $cmdNotaCredito->fetch()) {
+                array_push($array, array(
+                    "Nombre" => $row["Nombre"],
+                    "Estado" => $row["Estado"],
+                    "Cantidad" => $row["Cantidad"]
+                ));
+            }
+
+
+
+            return $array;
+        } catch (Exception $ex) {
+            return $ex->getMessage();
         }
     }
 }

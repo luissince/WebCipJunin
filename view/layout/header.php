@@ -20,6 +20,22 @@
         <div class="navbar-custom-menu">
             <ul class="nav navbar-nav">
 
+                <li class="dropdown notifications-menu">
+                    <a href="#" class="dropdown-toggle" data-toggle="dropdown" aria-expanded="true">
+                        <i class="fa fa-bell-o"></i>
+                        <span class="label label-warning" id="lblNumeroNotificaciones">0</span>
+                    </a>
+                    <ul class="dropdown-menu">
+                        <li class="header" id="lblTituloNotificaciones"></li>
+                        <li>
+                            <!-- inner menu: contains the actual data -->
+                            <ul class="menu" id="ulListaNotificaciones">                                
+                            </ul>
+                        </li>
+                        <!-- <li class="footer"><a href="#">View all</a></li> -->
+                    </ul>
+                </li>
+
                 <!-- User Account: style can be found in dropdown.less -->
                 <li class="dropdown user user-menu">
                     <a href="#" class="dropdown-toggle" data-toggle="dropdown">

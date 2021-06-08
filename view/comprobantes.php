@@ -398,7 +398,7 @@ if (!isset($_SESSION['IdUsuario'])) {
 
                                     let btnUpdate =
                                         '<button class="btn btn-warning btn-xs" onclick="updateComprobante(\'' + comprobante.IdTipoComprobante + '\')">' +
-                                        '<i class="fa fa-wrench" style="font-size:25px;"></i> ' +
+                                        '<i class="fa fa-edit" style="font-size:25px;"></i> ' +
                                         '</button>';
 
                                     let predeterminado = comprobante.Predeterminado == "SI" ? '<span class="text-success">' + comprobante.Predeterminado + '</span>' : '<span class="text-danger">' + comprobante.Predeterminado + '</span>';
@@ -494,9 +494,7 @@ if (!isset($_SESSION['IdUsuario'])) {
                                     if (result.estado === 1) {
                                         loadInitComprobantes();
                                         tools.ModalAlertSuccess("Comprobante", result.mensaje);
-                                    } else if (result.estado === 2) {
-                                        tools.ModalAlertWarning("Comprobante", result.mensaje);
-                                    } else if (result.estado === 3) {
+                                    }  else if (result.estado === 2) {
                                         loadInitComprobantes();
                                         tools.ModalAlertSuccess("Comprobante", result.mensaje);
                                     } else {

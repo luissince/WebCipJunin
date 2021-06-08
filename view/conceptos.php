@@ -263,11 +263,11 @@ if (!isset($_SESSION['IdUsuario'])) {
                                         <th width="5%" class="text-center">#</th>
                                         <th width="7%">Codigo</th>
                                         <th width="10%">Categoria</th>
-                                        <th width="15%">Concepto</th>
+                                        <th width="17%">Concepto</th>
                                         <th width="10%">Precio</th>
                                         <th width="10%">Especificación</th>
                                         <th width="10%">Asignado</th>
-                                        <th width="10%">Impuesto</th>
+                                        <th width="15%">Impuesto</th>
                                         <th width="5%">Estado</th>
                                         <th width="5%">Editar</th>
                                         <th width="5%">Eliminar</th>

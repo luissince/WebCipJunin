@@ -71,8 +71,8 @@ body {
 }
 
 .content-wrapper {
-    min-height: 100%;
-    background-color: #ecf0f5;
+    min-height: 100%;    
+    background-color: #ffffff;
     z-index: 800
 }
 
@@ -118,6 +118,7 @@ body {
 }
 
 .content {
+    max-width: 1224px;
     min-height: 250px;
     padding: 15px;
     margin-right: auto;
@@ -288,7 +289,9 @@ a:hover, a:active, a:focus {
 
 .content-header {
     position: relative;
-    padding: 15px 15px 0 15px
+    margin: auto;
+    padding: 15px 15px 0 15px;
+    max-width: 1224px;
 }
 
 .content-header>h1 {
@@ -1585,7 +1588,7 @@ a:hover, a:active, a:focus {
     font-size: 17px;
 }
 
-.d-none{
+.d-none {
     display: none;
 }
 

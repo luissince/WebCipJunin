@@ -112,7 +112,7 @@ mpdf-->
             </span>
             <br>
             <span style="font-size: 10pt; color: black; font-family: sans;">
-            FECHA: ' . $fechaInicial . ' al ' . $fechaFinal . '
+            FECHA: ' . date("d/m/Y", strtotime($fechaInicial)) . ' al ' . date("d/m/Y", strtotime($fechaFinal)) . '
         </span>
         </td>
     </tr>
@@ -125,16 +125,15 @@ mpdf-->
     <thead>
         <tr style="background: #BFBFBF;">
             <th width="3%" rowspan="1">ID</th>
-            <th width="9%" rowspan="1">MOTIVO ANULACIÓN</th>
-            <th width="8%" rowspan="1">FECHA ANULACIÓN</th>
+            <th width="9%" rowspan="1">MOTIVO ANUL.</th>
+            <th width="6%" rowspan="1">FECHA ANUL.</th>
             <th width="5%" rowspan="1">SERIE</th>
-            <th width="6%" rowspan="1">NUMERACIÓN</th>
-            <th width="8%" rowspan="1">FECHA INGRESO</th>
+            <th width="5%" rowspan="1">NUMERA</th>
+            <th width="6%" rowspan="1">FECHA REG.</th>
             <th width="5%" rowspan="1">ESTADO</th>
-            <th width="7%" rowspan="1">NUM. DNI</th>
             <th width="7%" rowspan="1">NUM. CIP</th>
-            <th width="14%" rowspan="1">APELLIDOS</th>
-            <th width="14%" rowspan="1">NOMBRES</th>
+            <th width="7%" rowspan="1">NUM. DNI/RUC</th>            
+            <th width="22%" rowspan="1">PERSONA</th>
             <th width="7%" rowspan="1">MONTO</th>
             <th width="7%" rowspan="1">MONTO ANULADO</th>
         </tr>
@@ -154,7 +153,7 @@ mpdf-->
                     ' . $value["MotivoAnulacion"] . '      
                 </td>
                 <td rowspan="1">
-                    ' . $value["FechaAnulacion"] . '       
+                    ' . date("d/m/Y", strtotime($value["FechaAnulacion"])) . '       
                 </td>
                 <td align="center" rowspan="1">
                     ' . $value["Serie"] . '      
@@ -169,21 +168,18 @@ mpdf-->
                     ' . $value["Estado"] . '      
                 </td>
                 <td align="center" rowspan="1">
-                    ' . $value["idDNI"] . '      
-                </td>
-                <td align="center" rowspan="1">
                     ' . $value["CIP"] . '      
                 </td>
-                <td align="center" rowspan="1">
-                    ' . $value["Apellidos"] . '      
+                <td align="left" rowspan="1">
+                    ' . $value["NumeroDocumento"] . '      
+                </td>                
+                <td align="left" rowspan="1">
+                    ' . $value["Persona"] . '      
                 </td>
-                <td align="center" rowspan="1">
-                    ' . $value["Nombres"] . '      
+                <td align="right" rowspan="1">
+                    ' . number_format(round($value["Total"], 2, PHP_ROUND_HALF_UP), 2, '.', '') . '      
                 </td>
-                <td align="center" rowspan="1">
-                    ' . $value["Total"] . '      
-                </td>
-                <td align="center" rowspan="1">
+                <td align="right" rowspan="1">
                     0.00      
                 </td>
             </tr>';
@@ -211,22 +207,19 @@ mpdf-->
                     ' . $value["Estado"] . '      
                 </td>
                 <td align="center" rowspan="1">
-                    ' . $value["idDNI"] . '      
-                </td>
-                <td align="center" rowspan="1">
                     ' . $value["CIP"] . '      
                 </td>
-                <td align="center" rowspan="1">
-                    ' . $value["Apellidos"] . '      
+                <td align="left" rowspan="1">
+                    ' . $value["NumeroDocumento"] . '      
+                </td>  
+                <td align="left" rowspan="1">
+                    ' . $value["Persona"] . '      
                 </td>
-                <td align="center" rowspan="1">
-                    ' . $value["Nombres"] . '      
-                </td>
-                <td align="center" rowspan="1">
+                <td align="right" rowspan="1">
                     0.00      
                 </td>
-                <td align="center" rowspan="1">
-                    ' . $value["Total"] . '    
+                <td align="right" rowspan="1">
+                    ' . number_format(round($value["Total"], 2, PHP_ROUND_HALF_UP), 2, '.', '')  . '    
                 </td>
             </tr>';
         }
@@ -261,12 +254,11 @@ mpdf-->
     $mpdf->SetDisplayMode('fullpage');
 
     $mpdf->WriteHTML($html);
-    if($tipoDocumento == "null"){
-        $mpdf->Output("Reporte de Ingresos del ".$fechaInicial." al ".$fechaFinal.".pdf",'I');
-    }else{
-        $mpdf->Output("Reporte de ".$nombreComprobante."(s) del ".$fechaInicial." al ".$fechaFinal.".pdf",'I');
+    if ($tipoDocumento == "null") {
+        $mpdf->Output("Reporte de Ingresos del " . $fechaInicial . " al " . $fechaFinal . ".pdf", 'I');
+    } else {
+        $mpdf->Output("Reporte de " . $nombreComprobante . "(s) del " . $fechaInicial . " al " . $fechaFinal . ".pdf", 'I');
     }
-    
 }
 ?>
 

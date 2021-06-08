@@ -199,8 +199,8 @@ if (!isset($_SESSION['IdUsuario'])) {
                                 <table class="table table-striped" style="border-width: 1px;border-style: dashed;border-color: #E31E25;">
                                     <thead style="background-color: #FDB2B1;color: #B72928;">
                                         <th width="5%" class="text-center">#</th>
-                                        <th width="20%">Capitulo</th>
-                                        <th width="20%">Especialidad</th>
+                                        <th width="40%">Capitulo</th>
+                                        <th width="40%">Especialidad</th>
                                         <th width="5%" class="text-center">Editar</th>
                                         <th width="5%" class="text-center">Elim. Capit.</th>
                                         <th width="5%" class="text-center">Elim. Espec.</th>
@@ -402,7 +402,7 @@ if (!isset($_SESSION['IdUsuario'])) {
                                     let btnUpdate =
                                         '<button class="btn btn-warning btn-xs" onclick="updateCapituloModal(\'' +
                                         especialidad.idCapitulo + '\',\'' + especialidad.Capitulo + '\',\'' + especialidad.idEspecialidad + '\',\'' + especialidad.Especialidad + '\')">' +
-                                        '<i class="fa fa-wrench" style="font-size:25px;"></i>' +
+                                        '<i class="fa fa-edit" style="font-size:25px;"></i>' +
                                         '</button>';
 
                                     let btnDeleteCapitulo =

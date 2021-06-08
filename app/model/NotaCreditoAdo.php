@@ -9,29 +9,57 @@ class NotaCreditoAdo
         try {
             $array = array();
             $arrayIngresos = array();
-            $cmdConcepto = Database::getInstance()->getDb()->prepare("SELECT nc.idNotaCredito, (SELECT NOMBRE FROM TipoComprobante WHERE IdTipoComprobante = nc.TipoNotaCredito) AS TipoNotaCredito, convert(VARCHAR, CAST(nc.FechaRegistro AS DATE),103) AS FechadeRegistro, 
-            nc.Hora, nc.TipoComprobante, tc.Nombre AS NombreComprobante, nc.Serie, nc.Correlativo, nc.IdIngreso, nc.MotivoNotaCredito, nc.NumeroDocIdentidad, 
-            nc.NombreRazonSocial, sum(dn.Monto) AS Total
+            $cmdConcepto = Database::getInstance()->getDb()->prepare("SELECT 
+            nc.idNotaCredito,             
+            convert(VARCHAR, CAST(nc.Fecha AS DATE),103) AS FechadeRegistro, 
+            nc.Hora, 
+            nc.Serie, 
+            nc.NumRecibo, 
+            isnull(ep.NumeroRuc,p.idDNI) AS NumeroDocumento,
+            isnull(ep.Nombre,concat(p.Apellidos,' ',p.Nombres)) AS Persona,
+            i.Serie AS SerieModificado,
+            i.NumRecibo AS NumeracionModificado,
+            isnull(nc.Xmlsunat,'') as Xmlsunat,
+            isnull(nc.Xmldescripcion,'') as Xmldescripcion,
+            sum(dn.Monto) AS Total
             FROM NotaCredito AS nc
-            INNER JOIN TipoComprobante AS tc ON tc.CodigoAlterno = nc.TipoComprobante
-            INNER JOIN DetalleNotaCredito AS dn ON dn.idIngreso = nc.IdIngreso
+            INNER JOIN TablaMotivoAnulacion AS ta ON ta.IdTablaMotivoAnulacion = nc.idMotivoAnulacion
+            INNER JOIN TipoComprobante AS tc ON tc.IdTipoComprobante = nc.TipoComprobante
+            INNER JOIN Ingreso AS i ON i.idIngreso = nc.idIngreso
+            INNER JOIN Persona AS p ON p.idDNI = i.idDNI
+            LEFT JOIN EmpresaPersona AS ep ON ep.IdEmpresa =i.idEmpresaPersona
+            INNER JOIN NotaCreditoDetalle AS dn ON dn.idNotaCredito = nc.idNotaCredito
             WHERE
-            ($opcion = 0 AND nc.FechaRegistro BETWEEN ? AND ?)
+            ($opcion = 0)
             OR
-            ($opcion = 1 AND nc.Serie LIKE CONCAT(?,'%'))
+            ($opcion = 1 AND nc.Fecha BETWEEN ? AND ?)
             OR
-            ($opcion = 1 AND nc.Correlativo LIKE CONCAT(?,'%'))
+            ($opcion = 2 AND nc.Serie LIKE CONCAT(?,'%'))
             OR
-            ($opcion = 1 AND CONCAT(nc.Serie,'-',nc.Correlativo) LIKE CONCAT(?,'%'))
+            ($opcion = 2 AND nc.NumRecibo LIKE CONCAT(?,'%'))
             OR
-            ($opcion = 1 AND nc.NumeroDocIdentidad LIKE CONCAT(?,'%'))
+            ($opcion = 2 AND CONCAT(nc.Serie,'-',nc.NumRecibo) LIKE CONCAT(?,'%'))
             OR
-            ($opcion = 1 AND nc.NombreRazonSocial LIKE CONCAT(?,'%'))
-            GROUP BY nc.idNotaCredito, nc.TipoNotaCredito, nc.FechaRegistro, nc.Hora, nc.TipoComprobante, tc.Nombre, nc.Serie,
-            nc.Correlativo, nc.IdIngreso, nc.MotivoNotaCredito, nc.NumeroDocIdentidad, nc.NombreRazonSocial
-            ORDER BY nc.FechaRegistro DESC, nc.Hora DESC
+            ($opcion = 2 AND  isnull(ep.NumeroRuc,p.idDNI) LIKE CONCAT(?,'%'))
+            OR
+            ($opcion = 2 AND isnull(ep.Nombre,concat(p.Apellidos,' ',p.Nombres)) LIKE CONCAT(?,'%'))
+            GROUP BY 
+            nc.idNotaCredito,
+            nc.Fecha,
+            nc.Hora, 
+            nc.Serie, 
+            nc.NumRecibo,
+            ep.NumeroRuc,
+            p.idDNI,
+            ep.Nombre,
+            p.Apellidos,
+            p.Nombres,
+            i.Serie,
+            i.NumRecibo,
+            nc.Xmlsunat,
+            nc.Xmldescripcion
+            ORDER BY nc.Fecha DESC, nc.Hora DESC
             offset ? ROWS FETCH NEXT ? ROWS only");
-            $cmdConcepto->bindParam(1, $fechaInicio, PDO::PARAM_STR);
             $cmdConcepto->bindParam(1, $fechaInicio, PDO::PARAM_STR);
             $cmdConcepto->bindParam(2, $fechaFinal, PDO::PARAM_STR);
             $cmdConcepto->bindParam(3, $buscar, PDO::PARAM_STR);
@@ -49,32 +77,39 @@ class NotaCreditoAdo
                 array_push($arrayIngresos, array(
                     "id" => $count + $posicionPagina,
                     "idNotaCredito" => $row["idNotaCredito"],
-                    "tipoNotaCredito" => $row["TipoNotaCredito"],
-                    "idIngreso" => $row["IdIngreso"],
-                    "fechadeRegistro" => $row["FechadeRegistro"],
-                    "hora" => $row["Hora"],
-                    "serie" => $row["Serie"],
-                    "correlativo" => $row["Correlativo"],
-                    "numeroDocIdent" => $row["NumeroDocIdentidad"],
-                    "nombres" => $row["NombreRazonSocial"],
-                    "total" => $row["Total"],
-                    "motivoNotaCredito" => $row["MotivoNotaCredito"],
+                    "FechadeRegistro" => $row["FechadeRegistro"],
+                    "Hora" => $row["Hora"],
+                    "Serie" => $row["Serie"],
+                    "NumRecibo" => $row["NumRecibo"],
+                    "NumeroDocumento" => $row["NumeroDocumento"],
+                    "Persona" => $row["Persona"],
+                    "SerieModificado" => $row["SerieModificado"],
+                    "NumeracionModificado" => $row["NumeracionModificado"],
+                    "Total" => $row["Total"],
+                    "Xmlsunat" => $row["Xmlsunat"],
+                    "Xmldescripcion" => NotaCreditoAdo::limitar_cadena($row["Xmldescripcion"], 100, "..."),
                 ));
             }
 
-            $comandoTotal = Database::getInstance()->getDb()->prepare("SELECT COUNT(*) AS Total FROM NotaCredito  
+            $comandoTotal = Database::getInstance()->getDb()->prepare("SELECT COUNT(*) AS Total 
+            FROM NotaCredito AS nc 
+            INNER JOIN TablaMotivoAnulacion AS ta ON ta.IdTablaMotivoAnulacion = nc.idMotivoAnulacion
+            INNER JOIN TipoComprobante AS tc ON tc.IdTipoComprobante = nc.TipoComprobante
+            INNER JOIN Ingreso AS i ON i.idIngreso = nc.idIngreso
+            INNER JOIN Persona AS p ON p.idDNI = i.idDNI
+            LEFT JOIN EmpresaPersona AS ep ON ep.IdEmpresa =i.idEmpresaPersona
             WHERE
-            $opcion = 0 AND FechaRegistro BETWEEN ? AND ?
+            $opcion = 0 AND nc.Fecha BETWEEN ? AND ?
             OR
-            ($opcion = 1 AND Serie LIKE CONCAT(?,'%'))
+            ($opcion = 1 AND nc.Serie LIKE CONCAT(?,'%'))
             OR
-            ($opcion = 1 AND correlativo LIKE CONCAT(?,'%'))
+            ($opcion = 1 AND nc.NumRecibo LIKE CONCAT(?,'%'))
             OR
-            ($opcion = 1 AND CONCAT(Serie,'-',correlativo) LIKE CONCAT(?,'%'))
+            ($opcion = 1 AND CONCAT(nc.Serie,'-',nc.NumRecibo) LIKE CONCAT(?,'%'))
             OR
-            ($opcion = 1 AND NumeroDocIdentidad LIKE CONCAT(?,'%'))
+            ($opcion = 1 AND  isnull(ep.NumeroRuc,p.idDNI) LIKE CONCAT(?,'%'))
             OR
-            ($opcion = 1 AND NombreRazonSocial LIKE CONCAT(?,'%'))");
+            ($opcion = 1 AND isnull(ep.Nombre,concat(p.Apellidos,' ',p.Nombres)) LIKE CONCAT(?,'%'))");
             $comandoTotal->bindParam(1, $fechaInicio, PDO::PARAM_STR);
             $comandoTotal->bindParam(2, $fechaFinal, PDO::PARAM_STR);
             $comandoTotal->bindParam(3, $buscar, PDO::PARAM_STR);
@@ -92,55 +127,233 @@ class NotaCreditoAdo
         }
     }
 
-    public static function registrarNotaCredito($dataNotaCredito)
+    public static function limitar_cadena($cadena, $limite, $sufijo)
+    {
+        if (strlen($cadena) > $limite) {
+            return substr($cadena, 0, $limite) . $sufijo;
+        }
+        return $cadena;
+    }
+
+    public static function DetalleNotaCreditoById($idNotaCredito)
+    {
+        try {
+            $cmDetalleNotaCredito = Database::getInstance()->getDb()->prepare("SELECT 
+            d.idNotaCreditoDetalle,            
+            c.Concepto,            
+            (d.Monto/d.Cantidad) AS Precio,
+            d.Cantidad,
+            d.Monto AS Total,
+            i.Nombre,
+            i.Valor,
+            i.Codigo
+            FROM NotaCreditoDetalle AS d 
+            INNER JOIN Concepto AS c ON d.idConcepto = c.idConcepto
+            INNER JOIN Impuesto AS i ON i.IdImpuesto = c.IdImpuesto
+            WHERE d.idNotaCredito  = ? ");
+            $cmDetalleNotaCredito->bindParam(1, $idNotaCredito, PDO::PARAM_INT);
+            $cmDetalleNotaCredito->execute();
+            $count = 0;
+
+            $detalleNotaCredito = array();
+            while ($row = $cmDetalleNotaCredito->fetch()) {
+                $count++;
+                array_push($detalleNotaCredito, array(
+                    "Id" => $count,
+                    "idNotaCreditoDetalle" => $row["idNotaCreditoDetalle"],
+                    "Concepto" => $row["Concepto"],
+                    "Precio" => $row["Precio"],
+                    "Cantidad" => $row["Cantidad"],
+                    "Total" => $row["Total"],
+                    "Nombre" => $row["Nombre"],
+                    "Valor" => $row["Valor"],
+                    "Codigo" => $row["Codigo"],
+                ));
+            }
+            return $detalleNotaCredito;
+        } catch (Exception $ex) {
+            return $ex->getMessage();
+        }
+    }
+
+    public static function ObtenerNotaCreditoXML($idNotaCredito)
+    {
+        try {
+            $array = array();
+            $totalsinimpuesto = 0;
+            $opegravada =  0;
+            $opeexogenerada = 0;
+            $impuesto = 0;
+
+            $cmdNotaCredito = Database::getInstance()->getDb()->prepare("SELECT 
+            t.CodigoAlterno AS TipoDocumentoNotaCredito,
+            t.Nombre AS Comprobante,
+            nc.Serie AS SerieNotaCredito,
+            nc.NumRecibo AS NumeracionNotaCredito,
+            nc.Fecha AS FechaNotaCredito,
+            nc.Hora as HoraNotaCredito,
+            tc.CodigoAlterno,
+            i.Serie,
+            i.NumRecibo,
+            ta.Codigo AS CodigoAnulacion, 
+            ta.Nombre AS MotivoAnulacion,
+            case when not e.IdEmpresa is null then 6 else 1 end as TipoDocumento,
+            case when not e.IdEmpresa is null then 'R.U.C' else 'D.N.I' end as NombreDocumento,
+            case when not e.IdEmpresa is null then 'Razón Social' else 'Nombres' end as TipoNombrePersona,
+            isnull(e.NumeroRuc,p.idDNI) as NumeroDocumento,
+            isnull(e.Nombre,concat(p.Apellidos,' ',p.Nombres)) as DatosPersona,
+            isnull(e.Direccion,p.RUC) as Direccion,
+            isnull(nc.CodigoHash,'') AS CodigoHash
+            FROM  
+            NotaCredito AS nc 
+            INNER JOIN TipoComprobante AS t ON t.IdTipoComprobante = nc.TipoComprobante 
+            INNER JOIN TablaMotivoAnulacion AS ta ON ta.IdTablaMotivoAnulacion = nc.idMotivoAnulacion
+            INNER JOIN Ingreso AS i ON i.idIngreso = nc.idIngreso
+            INNER JOIN TipoComprobante AS tc ON tc.IdTipoComprobante = i.TipoComprobante 
+            INNER JOIN Persona AS p ON p.idDNI = i.idDNI
+			LEFT JOIN EmpresaPersona AS e ON e.IdEmpresa = i.idEmpresaPersona            
+            WHERE nc.idNotaCredito = ?");
+            $cmdNotaCredito->bindParam(1, $idNotaCredito, PDO::PARAM_INT);
+            $cmdNotaCredito->execute();
+            $resultNotaCredito = $cmdNotaCredito->fetchObject();
+
+            $cmDetalleNotaCredito = Database::getInstance()->getDb()->prepare("SELECT 
+            d.idNotaCreditoDetalle,            
+            c.Concepto,            
+            (d.Monto/d.Cantidad) AS Precio,
+            d.Cantidad,
+            d.Monto AS Total,
+            i.Nombre,
+            i.Valor,
+            i.Codigo
+            FROM NotaCreditoDetalle AS d 
+            INNER JOIN Concepto AS c ON d.idConcepto = c.idConcepto
+            INNER JOIN Impuesto AS i ON i.IdImpuesto = c.IdImpuesto
+            WHERE d.idNotaCredito  = ?");
+            $cmDetalleNotaCredito->bindParam(1, $idNotaCredito, PDO::PARAM_INT);
+            $cmDetalleNotaCredito->execute();
+            $count = 0;
+
+            $detalleNotaCredito = array();
+            while ($row = $cmDetalleNotaCredito->fetch()) {
+                $count++;
+                array_push($detalleNotaCredito, array(
+                    "Id" => $count,
+                    "idNotaCreditoDetalle" => $row["idNotaCreditoDetalle"],
+                    "Concepto" => $row["Concepto"],
+                    "Precio" => $row["Precio"],
+                    "Cantidad" => $row["Cantidad"],
+                    "Total" => $row["Total"],
+                    "Nombre" => $row["Nombre"],
+                    "Valor" => $row["Valor"],
+                    "Codigo" => $row["Codigo"],
+                ));
+                $cantidad = $row["Cantidad"];
+                $valorImpuesto = $row['Valor'];
+                $preciobruto = $row['Precio'] / (($valorImpuesto / 100.00) + 1);
+
+                $opegravada +=  $valorImpuesto == 0 ? 0 : $cantidad * $preciobruto;
+                $opeexogenerada += $valorImpuesto == 0 ? $cantidad * $preciobruto : 0;
+
+                $totalsinimpuesto += $cantidad * $preciobruto;
+                $impuesto += $cantidad  * ($preciobruto * ($valorImpuesto / 100.00));
+            }
+
+            $cmdEmpresa = Database::getInstance()->getDb()->prepare("SELECT 
+            TOP 1 NumeroDocumento,
+            NombreComercial,
+            RazonSocial,
+            Domicilio,
+            Telefono,
+            PaginaWeb,
+            Email,
+            UsuarioSol,
+            ClaveSol
+            FROM Empresa");
+            $cmdEmpresa->execute();
+            $resultEmpresa = $cmdEmpresa->fetchObject();
+
+            array_push(
+                $array,
+                $resultNotaCredito,
+                $detalleNotaCredito,
+                $resultEmpresa,
+                array(
+                    "opgravada" => $opegravada,
+                    "opexonerada" =>   $opeexogenerada,
+                    "totalsinimpuesto" => $totalsinimpuesto,
+                    "totalimpuesto" => $impuesto,
+                    "totalconimpuesto" => $totalsinimpuesto + $impuesto,
+                )
+            );
+            return $array;
+        } catch (Exception $ex) {
+            return $ex->getMessage();
+        }
+    }
+
+    public static function registrarNotaCredito($body)
     {
         try {
             Database::getInstance()->getDb()->beginTransaction();
-            $cmdSelect = Database::getInstance()->getDb()->prepare('SELECT * FROM NotaCredito WHERE Serie = ? AND Correlativo = ?');
-            $cmdSelect->bindParam(1, $dataNotaCredito['serie'], PDO::PARAM_STR);
-            $cmdSelect->bindParam(2, $dataNotaCredito['correlativo'], PDO::PARAM_STR);
-            $cmdSelect->execute();
 
-            if ($cmdSelect->fetch()) {
-                Database::getInstance()->getDb()->rollback();
-                return 'Duplicado';
-            } else {
-                $comandoInsert = Database::getInstance()->getDb()->prepare('INSERT INTO NotaCredito (TipoNotaCredito, FechaRegistro, Hora, TipoComprobante, 
-                Serie, Correlativo, IdIngreso, MotivoNotaCredito, DocIdentidad, NumeroDocIdentidad, NombreRazonSocial, Direccion, Celular, Correo, 
-                Comentario) VALUES (?,?,GETDATE(),?,UPPER(?),?,?,?,?,?,UPPER(?),UPPER(?),?,UPPER(?),UPPER(?));');
+            $codigoSerieNumeracion = Database::getInstance()->getDb()->prepare("SELECT dbo.Fc_Serie_Numero(?)");
+            $codigoSerieNumeracion->bindParam(1, $body["idTipoNotaCredito"], PDO::PARAM_STR);
+            $codigoSerieNumeracion->execute();
+            $serie_numeracion = explode("-", $codigoSerieNumeracion->fetchColumn());
 
-                $comandoInsert->bindParam(1, $dataNotaCredito['tipoNotaCredito'], PDO::PARAM_INT);
-                $comandoInsert->bindParam(2, $dataNotaCredito['fechaRegistro'], PDO::PARAM_STR);
-                $comandoInsert->bindParam(3, $dataNotaCredito['tipoComprobante'], PDO::PARAM_INT);
-                $comandoInsert->bindParam(4, $dataNotaCredito['serie'], PDO::PARAM_STR);
-                $comandoInsert->bindParam(5, $dataNotaCredito['correlativo'], PDO::PARAM_STR);
-                $comandoInsert->bindParam(6, $dataNotaCredito['idIngreso'], PDO::PARAM_INT);
-                $comandoInsert->bindParam(7, $dataNotaCredito['motivoNotaCredito'], PDO::PARAM_INT);
-                $comandoInsert->bindParam(8, $dataNotaCredito['tipoDocumentoIdentidad'], PDO::PARAM_INT);
-                $comandoInsert->bindParam(9, $dataNotaCredito['numeroDocumentoIdentidad'], PDO::PARAM_STR);
-                $comandoInsert->bindParam(10, $dataNotaCredito['nombreRazonSocial'], PDO::PARAM_STR);
-                $comandoInsert->bindParam(11, $dataNotaCredito['direccion'], PDO::PARAM_STR);
-                $comandoInsert->bindParam(12, $dataNotaCredito['celular'], PDO::PARAM_STR);
-                $comandoInsert->bindParam(13, $dataNotaCredito['correo'], PDO::PARAM_STR);
-                $comandoInsert->bindParam(14, $dataNotaCredito['comentario'], PDO::PARAM_STR);
-                $comandoInsert->execute();
+            $cmdIngreso = Database::getInstance()->getDb()->prepare("INSERT INTO NotaCredito(
+                idIngreso,
+                idMotivoAnulacion,
+                TipoComprobante,
+                Serie,
+                NumRecibo,
+                Fecha,
+                Hora
+                )VALUES(?,?,?,?,?,GETDATE(),GETDATE())");
+            $cmdIngreso->bindParam(1, $body["idIngreso"], PDO::PARAM_STR);
+            $cmdIngreso->bindParam(2, $body["idMotivoNotaCredito"], PDO::PARAM_INT);
+            $cmdIngreso->bindParam(3, $body["idTipoNotaCredito"], PDO::PARAM_INT);
+            $cmdIngreso->bindParam(4, $serie_numeracion[0], PDO::PARAM_STR);
+            $cmdIngreso->bindParam(5, $serie_numeracion[1], PDO::PARAM_STR);
+            $cmdIngreso->execute();
 
-                foreach ($dataNotaCredito["detalleComprobante"] as $value) {
-                    $cmdDetalle = Database::getInstance()->getDb()->prepare("INSERT INTO detalleNotaCredito(
-                        idIngreso,
-                        idConcepto,
-                        Cantidad,
-                         Monto
-                        )VALUES(?,?,?,?)");
-                    $cmdDetalle->bindParam(1, $value['idIngreso'], PDO::PARAM_INT);
-                    $cmdDetalle->bindParam(2, $value['idConcepto'], PDO::PARAM_INT);
-                    $cmdDetalle->bindParam(3, $value['Cantidad'], PDO::PARAM_INT);
-                    $cmdDetalle->bindParam(4, $value['Total'], PDO::PARAM_INT);
-                    $cmdDetalle->execute();
-                }
-                Database::getInstance()->getDb()->commit();
-                return 'Insertado';
+            $idNotaCredito = Database::getInstance()->getDb()->lastInsertId();
+
+            foreach ($body["detalleComprobante"] as $value) {
+                $cmdDetalle = Database::getInstance()->getDb()->prepare("INSERT INTO NotaCreditoDetalle(
+                    idNotaCredito,
+                    idConcepto,
+                    Cantidad,
+                    Monto
+                    )VALUES(?,?,?,?)");
+                $cmdDetalle->bindParam(1, $idNotaCredito, PDO::PARAM_INT);
+                $cmdDetalle->bindParam(2, $value['idConcepto'], PDO::PARAM_INT);
+                $cmdDetalle->bindParam(3, $value['Cantidad'], PDO::PARAM_INT);
+                $cmdDetalle->bindParam(4, $value['Total'], PDO::PARAM_INT);
+                $cmdDetalle->execute();
             }
+            Database::getInstance()->getDb()->commit();
+            return 'Insertado';
+        } catch (Exception $ex) {
+            Database::getInstance()->getDb()->rollback();
+            return $ex->getMessage();
+        }
+    }
+
+    public static function CambiarEstadoSunatNotaCredito($idNotaCredito, $codigo, $descripcion, $hash)
+    {
+        try {
+            Database::getInstance()->getDb()->beginTransaction();
+            $comando = Database::getInstance()->getDb()->prepare("UPDATE NotaCredito SET 
+            Xmlsunat = ? , Xmldescripcion = ?, CodigoHash = ? WHERE idNotaCredito = ?");
+            $comando->bindParam(1, $codigo, PDO::PARAM_STR);
+            $comando->bindParam(2, $descripcion, PDO::PARAM_STR);
+            $comando->bindParam(3, $hash, PDO::PARAM_STR);
+            $comando->bindParam(4, $idNotaCredito, PDO::PARAM_STR);
+            $comando->execute();
+            Database::getInstance()->getDb()->commit();
+            return "updated";
         } catch (Exception $ex) {
             Database::getInstance()->getDb()->rollback();
             return $ex->getMessage();
