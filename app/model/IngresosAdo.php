@@ -18,16 +18,19 @@ class IngresosAdo
             i.idIngreso,
             convert(VARCHAR, CAST(i.Fecha AS DATE),103) AS Fecha,
             i.Hora,
+            tc.Nombre as Comprobante,
             i.Serie, 
             i.NumRecibo,
             i.Estado,
             p.CIP,
-            isnull(e.NumeroRuc,p.idDNI) as numeroDocumento,
-            isnull(e.Nombre,concat(p.Apellidos,' ', p.Nombres)) as persona,
+            case when not e.IdEmpresa is null then 'RUC' else 'DNI' end as NombreDocumento,
+            isnull(e.NumeroRuc,p.idDNI) as NumeroDocumento,
+            isnull(e.Nombre,concat(p.Apellidos,' ', p.Nombres)) as Persona,
             sum(d.Monto) AS Total,
             isnull(i.Xmlsunat,'') as Xmlsunat,
             isnull(i.Xmldescripcion,'') as Xmldescripcion
             FROM Ingreso AS i 
+            INNER JOIN TipoComprobante AS tc ON tc.IdTipoComprobante = i.TipoComprobante
             INNER JOIN Persona AS p ON i.idDNI = p.idDNI
             LEFT JOIN EmpresaPersona AS e ON e.IdEmpresa = i.idEmpresaPersona
             INNER JOIN Detalle AS d ON d.idIngreso = i.idIngreso
@@ -50,7 +53,7 @@ class IngresosAdo
             OR
             $opcion = 3 AND i.Estado = ? AND i.Fecha BETWEEN ? AND ?
             GROUP BY i.idIngreso,i.Fecha,i.Hora,i.Serie,i.NumRecibo,i.Estado,
-            p.CIP,p.idDNI,p.Apellidos,p.Nombres,e.NumeroRuc,e.Nombre,i.Xmlsunat,i.Xmldescripcion
+            p.CIP,p.idDNI,p.Apellidos,p.Nombres,e.NumeroRuc,e.Nombre,i.Xmlsunat,i.Xmldescripcion,e.IdEmpresa,tc.Nombre
             ORDER BY i.Fecha DESC,i.Hora DESC
             offset ? ROWS FETCH NEXT ? ROWS only");
             $cmdConcepto->bindParam(1, $fechaInicio, PDO::PARAM_STR);
@@ -79,12 +82,14 @@ class IngresosAdo
                     "idIngreso" => $row["idIngreso"],
                     "fecha" => $row["Fecha"],
                     "hora" => $row["Hora"],
+                    "comprobante" => $row["Comprobante"],
                     "serie" => $row["Serie"],
                     "numRecibo" => $row["NumRecibo"],
                     "estado" => $row["Estado"],
                     "cip" => $row["CIP"],
-                    "numeroDocumento" => $row["numeroDocumento"],
-                    "persona" => $row["persona"],
+                    "nombreDocumento" => $row["NombreDocumento"],
+                    "numeroDocumento" => $row["NumeroDocumento"],
+                    "persona" => $row["Persona"],
                     "total" => $row["Total"],
                     "xmlsunat" => $row["Xmlsunat"],
                     "xmldescripcion" => IngresosAdo::limitar_cadena($row["Xmldescripcion"], 100, "..."),
@@ -93,6 +98,7 @@ class IngresosAdo
 
             $comandoTotal = Database::getInstance()->getDb()->prepare("SELECT COUNT(*) AS Total 
             FROM Ingreso AS i 
+            INNER JOIN TipoComprobante AS tc ON tc.IdTipoComprobante = i.TipoComprobante
             INNER JOIN Persona AS p ON i.idDNI = p.idDNI
             LEFT JOIN EmpresaPersona AS e ON e.IdEmpresa = i.idEmpresaPersona
             WHERE
@@ -1451,8 +1457,6 @@ class IngresosAdo
                     "Cantidad" => $row["Cantidad"]
                 ));
             }
-
-
 
             return $array;
         } catch (Exception $ex) {

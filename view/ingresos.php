@@ -412,8 +412,8 @@ if (!isset($_SESSION['IdUsuario'])) {
                                         '<td>' + btnPdf + '</td>' +
                                         '<td>' + btnDetalle + '</td>' +
                                         '<td>' + ingresos.fecha + '<br>' + tools.getTimeForma(ingresos.hora, true) + '</td>' +
-                                        '<td>' + ingresos.serie + '-' + ingresos.numRecibo + '</td>' +
-                                        '<td>' + ingresos.numeroDocumento + '</br>' + ingresos.persona + '</td>' +
+                                        '<td>' + ingresos.comprobante + '<br>' + ingresos.serie + '-' + ingresos.numRecibo + '</td>' +
+                                        '<td>' + ingresos.nombreDocumento + ' - ' + ingresos.numeroDocumento + '</br>' + ingresos.persona + '</td>' +
                                         '<td>' + (ingresos.estado == "C" ? '<span class="text-green">Pagado</span>' : '<span class="text-red">Anulado</span>') + '</td>' +
                                         '<td>' + tools.formatMoney(ingresos.total) + '</td>' +
                                         '</tr>'

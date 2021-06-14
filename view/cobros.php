@@ -283,7 +283,7 @@ if (!isset($_SESSION['IdUsuario'])) {
                                                     <div class="input-group-btn">
                                                         <button type="button" id="btnAddEmpresa" class="btn btn-primary btn-flat">Nuevo</button>
                                                     </div>
-                                                    <select class="form-control select2" id="cbCliente" style="width:100%;">
+                                                    <select class="form-control select2" id="cbEmpresa">
                                                     </select>
                                                 </div>
                                             </div>
@@ -564,21 +564,21 @@ if (!isset($_SESSION['IdUsuario'])) {
                         "type": "empresaPersona"
                     },
                     beforeSend: function() {
-                        $("#cbCliente").empty();
+                        $("#cbEmpresa").empty();
                     },
                     success: function(result) {
                         if (result.estado == 1) {
-                            $("#cbCliente").append('<option value="">- Seleccione Empresa -</option>');
+                            $("#cbEmpresa").append('<option value="">- Seleccione Empresa -</option>');
                             for (let value of result.data) {
-                                $("#cbCliente").append('<option value="' + value.IdEmpresa + '">' + value.RazonSocial + '</option>');
+                                $("#cbEmpresa").append('<option value="' + value.IdEmpresa + '">' + value.RazonSocial + '</option>');
                             }
-                            $('#cbCliente').select2();
+                            $('#cbEmpresa').select2();
                         } else {
-                            $("#cbCliente").append('<option value="">- Seleccione -</option>');
+                            $("#cbEmpresa").append('<option value="">- Seleccione -</option>');
                         }
                     },
                     error: function(error) {
-                        $("#cbCliente").append('<option value="">- Seleccione -</option>');
+                        $("#cbEmpresa").append('<option value="">- Seleccione -</option>');
                     }
                 });
             }
@@ -603,9 +603,9 @@ if (!isset($_SESSION['IdUsuario'])) {
                     tools.AlertWarning("Cobros", "No hay conceptos para continuar.");
                 } else if (idDNI == 0) {
                     tools.AlertWarning("Cobros", "No selecciono ningún ingeneniero para continuar.");
-                } else if (UsarRuc && $("#cbCliente").val() == '') {
+                } else if (UsarRuc && $("#cbEmpresa").val() == '') {
                     tools.AlertWarning("Cobros", "El comprobante requiere usar una empresa asociada.");
-                    $("#cbCliente").focus();
+                    $("#cbEmpresa").focus();
                 } else {
                     tools.ModalDialog("Cobros", "¿Está seguro de continuar?", function(value) {
                         if (value == true) {
@@ -618,7 +618,7 @@ if (!isset($_SESSION['IdUsuario'])) {
                                 data: JSON.stringify({
                                     "idTipoDocumento": parseInt($("#cbComprobante").val()),
                                     "idCliente": idDNI,
-                                    "idEmpresaPersona": $("#cbCliente").val() == '' ? null : $("#cbCliente").val(),
+                                    "idEmpresaPersona": $("#cbEmpresa").val() == '' ? null : $("#cbEmpresa").val(),
                                     "idUsuario": 1,
                                     "estado": 'C',
                                     "estadoCuotas": cuotasEstate,

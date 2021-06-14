@@ -223,7 +223,7 @@ class PersonaAdo
             $cmdColegiatura = Database::getInstance()->getDb()->prepare("SELECT        
             CAST(dbo.Colegiatura.FechaColegiado AS DATE) as FechaColegiado,
             CAST(ISNULL(dbo.ULTIMACuota.FechaUltimaCuota,dbo.Colegiatura.FechaColegiado) AS DATE) AS UltimaCuota, 
-            CAST(DATEADD(MONTH,3,ISNULL(dbo.ULTIMACuota.FechaUltimaCuota,dbo.Colegiatura.FechaColegiado)) AS DATE) AS HabilitadoHasta     
+            CAST(DATEADD(MONTH,CASE dbo.Persona.Condicion WHEN 'O' THEN 3 WHEN 'V' THEN 9 ELSE 0 END,ISNULL(dbo.ULTIMACuota.FechaUltimaCuota,dbo.Colegiatura.FechaColegiado)) AS DATE) AS HabilitadoHasta     
             FROM dbo.Persona
             LEFT OUTER JOIN dbo.Colegiatura ON dbo.Colegiatura.idDNI = dbo.Persona.idDNI AND dbo.Colegiatura.Principal = 1
             LEFT OUTER JOIN dbo.ULTIMACuota ON dbo.ULTIMACuota.idDNI = dbo.Persona.idDNI
@@ -1441,9 +1441,9 @@ class PersonaAdo
             CAST(dbo.Colegiatura.FechaColegiado AS DATE)  AS FechaColegiado,
             CAST(ISNULL(dbo.ULTIMACuota.FechaUltimaCuota,dbo.Colegiatura.FechaColegiado) AS DATE) AS FechaUltimaCuota,             
             CASE
-                WHEN CAST (DATEDIFF(M,DATEADD(MONTH,3,ISNULL(dbo.ULTIMACuota.FechaUltimaCuota, dbo.Colegiatura.FechaColegiado)) , GETDATE()) AS INT) <=0 THEN 'Habilitado'
+                WHEN CAST (DATEDIFF(M,DATEADD(MONTH,CASE dbo.Persona.Condicion WHEN 'O' THEN 3 WHEN 'V' THEN 9 ELSE 0 END,ISNULL(dbo.ULTIMACuota.FechaUltimaCuota, dbo.Colegiatura.FechaColegiado)) , GETDATE()) AS INT) <=0 THEN 'Habilitado'
                 ELSE 'No Habilitado' END AS Habilidad,
-            CAST(DATEADD(MONTH,3,ISNULL(dbo.ULTIMACuota.FechaUltimaCuota,dbo.Colegiatura.FechaColegiado)) AS DATE) AS HabilitadoHasta           
+            CAST(DATEADD(MONTH,CASE dbo.Persona.Condicion WHEN 'O' THEN 3 WHEN 'V' THEN 9 ELSE 0 END,ISNULL(dbo.ULTIMACuota.FechaUltimaCuota,dbo.Colegiatura.FechaColegiado)) AS DATE) AS HabilitadoHasta           
             FROM dbo.Persona
             LEFT OUTER JOIN dbo.Colegiatura ON dbo.Colegiatura.idDNI = dbo.Persona.idDNI AND dbo.Colegiatura.Principal = 1
             INNER JOIN dbo.Especialidad ON dbo.Especialidad.idEspecialidad = dbo.Colegiatura.idEspecialidad
@@ -1454,8 +1454,8 @@ class PersonaAdo
             OR $opcion = 1 and dbo.Persona.Apellidos LIKE CONCAT(?,'%')
             OR $opcion = 1 and dbo.Persona.Nombres LIKE CONCAT(?,'%')
             OR $opcion = 2 and $tipoHabilidad = 0
-            OR $opcion = 2 and $tipoHabilidad = 1 and CAST(DATEDIFF(M,DATEADD(MONTH,3,ISNULL(dbo.ULTIMACuota.FechaUltimaCuota, dbo.Colegiatura.FechaColegiado)) , GETDATE()) AS INT) <=0
-            OR $opcion = 2 and $tipoHabilidad = 2 and CAST(DATEDIFF(M,DATEADD(MONTH,3,ISNULL(dbo.ULTIMACuota.FechaUltimaCuota, dbo.Colegiatura.FechaColegiado)) , GETDATE()) AS INT) >0
+            OR $opcion = 2 and $tipoHabilidad = 1 and CAST(DATEDIFF(M,DATEADD(MONTH,CASE dbo.Persona.Condicion WHEN 'O' THEN 3 WHEN 'V' THEN 9 ELSE 0 END,ISNULL(dbo.ULTIMACuota.FechaUltimaCuota, dbo.Colegiatura.FechaColegiado)) , GETDATE()) AS INT) <=0
+            OR $opcion = 2 and $tipoHabilidad = 2 and CAST(DATEDIFF(M,DATEADD(MONTH,CASE dbo.Persona.Condicion WHEN 'O' THEN 3 WHEN 'V' THEN 9 ELSE 0 END,ISNULL(dbo.ULTIMACuota.FechaUltimaCuota, dbo.Colegiatura.FechaColegiado)) , GETDATE()) AS INT) >0
             ORDER BY dbo.Persona.Apellidos ASC
             offset ? ROWS FETCH NEXT ? ROWS only");
             $comandoHabilidad->bindParam(1, $search, PDO::PARAM_INT);

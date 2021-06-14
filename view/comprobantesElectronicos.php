@@ -64,7 +64,7 @@ if (!isset($_SESSION['IdUsuario'])) {
             </div>
             <!--end modal history enginner  -->
             <!-- Content Wrapper. Contains page content -->
-            <div class="content-wrapper" >
+            <div class="content-wrapper">
                 <!-- Main content -->
                 <section class="content-header">
                     <h3 class="no-margin"> Comprobantes(Boletas, Facturas) <small> Lista </small> </h3>
@@ -510,8 +510,8 @@ if (!isset($_SESSION['IdUsuario'])) {
                                         '<td>' + btnPdf + '</td>' +
                                         '<td>' + btnDetalle + '</td>' +
                                         '<td>' + ingresos.fecha + '<br>' + tools.getTimeForma(ingresos.hora, true) + '</td>' +
-                                        '<td>' + ingresos.serie + '-' + ingresos.numRecibo + '</td>' +
-                                        '<td>' + ingresos.numeroDocumento + '</br>' + ingresos.persona  + '</td>' +
+                                        '<td>' + ingresos.comprobante + '<br>' + ingresos.serie + '-' + ingresos.numRecibo + '</td>' +
+                                        '<td>' + ingresos.nombreDocumento + ' - ' + ingresos.numeroDocumento + '</br>' + ingresos.persona + '</td>' +
                                         '<td>' + (ingresos.estado == "C" ? '<span class="text-green">Cobrado</span>' : '<span class="text-red">Anulado</span>') + '</td>' +
                                         '<td>' + tools.formatMoney(ingresos.total) + '</td>' +
                                         '<td style="text-align: center;">' + estadosunat + '</td>' +
