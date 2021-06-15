@@ -1,6 +1,6 @@
 <div class="row">
     <div class="modal fade" id="mdCuotas" data-backdrop="static">
-        <div class="modal-dialog modal-xl" style="width: 40%;">
+        <div class="modal-dialog modal-xl">
             <div class="modal-content">
                 <div class="modal-header">
                     <button id="btnCloseCuotas" type="button" class="close">
