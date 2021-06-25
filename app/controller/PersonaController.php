@@ -296,6 +296,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
 } else if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     if ($_POST["type"] == "create") {
         $persona["dni"] = $_POST["dni"];
+        $persona["num_duc"] = $_POST["num_duc"];
         $persona["nombres"] = $_POST["nombres"];
         $persona["apellidos"] = $_POST["apellidos"];
         $persona["sexo"] = $_POST["sexo"];
@@ -312,7 +313,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
                 "estado" => 1,
                 "message" => "Se insertarron correctamente los datos"
             ));
-        } else if ($result == "dni") {
+        } else if ($result == "num_duc") {
             echo json_encode(array(
                 "estado" => 2,
                 "message" => "El número de dni ya se encuentra registrado."
@@ -497,6 +498,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
         }
     } else if ($_POST["type"] == "update") {
         $persona["dni"] = $_POST["dni"];
+        $persona["num_duc"] = $_POST["num_duc"];
         $persona["nombres"] = $_POST["nombres"];
         $persona["apellidos"] = $_POST["apellidos"];
         $persona["sexo"] = $_POST["sexo"];
@@ -518,9 +520,14 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
                 "estado" => 2,
                 "message" => "El dni no existe o fue modificado para poder actualizar los datos."
             ));
-        } else if ($result == "cip") {
+        } else if ($result == "num_duc") {
             echo json_encode(array(
                 "estado" => 3,
+                "message" => "El número de dni ya se encuentra registrado."
+            ));
+        } else if ($result == "cip") {
+            echo json_encode(array(
+                "estado" => 4,
                 "message" => "El n° cip ya se encuentra registrado a un ingeniero."
             ));
         } else {

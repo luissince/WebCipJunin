@@ -1,18 +1,18 @@
 function Domicilio() {
 
-    this.loadDomicilio = function(idDni) {
+    this.loadDomicilio = function (id) {
         $.ajax({
             url: "../app/controller/PersonaController.php",
             method: "GET",
             data: {
                 type: "getdomicilio",
-                idDni: idDni
+                "idDni": id
             },
-            beforeSend: function() {
+            beforeSend: function () {
                 $("#tbDomicilio").empty();
                 $("#tbDomicilio").append('<tr class="text-center"><td colspan="5"><img src="./images/spiner.gif"/><p>cargando información.</p></td></tr>');
             },
-            success: function(result) {
+            success: function (result) {
                 if (result.estado == 1) {
                     $("#tbDomicilio").empty();
                     if (result.data.length == 0) {
@@ -44,7 +44,7 @@ function Domicilio() {
                 }
 
             },
-            error: function(error) {
+            error: function (error) {
                 console.log(error);
                 $("#tbDomicilio").empty();
                 $("#tbDomicilio").append('<tr class="text-center"><td colspan="5"><p>Se produjo un error interno, comuniquese con el administrador del sistema.</p></td></tr>');
@@ -52,19 +52,19 @@ function Domicilio() {
         });
     }
 
-    this.loadAddDomicilio = function() {
+    this.loadAddDomicilio = function () {
         $.ajax({
             url: "../app/controller/PersonaController.php",
             method: "GET",
             data: {
                 type: "getadddomicilio",
             },
-            beforeSend: function() {
+            beforeSend: function () {
                 $("#tipoDomicilio").empty();
                 $("#Departamento").empty();
                 $("#Direccion").val(null);
             },
-            success: function(result) {
+            success: function (result) {
                 if (result.estado == 1) {
                     $("#tipoDomicilio").append('<option value="">- Seleccione -</option>');
                     for (let tipoDomicilio of result.tipodomicilio) {
@@ -79,13 +79,13 @@ function Domicilio() {
                     tools.AlertWarning("domicilio", "Se produjo un error al cargar los datos en el modal");
                 }
             },
-            error: function(error) {
+            error: function (error) {
                 tools.AlertError("domicilio", "Error Fatal, Comuniquese con el administrador del sistema");
             }
         });
     }
 
-    this.crudDomicilio = function() {
+    this.crudDomicilio = function () {
 
         if ($("#tipoDomicilio").val() == '') {
             tools.AlertWarning('Domicilio', "Seleccione un tipo");
@@ -99,24 +99,24 @@ function Domicilio() {
                 method: "POST",
                 data: {
                     "type": "insertDomicilio",
-                    "dni": $("#dni").val(),
+                    "dni": idDNI,
                     "tipo": $("#tipoDomicilio").val(),
                     "departamento": $('#Departamento').val(),
                     "direccion": $("#Direccion").val(),
                 },
-                beforeSend: function() {
+                beforeSend: function () {
                     tools.AlertInfo("Domicilio", "Procesando información.");
                 },
-                success: function(result) {
+                success: function (result) {
                     if (result.estado == 1) {
                         $("#addDomicilio").modal("hide");
                         tools.AlertSuccess("Domicilio", "Se registro correctamente.");
-                        modelDomicilio.loadDomicilio($("#dni").val());
+                        modelDomicilio.loadDomicilio(idDNI);
                     } else {
                         tools.AlertWarning("Domicilio", "Error al tratar de registrar los datos " + result.message);
                     }
                 },
-                error: function(error) {
+                error: function (error) {
                     tools.AlertError("Colegiatura", "Error fatal: Comuniquese con el administrador del sistema");
                 }
             });
@@ -139,12 +139,12 @@ function updateDomicilio(Id, Tipo, Direccion, Ubigeo) {
         data: {
             type: "getadddomicilio",
         },
-        beforeSend: function() {
+        beforeSend: function () {
             $("#EtipoDomicilio").empty();
             $("#EDepartamento").empty();
             $("#EDireccion").empty();
         },
-        success: function(result) {
+        success: function (result) {
             if (result.estado == 1) {
                 // $("#EtipoDomicilio").append('<option value="">- Seleccione -</option>');
                 for (let tipoDomicilio of result.tipodomicilio) {
@@ -164,7 +164,7 @@ function updateDomicilio(Id, Tipo, Direccion, Ubigeo) {
                 tools.AlertWarning("Domicilio", "Se produjo un error al cargar los datos en el modal");
             }
         },
-        error: function(error) {
+        error: function (error) {
             tools.AlertError("Domicilio", "Error Fatal: Comuniquese con el administrador del sistema");
         }
     })
@@ -174,7 +174,7 @@ function updateDomicilio(Id, Tipo, Direccion, Ubigeo) {
     //     console.log('diste click');
     //     // AceptarUpdate(idCapitulo, idEspecialidad);
     // });
-    $("#EbtnAceptarDomicilio").bind('click', function() {
+    $("#EbtnAceptarDomicilio").bind('click', function () {
         AceptarUpdateDomicilio(Id);
     });
 }
@@ -194,21 +194,21 @@ function AceptarUpdateDomicilio(Id) {
                 "departamento": $('#EDepartamento').val(),
                 "direccion": $("#EDireccion").val(),
             },
-            beforeSend: function() {
+            beforeSend: function () {
                 tools.AlertInfo("Domicilio", "Procesando información.");
             },
-            success: function(result) {
+            success: function (result) {
                 if (result.estado == 1) {
                     $("#editDomicilio").modal("hide");
                     tools.AlertSuccess("Domicilio", "Se actualizo correctamente.");
-                    modelDomicilio.loadDomicilio($("#dni").val());
+                    modelDomicilio.loadDomicilio(idDNI);
                 } else if (result.estado == 2) {
                     tools.AlertWarning("Domicilio", result.message);
                 } else {
                     tools.AlertWarning("Domicilio", "Error al tratar de actualizar los datos " + result.message);
                 }
             },
-            error: function(error) {
+            error: function (error) {
                 tools.AlertError("Domicilio", "Error fatal: Comuniquese con el administrador del sistema");
             }
         });
@@ -222,7 +222,7 @@ function DeleteDomicilio(Id) {
 
     $("#btnDeleteDomicilio").unbind();
 
-    $("#btnDeleteDomicilio").bind("click", function() {
+    $("#btnDeleteDomicilio").bind("click", function () {
         $.ajax({
             url: "../app/controller/PersonaController.php",
             method: "POST",
@@ -230,19 +230,19 @@ function DeleteDomicilio(Id) {
                 "type": "deleteDomicilio",
                 "iddomicilio": idDireccion,
             },
-            beforeSend: function() {
+            beforeSend: function () {
                 tools.AlertInfo("Domicilio", "Procesando información.");
             },
-            success: function(result) {
+            success: function (result) {
                 if (result.estado == 1) {
                     tools.AlertSuccess("Domicilio", result.message);
                     $("#deleteDomicilio").modal("hide");
-                    modelDomicilio.loadDomicilio($("#dni").val());
+                    modelDomicilio.loadDomicilio(idDNI);
                 } else {
                     tools.AlertWarning("Domicilio", result.message);
                 }
             },
-            error: function(error) {
+            error: function (error) {
                 tools.AlertError("Domicilio", "Error fatal: Comuniquese con el administrador del sistema");
             }
         });

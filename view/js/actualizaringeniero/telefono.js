@@ -1,17 +1,17 @@
 function Celular() {
-    this.loadTelefono = function(idDni) {
+    this.loadTelefono = function (id) {
         $.ajax({
             url: "../app/controller/PersonaController.php",
             method: "GET",
             data: {
                 type: "gettelefono",
-                idDni: idDni
+                "idDni": id
             },
-            beforeSend: function() {
+            beforeSend: function () {
                 $("#tbTelefono").empty();
                 $("#tbTelefono").append('<tr class="text-center"><td colspan="4"><img src="./images/spiner.gif"/><p>cargando información.</p></td></tr>');
             },
-            success: function(result) {
+            success: function (result) {
                 if (result.estado == 1) {
                     $("#tbTelefono").empty();
                     if (result.data.length == 0) {
@@ -41,25 +41,25 @@ function Celular() {
                     $("#tbTelefono").append('<tr class="text-center"><td colspan="4"><p>' + result.message + '</p></td></tr>');
                 }
             },
-            error: function(error) {
+            error: function (error) {
                 $("#tbTelefono").empty();
                 $("#tbTelefono").append('<tr class="text-center"><td colspan="4"><p>Se produjo un error interno, comuniquese on el administrador del sistema.</p></td></tr>');
             }
         });
     }
 
-    this.loadAddCelular = function() {
+    this.loadAddCelular = function () {
         $.ajax({
             url: "../app/controller/PersonaController.php",
             method: "GET",
             data: {
                 type: "getaddcelular",
             },
-            beforeSend: function() {
+            beforeSend: function () {
                 $("#TipoCelular").val('');
                 $("#txtNumero").val('');
             },
-            success: function(result) {
+            success: function (result) {
                 if (result.estado == 1) {
                     $("#TipoCelular").append('<option value="">- Seleccione -</option>');
                     for (let tipoCelular of result.tipo) {
@@ -69,13 +69,13 @@ function Celular() {
                     tools.AlertWarning("telefono", "Se produjo un error al cargar los datos en el modal");
                 }
             },
-            error: function(error) {
+            error: function (error) {
                 tools.AlertError("telefono", "Error Fatal, Comuniquese con el administrador del sistema");
             }
         });
     }
 
-    this.crudCelular = function() {
+    this.crudCelular = function () {
 
         if ($("#TipoCelular").val() == '') {
             tools.AlertWarning('Celular', "Seleccione un tipo");
@@ -89,25 +89,25 @@ function Celular() {
                 method: "POST",
                 data: {
                     "type": "insertCelular",
-                    "dni": $("#dni").val(),
+                    "dni": idDNI,
                     "tipo": $("#TipoCelular").val(),
                     "numero": $("#txtNumero").val(),
                 },
-                beforeSend: function() {
+                beforeSend: function () {
                     tools.AlertInfo("telefono", "Procesando información.");
                 },
-                success: function(result) {
+                success: function (result) {
                     if (result.estado == 1) {
                         $("#addTelefono").modal("hide");
                         tools.AlertSuccess("Celular", "Se registro correctamente.");
-                        modelTelefono.loadTelefono($("#dni").val());
+                        modelTelefono.loadTelefono(idDNI);
                     } else if (result.estado == 3) {
                         tools.AlertWarning("Celular", result.message);
                     } else {
                         tools.AlertWarning("Celular", "Error al tratar de registrar los datos " + result.message);
                     }
                 },
-                error: function(error) {
+                error: function (error) {
                     console.log(error);
                     tools.AlertError("Celular", "Error fatal: Comuniquese con el administrador del sistema");
                 }
@@ -129,11 +129,11 @@ function updateTelefono(Id, Tipo, Numero) {
         data: {
             type: "getaddcelular",
         },
-        beforeSend: function() {
+        beforeSend: function () {
             $("#ETipoCelular").empty();
             $("#EtxtNumero").empty();
         },
-        success: function(result) {
+        success: function (result) {
             if (result.estado == 1) {
                 // $("#TipoCelular").append('<option value="">- Seleccione -</option>');
                 for (let tipoCelular of result.tipo) {
@@ -147,7 +147,7 @@ function updateTelefono(Id, Tipo, Numero) {
                 tools.AlertWarning("Telefono", "Se produjo un error al cargar los datos en el modal");
             }
         },
-        error: function(error) {
+        error: function (error) {
             tools.AlertError("Telefono", "Error Fatal: Comuniquese con el administrador del sistema");
         }
     })
@@ -157,7 +157,7 @@ function updateTelefono(Id, Tipo, Numero) {
     //     console.log('diste click');
     //     // AceptarUpdate(idCapitulo, idEspecialidad);
     // });
-    $("#EbtnAceptarCelular").bind('click', function() {
+    $("#EbtnAceptarCelular").bind('click', function () {
         AceptarUpdateTelefono(Id);
     });
 }
@@ -176,21 +176,21 @@ function AceptarUpdateTelefono(Id) {
                 "tipo": $("#ETipoCelular").val(),
                 "numero": $('#EtxtNumero').val(),
             },
-            beforeSend: function() {
+            beforeSend: function () {
                 tools.AlertInfo("Telefono", "Procesando información.");
             },
-            success: function(result) {
+            success: function (result) {
                 if (result.estado == 1) {
                     $("#editTelefono").modal("hide");
                     tools.AlertSuccess("Telefono", "Se actualizo correctamente.");
-                    modelTelefono.loadTelefono($("#dni").val());
+                    modelTelefono.loadTelefono(idDNI);
                 } else if (result.estado == 2) {
                     tools.AlertWarning("Telefono", result.message);
                 } else {
                     tools.AlertWarning("Telefono", "Error al tratar de actualizar los datos " + result.message);
                 }
             },
-            error: function(error) {
+            error: function (error) {
                 tools.AlertError("Telefono", "Error fatal: Comuniquese con el administrador del sistema");
             }
         });
@@ -204,7 +204,7 @@ function DeleteTelefono(Id) {
 
     $("#btnDeleteTelefono").unbind();
 
-    $("#btnDeleteTelefono").bind("click", function() {
+    $("#btnDeleteTelefono").bind("click", function () {
         $.ajax({
             url: "../app/controller/PersonaController.php",
             method: "POST",
@@ -212,19 +212,19 @@ function DeleteTelefono(Id) {
                 "type": "deleteTelefono",
                 "idtelefono": idTelefono,
             },
-            beforeSend: function() {
+            beforeSend: function () {
                 tools.AlertInfo("Telefono", "Procesando información.");
             },
-            success: function(result) {
+            success: function (result) {
                 if (result.estado == 1) {
                     tools.AlertSuccess("Telefono", result.message);
                     $("#deleteTelefono").modal("hide");
-                    modelTelefono.loadTelefono($("#dni").val());
+                    modelTelefono.loadTelefono(idDNI);
                 } else {
                     tools.AlertWarning("Telefono", result.message);
                 }
             },
-            error: function(error) {
+            error: function (error) {
                 tools.AlertError("Telefono", "Error fatal: Comuniquese con el administrador del sistema");
             }
         });

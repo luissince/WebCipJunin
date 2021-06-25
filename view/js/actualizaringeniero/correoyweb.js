@@ -1,17 +1,17 @@
 function CorreoyWeb() {
-    this.loadCorreoyWeb = function(idDni) {
+    this.loadCorreoyWeb = function (id) {
         $.ajax({
             url: "../app/controller/PersonaController.php",
             method: "GET",
             data: {
                 type: "getcorreoyweb",
-                idDni: idDni
+                "idDni": id
             },
-            beforeSend: function() {
+            beforeSend: function () {
                 $("#tbGradosyWeb").empty();
                 $("#tbGradosyWeb").append('<tr class="text-center"><td colspan="4"><img src="./images/spiner.gif"/><p>cargando información.</p></td></tr>');
             },
-            success: function(result) {
+            success: function (result) {
                 if (result.estado == 1) {
                     $("#tbGradosyWeb").empty();
                     if (result.data.length == 0) {
@@ -42,25 +42,25 @@ function CorreoyWeb() {
                 }
 
             },
-            error: function(error) {
+            error: function (error) {
                 $("#tbGradosyWeb").empty();
                 $("#tbGradosyWeb").append('<tr class="text-center"><td colspan="4"><p>Se produjo un error interno, comuniquese on el administrador del sistema.</p></td></tr>');
             }
         });
     }
 
-    this.loadAddCorreoyWeb = function() {
+    this.loadAddCorreoyWeb = function () {
         $.ajax({
             url: "../app/controller/PersonaController.php",
             method: "GET",
             data: {
                 type: "getaddcorreo",
             },
-            beforeSend: function() {
+            beforeSend: function () {
                 $("#TipoCorreo").empty();
                 $("#txtCorreo").val('');
             },
-            success: function(result) {
+            success: function (result) {
                 console.log(result);
                 if (result.estado == 1) {
                     $("#TipoCorreo").append('<option value="">- Seleccione -</option>');
@@ -71,13 +71,13 @@ function CorreoyWeb() {
                     tools.AlertWarning("Correo", "Se produjo un error al cargar los datos en el modal");
                 }
             },
-            error: function(error) {
+            error: function (error) {
                 tools.AlertError("Correo", "Error Fatal, Comuniquese con el administrador del sistema");
             }
         });
     }
 
-    this.crudCorreo = function() {
+    this.crudCorreo = function () {
 
         if ($("#TipoCorreo").val() == '') {
             tools.AlertWarning('Correo', "Seleccione un tipo");
@@ -91,25 +91,25 @@ function CorreoyWeb() {
                 method: "POST",
                 data: {
                     "type": "insertCorreo",
-                    "dni": $("#dni").val(),
+                    "dni": idDNI,
                     "tipo": $("#TipoCorreo").val(),
                     "correo": ($("#txtCorreo").val()).trim(),
                 },
-                beforeSend: function() {
+                beforeSend: function () {
                     tools.AlertInfo("Correo", "Procesando información.");
                 },
-                success: function(result) {
+                success: function (result) {
                     if (result.estado == 1) {
                         $("#addCorreoyWeb").modal("hide");
                         tools.AlertSuccess("Correo", "Se registro correctamente.");
-                        modelCorreoyWeb.loadCorreoyWeb($("#dni").val());
+                        modelCorreoyWeb.loadCorreoyWeb(idDNI);
                     } else if (result.estado == 3) {
                         tools.AlertWarning("Correo", result.message);
                     } else {
                         tools.AlertWarning("Correo", "Error al tratar de registrar los datos " + result.message);
                     }
                 },
-                error: function(error) {
+                error: function (error) {
                     tools.AlertError("Correo", "Error fatal: Comuniquese con el administrador del sistema");
                 }
             });
@@ -128,11 +128,11 @@ function updateCorreoyweb(Id, Tipo, Direccion) {
         data: {
             type: "getaddcorreo",
         },
-        beforeSend: function() {
+        beforeSend: function () {
             $("#ETipoCorreo").empty();
             $("#EtxtCorreo").val('');
         },
-        success: function(result) {
+        success: function (result) {
             if (result.estado == 1) {
                 // $("#TipoCorreo").append('<option value="">- Seleccione -</option>');
                 for (let tipoCorreo of result.correos) {
@@ -146,7 +146,7 @@ function updateCorreoyweb(Id, Tipo, Direccion) {
                 tools.AlertWarning("Correo", "Se produjo un error al cargar los datos en el modal");
             }
         },
-        error: function(error) {
+        error: function (error) {
             tools.AlertError("Correo", "Error Fatal, Comuniquese con el administrador del sistema");
         }
     })
@@ -156,7 +156,7 @@ function updateCorreoyweb(Id, Tipo, Direccion) {
     //     console.log('diste click');
     //     // AceptarUpdate(idCapitulo, idEspecialidad);
     // });
-    $("#EbtnAceptarCorreo").bind('click', function() {
+    $("#EbtnAceptarCorreo").bind('click', function () {
         AceptarUpdateCorreo(Id);
     });
 }
@@ -175,21 +175,21 @@ function AceptarUpdateCorreo(Id) {
                 "tipo": $("#ETipoCorreo").val(),
                 "direccion": $('#EtxtCorreo').val(),
             },
-            beforeSend: function() {
+            beforeSend: function () {
                 tools.AlertInfo("Correo", "Procesando información.");
             },
-            success: function(result) {
+            success: function (result) {
                 if (result.estado == 1) {
                     $("#editCorreoyWeb").modal("hide");
                     tools.AlertSuccess("Correo", "Se actualizo correctamente.");
-                    modelCorreoyWeb.loadCorreoyWeb($("#dni").val());
+                    modelCorreoyWeb.loadCorreoyWeb(idDNI);
                 } else if (result.estado == 2) {
                     tools.AlertWarning("Correo", result.message);
                 } else {
                     tools.AlertWarning("Correo", "Error al tratar de actualizar los datos " + result.message);
                 }
             },
-            error: function(error) {
+            error: function (error) {
                 tools.AlertError("Correo", "Error fatal: Comuniquese con el administrador del sistema");
             }
         });
@@ -203,7 +203,7 @@ function DeleteCorreoyweb(Id) {
 
     $("#btnDeleteCorreo").unbind();
 
-    $("#btnDeleteCorreo").bind("click", function() {
+    $("#btnDeleteCorreo").bind("click", function () {
         $.ajax({
             url: "../app/controller/PersonaController.php",
             method: "POST",
@@ -211,19 +211,19 @@ function DeleteCorreoyweb(Id) {
                 "type": "deleteCorreo",
                 "idCorreo": idCorreo,
             },
-            beforeSend: function() {
+            beforeSend: function () {
                 tools.AlertInfo("Correo", "Procesando información.");
             },
-            success: function(result) {
+            success: function (result) {
                 if (result.estado == 1) {
                     tools.AlertSuccess("Correo", result.message);
                     $("#deleteCorreo").modal("hide");
-                    modelCorreoyWeb.loadCorreoyWeb($("#dni").val());
+                    modelCorreoyWeb.loadCorreoyWeb(idDNI);
                 } else {
                     tools.AlertWarning("Correo", result.message);
                 }
             },
-            error: function(error) {
+            error: function (error) {
                 tools.AlertError("Correo", "Error fatal: Comuniquese con el administrador del sistema");
             }
         });

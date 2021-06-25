@@ -572,7 +572,7 @@ if (!isset($_SESSION['IdUsuario'])) {
                                     tbTable.append('<tr>' +
                                         '<td class="text-center text-primary">' + persona.Id + '</td>' +
                                         '<td>' + persona.Cip + '</td>' +
-                                        '<td>' + persona.idDNI + '</td>' +
+                                        '<td>' + persona.NumDoc + '</td>' +
                                         '<td>' + persona.Apellidos + ' ' + persona.Nombres + '</td>' +
                                         '<td>' + persona.Sexo + '</td>' +
                                         '<td>' + estadoCivil + '</td>' +
@@ -615,36 +615,7 @@ if (!isset($_SESSION['IdUsuario'])) {
                 location.href = "update_ingenieros.php?idPersona=" + idPersona;
             }
 
-            function deleteIngeniero(idDni) {
-                tools.ModalDialog("Ingeniero", "¿Está seguro de eliminar al ingeniero?", function(value) {
-                    if (value == true) {
-                        $.ajax({
-                            url: "../app/controller/PersonaController.php",
-                            method: "POST",
-                            data: {
-                                "type": "deleteleIngeniero",
-                                "IdDni": idDni
-                            },
-                            beforeSend: function() {
-                                tools.ModalAlertInfo("Ingeniero", "Procesando petición..");
-                            },
-                            success: function(result) {
-                                if (result.estado == 1) {
-                                    tools.ModalAlertSuccess("Ingeniero", result.message);
-                                    loadInitVentas();
-                                } else {
-                                    tools.ModalAlertWarning("Ingeniero", result.message);
-                                }
-                            },
-                            error: function(error) {
-                                tools.ModalAlertError("Ingeniero", error.responseText);
-                            }
-                        });
-                    }
-                });
-            }
-
-            function insertPersona(idPersona, nombres, apellidos, sexo, nacimiento, estado_civil, ruc, rason_social, cip,
+            function insertPersona(idDni, nombres, apellidos, sexo, nacimiento, estado_civil, ruc, rason_social, cip,
                 condicion) {
                 tools.ModalDialog("Ingeniero", "¿Está seguro de continuar?", function(value) {
                     if (value == true) {
@@ -653,7 +624,8 @@ if (!isset($_SESSION['IdUsuario'])) {
                             method: "POST",
                             data: {
                                 "type": "create",
-                                "dni": idPersona,
+                                "dni": "T" + idDni,
+                                "num_duc": idDni,
                                 "nombres": nombres.toUpperCase(),
                                 "apellidos": apellidos.toUpperCase(),
                                 "sexo": sexo,
@@ -683,6 +655,36 @@ if (!isset($_SESSION['IdUsuario'])) {
                     }
                 });
             }
+
+            function deleteIngeniero(idDni) {
+                tools.ModalDialog("Ingeniero", "¿Está seguro de eliminar al ingeniero?", function(value) {
+                    if (value == true) {
+                        $.ajax({
+                            url: "../app/controller/PersonaController.php",
+                            method: "POST",
+                            data: {
+                                "type": "deleteleIngeniero",
+                                "IdDni": idDni
+                            },
+                            beforeSend: function() {
+                                tools.ModalAlertInfo("Ingeniero", "Procesando petición..");
+                            },
+                            success: function(result) {
+                                if (result.estado == 1) {
+                                    tools.ModalAlertSuccess("Ingeniero", result.message);
+                                    loadInitVentas();
+                                } else {
+                                    tools.ModalAlertWarning("Ingeniero", result.message);
+                                }
+                            },
+                            error: function(error) {
+                                tools.ModalAlertError("Ingeniero", error.responseText);
+                            }
+                        });
+                    }
+                });
+            }
+
 
             function onEventPaginacionHistorial() {
                 switch (opcionHistorial) {

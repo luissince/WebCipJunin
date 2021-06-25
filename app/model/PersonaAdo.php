@@ -16,6 +16,7 @@ class PersonaAdo
             $arrayPersonas = array();
             $comandoPersona = Database::getInstance()->getDb()->prepare("SELECT
             p.idDNI,
+            p.NumDoc,
             p.Nombres,
             p.Apellidos,
             p.Sexo,
@@ -53,6 +54,7 @@ class PersonaAdo
                 array_push($arrayPersonas, array(
                     'Id' => $count + $posicionPagina,
                     'idDNI' => $row['idDNI'],
+                    'NumDoc' => $row['NumDoc'],
                     'Nombres' => $row['Nombres'],
                     'Apellidos' => $row['Apellidos'],
                     'Sexo' => $row["Sexo"] == 'M' ? "MASCULINO" : "FEMENINO",
@@ -190,6 +192,7 @@ class PersonaAdo
             //trae informacion del usuario (por su dni)
             $comandoPersona = Database::getInstance()->getDb()->prepare("SELECT 
             p.idDNI, 
+            p.NumDoc,
             p.idUsuario,
             p.Nombres, 
             p.Apellidos, 
@@ -368,40 +371,51 @@ class PersonaAdo
             $comandoValidate->bindParam(1, $persona['dni'], PDO::PARAM_STR);
             $comandoValidate->execute();
             if ($comandoValidate->fetch()) {
-                $comandoValidate = Database::getInstance()->getDb()->prepare("SELECT * FROM Persona WHERE idDNI <> ? AND CIP = ? AND CIP <> '' ");
+                $comandoValidate = Database::getInstance()->getDb()->prepare("SELECT * FROM Persona WHERE idDNI <> ? AND NumDoc = ?  ");
                 $comandoValidate->bindParam(1, $persona['dni'], PDO::PARAM_STR);
-                $comandoValidate->bindParam(2, $persona['cip'], PDO::PARAM_STR);
+                $comandoValidate->bindParam(2, $persona['num_duc'], PDO::PARAM_STR);
                 $comandoValidate->execute();
                 if ($comandoValidate->fetch()) {
                     Database::getInstance()->getDb()->rollback();
-                    return 'cip';
+                    return 'num_duc';
                 } else {
-                    $comandoPersona = Database::getInstance()->getDb()->prepare("UPDATE Persona SET 
-                    Nombres = UPPER(?),
-                    Apellidos = UPPER(?),
-                    Sexo = ?,
-                    FechaNac = ?,
-                    EstadoCivil = ?,
-                    RUC = ?,
-                    RAZONSOCIAL = ?,
-                    CIP = ?,
-                    Condicion = ?
-                    WHERE idDNI = ?");
+                    $comandoValidate = Database::getInstance()->getDb()->prepare("SELECT * FROM Persona WHERE idDNI <> ? AND CIP = ? AND CIP <> '' ");
+                    $comandoValidate->bindParam(1, $persona['dni'], PDO::PARAM_STR);
+                    $comandoValidate->bindParam(2, $persona['cip'], PDO::PARAM_STR);
+                    $comandoValidate->execute();
+                    if ($comandoValidate->fetch()) {
+                        Database::getInstance()->getDb()->rollback();
+                        return 'cip';
+                    } else {
+                        $comandoPersona = Database::getInstance()->getDb()->prepare("UPDATE Persona SET 
+                        NumDoc = ?,
+                        Nombres = UPPER(?),
+                        Apellidos = UPPER(?),
+                        Sexo = ?,
+                        FechaNac = ?,
+                        EstadoCivil = ?,
+                        RUC = ?,
+                        RAZONSOCIAL = ?,
+                        CIP = ?,
+                        Condicion = ?
+                        WHERE idDNI = ?");
 
-                    $comandoPersona->bindParam(1, $persona['nombres'], PDO::PARAM_STR);
-                    $comandoPersona->bindParam(2, $persona['apellidos'], PDO::PARAM_STR);
-                    $comandoPersona->bindParam(3, $persona['sexo'], PDO::PARAM_STR);
-                    $comandoPersona->bindParam(4, $persona['nacimiento'], PDO::PARAM_STR);
-                    $comandoPersona->bindParam(5, $persona['estado_civil'], PDO::PARAM_STR);
-                    $comandoPersona->bindParam(6, $persona['ruc'], PDO::PARAM_STR);
-                    $comandoPersona->bindParam(7, $persona['rason_social'], PDO::PARAM_STR);
-                    $comandoPersona->bindParam(8, $persona['cip'], PDO::PARAM_STR);
-                    $comandoPersona->bindParam(9, $persona['condicion'], PDO::PARAM_STR);
-                    $comandoPersona->bindParam(10, $persona['dni'], PDO::PARAM_STR);
-                    $comandoPersona->execute();
+                        $comandoPersona->bindParam(1, $persona['num_duc'], PDO::PARAM_STR);
+                        $comandoPersona->bindParam(2, $persona['nombres'], PDO::PARAM_STR);
+                        $comandoPersona->bindParam(3, $persona['apellidos'], PDO::PARAM_STR);
+                        $comandoPersona->bindParam(4, $persona['sexo'], PDO::PARAM_STR);
+                        $comandoPersona->bindParam(5, $persona['nacimiento'], PDO::PARAM_STR);
+                        $comandoPersona->bindParam(6, $persona['estado_civil'], PDO::PARAM_STR);
+                        $comandoPersona->bindParam(7, $persona['ruc'], PDO::PARAM_STR);
+                        $comandoPersona->bindParam(8, $persona['rason_social'], PDO::PARAM_STR);
+                        $comandoPersona->bindParam(9, $persona['cip'], PDO::PARAM_STR);
+                        $comandoPersona->bindParam(10, $persona['condicion'], PDO::PARAM_STR);
+                        $comandoPersona->bindParam(11, $persona['dni'], PDO::PARAM_STR);
+                        $comandoPersona->execute();
 
-                    Database::getInstance()->getDb()->commit();
-                    return 'updated';
+                        Database::getInstance()->getDb()->commit();
+                        return 'updated';
+                    }
                 }
             } else {
                 Database::getInstance()->getDb()->rollback();
@@ -438,12 +452,12 @@ class PersonaAdo
         try {
             Database::getInstance()->getDb()->beginTransaction();
 
-            $comandoValidate = Database::getInstance()->getDb()->prepare("SELECT * FROM Persona WHERE idDNI = ?");
-            $comandoValidate->bindParam(1, $persona['dni'], PDO::PARAM_STR);
+            $comandoValidate = Database::getInstance()->getDb()->prepare("SELECT * FROM Persona WHERE NumDoc = ?");
+            $comandoValidate->bindParam(1, $persona['num_duc'], PDO::PARAM_STR);
             $comandoValidate->execute();
             if ($comandoValidate->fetch()) {
                 Database::getInstance()->getDb()->rollback();
-                return "dni";
+                return "num_duc";
             } else {
                 $comandoValidate = Database::getInstance()->getDb()->prepare("SELECT * FROM Persona WHERE CIP = ? AND CIP <> ''");
                 $comandoValidate->bindParam(1, $persona['cip'], PDO::PARAM_STR);
@@ -453,19 +467,20 @@ class PersonaAdo
                     return "cip";
                 } else {
 
-                    $comandoPersona = Database::getInstance()->getDb()->prepare("INSERT INTO Persona (idDNI,idUsuario,Nombres,Apellidos,Sexo,FechaNac,EstadoCivil,RUC,RAZONSOCIAL,CIP,Condicion)
-                VALUES (?,'-1',UPPER(?),UPPER(?),?,?,?,?,?,?,?)");
+                    $comandoPersona = Database::getInstance()->getDb()->prepare("INSERT INTO Persona (idDNI,NumDoc,idUsuario,Nombres,Apellidos,Sexo,FechaNac,EstadoCivil,RUC,RAZONSOCIAL,CIP,Condicion)
+                VALUES (?,?,'-1',UPPER(?),UPPER(?),?,?,?,?,?,?,?)");
 
                     $comandoPersona->bindParam(1, $persona['dni'], PDO::PARAM_STR);
-                    $comandoPersona->bindParam(2, $persona['nombres'], PDO::PARAM_STR);
-                    $comandoPersona->bindParam(3, $persona['apellidos'], PDO::PARAM_STR);
-                    $comandoPersona->bindParam(4, $persona['sexo'], PDO::PARAM_STR);
-                    $comandoPersona->bindParam(5, $persona['nacimiento'], PDO::PARAM_STR);
-                    $comandoPersona->bindParam(6, $persona['estado_civil'], PDO::PARAM_STR);
-                    $comandoPersona->bindParam(7, $persona['ruc'], PDO::PARAM_STR);
-                    $comandoPersona->bindParam(8, $persona['rason_social'], PDO::PARAM_STR);
-                    $comandoPersona->bindParam(9, $persona['cip'], PDO::PARAM_STR);
-                    $comandoPersona->bindParam(10, $persona['condicion'], PDO::PARAM_STR);
+                    $comandoPersona->bindParam(2, $persona['num_duc'], PDO::PARAM_STR);
+                    $comandoPersona->bindParam(3, $persona['nombres'], PDO::PARAM_STR);
+                    $comandoPersona->bindParam(4, $persona['apellidos'], PDO::PARAM_STR);
+                    $comandoPersona->bindParam(5, $persona['sexo'], PDO::PARAM_STR);
+                    $comandoPersona->bindParam(6, $persona['nacimiento'], PDO::PARAM_STR);
+                    $comandoPersona->bindParam(7, $persona['estado_civil'], PDO::PARAM_STR);
+                    $comandoPersona->bindParam(8, $persona['ruc'], PDO::PARAM_STR);
+                    $comandoPersona->bindParam(9, $persona['rason_social'], PDO::PARAM_STR);
+                    $comandoPersona->bindParam(10, $persona['cip'], PDO::PARAM_STR);
+                    $comandoPersona->bindParam(11, $persona['condicion'], PDO::PARAM_STR);
 
                     $comandoPersona->execute();
                     Database::getInstance()->getDb()->commit();
@@ -1522,8 +1537,9 @@ class PersonaAdo
         try {
             $array = array();
             $arrayHabilidad = array();
-            $comandoHabilidad = Database::getInstance()->getDb()->prepare("SELECT p.CIP  AS Cip, 
-            p.idDNI as Dni, 
+            $comandoHabilidad = Database::getInstance()->getDb()->prepare("SELECT 
+            p.CIP  AS Cip, 
+            p.NumDoc as Dni, 
             p.Apellidos ,
             p.Nombres, 
             p.Condicion as CodigoCondicion,
@@ -1547,7 +1563,7 @@ class PersonaAdo
             INNER JOIN Capitulo as ca on ca.idCapitulo = e.idCapitulo
             INNER JOIN ULTIMACuota AS ul ON  ul.idDNI = p.idDNI
             WHERE $opcion = 0
-            OR $opcion = 1 and p.idDNI = ? 
+            OR $opcion = 1 and p.NumDoc = ? 
             OR $opcion = 1 and p.CIP = ? 
             OR $opcion = 1 and p.Apellidos LIKE CONCAT(?,'%') 
             OR $opcion = 1 and p.Nombres LIKE CONCAT(?,'%') 
@@ -1595,7 +1611,7 @@ class PersonaAdo
             INNER JOIN Capitulo as ca on ca.idCapitulo = e.idCapitulo
             INNER JOIN ULTIMACuota AS ul ON  ul.idDNI = p.idDNI
             WHERE $opcion = 0 
-            OR $opcion = 1 and p.idDNI = ? 
+            OR $opcion = 1 and p.NumDoc = ? 
             OR $opcion = 1 and p.CIP = ? 
             OR $opcion = 1 and p.Apellidos LIKE CONCAT(?,'%') 
             OR $opcion = 1 and p.Nombres LIKE CONCAT(?,'%') 

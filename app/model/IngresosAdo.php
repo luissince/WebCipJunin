@@ -24,7 +24,7 @@ class IngresosAdo
             i.Estado,
             p.CIP,
             case when not e.IdEmpresa is null then 'RUC' else 'DNI' end as NombreDocumento,
-            isnull(e.NumeroRuc,p.idDNI) as NumeroDocumento,
+            isnull(e.NumeroRuc,p.NumDoc) as NumeroDocumento,
             isnull(e.Nombre,concat(p.Apellidos,' ', p.Nombres)) as Persona,
             sum(d.Monto) AS Total,
             isnull(i.Xmlsunat,'') as Xmlsunat,
@@ -43,7 +43,7 @@ class IngresosAdo
             OR
             $opcion = 1 AND CONCAT(i.Serie,'-',i.NumRecibo) like CONCAT(?,'%')
             OR
-            $opcion = 1 AND isnull(e.NumeroRuc,p.idDNI) LIKE CONCAT(?,'%')
+            $opcion = 1 AND isnull(e.NumeroRuc,p.NumDoc) LIKE CONCAT(?,'%')
             OR
             $opcion = 1 AND isnull(e.Nombre,p.Apellidos) LIKE CONCAT(?,'%')
             OR
@@ -53,7 +53,7 @@ class IngresosAdo
             OR
             $opcion = 3 AND i.Estado = ? AND i.Fecha BETWEEN ? AND ?
             GROUP BY i.idIngreso,i.Fecha,i.Hora,i.Serie,i.NumRecibo,i.Estado,
-            p.CIP,p.idDNI,p.Apellidos,p.Nombres,e.NumeroRuc,e.Nombre,i.Xmlsunat,i.Xmldescripcion,e.IdEmpresa,tc.Nombre
+            p.CIP,p.NumDoc,p.Apellidos,p.Nombres,e.NumeroRuc,e.Nombre,i.Xmlsunat,i.Xmldescripcion,e.IdEmpresa,tc.Nombre
             ORDER BY i.Fecha DESC,i.Hora DESC
             offset ? ROWS FETCH NEXT ? ROWS only");
             $cmdConcepto->bindParam(1, $fechaInicio, PDO::PARAM_STR);
@@ -110,7 +110,7 @@ class IngresosAdo
             OR
             $opcion = 1 AND CONCAT(i.Serie,'-',i.NumRecibo) like CONCAT(?,'%')
             OR
-            $opcion = 1 AND isnull(e.NumeroRuc,p.idDNI) LIKE CONCAT(?,'%')
+            $opcion = 1 AND isnull(e.NumeroRuc,p.NumDoc) LIKE CONCAT(?,'%')
             OR
             $opcion = 1 AND isnull(e.NumeroRuc,p.Apellidos) LIKE CONCAT(?,'%')
             OR
@@ -149,8 +149,14 @@ class IngresosAdo
             $array = array();
             $arrayCertHabilidad = array();
             $cmdCertHabilidad = Database::getInstance()->getDb()->prepare("SELECT 
-            p.idDNI, p.Nombres,p.Apellidos,
-            e.Especialidad, ch.Numero, ch.Asunto, ch.Entidad, ch.Lugar, 
+            p.NumDoc, 
+            p.Nombres,
+            p.Apellidos,
+            e.Especialidad, 
+            ch.Numero, 
+            ch.Asunto, 
+            ch.Entidad, 
+            ch.Lugar, 
             convert(VARCHAR, CAST(ch.Fecha AS DATE),103) AS Fecha, 
             convert(VARCHAR, CAST(ch.HastaFecha AS DATE),103) AS HastaFecha, 
             ch.idIngreso,ch.Anulado AS Estado 
@@ -169,7 +175,7 @@ class IngresosAdo
             OR
             $opcion = 1 AND ch.Lugar LIKE CONCAT(?,'%')
             OR
-            $opcion = 1 AND p.idDNI = ?
+            $opcion = 1 AND p.NumDoc = ?
             OR
             $opcion = 1 AND p.CIP = ?
             ORDER BY i.Fecha DESC,i.Hora DESC
@@ -192,7 +198,7 @@ class IngresosAdo
                 array_push($arrayCertHabilidad, array(
                     "id" => $count + $posicionPagina,
                     "idIngreso" => $row["idIngreso"],
-                    "dni" => $row["idDNI"],
+                    "dni" => $row["NumDoc"],
                     "usuario" => $row["Nombres"],
                     "apellidos" => $row["Apellidos"],
                     "especialidad" => $row["Especialidad"],
@@ -221,7 +227,7 @@ class IngresosAdo
             OR
             $opcion = 1 AND ch.Lugar LIKE CONCAT(?,'%')
             OR
-            $opcion = 1 AND p.idDNI = ?
+            $opcion = 1 AND p.NumDoc = ?
             OR
             $opcion = 1 AND p.CIP = ?");
             $comandoTotal->bindParam(1, $fechaInicio, PDO::PARAM_STR);
@@ -247,9 +253,23 @@ class IngresosAdo
         try {
             $array = array();
             $arrayCertProyecto = array();
-            $cmdCertProyecto = Database::getInstance()->getDb()->prepare("SELECT p.idDNI, p.Nombres,p.Apellidos, e.Especialidad, cp.Numero, cp.Modalidad, cp.Propietario, 
-            cp.Proyecto, cp.Monto, CONCAT(U.Departamento,'-',U.Provincia,'-', u.Distrito) AS Ubigeo, ISNULL(cp.Adicional1,'N/D') AS Adicional1, ISNULL(cp.Adicional2,'N/D') AS Adicional2, 
-            convert(VARCHAR, CAST(cp.Fecha AS DATE),103) AS Fecha, convert(VARCHAR, CAST(cp.HastaFecha AS DATE),103) AS HastaFecha, cp.idIngreso, cp.Anulado AS Estado  
+            $cmdCertProyecto = Database::getInstance()->getDb()->prepare("SELECT 
+            p.NumDoc, 
+            p.Nombres,
+            p.Apellidos, 
+            e.Especialidad, 
+            cp.Numero, 
+            cp.Modalidad, 
+            cp.Propietario, 
+            cp.Proyecto, 
+            cp.Monto, 
+            CONCAT(U.Departamento,'-',U.Provincia,'-', u.Distrito) AS Ubigeo, 
+            ISNULL(cp.Adicional1,'N/D') AS Adicional1, 
+            ISNULL(cp.Adicional2,'N/D') AS Adicional2, 
+            convert(VARCHAR, CAST(cp.Fecha AS DATE),103) AS Fecha, 
+            convert(VARCHAR, CAST(cp.HastaFecha AS DATE),103) AS HastaFecha,
+            cp.idIngreso, 
+            cp.Anulado AS Estado  
             FROM CERTProyecto AS cp
             INNER JOIN Ingreso AS i ON i.idIngreso = cp.idIngreso
             INNER JOIN Persona AS p On p.idDNI = i.idDNI
@@ -274,7 +294,7 @@ class IngresosAdo
                 array_push($arrayCertProyecto, array(
                     "id" => $count + $posicionPagina,
                     "idIngreso" => $row["idIngreso"],
-                    "dni" => $row["idDNI"],
+                    "dni" => $row["NumDoc"],
                     "usuario" => $row["Nombres"],
                     "apellidos" => $row["Apellidos"],
                     "especialidad" => $row["Especialidad"],
@@ -319,9 +339,21 @@ class IngresosAdo
         try {
             $array = array();
             $arrayCertObra = array();
-            $cmdCertObra = Database::getInstance()->getDb()->prepare("SELECT p.idDNI, p.Nombres,p.Apellidos, e.Especialidad, cr.Numero, cr.Modalidad, cr.Propietario, 
-            cr.Proyecto, cr.Monto, CONCAT(u.Departamento,'-',u.Provincia,'-', u.Distrito) AS Ubigeo, convert(VARCHAR, CAST(cr.Fecha AS DATE),103) AS Fecha, 
-            convert(VARCHAR, CAST(cr.HastaFecha AS DATE),103) AS HastaFecha, cr.idIngreso, cr.Anulado AS Estado
+            $cmdCertObra = Database::getInstance()->getDb()->prepare("SELECT 
+            p.NumDoc, 
+            p.Nombres,
+            p.Apellidos, 
+            e.Especialidad, 
+            cr.Numero, 
+            cr.Modalidad, 
+            cr.Propietario, 
+            cr.Proyecto, 
+            cr.Monto, 
+            CONCAT(u.Departamento,'-',u.Provincia,'-', u.Distrito) AS Ubigeo, 
+            convert(VARCHAR, CAST(cr.Fecha AS DATE),103) AS Fecha, 
+            convert(VARCHAR, CAST(cr.HastaFecha AS DATE),103) AS HastaFecha, 
+            cr.idIngreso, 
+            cr.Anulado AS Estado
             FROM CERTResidencia AS cr
             INNER JOIN Ingreso AS i ON i.idIngreso = cr.idIngreso
             INNER JOIN Persona AS p On p.idDNI = i.idDNI
@@ -346,7 +378,7 @@ class IngresosAdo
                 array_push($arrayCertObra, array(
                     "id" => $count + $posicionPagina,
                     "idIngreso" => $row["idIngreso"],
-                    "dni" => $row["idDNI"],
+                    "dni" => $row["NumDoc"],
                     "usuario" => $row["Nombres"],
                     "apellidos" => $row["Apellidos"],
                     "especialidad" => $row["Especialidad"],
@@ -661,11 +693,11 @@ class IngresosAdo
             case when not e.IdEmpresa is null then 6 else 1 end as TipoDocumento,
             case when not e.IdEmpresa is null then 'R.U.C' else 'D.N.I' end as NombreDocumento,
             case when not e.IdEmpresa is null then 'Razón Social' else 'Nombres' end as TipoNombrePersona,
-            isnull(e.NumeroRuc,p.idDNI) as NumeroDocumento,
+            isnull(e.NumeroRuc,p.NumDoc) as NumeroDocumento,
             isnull(e.Nombre,concat(p.Apellidos,' ',p.Nombres)) as DatosPersona,
             isnull(e.Direccion,p.RUC) as Direccion,
 			p.CIP,
-            p.idDNI, 
+            p.NumDoc, 
             p.Apellidos,
             p.Nombres,
             ISNULL(i.Correlativo,0) as Correlativo
@@ -774,8 +806,14 @@ class IngresosAdo
     {
         try {
             $arrayCertHabilidad = array();
-            $cmdCertHabilidad = Database::getInstance()->getDb()->prepare("SELECT p.CIP,p.idDNI, p.Nombres,p.Apellidos,
-            e.Especialidad, ch.Numero, ch.Asunto, ch.Entidad, ch.Lugar, 
+            $cmdCertHabilidad = Database::getInstance()->getDb()->prepare("SELECT 
+            p.CIP,
+            p.NumDoc, 
+            p.Nombres,
+            p.Apellidos,
+            e.Especialidad, 
+            ch.Numero, 
+            ch.Asunto, ch.Entidad, ch.Lugar, 
             convert(VARCHAR, CAST(c.FechaColegiado AS DATE),103) AS FechaIncorporacion,
             DATEPART(DAY, (convert(VARCHAR, CAST(c.FechaColegiado AS DATE),103))) AS FIDia, 
             DATEPART(MONTH, (convert(VARCHAR, CAST(c.FechaColegiado AS DATE),103))) AS FIMes, 
@@ -801,7 +839,7 @@ class IngresosAdo
                 array_push($arrayCertHabilidad, array(
                     "idIngreso" => $row["idIngreso"],
                     "cip" => $row["CIP"],
-                    "dni" => $row["idDNI"],
+                    "dni" => $row["NumDoc"],
                     "usuario" => $row["Nombres"],
                     "apellidos" => $row["Apellidos"],
                     "especialidad" => $row["Especialidad"],
@@ -834,7 +872,20 @@ class IngresosAdo
     {
         try {
             $arrayCertObra = array();
-            $cmdCertObra = Database::getInstance()->getDb()->prepare("SELECT p.CIP,p.idDNI, p.Nombres,p.Apellidos, e.Especialidad, cr.Numero, cr.Modalidad, cr.Propietario, cr.Proyecto, cr.Monto, u.Departamento,u.Provincia,u.Distrito, 
+            $cmdCertObra = Database::getInstance()->getDb()->prepare("SELECT 
+            p.CIP,
+            p.NumDoc, 
+            p.Nombres,
+            p.Apellidos, 
+            e.Especialidad, 
+            cr.Numero, 
+            cr.Modalidad, 
+            cr.Propietario, 
+            cr.Proyecto, 
+            cr.Monto, 
+            u.Departamento,
+            u.Provincia,
+            u.Distrito, 
             convert(VARCHAR, CAST(c.FechaColegiado AS DATE),103) AS FechaIncorporacion, DATEPART(DAY, (convert(VARCHAR, CAST(c.FechaColegiado AS DATE),103))) AS FIDia, 
             DATEPART(MONTH, (convert(VARCHAR, CAST(c.FechaColegiado AS DATE),103))) AS FIMes, DATEPART(YEAR, (convert(VARCHAR, CAST(c.FechaColegiado AS DATE),103))) AS FIAnio, 
             convert(VARCHAR, CAST(cr.Fecha AS DATE),103) AS FechaRegistro, DATEPART(DAY, (convert(VARCHAR, CAST(cr.Fecha AS DATE),103))) AS FRDia, 
@@ -855,7 +906,7 @@ class IngresosAdo
                 array_push($arrayCertObra, array(
                     "idIngreso" => $row["idIngreso"],
                     "cip" => $row["CIP"],
-                    "dni" => $row["idDNI"],
+                    "dni" => $row["NumDoc"],
                     "usuario" => $row["Nombres"],
                     "apellidos" => $row["Apellidos"],
                     "especialidad" => $row["Especialidad"],
@@ -892,7 +943,20 @@ class IngresosAdo
     {
         try {
             $arrayCertProyecto = array();
-            $cmdCertProyecto = Database::getInstance()->getDb()->prepare("SELECT p.CIP,p.idDNI, p.Nombres,p.Apellidos, e.Especialidad, cp.Numero, cp.Modalidad, cp.Propietario, cp.Proyecto, cp.Monto, u.Departamento, u.Provincia, u.Distrito, 
+            $cmdCertProyecto = Database::getInstance()->getDb()->prepare("SELECT 
+            p.CIP,
+            p.NumDoc, 
+            p.Nombres,
+            p.Apellidos, 
+            e.Especialidad, 
+            cp.Numero, 
+            cp.Modalidad, 
+            cp.Propietario, 
+            cp.Proyecto, 
+            cp.Monto, 
+            u.Departamento, 
+            u.Provincia, 
+            u.Distrito, 
             ISNULL(cp.Adicional1,'N/D') AS Adicional1, ISNULL(cp.Adicional2,'N/D') AS Adicional2, convert(VARCHAR, CAST(c.FechaColegiado AS DATE),103) AS FechaIncorporacion, 
             DATEPART(DAY, (convert(VARCHAR, CAST(c.FechaColegiado AS DATE),103))) AS FIDia, DATEPART(MONTH, (convert(VARCHAR, CAST(c.FechaColegiado AS DATE),103))) AS FIMes, 
             DATEPART(YEAR, (convert(VARCHAR, CAST(c.FechaColegiado AS DATE),103))) AS FIAnio, convert(VARCHAR, CAST(cp.Fecha AS DATE),103) AS FechaRegistro, 
@@ -913,7 +977,7 @@ class IngresosAdo
                 array_push($arrayCertProyecto, array(
                     "idIngreso" => $row["idIngreso"],
                     "cip" => $row["CIP"],
-                    "dni" => $row["idDNI"],
+                    "dni" => $row["NumDoc"],
                     "usuario" => $row["Nombres"],
                     "apellidos" => $row["Apellidos"],
                     "especialidad" => $row["Especialidad"],
@@ -1106,8 +1170,15 @@ class IngresosAdo
                         THEN  Concepto.Concepto	
                         ELSE 'Cuotas Sociales CIP'     
                     END) AS Concepto2, 
-                Ingreso.idIngreso, Cuota.FechaIni,Cuota.FechaFin,Ingreso.Fecha,Ingreso.idDNI,Persona.Condicion, Persona.Apellidos+' '+Persona.Nombres AS Ingeniero,
-                Especialidad.Especialidad,Capitulo.Capitulo,
+                Ingreso.idIngreso, 
+                Cuota.FechaIni,
+                Cuota.FechaFin,
+                Ingreso.Fecha,
+                Ingreso.idDNI,
+                Persona.Condicion, 
+                Persona.Apellidos+' '+Persona.Nombres AS Ingeniero,
+                Especialidad.Especialidad,
+                Capitulo.Capitulo,
                 --MAX(CASE WHEN Condicion='V' and Concepto.concepto <> 'Cuotas Sociales CIP' THEN 0 ELSE Monto2 END) AS Monto2,
                 --MAX(Monto1) AS Monto1,
                 MAX(CASE WHEN Concepto.Concepto = 'Cuotas al ISS CIP'
@@ -1144,8 +1215,15 @@ class IngresosAdo
                     THEN  Concepto.Concepto	
                     ELSE 'Cuotas Sociales CIP'     
                 END) AS Concepto2, 
-                Ingreso.idIngreso, Cuota.FechaIni,Cuota.FechaFin,Ingreso.Fecha,Ingreso.idDNI,Persona.Condicion, Persona.Apellidos+' '+Persona.Nombres AS Ingeniero,
-                Especialidad.Especialidad,Capitulo.Capitulo,
+                Ingreso.idIngreso, 
+                Cuota.FechaIni,
+                Cuota.FechaFin,
+                Ingreso.Fecha,
+                Ingreso.idDNI,
+                Persona.Condicion, 
+                Persona.Apellidos+' '+Persona.Nombres AS Ingeniero,
+                Especialidad.Especialidad,
+                Capitulo.Capitulo,
                 --MAX(CASE WHEN Condicion='V' and Concepto.concepto <> 'Cuotas Sociales CIP' THEN 0 ELSE Monto2 END) AS Monto2,
                 --MAX(Monto1) AS Monto1,
                 MAX(CASE WHEN Concepto.Concepto = 'Cuotas al ISS CIP'
@@ -1164,7 +1242,7 @@ class IngresosAdo
                 INNER JOIN Colegiatura ON Colegiatura.idDNI=PERSONA.idDNI AND Colegiatura.Principal=1
                 INNER JOIN Especialidad ON Especialidad.idEspecialidad = Colegiatura.idEspecialidad
                 INNER JOIN Capitulo ON Capitulo.idCapitulo = Especialidad.idCapitulo
-                WHERE Persona.idDNI = ? AND Ingreso.Fecha  BETWEEN ? AND ? AND Ingreso.Estado<>'A'
+                WHERE Persona.NumDoc = ? AND Ingreso.Fecha  BETWEEN ? AND ? AND Ingreso.Estado<>'A'
                 AND (Concepto.Concepto = 'Cuotas al ISS CIP' or Concepto.Concepto =  'Cuotas Sociales CIP')
                 GROUP BY Persona.CIP, Concepto.Concepto, Ingreso.idIngreso, Ingreso.idDNI,Persona.Condicion, Persona.Apellidos+' '+Persona.Nombres,
                 Cuota.FechaIni,Cuota.FechaFin,Ingreso.Fecha,Especialidad.Especialidad,Capitulo.Capitulo
@@ -1210,7 +1288,7 @@ class IngresosAdo
             convert(varchar, cast(i.Fecha as date), 103) as FechaPago,
             i.Estado,
             p.CIP,
-            isnull(e.NumeroRuc,p.idDNI) as NumeroDocumento,            
+            isnull(e.NumeroRuc,p.NumDoc) as NumeroDocumento,            
             isnull(e.Nombre, concat(p.Apellidos,' ',p.Nombres)) as Persona,
             sum(d.Monto) as Total,
             isnull(i.Xmlsunat,'') as Xmlsunat,
@@ -1228,7 +1306,7 @@ class IngresosAdo
             i.NumRecibo,
             i.Fecha,
             i.Estado,
-            p.idDNI,
+            p.NumDoc,
             p.CIP,
             p.Apellidos,
             p.Nombres,
@@ -1284,7 +1362,7 @@ class IngresosAdo
             convert(varchar, cast(i.Fecha as date), 103) as FechaPago,
             i.Estado,
             p.CIP,
-            isnull(e.NumeroRuc,p.idDNI) as NumeroDocumento,            
+            isnull(e.NumeroRuc,p.NumDoc) as NumeroDocumento,            
             isnull(e.Nombre, concat(p.Apellidos,' ',p.Nombres)) as Persona,
             sum(d.Monto) as Total,
             isnull(i.Xmlsunat,'') as Xmlsunat,
@@ -1303,7 +1381,7 @@ class IngresosAdo
             i.NumRecibo,
             i.Fecha,
             i.Estado,
-            p.idDNI,
+            p.NumDoc,
             p.CIP,
             p.Apellidos,
             p.Nombres,
@@ -1391,7 +1469,7 @@ class IngresosAdo
             i.Hora as HoraPago,
             isnull(e.IdEmpresa,p.idDNI) as IdPersona,
             case when not e.IdEmpresa is null then 6 else 1 end as TipoDocumento,
-            isnull(e.NumeroRuc,p.idDNI) as NumeroDocumento,
+            isnull(e.NumeroRuc,p.NumDoc) as NumeroDocumento,
             isnull(e.Nombre,concat(p.Apellidos,' ',p.Nombres)) as DatosPersona,
             isnull(e.Direccion,p.RUC) as Direccion
             FROM Ingreso AS i 

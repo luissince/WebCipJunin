@@ -1,17 +1,17 @@
 function Estudios() {
-    this.loadGradosyEstudios = function(idDni) {
+    this.loadGradosyEstudios = function (id) {
         $.ajax({
             url: "../app/controller/PersonaController.php",
             method: "GET",
             data: {
                 type: "getgradosyestudios",
-                idDni: idDni
+                "idDni": id
             },
-            beforeSend: function() {
+            beforeSend: function () {
                 $("#tbGradosyExperiencia").empty();
                 $("#tbGradosyExperiencia").append('<tr class="text-center"><td colspan="6"><img src="./images/spiner.gif"/><p>cargando información.</p></td></tr>');
             },
-            success: function(result) {
+            success: function (result) {
                 if (result.estado == 1) {
                     $("#tbGradosyExperiencia").empty();
                     if (result.data.length == 0) {
@@ -45,14 +45,14 @@ function Estudios() {
                 }
 
             },
-            error: function(error) {
+            error: function (error) {
                 $("#tbGradosyExperiencia").empty();
                 $("#tbGradosyExperiencia").append('<tr class="text-center"><td colspan="6"><p>Se produjo un error interno, comuniquese on el administrador del sistema.</p></td></tr>');
             }
         });
     }
 
-    this.loadAddEstudios = function() {
+    this.loadAddEstudios = function () {
 
         $.ajax({
             url: "../app/controller/PersonaController.php",
@@ -60,13 +60,13 @@ function Estudios() {
             data: {
                 type: "getaddestudios",
             },
-            beforeSend: function() {
+            beforeSend: function () {
                 $("#selectGrado").empty();
                 $("#txtMateria").val('');
                 $("#selectUniversidad").empty();
                 $("#fechaEstudios").val('');
             },
-            success: function(result) {
+            success: function (result) {
                 if (result.estado == 1) {
                     $("#selectGrado").append('<option value="">- Seleccione -</option>');
                     for (let grados of result.grados) {
@@ -80,13 +80,13 @@ function Estudios() {
                     tools.AlertWarning("Estudios", "Se produjo un error al cargar los datos en el modal");
                 }
             },
-            error: function(error) {
+            error: function (error) {
                 tools.AlertError("Estudios", "Error Fatal, Comuniquese con el administrador del sistema");
             }
         });
     }
 
-    this.crudEstudios = function() {
+    this.crudEstudios = function () {
 
         if ($("#selectGrado").val() == '') {
             tools.AlertWarning('Estudios', "Seleccione un grado");
@@ -106,27 +106,27 @@ function Estudios() {
                 method: "POST",
                 data: {
                     "type": "insertEstudios",
-                    "dni": $("#dni").val(),
+                    "dni": idDNI,
                     "grado": $("#selectGrado").val(),
                     "materia": $("#txtMateria").val(),
                     "universidad": $("#selectUniversidad").val(),
                     "fechaEstudios": $("#fechaEstudios").val(),
                 },
-                beforeSend: function() {
+                beforeSend: function () {
                     tools.AlertInfo("Estudios", "Procesando información.");
                 },
-                success: function(result) {
+                success: function (result) {
                     if (result.estado == 1) {
                         $("#addGradosyEstudios").modal("hide");
                         tools.AlertSuccess("Estudios", "Se registro correctamente.");
-                        modelEstudios.loadGradosyEstudios($("#dni").val());
+                        modelEstudios.loadGradosyEstudios(idDNI);
                     } else if (result.estado == 3) {
                         tools.AlertWarning("Estudios", result.message);
                     } else {
                         tools.AlertWarning("Estudios", "Error al tratar de registrar los datos " + result.message);
                     }
                 },
-                error: function(error) {
+                error: function (error) {
                     tools.AlertError("Experiencia", "Error fatal: Comuniquese con el administrador del sistema");
                 }
             });
@@ -147,13 +147,13 @@ function updateEstudios(Id, Tipo, Materia, Universidad, Fecha) {
         data: {
             type: "getaddestudios",
         },
-        beforeSend: function() {
+        beforeSend: function () {
             $("#EselectGrado").empty();
             $("#EtxtMateria").val('');
             $("#EselectUniversidad").empty();
             $("#EfechaEstudios").val('');
         },
-        success: function(result) {
+        success: function (result) {
             if (result.estado == 1) {
                 // $("#selectGrado").append('<option value="">- Seleccione -</option>');
                 for (let grados of result.grados) {
@@ -173,7 +173,7 @@ function updateEstudios(Id, Tipo, Materia, Universidad, Fecha) {
                 tools.AlertWarning("Estudios", "Se produjo un error al cargar los datos en el modal");
             }
         },
-        error: function(error) {
+        error: function (error) {
             tools.AlertError("Estudios", "Error Fatal, Comuniquese con el administrador del sistema");
         }
     });
@@ -183,7 +183,7 @@ function updateEstudios(Id, Tipo, Materia, Universidad, Fecha) {
     //     console.log('diste click');
     //     // AceptarUpdate(idCapitulo, idEspecialidad);
     // });
-    $("#EbtnAceptarEstudios").bind('click', function() {
+    $("#EbtnAceptarEstudios").bind('click', function () {
         AceptarUpdateEstudios(Id);
     });
 }
@@ -204,21 +204,21 @@ function AceptarUpdateEstudios(Id) {
                 "universidad": $("#EselectUniversidad").val(),
                 "fecha": $("#EfechaEstudios").val(),
             },
-            beforeSend: function() {
+            beforeSend: function () {
                 tools.AlertInfo("Estudios", "Procesando información.");
             },
-            success: function(result) {
+            success: function (result) {
                 if (result.estado == 1) {
                     $("#editarGradosyEstudios").modal("hide");
                     tools.AlertSuccess("Estudios", "Se actualizo correctamente.");
-                    modelEstudios.loadGradosyEstudios($("#dni").val());
+                    modelEstudios.loadGradosyEstudios(idDNI);
                 } else if (result.estado == 2) {
                     tools.AlertWarning("Estudios", result.message);
                 } else {
                     tools.AlertWarning("Estudios", "Error al tratar de actualizar los datos " + result.message);
                 }
             },
-            error: function(error) {
+            error: function (error) {
                 tools.AlertError("Estudios", "Error fatal: Comuniquese con el administrador del sistema");
             }
         });
@@ -232,7 +232,7 @@ function DeleteEstudios(Id) {
 
     $("#btnDeleteEstudio").unbind();
 
-    $("#btnDeleteEstudio").bind("click", function() {
+    $("#btnDeleteEstudio").bind("click", function () {
         $.ajax({
             url: "../app/controller/PersonaController.php",
             method: "POST",
@@ -240,19 +240,19 @@ function DeleteEstudios(Id) {
                 "type": "deleteEstudio",
                 "idestudio": idEstudio,
             },
-            beforeSend: function() {
+            beforeSend: function () {
                 tools.AlertInfo("Estudio", "Procesando información.");
             },
-            success: function(result) {
+            success: function (result) {
                 if (result.estado == 1) {
                     tools.AlertSuccess("Estudio", result.message);
                     $("#deleteEstudio").modal("hide");
-                    modelEstudios.loadGradosyEstudios($("#dni").val());
+                    modelEstudios.loadGradosyEstudios(idDNI);
                 } else {
                     tools.AlertWarning("Estudio", result.message);
                 }
             },
-            error: function(error) {
+            error: function (error) {
                 tools.AlertError("Estudio", "Error fatal: Comuniquese con el administrador del sistema");
             }
         });

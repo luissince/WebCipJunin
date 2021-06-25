@@ -1263,13 +1263,13 @@ if (!isset($_SESSION['IdUsuario'])) {
                         <div class="col-lg-8 col-md-9 col-sm-12 col-xs-12">
                             <div class="row">
                                 <div class="col-md-12 col-sm-12 col-xs-12">
-                                    <label for="dni">DNI: <i class="fa fa-fw fa-asterisk text-danger"></i></label>
+                                    <label for="numDoc">DNI: <i class="fa fa-fw fa-asterisk text-danger"></i></label>
                                     <div class="form-group">
                                         <div class="input-group">
                                             <div class="input-group-btn">
                                                 <button type="button" id="btnReniec" class="btn btn-default btn-flat"><img src="./images/reniec.png" width="16" height="16" /></button>
                                             </div>
-                                            <input id="dni" type="text" name="Dni" class="form-control" placeholder="DNI" required="" minlength="8" maxlength="8" value="<?php echo  $_GET["idPersona"]; ?>">
+                                            <input id="numDoc" type="text" class="form-control" placeholder="Dni" required="" minlength="8" maxlength="8">
                                         </div>
                                     </div>
                                 </div>
@@ -1560,6 +1560,7 @@ if (!isset($_SESSION['IdUsuario'])) {
             let lblImagen = $("#lblImagen");
             let fileImage = $("#SubirImagen");
 
+            let idDNI = "<?php echo  $_GET["idPersona"]; ?>";
             let state = false;
 
             let tools = new Tools();
@@ -1572,11 +1573,11 @@ if (!isset($_SESSION['IdUsuario'])) {
             let modelCorreoyWeb = new CorreoyWeb();
 
             $(document).ready(function() {
-                loadDataPersona($("#dni").val());
+                loadDataPersona(idDNI);
 
                 $("#btnaceptar").click(function() {
                     if (state) {
-                        if ($("#dni").val() == '' || $("#dni").val().length < 8) {
+                        if ($("#numDoc").val() == '' || $("#numDoc").val().length < 8) {
                             tools.AlertWarning("Advertencia", "Ingrese un número de dni correcto por favor.");
                         } else if ($("#Nombres").val() == '') {
                             tools.AlertWarning("Advertencia", "Ingrese los nombres completos por favor.");
@@ -1588,7 +1589,8 @@ if (!isset($_SESSION['IdUsuario'])) {
 
                             let formData = new FormData();
                             formData.append("type", "update");
-                            formData.append("dni", $("#dni").val());
+                            formData.append("dni", idDNI);
+                            formData.append("num_duc", $("#numDoc").val());
                             formData.append("nombres", $("#Nombres").val().trim().toUpperCase());
                             formData.append("apellidos", $("#Apellidos").val().trim().toUpperCase());
                             formData.append("sexo", $("#Genero").val());
@@ -1636,13 +1638,13 @@ if (!isset($_SESSION['IdUsuario'])) {
                 });
 
                 // //carga las tablas inferiores
-                modelColegiatura.loadColegiatura($("#dni").val());
-                modelDomicilio.loadDomicilio($("#dni").val());
-                modelTelefono.loadTelefono($("#dni").val());
-                modelConyuge.loadConyuge($("#dni").val());
-                modelExperiencia.loadExperiencia($("#dni").val());
-                modelEstudios.loadGradosyEstudios($("#dni").val());
-                modelCorreoyWeb.loadCorreoyWeb($("#dni").val());
+                modelColegiatura.loadColegiatura(idDNI);
+                modelDomicilio.loadDomicilio(idDNI);
+                modelTelefono.loadTelefono(idDNI);
+                modelConyuge.loadConyuge(idDNI);
+                modelExperiencia.loadExperiencia(idDNI);
+                modelEstudios.loadGradosyEstudios(idDNI);
+                modelCorreoyWeb.loadCorreoyWeb(idDNI);
 
                 $("#guardarImagen").click(function() {
                     updateImage();
@@ -1732,21 +1734,21 @@ if (!isset($_SESSION['IdUsuario'])) {
                 });
 
                 $("#btnReniec").click(function() {
-                    if ($("#dni").val().trim() == '') {
+                    if ($("#numDoc").val().trim() == '') {
                         tools.AlertWarning("Ingenieros", "Ingrese un dni en el campo.");
-                        $("#dni").focus();
-                    } else if ($("#dni").val().length !== 8) {
+                        $("#numDoc").focus();
+                    } else if ($("#numDoc").val().length !== 8) {
                         tools.AlertWarning("Ingenieros", "El dni debe tener 8 caracteres.");
-                        $("#dni").focus();
+                        $("#numDoc").focus();
                     } else {
-                        loadReniecApi($("#dni").val());
+                        loadReniecApi($("#numDoc").val());
                     }
 
                 });
 
                 $("#btnReniec").keypress(function(event) {
                     if (event.keyCode == 13) {
-                        loadReniecApi($("#dni").val());
+                        loadReniecApi($("#numDoc").val());
                     }
                     event.preventDefault();
                 });
@@ -1778,13 +1780,13 @@ if (!isset($_SESSION['IdUsuario'])) {
                 }
             }
 
-            function loadDataPersona(idPersona) {
+            function loadDataPersona(id) {
                 $.ajax({
                     url: "../app/controller/PersonaController.php",
                     method: "GET",
                     data: {
                         "type": "data",
-                        "dni": idPersona
+                        "dni": id
                     },
                     beforeSend: function() {
                         spiner.append(
@@ -1802,6 +1804,7 @@ if (!isset($_SESSION['IdUsuario'])) {
                                 lblImagen.attr("src", "data:image/png;base64," + result.imagen[1]);
                             }
 
+                            $("#numDoc").val(persona.NumDoc);
                             $("#Nombres").val(persona.Nombres)
                             $("#Apellidos").val(persona.Apellidos)
 
@@ -1928,7 +1931,7 @@ if (!isset($_SESSION['IdUsuario'])) {
                         $("#divLoad").removeClass("d-none");
                     },
                     success: function(result) {
-                        $("#divLoad").addClass("d-none");                    
+                        $("#divLoad").addClass("d-none");
                         $("#Nombres").val(result.nombres);
                         $("#Apellidos").val(result.apellidoPaterno + " " + result.apellidoMaterno);
                     },
@@ -1956,7 +1959,7 @@ if (!isset($_SESSION['IdUsuario'])) {
                                 accepts: "application/json",
                                 contentType: "application/json; charset=utf-8",
                                 data: JSON.stringify({
-                                    "dni": $("#dni").val(),
+                                    "dni": idDNI,
                                     "image": base64String,
                                 }),
                                 success: function(result) {

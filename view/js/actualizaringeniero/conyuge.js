@@ -1,18 +1,18 @@
 function Conyuge() {
-    this.loadConyuge = function(idDni) {
+    this.loadConyuge = function (id) {
         $.ajax({
             url: "../app/controller/PersonaController.php",
             method: "GET",
             data: {
                 type: "getconyuge",
-                idDni: idDni
+                "idDni": id
             },
-            beforeSend: function() {
+            beforeSend: function () {
                 $("#tbConyuge").empty();
                 $("#tbConyuge").append('<tr class="text-center"><td colspan="4"><img src="./images/spiner.gif"/><p>cargando información.</p></td></tr>');
 
             },
-            success: function(result) {
+            success: function (result) {
                 if (result.estado == 1) {
                     $("#tbConyuge").empty();
                     if (result.data.length == 0) {
@@ -42,19 +42,19 @@ function Conyuge() {
                     $("#tbConyuge").append('<tr class="text-center"><td colspan="4"><p>' + result.message + '</p></td></tr>');
                 }
             },
-            error: function(error) {
+            error: function (error) {
                 $("#tbConyuge").empty();
                 $("#tbConyuge").append('<tr class="text-center"><td colspan="4"><p>Se produjo un error interno, comuniquese on el administrador del sistema.</p></td></tr>');
             }
         });
     }
 
-    this.loadAddConyuge = function() {
+    this.loadAddConyuge = function () {
         $("#txtConyuge").val("");
         $("#txtHijos").val("");
     }
 
-    this.crudConyuge = function() {
+    this.crudConyuge = function () {
 
         if ($("#txtConyuge").val() == '') {
             tools.AlertWarning('Conyuge', "Ingrese nombre de un conyuge");
@@ -68,25 +68,25 @@ function Conyuge() {
                 method: "POST",
                 data: {
                     "type": "insertConyuge",
-                    "dni": $("#dni").val(),
+                    "dni": idDNI,
                     "conyuge": ($("#txtConyuge").val()).trim(),
                     "hijos": $("#txtHijos").val(),
                 },
-                beforeSend: function() {
+                beforeSend: function () {
                     tools.AlertInfo("Conyuge", "Procesando información.");
                 },
-                success: function(result) {
+                success: function (result) {
                     if (result.estado == 1) {
                         $("#addConyuge").modal("hide");
                         tools.AlertSuccess("Conyuge", "Se registro correctamente.");
-                        modelConyuge.loadConyuge($("#dni").val());
+                        modelConyuge.loadConyuge(idDNI);
                     } else if (result.estado == 3) {
                         tools.AlertWarning("Conyuge", result.message);
                     } else {
                         tools.AlertWarning("Conyuge", "Error al tratar de registrar los datos " + result.message);
                     }
                 },
-                error: function(error) {
+                error: function (error) {
                     tools.AlertError("Conyuge", "Error fatal: Comuniquese con el administrador del sistema");
                 }
             });
@@ -105,7 +105,7 @@ function updateConyuge(Id, Nombre, Hijos) {
     //     console.log('diste click');
     //     // AceptarUpdate(idCapitulo, idEspecialidad);
     // });
-    $("#EbtnAceptarConyuge").bind('click', function() {
+    $("#EbtnAceptarConyuge").bind('click', function () {
         AceptarUpdateConyuge(Id);
     });
 }
@@ -127,21 +127,21 @@ function AceptarUpdateConyuge(Id) {
                 "Conyuge": ($("#EtxtConyuge").val()).trim(),
                 "Hijos": $('#EtxtHijos').val(),
             },
-            beforeSend: function() {
+            beforeSend: function () {
                 tools.AlertInfo("Conyuge", "Procesando información.");
             },
-            success: function(result) {
+            success: function (result) {
                 if (result.estado == 1) {
                     $("#editConyuge").modal("hide");
                     tools.AlertSuccess("Conyuge", "Se actualizo correctamente.");
-                    modelConyuge.loadConyuge($("#dni").val());
+                    modelConyuge.loadConyuge(idDNI);
                 } else if (result.estado == 2) {
                     tools.AlertWarning("Conyuge", result.message);
                 } else {
                     tools.AlertWarning("Conyuge", "Error al tratar de actualizar los datos " + result.message);
                 }
             },
-            error: function(error) {
+            error: function (error) {
                 tools.AlertError("Conyuge", "Error fatal: Comuniquese con el administrador del sistema");
             }
         });
@@ -155,7 +155,7 @@ function DeleteConyuge(Id) {
 
     $("#btnDeleteConyuge").unbind();
 
-    $("#btnDeleteConyuge").bind("click", function() {
+    $("#btnDeleteConyuge").bind("click", function () {
         $.ajax({
             url: "../app/controller/PersonaController.php",
             method: "POST",
@@ -163,19 +163,19 @@ function DeleteConyuge(Id) {
                 "type": "deleteConyuge",
                 "idconyuge": idConyuge,
             },
-            beforeSend: function() {
+            beforeSend: function () {
                 tools.AlertInfo("Conyuge", "Procesando información.");
             },
-            success: function(result) {
+            success: function (result) {
                 if (result.estado == 1) {
                     tools.AlertSuccess("Conyuge", result.message);
                     $("#deleteConyuge").modal("hide");
-                    modelConyuge.loadConyuge($("#dni").val());
+                    modelConyuge.loadConyuge(idDNI);
                 } else {
                     tools.AlertWarning("Conyuge", result.message);
                 }
             },
-            error: function(error) {
+            error: function (error) {
                 tools.AlertError("Conyuge", "Error fatal: Comuniquese con el administrador del sistema");
             }
         });
