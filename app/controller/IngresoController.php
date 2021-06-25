@@ -132,6 +132,20 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
                 "message" => $result
             ));
         }
+    } else if ($_GET["type"] == "listaNotificaciones") {
+        $result = IngresosAdo::ListarNotificaciones(intval($_GET["posicionPagina"]),intval($_GET["filasPorPagina"]));
+        if (is_array($result)) {
+            print json_encode(array(
+                "estado" => 1,
+                "data" => $result[0],
+                "total" => $result[1],
+            ));
+        } else {
+            print json_encode(array(
+                "estado" => 2,
+                "message" => $result
+            ));
+        }
     }
 } else if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     if ($_POST["type"] == "deleteIngreso") {

@@ -648,7 +648,9 @@ if (!isset($_SESSION['IdUsuario'])) {
                                         loadEmpresaPersona();
                                         loadComprobantes();
                                         if (result.estadoCuotas == true) {
-                                            EnviarHabilidad(cipupdate, result.cuotasFin);
+                                            if (result.colegiado != null) {
+                                                EnviarHabilidad(result.colegiado.CIP, result.colegiado.Apellidos, result.colegiado.Nombres, result.colegiado.Condicion, result.colegiado.FechaColegiado, result.cuotasFin, result.colegiado.Especialidad, result.colegiado.Capitulo);
+                                            }
                                         }
                                     } else {
                                         tools.ModalAlertWarning("Cobros", result.mensaje);
@@ -663,14 +665,21 @@ if (!isset($_SESSION['IdUsuario'])) {
                 }
             }
 
-            function EnviarHabilidad(cip, ultimopago) {
+            function EnviarHabilidad(cip, apellidos, nombres, condicion, colegiatura, ultimopago, especialidad, capitulo) {
                 $.ajax({
                     url: "http://cip-junin.org.pe/sistema/UpdateLastPago.php",
                     method: "POST",
                     dataType: "json",
                     data: {
                         "cip": cip,
-                        "UltimoPago": ultimopago
+                        "apellidos": apellidos,
+                        "nombres": nombres,
+                        "condicion": condicion,
+                        "colegiatura": colegiatura,
+                        "ultimopago": ultimopago,
+                        "sede": "JUNIN",
+                        "especialidad": especialidad,
+                        "capitulo": capitulo
                     },
                     beforeSend: function() {
                         tools.ModalAlertInfo("Cobros", "Actualizando su habilidad del Ingeniero...");
@@ -678,10 +687,6 @@ if (!isset($_SESSION['IdUsuario'])) {
                     success: function(result) {
                         if (result.estado == 1) {
                             tools.ModalAlertSuccess("Cobros", result.mensaje);
-                        } else if (result.estado == 2) {
-                            tools.ModalAlertWarning("Cobros", result.mensaje);
-                        } else if (result.estado == 3) {
-                            tools.ModalAlertWarning("Cobros", result.mensaje);
                         } else {
                             tools.ModalAlertWarning("Cobros", result.mensaje);
                         }
@@ -892,8 +897,6 @@ if (!isset($_SESSION['IdUsuario'])) {
                     }
                     break;
                 }
-
-
             }
 
             function validateDuplicate(idConcepto) {

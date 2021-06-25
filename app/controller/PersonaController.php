@@ -1,7 +1,4 @@
 <?php
-//error_reporting(0);
-
-use function PHPSTORM_META\type;
 
 date_default_timezone_set('America/Lima');
 header("Access-Control-Allow-Origin: *");
@@ -297,37 +294,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
         }
     }
 } else if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-    if ($_POST["type"] == "update") {
-        $persona["dni"] = $_POST["dni"];
-        $persona["nombres"] = $_POST["nombres"];
-        $persona["apellidos"] = $_POST["apellidos"];
-        $persona["sexo"] = $_POST["sexo"];
-        $persona["nacimiento"] = $_POST["nacimiento"];
-        $persona["estado_civil"] = $_POST["estado_civil"];
-        $persona["ruc"] = $_POST["ruc"];
-        $persona["rason_social"] = $_POST["rason_social"];
-        $persona["cip"] = $_POST["cip"];
-        $persona["condicion"] = $_POST["condicion"];
-
-        $result = PersonaAdo::update($persona);
-        if ($result == "updated") {
-            echo json_encode(array(
-                "estado" => 1,
-                "message" => "Se actualizo correctamente los datos."
-            ));
-        } else if ($result == "noexists") {
-            echo json_encode(array(
-                "estado" => 2,
-                "message" => "El dni no existe o fue modificado para poder actualizar los datos."
-            ));
-        } else {
-            echo json_encode(array(
-                "estado" => 0,
-                "message" => $result,
-                "value" => $persona["nacimiento"]
-            ));
-        }
-    } else if ($_POST["type"] == "create") {
+    if ($_POST["type"] == "create") {
         $persona["dni"] = $_POST["dni"];
         $persona["nombres"] = $_POST["nombres"];
         $persona["apellidos"] = $_POST["apellidos"];
@@ -345,14 +312,19 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
                 "estado" => 1,
                 "message" => "Se insertarron correctamente los datos"
             ));
-        } else if ($result == "duplicate") {
+        } else if ($result == "dni") {
+            echo json_encode(array(
+                "estado" => 2,
+                "message" => "El número de dni ya se encuentra registrado."
+            ));
+        } else if ($result == "cip") {
             echo json_encode(array(
                 "estado" => 3,
-                "message" => "El número de dni ya se encuentra registrado."
+                "message" => "El número de cip ya se encuentra registrado."
             ));
         } else {
             echo json_encode(array(
-                "estado" => 2,
+                "estado" => 0,
                 "message" => $result
             ));
         }
@@ -521,6 +493,41 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
             echo json_encode(array(
                 "estado" => 2,
                 "message" => $result
+            ));
+        }
+    } else if ($_POST["type"] == "update") {
+        $persona["dni"] = $_POST["dni"];
+        $persona["nombres"] = $_POST["nombres"];
+        $persona["apellidos"] = $_POST["apellidos"];
+        $persona["sexo"] = $_POST["sexo"];
+        $persona["nacimiento"] = $_POST["nacimiento"];
+        $persona["estado_civil"] = $_POST["estado_civil"];
+        $persona["ruc"] = $_POST["ruc"];
+        $persona["rason_social"] = $_POST["rason_social"];
+        $persona["cip"] = $_POST["cip"];
+        $persona["condicion"] = $_POST["condicion"];
+
+        $result = PersonaAdo::update($persona);
+        if ($result == "updated") {
+            echo json_encode(array(
+                "estado" => 1,
+                "message" => "Se actualizo correctamente los datos."
+            ));
+        } else if ($result == "noexists") {
+            echo json_encode(array(
+                "estado" => 2,
+                "message" => "El dni no existe o fue modificado para poder actualizar los datos."
+            ));
+        } else if ($result == "cip") {
+            echo json_encode(array(
+                "estado" => 3,
+                "message" => "El n° cip ya se encuentra registrado a un ingeniero."
+            ));
+        } else {
+            echo json_encode(array(
+                "estado" => 0,
+                "message" => $result,
+                "value" => $persona["nacimiento"]
             ));
         }
     } else if ($_POST["type"] == "updateColegiatura") {
@@ -711,11 +718,26 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
                 "message" => $result
             ));
         }
+    } else if ($_POST["type"] == "deleteleIngeniero") {
+        $result = PersonaAdo::deleteIngeniero($_POST["IdDni"]);
+        if ($result == "eliminado") {
+            echo json_encode(array(
+                "estado" => 1,
+                "message" => "Se eliminaron correctamente los datos"
+            ));
+        } else if ($result == "Ingresos") {
+            echo json_encode(array(
+                "estado" => 2,
+                "message" => "No se puede eliminar el ingeniero, porque tiene asociados ingresos."
+            ));
+        } else {
+            echo json_encode(array(
+                "estado" => 0,
+                "message" => $result
+            ));
+        }
     } else if ($_POST["type"] == "deleteExperiencia") {
-        $experiencia["idexperiencia"] = $_POST["idExperiencia"];
-
-        $result = PersonaAdo::deleteExperiencia($experiencia);
-
+        $result = PersonaAdo::deleteExperiencia($_POST["idExperiencia"]);
         if ($result == "eliminado") {
             echo json_encode(array(
                 "estado" => 1,

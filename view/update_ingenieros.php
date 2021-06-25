@@ -1337,7 +1337,7 @@ if (!isset($_SESSION['IdUsuario'])) {
                                 <div class="col-lg-5 col-md-5 col-sm-5 col-xs-5">
                                     <div class="form-group">
                                         <label for="Codigo">Codigo CIP: <i class="fa fa-fw fa-asterisk text-danger"></i></label>
-                                        <input id="Codigo" type="number" name="Codigo" class="form-control" placeholder="Codigo" required="">
+                                        <input id="Codigo" type="text" name="Codigo" class="form-control" placeholder="Codigo" required="">
                                     </div>
                                 </div>
                                 <div class="col-lg-2 col-md-2 col-sm-2 col-xs-2">
@@ -1582,7 +1582,7 @@ if (!isset($_SESSION['IdUsuario'])) {
                             tools.AlertWarning("Advertencia", "Ingrese los nombres completos por favor.");
                         } else if ($("#Apellidos").val() == '') {
                             tools.AlertWarning("Advertencia", "Ingrese los apellidos completos por favor.");
-                        } else if (!$('#Tramite').is(":checked") && $("#Codigo").val() == '' || !$('#Tramite').is(":checked") && $("#Codigo").val().length < 4) {
+                        } else if (!$('#Tramite').is(":checked") && $("#Codigo").val() == '') {
                             tools.AlertWarning("Advertencia", "Ingrese el número cip por favor.");
                         } else {
 
@@ -1596,7 +1596,7 @@ if (!isset($_SESSION['IdUsuario'])) {
                             formData.append("estado_civil", $("#Estado_civil").val());
                             formData.append("ruc", $("#Ruc").val().trim().toUpperCase());
                             formData.append("rason_social", $("#Razon_social").val().trim());
-                            formData.append("cip", $("#Codigo").val());
+                            formData.append("cip", $("#Codigo").val().trim());
                             formData.append("condicion", $("#Condicion").val());
                             updatePersona(formData);
                         }

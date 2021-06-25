@@ -57,7 +57,7 @@ if (!isset($_SESSION['IdUsuario'])) {
                                                 <div class="input-group-btn">
                                                     <button type="button" id="btnReniec" class="btn btn-default btn-flat"><img src="./images/reniec.png" width="16" height="16" /></button>
                                                 </div>
-                                                <input id="dni" type="text" name="Dni" class="form-control" placeholder="DNI" required="" minlength="8">
+                                                <input id="dni" type="text" class="form-control" placeholder="DNI" required="" minlength="8">
                                             </div>
                                         </div>
                                     </div>
@@ -66,13 +66,13 @@ if (!isset($_SESSION['IdUsuario'])) {
                                     <div class="col-md-6">
                                         <div class="form-group">
                                             <label for="Nombres">Nombres: <i class="fa fa-fw fa-asterisk text-danger"></i></label>
-                                            <input id="Nombres" type="text" name="Nombres" class="form-control" placeholder="Nombres" required="">
+                                            <input id="Nombres" type="text" class="form-control" placeholder="Nombres" required="">
                                         </div>
                                     </div>
                                     <div class="col-md-6">
                                         <div class="form-group">
                                             <label for="Apellidos">Apellidos: <i class="fa fa-fw fa-asterisk text-danger"></i></label>
-                                            <input id="Apellidos" type="text" name="Apellidos" class="form-control" placeholder="Apellidos" required="">
+                                            <input id="Apellidos" type="text" class="form-control" placeholder="Apellidos" required="">
                                         </div>
                                     </div>
                                 </div>
@@ -89,7 +89,7 @@ if (!isset($_SESSION['IdUsuario'])) {
                                     <div class="col-md-4">
                                         <div class="form-group">
                                             <label for="Nacimiento">Nacimiento: <i class="fa fa-fw fa-asterisk text-danger"></i></label>
-                                            <input id="Nacimiento" type="date" name="Nacimiento" class="form-control" required="">
+                                            <input id="Nacimiento" type="date" class="form-control" required="">
                                         </div>
                                     </div>
                                     <div class="col-md-4">
@@ -115,7 +115,7 @@ if (!isset($_SESSION['IdUsuario'])) {
                                     <div class="col-md-6">
                                         <div class="form-group">
                                             <label for="Razon_social">Télefono/Celular Prinpal:</label>
-                                            <input id="Razon_social" type="text" name="Razon_social" class="form-control" placeholder="N° de teléfono o celular principal" required="">
+                                            <input id="Razon_social" type="text" class="form-control" placeholder="N° de teléfono o celular principal" required="">
                                         </div>
                                     </div>
                                 </div>
@@ -124,7 +124,7 @@ if (!isset($_SESSION['IdUsuario'])) {
                                     <div class="col-md-5">
                                         <div class="form-group">
                                             <label for="Codigo">Codigo CIP: <i class="fa fa-fw fa-asterisk text-danger"></i></label>
-                                            <input id="Codigo" type="number" name="Codigo" class="form-control" placeholder="Codigo" required="" disabled>
+                                            <input id="Codigo" type="text" class="form-control" placeholder="Codigo" required="" disabled>
                                         </div>
                                     </div>
                                     <div class="col-md-2">
@@ -294,9 +294,10 @@ if (!isset($_SESSION['IdUsuario'])) {
                                         <th width="10%">Sexo</th>
                                         <th width="10%">Estado Civil</th>
                                         <th width="10%">Condicion</th>
-                                        <th width="10%">Colegiaturas</th>
+                                        <th width="10%">Fecha Registro</th>
                                         <th width="5%" class="text-center">Historial</th>
                                         <th width="5%" class="text-center">Editar</th>
+                                        <th width="5%" class="text-center">Eliminar</th>
                                     </thead>
                                     <tbody id="tbTable">
 
@@ -388,24 +389,50 @@ if (!isset($_SESSION['IdUsuario'])) {
 
                 $("#buscar").on("keyup", function(event) {
                     if (event.keyCode === 13) {
-                        paginacion = 1;
-                        loadTablePersonas($("#buscar").val().trim());
-                        opcion = 1;
+                        if (!state) {
+                            if ($("#buscar").val().trim().length != 0) {
+                                paginacion = 1;
+                                loadTablePersonas($("#buscar").val().trim());
+                                opcion = 1;
+                            }
+                        }
                     }
+                });
+
+                $("#btnSearch").click(function() {
+                    if (!state) {
+                        if ($("#buscar").val().trim().length != 0) {
+                            paginacion = 1;
+                            loadTablePersonas($("#buscar").val().trim());
+                            opcion = 1;
+                        }
+                    }
+                });
+
+                $("#btnSearch").keypress(function(event) {
+                    if (event.keyCode == 13) {
+                        if (!state) {
+                            if ($("#buscar").val().trim().length != 0) {
+                                paginacion = 1;
+                                loadTablePersonas($("#buscar").val().trim());
+                                opcion = 1;
+                            }
+                        }
+                    }
+                    event.preventDefault();
                 });
 
                 $("#btnNuevoIngeniero").click(function() {
                     $("#confirmar").modal("show");
                 });
 
-
                 //-------------------------------------------------------------------------
 
-                $("#btnCloseIngeniero").click(function() {                   
+                $("#btnCloseIngeniero").click(function() {
                     clearModalIngeniero()
                 });
 
-                $("#btnCancelarIngeniero").click(function() {               
+                $("#btnCancelarIngeniero").click(function() {
                     clearModalIngeniero()
                 });
 
@@ -418,12 +445,12 @@ if (!isset($_SESSION['IdUsuario'])) {
                         tools.AlertWarning("Advertencia", "Ingrese un apellido de 3 o mas letras por favor.");
                     } else if ($("#Nacimiento").val() == '') {
                         tools.AlertWarning("Advertencia", "Ingrese un fecha de nacimiento por favor.");
-                    } else if (!$('#cbTramite').is(":checked") && $("#Codigo").val() == '' || !$('#cbTramite').is(":checked") && $("#Codigo").val().length < 4) {
+                    } else if (!$('#cbTramite').is(":checked") && $("#Codigo").val() == '') {
                         tools.AlertWarning("Advertencia", "Ingrese el número cip por favor.");
                     } else {
                         insertPersona($("#dni").val(), $("#Nombres").val(), $("#Apellidos").val(), $("#Genero").val(),
                             $("#Nacimiento").val(), $("#Estado_civil").val(), $("#Ruc").val(), $("#Razon_social").val(),
-                            $("#Codigo").val(), $("#Condicion").val());
+                            $("#Codigo").val().trim(), $("#Condicion").val());
                     }
                 });
 
@@ -500,7 +527,7 @@ if (!isset($_SESSION['IdUsuario'])) {
                     beforeSend: function() {
                         tbTable.empty();
                         tbTable.append(
-                            '<tr class="text-center"><td colspan="10"><img src="./images/spiner.gif"/><p>cargando información.</p></td></tr>'
+                            '<tr class="text-center"><td colspan="11"><img src="./images/spiner.gif"/><p>cargando información.</p></td></tr>'
                         );
                         state = true;
                         totalPaginacion = 0;
@@ -511,7 +538,7 @@ if (!isset($_SESSION['IdUsuario'])) {
                             tbTable.empty();
                             if (result.personas.length == 0) {
                                 tbTable.append(
-                                    '<tr class="text-center"><td colspan="10"><p>No hay datos para mostrar.</p></td></tr>'
+                                    '<tr class="text-center"><td colspan="11"><p>No hay datos para mostrar.</p></td></tr>'
                                 );
                                 $("#lblPaginaActual").html(0);
                                 $("#lblPaginaSiguiente").html(0);
@@ -524,9 +551,13 @@ if (!isset($_SESSION['IdUsuario'])) {
                                         '</button>';
 
                                     let btnUpdate =
-                                        '<button class="btn btn-warning btn-xs" onclick="loadUpdateIngenieros(\'' +
-                                        persona.idDNI + '\')">' +
+                                        '<button class="btn btn-warning btn-xs" onclick="loadUpdateIngenieros(\'' + persona.idDNI + '\')">' +
                                         '<i class="fa fa-edit" style="font-size:25px;"></i> ' +
+                                        '</button>';
+
+                                    let btnDelete =
+                                        '<button class="btn btn-danger btn-xs" onclick="deleteIngeniero(\'' + persona.idDNI + '\')">' +
+                                        '<i class="fa fa-trash" style="font-size:25px;"></i> ' +
                                         '</button>';
 
                                     let estadoCivil = (persona.EstadoCivil == 'S') ? 'Soltero/a' :
@@ -546,11 +577,10 @@ if (!isset($_SESSION['IdUsuario'])) {
                                         '<td>' + persona.Sexo + '</td>' +
                                         '<td>' + estadoCivil + '</td>' +
                                         '<td>' + condicion + '</td>' +
-                                        '<td>' + 0 + '</td>' +
+                                        '<td>' + persona.FechaReg + '</td>' +
                                         '<td>' + btnHistorial + '</td>' +
-                                        '<td>' +
-                                        '' + btnUpdate + '' +
-                                        '</td>' +
+                                        '<td>' + btnUpdate + '</td>' +
+                                        '<td>' + btnDelete + '</td>' +
                                         '</tr>');
                                 }
                                 totalPaginacion = parseInt(Math.ceil((parseFloat(result.total) / parseInt(
@@ -562,7 +592,7 @@ if (!isset($_SESSION['IdUsuario'])) {
                         } else {
                             tbTable.empty();
                             tbTable.append(
-                                '<tr class="text-center"><td colspan="10"><p>' + result.message + '</p></td></tr>'
+                                '<tr class="text-center"><td colspan="11"><p>' + result.message + '</p></td></tr>'
                             );
                             $("#lblPaginaActual").html(0);
                             $("#lblPaginaSiguiente").html(0);
@@ -572,7 +602,7 @@ if (!isset($_SESSION['IdUsuario'])) {
                     error: function(error) {
                         tbTable.empty();
                         tbTable.append(
-                            '<tr class="text-center"><td colspan="10"><p>' + error.responseText + '</p></td></tr>'
+                            '<tr class="text-center"><td colspan="11"><p>' + error.responseText + '</p></td></tr>'
                         );
                         $("#lblPaginaActual").html(0);
                         $("#lblPaginaSiguiente").html(0);
@@ -583,6 +613,35 @@ if (!isset($_SESSION['IdUsuario'])) {
 
             function loadUpdateIngenieros(idPersona) {
                 location.href = "update_ingenieros.php?idPersona=" + idPersona;
+            }
+
+            function deleteIngeniero(idDni) {
+                tools.ModalDialog("Ingeniero", "¿Está seguro de eliminar al ingeniero?", function(value) {
+                    if (value == true) {
+                        $.ajax({
+                            url: "../app/controller/PersonaController.php",
+                            method: "POST",
+                            data: {
+                                "type": "deleteleIngeniero",
+                                "IdDni": idDni
+                            },
+                            beforeSend: function() {
+                                tools.ModalAlertInfo("Ingeniero", "Procesando petición..");
+                            },
+                            success: function(result) {
+                                if (result.estado == 1) {
+                                    tools.ModalAlertSuccess("Ingeniero", result.message);
+                                    loadInitVentas();
+                                } else {
+                                    tools.ModalAlertWarning("Ingeniero", result.message);
+                                }
+                            },
+                            error: function(error) {
+                                tools.ModalAlertError("Ingeniero", error.responseText);
+                            }
+                        });
+                    }
+                });
             }
 
             function insertPersona(idPersona, nombres, apellidos, sexo, nacimiento, estado_civil, ruc, rason_social, cip,
@@ -605,15 +664,14 @@ if (!isset($_SESSION['IdUsuario'])) {
                                 "cip": cip,
                                 "condicion": condicion,
                             },
-                            beforeSend: function() {                             
+                            beforeSend: function() {
                                 clearModalIngeniero();
                                 tools.ModalAlertInfo("Ingeniero", "Procesando petición..");
                             },
                             success: function(result) {
                                 if (result.estado == 1) {
                                     tools.ModalAlertSuccess("Ingeniero", result.message);
-                                } else if (result.estado == 3) {
-                                    tools.ModalAlertWarning("Ingeniero", result.message);
+                                    loadInitVentas();
                                 } else {
                                     tools.ModalAlertWarning("Ingeniero", result.message);
                                 }

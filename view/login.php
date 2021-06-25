@@ -155,7 +155,7 @@ if (isset($_SESSION['IdUsuario'])) {
                                 tools.AlertSuccess('Login', 'Bienvenido al Sistema ' + dato.Apellidos + ' ' + dato
                                     .Nombres)
                                 setTimeout(function() {
-                                    location.href = "../view/home.php"
+                                    location.href = "../view/index.php"
                                 }, 1000);
                             } else if (result.estado === 2) {
                                 $("#txtUsuario").focus();

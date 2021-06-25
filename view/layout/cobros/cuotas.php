@@ -13,29 +13,31 @@
                 </div>
                 <div class="modal-body">
                     <div class="row">
-                        <div class="col-md-8 col-sm-12 col-xs-12" style="margin-right: 30px;">
-                            <button id="btnCuotaNormal" type="button" class="btn btn-success">
-                                <i class="fa fa-plus"></i> Ordinaria
-                            </button>
-                            <button id="btnCuotaAmnistia" type="button" class="btn btn-default">
-                                <i class="fa fa-plus"></i> Amnistia
-                            </button>
-                            <button id="btnCuotaVitalicio" type="button" class="btn btn-default">
-                                <i class="fa fa-plus"></i> Vitalicio
-                            </button>
-                            <button id="btnCuotaResolucion" type="button" class="btn btn-default">
-                                <i class="fa fa-plus"></i> Res. 15
-                            </button>
+                        <div class="col-md-8 col-sm-12 col-xs-12">
+                            <div class="form-group">
+                                <button id="btnCuotaNormal" type="button" class="btn btn-success">
+                                    <i class="fa fa-plus"></i> Ordinaria
+                                </button>
+                                <button id="btnCuotaAmnistia" type="button" class="btn btn-default">
+                                    <i class="fa fa-plus"></i> Amnistia
+                                </button>
+                                <button id="btnCuotaVitalicio" type="button" class="btn btn-default">
+                                    <i class="fa fa-plus"></i> Vitalicio
+                                </button>
+                                <button id="btnCuotaResolucion" type="button" class="btn btn-default">
+                                    <i class="fa fa-plus"></i> Res. 15
+                                </button>
+                            </div>
                         </div>
-                        <div class="col-md-2 col-sm-12 col-xs-12 text-right">
-                            <button id="btnAddCuota" type="button" class="btn btn-warning">
-                                <i class="fa fa-plus"></i> Agregar
-                            </button>
-                        </div>
-                        <div class="col-md-2 col-sm-12 col-xs-12 text-right">
-                            <button id="btnDeleteCuota" type="button" class="btn btn-danger">
-                                <i class="fa fa-trash"></i> Eliminar
-                            </button>
+                        <div class="col-md-4 col-sm-12 col-xs-12 text-right">
+                            <div class="form-group">
+                                <button id="btnAddCuota" type="button" class="btn btn-warning">
+                                    <i class="fa fa-plus"></i> Agregar
+                                </button>
+                                <button id="btnDeleteCuota" type="button" class="btn btn-danger">
+                                    <i class="fa fa-trash"></i> Eliminar
+                                </button>
+                            </div>
                         </div>
                     </div>
 

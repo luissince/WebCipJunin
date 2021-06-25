@@ -14,16 +14,31 @@ class PersonaAdo
         try {
             $array = array();
             $arrayPersonas = array();
-            $comandoPersona = Database::getInstance()->getDb()->prepare("SELECT * FROM Persona 
-            where 
-            idDNI = ?
-            or
-            CIP = ?
-            or
-            Nombres like concat(?,'%') 
-            or 
-            Apellidos like concat(?,'%')
-            order by CAST(FechaReg as date) asc
+            $comandoPersona = Database::getInstance()->getDb()->prepare("SELECT
+            p.idDNI,
+            p.Nombres,
+            p.Apellidos,
+            p.Sexo,
+            p.EstadoCivil,
+            p.RUC,
+            p.CIP,
+            p.Condicion,
+            CONVERT(VARCHAR,CAST(p.FechaReg AS DATE),103) AS FechaReg,
+            ISNULL(ca.Capitulo,'SIN CAPITULO') AS Capitulo,
+            ISNULL(e.Especialidad,'SIN ESPECIALIDAD') AS Especialidad
+            FROM Persona AS p 
+            LEFT JOIN Colegiatura as c on c.idDNI = p.idDNI and c.Principal = 1
+            LEFT JOIN Especialidad AS e ON e.idEspecialidad = c.idEspecialidad
+            LEFT JOIN Capitulo AS ca ON ca.idCapitulo = e.idCapitulo
+            WHERE
+            p.idDNI = ?
+            OR
+            p.CIP = ?
+            OR
+            p.Nombres LIKE concat(?,'%') 
+            OR 
+            p.Apellidos LIKE concat(?,'%')
+            ORDER BY CAST(p.FechaReg AS DATE) DESC
             offset ? rows fetch next ? rows only");
             $comandoPersona->bindParam(1, $nombres, PDO::PARAM_STR);
             $comandoPersona->bindParam(2, $nombres, PDO::PARAM_STR);
@@ -44,18 +59,27 @@ class PersonaAdo
                     'EstadoCivil' => $row['EstadoCivil'],
                     'Ruc' => $row['RUC'],
                     'Cip' => $row['CIP'],
-                    'Condicion' => $row['Condicion']
+                    'Condicion' => $row['Condicion'],
+                    'FechaReg' => $row['FechaReg'],
+                    "Capitulo" => $row["Capitulo"],
+                    "Especialidad" => $row["Especialidad"],
                 ));
             }
 
-            $comandoTotal = Database::getInstance()->getDb()->prepare("SELECT COUNT(*) FROM Persona
-            where 
-            idDNI = ?
-            or
-            CIP = ?
-            or
-            Nombres like concat(?,'%') 
-            or Apellidos like concat(?,'%')");
+            $comandoTotal = Database::getInstance()->getDb()->prepare("SELECT 
+            COUNT(p.idDNI)
+            FROM Persona AS p 
+            LEFT JOIN Colegiatura as c on c.idDNI = p.idDNI and c.Principal = 1
+            LEFT JOIN Especialidad AS e ON e.idEspecialidad = c.idEspecialidad
+            LEFT JOIN Capitulo AS ca ON ca.idCapitulo = e.idCapitulo
+            WHERE 
+            p.idDNI = ?
+            OR
+            p.CIP = ?
+            OR
+            p.Nombres LIKE concat(?,'%') 
+            OR
+            p.Apellidos LIKE concat(?,'%')");
             $comandoTotal->bindParam(1, $nombres, PDO::PARAM_STR);
             $comandoTotal->bindParam(2, $nombres, PDO::PARAM_STR);
             $comandoTotal->bindParam(3, $nombres, PDO::PARAM_STR);
@@ -76,35 +100,37 @@ class PersonaAdo
             $array = array();
             $arrayPersonas = array();
             $comandoPersona = Database::getInstance()->getDb()->prepare("SELECT 
-            CASE CIP
-                WHEN 'T' THEN 'Tramite'
-                ELSE CIP END AS Cip, 
-            dbo.Persona.idDNI as Dni, dbo.Persona.Apellidos + ', ' + dbo.Persona.Nombres AS Ingeniero, 
-            CASE dbo.Persona.Condicion
-                WHEN 'T' THEN 'Transeunte'
-                WHEN 'F' THEN 'Fallecido'
-                WHEN 'R' THEN 'Retirado'
-                WHEN 'V' THEN 'Vitalicio'
-                ELSE 'Ordinario' END AS Condicion,
-            CONVERT(VARCHAR,CAST(dbo.Colegiatura.FechaColegiado AS DATE), 103) AS FechaColegiado,
-            CONVERT(VARCHAR,CAST(ISNULL(dbo.ULTIMACuota.FechaUltimaCuota,dbo.Colegiatura.FechaColegiado) AS DATE), 103) AS FechaUltimaCuota, 
-            CASE dbo.Persona.Condicion
-                WHEN 'T' THEN 0
-                ELSE DATEDIFF(M, ISNULL(dbo.ULTIMACuota.FechaUltimaCuota, dbo.Colegiatura.FechaColegiado), GETDATE()) END AS Deuda,
-            CASE
-                WHEN CAST (DATEDIFF(M,ISNULL(dbo.ULTIMACuota.FechaUltimaCuota, dbo.Colegiatura.FechaColegiado) , GETDATE()) AS INT) <=0 THEN 'Habilitado'
-                ELSE 'No Habilitado' END AS Habilidad
-            FROM dbo.Persona
-            LEFT OUTER JOIN dbo.Colegiatura ON dbo.Colegiatura.idDNI = dbo.Persona.idDNI AND dbo.Colegiatura.Principal = 1
-            INNER JOIN dbo.Especialidad ON dbo.Especialidad.idEspecialidad = dbo.Colegiatura.idEspecialidad
-            LEFT OUTER JOIN dbo.ULTIMACuota ON dbo.ULTIMACuota.idDNI = dbo.Persona.idDNI
-            --INNER JOIN dbo.Capitulo ON dbo.Capitulo.idCapitulo = dbo.Especialidad.idCapitulo 
-            WHERE  dbo.Persona.idDNI = ?
-            OR dbo.Persona.CIP = ? 
-            OR dbo.Persona.Apellidos LIKE CONCAT(?,'%')
-            OR dbo.Persona.Nombres LIKE CONCAT(?,'%')
-            ORDER BY dbo.Persona.Apellidos ASC
-            offset ? ROWS FETCH NEXT ? ROWS only");
+            p.CIP AS Cip, 
+            p.idDNI as Dni, p.Apellidos + ', ' + p.Nombres AS Ingeniero, 
+            CASE p.Condicion
+            WHEN 'T' THEN 'Transeunte'
+            WHEN 'F' THEN 'Fallecido'
+            WHEN 'R' THEN 'Retirado'
+            WHEN 'V' THEN 'Vitalicio'
+            ELSE 'Ordinario' END AS Condicion,
+			ISNULL(e.Especialidad,'SIN ESPECIALIDAD') AS Especialidad,
+			ISNULL(ca.Capitulo,'SIN CAPITULO') AS Capitulo,
+            CONVERT(VARCHAR,CAST(c.FechaColegiado AS DATE), 103) AS FechaColegiado,
+            CONVERT(VARCHAR,CAST(ISNULL(ul.FechaUltimaCuota,c.FechaColegiado) AS DATE), 103) AS FechaUltimaCuota, 
+            DATEDIFF(M, ISNULL(ul.FechaUltimaCuota, c.FechaColegiado), GETDATE()) AS Deuda,
+			CASE
+            WHEN CAST (DATEDIFF(M,DATEADD(MONTH,CASE p.Condicion WHEN 'O' THEN 3 WHEN 'V' THEN 9 ELSE 0 END,ISNULL(ul.FechaUltimaCuota, c.FechaColegiado)) , GETDATE()) AS INT) <=0 THEN 'Habilitado'
+            ELSE 'No Habilitado' END AS Habilidad
+            FROM Persona AS p
+            INNER JOIN Colegiatura AS c ON c.idDNI = p.idDNI AND c.Principal = 1
+            LEFT JOIN Especialidad AS e ON e.idEspecialidad = c.idEspecialidad
+            LEFT JOIN Capitulo AS ca ON ca.idCapitulo = e.idCapitulo 
+			LEFT OUTER JOIN ULTIMACuota AS ul ON ul.idDNI = p.idDNI
+            WHERE  
+            p.idDNI = ?
+            OR 
+            p.CIP = ? 
+            OR 
+            p.Apellidos LIKE CONCAT(?,'%')
+            OR 
+            p.Nombres LIKE CONCAT(?,'%')
+            ORDER BY p.FechaReg ASC
+            OFFSET ? ROWS FETCH NEXT ? ROWS only");
             $comandoPersona->bindParam(1, $search, PDO::PARAM_INT);
             $comandoPersona->bindParam(2, $search, PDO::PARAM_STR);
             $comandoPersona->bindParam(3, $search, PDO::PARAM_STR);
@@ -128,18 +154,21 @@ class PersonaAdo
                 ));
             }
 
-            $comandoTotal = Database::getInstance()->getDb()->prepare("SELECT COUNT(*) FROM dbo.Persona
-             LEFT OUTER JOIN
-                  dbo.Colegiatura ON dbo.Colegiatura.idDNI = dbo.Persona.idDNI
-                  AND dbo.Colegiatura.Principal = 1
-                  INNER JOIN
-                  dbo.Especialidad ON dbo.Especialidad.idEspecialidad = dbo.Colegiatura.idEspecialidad
-                  LEFT OUTER JOIN
-                  dbo.ULTIMACuota ON dbo.ULTIMACuota.idDNI = dbo.Persona.idDNI
-                  WHERE dbo.Persona.idDNI = ? 
-                  or dbo.Persona.CIP = ? 
-                  or dbo.Persona.Apellidos like concat(?,'%')
-                  or dbo.Persona.Nombres like concat(?,'%')");
+            $comandoTotal = Database::getInstance()->getDb()->prepare("SELECT 
+            COUNT(p.idDNI)
+            FROM Persona AS p
+            INNER JOIN Colegiatura AS c ON c.idDNI = p.idDNI AND c.Principal = 1
+            LEFT JOIN Especialidad AS e ON e.idEspecialidad = c.idEspecialidad
+            LEFT JOIN Capitulo AS ca ON ca.idCapitulo = e.idCapitulo 
+			LEFT OUTER JOIN ULTIMACuota AS ul ON ul.idDNI = p.idDNI
+            WHERE 
+            p.idDNI = ? 
+            OR
+            p.CIP = ? 
+            OR 
+            p.Apellidos like concat(?,'%')
+            OR 
+            p.Nombres like concat(?,'%')");
             $comandoTotal->bindParam(1, $search, PDO::PARAM_INT);
             $comandoTotal->bindParam(2, $search, PDO::PARAM_STR);
             $comandoTotal->bindParam(3, $search, PDO::PARAM_STR);
@@ -335,37 +364,45 @@ class PersonaAdo
         try {
             Database::getInstance()->getDb()->beginTransaction();
 
-            $comandoValidate = Database::getInstance()->getDb()->prepare("SELECT * FROM Persona
-            WHERE idDNI = ?");
+            $comandoValidate = Database::getInstance()->getDb()->prepare("SELECT * FROM Persona WHERE idDNI = ?");
             $comandoValidate->bindParam(1, $persona['dni'], PDO::PARAM_STR);
             $comandoValidate->execute();
             if ($comandoValidate->fetch()) {
-                $comandoPersona = Database::getInstance()->getDb()->prepare("UPDATE Persona SET 
-                Nombres = UPPER(?),
-                Apellidos = UPPER(?),
-                Sexo = ?,
-                FechaNac = ?,
-                EstadoCivil = ?,
-                RUC = ?,
-                RAZONSOCIAL = ?,
-                CIP = ?,
-                Condicion = ?
-                WHERE idDNI = ?");
+                $comandoValidate = Database::getInstance()->getDb()->prepare("SELECT * FROM Persona WHERE idDNI <> ? AND CIP = ? AND CIP <> '' ");
+                $comandoValidate->bindParam(1, $persona['dni'], PDO::PARAM_STR);
+                $comandoValidate->bindParam(2, $persona['cip'], PDO::PARAM_STR);
+                $comandoValidate->execute();
+                if ($comandoValidate->fetch()) {
+                    Database::getInstance()->getDb()->rollback();
+                    return 'cip';
+                } else {
+                    $comandoPersona = Database::getInstance()->getDb()->prepare("UPDATE Persona SET 
+                    Nombres = UPPER(?),
+                    Apellidos = UPPER(?),
+                    Sexo = ?,
+                    FechaNac = ?,
+                    EstadoCivil = ?,
+                    RUC = ?,
+                    RAZONSOCIAL = ?,
+                    CIP = ?,
+                    Condicion = ?
+                    WHERE idDNI = ?");
 
-                $comandoPersona->bindParam(1, $persona['nombres'], PDO::PARAM_STR);
-                $comandoPersona->bindParam(2, $persona['apellidos'], PDO::PARAM_STR);
-                $comandoPersona->bindParam(3, $persona['sexo'], PDO::PARAM_STR);
-                $comandoPersona->bindParam(4, $persona['nacimiento'], PDO::PARAM_STR);
-                $comandoPersona->bindParam(5, $persona['estado_civil'], PDO::PARAM_STR);
-                $comandoPersona->bindParam(6, $persona['ruc'], PDO::PARAM_STR);
-                $comandoPersona->bindParam(7, $persona['rason_social'], PDO::PARAM_STR);
-                $comandoPersona->bindParam(8, $persona['cip'], PDO::PARAM_STR);
-                $comandoPersona->bindParam(9, $persona['condicion'], PDO::PARAM_STR);
-                $comandoPersona->bindParam(10, $persona['dni'], PDO::PARAM_STR);
-                $comandoPersona->execute();
+                    $comandoPersona->bindParam(1, $persona['nombres'], PDO::PARAM_STR);
+                    $comandoPersona->bindParam(2, $persona['apellidos'], PDO::PARAM_STR);
+                    $comandoPersona->bindParam(3, $persona['sexo'], PDO::PARAM_STR);
+                    $comandoPersona->bindParam(4, $persona['nacimiento'], PDO::PARAM_STR);
+                    $comandoPersona->bindParam(5, $persona['estado_civil'], PDO::PARAM_STR);
+                    $comandoPersona->bindParam(6, $persona['ruc'], PDO::PARAM_STR);
+                    $comandoPersona->bindParam(7, $persona['rason_social'], PDO::PARAM_STR);
+                    $comandoPersona->bindParam(8, $persona['cip'], PDO::PARAM_STR);
+                    $comandoPersona->bindParam(9, $persona['condicion'], PDO::PARAM_STR);
+                    $comandoPersona->bindParam(10, $persona['dni'], PDO::PARAM_STR);
+                    $comandoPersona->execute();
 
-                Database::getInstance()->getDb()->commit();
-                return 'updated';
+                    Database::getInstance()->getDb()->commit();
+                    return 'updated';
+                }
             } else {
                 Database::getInstance()->getDb()->rollback();
                 return 'noexists';
@@ -406,26 +443,34 @@ class PersonaAdo
             $comandoValidate->execute();
             if ($comandoValidate->fetch()) {
                 Database::getInstance()->getDb()->rollback();
-                return "duplicate";
+                return "dni";
             } else {
+                $comandoValidate = Database::getInstance()->getDb()->prepare("SELECT * FROM Persona WHERE CIP = ? AND CIP <> ''");
+                $comandoValidate->bindParam(1, $persona['cip'], PDO::PARAM_STR);
+                $comandoValidate->execute();
+                if ($comandoValidate->fetch()) {
+                    Database::getInstance()->getDb()->rollback();
+                    return "cip";
+                } else {
 
-                $comandoPersona = Database::getInstance()->getDb()->prepare("INSERT INTO Persona (idDNI,idUsuario,Nombres,Apellidos,Sexo,FechaNac,EstadoCivil,RUC,RAZONSOCIAL,CIP,Condicion)
+                    $comandoPersona = Database::getInstance()->getDb()->prepare("INSERT INTO Persona (idDNI,idUsuario,Nombres,Apellidos,Sexo,FechaNac,EstadoCivil,RUC,RAZONSOCIAL,CIP,Condicion)
                 VALUES (?,'-1',UPPER(?),UPPER(?),?,?,?,?,?,?,?)");
 
-                $comandoPersona->bindParam(1, $persona['dni'], PDO::PARAM_STR);
-                $comandoPersona->bindParam(2, $persona['nombres'], PDO::PARAM_STR);
-                $comandoPersona->bindParam(3, $persona['apellidos'], PDO::PARAM_STR);
-                $comandoPersona->bindParam(4, $persona['sexo'], PDO::PARAM_STR);
-                $comandoPersona->bindParam(5, $persona['nacimiento'], PDO::PARAM_STR);
-                $comandoPersona->bindParam(6, $persona['estado_civil'], PDO::PARAM_STR);
-                $comandoPersona->bindParam(7, $persona['ruc'], PDO::PARAM_STR);
-                $comandoPersona->bindParam(8, $persona['rason_social'], PDO::PARAM_STR);
-                $comandoPersona->bindParam(9, $persona['cip'], PDO::PARAM_STR);
-                $comandoPersona->bindParam(10, $persona['condicion'], PDO::PARAM_STR);
+                    $comandoPersona->bindParam(1, $persona['dni'], PDO::PARAM_STR);
+                    $comandoPersona->bindParam(2, $persona['nombres'], PDO::PARAM_STR);
+                    $comandoPersona->bindParam(3, $persona['apellidos'], PDO::PARAM_STR);
+                    $comandoPersona->bindParam(4, $persona['sexo'], PDO::PARAM_STR);
+                    $comandoPersona->bindParam(5, $persona['nacimiento'], PDO::PARAM_STR);
+                    $comandoPersona->bindParam(6, $persona['estado_civil'], PDO::PARAM_STR);
+                    $comandoPersona->bindParam(7, $persona['ruc'], PDO::PARAM_STR);
+                    $comandoPersona->bindParam(8, $persona['rason_social'], PDO::PARAM_STR);
+                    $comandoPersona->bindParam(9, $persona['cip'], PDO::PARAM_STR);
+                    $comandoPersona->bindParam(10, $persona['condicion'], PDO::PARAM_STR);
 
-                $comandoPersona->execute();
-                Database::getInstance()->getDb()->commit();
-                return 'create';
+                    $comandoPersona->execute();
+                    Database::getInstance()->getDb()->commit();
+                    return 'create';
+                }
             }
         } catch (Exception $ex) {
             Database::getInstance()->getDb()->rollback();
@@ -433,9 +478,6 @@ class PersonaAdo
         }
     }
 
-    public static function delete()
-    {
-    }
 
     public static function getColegiatura($idDni)
     {
@@ -1250,21 +1292,6 @@ class PersonaAdo
         }
     }
 
-    public static function deleteConyuge($conyuge)
-    {
-        try {
-            Database::getInstance()->getDb()->beginTransaction();
-            $comandSelect = Database::getInstance()->getDb()->prepare("DELETE FROM Conyuge WHERE IdConyugue = ?");
-            $comandSelect->bindParam(1, $conyuge["idconyuge"], PDO::PARAM_INT);
-            $comandSelect->execute();
-            Database::getInstance()->getDb()->commit();
-            return "eliminado";
-        } catch (Exception $ex) {
-            Database::getInstance()->getDb()->rollback();
-            return $ex->getMessage();
-        }
-    }
-
     public static function updateExperiencia($experiencia)
     {
         try {
@@ -1296,21 +1323,6 @@ class PersonaAdo
                 Database::getInstance()->getDb()->commit();
                 return 'Actualizado';
             }
-        } catch (Exception $ex) {
-            Database::getInstance()->getDb()->rollback();
-            return $ex->getMessage();
-        }
-    }
-
-    public static function deleteExperiencia($experiencia)
-    {
-        try {
-            Database::getInstance()->getDb()->beginTransaction();
-            $comandSelect = Database::getInstance()->getDb()->prepare("DELETE FROM Experiencia WHERE idExperiencia = ?");
-            $comandSelect->bindParam(1, $experiencia["idexperiencia"], PDO::PARAM_INT);
-            $comandSelect->execute();
-            Database::getInstance()->getDb()->commit();
-            return "eliminado";
         } catch (Exception $ex) {
             Database::getInstance()->getDb()->rollback();
             return $ex->getMessage();
@@ -1349,6 +1361,93 @@ class PersonaAdo
                 Database::getInstance()->getDb()->commit();
                 return 'Actualizado';
             }
+        } catch (Exception $ex) {
+            Database::getInstance()->getDb()->rollback();
+            return $ex->getMessage();
+        }
+    }
+
+    public static function deleteIngeniero($idDni)
+    {
+        try {
+            Database::getInstance()->getDb()->beginTransaction();
+            $cmdValidate = Database::getInstance()->getDb()->prepare("SELECT * FROM Ingreso WHERE idDNI = ?");
+            $cmdValidate->bindParam(1, $idDni, PDO::PARAM_STR);
+            $cmdValidate->execute();
+            if ($cmdValidate->fetch()) {
+                Database::getInstance()->getDb()->rollback();
+                return "Ingresos";
+            } else {
+
+                $cmdColegiatura = Database::getInstance()->getDb()->prepare("DELETE FROM Colegiatura WHERE idDNI = ?");
+                $cmdColegiatura->bindParam(1, $idDni, PDO::PARAM_STR);
+                $cmdColegiatura->execute();
+
+                $cmdDomicilio = Database::getInstance()->getDb()->prepare("DELETE FROM Direccion WHERE idDNI = ?");
+                $cmdDomicilio->bindParam(1, $idDni, PDO::PARAM_STR);
+                $cmdDomicilio->execute();
+
+                $cmdDomicilio = Database::getInstance()->getDb()->prepare("DELETE FROM Telefono WHERE idDNI = ?");
+                $cmdDomicilio->bindParam(1, $idDni, PDO::PARAM_STR);
+                $cmdDomicilio->execute();
+
+                $cmdConyuge = Database::getInstance()->getDb()->prepare("DELETE FROM Conyuge WHERE idDNI = ?");
+                $cmdConyuge->bindParam(1, $idDni, PDO::PARAM_STR);
+                $cmdConyuge->execute();
+
+                $cmdExperiencia = Database::getInstance()->getDb()->prepare("DELETE FROM Experiencia WHERE idPersona = ?");
+                $cmdExperiencia->bindParam(1, $idDni, PDO::PARAM_STR);
+                $cmdExperiencia->execute();
+
+                $cmdGrados = Database::getInstance()->getDb()->prepare("DELETE FROM Grados WHERE idDNI = ?");
+                $cmdGrados->bindParam(1, $idDni, PDO::PARAM_STR);
+                $cmdGrados->execute();
+
+                $cmdWeb = Database::getInstance()->getDb()->prepare("DELETE FROM Web WHERE idDNI = ?");
+                $cmdWeb->bindParam(1, $idDni, PDO::PARAM_STR);
+                $cmdWeb->execute();
+
+                $cmdImagen = Database::getInstance()->getDb()->prepare("DELETE FROM PersonaImagen WHERE idDNI = ?");
+                $cmdImagen->bindParam(1, $idDni, PDO::PARAM_STR);
+                $cmdImagen->execute();
+
+                $cmdIngeniero = Database::getInstance()->getDb()->prepare("DELETE FROM Persona WHERE idDNI = ?");
+                $cmdIngeniero->bindParam(1, $idDni, PDO::PARAM_STR);
+                $cmdIngeniero->execute();
+
+                Database::getInstance()->getDb()->commit();
+                return "eliminado";
+            }
+        } catch (Exception $ex) {
+            Database::getInstance()->getDb()->rollback();
+            return $ex->getMessage();
+        }
+    }
+
+    public static function deleteConyuge($conyuge)
+    {
+        try {
+            Database::getInstance()->getDb()->beginTransaction();
+            $comandSelect = Database::getInstance()->getDb()->prepare("DELETE FROM Conyuge WHERE IdConyugue = ?");
+            $comandSelect->bindParam(1, $conyuge["idconyuge"], PDO::PARAM_INT);
+            $comandSelect->execute();
+            Database::getInstance()->getDb()->commit();
+            return "eliminado";
+        } catch (Exception $ex) {
+            Database::getInstance()->getDb()->rollback();
+            return $ex->getMessage();
+        }
+    }
+
+    public static function deleteExperiencia($experiencia)
+    {
+        try {
+            Database::getInstance()->getDb()->beginTransaction();
+            $comandSelect = Database::getInstance()->getDb()->prepare("DELETE FROM Experiencia WHERE idExperiencia = ?");
+            $comandSelect->bindParam(1, $experiencia["idexperiencia"], PDO::PARAM_INT);
+            $comandSelect->execute();
+            Database::getInstance()->getDb()->commit();
+            return "eliminado";
         } catch (Exception $ex) {
             Database::getInstance()->getDb()->rollback();
             return $ex->getMessage();
@@ -1423,40 +1522,39 @@ class PersonaAdo
         try {
             $array = array();
             $arrayHabilidad = array();
-            $comandoHabilidad = Database::getInstance()->getDb()->prepare("SELECT 
-            CASE CIP
-                WHEN 'T' THEN 'Tramite'
-                ELSE CIP END AS Cip, 
-            dbo.Persona.idDNI as Dni, 
-            dbo.Persona.Apellidos ,
-            dbo.Persona.Nombres, 
-            dbo.Persona.Condicion as CodigoCondicion,
-            CASE dbo.Persona.Condicion
+            $comandoHabilidad = Database::getInstance()->getDb()->prepare("SELECT p.CIP  AS Cip, 
+            p.idDNI as Dni, 
+            p.Apellidos ,
+            p.Nombres, 
+            p.Condicion as CodigoCondicion,
+            CASE p.Condicion
                 WHEN 'T' THEN 'Transeunte'
                 WHEN 'F' THEN 'Fallecido'
                 WHEN 'R' THEN 'Retirado'
                 WHEN 'V' THEN 'Vitalicio'
                 ELSE 'Ordinario' END AS Condicion,
-            ISNULL(dbo.Especialidad.Especialidad,'NO ESPECIFICADO') AS Especialidad,
-            CAST(dbo.Colegiatura.FechaColegiado AS DATE)  AS FechaColegiado,
-            CAST(ISNULL(dbo.ULTIMACuota.FechaUltimaCuota,dbo.Colegiatura.FechaColegiado) AS DATE) AS FechaUltimaCuota,             
+			ca.Capitulo,
+            e.Especialidad AS Especialidad,
+            CAST(c.FechaColegiado AS DATE)  AS FechaColegiado,
+            CAST(ISNULL(ul.FechaUltimaCuota,c.FechaColegiado) AS DATE) AS FechaUltimaCuota,             
             CASE
-                WHEN CAST (DATEDIFF(M,DATEADD(MONTH,CASE dbo.Persona.Condicion WHEN 'O' THEN 3 WHEN 'V' THEN 9 ELSE 0 END,ISNULL(dbo.ULTIMACuota.FechaUltimaCuota, dbo.Colegiatura.FechaColegiado)) , GETDATE()) AS INT) <=0 THEN 'Habilitado'
-                ELSE 'No Habilitado' END AS Habilidad,
-            CAST(DATEADD(MONTH,CASE dbo.Persona.Condicion WHEN 'O' THEN 3 WHEN 'V' THEN 9 ELSE 0 END,ISNULL(dbo.ULTIMACuota.FechaUltimaCuota,dbo.Colegiatura.FechaColegiado)) AS DATE) AS HabilitadoHasta           
-            FROM dbo.Persona
-            LEFT OUTER JOIN dbo.Colegiatura ON dbo.Colegiatura.idDNI = dbo.Persona.idDNI AND dbo.Colegiatura.Principal = 1
-            INNER JOIN dbo.Especialidad ON dbo.Especialidad.idEspecialidad = dbo.Colegiatura.idEspecialidad
-            LEFT OUTER JOIN dbo.ULTIMACuota ON dbo.ULTIMACuota.idDNI = dbo.Persona.idDNI
+            WHEN CAST (DATEDIFF(M,DATEADD(MONTH,CASE p.Condicion WHEN 'O' THEN 3 WHEN 'V' THEN 9 ELSE 0 END,ISNULL(ul.FechaUltimaCuota, c.FechaColegiado)) , GETDATE()) AS INT) <=0 THEN 'Habilitado'
+            ELSE 'No Habilitado' END AS Habilidad,
+            CAST(DATEADD(MONTH,CASE p.Condicion WHEN 'O' THEN 3 WHEN 'V' THEN 9 ELSE 0 END,ISNULL(ul.FechaUltimaCuota,c.FechaColegiado)) AS DATE) AS HabilitadoHasta           
+            FROM Persona AS p
+            INNER JOIN Colegiatura AS c ON c.idDNI = p.idDNI AND c.Principal = 1
+            INNER JOIN Especialidad AS e on e.idEspecialidad = c.idEspecialidad
+            INNER JOIN Capitulo as ca on ca.idCapitulo = e.idCapitulo
+            INNER JOIN ULTIMACuota AS ul ON  ul.idDNI = p.idDNI
             WHERE $opcion = 0
-            OR $opcion = 1 and dbo.Persona.idDNI = ? 
-            OR $opcion = 1 and dbo.Persona.CIP = ? 
-            OR $opcion = 1 and dbo.Persona.Apellidos LIKE CONCAT(?,'%')
-            OR $opcion = 1 and dbo.Persona.Nombres LIKE CONCAT(?,'%')
-            OR $opcion = 2 and $tipoHabilidad = 0
-            OR $opcion = 2 and $tipoHabilidad = 1 and CAST(DATEDIFF(M,DATEADD(MONTH,CASE dbo.Persona.Condicion WHEN 'O' THEN 3 WHEN 'V' THEN 9 ELSE 0 END,ISNULL(dbo.ULTIMACuota.FechaUltimaCuota, dbo.Colegiatura.FechaColegiado)) , GETDATE()) AS INT) <=0
-            OR $opcion = 2 and $tipoHabilidad = 2 and CAST(DATEDIFF(M,DATEADD(MONTH,CASE dbo.Persona.Condicion WHEN 'O' THEN 3 WHEN 'V' THEN 9 ELSE 0 END,ISNULL(dbo.ULTIMACuota.FechaUltimaCuota, dbo.Colegiatura.FechaColegiado)) , GETDATE()) AS INT) >0
-            ORDER BY dbo.Persona.Apellidos ASC
+            OR $opcion = 1 and p.idDNI = ? 
+            OR $opcion = 1 and p.CIP = ? 
+            OR $opcion = 1 and p.Apellidos LIKE CONCAT(?,'%') 
+            OR $opcion = 1 and p.Nombres LIKE CONCAT(?,'%') 
+            OR $opcion = 2 and $tipoHabilidad = 0 
+            OR $opcion = 2 and $tipoHabilidad = 1 and CAST(DATEDIFF(M,DATEADD(MONTH,CASE p.Condicion WHEN 'O' THEN 3 WHEN 'V' THEN 9 ELSE 0 END,ISNULL(ul.FechaUltimaCuota, c.FechaColegiado)) , GETDATE()) AS INT) <=0 
+            OR $opcion = 2 and $tipoHabilidad = 2 and CAST(DATEDIFF(M,DATEADD(MONTH,CASE p.Condicion WHEN 'O' THEN 3 WHEN 'V' THEN 9 ELSE 0 END,ISNULL(ul.FechaUltimaCuota, c.FechaColegiado)) , GETDATE()) AS INT) >0 
+            ORDER BY p.FechaReg 
             offset ? ROWS FETCH NEXT ? ROWS only");
             $comandoHabilidad->bindParam(1, $search, PDO::PARAM_INT);
             $comandoHabilidad->bindParam(2, $search, PDO::PARAM_STR);
@@ -1479,6 +1577,7 @@ class PersonaAdo
                     'Nombres' => $row['Nombres'],
                     'Condicion' => $row['Condicion'],
                     'CodigoCondicion' => $row['CodigoCondicion'],
+                    'Capitulo' => $row["Capitulo"],
                     'Especialidad' => $row['Especialidad'],
                     'Colegiatura' => $row['FechaColegiado'],
                     'FechaColegiado' => $dateFechaColegiado->format("d/m/Y"),
@@ -1489,22 +1588,20 @@ class PersonaAdo
                 ));
             }
 
-            $comandoTotal = Database::getInstance()->getDb()->prepare("SELECT COUNT(*) FROM dbo.Persona
-             LEFT OUTER JOIN
-                  dbo.Colegiatura ON dbo.Colegiatura.idDNI = dbo.Persona.idDNI
-                  AND dbo.Colegiatura.Principal = 1
-                  INNER JOIN
-                  dbo.Especialidad ON dbo.Especialidad.idEspecialidad = dbo.Colegiatura.idEspecialidad
-                  LEFT OUTER JOIN
-                  dbo.ULTIMACuota ON dbo.ULTIMACuota.idDNI = dbo.Persona.idDNI
-                  WHERE $opcion = 0
-                  or $opcion = 1 and dbo.Persona.idDNI = ? 
-                  or $opcion = 1 and dbo.Persona.CIP = ? 
-                  or $opcion = 1 and dbo.Persona.Apellidos like concat(?,'%')
-                  or $opcion = 1 and dbo.Persona.Nombres like concat(?,'%')
-                  or $opcion = 2 and $tipoHabilidad = 0
-                  or $opcion = 2 and $tipoHabilidad = 1 and CAST (DATEDIFF(M,DATEADD(MONTH,3,ISNULL(dbo.ULTIMACuota.FechaUltimaCuota, dbo.Colegiatura.FechaColegiado)) , GETDATE()) AS INT) <=0
-                  or $opcion = 2 and $tipoHabilidad = 2 and CAST(DATEDIFF(M,DATEADD(MONTH,3,ISNULL(dbo.ULTIMACuota.FechaUltimaCuota, dbo.Colegiatura.FechaColegiado)) , GETDATE()) AS INT) >0");
+            $comandoTotal = Database::getInstance()->getDb()->prepare("SELECT COUNT(p.idDNI) 
+            FROM Persona AS p
+            INNER JOIN Colegiatura AS c ON c.idDNI = p.idDNI AND c.Principal = 1
+            INNER JOIN Especialidad AS e on e.idEspecialidad = c.idEspecialidad
+            INNER JOIN Capitulo as ca on ca.idCapitulo = e.idCapitulo
+            INNER JOIN ULTIMACuota AS ul ON  ul.idDNI = p.idDNI
+            WHERE $opcion = 0 
+            OR $opcion = 1 and p.idDNI = ? 
+            OR $opcion = 1 and p.CIP = ? 
+            OR $opcion = 1 and p.Apellidos LIKE CONCAT(?,'%') 
+            OR $opcion = 1 and p.Nombres LIKE CONCAT(?,'%') 
+            OR $opcion = 2 and $tipoHabilidad = 0 
+            OR $opcion = 2 and $tipoHabilidad = 1 and CAST(DATEDIFF(M,DATEADD(MONTH,CASE p.Condicion WHEN 'O' THEN 3 WHEN 'V' THEN 9 ELSE 0 END,ISNULL(ul.FechaUltimaCuota, c.FechaColegiado)) , GETDATE()) AS INT) <=0 
+            OR $opcion = 2 and $tipoHabilidad = 2 and CAST(DATEDIFF(M,DATEADD(MONTH,CASE p.Condicion WHEN 'O' THEN 3 WHEN 'V' THEN 9 ELSE 0 END,ISNULL(ul.FechaUltimaCuota, c.FechaColegiado)) , GETDATE()) AS INT) >0 ");
             $comandoTotal->bindParam(1, $search, PDO::PARAM_INT);
             $comandoTotal->bindParam(2, $search, PDO::PARAM_STR);
             $comandoTotal->bindParam(3, $search, PDO::PARAM_STR);

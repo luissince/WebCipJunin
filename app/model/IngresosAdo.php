@@ -398,6 +398,7 @@ class IngresosAdo
             Database::getInstance()->getDb()->beginTransaction();
 
             $array = array();
+            $resultCliente = null;
 
             $codigoSerieNumeracion = Database::getInstance()->getDb()->prepare("SELECT dbo.Fc_Serie_Numero(?)");
             $codigoSerieNumeracion->bindParam(1, $body["idTipoDocumento"], PDO::PARAM_STR);
@@ -434,6 +435,27 @@ class IngresosAdo
                 $cmdCuota->bindParam(2, $body["cuotasInicio"], PDO::PARAM_STR);
                 $cmdCuota->bindParam(3, $body["cuotasFin"], PDO::PARAM_STR);
                 $cmdCuota->execute();
+
+                $cmdPersona = Database::getInstance()->getDb()->prepare("SELECT 
+                p.CIP,
+                p.Nombres,
+                p.Apellidos,
+                p.Sexo,
+                p.Condicion,
+                ca.Capitulo,
+                e.Especialidad,
+                c.FechaColegiado
+                FROM Persona AS p 
+                INNER JOIN Colegiatura AS c ON c.idDNI = p.idDNI AND c.Principal = 1
+                INNER JOIN Especialidad AS e ON e.idEspecialidad = c.idEspecialidad
+                INNER JOIN Capitulo AS ca ON ca.idCapitulo = e.idCapitulo
+                WHERE p.idDNI = ?");
+                $cmdPersona->bindParam(1, $body["idCliente"], PDO::PARAM_STR);
+                $cmdPersona->execute();
+                $resultCliente = $cmdPersona->fetchObject();
+                if (!$resultCliente) {
+                    throw new Exception("No se pudo completar el ingreso porque el colegiado no tiene registrado todo sus datos de colegiatura, comuníquese con el área de sistemas.");
+                }
 
                 $countResolucion15 = 0;
                 foreach ($body["ingresos"] as $value) {
@@ -537,9 +559,9 @@ class IngresosAdo
             }
             Database::getInstance()->getDb()->commit();
 
-            array_push($array, "inserted", $idIngreso, $body["estadoCertificadoHabilidad"], $body["estadoCertificadoResidenciaObra"], $body["estadoCertificadoProyecto"], $body["estadoCuotas"], $body["cuotasFin"]);
+            array_push($array, "inserted", $idIngreso, $body["estadoCertificadoHabilidad"], $body["estadoCertificadoResidenciaObra"], $body["estadoCertificadoProyecto"], $body["estadoCuotas"], $body["cuotasFin"], $resultCliente);
             return $array;
-        } catch (PDOException $ex) {
+        } catch (Exception $ex) {
             Database::getInstance()->getDb()->rollBack();
             return $ex->getMessage();
         }
@@ -611,7 +633,7 @@ class IngresosAdo
                 Database::getInstance()->getDb()->rollBack();
                 return "nodata";
             }
-        } catch (PDOException $ex) {
+        } catch (Exception $ex) {
             Database::getInstance()->getDb()->rollBack();
             return $ex->getMessage();
         }
@@ -1458,6 +1480,78 @@ class IngresosAdo
                 ));
             }
 
+            return $array;
+        } catch (Exception $ex) {
+            return $ex->getMessage();
+        }
+    }
+
+    public static function ListarNotificaciones($posicionPagina, $filasPorPagina)
+    {
+        try {
+            $array = array();
+
+
+            $cmdIngreso = Database::getInstance()->getDb()->prepare("SELECT 
+            td.Nombre,       
+			i.Serie,
+			i.NumRecibo,
+            CASE i.Estado WHEN 'A' THEN 'Dar de Baja' ELSE 'Por Declarar' END AS Estado,
+			i.Fecha,
+			i.Hora
+            FROM Ingreso AS i
+            INNER JOIN TipoComprobante AS td ON td.IdTipoComprobante = i.TipoComprobante
+			WHERE ISNULL(i.Xmlsunat,'') <> '0' AND ISNULL(i.Xmlsunat,'') <> '1032'
+			UNION
+            SELECT 
+            td.Nombre,       
+			i.Serie,
+			i.NumRecibo,
+            'Por Declarar' AS Estado,
+			i.Fecha,
+			i.Hora
+            FROM NotaCredito AS i
+            INNER JOIN TipoComprobante AS td ON td.IdTipoComprobante = i.TipoComprobante
+			WHERE ISNULL(i.Xmlsunat,'') <> '0' AND ISNULL(i.Xmlsunat,'') <> '1032'
+			ORDER BY Fecha DESC,Hora DESC 
+			offset ? ROWS FETCH NEXT ? ROWS only");
+            $cmdIngreso->bindParam(1, $posicionPagina, PDO::PARAM_INT);
+            $cmdIngreso->bindParam(2, $filasPorPagina, PDO::PARAM_INT);
+            $cmdIngreso->execute();
+            $arrayNotificaciones = array();
+            $count = 0;
+            while ($row = $cmdIngreso->fetch()) {
+                $count++;
+                array_push($arrayNotificaciones, array(
+                    "Id" => $count + $posicionPagina,
+                    "Nombre" => $row["Nombre"],
+                    "Serie" => $row["Serie"],
+                    "NumRecibo" => $row["NumRecibo"],
+                    "Estado" => $row["Estado"],
+                    "Fecha" => $row["Fecha"],
+                    "Hora" => $row["Hora"]
+                ));
+            }
+
+
+            $comandoTotal = Database::getInstance()->getDb()->prepare("SELECT 
+            count(i.idIngreso) as Total
+               FROM Ingreso AS i
+               INNER JOIN TipoComprobante AS td ON td.IdTipoComprobante = i.TipoComprobante
+               WHERE ISNULL(i.Xmlsunat,'') <> '0' AND ISNULL(i.Xmlsunat,'') <> '1032'
+               union
+            SELECT 
+               count(i.idNotaCredito) as Total
+               FROM NotaCredito AS i
+               INNER JOIN TipoComprobante AS td ON td.IdTipoComprobante = i.TipoComprobante
+               WHERE ISNULL(i.Xmlsunat,'') <> '0' AND ISNULL(i.Xmlsunat,'') <> '1032'");
+            $comandoTotal->execute();
+            $resultTotal = 0;
+            while ($row = $comandoTotal->fetch()) {
+                $resultTotal +=  $row["Total"];
+            }
+
+            array_push($array, $arrayNotificaciones, $resultTotal);
             return $array;
         } catch (Exception $ex) {
             return $ex->getMessage();

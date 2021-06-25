@@ -466,45 +466,47 @@ if (!isset($_SESSION['IdUsuario'])) {
                             for (let rol of result.roles) {
                                 $("#rol").append('<option value="' + rol.IdRol + '">' + rol.Nombre + '</option>');
                             }
-                            $.ajax({
-                                url: "../app/controller/UsuarioController.php",
-                                method: "GET",
-                                data: {
-                                    "type": "usuario",
-                                    "idUsuario": id
-                                },
-                                beforeSend: function() {
-                                    idUsuario = 0;
-                                },
-                                success: function(result) {
-                                    $("#modal-user-title").empty();
-                                    $("#modal-user-title").append('<i class="fa fa-address-book"> </i> Editar Usuario');
-                                    if (result.estado == 1) {
-                                        idUsuario = id;
-                                        $("#txtAddNombres").val(result.object.Nombres);
-                                        $("#txtAddApellidos").val(result.object.Apellidos);
-                                        $("#txtAddUsuario").val(result.object.Usuario);
-                                        $("#txtClave").val(result.object.Clave);
-                                        $("#rol").val(result.object.Rol);
-                                        $("#estado").val(result.object.Estado);
-                                        tools.AlertInfo("Información", "Se cargo correctamente los datos.");
-                                    } else {
-                                        tools.AlertWarning("Advertencia", result.message);
-                                    }
-                                },
-                                error: function(error) {
-                                    $("#modal-user-title").empty();
-                                    $("#modal-user-title").append('<i class="fa fa-address-book"> </i> Editar Usuario');
-                                    tools.AlertError("Error", error.responseText);
-                                }
-                            });
+                            updateUsuarioData();
                         } else {
-                            $("#modal-user-title").empty();
-                            $("#modal-user-title").append('<i class="fa fa-address-book"> </i> Editar Usuario');
-                            tools.AlertWarning("Advertencia", "No se pudo cargar correctamente los datos.");
+
                         }
                     },
                     error: function(error) {
+                        $("#modal-user-title").empty();
+                        $("#modal-user-title").append('<i class="fa fa-address-book"> </i> Editar Usuario');
+                        tools.AlertError("Error", error.responseText);
+                    }
+                });
+            }
+
+            function updateUsuarioData() {
+                $.ajax({
+                    url: "../app/controller/UsuarioController.php",
+                    method: "GET",
+                    data: {
+                        "type": "usuario",
+                        "idUsuario": id
+                    },
+                    beforeSend: function() {
+                        idUsuario = 0;
+                    },
+                    success: function() {
+                        $("#modal-user-title").empty();
+                        $("#modal-user-title").append('<i class="fa fa-address-book"> </i> Editar Usuario');
+                        if (result.estado == 1) {
+                            idUsuario = id;
+                            $("#txtAddNombres").val(result.object.Nombres);
+                            $("#txtAddApellidos").val(result.object.Apellidos);
+                            $("#txtAddUsuario").val(result.object.Usuario);
+                            $("#txtClave").val(result.object.Clave);
+                            $("#rol").val(result.object.Rol);
+                            $("#estado").val(result.object.Estado);
+                            tools.AlertInfo("Información", "Se cargo correctamente los datos.");
+                        } else {
+                            tools.AlertWarning("Advertencia", result.message);
+                        }
+                    },
+                    error: function() {
                         $("#modal-user-title").empty();
                         $("#modal-user-title").append('<i class="fa fa-address-book"> </i> Editar Usuario');
                         tools.AlertError("Error", error.responseText);

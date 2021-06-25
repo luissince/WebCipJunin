@@ -282,6 +282,15 @@ if (!isset($_SESSION['IdUsuario'])) {
                                                 </div>
                                             </div>
                                         </div>
+                                        <div class="form-group">
+                                            <div class="radio">
+                                                <label>
+                                                    <input type="radio" name="optionsColegiado" id="brColegiados_Resolucion" value="opcion3">
+                                                    Colegiados afiliados ala resolución n° 15
+                                                </label>
+                                            </div>
+                                        </div>
+
                                     </div>
                                 </div>
 

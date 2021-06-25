@@ -21,9 +21,7 @@
                     $("#lblTituloNotificaciones").html("Tiene " + result.data.length + " notificaciones")
                     for (let value of result.data) {
                         $("#ulListaNotificaciones").append('<li>' +
-                            '<a href="#">' +
-                            '<i class="fa fa-hand-paper-o text-aqua"></i> ' + value.Cantidad + ' ' + value.Nombre + ' - ' + value.Estado + '' +
-                            '</a>' +
+                            '<a href="notificaciones.php"><i class="fa fa-hand-paper-o text-aqua"></i> ' + value.Cantidad + ' ' + value.Nombre + ' - ' + value.Estado +  '</a>' +
                             '</li>');
                     }
                 } else {
