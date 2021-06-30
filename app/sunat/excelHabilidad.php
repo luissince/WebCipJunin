@@ -5,7 +5,7 @@ ini_set("pcre.backtrack_limit", "10000000");
 ini_set('memory_limit', '-1');
 
 require __DIR__ . "/lib/phpspreadsheet/vendor/autoload.php";
-include_once('../model/ListarIngenierosAdo.php');
+include_once('../model/PersonaAdo.php');
 
 use PhpOffice\PhpSpreadsheet\IOFactory;
 use PhpOffice\PhpSpreadsheet\Spreadsheet;
@@ -13,27 +13,42 @@ use PhpOffice\PhpSpreadsheet\Style\Fill;
 use PhpOffice\PhpSpreadsheet\Style\Alignment;
 use PhpOffice\PhpSpreadsheet\Style\Border;
 
-$fechaIngreso = "LISTA COLEGIADOS HABILITADOS/NO HABILITADOS";
+$opcion = $_GET['opcion'];
+$search = $_GET['txtBuscar'];
+$tipoHabilidad = $_GET['cbHabilidad'];
+$capitulo = $_GET['cbCapitulo'];
+$especialidad = $_GET['cbEspecialidad'];
 
-$listarColegiados = ListarIngenierosAdo::allIngenieros($data);
+$subtitulo = "LISTA COLEGIADOS HABILITADOS/NO HABILITADOS";
 
-if (!is_array($resumen)) {
-    echo $resumen;
+
+$data = PersonaAdo::getHabilidadIngenieroForExcel($opcion, $search, intval($tipoHabilidad), intval($capitulo), intval($especialidad));
+
+// $data['condicion'] = $getCodicion;
+// $data['fiColegiado'] = $_GET['fiColegiado'];
+// $data['ffColegiado'] = $_GET['ffColegiado'];
+// $data['opcion'] = $_GET['opcion'];
+
+
+// $listarColegiados = ListarIngenierosAdo::allIngenieros($data);
+
+if (!is_array($data)) {
+    echo 'error';
 } else {
 
     $documento = new Spreadsheet();
     $documento
         ->getProperties()
         ->setCreator("Creado por SysSoftIntegra")
-        ->setTitle('Resumen de Aportaciones al CIP Nacional')
+        ->setTitle('Lista de Colegiados Habilitados/No Habilitados')
         ->setSubject('Reporte')
-        ->setDescription('Resumen de Aportaciones al CIP Nacional')
-        ->setKeywords('Reporte de Aportaciones')
-        ->setCategory('Aportaciones');
+        ->setDescription('Lista de Colegiados Habilitados/No Habilitados')
+        ->setKeywords('Reporte de Colegiados')
+        ->setCategory('Reporte');
 
-    $documento->getActiveSheet()->setTitle("Aportaciones");
+    $documento->getActiveSheet()->setTitle("Colegiados");
 
-    $documento->getActiveSheet()->getStyle('A1:AG1')->applyFromArray(array(
+    $documento->getActiveSheet()->getStyle('A1:K1')->applyFromArray(array(
         'borders' => array(
             'outline' => array(
                 'borderStyle' => Border::BORDER_THIN,
@@ -52,118 +67,123 @@ if (!is_array($resumen)) {
             'horizontal' => Alignment::HORIZONTAL_CENTER
         )
     ));
-    $documento->setActiveSheetIndex(0)->mergeCells('A1:AG1');
-    $documento->setActiveSheetIndex(0)->setCellValue("A1", $fechaIngreso);
+    $documento->setActiveSheetIndex(0)->mergeCells('A1:K1');
+    $documento->setActiveSheetIndex(0)->setCellValue("A1", $subtitulo);
 
-    $documento->setActiveSheetIndex(0)->mergeCells('A2:A3');
-    $documento->setActiveSheetIndex(0)->mergeCells('B2:B3');
-    $documento->setActiveSheetIndex(0)->mergeCells('C2:C3');
-    $documento->setActiveSheetIndex(0)->mergeCells('D2:D3');
-    $documento->setActiveSheetIndex(0)->mergeCells('E2:E3');
-    $documento->setActiveSheetIndex(0)->mergeCells('F2:F3');
-    $documento->setActiveSheetIndex(0)->mergeCells('G2:S2');
-    $documento->setActiveSheetIndex(0)->mergeCells('T2:AF2');
-    $documento->setActiveSheetIndex(0)->mergeCells('AG2:AG3');
-
-    $documento->getActiveSheet()->getStyle('A2:AG3')->getBorders()->getAllBorders()->setBorderStyle(Border::BORDER_THIN);
-
-    $documento->getActiveSheet()->getStyle('A2:AG3')->applyFromArray(array(
-        // 'borders' => array(
-        //     'outline' => array(
-        //         'borderStyle' => Border::BORDER_THIN,
-        //         'color' => array('argb' => '000000'),
-        //     ),
-        // ),
+    $documento->getActiveSheet()->getStyle('A2:K2')->applyFromArray(array(
+        'borders' => array(
+            'outline' => array(
+                'borderStyle' => Border::BORDER_THIN,
+                'color' => array('argb' => '000000'),
+            ),
+        ),
         'fill' => array(
             'fillType' => Fill::FILL_SOLID,
-            'startColor' => array('rgb' => 'D6D5D5')
+            'startColor' => array('rgb' => 'C4C4C4')
         ),
         'font'  => array(
             'bold'  =>  true,
             'color' => array('argb' => '000000')
         ),
         'alignment' => array(
-            'horizontal' => Alignment::HORIZONTAL_CENTER,
-            'vertical' => Alignment::VERTICAL_CENTER
+            'horizontal' => Alignment::HORIZONTAL_CENTER
         )
     ));
+
     $documento->setActiveSheetIndex(0)
         ->setCellValue("A2", "N°")
-        ->setCellValue("B2", "CAPITULO")
-        ->setCellValue("C2", "N° CIP")
-        ->setCellValue("D2", "CONDICION")
-        ->setCellValue("E2", "INGENIERO")
-        ->setCellValue("F2", "AÑO")
-        ->setCellValue("G2", "CUOTAS AL ISS CIP")
-        ->setCellValue("T2", "CUOTAS SOCIALES CIP")
-        ->setCellValue("G3", "E")
-        ->setCellValue("H3", "F")
-        ->setCellValue("I3", "M")
-        ->setCellValue("J3", "A")
-        ->setCellValue("K3", "M")
-        ->setCellValue("L3", "J")
-        ->setCellValue("M3", "J")
-        ->setCellValue("N3", "A")
-        ->setCellValue("O3", "S")
-        ->setCellValue("P3", "O")
-        ->setCellValue("Q3", "N")
-        ->setCellValue("R3", "D")
-        ->setCellValue("S3", "S1")
-        ->setCellValue("T3", "E")
-        ->setCellValue("U3", "F")
-        ->setCellValue("V3", "M")
-        ->setCellValue("W3", "A")
-        ->setCellValue("X3", "M")
-        ->setCellValue("Y3", "J")
-        ->setCellValue("Z3", "J")
-        ->setCellValue("AA3", "A")
-        ->setCellValue("AB3", "S")
-        ->setCellValue("AC3", "O")
-        ->setCellValue("AD3", "N")
-        ->setCellValue("AE3", "D")
-        ->setCellValue("AF3", "S2")
-        ->setCellValue("AG2", "T.");
+        ->setCellValue("B2", "N° CIP")
+        ->setCellValue("C2", "N° DOCUMENTO")
+        ->setCellValue("D2", "COLEGIADO")
+        ->setCellValue("E2", "CONDICION")
+        ->setCellValue("F2", "CAPITULO")
+        ->setCellValue("G2", "ESPECIALIDAD")
+        ->setCellValue("H2", "FECHA COLEGIADO")
+        ->setCellValue("I2", "FECHA ULT. CUOTA")
+        ->setCellValue("J2", "HABILIDAD")
+        ->setCellValue("K2", "HABILITADO HASTA");
 
+    $cel = 3;
+    // if ($data['Habilidad'] == "") {
+        foreach ($data as $key => $value) {
+            $documento->getActiveSheet()->getStyle('A' . $cel . ':K' . $cel)->applyFromArray(array(
+                'fill' => array(
+                    'type' => Fill::FILL_SOLID,
+                    'color' => array('rgb' => 'E5E4E2')
+                ),
+                'font'  => array(
+                    'bold'  =>  false
+                ),
+                'alignment' => array(
+                    'horizontal' => Alignment::HORIZONTAL_LEFT
+                )
+            ));
+
+            $documento->getActiveSheet()->getStyle('H' . $cel . ':I' . $cel . '', 'K'.$cel)->applyFromArray(array(
+                'font'  => array(
+                    'bold'  =>  false,
+                    'color' => array('rgb' => '000000')
+                ),
+                'alignment' => array(
+                    'horizontal' => Alignment::HORIZONTAL_CENTER
+                )
+            ));
+
+            if (strtolower($value['Habilidad']) == "habilitado") {
+                $documento->getActiveSheet()->getStyle('j' . $cel)->applyFromArray(array(
+                    'font'  => array(
+                        'bold'  =>  false,
+                        'color' => array('rgb' => '1C64C0')
+                    ),
+                    'alignment' => array(
+                        'horizontal' => Alignment::HORIZONTAL_LEFT
+                    )
+                ));
+            } else{
+                $documento->getActiveSheet()->getStyle('j' . $cel)->applyFromArray(array(
+                    'font'  => array(
+                        'bold'  =>  false,
+                        'color' => array('rgb' => 'EE2C2C')
+                    ),
+                    'alignment' => array(
+                        'horizontal' => Alignment::HORIZONTAL_LEFT
+                    )
+                ));
+            }
+
+            $documento->setActiveSheetIndex(0)
+                ->setCellValue("A" . $cel,  strval($value["Id"]))
+                ->setCellValue("B" . $cel, strval($value["Cip"]))
+                ->setCellValue("C" . $cel, strval($value["Dni"]))
+                ->setCellValue("D" . $cel, strval($value["Apellidos"].", ".$value["Nombres"]))
+                ->setCellValue("E" . $cel, strval($value["Condicion"]))
+                ->setCellValue("F" . $cel, strval($value["Capitulo"]))
+                ->setCellValue("G" . $cel, strval($value["Especialidad"]))
+                ->setCellValue("H" . $cel, strval($value["FechaColegiado"]))
+                ->setCellValue("I" . $cel, strval($value["FechaUltimaCuota"]))
+                ->setCellValue("J" . $cel, strval($value["Habilidad"]))
+                ->setCellValue("K" . $cel, strval($value["HabilitadoHasta"]));
+            $cel++;
+        }
+    // }
 
     //Ancho de las columnas
     $documento->getActiveSheet()->getColumnDimension('A')->setWidth(7);
-    $documento->getActiveSheet()->getColumnDimension('B')->setWidth(15);
-    $documento->getActiveSheet()->getColumnDimension('C')->setWidth(10);
-    $documento->getActiveSheet()->getColumnDimension('D')->setWidth(15);
-    $documento->getActiveSheet()->getColumnDimension('E')->setWidth(30);
-    $documento->getActiveSheet()->getColumnDimension('F')->setWidth(10);
-    $documento->getActiveSheet()->getColumnDimension('G')->setWidth(5);
-    $documento->getActiveSheet()->getColumnDimension('H')->setWidth(5);
-    $documento->getActiveSheet()->getColumnDimension('I')->setWidth(5);
-    $documento->getActiveSheet()->getColumnDimension('J')->setWidth(5);
-    $documento->getActiveSheet()->getColumnDimension('K')->setWidth(5);
-    $documento->getActiveSheet()->getColumnDimension('L')->setWidth(5);
-    $documento->getActiveSheet()->getColumnDimension('M')->setWidth(5);
-    $documento->getActiveSheet()->getColumnDimension('N')->setWidth(5);
-    $documento->getActiveSheet()->getColumnDimension('O')->setWidth(5);
-    $documento->getActiveSheet()->getColumnDimension('P')->setWidth(5);
-    $documento->getActiveSheet()->getColumnDimension('Q')->setWidth(5);
-    $documento->getActiveSheet()->getColumnDimension('R')->setWidth(5);
-    $documento->getActiveSheet()->getColumnDimension('S')->setWidth(5);
-    $documento->getActiveSheet()->getColumnDimension('T')->setWidth(5);
-    $documento->getActiveSheet()->getColumnDimension('U')->setWidth(5);
-    $documento->getActiveSheet()->getColumnDimension('V')->setWidth(5);
-    $documento->getActiveSheet()->getColumnDimension('W')->setWidth(5);
-    $documento->getActiveSheet()->getColumnDimension('X')->setWidth(5);
-    $documento->getActiveSheet()->getColumnDimension('Y')->setWidth(5);
-    $documento->getActiveSheet()->getColumnDimension('Z')->setWidth(5);
-    $documento->getActiveSheet()->getColumnDimension('AA')->setWidth(5);
-    $documento->getActiveSheet()->getColumnDimension('AB')->setWidth(5);
-    $documento->getActiveSheet()->getColumnDimension('AC')->setWidth(5);
-    $documento->getActiveSheet()->getColumnDimension('AD')->setWidth(5);
-    $documento->getActiveSheet()->getColumnDimension('AE')->setWidth(5);
-    $documento->getActiveSheet()->getColumnDimension('AF')->setWidth(5);
-    $documento->getActiveSheet()->getColumnDimension('AG')->setWidth(5);
+    $documento->getActiveSheet()->getColumnDimension('B')->setWidth(10);
+    $documento->getActiveSheet()->getColumnDimension('C')->setWidth(15);
+    $documento->getActiveSheet()->getColumnDimension('D')->setWidth(60);
+    $documento->getActiveSheet()->getColumnDimension('E')->setWidth(17);
+    $documento->getActiveSheet()->getColumnDimension('F')->setWidth(20);
+    $documento->getActiveSheet()->getColumnDimension('G')->setWidth(35);
+    $documento->getActiveSheet()->getColumnDimension('H')->setWidth(20);
+    $documento->getActiveSheet()->getColumnDimension('I')->setWidth(20);
+    $documento->getActiveSheet()->getColumnDimension('J')->setWidth(17);
+    $documento->getActiveSheet()->getColumnDimension('K')->setWidth(20);
 
 
     // Redirect output to a client’s web browser (Xlsx)
     header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
-    header('Content-Disposition: attachment;filename=' . $fechaIngreso.'.xlsx');
+    header('Content-Disposition: attachment;filename=' . $subtitulo . '.xlsx');
     header('Cache-Control: max-age=0');
     // If you're serving to IE 9, then the following may be needed
     header('Cache-Control: max-age=1');

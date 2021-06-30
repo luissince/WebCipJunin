@@ -277,9 +277,11 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
         $search = $_GET['search'];
         $opcion = $_GET['opcion'];
         $tipoHabilidad = $_GET['tipoHabilidad'];
+        $capitulo = $_GET['capitulo'];
+        $especialidad = $_GET['especialidad'];
         $posicionPagina = $_GET['posicionPagina'];
         $filasPorPagina = $_GET['filasPorPagina'];
-        $habilidad = PersonaAdo::getHabilidadIngeniero($opcion, $search, intval($tipoHabilidad), intval($posicionPagina), intval($filasPorPagina));
+        $habilidad = PersonaAdo::getHabilidadIngeniero($opcion, $search, intval($tipoHabilidad), intval($capitulo), intval($especialidad), intval($posicionPagina), intval($filasPorPagina));
         if (is_array($habilidad)) {
             echo json_encode(array(
                 "estado" => 1,

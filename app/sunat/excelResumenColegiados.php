@@ -91,8 +91,7 @@ if (!is_array($listarColegiados)) {
     ));
 
     $documento->setActiveSheetIndex(0)->mergeCells('A1:I1');
-    $documento->setActiveSheetIndex(0)
-        ->setCellValue("A1",  $subtitle);
+    $documento->setActiveSheetIndex(0)->setCellValue("A1",  $subtitle);
 
     $documento->getActiveSheet()->getStyle('A2:I2')->applyFromArray(array(
         'borders' => array(
