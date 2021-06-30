@@ -215,6 +215,7 @@ function CobroIngenieros() {
                                 data.persona.Condicion == 'V' ? 'Vitalicio' : 'Ordinario';
                     $("#lblCipSeleccionado").html(data.persona.CIP);
                     $("#lblTipoIngenieroSeleccionado").html(Condicion);
+                    console.log(data.persona)
                     $("#lblDocumentSeleccionado").html(data.persona.NumDoc);
 
                     $("#lblDatosSeleccionado").html(data.persona.Apellidos + " " + data.persona.Nombres);

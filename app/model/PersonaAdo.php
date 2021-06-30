@@ -238,6 +238,7 @@ class PersonaAdo
             //trae informacion del usuario (por su dni)
             $comandoPersona = Database::getInstance()->getDb()->prepare("SELECT 
             p.idDNI, 
+            p.NumDoc,
             p.idUsuario,
             p.Nombres, 
             p.Apellidos, 

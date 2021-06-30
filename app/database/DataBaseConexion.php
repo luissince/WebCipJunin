@@ -6,7 +6,8 @@
  */
 require_once 'DbCredenciales.php';
 
-class Database {
+class Database
+{
 
     /**
      * Única instancia de la clase
@@ -18,7 +19,8 @@ class Database {
      */
     private static $pdo;
 
-    final private function __construct() {
+    final private function __construct()
+    {
         try {
             // Crear nueva conexión PDO
             self::getDb();
@@ -31,7 +33,8 @@ class Database {
      * Retorna en la única instancia de la clase
      * @return Database|null
      */
-    public static function getInstance() {
+    public static function getInstance()
+    {
         if (self::$db === null) {
             self::$db = new self();
         }
@@ -43,10 +46,14 @@ class Database {
      * en los datos de conexión
      * @return PDO Objeto PDO
      */
-    public function getDb() {
+    public function getDb()
+    {
         if (self::$pdo == null) {
             self::$pdo = new PDO(
-                "sqlsrv:Server=".HOSTNAME.",".PORT.";Database=".DATABASE,USERNAME, PASSWORD, array(PDO::MYSQL_ATTR_INIT_COMMAND => "SET NAMES utf8")
+                "sqlsrv:Server=" . HOSTNAME . "," . PORT . ";Database=" . DATABASE,
+                USERNAME,
+                PASSWORD,
+                array(PDO::MYSQL_ATTR_INIT_COMMAND => "SET NAMES utf8")
             );
             // Habilitar excepciones
             self::$pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
@@ -57,12 +64,12 @@ class Database {
     /**
      * Evita la clonación del objeto
      */
-    final protected function __clone() {
-        
+    final protected function __clone()
+    {
     }
 
-    function _destructor() {
+    function _destructor()
+    {
         self::$pdo = null;
     }
-
 }
