@@ -30,7 +30,7 @@ if (!isset($_SESSION['IdUsuario'])) {
                 <section class="content">
                     <div class="row">
 
-                        <div class="col-lg-5 col-md-6 col-sm-12 col-xs-12">
+                        <div class="col-lg-3 col-md-6 col-sm-12 col-xs-12">
                             <label>Filtrar por cip,dni, apellidos y nombres.</label>
                             <div class="form-group">
                                 <div class="input-group">
@@ -42,7 +42,7 @@ if (!isset($_SESSION['IdUsuario'])) {
                             </div>
                         </div>
 
-                        <div class="col-lg-3 col-md-3 col-sm-12 col-xs-12">
+                        <div class="col-lg-2 col-md-3 col-sm-12 col-xs-12">
                             <label>Habilidad.</label>
                             <div class="form-group">
                                 <select class="form-control" id="cbTipoHabilidad">
@@ -54,14 +54,44 @@ if (!isset($_SESSION['IdUsuario'])) {
                         </div>
 
                         <div class="col-lg-2 col-md-3 col-sm-12 col-xs-12">
-                            <label>Opción.</label>
+                            <label>Capitulo.</label>
                             <div class="form-group">
-                                <button class="btn btn-warning" id="btnEnvioMasivo">
-                                    <i class="fa fa-paper-plane"></i> Envio Masivo
-                                </button>
+                                <select class="form-control select2" id="cbCapitulo">
+                                </select>
                             </div>
                         </div>
 
+                        <div class="col-lg-2 col-md-3 col-sm-12 col-xs-12">
+                            <label>Especialidad.</label>
+                            <div class="form-group">
+                                <select class="form-control select2" id="cbEspecialidad">
+                                    <option value="0">- Seleccione -</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="col-lg-3 col-md-3 col-sm-12 col-xs-12">
+
+                            <div class="col-lg-6">
+                                <label>Opción.</label>
+                                <div class="form-group">
+                                    <button class="btn btn-warning" id="btnEnvioMasivo">
+                                        <i class="fa fa-paper-plane"></i> Envio Masivo
+                                    </button>
+                                </div>
+                            </div>
+
+                            <div class="col-lg-6">
+                                <label>Exportar.</label>
+                                <div class="form-group">
+                                    <button class="btn btn-success" id="btnExportExcel">
+                                        <i class="fa fa-file-excel-o"></i> Exportar Excel
+                                    </button>
+                                </div>
+                            </div>
+
+
+                        </div>
                         <!-- <div class="col-lg-2 col-md-3 col-sm-12 col-xs-12">
                             <label>Excel.</label>
                             <div class="form-group">
@@ -141,6 +171,10 @@ if (!isset($_SESSION['IdUsuario'])) {
 
             $(document).ready(function() {
 
+                loadCapitulos();
+
+                // loadEspecialidades($("#cbCapitulo").val());
+
                 loadInitHabilidad();
 
                 $("#btnIzquierda").click(function() {
@@ -165,25 +199,69 @@ if (!isset($_SESSION['IdUsuario'])) {
                     if (event.keyCode === 13) {
                         if (!state) {
                             paginacion = 1;
-                            loadTableHabilidad(1, $("#txtBuscar").val(), 0);
+                            loadTableHabilidad(1, $("#txtBuscar").val(), 0, 0, 0);
                             opcion = 1;
                         }
+                        $("#cbTipoHabilidad").val(0);
+                        $("#cbCapitulo").select2("val", "0"); 
                     }
+                    event.preventDefault();
                 });
 
                 $("#btnBuscar").click(function() {
                     if (!state) {
                         paginacion = 1;
-                        loadTableHabilidad(1, $("#txtBuscar").val(), 0);
+                        loadTableHabilidad(1, $("#txtBuscar").val(), 0, 0, 0);
                         opcion = 1;
+                        $("#cbTipoHabilidad").val(0);
+                        $("#cbCapitulo").select2("val", "0"); 
                     }
                 });
 
                 $("#cbTipoHabilidad").change(function() {
                     if (!state) {
-                        paginacion = 1;
-                        loadTableHabilidad(2, $("#txtBuscar").val(), $("#cbTipoHabilidad").val());
-                        opcion = 2;
+                        if ($("#cbCapitulo").val() != 0) {
+                            paginacion = 1;
+                            loadTableHabilidad(3, '', $("#cbTipoHabilidad").val(), $("#cbCapitulo").val(), 0);
+                            opcion = 3;
+                        } else {
+                            
+                            paginacion = 1;
+                            loadTableHabilidad(2, '', $("#cbTipoHabilidad").val(), 0, 0);
+                            opcion = 2;
+                        }
+                        $("#txtBuscar").val('');
+                    }
+                });
+
+                $("#cbCapitulo").change(function() {
+                    loadEspecialidades($("#cbCapitulo").val());
+                    if (!state) {
+                        if ($("#cbCapitulo").val() != 0) {
+                            paginacion = 1;
+                            loadTableHabilidad(3, $("#txtBuscar").val(), $("#cbTipoHabilidad").val(), $("#cbCapitulo").val(), 0);
+                            opcion = 3;
+                        } else {
+                            paginacion = 1;
+                            loadTableHabilidad(2, $("#txtBuscar").val(), $("#cbTipoHabilidad").val(), 0, 0);
+                            opcion = 2;
+                        }
+                        $("#txtBuscar").val('');
+                    }
+                });
+
+                $("#cbEspecialidad").change(function() {
+                    if (!state) {
+                        if ($("#cbEspecialidad").val() != 0) {
+                            paginacion = 1;
+                            loadTableHabilidad(4, $("#txtBuscar").val(), $("#cbTipoHabilidad").val(), $("#cbCapitulo").val(), $("#cbEspecialidad").val());
+                            opcion = 4;
+                        } else {
+                            paginacion = 1;
+                            loadTableHabilidad(3, $("#txtBuscar").val(), $("#cbTipoHabilidad").val(), $("#cbCapitulo").val(), 0);
+                            opcion = 3;
+                        }
+
                     }
                 });
 
@@ -196,18 +274,63 @@ if (!isset($_SESSION['IdUsuario'])) {
                         }
                     });
                 });
+
+                $("#btnExportExcel").click(function() {
+
+                    if ($("#txtBuscar").val() == '' && $("#cbTipoHabilidad").val() == 0 && $("#cbCapitulo").val() == 0 && $("#cbEspecialidad").val() == 0) {
+                        openExcelHabilidad(0, '', 0, 0, 0);
+                        console.log(0)
+                    } else if ($("#txtBuscar").val() != '' && $("#cbTipoHabilidad").val() == 0 && $("#cbCapitulo").val() == 0 && $("#cbEspecialidad").val() == 0) {
+                        openExcelHabilidad(1,'',$("#txtBuscar").val(), 0, 0, 0)
+                        console.log(1)
+                    } else if($("#txtBuscar").val() == '' && $("#cbTipoHabilidad").val() != 0 && $("#cbCapitulo").val() == 0 && $("#cbEspecialidad").val() == 0){
+                        openExcelHabilidad(2, '', $("#cbTipoHabilidad").val(), 0, 0);
+                        console.log(2)
+                    } else if($("#txtBuscar").val() == '' && $("#cbTipoHabilidad").val() != 0 && $("#cbCapitulo").val() != 0 && $("#cbEspecialidad").val() == 0){
+                        openExcelHabilidad(3, '', $("#cbTipoHabilidad").val(), $("#cbCapitulo").val(), 0);
+                        console.log(3)
+                    } else if($("#txtBuscar").val() == '' && $("#cbTipoHabilidad").val() != 0 && $("#cbCapitulo").val() != 0 && $("#cbEspecialidad").val() != 0){
+                        openExcelHabilidad(4, '', $("#cbTipoHabilidad").val(), $("#cbCapitulo").val(), $("#cbEspecialidad").val());
+                        console.log(4)
+                    }
+
+              
+
+
+                    // if ($("#txtBuscar").val() == '' && $("#cbTipoHabilidad").val() == 0 && $("#cbCapitulo").val() == 0 && $("#cbEspecialidad").val() == 0) {
+                    //     openExcelHabilidad(0, '', 0, 0, 0);
+                    // } else if ($("#txtBuscar").val() != '' && $("#cbTipoHabilidad").val() == 0 && $("#cbCapitulo").val() == 0 && $("#cbEspecialidad").val() == 0) {
+                    //     openExcelHabilidad(1, $("#txtBuscar").val(), 0, 0, 0);
+                    // } else if ($("#txtBuscar").val() != '' && $("#cbTipoHabilidad").val() != 0 && $("#cbCapitulo").val() == 0 && $("#cbEspecialidad").val() == 0) {
+                    //     openExcelHabilidad(2, $("#txtBuscar").val(), $("#cbTipoHabilidad").val(), 0, 0);
+                    // } else if ($("#txtBuscar").val() != '' && $("#cbTipoHabilidad").val() != 0 && $("#cbCapitulo").val() != 0 && $("#cbEspecialidad").val() == 0) {
+                    //     openExcelHabilidad(3, $("#txtBuscar").val(), $("#cbTipoHabilidad").val(), $("#cbCapitulo").val(), 0);
+                    // } else if ($("#txtBuscar").val() != '' && $("#cbTipoHabilidad").val() != 0 && $("#cbCapitulo").val() == 0 && $("#cbEspecialidad").val() != 0) {
+                    //     openExcelHabilidad(4, $("#txtBuscar").val(), $("#cbTipoHabilidad").val(), $("#cbCapitulo").val(), $("#cbEspecialidad").val());
+                    // } else if ($("#txtBuscar").val() == '' && $("#cbTipoHabilidad").val() != 0 && $("#cbCapitulo").val() == 0 && $("#cbEspecialidad").val() == 0) {
+                    //     loadTableHabilidad(2, $("#txtBuscar").val(), $("#cbTipoHabilidad").val(), 0, 0);
+                    // } else if($("#txtBuscar").val() == '' &&){
+
+                    // }
+                });
             });
 
             function onEventPaginacion() {
                 switch (opcion) {
                     case 0:
-                        loadTableHabilidad(0, "", 0);
+                        loadTableHabilidad(0, "", 0, 0, 0);
                         break;
                     case 1:
-                        loadTableHabilidad(1, $("#txtBuscar").val(), 0);
+                        loadTableHabilidad(1, $("#txtBuscar").val(), 0, 0, 0);
                         break;
                     case 2:
-                        loadTableHabilidad(2, $("#txtBuscar").val(), $("#cbTipoHabilidad").val());
+                        loadTableHabilidad(2, $("#txtBuscar").val(), $("#cbTipoHabilidad").val(), 0, 0);
+                        break;
+                    case 3:
+                        loadTableHabilidad(3, $("#txtBuscar").val(), $("#cbTipoHabilidad").val(), $("#cbCapitulo").val(), 0);
+                        break;
+                    case 4:
+                        loadTableHabilidad(4, $("#txtBuscar").val(), $("#cbTipoHabilidad").val(), $("#cbCapitulo").val(), $("#cbEspecialidad").val());
                         break;
                 }
             }
@@ -215,12 +338,12 @@ if (!isset($_SESSION['IdUsuario'])) {
             function loadInitHabilidad() {
                 if (!state) {
                     paginacion = 1;
-                    loadTableHabilidad(0, "", 0);
+                    loadTableHabilidad(0, "", 0, 0, 0);
                     opcion = 0;
                 }
             }
 
-            function loadTableHabilidad(opcion, search, tipoHabilidad) {
+            function loadTableHabilidad(opcion, search, tipoHabilidad, capitulo, especialidad) {
                 $.ajax({
                     url: "../app/controller/PersonaController.php",
                     method: "GET",
@@ -229,6 +352,8 @@ if (!isset($_SESSION['IdUsuario'])) {
                         "opcion": opcion,
                         "search": search,
                         "tipoHabilidad": tipoHabilidad,
+                        "capitulo": capitulo,
+                        "especialidad": especialidad,
                         "posicionPagina": ((paginacion - 1) * filasPorPagina),
                         "filasPorPagina": filasPorPagina
                     },
@@ -258,7 +383,7 @@ if (!isset($_SESSION['IdUsuario'])) {
                                     let ultimopago = habilidad.UltimaCuota;
                                     /* let ultimopago = (habilidad.FechaUltimaCuota).split('/').reverse().join('-');*/
 
-                                    let btnEnviar = '<button class="btn btn-warning btn-xs" onclick="actualizarHabilidad(\'' + habilidad.Cip + '\',\'' + habilidad.Apellidos + '\',\'' + habilidad.Nombres + '\',\'' + habilidad.CodigoCondicion + '\',\'' + habilidad.Colegiatura + '\',\'' + ultimopago + '\',\'' + habilidad.Especialidad + '\',\''+habilidad.Capitulo+'\')">' +
+                                    let btnEnviar = '<button class="btn btn-warning btn-xs" onclick="actualizarHabilidad(\'' + habilidad.Cip + '\',\'' + habilidad.Apellidos + '\',\'' + habilidad.Nombres + '\',\'' + habilidad.CodigoCondicion + '\',\'' + habilidad.Colegiatura + '\',\'' + ultimopago + '\',\'' + habilidad.Especialidad + '\',\'' + habilidad.Capitulo + '\')">' +
                                         '<i class="fa  fa-history" style="font-size:25px;"></i> ' +
                                         '</button>';
 
@@ -338,7 +463,7 @@ if (!isset($_SESSION['IdUsuario'])) {
                         "ultimopago": ultimopago,
                         "sede": "JUNIN",
                         "especialidad": especialidad,
-                        "capitulo":capitulo
+                        "capitulo": capitulo
                     },
                     beforeSend: function() {
                         tools.ModalAlertInfo("Habilidad", "Procesando petición...");
@@ -354,6 +479,65 @@ if (!isset($_SESSION['IdUsuario'])) {
                         tools.ModalAlertError("Habilidad", "Se produjo un error en actualizar la habilidad. Tiempo de conexión agotada, intente nuevamente.");
                     }
                 });
+            }
+
+            function loadCapitulos() {
+                $.ajax({
+                    url: "../app/controller/CapituloController.php",
+                    method: "GET",
+                    data: {
+                        "type": "allCapitulos"
+                    },
+                    beforeSend: function() {
+                        $("#cbCapitulo").empty();
+                    },
+                    success: function(result) {
+                        if (result.estado == 1) {
+                            $("#cbCapitulo").append('<option value="0">- Seleccione -</option>');
+                            for (let value of result.capitulos) {
+                                $("#cbCapitulo").append('<option value="' + value.idCapitulo + '">' + value.Capitulo + '</option>');
+                            }
+                            $('#cbCapitulo').select2();
+                        } else {
+                            $("#cbCapitulo").append('<option value="">- Seleccione -</option>');
+                        }
+                    },
+                    error: function(error) {
+                        $("#cbCapitulo").append('<option value="">- Seleccione -</option>');
+                    }
+                });
+            }
+
+            function loadEspecialidades(idCapitulo) {
+                $.ajax({
+                    url: "../app/controller/CapituloController.php",
+                    method: "GET",
+                    data: {
+                        "type": "allEspecialidades",
+                        "idCapitulo": idCapitulo
+                    },
+                    beforeSend: function() {
+                        $("#cbEspecialidad").empty();
+                    },
+                    success: function(result) {
+                        if (result.estado == 1) {
+                            $("#cbEspecialidad").append('<option value="">- Seleccione -</option>');
+                            for (let value of result.especialidades) {
+                                $("#cbEspecialidad").append('<option value="' + value.idEspecialidad + '">' + value.Especialidad + '</option>');
+                            }
+                            $('#cbEspecialidad').select2();
+                        } else {
+                            $("#cbEspecialidad").append('<option value="">- Seleccione -</option>');
+                        }
+                    },
+                    error: function(error) {
+                        $("#cbEspecialidad").append('<option value="">- Seleccione -</option>');
+                    }
+                });
+            }
+
+            function openExcelHabilidad(opcion, buscar, habilitado, capitulo, especialidad) {
+                window.open("../app/sunat/excelHabilidad.php?opcion=" + opcion + "&txtBuscar=" + buscar + "&cbHabilidad=" + habilitado + "&cbCapitulo=" + capitulo + "&cbEspecialidad=" + especialidad, "_blank");
             }
         </script>
     </body>

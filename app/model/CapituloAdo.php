@@ -68,7 +68,20 @@ class CapituloAdo
     public static function getAllDistinctEspecialidades()
     {
         try {
-            $comandoEspecialidad = Database::getInstance()->getDb()->prepare("SELECT DISTINCT Especialidad from Especialidad");
+            $comandoEspecialidad = Database::getInstance()->getDb()->prepare("SELECT DISTINCT idEspecialidad,Especialidad from Especialidad");
+            $comandoEspecialidad->execute();
+            $resultado = $comandoEspecialidad->fetchAll();
+            return $resultado;
+        } catch (Exception $ex) {
+            return $ex->getMessage();
+        }
+    }
+
+    public static function getAllEspecialidadesByCapitulo($idCapitulo)
+    {
+        try {
+            $comandoEspecialidad = Database::getInstance()->getDb()->prepare("SELECT DISTINCT idEspecialidad,Especialidad from Especialidad WHERE idCapitulo = ?");
+            $comandoEspecialidad->bindParam(1, $idCapitulo, PDO::PARAM_INT);
             $comandoEspecialidad->execute();
             $resultado = $comandoEspecialidad->fetchAll();
             return $resultado;

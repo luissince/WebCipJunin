@@ -36,6 +36,19 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
                 "message" => $capitulos
             ));
         }
+    } else if ($_GET["type"] === "allEspecialidades"){
+        $especialidades = CapituloAdo::getAllEspecialidadesByCapitulo($_GET["idCapitulo"] );
+        if (is_array($especialidades)) {
+            echo json_encode(array(
+                "estado" => 1,
+                "especialidades" => $especialidades,
+            ));
+        } else {
+            echo json_encode(array(
+                "estado" => 2,
+                "message" => $especialidades
+            ));
+        }
     }
 } else if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     if ($_POST["type"] === "insertCapitulo") {
