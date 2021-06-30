@@ -466,7 +466,7 @@ if (!isset($_SESSION['IdUsuario'])) {
                             for (let rol of result.roles) {
                                 $("#rol").append('<option value="' + rol.IdRol + '">' + rol.Nombre + '</option>');
                             }
-                            updateUsuarioData();
+                            updateUsuarioData(id);
                         } else {
 
                         }
@@ -479,7 +479,7 @@ if (!isset($_SESSION['IdUsuario'])) {
                 });
             }
 
-            function updateUsuarioData() {
+            function updateUsuarioData(id) {
                 $.ajax({
                     url: "../app/controller/UsuarioController.php",
                     method: "GET",
@@ -490,7 +490,7 @@ if (!isset($_SESSION['IdUsuario'])) {
                     beforeSend: function() {
                         idUsuario = 0;
                     },
-                    success: function() {
+                    success: function(result) {
                         $("#modal-user-title").empty();
                         $("#modal-user-title").append('<i class="fa fa-address-book"> </i> Editar Usuario');
                         if (result.estado == 1) {

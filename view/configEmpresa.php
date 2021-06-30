@@ -258,7 +258,7 @@ if (!isset($_SESSION['IdUsuario'])) {
 
             function LoadDataEmpresa() {
                 $.ajax({
-                    url: "../app/controller/configEmpresaController.php",
+                    url: "../app/controller/ConfigEmpresaController.php",
                     method: "GET",
                     data: {
 

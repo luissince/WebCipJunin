@@ -15,7 +15,7 @@ class NotaCreditoAdo
             nc.Hora, 
             nc.Serie, 
             nc.NumRecibo, 
-            isnull(ep.NumeroRuc,p.idDNI) AS NumeroDocumento,
+            isnull(ep.NumeroRuc,p.NumDoc) AS NumeroDocumento,
             isnull(ep.Nombre,concat(p.Apellidos,' ',p.Nombres)) AS Persona,
             i.Serie AS SerieModificado,
             i.NumRecibo AS NumeracionModificado,
@@ -40,7 +40,7 @@ class NotaCreditoAdo
             OR
             ($opcion = 2 AND CONCAT(nc.Serie,'-',nc.NumRecibo) LIKE CONCAT(?,'%'))
             OR
-            ($opcion = 2 AND  isnull(ep.NumeroRuc,p.idDNI) LIKE CONCAT(?,'%'))
+            ($opcion = 2 AND  isnull(ep.NumeroRuc,p.NumDoc) LIKE CONCAT(?,'%'))
             OR
             ($opcion = 2 AND isnull(ep.Nombre,concat(p.Apellidos,' ',p.Nombres)) LIKE CONCAT(?,'%'))
             GROUP BY 
@@ -50,7 +50,7 @@ class NotaCreditoAdo
             nc.Serie, 
             nc.NumRecibo,
             ep.NumeroRuc,
-            p.idDNI,
+            p.NumDoc,
             ep.Nombre,
             p.Apellidos,
             p.Nombres,
@@ -99,17 +99,19 @@ class NotaCreditoAdo
             INNER JOIN Persona AS p ON p.idDNI = i.idDNI
             LEFT JOIN EmpresaPersona AS ep ON ep.IdEmpresa =i.idEmpresaPersona
             WHERE
-            $opcion = 0 AND nc.Fecha BETWEEN ? AND ?
+            ($opcion = 0)
             OR
-            ($opcion = 1 AND nc.Serie LIKE CONCAT(?,'%'))
+            ($opcion = 1 AND nc.Fecha BETWEEN ? AND ?)
             OR
-            ($opcion = 1 AND nc.NumRecibo LIKE CONCAT(?,'%'))
+            ($opcion = 2 AND nc.Serie LIKE CONCAT(?,'%'))
             OR
-            ($opcion = 1 AND CONCAT(nc.Serie,'-',nc.NumRecibo) LIKE CONCAT(?,'%'))
+            ($opcion = 2 AND nc.NumRecibo LIKE CONCAT(?,'%'))
             OR
-            ($opcion = 1 AND  isnull(ep.NumeroRuc,p.idDNI) LIKE CONCAT(?,'%'))
+            ($opcion = 2 AND CONCAT(nc.Serie,'-',nc.NumRecibo) LIKE CONCAT(?,'%'))
             OR
-            ($opcion = 1 AND isnull(ep.Nombre,concat(p.Apellidos,' ',p.Nombres)) LIKE CONCAT(?,'%'))");
+            ($opcion = 2 AND  isnull(ep.NumeroRuc,p.NumDoc) LIKE CONCAT(?,'%'))
+            OR
+            ($opcion = 2 AND isnull(ep.Nombre,concat(p.Apellidos,' ',p.Nombres)) LIKE CONCAT(?,'%'))");
             $comandoTotal->bindParam(1, $fechaInicio, PDO::PARAM_STR);
             $comandoTotal->bindParam(2, $fechaFinal, PDO::PARAM_STR);
             $comandoTotal->bindParam(3, $buscar, PDO::PARAM_STR);

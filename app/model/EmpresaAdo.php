@@ -75,8 +75,15 @@ class EmpresaAdo
         try {
             $array = array();
             $arrayEmpresas = array();
-            $comandoEmpresas = Database::getInstance()->getDb()->prepare("SELECT IdEmpresa, NumeroRuc, UPPER(Nombre) AS Nombre, UPPER(Direccion) AS Direccion, Telefono, LOWER(PaginaWeb) AS PaginaWeb, 
-            LOWER(Email) AS Email from EmpresaPersona
+            $comandoEmpresas = Database::getInstance()->getDb()->prepare("SELECT 
+            IdEmpresa, 
+            NumeroRuc, 
+            UPPER(Nombre) AS Nombre, 
+            UPPER(Direccion) AS Direccion, 
+            Telefono, 
+            LOWER(PaginaWeb) AS PaginaWeb, 
+            LOWER(Email) AS Email 
+            FROM EmpresaPersona
             WHERE Nombre like concat('%', ?,'%') or NumeroRuc like concat('%', ?,'%')
             ORDER BY IdEmpresa ASC
             offset ? rows fetch next ? rows only");
@@ -120,10 +127,10 @@ class EmpresaAdo
             $cmdEmpresa = Database::getInstance()->getDb()->prepare("SELECT IdEmpresa, NumeroRuc, UPPER(Nombre) AS Nombre, UPPER(Direccion) AS Direccion, Telefono, LOWER(PaginaWeb) AS PaginaWeb, 
             LOWER(Email) AS Email from EmpresaPersona
             WHERE IdEmpresa = ?");
-             $cmdEmpresa->bindParam(1, $idEmpresa, PDO::PARAM_INT);
-             $cmdEmpresa->execute();
-             $resultEmpresa = $cmdEmpresa->fetchObject();
-             return $resultEmpresa;
+            $cmdEmpresa->bindParam(1, $idEmpresa, PDO::PARAM_INT);
+            $cmdEmpresa->execute();
+            $resultEmpresa = $cmdEmpresa->fetchObject();
+            return $resultEmpresa;
         } catch (Exception $ex) {
             return $ex->getMessage();
         }
@@ -134,13 +141,12 @@ class EmpresaAdo
         try {
             Database::getInstance()->getDb()->beginTransaction();
 
-            
-                $comandoInsert = Database::getInstance()->getDb()->prepare("DELETE FROM EmpresaPersona WHERE IdEmpresa = ?");
-                $comandoInsert->bindParam(1, $idEmpresa["idEmpresa"], PDO::PARAM_STR);
-                $comandoInsert->execute();
-                Database::getInstance()->getDb()->commit();
-                return "eliminado";
-            
+
+            $comandoInsert = Database::getInstance()->getDb()->prepare("DELETE FROM EmpresaPersona WHERE IdEmpresa = ?");
+            $comandoInsert->bindParam(1, $idEmpresa["idEmpresa"], PDO::PARAM_STR);
+            $comandoInsert->execute();
+            Database::getInstance()->getDb()->commit();
+            return "eliminado";
         } catch (Exception $ex) {
             Database::getInstance()->getDb()->rollback();
             return $ex->getMessage();

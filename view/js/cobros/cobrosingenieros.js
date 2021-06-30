@@ -147,7 +147,7 @@ function CobroIngenieros() {
                             tbIngenieros.append('<tr ondblclick="onSelectedIngeniero(\'' + value.Dni + '\')">' +
                                 '<td style="">' + value.Id + '</td>' +
                                 '<td style="">' + value.Cip + '</td>' +
-                                '<td style=" text-align: center;">' + value.Dni + '</td>' +
+                                '<td style=" text-align: center;">' + value.NumDoc + '</td>' +
                                 // '<td style=" font-size:12px;">' + value.Capitulo + '</td>' +
                                 '<td style=" font-size:14px;">' + value.Ingeniero + '</td>' +
                                 '<td style=" text-align: center;">' + value.Condicion + '</td>' +
@@ -215,7 +215,7 @@ function CobroIngenieros() {
                                 data.persona.Condicion == 'V' ? 'Vitalicio' : 'Ordinario';
                     $("#lblCipSeleccionado").html(data.persona.CIP);
                     $("#lblTipoIngenieroSeleccionado").html(Condicion);
-                    $("#lblDocumentSeleccionado").html(data.persona.idDNI);
+                    $("#lblDocumentSeleccionado").html(data.persona.NumDoc);
 
                     $("#lblDatosSeleccionado").html(data.persona.Apellidos + " " + data.persona.Nombres);
                     // $("#lblDireccionSeleccionado").html("");

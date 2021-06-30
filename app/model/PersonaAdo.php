@@ -32,7 +32,7 @@ class PersonaAdo
             LEFT JOIN Especialidad AS e ON e.idEspecialidad = c.idEspecialidad
             LEFT JOIN Capitulo AS ca ON ca.idCapitulo = e.idCapitulo
             WHERE
-            p.idDNI = ?
+            p.NumDoc = ?
             OR
             p.CIP = ?
             OR
@@ -75,7 +75,7 @@ class PersonaAdo
             LEFT JOIN Especialidad AS e ON e.idEspecialidad = c.idEspecialidad
             LEFT JOIN Capitulo AS ca ON ca.idCapitulo = e.idCapitulo
             WHERE 
-            p.idDNI = ?
+            p.NumDoc = ?
             OR
             p.CIP = ?
             OR
@@ -103,7 +103,9 @@ class PersonaAdo
             $arrayPersonas = array();
             $comandoPersona = Database::getInstance()->getDb()->prepare("SELECT 
             p.CIP AS Cip, 
-            p.idDNI as Dni, p.Apellidos + ', ' + p.Nombres AS Ingeniero, 
+            p.idDNI as Dni, 
+            p.NumDoc, 
+            p.Apellidos + ', ' + p.Nombres AS Ingeniero, 
             CASE p.Condicion
             WHEN 'T' THEN 'Transeunte'
             WHEN 'F' THEN 'Fallecido'
@@ -124,7 +126,7 @@ class PersonaAdo
             LEFT JOIN Capitulo AS ca ON ca.idCapitulo = e.idCapitulo 
 			LEFT OUTER JOIN ULTIMACuota AS ul ON ul.idDNI = p.idDNI
             WHERE  
-            p.idDNI = ?
+            p.NumDoc = ?
             OR 
             p.CIP = ? 
             OR 
@@ -147,6 +149,7 @@ class PersonaAdo
                     'Id' => $count + $posicionPagina,
                     'Cip' => $row['Cip'],
                     'Dni' => $row['Dni'],
+                    'NumDoc' => $row['NumDoc'],
                     'Ingeniero' => $row['Ingeniero'],
                     'FechaColegiado' => $row['FechaColegiado'],
                     'Condicion' => $row['Condicion'],

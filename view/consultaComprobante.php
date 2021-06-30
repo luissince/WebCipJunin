@@ -35,11 +35,11 @@ if (!isset($_SESSION['IdUsuario'])) {
                         <div class="col-md-12">
                             <div class="nav-tabs-custom">
                                 <ul class="nav nav-tabs">
-                                    <li class="active"><a href="#tab_1" data-toggle="tab">Consulta Básica</a></li>
-                                    <li><a href="#tab_2" data-toggle="tab">Consulta avanzada</a></li>
+                                    <!-- <li class="active"><a href="#tab_1" data-toggle="tab">Consulta Básica</a></li> -->
+                                    <li class="active"><a href="#tab_2" data-toggle="tab">Consulta avanzada</a></li>
                                 </ul>
                                 <div class="tab-content">
-                                    <div class="tab-pane active" id="tab_1">
+                                    <!-- <div class="tab-pane active" id="tab_1">
                                         <div class="row">
                                             <div class="col-md-5">
                                                 <div class="form-group">
@@ -193,8 +193,8 @@ if (!isset($_SESSION['IdUsuario'])) {
                                             </div>
 
                                         </div>
-                                    </div>
-                                    <div class="tab-pane" id="tab_2">
+                                    </div> -->
+                                    <div class="tab-pane active" id="tab_2">
                                         <div class="row">
                                             <div class="col-md-6">
                                                 <div class="form-group">
@@ -211,13 +211,13 @@ if (!isset($_SESSION['IdUsuario'])) {
                                             <div class="col-md-6">
                                                 <label style="color: #676363;">Ruc: </label>
                                                 <div class="form-group">
-                                                    <input class="form-control" type="text" placeholder="Ingrese Usuario">
+                                                    <input id="txtRuc" class="form-control" type="text" placeholder="Ingrese su RUC">
                                                 </div>
                                             </div>
                                             <div class="col-md-6">
                                                 <label style="color: #676363;">Ruc Emisor: </label>
                                                 <div class="form-group">
-                                                    <input class="form-control" type="text" placeholder="Ingrese RUC">
+                                                    <input id="txtRucEmision" class="form-control" type="text" placeholder="Ingrese RUC">
                                                 </div>
                                             </div>
                                         </div>
@@ -225,13 +225,13 @@ if (!isset($_SESSION['IdUsuario'])) {
                                             <div class="col-md-6">
                                                 <label style="color: #676363;">usuario: </label>
                                                 <div class="form-group">
-                                                    <input class="form-control" type="text" placeholder="Ingrese RUC">
+                                                    <input id="txtUsuario" class="form-control" type="text" placeholder="Ingrese su Usuario">
                                                 </div>
                                             </div>
                                             <div class="col-md-6">
                                                 <label style="color: #676363;">Tipo: </label>
                                                 <div class="form-group">
-                                                    <input class="form-control" type="text" placeholder="Ingrese Codigo de documento (factura: 01 / boleta: 03 / etc)">
+                                                    <input id="txtTipo" class="form-control" type="text" placeholder="Ingrese Codigo de documento (factura: 01 / boleta: 03 / etc)">
                                                 </div>
                                             </div>
                                         </div>
@@ -239,13 +239,13 @@ if (!isset($_SESSION['IdUsuario'])) {
                                             <div class="col-md-6">
                                                 <label style="color: #676363;">Contraseña: </label>
                                                 <div class="form-group">
-                                                    <input class="form-control" type="text" placeholder="Ingrese Contraseña">
+                                                    <input id="txtClave" class="form-control" type="text" placeholder="Ingrese Contraseña">
                                                 </div>
                                             </div>
                                             <div class="col-md-6">
                                                 <label style="color: #676363;">Serie: </label>
                                                 <div class="form-group">
-                                                    <input class="form-control" type="text" placeholder="F001 / B001 / etc">
+                                                    <input id="txtSerie" class="form-control" type="text" placeholder="F001 / B001 / etc">
                                                 </div>
                                             </div>
                                         </div>
@@ -255,7 +255,7 @@ if (!isset($_SESSION['IdUsuario'])) {
                                             <div class="col-md-6">
                                                 <label style="color: #676363;">Correlativo: </label>
                                                 <div class="form-group">
-                                                    <input class="form-control" type="text" placeholder="ingrese correlativo (1,2,3...)">
+                                                    <input id="txtCorrelativo" class="form-control" type="text" placeholder="ingrese correlativo (1,2,3...)">
                                                 </div>
                                             </div>
                                         </div>
@@ -285,12 +285,30 @@ if (!isset($_SESSION['IdUsuario'])) {
         <script src="js/tools.js"></script>
         <script>
             $(document).ready(function() {
-                $("#codDocRecep").change(function() {
-                    $("#numDocRecep").removeAttr("readonly");
-                    console.log($("#codDocRecep").val())
-                });
-
+                loadInitConsultaAvanzada();
             });
+
+            function loadInitConsultaAvanzada() {
+                $.ajax({
+                    url: "../app/controller/ConfigEmpresaController.php",
+                    method: "GET",
+                    data: {},
+                    beforeSend: function() {
+
+                    },
+                    success: function(result) {
+                        if (result.estado == 1) {
+                            $("#txtRuc").val(result.result.NumeroDocumento);
+                            $("#txtUsuario").val(result.result.UsuarioSol);
+                            $("#txtClave").val(result.result.ClaveSol);
+                            $("#txtRucEmision").val(result.result.NumeroDocumento);
+                        }
+                    },
+                    error: function(error) {
+
+                    }
+                });
+            }
         </script>
     </body>
 

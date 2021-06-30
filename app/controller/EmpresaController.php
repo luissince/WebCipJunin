@@ -60,12 +60,12 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
         } else if ($result === "Duplicado") {
             echo json_encode(array(
                 "estado" => 2,
-                "mensaje" => "La empresa " . $data["Nombre"] . "(RUC:".$data["Ruc"].") ya se encuentra registrada",
+                "mensaje" => "La empresa " . $data["Nombre"] . "(RUC:" . $data["Ruc"] . ") ya se encuentra registrada",
             ));
         } else if ($result === "Actualizado") {
             echo json_encode(array(
                 "estado" => 3,
-                "mensaje" => "La empresa con el ruc " . $data["Nombre"] . "(RUC:".$data["Ruc"].") se actualizó correctamente",
+                "mensaje" => "La empresa con el ruc " . $data["Nombre"] . "(RUC:" . $data["Ruc"] . ") se actualizó correctamente",
             ));
         } else {
             echo json_encode(array(

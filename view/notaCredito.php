@@ -318,14 +318,6 @@ if (!isset($_SESSION['IdUsuario'])) {
                 listarNotasCredito();
             });
 
-            function listarNotasCredito() {
-                if (!state) {
-                    paginacion = 1;
-                    loadTableNotasCredito(0, "", "", "");
-                    opcion = 0;
-                }
-            }
-
             function onEventPaginacion() {
                 switch (opcion) {
                     case 0:
@@ -337,6 +329,14 @@ if (!isset($_SESSION['IdUsuario'])) {
                     case 2:
                         loadTableNotasCredito(2, $("#txtBuscar").val().trim(), "", "");
                         break;
+                }
+            }
+
+            function listarNotasCredito() {
+                if (!state) {
+                    paginacion = 1;
+                    loadTableNotasCredito(0, "", "", "");
+                    opcion = 0;
                 }
             }
 
@@ -370,7 +370,7 @@ if (!isset($_SESSION['IdUsuario'])) {
                                 tbTable.append(
                                     '<tr class="text-center"><td colspan="10"><p>No hay comprobantes para mostrar.</p></td></tr>'
                                 );
-                                $("#lblPaginaActual").html("0");
+                                $("#lblPaginaActual").html(0);
                                 $("#lblPaginaSiguiente").html(0);
                                 state = false;
                             } else {
@@ -516,8 +516,6 @@ if (!isset($_SESSION['IdUsuario'])) {
                     }
                 });
             }
-
-            
         </script>
     </body>
 
