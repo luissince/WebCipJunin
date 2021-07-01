@@ -43,6 +43,8 @@ if ($_GET["opcion"] == 1) {
         $condicion =  "50 AÑOS";
     }
     $subtitle = "REPORTE DE COLEGIADOS QUE VAN A CUMPLIR " . $condicion . " DEL AÑO " . $_GET["fiColegiado"];
+} else if ($_GET["opcion"] == 4) {
+    $subtitle = "REPORTE DE COLEGIADOS AFILIADOS A LA RESOLUCION N° 15";
 }
 
 
@@ -70,48 +72,93 @@ if (!is_array($listarColegiados)) {
 
     $documento->getActiveSheet()->setTitle("Colegiados");
 
-    $documento->getActiveSheet()->getStyle('A1:I1')->applyFromArray(array(
-        'borders' => array(
-            'outline' => array(
-                'borderStyle' => Border::BORDER_THIN,
-                'color' => array('argb' => '000000'),
+    if ($data['opcion'] == 4) {
+        $documento->getActiveSheet()->getStyle('A1:K1')->applyFromArray(array(
+            'borders' => array(
+                'outline' => array(
+                    'borderStyle' => Border::BORDER_THIN,
+                    'color' => array('argb' => '000000'),
+                ),
             ),
-        ),
-        'fill' => array(
-            'fillType' => Fill::FILL_SOLID,
-            'startColor' => array('argb' => '006ac1')
-        ),
-        'font'  => array(
-            'bold'  =>  true,
-            'color' => array('argb' => 'ffffff')
-        ),
-        'alignment' => array(
-            'horizontal' => Alignment::HORIZONTAL_CENTER
-        )
-    ));
-
-    $documento->setActiveSheetIndex(0)->mergeCells('A1:I1');
-    $documento->setActiveSheetIndex(0)->setCellValue("A1",  $subtitle);
-
-    $documento->getActiveSheet()->getStyle('A2:I2')->applyFromArray(array(
-        'borders' => array(
-            'outline' => array(
-                'borderStyle' => Border::BORDER_THIN,
-                'color' => array('argb' => '000000'),
+            'fill' => array(
+                'fillType' => Fill::FILL_SOLID,
+                'startColor' => array('argb' => '006ac1')
             ),
-        ),
-        'fill' => array(
-            'fillType' => Fill::FILL_SOLID,
-            'startColor' => array('rgb' => 'C4C4C4')
-        ),
-        'font'  => array(
-            'bold'  =>  true,
-            'color' => array('argb' => '000000')
-        ),
-        'alignment' => array(
-            'horizontal' => Alignment::HORIZONTAL_CENTER
-        )
-    ));
+            'font'  => array(
+                'bold'  =>  true,
+                'color' => array('argb' => 'ffffff')
+            ),
+            'alignment' => array(
+                'horizontal' => Alignment::HORIZONTAL_CENTER
+            )
+        ));
+
+        $documento->setActiveSheetIndex(0)->mergeCells('A1:K1');
+        $documento->setActiveSheetIndex(0)->setCellValue("A1",  $subtitle);
+
+        $documento->getActiveSheet()->getStyle('A2:K2')->applyFromArray(array(
+            'borders' => array(
+                'outline' => array(
+                    'borderStyle' => Border::BORDER_THIN,
+                    'color' => array('argb' => '000000'),
+                ),
+            ),
+            'fill' => array(
+                'fillType' => Fill::FILL_SOLID,
+                'startColor' => array('rgb' => 'C4C4C4')
+            ),
+            'font'  => array(
+                'bold'  =>  true,
+                'color' => array('argb' => '000000')
+            ),
+            'alignment' => array(
+                'horizontal' => Alignment::HORIZONTAL_CENTER
+            )
+        ));
+    } else {
+        $documento->getActiveSheet()->getStyle('A1:I1')->applyFromArray(array(
+            'borders' => array(
+                'outline' => array(
+                    'borderStyle' => Border::BORDER_THIN,
+                    'color' => array('argb' => '000000'),
+                ),
+            ),
+            'fill' => array(
+                'fillType' => Fill::FILL_SOLID,
+                'startColor' => array('argb' => '006ac1')
+            ),
+            'font'  => array(
+                'bold'  =>  true,
+                'color' => array('argb' => 'ffffff')
+            ),
+            'alignment' => array(
+                'horizontal' => Alignment::HORIZONTAL_CENTER
+            )
+        ));
+
+        $documento->setActiveSheetIndex(0)->mergeCells('A1:I1');
+        $documento->setActiveSheetIndex(0)->setCellValue("A1",  $subtitle);
+
+        $documento->getActiveSheet()->getStyle('A2:I2')->applyFromArray(array(
+            'borders' => array(
+                'outline' => array(
+                    'borderStyle' => Border::BORDER_THIN,
+                    'color' => array('argb' => '000000'),
+                ),
+            ),
+            'fill' => array(
+                'fillType' => Fill::FILL_SOLID,
+                'startColor' => array('rgb' => 'C4C4C4')
+            ),
+            'font'  => array(
+                'bold'  =>  true,
+                'color' => array('argb' => '000000')
+            ),
+            'alignment' => array(
+                'horizontal' => Alignment::HORIZONTAL_CENTER
+            )
+        ));
+    }
 
     if ($data['opcion'] == 1 || $data['opcion'] == 2) {
         $documento->setActiveSheetIndex(0)
@@ -124,6 +171,18 @@ if (!is_array($listarColegiados)) {
             ->setCellValue("G2", "FECHA COLEGIADO")
             ->setCellValue("H2", "CAPITULO")
             ->setCellValue("I2", "ESPECIALIDAD");
+    } else if ($data['opcion'] == 4) {
+        $documento->setActiveSheetIndex(0)
+            ->setCellValue("A2", "N°")
+            ->setCellValue("B2", "DNI")
+            ->setCellValue("C2", "N° CIP")
+            ->setCellValue("D2", "INGENIERO")
+            ->setCellValue("E2", "CONDICION")
+            ->setCellValue("F2", "CAPITULO")
+            ->setCellValue("G2", "ESPECIALIDAD")
+            ->setCellValue("H2", "FECHA COLEGIADO")
+            ->setCellValue("I2", "MESES DE DEUDA")
+            ->setCellValue("J2", "FECHA A VITALICIO");
     } else {
         $documento->setActiveSheetIndex(0)
             ->setCellValue("A2", "N°")
@@ -131,8 +190,8 @@ if (!is_array($listarColegiados)) {
             ->setCellValue("C2", "N° CIP")
             ->setCellValue("D2", "APELLIDOS")
             ->setCellValue("E2", "NOMBRES")
-            ->setCellValue("F2", "CAPITULO")
-            ->setCellValue("G2", "CONDICION")
+            ->setCellValue("F2", "CONDICION")
+            ->setCellValue("G2", "CAPITULO")
             ->setCellValue("H2", "FECHA COLEGIADO")
             ->setCellValue("I2", "FECHA QUE CUMPLE SUS" . $condicion);
     }
@@ -178,6 +237,55 @@ if (!is_array($listarColegiados)) {
                 ->setCellValue("I" . $cel, strval($value["Especialidad"]));
             $cel++;
         }
+    } else if ($data['opcion'] == 4) {
+        foreach ($listarColegiados as $key => $value) {
+            $count++;
+            $documento->getActiveSheet()->getStyle('A' . $cel . ':K' . $cel . '')->applyFromArray(array(
+                'fill' => array(
+                    'type' => Fill::FILL_SOLID,
+                    'color' => array('rgb' => 'E5E4E2')
+                ),
+                'font'  => array(
+                    'bold'  =>  false
+                ),
+                'alignment' => array(
+                    'horizontal' => Alignment::HORIZONTAL_LEFT
+                )
+            ));
+
+            $documento->getActiveSheet()->getStyle('I' . $cel . ':K' . $cel. '')->applyFromArray(array(
+                'font'  => array(
+                    'bold'  =>  false,
+                    'color' => array('rgb' => '000000')
+                ),
+                'alignment' => array(
+                    'horizontal' => Alignment::HORIZONTAL_CENTER
+                )
+            ));
+            $documento->getActiveSheet()->getStyle('F' . $cel . '')->applyFromArray(array(
+                'font'  => array(
+                    'bold'  =>  false,
+                    'color' => array('rgb' => '000000')
+                ),
+                'alignment' => array(
+                    'horizontal' => Alignment::HORIZONTAL_CENTER
+                )
+            ));
+
+
+            $documento->setActiveSheetIndex(0)
+                ->setCellValue("A" . $cel,  strval($count))
+                ->setCellValue("B" . $cel, strval($value["idDNI"]))
+                ->setCellValue("C" . $cel, strval($value["CIP"]))
+                ->setCellValue("D" . $cel, strval($value["Apellidos"].', '.$value["Apellidos"]))
+                ->setCellValue("E" . $cel, strval($value["Condicion"]))
+                ->setCellValue("F" . $cel, strval($value["Capitulo"]))
+                ->setCellValue("G" . $cel, strval($value["Especialidad"]))
+                ->setCellValue("H" . $cel, strval($value["FechaColegiado"]))
+                ->setCellValue("I" . $cel, strval($value["MesAumento"]). " Meses")
+                ->setCellValue("J" . $cel, strval($value["Cumple"]));
+            $cel++;
+        }
     } else {
         foreach ($listarColegiados as $key => $value) {
             $count++;
@@ -211,8 +319,8 @@ if (!is_array($listarColegiados)) {
                 ->setCellValue("C" . $cel, strval($value["CIP"]))
                 ->setCellValue("D" . $cel, strval($value["Apellidos"]))
                 ->setCellValue("E" . $cel, strval($value["Nombres"]))
-                ->setCellValue("F" . $cel, strval($value["Capitulo"]))
-                ->setCellValue("G" . $cel, strval($value["Condicion"]))
+                ->setCellValue("F" . $cel, strval($value["Condicion"]))
+                ->setCellValue("G" . $cel, strval($value["Capitulo"]))
                 ->setCellValue("H" . $cel, strval($value["FechaColegiado"]))
                 ->setCellValue("I" . $cel, strval($value["Cumple"]));
             $cel++;
@@ -221,16 +329,28 @@ if (!is_array($listarColegiados)) {
 
 
     //Ancho de las columnas
-    $documento->getActiveSheet()->getColumnDimension('A')->setWidth(7);
-    $documento->getActiveSheet()->getColumnDimension('B')->setWidth(15);
-    $documento->getActiveSheet()->getColumnDimension('C')->setWidth(10);
-    $documento->getActiveSheet()->getColumnDimension('D')->setWidth(30);
-    $documento->getActiveSheet()->getColumnDimension('E')->setWidth(30);
-    $documento->getActiveSheet()->getColumnDimension('F')->setWidth(17);
-    $documento->getActiveSheet()->getColumnDimension('G')->setWidth(20);
-    $documento->getActiveSheet()->getColumnDimension('H')->setWidth(20);
-    $documento->getActiveSheet()->getColumnDimension('I')->setWidth(35);
-
+    if ($data['opcion'] == 4) {
+        $documento->getActiveSheet()->getColumnDimension('A')->setWidth(7);
+        $documento->getActiveSheet()->getColumnDimension('B')->setWidth(15);
+        $documento->getActiveSheet()->getColumnDimension('C')->setWidth(10);
+        $documento->getActiveSheet()->getColumnDimension('D')->setWidth(50);
+        $documento->getActiveSheet()->getColumnDimension('E')->setWidth(17);
+        $documento->getActiveSheet()->getColumnDimension('F')->setWidth(20);
+        $documento->getActiveSheet()->getColumnDimension('G')->setWidth(35);
+        $documento->getActiveSheet()->getColumnDimension('H')->setWidth(20);
+        $documento->getActiveSheet()->getColumnDimension('I')->setWidth(20);
+        $documento->getActiveSheet()->getColumnDimension('J')->setWidth(20);
+    } else {
+        $documento->getActiveSheet()->getColumnDimension('A')->setWidth(7);
+        $documento->getActiveSheet()->getColumnDimension('B')->setWidth(15);
+        $documento->getActiveSheet()->getColumnDimension('C')->setWidth(10);
+        $documento->getActiveSheet()->getColumnDimension('D')->setWidth(30);
+        $documento->getActiveSheet()->getColumnDimension('E')->setWidth(30);
+        $documento->getActiveSheet()->getColumnDimension('F')->setWidth(17);
+        $documento->getActiveSheet()->getColumnDimension('G')->setWidth(20);
+        $documento->getActiveSheet()->getColumnDimension('H')->setWidth(20);
+        $documento->getActiveSheet()->getColumnDimension('I')->setWidth(35);
+    }
 
     // Redirect output to a client’s web browser (Xlsx)
     header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');

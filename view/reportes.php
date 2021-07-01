@@ -482,6 +482,12 @@ if (!isset($_SESSION['IdUsuario'])) {
                     $("#fi_colegiado").prop('disabled', false)
                 });
 
+                $("#brColegiados_Resolucion").click(function() {
+                    $("#cbCategoriaColegiado1").attr('disabled', true)
+                    $("#cbCategoriaColegiado2").attr('disabled', true)
+                    $("#fi_colegiado").attr('disabled', true)
+                });
+
                 //Radio Buttons Reporte de comprobante emitidos
                 $("#brComprobantes").click(function() {
                     $("#cbTipodeDocumento").attr('disabled', '')
@@ -559,6 +565,8 @@ if (!isset($_SESSION['IdUsuario'])) {
                         } else {
                             openExcelColegiado($("#cbCategoriaColegiado2").val(), $("#fi_colegiado").val(), '', 3);
                         }
+                    } else if ($("#brColegiados_Resolucion").is(':checked')) {
+                        openExcelColegiado('', '', '', 4);
                     }
                 });
 
@@ -582,6 +590,8 @@ if (!isset($_SESSION['IdUsuario'])) {
                         } else {
                             openPDFColegiado($("#cbCategoriaColegiado2").val(), $("#fi_colegiado").val(), '', 3);
                         }
+                    } else if ($("#brColegiados_Resolucion").is(':checked')) {
+                        openPDFColegiado('', '', '', 4);
                     }
                 });
 

@@ -11,7 +11,7 @@ class ListarIngenierosAdo
 
             if ($data['opcion'] == 1) {
                 $cmdSelect = Database::getInstance()->getDb()->prepare("SELECT 
-                p.idDNI, 
+                p.NumDoc as idDNI, 
                 p.CIP, 
                 p.Apellidos, 
                 p.Nombres, 
@@ -35,7 +35,7 @@ class ListarIngenierosAdo
                 $cmdSelect->execute();
             } else if ($data['opcion'] == 2) {
                 $cmdSelect = Database::getInstance()->getDb()->prepare("SELECT 
-                p.idDNI, 
+                p.NumDoc as idDNI, 
                 p.CIP, p.Apellidos, 
                 p.Nombres, 
                 CASE 
@@ -65,7 +65,7 @@ class ListarIngenierosAdo
                 }
 
                 $cmdSelect = Database::getInstance()->getDb()->prepare("SELECT 
-                p.idDNI,
+                p.NumDoc as idDNI,
                 p.CIP,
                 p.Apellidos, 
                 p.Nombres,            
@@ -88,6 +88,30 @@ class ListarIngenierosAdo
                 ORDER BY CONVERT(date,dateadd(month,c.MesAumento,dateadd(year, $condicion,c.FechaColegiado))) ASC");
                 $cmdSelect->bindParam(1,  $condicion, PDO::PARAM_INT);
                 $cmdSelect->bindParam(2,  $data['fiColegiado'], PDO::PARAM_STR);
+                $cmdSelect->execute();
+            } else  if($data['opcion'] == 4){
+                $cmdSelect = Database::getInstance()->getDb()->prepare("SELECT 
+                p.NumDoc as idDNI,
+                p.CIP,
+                p.Apellidos, 
+                p.Nombres,            
+                CASE 
+                WHEN p.Condicion = 'T' THEN 'TRANSEUNTE'  
+                WHEN p.Condicion = 'O' THEN 'ORDINARIO'  
+                WHEN p.Condicion = 'V' THEN 'VITALICIO'  
+                WHEN p.Condicion = 'R' THEN 'RETIRADO'  
+                WHEN p.Condicion = 'F' THEN 'FALLECIDO'
+                ELSE 'ORDINARIO' END AS Condicion,
+                CONVERT(VARCHAR,CAST(c.FechaColegiado AS DATE), 103) AS FechaColegiado,
+                CONVERT(VARCHAR,CAST(CONVERT(date,dateadd(month,c.MesAumento,dateadd(year, 30,c.FechaColegiado))) AS DATE), 103) AS Cumple,
+                ca.Capitulo,
+                e.Especialidad,
+                c.MesAumento
+                FROM Persona AS p
+                inner join Colegiatura as c on c.Principal = 1 AND P.idDNI = C.idDNI
+                inner join Especialidad AS e on e.idEspecialidad = c.idEspecialidad
+                inner join Capitulo as ca on ca.idCapitulo = e.idCapitulo
+                 where Resolucion15 <> 0 and Principal = 1");
                 $cmdSelect->execute();
             }
 
