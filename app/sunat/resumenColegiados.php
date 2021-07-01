@@ -40,6 +40,8 @@ if ($_GET["opcion"] == 1) {
         $condicion =  "50 AÑOS";
     }
     $subtitle = "REPORTE DE COLEGIADOS QUE VAN A CUMPLIR " . $condicion . " DEL AÑO " . $_GET["fiColegiado"];
+} else if ($_GET["opcion"] == 4) {
+    $subtitle = "REPORTE DE COLEGIADOS AFILIADOS A LA RESOLUCION N° 15";
 }
 
 $data['condicion'] = $getCodicion;
@@ -162,7 +164,26 @@ mpdf-->
     </thead>
     <tbody>
     ';
-    } else {
+    } else if($data['opcion'] == 4){
+        $html .= '<table class="items" width="100%" style="font-size: 8pt; border-collapse: collapse; " cellpadding="8">
+    <thead>
+        <tr>   
+            <th width="4%" >N°</th>  
+            <th width="8%" >DNI</th>        
+            <th width="8%" >N° Cip</th>
+            <th width="10%" >APELLIDOS</th>
+            <th width="10%" >NOMBRES</th>
+            <th width="10%" >CONDICION</th>
+            <th width="10%" >CAPITULO</th>
+            <th width="10%" >ESPECIALIDAD</th>
+            <th width="10%" >FECHA COLEGIADO</th>
+            <th width="9%" >MESE DE DEUDA</th>
+            <th width="10%" >FECHA A VITALICIO</th>
+        </tr>
+    </thead>
+    <tbody>
+    ';
+    }else {
         $html .= '<table class="items" width="100%" style="font-size: 8pt; border-collapse: collapse; " cellpadding="8">
         <thead>
             <tr>   
@@ -170,8 +191,9 @@ mpdf-->
                 <th width="8%" >DNI</th>        
                 <th width="8%" >N° Cip</th>
                 <th width="15%" >APELLIDOS Y NOMBRES</th>
+                <th width="10%" >CONDICION</th> 
                 <th width="10%" >CAPITULO</th>
-                <th width="10%" >CONDICION</th>                
+                <th width="10%" >ESPECIALIDAD</th>
                 <th width="10%" >FECHA COLEGIADO</th>
                 <th width="10%" >FECHA QUE CUMPLE SUS ' . $condicion . '</th>
     
@@ -194,13 +216,32 @@ mpdf-->
                 <td >' . $value["CIP"] . '</td>       
                 <td >' . $value["Apellidos"] . '</td>
                 <td >' . $value["Nombres"] . '</td>     
-                <td >' . $value["Condicion"] . '</td>
-                <td  align="center">' . $value["FechaColegiado"] . '</td>
+                <td align="center">' . $value["Condicion"] . '</td>
+                <td align="center">' . $value["FechaColegiado"] . '</td>
                 <td >' . $value["Capitulo"] . '</td>
                 <td >' . $value["Especialidad"] . '</td>
             </tr>';
         }
-    } else {
+    } else if ($data['opcion'] == 4) {
+        $count = 0;
+        foreach ($listarColegiados as $value) {
+            $count++;
+            $html .= '
+            <tr>            
+                <td align="center">' .  $count . '</td>
+                <td >' . $value["idDNI"] . '</td>
+                <td >' . $value["CIP"] . '</td>       
+                <td >' . $value["Apellidos"] . '</td>
+                <td >' . $value["Nombres"] . '</td>     
+                <td align="center">' . $value["Condicion"] . '</td>
+                <td >' . $value["Capitulo"] . '</td>
+                <td >' . $value["Especialidad"] . '</td>
+                <td align="center">' . $value["FechaColegiado"] . '</td>
+                <td >' . $value["MesAumento"] . ' Meses'.'</td>
+                <td align="center">' . $value["Cumple"] . '</td>
+            </tr>';
+        }
+    }else {
         $count = 0;
         foreach ($listarColegiados as $value) {
             $count++;
@@ -209,9 +250,10 @@ mpdf-->
                 <td align="center">' .  $count . '</td>
                 <td  align="left">' . $value["idDNI"] . '</td>
                 <td  align="left">' . $value["CIP"] . '</td>       
-                <td  align="left">' . $value["Apellidos"] . '<br>' . $value["Nombres"] . '</td>  
+                <td  align="left">' . $value["Apellidos"] . '<br>' . $value["Nombres"] . '</td>
+                <td  align="center">' . $value["Condicion"] . '</td> 
                 <td  align="left">' . $value["Capitulo"] . '</td>
-                <td  align="center">' . $value["Condicion"] . '</td>                
+                <td  align="left">' . $value["Especialidad"] . '</td>
                 <td  align="center">' . $value["FechaColegiado"] . '</td>
                 <td  align="center">' . $value["Cumple"] . '</td>
             </tr>';
@@ -260,5 +302,7 @@ mpdf-->
         $mpdf->Output("Reporte Colegiados - Condición_" . $condicion . ".pdf", 'I');
     } else if ($_GET["opcion"] == 3) {
         $mpdf->Output("Reporte Colegiados - Condición_" . $condicion . " De La Fecha: " . date("d-m-Y", strtotime($_GET["fiColegiado"])) . " al " . date("d-m-Y", strtotime($_GET["ffColegiado"])) . ".pdf", 'I');
+    } else if($_GET["opcion"] == 4){
+        $mpdf->Output("Reporte De Colegiados Afiliados A La Resolucion N° 15.pdf", 'I');
     }
 }
