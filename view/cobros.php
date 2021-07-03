@@ -382,6 +382,8 @@ if (!isset($_SESSION['IdUsuario'])) {
             //cuotas
             let cuotas = [];
             let countCurrentDate = 0;
+            let yearCurrentView = "";
+            let monthCurrentView = "";
             let tipoCuotas = 0;
             let cuotasEstate = false;
             let cuotasInicio = "";

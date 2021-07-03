@@ -43,7 +43,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
         }
     } else if ($_GET["type"] === "typecolegiatura") {
         if (intval($_GET["categoria"]) === 1) {
-            $result = ConceptoAdo::getCuotas($_GET["dni"], intval($_GET["categoria"]), intval($_GET["mes"]));
+            $result = ConceptoAdo::getCuotas($_GET["dni"], intval($_GET["categoria"]), intval($_GET["mes"]),$_GET["yearv"], $_GET["monthv"]);
             if (is_array($result)) {
                 echo json_encode(array(
                     "estado" => 1,
@@ -56,7 +56,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
                 ));
             }
         } else if (intval($_GET["categoria"]) === 2) {
-            $result = ConceptoAdo::getCuotas($_GET["dni"], intval($_GET["categoria"]), intval($_GET["mes"]));
+            $result = ConceptoAdo::getCuotas($_GET["dni"], intval($_GET["categoria"]), intval($_GET["mes"]),$_GET["yearv"], $_GET["monthv"]);
             if (is_array($result)) {
                 echo json_encode(array(
                     "estado" => 1,
@@ -69,7 +69,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
                 ));
             }
         } else if (intval($_GET["categoria"]) === 3) {
-            $result = ConceptoAdo::getCuotas($_GET["dni"], intval($_GET["categoria"]), intval($_GET["mes"]));
+            $result = ConceptoAdo::getCuotas($_GET["dni"], intval($_GET["categoria"]), intval($_GET["mes"]),$_GET["yearv"], $_GET["monthv"]);
             if (is_array($result)) {
                 echo json_encode(array(
                     "estado" => 1,
@@ -82,7 +82,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
                 ));
             }
         } else if (intval($_GET["categoria"]) === 12) {
-            $result = ConceptoAdo::getCuotas($_GET["dni"], intval($_GET["categoria"]), intval($_GET["mes"]));
+            $result = ConceptoAdo::getCuotas($_GET["dni"], intval($_GET["categoria"]), intval($_GET["mes"]),$_GET["yearv"], $_GET["monthv"]);
             if (is_array($result)) {
                 echo json_encode(array(
                     "estado" => 1,

@@ -127,7 +127,7 @@ class ConceptoAdo
         }
     }
 
-    public static function getCuotas($ingeniero, $categoria, $mes)
+    public static function getCuotas($ingeniero, $categoria, $mes, $yearCurrentView, $monthCurrentView)
     {
         try {
             $array = array();
@@ -143,22 +143,8 @@ class ConceptoAdo
 
             if ($row = $cmdCuota->fetch()) {
 
-                $cmdConceptos = "SELECT co.idConcepto,co.Concepto,co.Categoria,co.Precio       
-                from Concepto as co
-                WHERE  Categoria = ? and Estado = 1 ";
-                $cmdConceptos = Database::getInstance()->getDb()->prepare($cmdConceptos);
-                $cmdConceptos->bindParam(1, $categoria, PDO::PARAM_INT);
-                $cmdConceptos->execute();
 
-                $arryConcepto = array();
-                while ($rowc = $cmdConceptos->fetch()) {
-                    array_push($arryConcepto, array(
-                        "IdConcepto" => $rowc["idConcepto"],
-                        "Categoria" => $rowc["Categoria"],
-                        "Concepto" => $rowc["Concepto"],
-                        "Precio" => $rowc["Precio"],
-                    ));
-                }
+
 
                 $date = new DateTime($row["UltimoPago"]);
                 $date->setDate($date->format("Y"), $date->format("m"), 1);
@@ -166,10 +152,18 @@ class ConceptoAdo
                 $fechaactual = new DateTime('now');
                 if ($fechaactual < $date) {
                     $fechaactual = new DateTime($row["UltimoPago"]);
-                    $fechaactual->setDate($fechaactual->format("Y"), $fechaactual->format("m"), 1);
+                    if ($yearCurrentView == "" && $monthCurrentView == "") {
+                        $fechaactual->setDate($fechaactual->format("Y"), $fechaactual->format("m"), 1);
+                    } else {
+                        $fechaactual->setDate($yearCurrentView, $monthCurrentView, 1);
+                    }
                     $fechaactual->modify('+ ' . $mes  . ' month');
                 } else {
-                    $fechaactual->setDate($fechaactual->format("Y"), $fechaactual->format("m"), 1);
+                    if ($yearCurrentView == "" && $monthCurrentView == "") {
+                        $fechaactual->setDate($fechaactual->format("Y"), $fechaactual->format("m"), 1);
+                    } else {
+                        $fechaactual->setDate($yearCurrentView, $monthCurrentView, 1);
+                    }
                     $fechaactual->modify('+ ' . $mes  . ' month');
                 }
 
@@ -184,6 +178,24 @@ class ConceptoAdo
                         $inicio = $date->modify('+ 1 month');
                         if ($inicio <= $fechaactual) {
                             while ($inicio <= $fechaactual) {
+                                $inicioFormat = $inicio->format('Y') . '-' . $inicio->format('m') . '-' . $inicio->format('d');
+
+                                $cmdConceptos = Database::getInstance()->getDb()->prepare("SELECT co.idConcepto,co.Concepto,co.Categoria,co.Precio       
+                                FROM Concepto as co
+                                WHERE  Categoria = ? and ? between Inicio and Fin");
+                                $cmdConceptos->bindParam(1, $categoria, PDO::PARAM_INT);
+                                $cmdConceptos->bindParam(2, $inicioFormat, PDO::PARAM_STR);
+                                $cmdConceptos->execute();
+
+                                $arryConcepto = array();
+                                while ($rowc = $cmdConceptos->fetch()) {
+                                    array_push($arryConcepto, array(
+                                        "IdConcepto" => $rowc["idConcepto"],
+                                        "Categoria" => $rowc["Categoria"],
+                                        "Concepto" => $rowc["Concepto"],
+                                        "Precio" => $rowc["Precio"],
+                                    ));
+                                }
                                 array_push($array, array(
                                     "day" => $inicio->format('d'),
                                     "mes" => $inicio->format('m'),
@@ -199,6 +211,25 @@ class ConceptoAdo
                         $inicio = $date;
                         if ($inicio <= $fechaactual) {
                             while ($inicio <= $fechaactual) {
+                                $inicioFormat = $inicio->format('Y') . '-' . $inicio->format('m') . '-' . $inicio->format('d');
+
+                                $cmdConceptos = Database::getInstance()->getDb()->prepare("SELECT co.idConcepto,co.Concepto,co.Categoria,co.Precio       
+                                FROM Concepto as co
+                                WHERE Categoria = ? and ? between Inicio and Fin");
+                                $cmdConceptos->bindParam(1, $categoria, PDO::PARAM_INT);
+                                $cmdConceptos->bindParam(2, $inicioFormat, PDO::PARAM_STR);
+                                $cmdConceptos->execute();
+
+                                $arryConcepto = array();
+                                while ($rowc = $cmdConceptos->fetch()) {
+                                    array_push($arryConcepto, array(
+                                        "IdConcepto" => $rowc["idConcepto"],
+                                        "Categoria" => $rowc["Categoria"],
+                                        "Concepto" => $rowc["Concepto"],
+                                        "Precio" => $rowc["Precio"],
+                                    ));
+                                }
+
                                 array_push($array, array(
                                     "day" => $inicio->format('d'),
                                     "mes" => $inicio->format('m'),
@@ -217,6 +248,120 @@ class ConceptoAdo
             return $ex->getMessage();
         }
     }
+
+    // public static function getCuotasMob($ingeniero, $categoria, $mes, $yearCurrentView, $monthCurrentView)
+    // {
+    //     try {
+
+    //         $array = array();
+    //         $cmdCuota = Database::getInstance()->getDb()->prepare("SELECT 
+    //         cast(ISNULL(ul.FechaUltimaCuota, c.FechaColegiado)as date) as UltimoPago     
+    //         from Persona as p inner join Colegiatura as c
+    //         on p.idDNI = c.idDNI and c.Principal = 1
+    //         left outer join ULTIMACuota as ul
+    //         on p.idDNI = ul.idDNI
+    //         WHERE p.idDNI = ?");
+    //         $cmdCuota->bindParam(1, $ingeniero, PDO::PARAM_INT);
+    //         $cmdCuota->execute();
+
+    //         if ($row = $cmdCuota->fetch()) {
+
+    //             $ano = new DateTime($row["UltimoPago"]);
+    //             $hoy =  new DateTime('now');
+
+    //             while ($ano <= $hoy) {
+
+    //                 $formatano =  $ano->format('Y') . '-' . $ano->format('m') . '-' . $ano->format('d');
+
+    //                 $cmdConceptos = "SELECT co.idConcepto,co.Concepto,co.Categoria,co.Precio       
+    //                 from Concepto as co
+    //                 WHERE  Categoria = ? and ? between Inicio and Fin";
+    //                 $cmdConceptos = Database::getInstance()->getDb()->prepare($cmdConceptos);
+    //                 $cmdConceptos->bindParam(1, $categoria, PDO::PARAM_INT);
+    //                 $cmdConceptos->bindParam(2, $formatano, PDO::PARAM_STR);
+    //                 $cmdConceptos->execute();
+
+    //                 $arryConcepto = array();
+    //                 while ($rowc = $cmdConceptos->fetch()) {
+    //                     array_push($arryConcepto, array(
+    //                         "IdConcepto" => $rowc["idConcepto"],
+    //                         "Categoria" => $rowc["Categoria"],
+    //                         "Concepto" => $rowc["Concepto"],
+    //                         "Precio" => $rowc["Precio"],
+    //                     ));
+    //                 }
+
+    //                 $date = new DateTime($row["UltimoPago"]);
+    //                 $date->setDate($date->format("Y"), $date->format("m"), 1);
+
+    //                 $fechaactual = new DateTime('now');
+    //                 if ($fechaactual < $date) {
+    //                     $fechaactual = new DateTime($row["UltimoPago"]);
+    //                     if ($yearCurrentView == "" && $monthCurrentView == "") {
+    //                         $fechaactual->setDate($fechaactual->format("Y"), $fechaactual->format("m"), 1);
+    //                     } else {
+    //                         $fechaactual->setDate($yearCurrentView, $monthCurrentView, 1);
+    //                     }
+    //                     $fechaactual->modify('+ ' . $mes  . ' month');
+    //                 } else {
+    //                     if ($yearCurrentView == "" && $monthCurrentView == "") {
+    //                         $fechaactual->setDate($fechaactual->format("Y"), $fechaactual->format("m"), 1);
+    //                     } else {
+    //                         $fechaactual->setDate($yearCurrentView, $monthCurrentView, 1);
+    //                     }
+    //                     $fechaactual->modify('+ ' . $mes  . ' month');
+    //                 }
+
+    //                 $cmdAltaColegiado = Database::getInstance()->getDb()->prepare("SELECT * FROM Persona AS  p
+    //                 INNER JOIN Ingreso AS i ON i.idDNI = p.idDNI
+    //                 INNER JOIN Cuota as c on c.idIngreso = i.idIngreso
+    //                 WHERE i.idDNI = ? ");
+    //                 $cmdAltaColegiado->bindParam(1, $ingeniero, PDO::PARAM_INT);
+    //                 $cmdAltaColegiado->execute();
+
+    //                 if ($cmdAltaColegiado->fetch()) {
+    //                     // if ($fechaactual >= $date) {
+    //                     $inicio = $ano;
+    //                     // $inicio = $ano->modify('+ 1 month');
+    //                     // if ($inicio <= $fechaactual) {
+    //                     // while ($inicio <= $fechaactual) {
+    //                     array_push($array, array(
+    //                         "day" => $inicio->format('d'),
+    //                         "mes" => $inicio->format('m'),
+    //                         "year" => $inicio->format('Y'),
+    //                         "concepto" => $arryConcepto
+    //                     ));
+    //                     // $inicio->modify('+ 1 month');
+    //                     // }
+    //                     // }
+    //                     // }
+    //                 } else {
+    //                     // if ($fechaactual >= $date) {
+    //                     $inicio = $ano;
+    //                     // if ($inicio <= $fechaactual) {
+    //                     // while ($inicio <= $fechaactual) {
+    //                     array_push($array, array(
+    //                         "day" => $inicio->format('d'),
+    //                         "mes" => $inicio->format('m'),
+    //                         "year" => $inicio->format('Y'),
+    //                         "concepto" => $arryConcepto
+    //                     ));
+    //                     // $inicio->modify('+ 1 month');
+    //                     // }
+    //                     // }
+    //                     // }
+    //                 }
+
+
+    //                 $ano->modify('+ 1 month');
+    //             }
+    //         }
+
+    //         return $array;
+    //     } catch (Exception $ex) {
+    //         return $ex->getMessage();
+    //     }
+    // }
 
     public static function getColegiatura($tipoCategoria)
     {
