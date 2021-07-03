@@ -235,13 +235,14 @@ function Cuotas() {
         $("#btnCuotaVitalicio").removeClass();
         $("#btnCuotaVitalicio").addClass("btn btn-default");
         countCurrentDate = 0;
+        yearCurrentView = "";
+        monthCurrentView = "";
         tipoCuotas = 0;
     }
 
     function addCuotas() {
-        countCurrentDate++;
+        countCurrentDate = 1;
         loadCuotas(tipoCuotas);
-        
     }
 
     function loadCuotas(categoria) {
@@ -253,6 +254,8 @@ function Cuotas() {
                 categoria: categoria,
                 dni: idDNI,
                 mes: countCurrentDate,
+                yearv: yearCurrentView,
+                monthv: monthCurrentView,
             },
             beforeSend: function () {
                 $("#tbCuotas").empty();
@@ -262,23 +265,29 @@ function Cuotas() {
                 cuotas.splice(0, cuotas.length);
             },
             success: function (result) {
+
                 if (result.estado == 1) {
                     $("#tbCuotas").empty();
+
                     cuotas = result.data;
                     if (cuotas.length > 0) {
                         let totalCuotas = 0;
+                        let idCheck = 1;
                         for (let value of cuotas) {
                             let monto = 0;
+                            let lol = '<input id="' + idCheck + '" type="checkbox" checked onclick="selectCheck(' + idCheck + ')">';
                             for (let c of value.concepto) {
                                 monto += parseFloat(c.Precio);
                             }
                             $("#tbCuotas").append(
                                 '<tr id="' + (value.mes + "-" + value.year) + '">' +
-                                '<td class="no-padding"> ' + tools.nombreMes(value.mes) + " - " + value.year + "</td>" +
-                                '<td class="no-padding text-center">' + tools.formatMoney(monto) + "</td>" +
+                                '<td style="width:3%">' + lol + '</td>' +
+                                '<td class="no-padding" style="vertical-align:middle;">' + tools.nombreMes(value.mes) + " - " + value.year + "</td>" +
+                                '<td class="no-padding text-center" style="vertical-align:middle;">' + tools.formatMoney(monto) + "</td>" +
                                 +"</tr>"
                             );
                             totalCuotas += parseFloat(monto);
+                            idCheck++;
                         }
                         $("#lblTotalCuotas").html("TOTAL DE " + cuotas.length + " CUOTAS: " + tools.formatMoney(totalCuotas));
 
@@ -293,12 +302,12 @@ function Cuotas() {
                                 "/" +
                                 cuotas[cuotas.length - 1].year
                             );
+                            yearCurrentView = cuotas[cuotas.length - 1].year;
+                            monthCurrentView = cuotas[cuotas.length - 1].mes;
                         }
-
-                       // countCurrentDate += cuotas.length;
                     } else {
                         $("#tbCuotas").append(
-                            '<tr class="text-center"><td colspan="2"><img src="./images/ayuda.png" width="80"/><p>Cuotas al Día has click en boton (+Agregar) para más cuotas.</p></td></tr>'
+                            '<tr class="text-center"><td colspan="3"><img src="./images/ayuda.png" width="80"/><p>Cuotas al Día has click en boton (+Agregar) para más cuotas.</p></td></tr>'
                         );
                         $("#lblTotalCuotas").html("TOTAL DE 0 CUOTAS: 0.00");
                         $("#lblNumeroCuotas").html("CUOTAS DEL: 00/0000 al 00/0000");
@@ -306,7 +315,7 @@ function Cuotas() {
                 } else {
                     $("#tbCuotas").empty();
                     $("#tbCuotas").append(
-                        '<tr class="text-center"><td colspan="2"><p>' +
+                        '<tr class="text-center"><td colspan="3"><p>' +
                         result.message +
                         "</p></td></tr>"
                     );
@@ -325,18 +334,94 @@ function Cuotas() {
         });
     }
 
+    selectCheck = function (idCheckBox) {
+        let nmroCheckbox = idCheckBox;
+        while (cuotas.length >= nmroCheckbox) {
+            if ($("#" + nmroCheckbox).prop('checked')) {
+                $("#" + nmroCheckbox).prop('checked', false);
+
+            }
+            nmroCheckbox++;
+        }
+
+        let nCheckBox = idCheckBox;
+        while (nCheckBox >= 0) {
+            if (!$("#" + nCheckBox).is(':checked')) {
+                $("#" + nCheckBox).prop('checked', true);
+            }
+            nCheckBox--;
+        }
+
+        let newArray = [];
+        $("#tbCuotas tr").each(function (row, tr) {
+            for (let value of cuotas) {
+                if ((value.mes + "-" + value.year) == $(tr).attr('id')) {
+                    let isChecked = $(tr).find("td:eq(0)").find('input[type="checkbox"]').is(':checked');
+                    if (isChecked) {
+                        newArray.push(value);
+                    }
+                    break;
+                }
+            }
+        });
+
+
+        if (newArray.length > 0) {
+            let totalCuotas = 0;
+            for (let value of newArray) {
+                let monto = 0;
+                for (let c of value.concepto) {
+                    monto += parseFloat(c.Precio);
+                }
+                totalCuotas += parseFloat(monto);
+            }
+            $("#lblTotalCuotas").html(
+                "TOTAL DE " +
+                newArray.length +
+                " CUOTAS: " +
+                tools.formatMoney(totalCuotas)
+            );
+            if (newArray.length > 0) {
+                $("#lblNumeroCuotas").html(
+                    "CUOTAS DEL: " +
+                    newArray[0].mes +
+                    "/" +
+                    newArray[0].year +
+                    " al " +
+                    newArray[newArray.length - 1].mes +
+                    "/" +
+                    newArray[newArray.length - 1].year
+                );
+                yearCurrentView = newArray[newArray.length - 1].year;
+                monthCurrentView = newArray[newArray.length - 1].mes;
+            }
+        } else {
+            $("#tbCuotas").append(
+                '<tr class="text-center"><td colspan="3"><img src="./images/ayuda.png" width="80"/><p>Cuotas al Día has click en boton (+Agregar) para más cuotas.</p></td></tr>'
+            );
+            $("#lblTotalCuotas").html("TOTAL DE 0 CUOTAS: 0.00");
+            $("#lblNumeroCuotas").html("CUOTAS DEL: 00/0000 al 00/0000");
+            if (yearCurrentView != "" && monthCurrentView != "") {
+                monthCurrentView = monthCurrentView - 1;
+            }
+
+        }
+
+    }
+
+
     function removeCuota() {
         if (cuotas.length != 0) {
             cuotas.pop();
-            if (countCurrentDate > 0) {
-                countCurrentDate--;
-            }
-            
+
             $("#tbCuotas").empty();
             if (cuotas.length > 0) {
                 let totalCuotas = 0;
+                let idCheck = 1;
                 for (let value of cuotas) {
                     let monto = 0;
+
+                    let lol = '<input id="' + idCheck + '" type="checkbox" checked onclick="selectCheck(' + idCheck + ')">';
                     for (let c of value.concepto) {
                         monto += parseFloat(c.Precio);
                     }
@@ -344,18 +429,20 @@ function Cuotas() {
                         '<tr id="' +
                         (value.mes + "-" + value.year) +
                         '">' +
-                        '<td class="no-padding"> ' +
+                        '<td style="width:3%">' + lol + '</td>' +
+                        '<td class="no-padding" style="vertical-align:middle;"> ' +
                         tools.nombreMes(value.mes) +
                         " - " +
                         value.year +
                         "</td>" +
-                        '<td class="no-padding text-center">' +
+                        '<td class="no-padding text-center" style="vertical-align:middle;">' +
                         tools.formatMoney(monto) +
                         "</td>" +
                         // '<td class="no-padding text-center"><button class="btn btn-danger btn-sm" onclick="removeCuota(\'' + (value.mes + '-' + value.year) + '\')"><i class="fa fa-trash"></i></button></td>' +
                         +"</tr>"
                     );
                     totalCuotas += parseFloat(monto);
+                    idCheck++;
                 }
                 $("#lblTotalCuotas").html(
                     "TOTAL DE " +
@@ -374,6 +461,8 @@ function Cuotas() {
                         "/" +
                         cuotas[cuotas.length - 1].year
                     );
+                    yearCurrentView = cuotas[cuotas.length - 1].year;
+                    monthCurrentView = cuotas[cuotas.length - 1].mes;
                 }
             } else {
                 $("#tbCuotas").append(
@@ -381,6 +470,10 @@ function Cuotas() {
                 );
                 $("#lblTotalCuotas").html("TOTAL DE 0 CUOTAS: 0.00");
                 $("#lblNumeroCuotas").html("CUOTAS DEL: 00/0000 al 00/0000");
+                if (yearCurrentView != "" && monthCurrentView != "") {
+                    monthCurrentView = monthCurrentView - 1;
+                }
+
             }
         }
     }
@@ -391,8 +484,23 @@ function Cuotas() {
             removeIngresos(0, 2);
             removeIngresos(0, 3);
         }
-        for (let value of cuotas) {
-            for (let c of value.concepto) {
+        let newArray = [];
+        $("#tbCuotas tr").each(function (row, tr) {
+
+            for (let value of cuotas) {
+                if ((value.mes + "-" + value.year) == $(tr).attr('id')) {
+                    let isChecked = $(tr).find("td:eq(0)").find('input[type="checkbox"]').is(':checked');
+                    if (isChecked) {                        
+                        newArray.push(value);
+                    }
+                    break;
+                }
+            }
+
+        });
+
+        for (let value of newArray) {
+            for (let c of value.concepto) {            
                 if (!validateDuplicate(c.IdConcepto)) {
                     arrayIngresos.push({
                         idConcepto: parseInt(c.IdConcepto),
@@ -405,6 +513,7 @@ function Cuotas() {
                 } else {
                     for (let i = 0; i < arrayIngresos.length; i++) {
                         if (arrayIngresos[i].idConcepto == c.IdConcepto) {
+                            
                             let newConcepto = arrayIngresos[i];
                             newConcepto.categoria = parseInt(c.Categoria);
                             newConcepto.cantidad = newConcepto.cantidad + 1;
@@ -419,19 +528,22 @@ function Cuotas() {
                 }
             }
         }
-        if (cuotas.length > 0) {
+
+        if (newArray.length > 0) {
             cuotasEstate = true;
-            cuotasInicio = cuotas[0].year + "-" + cuotas[0].mes + "-" + cuotas[0].day;
+            cuotasInicio = newArray[0].year + "-" + newArray[0].mes + "-" + newArray[0].day;
             cuotasFin =
-                cuotas[cuotas.length - 1].year +
+                newArray[newArray.length - 1].year +
                 "-" +
-                cuotas[cuotas.length - 1].mes +
+                newArray[newArray.length - 1].mes +
                 "-" +
-                cuotas[cuotas.length - 1].day;
+                newArray[newArray.length - 1].day;
         }
         addIngresos();
         $("#mdCuotas").modal("hide");
         countCurrentDate = 0;
+        yearCurrentView = "";
+        monthCurrentView = "";
         tipoCuotas = 0;
     }
 }

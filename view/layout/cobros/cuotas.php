@@ -1,6 +1,6 @@
 <div class="row">
     <div class="modal fade" id="mdCuotas" data-backdrop="static">
-        <div class="modal-dialog modal-xl">
+        <div class="modal-dialog modal-lg">
             <div class="modal-content">
                 <div class="modal-header">
                     <button id="btnCloseCuotas" type="button" class="close">
@@ -29,7 +29,7 @@
                                 </button>
                             </div>
                         </div>
-                        <div class="col-md-4 col-sm-12 col-xs-12 text-right">
+                        <div class="col-md-4 col-sm-12 col-xs-12 ">
                             <div class="form-group">
                                 <button id="btnAddCuota" type="button" class="btn btn-warning">
                                     <i class="fa fa-plus"></i> Agregar
@@ -54,8 +54,9 @@
                             <table class="table table-striped table-hover">
                                 <thead>
                                     <tr>
-                                        <th width="70%">Cuota del Mes</th>
-                                        <th width="15%">Monto</th>
+                                        <th width="65%" colspan="2">Cuota del Mes</th>
+                                        <!-- <th width="60%"></th> -->
+                                        <th width="15%" class="text-center">Monto</th>
                                     </tr>
                                 </thead>
                                 <tbody id="tbCuotas">
