@@ -96,14 +96,14 @@ if (!isset($_SESSION['IdUsuario'])) {
                                     </div>
                                     <div class="col-md-4 col-sm-12 col-xs-12">
                                         <div class="form-group">
-                                            <label for="fecha_inicio">Fecha Inicio: <i class="fa fa-fw fa-asterisk text-danger"></i></label>
-                                            <input id="txtFecha_inicio" type="date" name="fecha_inicio" class="form-control" required="">
+                                            <label for="txtFecha_inicio">Fecha Inicio: <i class="fa fa-fw fa-asterisk text-danger"></i></label>
+                                            <input id="txtFecha_inicio" type="date" class="form-control" required="">
                                         </div>
                                     </div>
                                     <div class="col-md-4 col-sm-12 col-xs-12">
                                         <div class="form-group">
-                                            <label for="fecha_fin">Fecha Fin: <i class="fa fa-fw fa-asterisk text-danger"></i></label>
-                                            <input id="txtFecha_fin" type="date" name="fecha_fin" class="form-control" required="">
+                                            <label for="txtFecha_fin">Fecha Fin: <i class="fa fa-fw fa-asterisk text-danger"></i></label>
+                                            <input id="txtFecha_fin" type="date" class="form-control" required="">
                                         </div>
                                     </div>
                                 </div>
@@ -399,6 +399,7 @@ if (!isset($_SESSION['IdUsuario'])) {
                     if (event.keyCode === 13) {
                         insertConcepto();
                     }
+                    event.preventDefault();
                 });
 
                 $("#modalNuevoConcepto").on("shown.bs.modal", function() {
@@ -593,7 +594,6 @@ if (!isset($_SESSION['IdUsuario'])) {
             }
 
             function insertConcepto() {
-
                 if ($("#cbCategoria").val() == "0") {
                     tools.AlertWarning("Advertencia", "Seleccione la categoría del concepto.");
                     $("#cbCategoria").focus();

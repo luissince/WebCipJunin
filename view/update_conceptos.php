@@ -359,9 +359,9 @@ if (!isset($_SESSION['IdUsuario'])) {
                 } else if ($("#fecha_inicio").val() == '') {
                     tools.AlertWarning("Advertencia", "Seleccione la fecha de inicio.");
                     $("#fecha_inicio").focus();
-                } else if ($("#fecha_inicio").val() == '') {
+                } else if ($("#fecha_fin").val() == '') {
                     tools.AlertWarning("Advertencia", "Seleccione la fecha de fin.");
-                    $("#fecha_inicio").focus();
+                    $("#fecha_fin").focus();
                 } else if ($('#cbImpuesto option').length != 0 && $("#cbImpuesto").val() == "") {
                     tools.AlertWarning("Advertencia", "Seleccione el impuesto a incluir.");
                     $("#cbImpuesto").focus();
@@ -379,7 +379,7 @@ if (!isset($_SESSION['IdUsuario'])) {
                                     "Precio": $("#precio").val(),
                                     "Propiedad": $("#rbJunin").is(":checked") ? 0 : 48,
                                     "Inicio": $("#fecha_inicio").val(),
-                                    "Fin": $("#fecha_inicio").val(),
+                                    "Fin": $("#fecha_fin").val(),
                                     "Observacion": "",
                                     "Codigo": $("#codigo").val(),
                                     "Estado": $("#estado").is(":checked"),

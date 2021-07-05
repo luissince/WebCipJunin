@@ -315,6 +315,17 @@ if (!isset($_SESSION['IdUsuario'])) {
                     $("#mdAlert").modal("show")
                 });
 
+                $("#btnEnvioMasivo").click(function() {
+                    envioMasivo();
+                });
+
+                $("#btnEnvioMasivo").keypress(function(event) {
+                    if (event.getCode() == 13) {
+                        envioMasivo();
+                    }
+                    event.preventDefault();
+                });
+
                 listarNotasCredito();
             });
 
@@ -470,6 +481,48 @@ if (!isset($_SESSION['IdUsuario'])) {
                         });
                     }
                 });
+            }
+
+            function envioMasivo() {
+                tools.ModalDialog("Nota de Crédito", "Está seguro de continuar con el envío?", function(value) {
+                    if (value == true) {
+                        for (let ingresos of arrayIngresos) {
+                            if (ingresos.Xmlsunat !== "0") {
+                                firmaMasivaXml(ingresos.idNotaCredito);
+                            }
+                        }
+                    }
+                });
+            }
+
+            function firmaMasivaXml(idNotaCredito) {
+                if (value == true) {
+                    $.ajax({
+                        url: "../app/examples/notacredito.php",
+                        method: "GET",
+                        data: {
+                            "idNotaCredito": idNotaCredito
+                        },
+                        beforeSend: function() {
+                            tools.ModalAlertInfo("Nota de Crédito", "Firmando xml y enviando a la sunat.");
+                        },
+                        success: function(result) {
+                            let object = result;
+                            if (object.state === true) {
+                                if (object.accept === true) {
+                                    tools.ModalAlertSuccess("Nota de Crédito", "Resultado: Código " + object.code + " " + object.description);
+                                } else {
+                                    tools.ModalAlertWarning("Nota de Crédito", "Resultado: Código " + object.code + " " + object.description);
+                                }
+                            } else {
+                                tools.ModalAlertWarning("Nota de Crédito", "Resultado: Código " + object.code + " " + object.description);
+                            }
+                        },
+                        error: function(error) {
+                            tools.ModalAlertError("Nota de Crédito", "Error en el momento de firmar el xml: " + error.responseText);
+                        }
+                    });
+                }
             }
 
             function openPdf(idNotaCredito) {
