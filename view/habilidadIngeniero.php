@@ -30,7 +30,7 @@ if (!isset($_SESSION['IdUsuario'])) {
                 <section class="content">
                     <div class="row">
 
-                        <div class="col-lg-3 col-md-6 col-sm-12 col-xs-12">
+                        <div class="col-lg-4 col-md-6 col-sm-12 col-xs-12">
                             <label>Filtrar por cip,dni, apellidos y nombres.</label>
                             <div class="form-group">
                                 <div class="input-group">
@@ -70,36 +70,23 @@ if (!isset($_SESSION['IdUsuario'])) {
                             </div>
                         </div>
 
-                        <div class="col-lg-3 col-md-3 col-sm-12 col-xs-12">
-
-                            <div class="col-lg-6">
-                                <label>Opción.</label>
-                                <div class="form-group">
-                                    <button class="btn btn-warning" id="btnEnvioMasivo">
-                                        <i class="fa fa-paper-plane"></i> Envio Masivo
-                                    </button>
-                                </div>
-                            </div>
-
-                            <div class="col-lg-6">
-                                <label>Exportar.</label>
-                                <div class="form-group">
-                                    <button class="btn btn-success" id="btnExportExcel">
-                                        <i class="fa fa-file-excel-o"></i> Exportar Excel
-                                    </button>
-                                </div>
-                            </div>
-
-
-                        </div>
-                        <!-- <div class="col-lg-2 col-md-3 col-sm-12 col-xs-12">
-                            <label>Excel.</label>
+                        <div class="col-lg-1 col-md-3 col-sm-12 col-xs-12">
+                            <label>Envío.</label>
                             <div class="form-group">
-                                <button class="btn btn-success" id="btnExcel">
-                                    <i class="fa fa-file-excel-o"></i> Generar
+                                <button class="btn btn-warning" id="btnEnvioMasivo">
+                                    <i class="fa fa-paper-plane"></i> Data
                                 </button>
                             </div>
-                        </div> -->
+                        </div>
+
+                        <div class="col-lg-1 col-md-3 col-sm-12 col-xs-12">
+                            <label>Generar.</label>
+                            <div class="form-group">
+                                <button class="btn btn-success" id="btnExportExcel">
+                                    <i class="fa fa-file-excel-o"></i>Excel
+                                </button>
+                            </div>
+                        </div>
 
                     </div>
                     <!-- TABLA -->
@@ -203,7 +190,7 @@ if (!isset($_SESSION['IdUsuario'])) {
                             opcion = 1;
                         }
                         $("#cbTipoHabilidad").val(0);
-                        $("#cbCapitulo").select2("val", "0"); 
+                        $("#cbCapitulo").select2("val", "0");
                     }
                     event.preventDefault();
                 });
@@ -214,7 +201,7 @@ if (!isset($_SESSION['IdUsuario'])) {
                         loadTableHabilidad(1, $("#txtBuscar").val(), 0, 0, 0);
                         opcion = 1;
                         $("#cbTipoHabilidad").val(0);
-                        $("#cbCapitulo").select2("val", "0"); 
+                        $("#cbCapitulo").select2("val", "0");
                     }
                 });
 
@@ -225,7 +212,7 @@ if (!isset($_SESSION['IdUsuario'])) {
                             loadTableHabilidad(3, '', $("#cbTipoHabilidad").val(), $("#cbCapitulo").val(), 0);
                             opcion = 3;
                         } else {
-                            
+
                             paginacion = 1;
                             loadTableHabilidad(2, '', $("#cbTipoHabilidad").val(), 0, 0);
                             opcion = 2;
@@ -281,20 +268,20 @@ if (!isset($_SESSION['IdUsuario'])) {
                         openExcelHabilidad(0, '', 0, 0, 0);
                         console.log(0)
                     } else if ($("#txtBuscar").val() != '' && $("#cbTipoHabilidad").val() == 0 && $("#cbCapitulo").val() == 0 && $("#cbEspecialidad").val() == 0) {
-                        openExcelHabilidad(1,'',$("#txtBuscar").val(), 0, 0, 0)
+                        openExcelHabilidad(1, '', $("#txtBuscar").val(), 0, 0, 0)
                         console.log(1)
-                    } else if($("#txtBuscar").val() == '' && $("#cbTipoHabilidad").val() != 0 && $("#cbCapitulo").val() == 0 && $("#cbEspecialidad").val() == 0){
+                    } else if ($("#txtBuscar").val() == '' && $("#cbTipoHabilidad").val() != 0 && $("#cbCapitulo").val() == 0 && $("#cbEspecialidad").val() == 0) {
                         openExcelHabilidad(2, '', $("#cbTipoHabilidad").val(), 0, 0);
                         console.log(2)
-                    } else if($("#txtBuscar").val() == '' && $("#cbTipoHabilidad").val() != 0 && $("#cbCapitulo").val() != 0 && $("#cbEspecialidad").val() == 0){
+                    } else if ($("#txtBuscar").val() == '' && $("#cbTipoHabilidad").val() != 0 && $("#cbCapitulo").val() != 0 && $("#cbEspecialidad").val() == 0) {
                         openExcelHabilidad(3, '', $("#cbTipoHabilidad").val(), $("#cbCapitulo").val(), 0);
                         console.log(3)
-                    } else if($("#txtBuscar").val() == '' && $("#cbTipoHabilidad").val() != 0 && $("#cbCapitulo").val() != 0 && $("#cbEspecialidad").val() != 0){
+                    } else if ($("#txtBuscar").val() == '' && $("#cbTipoHabilidad").val() != 0 && $("#cbCapitulo").val() != 0 && $("#cbEspecialidad").val() != 0) {
                         openExcelHabilidad(4, '', $("#cbTipoHabilidad").val(), $("#cbCapitulo").val(), $("#cbEspecialidad").val());
                         console.log(4)
                     }
 
-              
+
 
 
                     // if ($("#txtBuscar").val() == '' && $("#cbTipoHabilidad").val() == 0 && $("#cbCapitulo").val() == 0 && $("#cbEspecialidad").val() == 0) {
