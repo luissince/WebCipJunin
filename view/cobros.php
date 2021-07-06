@@ -192,7 +192,7 @@ if (!isset($_SESSION['IdUsuario'])) {
                                                     <th width="5%">#</th>
                                                     <th width="15%">Cantidad</th>
                                                     <th width="35%">Concepto</th>
-                                                    <th width="15%">Precio</th>
+                                                    <!-- <th width="15%">Precio</th> -->
                                                     <th width="20%">Monto</th>
                                                     <th width="10%">Quitar</th>
                                                 </thead>
@@ -731,7 +731,8 @@ if (!isset($_SESSION['IdUsuario'])) {
                             "cantidad": value.cantidad,
                             "concepto": value.categoria == 1 ? "Cuotas Ordinarias(Del " + cuotasFechas + ")" : value.categoria == 2 ? "Cuotas de Administia(Del " + cuotasFechas + ")" : value.categoria == 3 ? "Cuotas de Vitalicio(Del " + cuotasFechas + ")" : value.categoria == 12 ? "Cuota Ordinarias - Resolución 15 (Del " + cuotasFechas + ")" : value.categoria == 4 ? "Colegiatura Ordinaria" : value.categoria == 9 ? "Colegiatura Otras Modalidades" : value.categoria == 10 ? "Colegiatura por Tesis Local" : value.categoria == 11 ? "Colegiatura por Tesis Externa" : value.concepto,
                             "precio": parseFloat(value.precio),
-                            "monto": parseFloat(value.precio) * parseFloat(value.cantidad)
+                            "monto": parseFloat(value.monto)
+                            // "monto": parseFloat(value.precio) * parseFloat(value.cantidad)
                         });
                     } else {
                         for (let i = 0; i < arrayRenderTable.length; i++) {
@@ -753,7 +754,8 @@ if (!isset($_SESSION['IdUsuario'])) {
                                     value.concepto;
 
                                 newConcepto.precio += parseFloat(value.precio);
-                                newConcepto.monto = newConcepto.precio * newConcepto.cantidad;
+                                newConcepto.monto += value.monto;
+                                // newConcepto.monto = newConcepto.precio * newConcepto.cantidad;
                                 arrayRenderTable[i] = newConcepto;
                             }
                         }
@@ -767,7 +769,7 @@ if (!isset($_SESSION['IdUsuario'])) {
                         '<td>' + count + '</td>' +
                         '<td>' + value.cantidad + '</td>' +
                         '<td>' + value.concepto + '</td>' +
-                        '<td>' + tools.formatMoney(value.precio) + '</td>' +
+                        // '<td>' + tools.formatMoney(value.precio) + '</td>' +
                         '<td>' + tools.formatMoney(value.monto) + '</td>' +
                         '<td><button class="btn btn-warning" onClick="removeIngresos(\'' + value.idConcepto + '\',\'' + value.categoria + '\')"><i class="fa fa-trash"></i></button></td>' +
                         '</tr>');

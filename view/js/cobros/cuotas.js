@@ -486,21 +486,19 @@ function Cuotas() {
         }
         let newArray = [];
         $("#tbCuotas tr").each(function (row, tr) {
-
             for (let value of cuotas) {
                 if ((value.mes + "-" + value.year) == $(tr).attr('id')) {
                     let isChecked = $(tr).find("td:eq(0)").find('input[type="checkbox"]').is(':checked');
-                    if (isChecked) {                        
+                    if (isChecked) {
                         newArray.push(value);
                     }
                     break;
                 }
             }
-
         });
 
         for (let value of newArray) {
-            for (let c of value.concepto) {            
+            for (let c of value.concepto) {
                 if (!validateDuplicate(c.IdConcepto)) {
                     arrayIngresos.push({
                         idConcepto: parseInt(c.IdConcepto),
@@ -513,7 +511,6 @@ function Cuotas() {
                 } else {
                     for (let i = 0; i < arrayIngresos.length; i++) {
                         if (arrayIngresos[i].idConcepto == c.IdConcepto) {
-                            
                             let newConcepto = arrayIngresos[i];
                             newConcepto.categoria = parseInt(c.Categoria);
                             newConcepto.cantidad = newConcepto.cantidad + 1;
@@ -524,7 +521,9 @@ function Cuotas() {
                             arrayIngresos[i] = newConcepto;
                             break;
                         }
+
                     }
+
                 }
             }
         }

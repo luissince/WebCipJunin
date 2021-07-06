@@ -206,7 +206,7 @@ if (!isset($_SESSION['IdUsuario'])) {
                             <div class="form-group">
                                 <!-- <button type="button" class="btn btn-danger" data-toggle="modal" data-target="#confirmar"> -->
                                 <button type="button" class="btn btn-success" id="btnNuevo">
-                                    <i class="fa fa-plus"></i> Agregar Concepto
+                                    <i class="fa fa-plus"></i> Agregar
                                 </button>
                             </div>
                         </div>
@@ -223,7 +223,7 @@ if (!isset($_SESSION['IdUsuario'])) {
                         <div class="col-md-3 col-sm-12 col-xs-12">
                             <label>Categoría.</label>
                             <div class="form-group">
-                                <select class="form-control" id="cbCategorias">
+                                <select class="form-control" id="cbTipoCategorias">
                                     <option value="0">- - Seleccione - -</option>
                                     <option value="1">Cuota ordinaria</option>
                                     <option value="2">Cuota ordinaria (Admistia)</option>
@@ -369,11 +369,11 @@ if (!isset($_SESSION['IdUsuario'])) {
                     }
                 });
 
-                $("#cbCategorias").change(function() {
-                    if ($("#cbCategorias").val() != '') {
+                $("#cbTipoCategorias").change(function() {
+                    if ($("#cbTipoCategorias").val() != '') {
                         if (!state) {
                             paginacion = 1;
-                            loadTableConceptos(2, $("#cbCategorias").val(), "");
+                            loadTableConceptos(2, $("#cbTipoCategorias").val(), "");
                             opcion = 2;
                         }
                     }
@@ -406,6 +406,10 @@ if (!isset($_SESSION['IdUsuario'])) {
                     $("#cbCategoria").focus();
                 });
 
+                $("#cbCategoria").change(function(event) {
+
+                });
+
                 $("#btnCancelarModal").click(function() {
                     clearModalConcepto();
                 });
@@ -429,7 +433,7 @@ if (!isset($_SESSION['IdUsuario'])) {
                         loadTableConceptos(1, 0, $("#buscar").val());
                         break;
                     case 2:
-                        loadTableConceptos(2, $("#cbCategorias").val(), "");
+                        loadTableConceptos(2, $("#cbTipoCategorias").val(), "");
                         break;
                 }
             }

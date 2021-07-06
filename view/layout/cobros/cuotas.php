@@ -1,6 +1,6 @@
 <div class="row">
     <div class="modal fade" id="mdCuotas" data-backdrop="static">
-        <div class="modal-dialog modal-lg">
+        <div class="modal-dialog modal-md">
             <div class="modal-content">
                 <div class="modal-header">
                     <button id="btnCloseCuotas" type="button" class="close">
@@ -13,7 +13,7 @@
                 </div>
                 <div class="modal-body">
                     <div class="row">
-                        <div class="col-md-8 col-sm-12 col-xs-12">
+                        <div class="col-md-12 col-sm-12 col-xs-12">
                             <div class="form-group">
                                 <button id="btnCuotaNormal" type="button" class="btn btn-success">
                                     <i class="fa fa-plus"></i> Ordinaria
@@ -29,7 +29,10 @@
                                 </button>
                             </div>
                         </div>
-                        <div class="col-md-4 col-sm-12 col-xs-12 ">
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-12 col-sm-12 col-xs-12 text-right">
                             <div class="form-group">
                                 <button id="btnAddCuota" type="button" class="btn btn-warning">
                                     <i class="fa fa-plus"></i> Agregar
@@ -42,7 +45,7 @@
                     </div>
 
                     <div class="row">
-                        <div class="col-md-12 text-center" style="padding-top: 10px;">
+                        <div class="col-md-12 text-center">
                             <h4 class="text-info" id="lblCuotasMensaje">
                                 Cuotas Ordinarias
                             </h4>
@@ -55,7 +58,6 @@
                                 <thead>
                                     <tr>
                                         <th width="65%" colspan="2">Cuota del Mes</th>
-                                        <!-- <th width="60%"></th> -->
                                         <th width="15%" class="text-center">Monto</th>
                                     </tr>
                                 </thead>
