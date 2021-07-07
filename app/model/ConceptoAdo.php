@@ -143,9 +143,6 @@ class ConceptoAdo
 
             if ($row = $cmdCuota->fetch()) {
 
-
-
-
                 $date = new DateTime($row["UltimoPago"]);
                 $date->setDate($date->format("Y"), $date->format("m"), 1);
 

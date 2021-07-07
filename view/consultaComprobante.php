@@ -250,7 +250,7 @@ if (!isset($_SESSION['IdUsuario'])) {
                                             <div class="col-md-6">
                                                 <label style="color: #676363;">Contraseña: </label>
                                                 <div class="form-group">
-                                                    <input id="txtClave" class="form-control" type="text" placeholder="Ingrese Contraseña">
+                                                    <input id="txtClave" class="form-control" type="password" placeholder="Ingrese Contraseña">
                                                 </div>
                                             </div>
                                             <div class="col-md-6">
@@ -286,14 +286,7 @@ if (!isset($_SESSION['IdUsuario'])) {
                                 </div>
                             </div>
                             <div class="col-md-12" id="lblResponse">
-                                <!-- <div class="box box-success">
-                                    <div class="box-header">
-                                        <h3 class="box-title">RESULTADO</h3>
-                                    </div>
-                                    <div class="box-body">
-                                        <label id="lblResponse"></label>
-                                    </div>
-                                </div> -->
+
                             </div>
                         </div>
                     </div>
@@ -411,9 +404,9 @@ if (!isset($_SESSION['IdUsuario'])) {
                         cdr: cdr
                     },
                     beforeSend: function() {
-
+                        $("#ReduxComponent").empty();
                     },
-                    success: function(result) {                        
+                    success: function(result) {
                         cdrDiv = '';
                         if (result.typecode == "0004") {
                             cdrDiv =
@@ -435,7 +428,7 @@ if (!isset($_SESSION['IdUsuario'])) {
                                 '<div class="col-md-11">' +
                                 '<div class="row">' +
                                 '<div class="col-md-4">' +
-                                '<a onclick="descargarCdr(\''+result.file+'\')"" style="cursor:pointer">' +
+                                '<a onclick="descargarCdr(\'' + result.file + '\')"" style="cursor:pointer">' +
                                 result.file +
                                 '</a>' +
                                 '</div>' +

@@ -14,34 +14,26 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $mes = $body["mes"];
     $yearCurrentView = $body["yearCurrentView"];
     $monthCurrentView = $body["monthCurrentView"];
-    echo json_encode(Informacion::getPersonaInformacion($idDni, $mes, $yearCurrentView, $monthCurrentView));
+    echo json_encode(Cuotas::getCuotas($idDni, $mes, $yearCurrentView, $monthCurrentView));
     exit;
 }
 
-class Informacion
+class Cuotas
 {
-    public static function getPersonaInformacion($idDni, $mes, $yearCurrentView, $monthCurrentView)
+    public static function getCuotas($idDni, $mes, $yearCurrentView, $monthCurrentView)
     {
         try {
+
+            $array = array();
+
             $cmdValidate = Database::getInstance()->getDb()->prepare("SELECT 
-            p.idDNI,
-            p.Nombres,
-            p.Apellidos,
-            p.CIP ,
-            e.Especialidad,
-            ca.Capitulo,
-            CASE p.Condicion WHEN 'V' THEN 'VITALICIO' WHEN 'R' THEN 'RETIRADO' WHEN 'F' THEN 'FALLECIDO' WHEN 'T' THEN 'TRANSEUNTE' ELSE 'ORDINARIO' END AS Condicion,
-            CONVERT(VARCHAR,CAST(ISNULL(uc.FechaUltimaCuota,C.FechaColegiado) AS DATE),103) AS FechaUltimaCuota,
-            CONVERT(VARCHAR,CAST(DATEADD(MONTH,CASE p.Condicion WHEN 'O' THEN 3 WHEN 'V' THEN 9 ELSE 0 END,ISNULL(uc.FechaUltimaCuota,C.FechaColegiado)) AS DATE),103) AS HabilitadoHasta,
-            CASE
-            WHEN CAST (DATEDIFF(M,DATEADD(MONTH,CASE p.Condicion WHEN 'O' THEN 3 WHEN 'V' THEN 9 ELSE 0 END,ISNULL(uc.FechaUltimaCuota, C.FechaColegiado)) , GETDATE()) AS INT) <=0 THEN 1
-            ELSE 0 END AS Habilidad,
-            DATEDIFF(YEAR,GETDATE(),DATEADD(MONTH,c.MesAumento,DATEADD(YEAR,30,c.FechaColegiado))) CumplirTreinta
+            CASE p.Condicion 
+            WHEN 'V' THEN 'VITALICIO' 
+            WHEN 'R' THEN 'RETIRADO' 
+            WHEN 'F' THEN 'FALLECIDO' 
+            WHEN 'T' THEN 'TRANSEUNTE' 
+            ELSE 'ORDINARIO' END AS Condicion
             FROM Persona AS p
-            INNER JOIN Colegiatura AS c ON c.idDNI = p.idDNI AND c.Principal = 1
-            INNER JOIN Especialidad AS e ON e.idEspecialidad = c.idEspecialidad
-            INNER JOIN Capitulo as ca ON ca.idCapitulo = e.idCapitulo
-            LEFT OUTER JOIN ULTIMACuota AS uc ON uc.idDNI = p.idDNI
             WHERE p.idDNI = ?");
             $cmdValidate->bindParam(1, $idDni, PDO::PARAM_STR);
             $cmdValidate->execute();
@@ -65,7 +57,6 @@ class Informacion
                 $condicion =  0;
             }
 
-            $montodeuda = 0;
 
             if ($row = $cmdCuota->fetch()) {
 
@@ -111,9 +102,21 @@ class Informacion
                                 $cmdConceptos->bindParam(2, $inicioFormat, PDO::PARAM_STR);
                                 $cmdConceptos->execute();
 
+                                $arryConcepto = array();
                                 while ($rowc = $cmdConceptos->fetch()) {
-                                    $montodeuda += floatval($rowc["Precio"]);
+                                    array_push($arryConcepto, array(
+                                        "IdConcepto" => $rowc["idConcepto"],
+                                        "Categoria" => $rowc["Categoria"],
+                                        "Concepto" => $rowc["Concepto"],
+                                        "Precio" => $rowc["Precio"],
+                                    ));
                                 }
+                                array_push($array, array(
+                                    "day" => $inicio->format('d'),
+                                    "mes" => $inicio->format('m'),
+                                    "year" => $inicio->format('Y'),
+                                    "concepto" => $arryConcepto
+                                ));
                                 $inicio->modify('+ 1 month');
                             }
                         }
@@ -133,9 +136,22 @@ class Informacion
                                 $cmdConceptos->bindParam(2, $inicioFormat, PDO::PARAM_STR);
                                 $cmdConceptos->execute();
 
+                                $arryConcepto = array();
                                 while ($rowc = $cmdConceptos->fetch()) {
-                                    $montodeuda += floatval($rowc["Precio"]);
+                                    array_push($arryConcepto, array(
+                                        "IdConcepto" => $rowc["idConcepto"],
+                                        "Categoria" => $rowc["Categoria"],
+                                        "Concepto" => $rowc["Concepto"],
+                                        "Precio" => $rowc["Precio"],
+                                    ));
                                 }
+
+                                array_push($array, array(
+                                    "day" => $inicio->format('d'),
+                                    "mes" => $inicio->format('m'),
+                                    "year" => $inicio->format('Y'),
+                                    "concepto" => $arryConcepto
+                                ));
                                 $inicio->modify('+ 1 month');
                             }
                         }
@@ -143,30 +159,9 @@ class Informacion
                 }
             }
 
-            return array("state" => 1, "persona" => $resultInformacion, "deuda" => $montodeuda);
+            return array("state" => 1, "data" => $array);
         } catch (Exception $ex) {
             return array("state" => 0, "message" => "Error de conexión del servidor, intente nuevamente en un par de minutos.");
         }
     }
 }
-
-
-// $body = json_decode(file_get_contents("php://input"), true);
-// $postdata = http_build_query(
-//     array(
-//         'idDni' => $body["idDni"],
-//     )
-// );
-// $opts = array(
-//     'http' =>
-//     array(
-//         'method'  => 'POST',
-//         'header'  => 'Content-Type: application/x-www-form-urlencoded',
-//         'content' => $postdata
-//     )
-// );
-
-// $context  = stream_context_create($opts);
-// $data = file_get_contents('http://localhost:5000/api/informacion', false, $context);
-// $manage = json_decode($data);
-// print json_encode($manage);
