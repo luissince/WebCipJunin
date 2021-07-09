@@ -446,17 +446,17 @@ if (!isset($_SESSION['IdUsuario'])) {
                                 $("#cbEspecialidadCertificado").append('<option value="' + especialidades.idEspecialidad + '">' + especialidades.Especialidad + '</option>');
                             }
                         } else {
-                            //     $("#lblCertificadoHabilidadEstado").addClass("text-warning");
-                            //     $("#lblCertificadoHabilidadEstado").append('<i class="fa fa-check"> </i> ' + result.message);
-                            //     $("#cbEspecialidadCertificado").append('<option value="">- Seleccione -</option>');
+                                $("#lblCertificadoHabilidadEstado").addClass("text-warning");
+                                $("#lblCertificadoHabilidadEstado").append('<i class="fa fa-check"> </i> ' + result.message);
+                                $("#cbEspecialidadCertificado").append('<option value="">- Seleccione -</option>');
                         }
                     },
                     error: function(error) {
-                        // $("#modal-title-certificado-habilidad").empty();
-                        // $("#modal-title-certificado-habilidad").append('<i class="fa fa-plus"></i> Certificado de Habilidad');
-                        // $("#cbEspecialidadCertificado").append('<option value="">- Seleccione -</option>');
-                        // $("#lblCertificadoHabilidadEstado").addClass("text-danger");
-                        // $("#lblCertificadoHabilidadEstado").append('<i class="fa fa-check"> </i> ' + error.responseText);
+                        $("#modal-title-certificado-habilidad").empty();
+                        $("#modal-title-certificado-habilidad").append('<i class="fa fa-plus"></i> Certificado de Habilidad');
+                        $("#cbEspecialidadCertificado").append('<option value="">- Seleccione -</option>');
+                        $("#lblCertificadoHabilidadEstado").addClass("text-danger");
+                        $("#lblCertificadoHabilidadEstado").append('<i class="fa fa-check"> </i> ' + error.responseText);
                     }
                 });
             }

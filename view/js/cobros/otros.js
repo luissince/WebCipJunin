@@ -1,5 +1,6 @@
 function Otros() {
 
+
     this.componentesOtros = function() {
         $("#btnOtro").click(function() {
             if (idDNI == 0 && $("#cbEmpresa").val() == "") {
@@ -12,8 +13,12 @@ function Otros() {
 
         $("#btnOtro").keypress(function(event) {
             if (event.keyCode === 13) {
-                $('#mdOtros').modal('show');
-                loadOtros();
+                if (idDNI == 0 && $("#cbEmpresa").val() == "") {
+                    tools.AlertWarning("Cuotas", "No selecciono ningún ingeniero o empresa para aceder al modulo otros.")
+                } else {
+                    $('#mdOtros').modal('show');
+                    loadOtros();
+                }
             }
             event.preventDefault();
         });
