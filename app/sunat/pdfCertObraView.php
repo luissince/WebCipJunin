@@ -1,43 +1,61 @@
 <?php
+setlocale(LC_TIME, 'Spanish_Peru');
+
+if (!isset($_GET["idIngreso"])) {
+    echo '<script>location.href = "404.php";</script>';
+} else {
 
     define('_MPDF_PATH', '/lib');
     require('./lib/mpdf/vendor/autoload.php');
+    include_once('../model/IngresosAdo.php');
 
-    $Nombreingeniero = '';
-        $Apellidosingeniero = '';
+    $CertificadoObra = IngresosAdo::ObtenerDatosPdfCertObra($_GET["idIngreso"]);
+    if (!is_array($CertificadoObra)) {
+        echo $CertificadoObra;
+    } else {
+        $Datos = $CertificadoObra[0];
+
+        $Nombreingeniero = $Datos['usuario'];
+        $Apellidosingeniero = $Datos['apellidos'];
         $ConsejoDepartamental = 'JUNIN';
-        $NumeroCIP = '';
-        
-        $FechaIncorporacion = '';
-        $DiaIncorporacion = '';
-        $MesIncorporacion = '';
-        $AnioIncorporacion = '';
+        $NumeroCIP = $Datos['cip'];
 
-        $Especialidad = '';
-        $Modalidad = '';
-        $Proyecto = '';
-        $Propietario = '';
-        $Monto = '';
+        $FechaIncorporacion = $Datos['fechaIncorporacion'];
+        $DiaIncorporacion = $Datos['fiDia'];
+        $MesIncorporacion = $Datos['fiMes'];
+        $AnioIncorporacion = $Datos['fiAnio'];
+
+        $Especialidad = $Datos['especialidad'];
+        $Modalidad = $Datos['modalidad'];
+        $Proyecto = $Datos['proyecto'];
+        $Propietario = $Datos['propietario'];
+        $Monto = number_format(round($Datos['monto'], 2, PHP_ROUND_HALF_UP), 2, '.', '');
         $MontoenLetras = 'CINCUENTA NUEVOS SOLES CON 00 SOLES';
-        $Departamento = '';
-        $Provincia = '';
-        $Distrito = '';
-        $UrbAahhPpjjAsoc = '';
-        $JrAvCallePasaje = '';
+        $Departamento = $Datos['departamento'];
+        $Provincia = $Datos['provincia'];
+        $Distrito = $Datos['distrito'];
 
-        $FechaVencimiento = '';
-        $DiaVencimiento = '';
-        $MesVencimiento = '';
-        $AnioVencimiento = '';
+        $FechaVencimiento = $Datos['fechaVencimiento'];
+        $DiaVencimiento = $Datos['fvDia'];
+        $MesVencimiento = $Datos['fvMes'];
+        $AnioVencimiento = $Datos['fvAnio'];
 
         $LugarRegistro = 'Huancayo'; //modificar****************************************************
 
-        $FechaRegistro = '';
-        $DiaRegistro = '';
-        $Mes = '';
-        
+        $FechaRegistro = $Datos['fechaRegistro'];
+        $DiaRegistro = $Datos['frDia'];
+        $Mes = $Datos['frMes'];
+        $MesFormat = DateTime::createFromFormat('!m', $Mes);
+        $MesRegistro = strftime("%B", $MesFormat->getTimestamp());
+        $AnioRegistro = substr($Datos['frAnio'], 2, 2);
+        $sesentaEspacios = '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+                            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;';
+        $veinteEspacios = '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;';
+        $cincoEspacios = '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;';
+        $tresEspacios = '&nbsp;&nbsp;&nbsp;';
 
- 
+
         $html .= '<html>
             <head>
                 <style>
@@ -84,22 +102,22 @@
                         </div>
                     </div>
                     <div style="width:100%; padding-left: 42px;" face:"georgia";>
-                        El ingeniero (a):______________________________________________________________________________________________________
+                        El ingeniero (a): <strong>'.$tresEspacios .$Nombreingeniero.' '.$Apellidosingeniero.'</strong>
                     </div>
                     <div style="width:100%; padding-left: 42px; padding-top: 5px;">
-                        Adscrito al Consejo Departamental de:_____________________________________Registro CIP N°:_________________________
+                        Adscrito al Consejo Departamental de: <strong>'.$tresEspacios .$ConsejoDepartamental.' </strong>'.$veinteEspacios.'Registro CIP N°:<strong>'.$tresEspacios .$NumeroCIP.'</strong>
                     </div>
                     <div style="width:100%; padding-left: 42px; padding-top: 5px;">
-                        Fecha de Incorporación:_____________________Especialidad:___________________________________________________________
+                        Fecha de Incorporación:<strong>'.$tresEspacios .$FechaIncorporacion.'</strong>'.$veinteEspacios.$cincoEspacios.'Especialidad: <strong>'.$tresEspacios .$Especialidad.'</strong>
                     </div>
                     <div style="width:100%; padding-left: 42px; padding-top: 8px;">
                         EL INGENIERO SE ENCUENTRA COLEGIADO Y HÁBIL, para el siguiente detalle:
                     </div>
                     <div style="width:100%; padding-left: 42px; padding-top: 8px;">
-                        Modalidad:__________________________________________________Proyecto:________________________________________________
+                        Modalidad:<strong>'.$tresEspacios .$Modalidad.'</strong>'.$veinteEspacios.$cincoEspacios.'Proyecto:<strong>'.$tresEspacios .IngresosAdo::limitar_cadena($Proyecto,25,"").'</strong>
                     </div>
                     <div style="width:100%; padding-left: 42px; padding-top: 8px;">
-                        Propietario:_________________________________________________Monto del contrato:______________________________________
+                        Propietario:<strong>'.$tresEspacios .$Propietario.'</strong>'.$veinteEspacios.$cincoEspacios.'Monto del contrato: <strong>'.$tresEspacios .$Monto.'</strong>
                     </div>
                     <div style="width:100%; height:50px; padding-left: 42px; padding-top: 5px;">
                         <div style="float:left; width:40%; height:40px; padding-left: 2px;">
@@ -111,14 +129,14 @@
                                     <td style="width:20px; height:13px;  font-size:8px; text-align:center; border:1px solid #c55f52; border-bottom:0;">AÑO</td>
                                 </tr>
                                 <tr>
-                                    <td style="width:20px; height:18px; text-align:center; border:1px solid #c55f52; border-top:0; font-size:8px;">06</td>
-                                    <td style="width:20px; height:18px;  text-align:center; border:1px solid #c55f52; border-top:0; font-size:8px;">07</td>
-                                    <td style="width:20px; height:18px;  text-align:center; border:1px solid #c55f52; border-top:0; font-size:8px;">2021</td>
+                                    <td style="width:20px; height:18px; text-align:center; border:1px solid #c55f52; border-top:0; font-size:8px;"><strong>'.$DiaVencimiento.'</strong></td>
+                                    <td style="width:20px; height:18px;  text-align:center; border:1px solid #c55f52; border-top:0; font-size:8px;"><strong>'.$MesVencimiento.'</strong></td>
+                                    <td style="width:20px; height:18px;  text-align:center; border:1px solid #c55f52; border-top:0; font-size:8px;"><strong>'.$AnioVencimiento.'</strong></td>
                                 </tr>
                             </table>
                         </div>
                         <div style="float:left; width:55%; height:30px; margin-top: 15px; text-align:right;">
-                                _______________, de_________ del 20_____
+                            <strong>'.$LugarRegistro.$cincoEspacios.$DiaRegistro.$tresEspacios.'</strong>, de<strong>'.$tresEspacios.$MesRegistro.$tresEspacios.'</strong> del 20<strong>'.$AnioRegistro.'</strong>
                         </div>
                     </div>
                 </div>
@@ -149,16 +167,16 @@
                         Los que suscriben certifican que:
                     </div>
                     <div style="width:100%; padding-left: 135px; padding-top:10px;">
-                        El ingeniero (a):____________________________________________________________________________________________
+                        El ingeniero (a): <strong>'.$tresEspacios .$Nombreingeniero.' '.$Apellidosingeniero.'</strong>
                     </div>
                     <div style="width:100%; padding-left: 135px; padding-top: 10px;">
-                        Adscrito al Consejo Departamental de:_____________________________________________________________________
+                        Adscrito al Consejo Departamental de: <strong>'.$tresEspacios .$ConsejoDepartamental.'</strong>
                     </div>
                     <div style="width:100%; padding-left: 135px; padding-top: 10px;">
-                        Con Registro de Matrícula del CIP N°:_______________________Fecha de Incorporación:______________________
+                        Con Registro de Matrícula del CIP N°: <strong>'.$tresEspacios .$NumeroCIP.$veinteEspacios.'</strong>Fecha de Incorporación: <strong>'.$tresEspacios .$FechaIncorporacion.'</strong>
                     </div>
                     <div style="width:100%; padding-left: 135px; padding-top: 10px;">
-                        Especialidad:_______________________________________________________________________________________________
+                        Especialidad: <strong>'.$tresEspacios .$Especialidad.'</strong>
                     </div>
                     <div style="width:100%; padding-left: 135px; padding-top: 10px; font-size:8.7pt;">
                         De conformidad con la Ley N° 28858, Ley que complementa a la Ley N° 16053 del Ejercicio Profesional y el Estatuto
@@ -173,28 +191,25 @@
                          en consecuencia está autorizado para ejercer la profesión de Ingeniero(a) de acuerdo al siguiente detalle:
                     </div>
                     <div style="width:100%; padding-left: 135px; padding-top:10px;">
-                        Modalidad:_________________________________________________________________________________________________
+                        Modalidad:<strong>'.$tresEspacios .$Modalidad.'</strong>
                     </div>
                     <div style="width:100%; padding-left: 135px; padding-top:10px;">
-                        Proyecto:___________________________________________________________________________________________________
-                    </div>
-                    <div style="width:100%; padding-left: 263px; padding-top:10px;">
-                    _______________________________________________________________________________________
+                        Proyecto:<strong>'.$tresEspacios .$Proyecto.'</strong>
                     </div>
                     <div style="width:100%; padding-left: 135px; padding-top:10px;">
-                        Propietario:_________________________________________________________________________________________________
+                        Propietario:<strong>'.$tresEspacios .$Propietario.'</strong>
                     </div>
                     <div style="width:100%; padding-left: 135px; padding-top:10px;">
-                        Monto del contrato:_________________________________________________________________________________________
+                        Monto del contrato:<strong>'.$tresEspacios .$Monto.'</strong>
                     </div>
                     <div style="width:100%; padding-left: 135px; padding-top:10px; text-decoration: underline;">
                         Ubicación:
                     </div>
                     <div style="width:100%; padding-left: 135px; padding-top:10px;">
-                        Departamento:__________________________________________Provincia:__________________________________________
+                        Departamento:<strong>'.$tresEspacios .$Departamento.$sesentaEspacios.'</strong>Provincia:<strong>'.$tresEspacios .$Provincia.'</strong>
                     </div>
                     <div style="width:100%; padding-left: 135px; padding-top:10px;">
-                        Distrito:_____________________________________________________________________________________________________
+                        Distrito:<strong>'.$tresEspacios .$Distrito.'</strong>
                     </div>
                     <!--######################################### Fin Cuerpo del documento ##################################################################-->
 
@@ -211,14 +226,14 @@
                                     <td style="width:20px; height:15px;  font-size:9px; text-align:center; border:1px solid #c55f52; border-bottom:0;">AÑO</td>
                                 </tr>
                                 <tr>
-                                    <td style="width:20px; height:22px; text-align:center; border:1px solid #c55f52; border-top:0; font-size:10px;">06</td>
-                                    <td style="width:20px; height:22px;  text-align:center; border:1px solid #c55f52; border-top:0; font-size:10px;">07</td>
-                                    <td style="width:20px; height:22px;  text-align:center; border:1px solid #c55f52; border-top:0; font-size:10px;">2021</td>
+                                    <td style="width:20px; height:22px; text-align:center; border:1px solid #c55f52; border-top:0; font-size:10px;"><strong>'.$DiaVencimiento.'</strong></td>
+                                    <td style="width:20px; height:22px;  text-align:center; border:1px solid #c55f52; border-top:0; font-size:10px;"><strong>'.$MesVencimiento.'</strong></td>
+                                    <td style="width:20px; height:22px;  text-align:center; border:1px solid #c55f52; border-top:0; font-size:10px;"><strong>'.$AnioVencimiento.'</strong></td>
                                 </tr>
                             </table>
                         </div>
                         <div style="float:left; width:50%; height:40px;  padding-top:55px; font-size:11pt; font-weight:bold;">
-                            __________________, de______ del 20_____
+                            <strong>'.$LugarRegistro.$cincoEspacios.$DiaRegistro.$tresEspacios.'</strong>, de<strong>'.$tresEspacios.$MesRegistro.$tresEspacios.'</strong> del 20<strong>'.$AnioRegistro.'</strong>
                         </div>
                         <div style="float:right; width:70%; height:40px;  padding-top:0px; font-size:15pt; font-weight:bold;">
                             VÁLIDO SOLO ORIGINAL
@@ -263,4 +278,5 @@
 
         // Output a PDF file directly to the browser
         $mpdf->Output(" CIP-JUNIN.pdf", 'I');
-    
+    }
+}

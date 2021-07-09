@@ -204,7 +204,7 @@ if (!isset($_SESSION['IdUsuario'])) {
                                     </div>
                                 </div>
                             </div>
-                            <!-- panel derecho inferior-->
+                            <!-- panel izquierdo inferior-->
 
                             <!-- HISTORIAL DE COBROS-->
                             <div class="panel panel-primary">

@@ -22,6 +22,120 @@ if (!isset($_SESSION['IdUsuario'])) {
             <!-- start menu -->
             <?php include('./layout/menu.php') ?>
             <!-- end menu -->
+
+            <!-- modal start certificado de proyecto -->
+            <div class="row">
+                <div class="modal fade" id="mdCertProyecto" data-backdrop="static">
+                    <div class="modal-dialog modal-xl">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <button type="button" class="close" id="btnCloseCertProyecto">
+                                    <i class="fa fa-close"></i>
+                                </button>
+                                <h4 class="modal-title" id="modal-title-certificado-proyecto">
+                                    <i class="fa fa-plus">
+                                    </i> Certificado de Proyecto
+                                </h4>
+                            </div>
+                            <div class="modal-body">
+
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <label id="lblCertificadoProyectoEstado"></label>
+                                    </div>
+                                </div>
+
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <div class="form-group">
+                                            <label for="txtIngenieroProyecto">Ingeniero(a)</label>
+                                            <input type="text" class="form-control" id="txtIngenieroProyecto" placeholder="Datos completos del ingeniero" disabled>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <div class="form-group">
+                                            <label id="lblEspecialidadProyecto">Especialidad(es)</label>
+                                            <select class="form-control" id="cbEspecialidadProyecto">
+                                            </select>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            <label for="txtFechaProyecto">Hábil Hasta</label>
+                                            <input type="date" class="form-control" id="txtFechaProyecto" disabled>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            <label for="txtNumeroCertificadoProyecto">Certificado N°</label>
+                                            <input type="text" class="form-control" id="txtNumeroCertificadoProyecto" placeholder="Número del certificado" disabled>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            <label for="txtModalidadProyecto">Modalidad</label>
+                                            <input type="text" class="form-control" id="txtModalidadProyecto" placeholder="Ingrese la modalidad">
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            <label for="txtPropietarioProyecto">Propietario</label>
+                                            <input type="text" class="form-control" id="txtPropietarioProyecto" placeholder="Ingrese el propietario">
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <div class="form-group">
+                                            <label for="txtProyectoProyecto">Proyecto</label>
+                                            <input type="text" class="form-control" id="txtProyectoProyecto" placeholder="Ingrese el nombre del proyecto">
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <div class="form-group">
+                                            <label>Departamento/Provincia/Distrito</label>
+                                            <select class="form-control select2" style="width: 100%;" id="cbDepartamentoProyecto">
+                                            </select>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <div class="form-group">
+                                            <label for="txtUrbProyecto">Urb./A.A.H.H./PP.JJ/Asoc</label>
+                                            <input type="text" class="form-control" id="txtUrbProyecto" placeholder="Urb./A.A.H.H./PP.JJ/Asoc">
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <div class="form-group">
+                                            <label for="txtCalleProyecto">Jr./Av./Calle/Pasaje</label>
+                                            <input type="text" class="form-control" id="txtCalleProyecto" placeholder="Jr./Av./Calle/Pasaje">
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-danger" id="btnAceptarCertProyecto">
+                                    <i class="fa fa-check"></i> Aceptar</button>
+                                <button type="button" class="btn btn-primary" id="btnCancelCertProyecto">
+                                    <i class="fa fa-remove"></i> Cancelar</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- modal end certificado de proyecto -->
+
             <!-- Content Wrapper. Contains page content -->
             <div class="content-wrapper" style="background-color: #FFFFFF;">
                 <!-- Main content -->
@@ -65,9 +179,10 @@ if (!isset($_SESSION['IdUsuario'])) {
                             <div class="table-responsive">
                                 <table class="table table-striped" style="border-width: 1px;border-style: dashed;border-color: #E31E25;">
                                     <thead style="background-color: #FDB2B1;color: #B72928;">
-                                        <th style="width:5%;">#</th>
-                                        <th style="width:5%;">P.D.F</th>
-                                        <th style="width:10%;">Colegiado</th>
+                                        <th style="width:4%;">#</th>
+                                        <th style="width:4%;">P.D.F</th>
+                                        <th style="width:4%;">Editar</th>
+                                        <th style="width:8%;">Colegiado</th>
                                         <th style="width:12%;">Especialidad</th>
                                         <th style="width:5%;">N° Cert.</th>
                                         <th style="width:5%;">Estado</th>
@@ -127,6 +242,7 @@ if (!isset($_SESSION['IdUsuario'])) {
             let paginacion = 0;
             let filasPorPagina = 2;
             let tbTable = $("#tbTable");
+            let idCertProyecto = 0;
 
             $(document).ready(function() {
 
@@ -194,6 +310,27 @@ if (!isset($_SESSION['IdUsuario'])) {
                 });
 
                 loadInitIngresos();
+
+                $("#btnAceptarCertProyecto").click(function() {
+                    crudEditCertProyecto(idCertProyecto);
+                });
+
+                $("#btnAceptarCertProyecto").keypress(function(event) {
+                    if (event.keyCode === 13) {
+                        crudEditCertProyecto(idCertProyecto);
+                    }
+                    event.preventDefault();
+                });
+
+                $("#btnCloseCertProyecto").click(function() {
+                    $('#mdCertProyecto').modal('hide');
+                    cleanModalProyecto()
+                });
+
+                $("#btnCancelCertProyecto").click(function() {
+                    $('#mdCertProyecto').modal('hide');
+                    cleanModalProyecto()
+                });
             });
 
             function onEventPaginacion() {
@@ -259,9 +396,15 @@ if (!isset($_SESSION['IdUsuario'])) {
                                         '<i class="fa fa-file-pdf-o" style="font-size:25px;"></i>' +
                                         '</button>';
 
+                                    let btnEdit =
+                                        '<button class="btn btn-warning btn-xs" onclick="editCertProyecto(\'' + ingresos.idIngreso + '\')">' +
+                                        '<i class="fa fa-edit" style="font-size:25px;"></i>' +
+                                        '</button>';
+
                                     tbTable.append('<tr>' +
                                         '<td class="text-center text-primary">' + ingresos.id + '</td>' +
                                         '<td>' + btnPdf + '</td>' +
+                                        '<td>' + btnEdit + '</td>' +
                                         '<td>' + ingresos.dni + '</br>' + ingresos.usuario + ' ' + ingresos.apellidos + '</td>' +
                                         '<td>' + ingresos.especialidad + '</td>' +
                                         '<td>' + ingresos.numCertificado + '</td>' +
@@ -307,6 +450,141 @@ if (!isset($_SESSION['IdUsuario'])) {
 
             function openPdf(idIngreso) {
                 window.open("../app/sunat/pdfCertProyecto.php?idIngreso=" + idIngreso, "_blank");
+            }
+
+            function editCertProyecto(idIngreso) {
+                $('#mdCertProyecto').modal('show');
+
+                $.ajax({
+                    url: "../app/controller/ConceptoController.php",
+                    method: "GET",
+                    dataType: "json",
+                    data: {
+                        "type": "certProyecto",
+                        "idIngreso": idIngreso,
+                    },
+                    beforeSend: function() {
+
+                        cleanModalProyecto();
+                    },
+                    success: function(result) {
+                        $("#modal-title-certificado-proyecto").empty();
+                        $("#modal-title-certificado-proyecto").append('<i class="fa fa-edit"> </i> Editar Certificado de Proyecto');
+
+                        if (result.estado == 1) {
+                            $("#cbEspecialidadProyecto").append('<option value="">- Seleccione -</option>');
+                            for (let especialidades of result.especialidades) {
+                                $("#cbEspecialidadProyecto").append('<option value="' + especialidades.idEspecialidad + '">' + especialidades.Especialidad + '</option>');
+                            }
+
+                            $("#cbDepartamentoProyecto").append('<option value="">- Seleccione un Ubigeo -</option>');
+                            for (let ubigeo of result.ubigeo) {
+                                $("#cbDepartamentoProyecto").append('<option value="' + ubigeo.IdUbicacion + '">' + ubigeo.Ubicacion + '</option>');
+                            }
+                            $('#cbDepartamentoProyecto').select2();
+
+                            idCertProyecto = result.data.idProyecto;
+                            $("#txtIngenieroProyecto").val(result.data.Apellidos + ', ' + result.data.Nombres);
+                            $("#cbEspecialidadProyecto").val(result.data.idEspecialidad);
+                            $("#txtFechaProyecto").val(result.data.HastaFecha);
+                            $("#txtNumeroCertificadoProyecto").val(result.data.Numero);
+                            $("#txtModalidadProyecto").val(result.data.Modalidad);
+                            $("#txtPropietarioProyecto").val(result.data.Propietario);
+                            $("#txtProyectoProyecto").val(result.data.Proyecto);
+                            $('#cbDepartamentoProyecto').val(result.data.idUbigeo).trigger('change.select2');
+                            $("#txtUrbProyecto").val(result.data.Adicional1);
+                            $("#txtCalleProyecto").val(result.data.Adicional2);
+
+                        } else {
+                            $("#lblCertificadoProyectoEstado").addClass("text-warning");
+                            $("#lblCertificadoProyectoEstado").append('<i class="fa fa-check"> </i> ' + result.message);
+                            $("#cbEspecialidadProyecto").append('<option value="">- Seleccione -</option>');
+                            $("#cbDepartamentoProyecto").append('<option value="">- Seleccione -</option>');
+                        }
+                    },
+                    error: function(error) {
+                        $("#modal-title-certificado-proyecto").empty();
+                        $("#modal-title-certificado-proyecto").append('<i class="fa fa-edit"></i> Editar Certificado de Habilidad para Firmar de Contrato de Obra Pública o Residencia');
+                        $("#cbEspecialidadProyecto").append('<option value="">- Seleccione -</option>');
+                        $("#cbDepartamentoProyecto").append('<option value="">- Seleccione -</option>');
+                        $("#lblCertificadoProyectoEstado").addClass("text-danger");
+                        $("#lblCertificadoProyectoEstado").append('<i class="fa fa-check"> </i> ' + error.responseText);
+                    }
+                });
+            }
+
+            function crudEditCertProyecto(idCertProyecto) {
+
+                if ($("#cbEspecialidadProyecto").val() == '') {
+                    tools.AlertWarning("Certificado de Proyecto", "Seleccione una especialidad para continuar.");
+                    $("#cbEspecialidadProyecto").focus();
+                } else if ($("#txtModalidadProyecto").val() == '') {
+                    tools.AlertWarning("Certificado de Proyecto", "Ingrese una modalidad para continuar.");
+                    $("#txtModalidadProyecto").focus();
+                } else if ($("#txtPropietarioProyecto").val() == '') {
+                    tools.AlertWarning("Certificado de Proyecto", "Ingrese un Propietario para continuar.");
+                    $("#txtPropietarioProyecto").focus();
+                } else if ($("#txtProyectoProyecto").val() == '') {
+                    tools.AlertWarning("Certificado de Proyecto", "Ingrese un Proyecto para continuar.");
+                    $("#txtProyectoProyecto").focus();
+                } else if ($("#cbDepartamentoProyecto").val() == '') {
+                    tools.AlertWarning("Certificado de Proyecto", "Ingrese un Departamento/Provincia/Distrito para continuar.");
+                    $("#cbDepartamentoProyecto").focus();
+                } else if ($("#txtUrbProyecto").val() == '') {
+                    tools.AlertWarning("Certificado de Proyecto", "Ingrese una Urb./A.A.H.H./PP.JJ/Asoc para continuar.");
+                    $("#txtUrbProyecto").focus();
+                } else if ($("#txtCalleProyecto").val() == '') {
+                    tools.AlertWarning("Certificado de Proyecto", "Ingrese una Jr./Av./Calle/Pasaje para continuar.");
+                    $("#txtCalleProyecto").focus();
+                } else {
+                    $.ajax({
+                        url: "../app/controller/ConceptoController.php",
+                        method: "POST",
+                        data: {
+                            "type": "certProyecto",
+                            "idCertificado": idCertProyecto,
+                            "especialidad": $("#cbEspecialidadProyecto").val(),
+                            "modalidad": $("#txtModalidadProyecto").val(),
+                            "proyecto": $("#txtProyectoProyecto").val(),
+                            "propietario": $("#txtPropietarioProyecto").val(),
+                            "ubigeo": $("#cbDepartamentoProyecto").val(),
+                            "adicional1": $("#txtUrbProyecto").val(),
+                            "adicional2": $("#txtCalleProyecto").val()
+
+                        },
+                        beforeSend: function() {
+                            tools.ModalAlertInfo("Certificado Proyecto", "Procesando petición..");
+                        },
+                        success: function(result) {
+                            if (result.estado == 1) {
+                                tools.ModalAlertSuccess("Certificado Proyecto", result.message);
+                                loadInitIngresos();
+                            } else {
+                                tools.ModalAlertWarning("Certificado Proyecto", result.message);
+                            }
+                            $('#mdCertProyecto').modal('hide');
+                            cleanModalProyecto();
+                        },
+
+                        error: function(error) {
+                            tools.ModalAlertError("Certificado Proyecto", "Se produjo un error: " + error.responseText);
+                        }
+                    });
+                }
+            }
+
+            function cleanModalProyecto() {
+                $("#txtIngenieroProyecto").val('');
+                $("#cbEspecialidadProyecto").empty();
+                $("#txtFechaProyecto").val('');
+                $("#txtNumeroCertificadoProyecto").val('');
+                $("#txtModalidadProyecto").val('');
+                $("#txtPropietarioProyecto").val('');
+                $("#txtProyectoProyecto").val('');
+                $("#cbDepartamentoProyecto").empty();
+                $("#txtUrbProyecto").val('');
+                $("#txtCalleProyecto").val('');
+                idCertProyecto = 0;
             }
 
             function anularIngreso(idIngreso, dni) {

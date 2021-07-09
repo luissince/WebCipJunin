@@ -685,42 +685,226 @@ class ConceptoAdo
         }
     }
 
-    public static function getCertHabilidad($idCertificado, $condicion)
+    public static function getCertHabilidad($data)
     {
         try {
-            //condicion se refiere a si se edita o atualiza (1=editar o traer informacion para mostrar)
-            if ($condicion == 1) {
-                $array = array();
-                $cmdCertificado = Database::getInstance()->getDb()->prepare("SELECT ch.Fecha, ch.Numero, ch.Asunto, ch.Lugar, ch.Entidad, e.Especialidad, p.idDNI, p.Apellidos, p.Nombres 
+            $array = array();
+            $cmdCertificado = Database::getInstance()->getDb()->prepare("SELECT ch.idHabilidad, ch.Fecha, ch.Numero, ch.Asunto, ch.Lugar, 
+                ch.Entidad, ch.idColegiatura, e.Especialidad, p.idDNI, p.Apellidos, p.Nombres 
                 FROM CERTHabilidad AS ch  
                 INNER JOIN Especialidad AS e ON e.idEspecialidad = ch.idColegiatura
                 INNER JOIN Ingreso AS i ON i.idIngreso = ch.idIngreso
                 INNER JOIN Persona AS p ON p.idDNI = i.idDNI
                 where ch.idIngreso = ? ");
-                $cmdCertificado->bindParam(1, $idCertificado, PDO::PARAM_STR);
-                $cmdCertificado->execute();
+            $cmdCertificado->bindParam(1, $data, PDO::PARAM_STR);
+            $cmdCertificado->execute();
 
-                $objetCertificado = $cmdCertificado->fetchObject();
+            $objetCertificado = $cmdCertificado->fetchObject();
 
-                $cmdEspecialidad = Database::getInstance()->getDb()->prepare("SELECT c.idColegiado, c.idEspecialidad, e.Especialidad FROM Colegiatura AS c 
+            $cmdEspecialidad = Database::getInstance()->getDb()->prepare("SELECT c.idColegiado, c.idEspecialidad, e.Especialidad FROM Colegiatura AS c 
                 INNER JOIN Especialidad AS e ON e.idEspecialidad = c.idEspecialidad where c.idDNI = ?");
-                $cmdEspecialidad->bindParam(1, $objetCertificado->idDNI, PDO::PARAM_STR);
-                $cmdEspecialidad->execute();
+            $cmdEspecialidad->bindParam(1, $objetCertificado->idDNI, PDO::PARAM_STR);
+            $cmdEspecialidad->execute();
 
-                $arrayEspecialidades = array();
-                while ($row = $cmdEspecialidad->fetch()) {
-                    array_push($arrayEspecialidades, array(
-                        "idColegiado" => $row["idColegiado"],
-                        "idEspecialidad" => $row["idEspecialidad"],
-                        "Especialidad" => $row["Especialidad"]
-                    ));
-                }
+            $arrayEspecialidades = array();
+            while ($row = $cmdEspecialidad->fetch()) {
+                array_push($arrayEspecialidades, array(
+                    "idColegiado" => $row["idColegiado"],
+                    "idEspecialidad" => $row["idEspecialidad"],
+                    "Especialidad" => $row["Especialidad"]
+                ));
             }
-
 
             array_push($array, $objetCertificado, $arrayEspecialidades);
             return $array;
         } catch (Exception $ex) {
+            return $ex->getMessage();
+        }
+    }
+
+    public static function getCertObra($idIngreso)
+    {
+        try {
+            $array = array();
+            $cmdCertificado = Database::getInstance()->getDb()->prepare("SELECT p.idDNI, p.Apellidos, p.Nombres, e.idEspecialidad, co.idResidencia, 
+            co.HastaFecha, co.Numero, co.Modalidad, co.Proyecto, co.Propietario,
+            co.idUbigeo FROM CERTResidencia AS co 
+            INNER JOIN Especialidad AS e ON e.idEspecialidad = co.idColegiatura
+            INNER JOIN Ingreso AS i ON i.idIngreso = co.idIngreso
+            INNER JOIN Persona AS p ON p.idDNI = i.idDNI
+            where co.idIngreso = ? ");
+            $cmdCertificado->bindParam(1, $idIngreso, PDO::PARAM_STR);
+            $cmdCertificado->execute();
+
+            $objetCertificado = $cmdCertificado->fetchObject();
+
+            $cmdEspecialidad = Database::getInstance()->getDb()->prepare("SELECT c.idColegiado, c.idEspecialidad, e.Especialidad FROM Colegiatura AS c 
+            INNER JOIN Especialidad AS e ON e.idEspecialidad = c.idEspecialidad where c.idDNI = ?");
+            $cmdEspecialidad->bindParam(1, $objetCertificado->idDNI, PDO::PARAM_STR);
+            $cmdEspecialidad->execute();
+
+            $arrayEspecialidades = array();
+            while ($row = $cmdEspecialidad->fetch()) {
+                array_push($arrayEspecialidades, array(
+                    "idColegiado" => $row["idColegiado"],
+                    "idEspecialidad" => $row["idEspecialidad"],
+                    "Especialidad" => $row["Especialidad"]
+                ));
+            }
+
+            $arrayUbigeo = array();
+            $cmdUbigeo = Database::getInstance()->getDb()->prepare(" SELECT idUbigeo, CONCAT(Departamento, ' - ', Provincia, ' - ', 
+            Distrito) AS Ubicacion FROM Ubigeo ");
+            $cmdUbigeo->execute();
+
+            while ($row = $cmdUbigeo->fetch()) {
+                array_push($arrayUbigeo, array(
+                    'IdUbicacion' => $row['idUbigeo'],
+                    'Ubicacion' => $row['Ubicacion'],
+                ));
+            }
+
+            array_push($array, $objetCertificado, $arrayEspecialidades, $arrayUbigeo);
+            return $array;
+        } catch (Exception $ex) {
+            return $ex->getMessage();
+        }
+    }
+
+    public static function getCertProyecto($idIngreso)
+    {
+        try {
+            $array = array();
+            $cmdCertificado = Database::getInstance()->getDb()->prepare("SELECT p.idDNI, p.Apellidos, p.Nombres, e.idEspecialidad, cp.idProyecto, 
+            cp.HastaFecha, cp.Numero, cp.Modalidad, cp.Proyecto, cp.Propietario,
+            cp.idUbigeo, cp.Adicional1, cp.Adicional2 FROM CERTProyecto AS cp 
+            INNER JOIN Especialidad AS e ON e.idEspecialidad = cp.idColegiatura
+            INNER JOIN Ingreso AS i ON i.idIngreso = cp.idIngreso
+            INNER JOIN Persona AS p ON p.idDNI = i.idDNI
+            where cp.idIngreso = ?");
+            $cmdCertificado->bindParam(1, $idIngreso, PDO::PARAM_STR);
+            $cmdCertificado->execute();
+
+            $objetCertificado = $cmdCertificado->fetchObject();
+
+            $cmdEspecialidad = Database::getInstance()->getDb()->prepare("SELECT c.idColegiado, c.idEspecialidad, e.Especialidad FROM Colegiatura AS c 
+            INNER JOIN Especialidad AS e ON e.idEspecialidad = c.idEspecialidad where c.idDNI = ?");
+            $cmdEspecialidad->bindParam(1, $objetCertificado->idDNI, PDO::PARAM_STR);
+            $cmdEspecialidad->execute();
+
+            $arrayEspecialidades = array();
+            while ($row = $cmdEspecialidad->fetch()) {
+                array_push($arrayEspecialidades, array(
+                    "idColegiado" => $row["idColegiado"],
+                    "idEspecialidad" => $row["idEspecialidad"],
+                    "Especialidad" => $row["Especialidad"]
+                ));
+            }
+
+            $arrayUbigeo = array();
+            $cmdUbigeo = Database::getInstance()->getDb()->prepare(" SELECT idUbigeo, CONCAT(Departamento, ' - ', Provincia, ' - ', 
+            Distrito) AS Ubicacion FROM Ubigeo ");
+            $cmdUbigeo->execute();
+
+            while ($row = $cmdUbigeo->fetch()) {
+                array_push($arrayUbigeo, array(
+                    'IdUbicacion' => $row['idUbigeo'],
+                    'Ubicacion' => $row['Ubicacion'],
+                ));
+            }
+
+            array_push($array, $objetCertificado, $arrayEspecialidades, $arrayUbigeo);
+            return $array;
+        } catch (Exception $ex) {
+            return $ex->getMessage();
+        }
+    }
+
+    public static function updateCertHabilidad($data)
+    {
+        try {
+            Database::getInstance()->getDb()->beginTransaction();
+
+            $cmdConcepto = Database::getInstance()->getDb()->prepare("UPDATE CERTHabilidad SET
+                Asunto = ?,
+                Entidad = ?,
+                Lugar = ?,
+                idColegiatura = ?
+                WHERE idHabilidad = ?");
+
+            $cmdConcepto->bindParam(1, $data["asunto"], PDO::PARAM_STR);
+            $cmdConcepto->bindParam(2, $data["entidad"], PDO::PARAM_STR);
+            $cmdConcepto->bindParam(3, $data["lugar"], PDO::PARAM_STR);
+            $cmdConcepto->bindParam(4, $data["especialidad"], PDO::PARAM_INT);
+            $cmdConcepto->bindParam(5, $data["idCertHabilidad"], PDO::PARAM_INT);
+            $cmdConcepto->execute();
+
+            Database::getInstance()->getDb()->commit();
+            return "updated";
+        } catch (Exception $ex) {
+            Database::getInstance()->getDb()->rollback();
+            return $ex->getMessage();
+        }
+    }
+
+    public static function updateCertObra($data)
+    {
+        try {
+            Database::getInstance()->getDb()->beginTransaction();
+
+            $cmdConcepto = Database::getInstance()->getDb()->prepare("UPDATE CERTResidencia SET
+                Modalidad = ?,
+                Propietario = ?,
+                Proyecto = ?,
+                idColegiatura = ?,
+                idUbigeo = ?
+                WHERE idResidencia = ?");
+
+            $cmdConcepto->bindParam(1, $data["modalidad"], PDO::PARAM_STR);
+            $cmdConcepto->bindParam(2, $data["propietario"], PDO::PARAM_STR);
+            $cmdConcepto->bindParam(3, $data["proyecto"], PDO::PARAM_STR);
+            $cmdConcepto->bindParam(4, $data["especialidad"], PDO::PARAM_INT);
+            $cmdConcepto->bindParam(5, $data["ubigeo"], PDO::PARAM_INT);
+            $cmdConcepto->bindParam(6, $data["idCertObra"], PDO::PARAM_INT);
+            $cmdConcepto->execute();
+
+            Database::getInstance()->getDb()->commit();
+            return "updated";
+        } catch (Exception $ex) {
+            Database::getInstance()->getDb()->rollback();
+            return $ex->getMessage();
+        }
+    }
+
+    public static function updateCertProyecto($data)
+    {
+        try {
+            Database::getInstance()->getDb()->beginTransaction();
+
+            $cmdConcepto = Database::getInstance()->getDb()->prepare("UPDATE CERTProyecto SET
+                Modalidad = ?,
+                Propietario = ?,
+                Proyecto = ?,
+                idColegiatura = ?,
+                idUbigeo = ?,
+                Adicional1 = ?,
+                Adicional2 = ?
+                WHERE idProyecto = ?");
+
+            $cmdConcepto->bindParam(1, $data["modalidad"], PDO::PARAM_STR);
+            $cmdConcepto->bindParam(2, $data["propietario"], PDO::PARAM_STR);
+            $cmdConcepto->bindParam(3, $data["proyecto"], PDO::PARAM_STR);
+            $cmdConcepto->bindParam(4, $data["especialidad"], PDO::PARAM_INT);
+            $cmdConcepto->bindParam(5, $data["ubigeo"], PDO::PARAM_INT);
+            $cmdConcepto->bindParam(6, $data["adicional1"], PDO::PARAM_STR);
+            $cmdConcepto->bindParam(7, $data["adicional2"], PDO::PARAM_STR);
+            $cmdConcepto->bindParam(8, $data["idCertProyecto"], PDO::PARAM_INT);
+            $cmdConcepto->execute();
+
+            Database::getInstance()->getDb()->commit();
+            return "updated";
+        } catch (Exception $ex) {
+            Database::getInstance()->getDb()->rollback();
             return $ex->getMessage();
         }
     }

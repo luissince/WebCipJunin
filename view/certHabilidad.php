@@ -214,6 +214,7 @@ if (!isset($_SESSION['IdUsuario'])) {
             let paginacion = 0;
             let filasPorPagina = 10;
             let tbTable = $("#tbTable");
+            let idCertHabilidad = 0;
 
             $(document).ready(function() {
 
@@ -283,6 +284,17 @@ if (!isset($_SESSION['IdUsuario'])) {
                 });
 
                 loadInitIngresos();
+
+                $("#btnAceptarCertificado").click(function() {
+                    crudEditCertHabilidad(idCertHabilidad);
+                });
+
+                $("#btnAceptarCertificado").keypress(function(event) {
+                    if (event.keyCode === 13) {
+                        crudEditCertHabilidad(idCertHabilidad);
+                    }
+                    event.preventDefault();
+                });
 
                 $("#btnCancelarCertificado").click(function() {
                     $('#mdCertHabilidad').modal('hide');
@@ -428,27 +440,29 @@ if (!isset($_SESSION['IdUsuario'])) {
                         cleanModalHabilidad();
                     },
                     success: function(result) {
-                        console.log(result)
                         $("#modal-title-certificado-habilidad").empty();
                         $("#modal-title-certificado-habilidad").append('<i class="fa fa fa-edit"> </i> Editar Certificado de Habilidad');
                         if (result.estado == 1) {
 
+                            $("#cbEspecialidadCertificado").append('<option value="">- Seleccione -</option>');
+                            for (let especialidades of result.especialidades) {
+                                $("#cbEspecialidadCertificado").append('<option value="' + especialidades.idEspecialidad + '">' + especialidades.Especialidad + '</option>');
+                            }
+
+                            idCertHabilidad = result.data.idHabilidad;
                             $("#txtIngenieroCertificado").val(result.data.Apellidos + ', ' + result.data.Nombres);
-                            $("#cbEspecialidadCertificado").empty();
+                            $("#cbEspecialidadCertificado").val(result.data.idColegiatura);
                             $("#txtFechaCertificado").val(result.data.Fecha);
                             $("#txtCorrelativoCertificado").val(result.data.Numero);
                             $("#txtAsuntoCertificado").val(result.data.Asunto);
                             $("#txtEntidadCertificado").val(result.data.Entidad);
                             $("#txtLugarCertificado").val(result.data.Lugar);
 
-                            $("#cbEspecialidadCertificado").append('<option value="">- Seleccione -</option>');
-                            for (let especialidades of result.especialidades) {
-                                $("#cbEspecialidadCertificado").append('<option value="' + especialidades.idEspecialidad + '">' + especialidades.Especialidad + '</option>');
-                            }
+                            
                         } else {
-                                $("#lblCertificadoHabilidadEstado").addClass("text-warning");
-                                $("#lblCertificadoHabilidadEstado").append('<i class="fa fa-check"> </i> ' + result.message);
-                                $("#cbEspecialidadCertificado").append('<option value="">- Seleccione -</option>');
+                            $("#lblCertificadoHabilidadEstado").addClass("text-warning");
+                            $("#lblCertificadoHabilidadEstado").append('<i class="fa fa-check"> </i> ' + result.message);
+                            $("#cbEspecialidadCertificado").append('<option value="">- Seleccione -</option>');
                         }
                     },
                     error: function(error) {
@@ -459,6 +473,53 @@ if (!isset($_SESSION['IdUsuario'])) {
                         $("#lblCertificadoHabilidadEstado").append('<i class="fa fa-check"> </i> ' + error.responseText);
                     }
                 });
+            }
+
+            function crudEditCertHabilidad(idCertHabilidad) {
+                
+                if ($("#cbEspecialidadCertificado").val() == '') {
+                    tools.AlertWarning("Certificado de Habilidad", "Seleccione una especialidad para continuar.");
+                    $("#cbEspecialidadCertificado").focus();
+                } else if ($("#txtAsuntoCertificado").val() == '') {
+                    tools.AlertWarning("Certificado de Habilidad", "Ingrese un asunto para continuar.");
+                    $("#txtAsuntoCertificado").focus();
+                } else if ($("#txtEntidadCertificado").val() == '') {
+                    tools.AlertWarning("Certificado de Habilidad", "Ingrese una entidad para continuar.");
+                    $("#txtEntidadCertificado").focus();
+                } else if ($("#txtLugarCertificado").val() == '') {
+                    tools.AlertWarning("Certificado de Habilidad", "Ingrese un lugar para continuar.");
+                    $("#txtLugarCertificado").focus();
+                } else {
+                    $.ajax({
+                        url: "../app/controller/ConceptoController.php",
+                        method: "POST",
+                        data: {
+                            "type": "certHabilidad",
+                            "idCertificado": idCertHabilidad,
+                            "especialidad": $("#cbEspecialidadCertificado").val(),
+                            "asunto": $("#txtAsuntoCertificado").val(),
+                            "entidad": $("#txtEntidadCertificado").val(),
+                            "lugar": $("#txtLugarCertificado").val()
+                        },
+                        beforeSend: function() {
+                            tools.ModalAlertInfo("Certificado Habilidad", "Procesando petición..");
+                        },
+                        success: function(result) {
+                            if (result.estado == 1) {
+                                tools.ModalAlertSuccess("Certificado Habilidad", result.message);
+                                loadInitIngresos();
+                            } else {
+                                tools.ModalAlertWarning("Certificado Habilidad", result.message);
+                            }
+                            $('#mdCertHabilidad').modal('hide');
+                            cleanModalHabilidad();
+                        },
+
+                        error: function(error) {
+                            tools.ModalAlertError("Certificado Habilidad", "Se produjo un error: " + error.responseText);
+                        }
+                    });
+                }
             }
 
             function anularIngreso(idIngreso, dni) {
@@ -507,6 +568,7 @@ if (!isset($_SESSION['IdUsuario'])) {
                 $("#txtAsuntoCertificado").val('');
                 $("#txtEntidadCertificado").val('');
                 $("#txtLugarCertificado").val('');
+                idCertHabilidad = 0;
             }
         </script>
     </body>

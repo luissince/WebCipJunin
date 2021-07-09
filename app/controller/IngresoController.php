@@ -149,6 +149,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
     }
 } else if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     if ($_POST["type"] == "deleteIngreso") {
+
         $result = IngresosAdo::EliminarIngreso($_POST["idIngreso"], $_POST["idUsuario"], $_POST["fecha"], $_POST["hora"], $_POST["motivo"]);
         if ($result == "deleted") {
             echo json_encode(array(
@@ -171,5 +172,5 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
                 "message" => $result
             ));
         }
-    }
+    } 
 }
