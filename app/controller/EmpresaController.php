@@ -52,10 +52,11 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
         $data["Email"] = $_POST["email"];
 
         $result = EmpresaAdo::RegistrarEmpresa($data);
-        if ($result === "Insertado") {
+        if (is_array($result)) {
             echo json_encode(array(
                 "estado" => 1,
                 "mensaje" => "Se completo correctamento el ingreso.",
+                "data"=>$result
             ));
         } else if ($result === "Duplicado") {
             echo json_encode(array(

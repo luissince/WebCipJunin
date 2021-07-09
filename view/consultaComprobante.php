@@ -30,7 +30,6 @@ if (!isset($_SESSION['IdUsuario'])) {
                 </section>
 
                 <section class="content">
-
                     <div class="row">
                         <div class="col-md-12">
                             <div class="nav-tabs-custom">
@@ -405,6 +404,7 @@ if (!isset($_SESSION['IdUsuario'])) {
                     },
                     beforeSend: function() {
                         $("#ReduxComponent").empty();
+                        tools.ModalAlertInfo("Consultar Datos", "Procesando petición..");
                     },
                     success: function(result) {
                         cdrDiv = '';
@@ -472,6 +472,8 @@ if (!isset($_SESSION['IdUsuario'])) {
                             cdrDiv +
                             '</div>' +
                             '</div>')
+
+                            tools.ModalAlertSuccess("Consultar Datos", result.message);
                     },
                     error: function(error) {
                         console.log(error.responseText)

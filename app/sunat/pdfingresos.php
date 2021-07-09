@@ -211,10 +211,23 @@ if (!isset($_GET["idIngreso"])) {
 ?>
                             <?php
                             if ($ingreso->TipoDocumento == 6) {
-                                $html .= '<tr>
+                                if ($ingreso->CIP != "") {
+                                    $html .= '<tr>
                                             <td style="line-height: 0px;padding:2px 0px;"><b>Ref</b></td>
                                             <td style="line-height: 0px;padding:2px 0px;"><b>:</b> N° Cip ' . $ingreso->CIP . ' - ING. ' . $ingreso->Apellidos . ' ' . $ingreso->Nombres . '</td>
                                             </tr>  ';
+                                    $html .= '<tr>
+                                            <td style="line-height: 0px;padding:2px 0px;"><b>Cap. - Especia.</b></td>
+                                            <td style="line-height: 0px;padding:2px 0px;"><b>:</b> ' . $ingreso->Capitulo .' - '. $ingreso->Especialidad .'</td>
+                                            </tr>  ';
+                                }
+                            } else{
+                                if ($ingreso->CIP != "") {
+                                    $html .= '<tr>
+                                            <td style="line-height: 0px;padding:2px 0px;"><b>Cap. - Especia.</b></td>
+                                            <td style="line-height: 0px;padding:2px 0px;"><b>:</b> ' . $ingreso->Capitulo .' - '. $ingreso->Especialidad .'</td>
+                                            </tr>  ';
+                                }
                             }
                             ?>
                             <?php

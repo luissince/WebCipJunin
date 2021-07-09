@@ -45,6 +45,8 @@ if ($_GET["opcion"] == 1) {
     $subtitle = "REPORTE DE COLEGIADOS QUE VAN A CUMPLIR " . $condicion . " DEL AÑO " . $_GET["fiColegiado"];
 } else if ($_GET["opcion"] == 4) {
     $subtitle = "REPORTE DE COLEGIADOS AFILIADOS A LA RESOLUCION N° 15";
+} else if ($_GET["opcion"] == 5) {
+    $subtitle = "REPORTE DE COLEGIADOS ENTRE LAS FECHAS " . $_GET["fiColegiado"] . " - " . $_GET["ffColegiado"];
 }
 
 
@@ -183,6 +185,17 @@ if (!is_array($listarColegiados)) {
             ->setCellValue("H2", "FECHA COLEGIADO")
             ->setCellValue("I2", "MESES DE DEUDA")
             ->setCellValue("J2", "FECHA A VITALICIO");
+    } else if ($data['opcion'] == 5){
+        $documento->setActiveSheetIndex(0)
+            ->setCellValue("A2", "N°")
+            ->setCellValue("B2", "DNI")
+            ->setCellValue("C2", "N° CIP")
+            ->setCellValue("D2", "INGENIERO")
+            ->setCellValue("E2", "CONDICION")
+            ->setCellValue("F2", "FECHA COLEGIADO")
+            ->setCellValue("G2", "FECHA REGISTRO")
+            ->setCellValue("H2", "CAPITULO")
+            ->setCellValue("I2", "ESPECIALIDAD");
     } else {
         $documento->setActiveSheetIndex(0)
             ->setCellValue("A2", "N°")
@@ -277,7 +290,7 @@ if (!is_array($listarColegiados)) {
                 ->setCellValue("A" . $cel,  strval($count))
                 ->setCellValue("B" . $cel, strval($value["idDNI"]))
                 ->setCellValue("C" . $cel, strval($value["CIP"]))
-                ->setCellValue("D" . $cel, strval($value["Apellidos"].', '.$value["Apellidos"]))
+                ->setCellValue("D" . $cel, strval($value["Apellidos"].', '.$value["Nombres"]))
                 ->setCellValue("E" . $cel, strval($value["Condicion"]))
                 ->setCellValue("F" . $cel, strval($value["Capitulo"]))
                 ->setCellValue("G" . $cel, strval($value["Especialidad"]))
@@ -286,7 +299,46 @@ if (!is_array($listarColegiados)) {
                 ->setCellValue("J" . $cel, strval($value["Cumple"]));
             $cel++;
         }
-    } else {
+    } else if ($data['opcion'] == 5) {
+        foreach ($listarColegiados as $key => $value) {
+            $count++;
+            $documento->getActiveSheet()->getStyle('A' . $cel . ':I' . $cel . '')->applyFromArray(array(
+                'fill' => array(
+                    'type' => Fill::FILL_SOLID,
+                    'color' => array('rgb' => 'E5E4E2')
+                ),
+                'font'  => array(
+                    'bold'  =>  false
+                ),
+                'alignment' => array(
+                    'horizontal' => Alignment::HORIZONTAL_LEFT
+                )
+            ));
+
+            $documento->getActiveSheet()->getStyle('E' . $cel . ':G' . $cel . '')->applyFromArray(array(
+                'font'  => array(
+                    'bold'  =>  false,
+                    'color' => array('rgb' => '000000')
+                ),
+                'alignment' => array(
+                    'horizontal' => Alignment::HORIZONTAL_CENTER
+                )
+            ));
+
+
+            $documento->setActiveSheetIndex(0)
+                ->setCellValue("A" . $cel,  strval($count))
+                ->setCellValue("B" . $cel, strval($value["idDNI"]))
+                ->setCellValue("C" . $cel, strval($value["CIP"]))
+                ->setCellValue("D" . $cel, strval($value["Apellidos"].', '.$value["Nombres"]))
+                ->setCellValue("E" . $cel, strval($value["Condicion"]))
+                ->setCellValue("F" . $cel, strval($value["FechaColegiado"]))
+                ->setCellValue("G" . $cel, strval($value["FechaRegistro"]))
+                ->setCellValue("H" . $cel, strval($value["Capitulo"]))
+                ->setCellValue("I" . $cel, strval($value["Especialidad"]));
+            $cel++;
+        }
+    }else {
         foreach ($listarColegiados as $key => $value) {
             $count++;
             $documento->getActiveSheet()->getStyle('A' . $cel . ':I' . $cel . '')->applyFromArray(array(

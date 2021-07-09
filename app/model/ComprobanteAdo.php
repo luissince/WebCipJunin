@@ -33,7 +33,7 @@ class ComprobanteAdo
     {
         try {
             $array = array();
-            $comandoEmpresa = Database::getInstance()->getDb()->prepare("SELECT idEmpresa, NumeroRuc, Nombre FROM EmpresaPersona");
+            $comandoEmpresa = Database::getInstance()->getDb()->prepare("SELECT idEmpresa, NumeroRuc, Nombre FROM EmpresaPersona order by IdEmpresa desc");
             $comandoEmpresa->execute();
 
             while ($row = $comandoEmpresa->fetch()) {

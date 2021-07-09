@@ -685,6 +685,46 @@ class ConceptoAdo
         }
     }
 
+    public static function getCertHabilidad($idCertificado, $condicion)
+    {
+        try {
+            //condicion se refiere a si se edita o atualiza (1=editar o traer informacion para mostrar)
+            if ($condicion == 1) {
+                $array = array();
+                $cmdCertificado = Database::getInstance()->getDb()->prepare("SELECT ch.Fecha, ch.Numero, ch.Asunto, ch.Lugar, ch.Entidad, e.Especialidad, p.idDNI, p.Apellidos, p.Nombres 
+                FROM CERTHabilidad AS ch  
+                INNER JOIN Especialidad AS e ON e.idEspecialidad = ch.idColegiatura
+                INNER JOIN Ingreso AS i ON i.idIngreso = ch.idIngreso
+                INNER JOIN Persona AS p ON p.idDNI = i.idDNI
+                where ch.idIngreso = ? ");
+                $cmdCertificado->bindParam(1, $idCertificado, PDO::PARAM_STR);
+                $cmdCertificado->execute();
+
+                $objetCertificado = $cmdCertificado->fetchObject();
+
+                $cmdEspecialidad = Database::getInstance()->getDb()->prepare("SELECT c.idColegiado, c.idEspecialidad, e.Especialidad FROM Colegiatura AS c 
+                INNER JOIN Especialidad AS e ON e.idEspecialidad = c.idEspecialidad where c.idDNI = ?");
+                $cmdEspecialidad->bindParam(1, $objetCertificado->idDNI, PDO::PARAM_STR);
+                $cmdEspecialidad->execute();
+
+                $arrayEspecialidades = array();
+                while ($row = $cmdEspecialidad->fetch()) {
+                    array_push($arrayEspecialidades, array(
+                        "idColegiado" => $row["idColegiado"],
+                        "idEspecialidad" => $row["idEspecialidad"],
+                        "Especialidad" => $row["Especialidad"]
+                    ));
+                }
+            }
+
+
+            array_push($array, $objetCertificado, $arrayEspecialidades);
+            return $array;
+        } catch (Exception $ex) {
+            return $ex->getMessage();
+        }
+    }
+
     public static function insert($data)
     {
         try {

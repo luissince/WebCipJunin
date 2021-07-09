@@ -271,6 +271,7 @@ if (!isset($_SESSION['IdUsuario'])) {
                                                 </div>
                                                 <div class="col-md-6 text-right">
                                                     <h4 id="lblSumaTotal">0.00</h4>
+                                                </div>
                                             </button>
                                         </div>
                                     </div>
@@ -320,6 +321,18 @@ if (!isset($_SESSION['IdUsuario'])) {
                                                 <div class="col-md-6">
                                                     <h5>Hábil Hasta</h5>
                                                     <h5 class="text-primary description-header" id="lblHabilHasta">--</h5>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-12 text-left">
+                                            <div class="row">
+                                                <div class="col-md-6">
+                                                    <h5>Capitulo</h5>
+                                                    <h5 id="lblCapitulo">--</h5>
+                                                </div>
+                                                <div class="col-md-6">
+                                                    <h5>Especialidad</h5>
+                                                    <h5 id="lblEspecialidad">--</h5>
                                                 </div>
                                             </div>
                                         </div>
@@ -426,6 +439,9 @@ if (!isset($_SESSION['IdUsuario'])) {
 
             let comprobantes = [];
             let UsarRuc = false;
+            let newEmpresa = 0;
+
+            let idUsuario =<?= $_SESSION['IdUsuario'] ?>;
 
             let modelCobrosIngenieros = new CobroIngenieros();
             let modelColegiatura = new Colegiatura();
@@ -522,6 +538,10 @@ if (!isset($_SESSION['IdUsuario'])) {
                     event.preventDefault();
                 });
 
+                $("#cbEmpresa").on('change', function() {
+                    console.log($("#cbEmpresa").val());
+                });
+
             });
 
             function loadComprobantes() {
@@ -569,12 +589,16 @@ if (!isset($_SESSION['IdUsuario'])) {
                         $("#cbEmpresa").empty();
                     },
                     success: function(result) {
+
                         if (result.estado == 1) {
                             $("#cbEmpresa").append('<option value="">- Seleccione Empresa -</option>');
                             for (let value of result.data) {
                                 $("#cbEmpresa").append('<option value="' + value.IdEmpresa + '">' + value.RazonSocial + '</option>');
                             }
                             $('#cbEmpresa').select2();
+                            if (newEmpresa != 0) {
+                                $('#cbEmpresa').val(newEmpresa).trigger('change.select2');
+                            }
                         } else {
                             $("#cbEmpresa").append('<option value="">- Seleccione -</option>');
                         }
@@ -603,8 +627,8 @@ if (!isset($_SESSION['IdUsuario'])) {
                     tools.AlertWarning("Cobros", "Seleccione un comprobante para continuar.");
                 } else if (arrayIngresos.length == 0) {
                     tools.AlertWarning("Cobros", "No hay conceptos para continuar.");
-                } else if (idDNI == 0) {
-                    tools.AlertWarning("Cobros", "No selecciono ningún ingeneniero para continuar.");
+                } else if (idDNI == 0 && $("#cbEmpresa").val() == "") {
+                    tools.AlertWarning("Cobros", "No selecciono ningún ingeneniero o Empresa para continuar.");
                 } else if (UsarRuc && $("#cbEmpresa").val() == '') {
                     tools.AlertWarning("Cobros", "El comprobante requiere usar una empresa asociada.");
                     $("#cbEmpresa").focus();
@@ -619,9 +643,9 @@ if (!isset($_SESSION['IdUsuario'])) {
                                 contentType: "application/json",
                                 data: JSON.stringify({
                                     "idTipoDocumento": parseInt($("#cbComprobante").val()),
-                                    "idCliente": idDNI,
+                                    "idCliente": idDNI == 0 ? 0 : idDNI,
                                     "idEmpresaPersona": $("#cbEmpresa").val() == '' ? null : $("#cbEmpresa").val(),
-                                    "idUsuario": 1,
+                                    "idUsuario": idUsuario,
                                     "estado": 'C',
                                     "estadoCuotas": cuotasEstate,
                                     "estadoColegiatura": colegiaturaEstado,
@@ -647,6 +671,7 @@ if (!isset($_SESSION['IdUsuario'])) {
                                         openPdfComprobante(result.idIngreso);
                                         $("#btnCertificado").attr('data-toggle', '');
                                         $("#btnCertificado").attr('aria-expanded', 'false');
+                                        newEmpresa = 0;
                                         loadEmpresaPersona();
                                         loadComprobantes();
                                         if (result.estadoCuotas == true) {
@@ -701,6 +726,7 @@ if (!isset($_SESSION['IdUsuario'])) {
 
             function openPdfComprobante(idIngreso) {
                 window.open("../app/sunat/pdfingresos.php?idIngreso=" + idIngreso, "_blank");
+                // window.open("../app/sunat/pdfingresos.php?idIngreso=" + idIngreso, "_blank");
             }
 
             function openPdfCertHabilidad() {
@@ -953,8 +979,11 @@ if (!isset($_SESSION['IdUsuario'])) {
                                 },
                                 success: function(result) {
                                     if (result.estado === 1) {
+                                        console.log(result.data.id)
                                         tools.ModalAlertSuccess("Empresa", result.mensaje);
                                         clearModalAddEmpresa();
+                                        newEmpresa = result.data.id;
+                                        // $("#cbEmpresa").val(result.data.id)
                                     } else if (result.estado === 2) {
                                         tools.ModalAlertWarning("Empresa", result.mensaje);
                                     } else {

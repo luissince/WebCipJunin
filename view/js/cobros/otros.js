@@ -2,8 +2,8 @@ function Otros() {
 
     this.componentesOtros = function() {
         $("#btnOtro").click(function() {
-            if (idDNI == 0) {
-                tools.AlertWarning("Cuotas", "No selecciono ningún ingeniero para obtener peritajes.")
+            if (idDNI == 0 && $("#cbEmpresa").val() == "") {
+                tools.AlertWarning("Cuotas", "No selecciono ningún ingeniero o empresa para aceder al modulo otros.")
             } else {
                 $('#mdOtros').modal('show');
                 loadOtros();

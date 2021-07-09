@@ -22,6 +22,93 @@ if (!isset($_SESSION['IdUsuario'])) {
             <!-- start menu -->
             <?php include('./layout/menu.php') ?>
             <!-- end menu -->
+
+            <!-- modal start certificado -->
+            <div class="row">
+                <div class="modal fade" id="mdCertHabilidad" data-backdrop="static">
+                    <div class="modal-dialog modal-xl">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <button type="button" class="close" id="btnCloseCertificado">
+                                    <i class="fa fa-close"></i>
+                                </button>
+                                <h4 class="modal-title" id="modal-title-certificado-habilidad">
+                                    <i class="fa fa-plus">
+                                    </i> Certificado de Habilidad
+                                </h4>
+                            </div>
+                            <div class="modal-body">
+
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <label id="lblCertificadoHabilidadEstado"></label>
+                                    </div>
+                                </div>
+
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <div class="form-group">
+                                            <label for="txtIngenieroCertificado">Ingeniero(a)</label>
+                                            <input type="text" class="form-control" id="txtIngenieroCertificado" placeholder="Datos completos del ingeniero" disabled>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-12">
+                                        <div class="form-group">
+                                            <label id="lblEspecialidadCertificado">Especialidad(es)</label>
+                                            <select class="form-control" id="cbEspecialidadCertificado">
+                                            </select>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            <label for="txtFechaCertificado">Fecha</label>
+                                            <input type="date" class="form-control" id="txtFechaCertificado" disabled>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            <label for="txtCorrelativoCertificado">Certificado N°</label>
+                                            <input type="text" class="form-control" id="txtCorrelativoCertificado" placeholder="0" disabled>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            <label for="txtAsuntoCertificado">Asunto</label>
+                                            <input type="text" class="form-control" id="txtAsuntoCertificado" value="EJERCICIO DE LA PROFESIÓN" placeholder="Ingrese el asunto">
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            <label for="txtEntidadCertificado">Entidad o Propietario</label>
+                                            <input type="text" class="form-control" id="txtEntidadCertificado" value="VARIOS" placeholder="Ingrese la entidad o el propietario">
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <div class="form-group">
+                                            <label for="txtLugarCertificado">Lugar</label>
+                                            <input type="text" class="form-control" id="txtLugarCertificado" value="A NIVEL NACIONAL" placeholder="Ingrese el lugar">
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-danger" id="btnAceptarCertificado">
+                                    <i class="fa fa-check"></i> Aceptar</button>
+                                <button type="button" class="btn btn-primary" id="btnCancelarCertificado">
+                                    <i class="fa fa-remove"></i> Cancelar</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- modal end certificado -->
+
             <!-- Content Wrapper. Contains page content -->
             <div class="content-wrapper" style="background-color: #FFFFFF;">
                 <!-- Main content -->
@@ -65,17 +152,19 @@ if (!isset($_SESSION['IdUsuario'])) {
                             <div class="table-responsive">
                                 <table class="table table-striped" style="border-width: 1px;border-style: dashed;border-color: #E31E25;">
                                     <thead style="background-color: #FDB2B1;color: #B72928;">
-                                        <th width="5%;" class="text-center">#</th>
-                                        <th width="5%;" class="text-center">P.D.F</th>
+                                        <th width="4%;" class="text-center">#</th>
+                                        <th width="4%;" class="text-center">P.D.F</th>
+                                        <th width="4%;" class="text-center">Editar</th>
+                                        <th width="8%;">N° CIP</th>
                                         <th width="10%;">Colegiado</th>
                                         <th width="10%;">Especialidad</th>
-                                        <th width="10%;">N° Certificado</th>
+                                        <th width="9%;">N° Certificado</th>
                                         <th width="5%;">Estado</th>
                                         <th width="10%;">Asunto</th>
                                         <th width="10%;">Entidad</th>
                                         <th width="10%;">Lugar</th>
-                                        <th width="10%;">Fecha de Pago</th>
-                                        <th width="10%;">Fecha Venci.</th>
+                                        <th width="8%;">Fecha Pago</th>
+                                        <th width="8%;">Fecha Venci.</th>
                                     </thead>
                                     <tbody id="tbTable">
 
@@ -195,6 +284,16 @@ if (!isset($_SESSION['IdUsuario'])) {
 
                 loadInitIngresos();
 
+                $("#btnCancelarCertificado").click(function() {
+                    $('#mdCertHabilidad').modal('hide');
+                    cleanModalHabilidad()
+                });
+
+                $("#btnCloseCertificado").click(function() {
+                    $('#mdCertHabilidad').modal('hide');
+                    cleanModalHabilidad()
+                });
+
             });
 
             function onEventPaginacion() {
@@ -258,10 +357,16 @@ if (!isset($_SESSION['IdUsuario'])) {
                                     let btnPdf = '<button class="btn btn-danger btn-xs" onclick="openPdf(\'' + ingresos.idIngreso + '\')">' +
                                         '<i class="fa fa-file-pdf-o" style="font-size:25px;"></i></br>' +
                                         '</button>';
+                                    let btnEdit =
+                                        '<button class="btn btn-warning btn-xs" onclick="editCertHabilidad(\'' + ingresos.idIngreso + '\')">' +
+                                        '<i class="fa fa-edit" style="font-size:25px;"></i>' +
+                                        '</button>';
 
                                     tbTable.append('<tr>' +
                                         '<td class="text-center text-primary">' + ingresos.id + '</td>' +
                                         '<td>' + btnPdf + '</td>' +
+                                        '<td>' + btnEdit + '</td>' +
+                                        '<td>' + ingresos.numeroCip + '</td>' +
                                         '<td>' + ingresos.dni + '</br>' + ingresos.usuario + ' ' + ingresos.apellidos + '</td>' +
                                         '<td>' + ingresos.especialidad + '</td>' +
                                         '<td>' + ingresos.numCertificado + '</td>' +
@@ -307,6 +412,55 @@ if (!isset($_SESSION['IdUsuario'])) {
                 window.open("../app/sunat/pdfCertHabilidad.php?idIngreso=" + idIngreso, "_blank");
             }
 
+            function editCertHabilidad(idCertificado) {
+                $('#mdCertHabilidad').modal('show');
+
+                $.ajax({
+                    url: "../app/controller/ConceptoController.php",
+                    method: "GET",
+                    dataType: "json",
+                    data: {
+                        "type": "certHabilidad",
+                        "idCertificado": idCertificado,
+                    },
+                    beforeSend: function() {
+
+                        cleanModalHabilidad();
+                    },
+                    success: function(result) {
+                        console.log(result)
+                        $("#modal-title-certificado-habilidad").empty();
+                        $("#modal-title-certificado-habilidad").append('<i class="fa fa fa-edit"> </i> Editar Certificado de Habilidad');
+                        if (result.estado == 1) {
+
+                            $("#txtIngenieroCertificado").val(result.data.Apellidos + ', ' + result.data.Nombres);
+                            $("#cbEspecialidadCertificado").empty();
+                            $("#txtFechaCertificado").val(result.data.Fecha);
+                            $("#txtCorrelativoCertificado").val(result.data.Numero);
+                            $("#txtAsuntoCertificado").val(result.data.Asunto);
+                            $("#txtEntidadCertificado").val(result.data.Entidad);
+                            $("#txtLugarCertificado").val(result.data.Lugar);
+
+                            $("#cbEspecialidadCertificado").append('<option value="">- Seleccione -</option>');
+                            for (let especialidades of result.especialidades) {
+                                $("#cbEspecialidadCertificado").append('<option value="' + especialidades.idEspecialidad + '">' + especialidades.Especialidad + '</option>');
+                            }
+                        } else {
+                            //     $("#lblCertificadoHabilidadEstado").addClass("text-warning");
+                            //     $("#lblCertificadoHabilidadEstado").append('<i class="fa fa-check"> </i> ' + result.message);
+                            //     $("#cbEspecialidadCertificado").append('<option value="">- Seleccione -</option>');
+                        }
+                    },
+                    error: function(error) {
+                        // $("#modal-title-certificado-habilidad").empty();
+                        // $("#modal-title-certificado-habilidad").append('<i class="fa fa-plus"></i> Certificado de Habilidad');
+                        // $("#cbEspecialidadCertificado").append('<option value="">- Seleccione -</option>');
+                        // $("#lblCertificadoHabilidadEstado").addClass("text-danger");
+                        // $("#lblCertificadoHabilidadEstado").append('<i class="fa fa-check"> </i> ' + error.responseText);
+                    }
+                });
+            }
+
             function anularIngreso(idIngreso, dni) {
                 tools.ModalDialogInputText("Ingreso", "¿Está seguro de anular el comprobante?", function(value) {
                     if (value.dismiss == "cancel") {} else if (value.value.length == 0) {
@@ -343,6 +497,16 @@ if (!isset($_SESSION['IdUsuario'])) {
                         });
                     }
                 });
+            }
+
+            function cleanModalHabilidad() {
+                $("#txtIngenieroCertificado").val('');
+                $("#cbEspecialidadCertificado").empty();
+                $("#txtFechaCertificado").val('');
+                $("#txtCorrelativoCertificado").val('');
+                $("#txtAsuntoCertificado").val('');
+                $("#txtEntidadCertificado").val('');
+                $("#txtLugarCertificado").val('');
             }
         </script>
     </body>

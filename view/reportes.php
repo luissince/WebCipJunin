@@ -237,6 +237,28 @@ if (!isset($_SESSION['IdUsuario'])) {
                                         <div class="form-group">
                                             <div class="radio">
                                                 <label>
+                                                    <input type="radio" name="optionsColegiado" id="brColegiadosFecha" value="opcion5">
+                                                    Colegiados segun su fecha de registro
+                                                </label>
+                                            </div>
+                                        </div>
+                                        <div class="row" style="padding-left: 20px;">
+                                            <div class="col-md-6">
+                                                <label>Fecha de inicio.</label>
+                                                <div class="form-group">
+                                                    <input type="date" class="form-control" id="finicioColegiado">
+                                                </div>
+                                            </div>
+                                            <div class="col-md-6">
+                                                <label>Fecha de fin.</label>
+                                                <div class="form-group">
+                                                    <input type="date" class="form-control" id="ffinColegiado">
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <div class="radio">
+                                                <label>
                                                     <input type="radio" name="optionsColegiado" id="brColegiados_Categoria" value="opcion2">
                                                     Según su Categoria
                                                 </label>
@@ -285,7 +307,7 @@ if (!isset($_SESSION['IdUsuario'])) {
                                         <div class="form-group">
                                             <div class="radio">
                                                 <label>
-                                                    <input type="radio" name="optionsColegiado" id="brColegiados_Resolucion" value="opcion3">
+                                                    <input type="radio" name="optionsColegiado" id="brColegiados_Resolucion" value="opcion4">
                                                     Colegiados afiliados ala resolución n° 15
                                                 </label>
                                             </div>
@@ -434,6 +456,8 @@ if (!isset($_SESSION['IdUsuario'])) {
                 }
                 $("#fi_colegiado").val(tools.getCurrentYear());
                 $("#fi_colegiado").prop('disabled', true)
+                $("#finicioColegiado").prop('disabled', true)
+                $("#ffinColegiado").prop('disabled', true)
 
                 //Resumen de ingresos
                 $("#fi_ingresos").val(tools.getCurrentDate())
@@ -466,6 +490,18 @@ if (!isset($_SESSION['IdUsuario'])) {
                     $("#cbCategoriaColegiado2").attr('disabled', true)
                     $("#cbCategoriaColegiado2").val('')
                     $("#fi_colegiado").prop('disabled', true)
+                    $("#finicioColegiado").prop('disabled', true)
+                    $("#ffinColegiado").prop('disabled', true)
+                });
+
+                $("#brColegiadosFecha").click(function() {
+                    $("#finicioColegiado").prop('disabled', false)
+                    $("#ffinColegiado").prop('disabled', false)
+                    $("#cbCategoriaColegiado1").attr('disabled', true)
+                    $("#cbCategoriaColegiado1").val('')
+                    $("#cbCategoriaColegiado2").attr('disabled', true)
+                    $("#cbCategoriaColegiado2").val('')
+                    $("#fi_colegiado").prop('disabled', true)
                 });
 
                 $("#brColegiados_Categoria").click(function() {
@@ -473,6 +509,8 @@ if (!isset($_SESSION['IdUsuario'])) {
                     $("#cbCategoriaColegiado2").val('')
                     $("#cbCategoriaColegiado2").attr('disabled', true)
                     $("#fi_colegiado").prop('disabled', true)
+                    $("#finicioColegiado").prop('disabled', true)
+                    $("#ffinColegiado").prop('disabled', true)
                 });
 
                 $("#brColegiados_Categoria_Fecha").click(function() {
@@ -480,12 +518,16 @@ if (!isset($_SESSION['IdUsuario'])) {
                     $("#cbCategoriaColegiado1").val('')
                     $("#cbCategoriaColegiado1").attr('disabled', true)
                     $("#fi_colegiado").prop('disabled', false)
+                    $("#finicioColegiado").prop('disabled', true)
+                    $("#ffinColegiado").prop('disabled', true)
                 });
 
                 $("#brColegiados_Resolucion").click(function() {
                     $("#cbCategoriaColegiado1").attr('disabled', true)
                     $("#cbCategoriaColegiado2").attr('disabled', true)
                     $("#fi_colegiado").attr('disabled', true)
+                    $("#finicioColegiado").prop('disabled', true)
+                    $("#ffinColegiado").prop('disabled', true)
                 });
 
                 //Radio Buttons Reporte de comprobante emitidos
@@ -548,6 +590,15 @@ if (!isset($_SESSION['IdUsuario'])) {
                 $("#btnGenerarExcelColegiado").click(function() {
                     if ($("#brColegiados").is(':checked')) {
                         openExcelColegiado('', '', '', 1);
+                    } else if ($("#brColegiadosFecha").is(':checked')) {
+                        if (tools.validateDate($("#finicioColegiado").val()) && tools.validateDate($("#ffinColegiado").val())) {
+                            if ($("#finicioColegiado").val() > $("#ffinColegiado").val()) {
+                                tools.AlertWarning("reportes", "La fecha inicial no puede ser mayor que la fecha final")
+                                $("#finicioColegiado").focus();
+                            } else {
+                                openExcelColegiado('', $("#finicioColegiado").val(), $("#ffinColegiado").val(), 5);
+                            }
+                        }
                     } else if ($("#brColegiados_Categoria").is(':checked')) {
                         if ($("#cbCategoriaColegiado1").val() == '') {
                             tools.AlertWarning("reportes", "Seleccione una categoria")
@@ -573,6 +624,15 @@ if (!isset($_SESSION['IdUsuario'])) {
                 $("#btnGenerarPdfColegiado").click(function() {
                     if ($("#brColegiados").is(':checked')) {
                         openPDFColegiado('', '', '', 1);
+                    } else if ($("#brColegiadosFecha").is(':checked')) {
+                        if (tools.validateDate($("#finicioColegiado").val()) && tools.validateDate($("#ffinColegiado").val())) {
+                            if ($("#finicioColegiado").val() > $("#ffinColegiado").val()) {
+                                tools.AlertWarning("reportes", "La fecha inicial no puede ser mayor que la fecha final")
+                                $("#finicioColegiado").focus();
+                            } else {
+                                openPDFColegiado('', $("#finicioColegiado").val(), $("#ffinColegiado").val(), 5);
+                            }
+                        }
                     } else if ($("#brColegiados_Categoria").is(':checked')) {
                         if ($("#cbCategoriaColegiado1").val() == '') {
                             tools.AlertWarning("reportes", "Seleccione una categoria")

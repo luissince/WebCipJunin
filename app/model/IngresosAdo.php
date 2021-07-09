@@ -18,6 +18,8 @@ class IngresosAdo
             i.idIngreso,
             convert(VARCHAR, CAST(i.Fecha AS DATE),103) AS Fecha,
             i.Hora,
+			CONCAT(UPPER(u.Nombres),', ', UPPER(u.Apellidos)) as Usuario,
+			r.Nombre AS Rol,
             tc.Nombre as Comprobante,
             i.Serie, 
             i.NumRecibo,
@@ -31,9 +33,11 @@ class IngresosAdo
             isnull(i.Xmldescripcion,'') as Xmldescripcion
             FROM Ingreso AS i 
             INNER JOIN TipoComprobante AS tc ON tc.IdTipoComprobante = i.TipoComprobante
-            INNER JOIN Persona AS p ON i.idDNI = p.idDNI
+            LEFT JOIN Persona AS p ON i.idDNI = p.idDNI
             LEFT JOIN EmpresaPersona AS e ON e.IdEmpresa = i.idEmpresaPersona
             INNER JOIN Detalle AS d ON d.idIngreso = i.idIngreso
+			INNER JOIN Usuario AS u ON u.idUsuario = i.idUsuario
+			INNER JOIN Rol AS r ON r.idRol = u.Rol
             WHERE
             $opcion = 0 AND i.Fecha BETWEEN ? AND ?
             OR
@@ -52,8 +56,8 @@ class IngresosAdo
             $opcion = 2 AND i.TipoComprobante = ? AND i.Fecha BETWEEN ? AND ?
             OR
             $opcion = 3 AND i.Estado = ? AND i.Fecha BETWEEN ? AND ?
-            GROUP BY i.idIngreso,i.Fecha,i.Hora,i.Serie,i.NumRecibo,i.Estado,
-            p.CIP,p.NumDoc,p.Apellidos,p.Nombres,e.NumeroRuc,e.Nombre,i.Xmlsunat,i.Xmldescripcion,e.IdEmpresa,tc.Nombre
+            GROUP BY i.idIngreso,u.Nombres, u.Apellidos,i.Fecha,i.Hora,i.Serie,i.NumRecibo,i.Estado,
+            p.CIP,p.NumDoc,p.Apellidos,r.Nombre, p.Nombres,e.NumeroRuc,e.Nombre,i.Xmlsunat,i.Xmldescripcion,e.IdEmpresa,tc.Nombre
             ORDER BY i.Fecha DESC,i.Hora DESC
             offset ? ROWS FETCH NEXT ? ROWS only");
             $cmdConcepto->bindParam(1, $fechaInicio, PDO::PARAM_STR);
@@ -82,6 +86,8 @@ class IngresosAdo
                     "idIngreso" => $row["idIngreso"],
                     "fecha" => $row["Fecha"],
                     "hora" => $row["Hora"],
+                    "usuario" => $row["Usuario"],
+                    "rol" => $row["Rol"],
                     "comprobante" => $row["Comprobante"],
                     "serie" => $row["Serie"],
                     "numRecibo" => $row["NumRecibo"],
@@ -99,8 +105,10 @@ class IngresosAdo
             $comandoTotal = Database::getInstance()->getDb()->prepare("SELECT COUNT(*) AS Total 
             FROM Ingreso AS i 
             INNER JOIN TipoComprobante AS tc ON tc.IdTipoComprobante = i.TipoComprobante
-            INNER JOIN Persona AS p ON i.idDNI = p.idDNI
+            LEFT JOIN Persona AS p ON i.idDNI = p.idDNI
             LEFT JOIN EmpresaPersona AS e ON e.IdEmpresa = i.idEmpresaPersona
+            INNER JOIN Usuario AS u ON u.idUsuario = i.idUsuario
+			INNER JOIN Rol AS r ON r.idRol = u.Rol
             WHERE
             $opcion = 0 AND i.Fecha BETWEEN ? AND ?
             OR
@@ -152,6 +160,7 @@ class IngresosAdo
             p.NumDoc, 
             p.Nombres,
             p.Apellidos,
+			p.CIP,
             e.Especialidad, 
             ch.Numero, 
             ch.Asunto, 
@@ -178,6 +187,10 @@ class IngresosAdo
             $opcion = 1 AND p.NumDoc = ?
             OR
             $opcion = 1 AND p.CIP = ?
+            OR
+            $opcion = 1 AND p.Nombres LIKE CONCAT(?,'%')
+            OR
+            $opcion = 1 AND p.Apellidos LIKE CONCAT(?,'%')
             ORDER BY i.Fecha DESC,i.Hora DESC
             offset ? ROWS FETCH NEXT ? ROWS only");
             $cmdCertHabilidad->bindParam(1, $fechaInicio, PDO::PARAM_STR);
@@ -188,8 +201,10 @@ class IngresosAdo
             $cmdCertHabilidad->bindParam(6, $buscar, PDO::PARAM_STR);
             $cmdCertHabilidad->bindParam(7, $buscar, PDO::PARAM_STR);
             $cmdCertHabilidad->bindParam(8, $buscar, PDO::PARAM_STR);
-            $cmdCertHabilidad->bindParam(9, $posicionPagina, PDO::PARAM_INT);
-            $cmdCertHabilidad->bindParam(10, $filasPorPagina, PDO::PARAM_INT);
+            $cmdCertHabilidad->bindParam(9, $buscar, PDO::PARAM_STR);
+            $cmdCertHabilidad->bindParam(10, $buscar, PDO::PARAM_STR);
+            $cmdCertHabilidad->bindParam(11, $posicionPagina, PDO::PARAM_INT);
+            $cmdCertHabilidad->bindParam(12, $filasPorPagina, PDO::PARAM_INT);
             $cmdCertHabilidad->execute();
             $count = 0;
 
@@ -201,6 +216,7 @@ class IngresosAdo
                     "dni" => $row["NumDoc"],
                     "usuario" => $row["Nombres"],
                     "apellidos" => $row["Apellidos"],
+                    "numeroCip" => $row["CIP"],
                     "especialidad" => $row["Especialidad"],
                     "numCertificado" => $row["Numero"],
                     "asunto" => $row["Asunto"],
@@ -229,7 +245,12 @@ class IngresosAdo
             OR
             $opcion = 1 AND p.NumDoc = ?
             OR
-            $opcion = 1 AND p.CIP = ?");
+            $opcion = 1 AND p.CIP = ?
+            OR
+            $opcion = 1 AND p.Nombres LIKE CONCAT(?,'%')
+            OR
+            $opcion = 1 AND p.Apellidos LIKE CONCAT(?,'%')");
+            
             $comandoTotal->bindParam(1, $fechaInicio, PDO::PARAM_STR);
             $comandoTotal->bindParam(2, $fechaFinal, PDO::PARAM_STR);
             $comandoTotal->bindParam(3, $buscar, PDO::PARAM_STR);
@@ -238,6 +259,8 @@ class IngresosAdo
             $comandoTotal->bindParam(6, $buscar, PDO::PARAM_STR);
             $comandoTotal->bindParam(7, $buscar, PDO::PARAM_STR);
             $comandoTotal->bindParam(8, $buscar, PDO::PARAM_STR);
+            $comandoTotal->bindParam(9, $buscar, PDO::PARAM_STR);
+            $comandoTotal->bindParam(10, $buscar, PDO::PARAM_STR);
             $comandoTotal->execute();
             $resultTotal =  $comandoTotal->fetchColumn();
 
@@ -700,19 +723,25 @@ class IngresosAdo
             p.NumDoc, 
             p.Apellidos,
             p.Nombres,
+			ISNULL(es.Especialidad, 'SIN ESPECIALIDAD') AS Especialidad,
+			ISNULL(ca.Capitulo, 'SIN CAPITULO') AS Capitulo,
             ISNULL(i.Correlativo,0) as Correlativo
             FROM Ingreso AS i 
-            INNER JOIN Persona AS p ON p.idDNI = i.idDNI
+            LEFT JOIN Persona AS p ON p.idDNI = i.idDNI
+			LEFT JOIN Colegiatura AS c ON c.idDNI = p.idDNI AND c.Principal = 1
+			LEFT JOIN Especialidad AS es ON es.idEspecialidad = c.idEspecialidad
+			LEFT JOIN Capitulo AS ca ON ca.idCapitulo = es.idCapitulo
 			LEFT JOIN EmpresaPersona AS e ON e.IdEmpresa = i.idEmpresaPersona
             INNER JOIN TipoComprobante AS t ON t.IdTipoComprobante = i.TipoComprobante 
-            WHERE i.idIngreso = ?");
+            WHERE i.idIngreso = ? ");
             $cmdIngreso->bindParam(1, $idIngreso, PDO::PARAM_INT);
             $cmdIngreso->execute();
             $resultIngreso = $cmdIngreso->fetchObject();
 
             $cmdDetail = Database::getInstance()->getDb()->prepare("SELECT 
             d.idDetalle,
-            d.idIngreso,c.Concepto,            
+            d.idIngreso,
+            IIF(c.Categoria =8, p.Detalle, c.Concepto) AS Concepto,			            
             (d.Monto/d.Cantidad) AS Precio,
             d.Cantidad,
             d.Monto AS Total,
@@ -721,6 +750,7 @@ class IngresosAdo
             i.Codigo
             FROM Detalle AS d 
             INNER JOIN Concepto AS c ON d.idConcepto = c.idConcepto
+			LEFT JOIN Peritaje as p ON p.idIngreso = d.idIngreso
             INNER JOIN Impuesto AS i ON i.IdImpuesto = c.IdImpuesto
             WHERE d.idIngreso  = ?");
             $cmdDetail->bindParam(1, $idIngreso, PDO::PARAM_INT);
@@ -815,17 +845,17 @@ class IngresosAdo
             ch.Numero, 
             ch.Asunto, ch.Entidad, ch.Lugar, 
             convert(VARCHAR, CAST(c.FechaColegiado AS DATE),103) AS FechaIncorporacion,
-            DATEPART(DAY, (convert(VARCHAR, CAST(c.FechaColegiado AS DATE),103))) AS FIDia, 
-            DATEPART(MONTH, (convert(VARCHAR, CAST(c.FechaColegiado AS DATE),103))) AS FIMes, 
+			DATEPART(DAY, (convert(VARCHAR, CAST(c.FechaColegiado AS DATE),103))) AS FIDia, 
+			DATEPART(MONTH, (convert(VARCHAR, CAST(c.FechaColegiado AS DATE),103))) AS FIMes, 
             DATEPART(YEAR, (convert(VARCHAR, CAST(c.FechaColegiado AS DATE),103))) AS FIAnio, 
             convert(VARCHAR, CAST(ch.Fecha AS DATE),103) AS FechaRegistro,
             DATEPART(DAY, (convert(VARCHAR, CAST(ch.Fecha AS DATE),103))) AS FRDia, 
             DATEPART(MONTH, (convert(VARCHAR, CAST(ch.Fecha AS DATE),103))) AS FRMes, 
             DATEPART(YEAR, (convert(VARCHAR, CAST(ch.Fecha AS DATE),103))) AS FRAnio, 
             convert(VARCHAR, CAST(ch.HastaFecha AS DATE),103) AS HastaFecha, 
-            DATEPART(DAY, (convert(VARCHAR, CAST(ch.HastaFecha AS DATE),103))) AS FVDia,
-            DATEPART(MONTH, (convert(VARCHAR, CAST(ch.HastaFecha AS DATE),103))) AS FVMes, 
-            DATEPART(YEAR, (convert(VARCHAR, CAST(ch.HastaFecha AS DATE),103))) AS FVAnio,
+            DATEPART(DAY, ch.HastaFecha) AS FVDia,
+            DATEPART(MONTH, ch.HastaFecha) AS FVMes, 
+            DATEPART(YEAR, ch.HastaFecha) AS FVAnio,
             ch.idIngreso from CERTHabilidad AS ch
             INNER JOIN Ingreso AS i ON i.idIngreso = ch.idIngreso
             INNER JOIN Persona AS p On p.idDNI = i.idDNI
@@ -886,12 +916,12 @@ class IngresosAdo
             u.Departamento,
             u.Provincia,
             u.Distrito, 
-            convert(VARCHAR, CAST(c.FechaColegiado AS DATE),103) AS FechaIncorporacion, DATEPART(DAY, (convert(VARCHAR, CAST(c.FechaColegiado AS DATE),103))) AS FIDia, 
-            DATEPART(MONTH, (convert(VARCHAR, CAST(c.FechaColegiado AS DATE),103))) AS FIMes, DATEPART(YEAR, (convert(VARCHAR, CAST(c.FechaColegiado AS DATE),103))) AS FIAnio, 
-            convert(VARCHAR, CAST(cr.Fecha AS DATE),103) AS FechaRegistro, DATEPART(DAY, (convert(VARCHAR, CAST(cr.Fecha AS DATE),103))) AS FRDia, 
-            DATEPART(MONTH, (convert(VARCHAR, CAST(cr.Fecha AS DATE),103))) AS FRMes, DATEPART(YEAR, (convert(VARCHAR, CAST(cr.Fecha AS DATE),103))) AS FRAnio, 
-            convert(VARCHAR, CAST(cr.HastaFecha AS DATE),103) AS HastaFecha, DATEPART(DAY, (convert(VARCHAR, CAST(cr.HastaFecha AS DATE),103))) AS FVDia,
-            DATEPART(MONTH, (convert(VARCHAR, CAST(cr.HastaFecha AS DATE),103))) AS FVMes, DATEPART(YEAR, (convert(VARCHAR, CAST(cr.HastaFecha AS DATE),103))) AS FVAnio,
+            convert(VARCHAR, CAST(c.FechaColegiado AS DATE),103) AS FechaIncorporacion, DATEPART(DAY, c.FechaColegiado) AS FIDia, 
+            DATEPART(MONTH, c.FechaColegiado) AS FIMes, DATEPART(YEAR, c.FechaColegiado) AS FIAnio, 
+            convert(VARCHAR, CAST(cr.Fecha AS DATE),103) AS FechaRegistro, DATEPART(DAY, cr.Fecha) AS FRDia, 
+            DATEPART(MONTH, cr.Fecha) AS FRMes, DATEPART(YEAR, cr.Fecha ) AS FRAnio, 
+            convert(VARCHAR, CAST(cr.HastaFecha AS DATE),103) AS HastaFecha, DATEPART(DAY, cr.HastaFecha ) AS FVDia,
+            DATEPART(MONTH, cr.HastaFecha ) AS FVMes, DATEPART(YEAR, cr.HastaFecha ) AS FVAnio,
             cr.idIngreso  from CERTResidencia AS cr
             INNER JOIN Ingreso AS i ON i.idIngreso = cr.idIngreso
             INNER JOIN Persona AS p On p.idDNI = i.idDNI
@@ -958,12 +988,12 @@ class IngresosAdo
             u.Provincia, 
             u.Distrito, 
             ISNULL(cp.Adicional1,'N/D') AS Adicional1, ISNULL(cp.Adicional2,'N/D') AS Adicional2, convert(VARCHAR, CAST(c.FechaColegiado AS DATE),103) AS FechaIncorporacion, 
-            DATEPART(DAY, (convert(VARCHAR, CAST(c.FechaColegiado AS DATE),103))) AS FIDia, DATEPART(MONTH, (convert(VARCHAR, CAST(c.FechaColegiado AS DATE),103))) AS FIMes, 
-            DATEPART(YEAR, (convert(VARCHAR, CAST(c.FechaColegiado AS DATE),103))) AS FIAnio, convert(VARCHAR, CAST(cp.Fecha AS DATE),103) AS FechaRegistro, 
-            DATEPART(DAY, (convert(VARCHAR, CAST(cp.Fecha AS DATE),103))) AS FRDia, DATEPART(MONTH, (convert(VARCHAR, CAST(cp.Fecha AS DATE),103))) AS FRMes, 
-            DATEPART(YEAR, (convert(VARCHAR, CAST(cp.Fecha AS DATE),103))) AS FRAnio, CONVERT(VARCHAR, CAST(cp.HastaFecha AS DATE),103) AS HastaFecha, 
-            DATEPART(DAY, (convert(VARCHAR, CAST(cp.HastaFecha AS DATE),103))) AS FVDia, DATEPART(MONTH, (convert(VARCHAR, CAST(cp.HastaFecha AS DATE),103))) AS FVMes, 
-            DATEPART(YEAR, (convert(VARCHAR, CAST(cp.HastaFecha AS DATE),103))) AS FVAnio,cp.idIngreso  from CERTProyecto AS cp
+            DATEPART(DAY, c.FechaColegiado) AS FIDia, DATEPART(MONTH, c.FechaColegiado ) AS FIMes, 
+            DATEPART(YEAR, c.FechaColegiado) AS FIAnio, convert(VARCHAR, CAST(cp.Fecha AS DATE),103) AS FechaRegistro, 
+            DATEPART(DAY, cp.Fecha) AS FRDia, DATEPART(MONTH,cp.Fecha) AS FRMes, 
+            DATEPART(YEAR, cp.Fecha ) AS FRAnio, CONVERT(VARCHAR, CAST(cp.HastaFecha AS DATE),103) AS HastaFecha, 
+            DATEPART(DAY, cp.HastaFecha) AS FVDia, DATEPART(MONTH, cp.HastaFecha) AS FVMes, 
+            DATEPART(YEAR,cp.HastaFecha) AS FVAnio,cp.idIngreso  from CERTProyecto AS cp
             INNER JOIN Ingreso AS i ON i.idIngreso = cp.idIngreso
             INNER JOIN Persona AS p On p.idDNI = i.idDNI
             INNER JOIN Especialidad AS e On e.idEspecialidad = cp.idColegiatura
@@ -1286,6 +1316,14 @@ class IngresosAdo
             i.Serie,
             i.NumRecibo,
             convert(varchar, cast(i.Fecha as date), 103) as FechaPago,
+			CASE 
+             WHEN NOT cu.idCuota IS NULL THEN 1
+             WHEN NOT ac.idAltaColegio IS NULL THEN 4 
+             WHEN NOT ch.idHabilidad IS NULL THEN 5 
+             WHEN NOT cr.idResidencia IS NULL THEN 6 
+             WHEN NOT cp.idProyecto IS NULL THEN 7 
+             WHEN NOT pe.idPeritaje IS NULL THEN 8 
+             ELSE 100 END AS TipoIngreso,
             i.Estado,
             p.CIP,
             isnull(e.NumeroRuc,p.NumDoc) as NumeroDocumento,            
@@ -1294,7 +1332,13 @@ class IngresosAdo
             isnull(i.Xmlsunat,'') as Xmlsunat,
             isnull(i.Xmldescripcion,'') as Xmldescripcion							
             from Ingreso as i 
-            inner join Persona as p on i.idDNI = p.idDNI
+			LEFT OUTER JOIN Cuota AS cu ON cu.idIngreso = i.idIngreso 
+            LEFT OUTER JOIN AltaColegio AS ac ON ac.idIngreso = i.idIngreso 
+            LEFT OUTER JOIN CERTHabilidad AS ch ON ch.idIngreso = i.idIngreso 
+            LEFT OUTER JOIN CERTResidencia AS cr ON cr.idIngreso = i.idIngreso 
+            LEFT OUTER JOIN CERTProyecto AS cp ON cp.idIngreso = i.idIngreso 
+            LEFT OUTER JOIN Peritaje AS pe ON pe.idIngreso = i.idIngreso
+            left join Persona as p on i.idDNI = p.idDNI
             left join EmpresaPersona AS e ON e.IdEmpresa = i.idEmpresaPersona 
             inner join Detalle as d on d.idIngreso = i.idIngreso 
             inner join Concepto as c on d.idConcepto = c.idConcepto
@@ -1315,7 +1359,13 @@ class IngresosAdo
             i.Xmlsunat,
             i.Xmldescripcion,
             a.Motivo,
-            a.Fecha
+            a.Fecha,
+			cu.idCuota,
+			ac.idAltaColegio,
+			ch.idHabilidad,
+			cr.idResidencia,
+			cp.idProyecto,
+			pe.idPeritaje
             order by CAST(i.Fecha as date) desc, i.NumRecibo desc");
             $cmdDetalle->bindParam(1, $fechaInicio, PDO::PARAM_STR);
             $cmdDetalle->bindParam(2, $fechaFinal, PDO::PARAM_STR);
@@ -1333,6 +1383,7 @@ class IngresosAdo
                     "Serie" => $row["Serie"],
                     "NumRecibo" => $row["NumRecibo"],
                     "FechaPago" => $row["FechaPago"],
+                    "Concepto" => $row["TipoIngreso"],
                     "Estado" => $row["Estado"],
                     "NumeroDocumento" => $row["NumeroDocumento"],
                     "CIP" => $row["CIP"],
@@ -1356,10 +1407,17 @@ class IngresosAdo
             i.idIngreso,
             isnull(a.Motivo,'') as MotivoAnulacion,
             isnull(a.Fecha,'') as FechaAnulacion,
-            i.TipoComprobante,
             i.Serie,
             i.NumRecibo,
             convert(varchar, cast(i.Fecha as date), 103) as FechaPago,
+			CASE 
+             WHEN NOT cu.idCuota IS NULL THEN 1
+             WHEN NOT ac.idAltaColegio IS NULL THEN 4 
+             WHEN NOT ch.idHabilidad IS NULL THEN 5 
+             WHEN NOT cr.idResidencia IS NULL THEN 6 
+             WHEN NOT cp.idProyecto IS NULL THEN 7 
+             WHEN NOT pe.idPeritaje IS NULL THEN 8 
+             ELSE 100 END AS TipoIngreso,
             i.Estado,
             p.CIP,
             isnull(e.NumeroRuc,p.NumDoc) as NumeroDocumento,            
@@ -1368,7 +1426,13 @@ class IngresosAdo
             isnull(i.Xmlsunat,'') as Xmlsunat,
             isnull(i.Xmldescripcion,'') as Xmldescripcion							
             from Ingreso as i 
-            inner join Persona as p on i.idDNI = p.idDNI
+			LEFT OUTER JOIN Cuota AS cu ON cu.idIngreso = i.idIngreso 
+            LEFT OUTER JOIN AltaColegio AS ac ON ac.idIngreso = i.idIngreso 
+            LEFT OUTER JOIN CERTHabilidad AS ch ON ch.idIngreso = i.idIngreso 
+            LEFT OUTER JOIN CERTResidencia AS cr ON cr.idIngreso = i.idIngreso 
+            LEFT OUTER JOIN CERTProyecto AS cp ON cp.idIngreso = i.idIngreso 
+            LEFT OUTER JOIN Peritaje AS pe ON pe.idIngreso = i.idIngreso
+            left join Persona as p on i.idDNI = p.idDNI
             left join EmpresaPersona AS e ON e.IdEmpresa = i.idEmpresaPersona 
             inner join Detalle as d on d.idIngreso = i.idIngreso 
             inner join Concepto as c on d.idConcepto = c.idConcepto
@@ -1376,7 +1440,6 @@ class IngresosAdo
             where
             (cast(i.Fecha as date) between ? and ?) and i.TipoComprobante = ?
             group by i.idIngreso,
-            i.TipoComprobante,
             i.Serie,
             i.NumRecibo,
             i.Fecha,
@@ -1390,7 +1453,13 @@ class IngresosAdo
             i.Xmlsunat,
             i.Xmldescripcion,
             a.Motivo,
-            a.Fecha
+            a.Fecha,
+			cu.idCuota,
+			ac.idAltaColegio,
+			ch.idHabilidad,
+			cr.idResidencia,
+			cp.idProyecto,
+			pe.idPeritaje
             order by CAST(i.Fecha as date) desc, i.NumRecibo desc");
             $cmdDetalle->bindParam(1, $fechaInicio, PDO::PARAM_STR);
             $cmdDetalle->bindParam(2, $fechaFinal, PDO::PARAM_STR);
@@ -1410,6 +1479,7 @@ class IngresosAdo
                     "NumRecibo" => $row["NumRecibo"],
                     "FechaPago" => $row["FechaPago"],
                     "Estado" => $row["Estado"],
+                    "Concepto" => $row["TipoIngreso"],
                     "NumeroDocumento" => $row["NumeroDocumento"],
                     "CIP" => $row["CIP"],
                     "Persona" => $row["Persona"],

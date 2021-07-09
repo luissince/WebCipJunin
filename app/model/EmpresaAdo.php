@@ -61,7 +61,7 @@ class EmpresaAdo
 
                     $comandoInsert->execute();
                     Database::getInstance()->getDb()->commit();
-                    return 'Insertado';
+                    return array("result"=>"Insertado","id"=>Database::getInstance()->getDb()->lastInsertId());
                 }
             }
         } catch (Exception $ex) {

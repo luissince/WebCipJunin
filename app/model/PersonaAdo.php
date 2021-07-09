@@ -257,20 +257,29 @@ class PersonaAdo
             $object = $comandoPersona->fetchObject();
 
             $cmdColegiatura = Database::getInstance()->getDb()->prepare("SELECT        
-            CAST(dbo.Colegiatura.FechaColegiado AS DATE) as FechaColegiado,
-            CAST(ISNULL(dbo.ULTIMACuota.FechaUltimaCuota,dbo.Colegiatura.FechaColegiado) AS DATE) AS UltimaCuota, 
-            CAST(DATEADD(MONTH,CASE dbo.Persona.Condicion WHEN 'O' THEN 3 WHEN 'V' THEN 9 ELSE 0 END,ISNULL(dbo.ULTIMACuota.FechaUltimaCuota,dbo.Colegiatura.FechaColegiado)) AS DATE) AS HabilitadoHasta     
-            FROM dbo.Persona
-            LEFT OUTER JOIN dbo.Colegiatura ON dbo.Colegiatura.idDNI = dbo.Persona.idDNI AND dbo.Colegiatura.Principal = 1
-            LEFT OUTER JOIN dbo.ULTIMACuota ON dbo.ULTIMACuota.idDNI = dbo.Persona.idDNI
-            WHERE dbo.Persona.idDNI = ? ");
+            CAST(c.FechaColegiado AS DATE) as FechaColegiado,
+            CAST(ISNULL(uc.FechaUltimaCuota,c.FechaColegiado) AS DATE) AS UltimaCuota, 
+            CAST(DATEADD(MONTH,CASE p.Condicion WHEN 'O' THEN 3 WHEN 'V' THEN 9 ELSE 0 END,ISNULL(uc.FechaUltimaCuota,c.FechaColegiado)) AS DATE) AS HabilitadoHasta,
+			ISNULL(e.Especialidad,'SIN ESPECIALIDAD') as Especialidad, ISNULL(cp.Capitulo, 'SIN CAPITULO') as Capitulo
+            FROM Persona AS p
+            LEFT OUTER JOIN Colegiatura AS c ON c.idDNI = p.idDNI AND c.Principal = 1
+            LEFT OUTER JOIN ULTIMACuota AS uc ON uc.idDNI = p.idDNI
+			LEFT OUTER JOIN Especialidad AS e ON e.idEspecialidad = c.idEspecialidad
+			LEFT OUTER JOIN Capitulo AS cp ON cp.idCapitulo = e.idCapitulo
+			WHERE p.idDNI = ? ");
             $cmdColegiatura->bindParam(1, $idPersona, PDO::PARAM_STR);
             $cmdColegiatura->execute();
             $resultColegiatura = null;
             if ($row = $cmdColegiatura->fetch()) {
                 $dateUltimaCuota = new DateTime($row['UltimaCuota']);
                 $dateHabilHasta = new DateTime($row['HabilitadoHasta']);
-                $resultColegiatura = (object)array("FechaColegiado" => $row['FechaColegiado'], "UltimaCuota" => $dateUltimaCuota->format("m/Y"), "HabilitadoHasta" => $dateHabilHasta->format("m/Y"));
+                $resultColegiatura = (object)array(
+                    "FechaColegiado" => $row['FechaColegiado'],
+                    "UltimaCuota" => $dateUltimaCuota->format("m/Y"),
+                    "HabilitadoHasta" => $dateHabilHasta->format("m/Y"),
+                    "Capitulo" => $row['Capitulo'],
+                    "Especialidad" => $row['Especialidad']
+                );
             }
 
             $cmdYears = Database::getInstance()->getDb()->prepare("SELECT 
@@ -303,28 +312,28 @@ class PersonaAdo
         try {
             $array = array();
 
-            $cmdHistorial = Database::getInstance()->getDb()->prepare("SELECT dbo.Ingreso.idIngreso, dbo.Ingreso.idDNI, CONCAT(dbo.Ingreso.Serie,' - ',dbo.Ingreso.NumRecibo) AS Recibo, 
-            dbo.Ingreso.Fecha,dbo.Ingreso.Hora,
+            $cmdHistorial = Database::getInstance()->getDb()->prepare("SELECT i.idIngreso, i.idDNI, CONCAT(i.Serie,' - ', i.NumRecibo) AS Recibo, 
+            i.Fecha, i.Hora,
                 CASE 
-                    WHEN NOT idCuota IS NULL THEN RIGHT(CONVERT(VARCHAR(10), Cuota.FechaIni, 103), 7) + ' a ' + RIGHT(CONVERT(VARCHAR(10), Cuota.FechaFin, 103), 7) 
-                        ELSE Ingreso.Observacion END AS Observacion, dbo.vINGRESOTotal.Total,
+                    WHEN NOT idCuota IS NULL THEN RIGHT(CONVERT(VARCHAR(10), cu.FechaIni, 103), 7) + ' a ' + RIGHT(CONVERT(VARCHAR(10), cu.FechaFin, 103), 7) 
+                        ELSE i.Observacion END AS Observacion, vit.Total,
                             CASE 
                                 WHEN NOT idCuota IS NULL THEN 1
                                 WHEN NOT idAltaColegio IS NULL THEN 4 
-                                WHEN NOT idHabilidad IS NULL THEN 5 
+                                WHEN NOT idHabilidad IS NULL THEN  5
                                 WHEN NOT idResidencia IS NULL THEN 6 
                                 WHEN NOT idProyecto IS NULL THEN 7 
                                 WHEN NOT idPeritaje IS NULL THEN 8 
-                                ELSE 100 END AS TipoIngreso
-                FROM dbo.Ingreso INNER JOIN dbo.vINGRESOTotal ON dbo.vINGRESOTotal.idIngreso = dbo.Ingreso.idIngreso 
-                                LEFT OUTER JOIN dbo.Cuota ON dbo.Cuota.idIngreso = dbo.Ingreso.idIngreso 
-                                LEFT OUTER JOIN dbo.AltaColegio ON dbo.AltaColegio.idIngreso = dbo.Ingreso.idIngreso 
-                                LEFT OUTER JOIN dbo.CERTHabilidad ON dbo.CERTHabilidad.idIngreso = dbo.Ingreso.idIngreso 
-                                LEFT OUTER JOIN dbo.CERTResidencia ON dbo.CERTResidencia.idIngreso = dbo.Ingreso.idIngreso 
-                                LEFT OUTER JOIN dbo.CERTProyecto ON dbo.CERTProyecto.idIngreso = dbo.Ingreso.idIngreso 
-                                LEFT OUTER JOIN dbo.Peritaje ON dbo.Peritaje.idIngreso = dbo.Ingreso.idIngreso
-                WHERE (dbo.Ingreso.Estado = 'C') AND idDNI = ?
-                ORDER BY dbo.Ingreso.Fecha DESC,dbo.Ingreso.Hora DESC
+                                ELSE 100 END AS TipoIngreso, ISNULL(ch.Numero, '-') AS NmroCertHabilidad
+                FROM Ingreso AS i INNER JOIN vINGRESOTotal AS vit ON vit.idIngreso = i.idIngreso 
+                                LEFT OUTER JOIN Cuota AS cu ON cu.idIngreso = i.idIngreso 
+                                LEFT OUTER JOIN AltaColegio AS ac ON ac.idIngreso = i.idIngreso 
+                                LEFT OUTER JOIN CERTHabilidad AS ch ON ch.idIngreso = i.idIngreso 
+                                LEFT OUTER JOIN CERTResidencia AS cr ON cr.idIngreso = i.idIngreso 
+                                LEFT OUTER JOIN CERTProyecto AS cp ON cp.idIngreso = i.idIngreso 
+                                LEFT OUTER JOIN Peritaje AS pe ON pe.idIngreso = i.idIngreso
+                WHERE (i.Estado = 'C') AND idDNI = ?
+                ORDER BY i.Fecha DESC,i.Hora DESC
                 offset ? ROWS FETCH NEXT ? ROWS only");
             $cmdHistorial->bindParam(1, $idPersona, PDO::PARAM_STR);
             $cmdHistorial->bindParam(2, $posicionPagina, PDO::PARAM_INT);
@@ -340,21 +349,22 @@ class PersonaAdo
                     "Recibo" => $row["Recibo"],
                     "Fecha" => $row["Fecha"],
                     "Hora" => $row["Hora"],
+                    "nroCertHabilidad" => $row["NmroCertHabilidad"],
                     "Concepto" => $row["TipoIngreso"],
                     "Monto" => number_format($row["Total"], 2, ".", ""),
                     "Observacion" => $row["Observacion"],
                 ));
             }
 
-            $cmdTotales = Database::getInstance()->getDb()->prepare("SELECT COUNT(dbo.Ingreso.idIngreso)
-                FROM dbo.Ingreso INNER JOIN dbo.vINGRESOTotal ON dbo.vINGRESOTotal.idIngreso = dbo.Ingreso.idIngreso 
-                                LEFT OUTER JOIN dbo.Cuota ON dbo.Cuota.idIngreso = dbo.Ingreso.idIngreso 
-                                LEFT OUTER JOIN dbo.AltaColegio ON dbo.AltaColegio.idIngreso = dbo.Ingreso.idIngreso 
-                                LEFT OUTER JOIN dbo.CERTHabilidad ON dbo.CERTHabilidad.idIngreso = dbo.Ingreso.idIngreso 
-                                LEFT OUTER JOIN dbo.CERTResidencia ON dbo.CERTResidencia.idIngreso = dbo.Ingreso.idIngreso 
-                                LEFT OUTER JOIN dbo.CERTProyecto ON dbo.CERTProyecto.idIngreso = dbo.Ingreso.idIngreso 
-                                LEFT OUTER JOIN dbo.Peritaje ON dbo.Peritaje.idIngreso = dbo.Ingreso.idIngreso
-                WHERE (dbo.Ingreso.Estado = 'C') AND idDNI = ?");
+            $cmdTotales = Database::getInstance()->getDb()->prepare("SELECT COUNT(i.idIngreso)
+                FROM Ingreso AS i INNER JOIN vINGRESOTotal AS vit ON vit.idIngreso = i.idIngreso 
+                                LEFT OUTER JOIN Cuota AS cu ON cu.idIngreso = i.idIngreso 
+                                LEFT OUTER JOIN AltaColegio AS ac ON ac.idIngreso = i.idIngreso 
+                                LEFT OUTER JOIN CERTHabilidad AS ch ON ch.idIngreso = i.idIngreso 
+                                LEFT OUTER JOIN CERTResidencia AS cr ON cr.idIngreso = i.idIngreso 
+                                LEFT OUTER JOIN CERTProyecto AS cp ON cp.idIngreso = i.idIngreso 
+                                LEFT OUTER JOIN Peritaje AS pe ON pe.idIngreso = i.idIngreso
+                WHERE (i.Estado = 'C') AND idDNI = ?");
             $cmdTotales->bindParam(1, $idPersona, PDO::PARAM_STR);
             $cmdTotales->execute();
             $resultTotal = $cmdTotales->fetchColumn();
@@ -887,19 +897,11 @@ class PersonaAdo
     {
         try {
             Database::getInstance()->getDb()->beginTransaction();
-            $cmdSelect = Database::getInstance()->getDb()->prepare('SELECT * FROM Colegiatura WHERE UPPER(Resolucion) = UPPER(?)');
-            $cmdSelect->bindParam(1, $colegiatura['resolucion'], PDO::PARAM_STR);
+            $cmdSelect = Database::getInstance()->getDb()->prepare('SELECT * FROM Colegiatura WHERE idDNI = ?');
+            $cmdSelect->bindParam(1, $colegiatura['dni'], PDO::PARAM_STR);
             $cmdSelect->execute();
-
             if ($cmdSelect->fetch()) {
-                Database::getInstance()->getDb()->rollback();
-                return 'Duplicado';
-            } else {
-                $cmdSelect = Database::getInstance()->getDb()->prepare('SELECT * FROM Colegiatura WHERE idDNI = ?');
-                $cmdSelect->bindParam(1, $colegiatura['dni'], PDO::PARAM_STR);
-                $cmdSelect->execute();
-                if ($cmdSelect->fetch()) {
-                    $comandoInsert = Database::getInstance()->getDb()->prepare("INSERT INTO Colegiatura (
+                $comandoInsert = Database::getInstance()->getDb()->prepare("INSERT INTO Colegiatura (
                         idDNI,
                         idSede,
                         idEspecialidad, 
@@ -914,21 +916,21 @@ class PersonaAdo
                         MesAumento)
                     VALUES(?,?,?,?,?,?,?,?,?,0,0,0)");
 
-                    $comandoInsert->bindParam(1, $colegiatura['dni'], PDO::PARAM_STR);
-                    $comandoInsert->bindParam(2, $colegiatura['sede'], PDO::PARAM_INT);
-                    $comandoInsert->bindParam(3, $colegiatura['especialidad'], PDO::PARAM_INT);
-                    $comandoInsert->bindParam(4, $colegiatura['fechacolegiacion'], PDO::PARAM_STR);
-                    $comandoInsert->bindParam(5, $colegiatura['universidadegreso'], PDO::PARAM_INT);
-                    $comandoInsert->bindParam(6, $colegiatura['fechaegreso'], PDO::PARAM_STR);
-                    $comandoInsert->bindParam(7, $colegiatura['universidadtitulacion'], PDO::PARAM_INT);
-                    $comandoInsert->bindParam(8, $colegiatura['fechatitulo'], PDO::PARAM_STR);
-                    $comandoInsert->bindParam(9, $colegiatura['resolucion'], PDO::PARAM_STR);
+                $comandoInsert->bindParam(1, $colegiatura['dni'], PDO::PARAM_STR);
+                $comandoInsert->bindParam(2, $colegiatura['sede'], PDO::PARAM_INT);
+                $comandoInsert->bindParam(3, $colegiatura['especialidad'], PDO::PARAM_INT);
+                $comandoInsert->bindParam(4, $colegiatura['fechacolegiacion'], PDO::PARAM_STR);
+                $comandoInsert->bindParam(5, $colegiatura['universidadegreso'], PDO::PARAM_INT);
+                $comandoInsert->bindParam(6, $colegiatura['fechaegreso'], PDO::PARAM_STR);
+                $comandoInsert->bindParam(7, $colegiatura['universidadtitulacion'], PDO::PARAM_INT);
+                $comandoInsert->bindParam(8, $colegiatura['fechatitulo'], PDO::PARAM_STR);
+                $comandoInsert->bindParam(9, $colegiatura['resolucion'], PDO::PARAM_STR);
 
-                    $comandoInsert->execute();
-                    Database::getInstance()->getDb()->commit();
-                    return 'Insertado';
-                } else {
-                    $comandoInsert = Database::getInstance()->getDb()->prepare("INSERT INTO Colegiatura (
+                $comandoInsert->execute();
+                Database::getInstance()->getDb()->commit();
+                return 'Actualizado';
+            } else {
+                $comandoInsert = Database::getInstance()->getDb()->prepare("INSERT INTO Colegiatura (
                         idDNI,
                         idSede,
                         idEspecialidad, 
@@ -943,20 +945,19 @@ class PersonaAdo
                         MesAumento)
                     VALUES(?,?,?,?,?,?,?,?,?,1,0,0)");
 
-                    $comandoInsert->bindParam(1, $colegiatura['dni'], PDO::PARAM_STR);
-                    $comandoInsert->bindParam(2, $colegiatura['sede'], PDO::PARAM_INT);
-                    $comandoInsert->bindParam(3, $colegiatura['especialidad'], PDO::PARAM_INT);
-                    $comandoInsert->bindParam(4, $colegiatura['fechacolegiacion'], PDO::PARAM_STR);
-                    $comandoInsert->bindParam(5, $colegiatura['universidadegreso'], PDO::PARAM_INT);
-                    $comandoInsert->bindParam(6, $colegiatura['fechaegreso'], PDO::PARAM_STR);
-                    $comandoInsert->bindParam(7, $colegiatura['universidadtitulacion'], PDO::PARAM_INT);
-                    $comandoInsert->bindParam(8, $colegiatura['fechatitulo'], PDO::PARAM_STR);
-                    $comandoInsert->bindParam(9, $colegiatura['resolucion'], PDO::PARAM_STR);
+                $comandoInsert->bindParam(1, $colegiatura['dni'], PDO::PARAM_STR);
+                $comandoInsert->bindParam(2, $colegiatura['sede'], PDO::PARAM_INT);
+                $comandoInsert->bindParam(3, $colegiatura['especialidad'], PDO::PARAM_INT);
+                $comandoInsert->bindParam(4, $colegiatura['fechacolegiacion'], PDO::PARAM_STR);
+                $comandoInsert->bindParam(5, $colegiatura['universidadegreso'], PDO::PARAM_INT);
+                $comandoInsert->bindParam(6, $colegiatura['fechaegreso'], PDO::PARAM_STR);
+                $comandoInsert->bindParam(7, $colegiatura['universidadtitulacion'], PDO::PARAM_INT);
+                $comandoInsert->bindParam(8, $colegiatura['fechatitulo'], PDO::PARAM_STR);
+                $comandoInsert->bindParam(9, $colegiatura['resolucion'], PDO::PARAM_STR);
 
-                    $comandoInsert->execute();
-                    Database::getInstance()->getDb()->commit();
-                    return 'Insertado';
-                }
+                $comandoInsert->execute();
+                Database::getInstance()->getDb()->commit();
+                return 'Insertado';
             }
         } catch (Exception $ex) {
             Database::getInstance()->getDb()->rollback();
@@ -1673,7 +1674,7 @@ class PersonaAdo
 
     public static function getHabilidadIngenieroForExcel($opcion, $search, $tipoHabilidad, $capitulo, $especialidad)
     {
-        try {            
+        try {
             $arrayHabilidad = array();
             $comandoHabilidad = Database::getInstance()->getDb()->prepare("SELECT 
             p.CIP  AS Cip, 
@@ -1719,7 +1720,7 @@ class PersonaAdo
 
             ORDER BY p.FechaReg ");
 
-            $comandoHabilidad->bindParam(1, $search, PDO::PARAM_INT);            
+            $comandoHabilidad->bindParam(1, $search, PDO::PARAM_INT);
             $comandoHabilidad->bindParam(2, $search, PDO::PARAM_STR);
             $comandoHabilidad->bindParam(3, $search, PDO::PARAM_STR);
             $comandoHabilidad->bindParam(4, $search, PDO::PARAM_STR);
@@ -1733,10 +1734,10 @@ class PersonaAdo
 
             $comandoHabilidad->bindParam(10, $capitulo, PDO::PARAM_INT);
             $comandoHabilidad->bindParam(11, $especialidad, PDO::PARAM_INT);
-            
+
             $comandoHabilidad->bindParam(12, $capitulo, PDO::PARAM_INT);
             $comandoHabilidad->bindParam(13, $especialidad, PDO::PARAM_INT);
-            
+
             $comandoHabilidad->execute();
             $count = 0;
             while ($row = $comandoHabilidad->fetch()) {
@@ -1761,7 +1762,7 @@ class PersonaAdo
                     'Habilidad' => $row['Habilidad'],
                     'HabilitadoHasta' =>  $dateHabilidadHasta->format("m/Y")
                 ));
-            }            
+            }
 
             return $arrayHabilidad;
         } catch (Exception $ex) {

@@ -209,6 +209,20 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
                 "estado" => $validate
             ));
         }
+    } else if($_GET["type"] === "certHabilidad"){
+        $result = ConceptoAdo::getCertHabilidad($_GET['idCertificado'],1);
+        if (is_array($result)) {
+            echo json_encode(array(
+                "estado" => 1,
+                "data" => $result[0],
+                "especialidades" => $result[1]
+            ));
+        } else {
+            echo json_encode(array(
+                "estado" => 0,
+                "message" => $result
+            ));
+        }
     }
 } else if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     if ($_POST["type"] === "create") {

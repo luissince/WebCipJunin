@@ -288,9 +288,9 @@ if (!isset($_SESSION['IdUsuario'])) {
                                 <table class="table table-striped" style="border-width: 1px;border-style: dashed;border-color: #E31E25;">
                                     <thead style="background-color: #FDB2B1;color: #B72928;">
                                         <th width="5%" class="text-center">#</th>
-                                        <th width="7%">Cip</th>
-                                        <th width="7%">Dni</th>
-                                        <th width="21%">Apellidos y Nombres</th>
+                                        <th width="5%">Cip</th>
+                                        <th width="21%">Colegiado</th>
+                                        <th width="14%">Capit./Espec.</th>
                                         <th width="10%">Sexo</th>
                                         <th width="10%">Estado Civil</th>
                                         <th width="10%">Condicion</th>
@@ -572,8 +572,8 @@ if (!isset($_SESSION['IdUsuario'])) {
                                     tbTable.append('<tr>' +
                                         '<td class="text-center text-primary">' + persona.Id + '</td>' +
                                         '<td>' + persona.Cip + '</td>' +
-                                        '<td>' + persona.NumDoc + '</td>' +
-                                        '<td>' + persona.Apellidos + ' ' + persona.Nombres + '</td>' +
+                                        '<td>' + persona.NumDoc + '<br>' + persona.Apellidos + ' ' + persona.Nombres +'</td>' +
+                                        '<td>' + persona.Capitulo + '<br>' + persona.Especialidad +'</td>' +
                                         '<td>' + persona.Sexo + '</td>' +
                                         '<td>' + estadoCivil + '</td>' +
                                         '<td>' + condicion + '</td>' +

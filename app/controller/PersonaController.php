@@ -347,16 +347,16 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
         if ($result == "Insertado") {
             echo json_encode(array(
                 "estado" => 1,
-                "message" => "Se insertaron correctamente los datos"
+                "message" => "Se registro correctamente la colegiatura"
             ));
-        } else if ($result == "Duplicado") {
+        } else if ($result == "Actualizado") {
             echo json_encode(array(
-                "estado" => 3,
-                "message" => "La colegiatura con resolución " . $colegiatura["resolucion"] . " ya se encuentra registrada"
+                "estado" => 1,
+                "message" => "La colegiatura con resolución " . $colegiatura["resolucion"] . " se actualizó correctamente"
             ));
         } else {
             echo json_encode(array(
-                "estado" => 2,
+                "estado" => 0,
                 "message" => $result
             ));
         }

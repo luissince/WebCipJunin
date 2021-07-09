@@ -142,14 +142,15 @@ if (!isset($_SESSION['IdUsuario'])) {
                                 <table class="table table-striped" style="border-width: 1px;border-style: dashed;border-color: #E31E25;">
                                     <thead style="background-color: #FDB2B1;color: #B72928;">
                                         <th style="width:5%;" class="text-center">#</th>
-                                        <th style="width:5%;">Anular</th>
-                                        <th style="width:5%;">P.D.F</th>
-                                        <th style="width:5%;">Detalle</th>
-                                        <th style="width:13%;">Fecha</th>
-                                        <th style="width:13%;">Comprobante</th>
-                                        <th style="width:30%;">Colegiado</th>
-                                        <th style="width:12%;">Estado</th>
-                                        <th style="width:12%;">Total</th>
+                                        <th style="width:4%;">Anular</th>
+                                        <th style="width:4%;">P.D.F</th>
+                                        <th style="width:4%;">Detalle</th>
+                                        <th style="width:10%;">Fecha</th>
+                                        <th style="width:12%;">Comprobante</th>
+                                        <th style="width:25%;">Colegiado</th>
+                                        <th style="width:10%;">Estado</th>
+                                        <th style="width:10%;">Total</th>
+                                        <th style="width:16%;">Usuario</th>
                                     </thead>
                                     <tbody id="tbTable">
 
@@ -416,6 +417,7 @@ if (!isset($_SESSION['IdUsuario'])) {
                                         '<td>' + ingresos.nombreDocumento + ' - ' + ingresos.numeroDocumento + '</br>' + ingresos.persona + '</td>' +
                                         '<td>' + (ingresos.estado == "C" ? '<span class="text-green">Pagado</span>' : '<span class="text-red">Anulado</span>') + '</td>' +
                                         '<td>' + tools.formatMoney(ingresos.total) + '</td>' +
+                                        '<td>' + ingresos.usuario + '<br>'+ ingresos.rol + '</td>' +
                                         '</tr>'
                                     );
                                 }

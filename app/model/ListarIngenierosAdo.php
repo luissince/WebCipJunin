@@ -113,6 +113,31 @@ class ListarIngenierosAdo
                 inner join Capitulo as ca on ca.idCapitulo = e.idCapitulo
                  where Resolucion15 <> 0 and Principal = 1");
                 $cmdSelect->execute();
+            } else if($data['opcion'] == 5){
+                $cmdSelect = Database::getInstance()->getDb()->prepare("SELECT 
+                p.NumDoc as idDNI, 
+                p.CIP, 
+                p.Apellidos, 
+                p.Nombres, 
+                CASE 
+                WHEN p.Condicion = 'T' THEN 'TRANSEUNTE' 
+                WHEN p.Condicion = 'O' THEN 'ORDINARIO'  
+                WHEN p.Condicion = 'V' THEN 'VITALICIO'  
+                WHEN p.Condicion = 'R' THEN 'RETIRADO' 
+                WHEN p.Condicion = 'F' THEN 'FALLECIDO'
+                ELSE 'ORDINARIO' END AS Condicion,
+                CONVERT(VARCHAR,CAST(c.FechaColegiado AS DATE), 103) AS FechaColegiado,
+				CONVERT(VARCHAR,CAST(P.FechaReg AS DATE), 103) AS FechaRegistro,
+                ca.Capitulo,
+                e.Especialidad  
+                from Persona AS p
+                INNER JOIN Colegiatura AS c ON c.Principal = 1 AND P.idDNI = C.idDNI
+                INNER JOIN Especialidad AS e ON e.idEspecialidad = c.idEspecialidad
+                INNER JOIN Capitulo AS ca ON ca.idCapitulo = e.idCapitulo
+				where FechaReg between ? and ? ");
+                $cmdSelect->bindParam(1,  $data['fiColegiado'], PDO::PARAM_STR);
+                $cmdSelect->bindParam(2,  $data['ffColegiado'], PDO::PARAM_STR);
+                $cmdSelect->execute();
             }
 
             $arrayIngenieros = array();

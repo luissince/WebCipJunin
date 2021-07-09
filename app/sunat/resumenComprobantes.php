@@ -13,7 +13,7 @@ $title = "RESUMEN DE COMPROBANTES";
 $fechaInicial = $_GET["txtFechaInicial"];
 $fechaFinal = $_GET["txtFechaFinal"];
 $tipoDocumento = $_GET["cbTipoDocumento"];
-$nombreComprobante = $_GET["nombreComprobante"];
+
 
 $recibos = "Detalle del resumen";
 
@@ -128,8 +128,9 @@ mpdf-->
             <th width="9%" rowspan="1">MOTIVO ANUL.</th>
             <th width="6%" rowspan="1">FECHA ANUL.</th>
             <th width="5%" rowspan="1">SERIE</th>
-            <th width="5%" rowspan="1">NUMERA</th>
+            <th width="4%" rowspan="1">CORRELATIVO</th>
             <th width="6%" rowspan="1">FECHA REG.</th>
+            <th width="8%" rowspan="1">CONCEPTO</th>
             <th width="5%" rowspan="1">ESTADO</th>
             <th width="7%" rowspan="1">NUM. CIP</th>
             <th width="7%" rowspan="1">NUM. DNI/RUC</th>            
@@ -142,6 +143,27 @@ mpdf-->
 ?>
     <?php
     foreach ($ventas as $value) {
+
+        if ($value["Concepto"] == 1) {
+            $Concepto = "Cuota Ordinaria";
+        } else if ($value["Concepto"] == 2) {
+            $Concepto = "Cuota Ordinaria (Amnistia)";
+        } else if ($value["Concepto"] == 3) {
+            $Concepto = "Cuota Ordinaria (Vitalicio)";
+        } else if ($value["Concepto"] == 4) {
+            $Concepto = "Colegiatura";
+        } else if ($value["Concepto"] == 5) {
+            $Concepto = "Certificado de habilidad";
+        } else if ($value["Concepto"] == 6) {
+            $Concepto = "Cuota de residencia de obra";
+        } else if ($value["Concepto"] == 7) {
+            $Concepto = "Certificado de proyecto";
+        } else if ($value["Concepto"] == 8) {
+            $Concepto = "Peritaje";
+        } else if ($value["Concepto"] == 100) {
+            $Concepto = "Ingresos Diversos";
+        }
+
         // $totalCipJunin += $value["CIPJunin"];
         // $totalCipNacional += $value["CIPNacional"];
         if ($value["Estado"] === "C") {
@@ -163,6 +185,9 @@ mpdf-->
                 </td>
                 <td align="center" rowspan="1">
                     ' . $value["FechaPago"] . '      
+                </td>
+                <td align="center" rowspan="1">
+                    ' . $Concepto . '     
                 </td>
                 <td align="center" rowspan="1">
                     ' . $value["Estado"] . '      
@@ -202,6 +227,9 @@ mpdf-->
                 </td>
                 <td align="center" rowspan="1">
                     ' . $value["FechaPago"] . '      
+                </td>
+                <td align="center" rowspan="1">
+                    ' . $Concepto . '     
                 </td>
                 <td align="center" rowspan="1">
                     ' . $value["Estado"] . '      
