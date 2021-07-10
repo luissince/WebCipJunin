@@ -63,6 +63,46 @@ if (!isset($_SESSION['IdUsuario'])) {
                 </div>
             </div>
             <!--end modal history enginner  -->
+
+            <!-- modal detalle del ingreso -->
+            <div class="row">
+                <div class="modal fade" id="eviarDocumentoalCorreo" data-backdrop="static">
+                    <div class="modal-dialog">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <button type="button" class="close" data-dismiss="modal">
+                                    <i class="fa fa-close"></i>
+                                </button>
+                                <h4 class="modal-title">
+                                    <i class="fa fa-envelope">
+                                    </i> Enviar Documento por Correo
+                                </h4>
+                            </div>
+                            <div class="modal-body">
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <div class="form-group">
+                                            <label for="Universidad" class="col-sm-4 control-label">Correo del Colegiado</label>
+                                            <div class="col-sm-8">
+                                                <input id="txtCorreo" type="text" class="form-control" placeholder="Ingrese un correo válido" required="">
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-warning" id="btnAceptarEnvio">
+                                    <i class="fa fa-check"></i> Aceptar</button>
+                                <button type="button" class="btn btn-primary" data-dismiss="modal" id="btnCancelEnvio">
+                                    <i class="fa fa-remove"></i> Cancelar</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- </div> -->
+            <!--end modal history enginner  -->
+
             <!-- Content Wrapper. Contains page content -->
             <div class="content-wrapper" style="background-color: #FFFFFF;">
                 <!-- Main content -->
@@ -147,10 +187,11 @@ if (!isset($_SESSION['IdUsuario'])) {
                                         <th style="width:4%;">Detalle</th>
                                         <th style="width:10%;">Fecha</th>
                                         <th style="width:12%;">Comprobante</th>
-                                        <th style="width:25%;">Colegiado</th>
-                                        <th style="width:10%;">Estado</th>
-                                        <th style="width:10%;">Total</th>
-                                        <th style="width:16%;">Usuario</th>
+                                        <th style="width:24%;">Colegiado</th>
+                                        <th style="width:9%;">Estado</th>
+                                        <th style="width:9%;">Total</th>
+                                        <th style="width:15%;">Usuario</th>
+                                        <th style="width:4%;">enviar</th>
                                     </thead>
                                     <tbody id="tbTable">
 
@@ -202,6 +243,8 @@ if (!isset($_SESSION['IdUsuario'])) {
             let tbTable = $("#tbTable");
 
             let arrayIngresos = [];
+
+            let idIngreso = '';
 
             $(document).ready(function() {
 
@@ -324,6 +367,16 @@ if (!isset($_SESSION['IdUsuario'])) {
                 loadComprobantes();
                 loadInitIngresos();
 
+                $("#btnCancelEnvio").click(function() {
+                    $("#eviarDocumentoalCorreo").modal("hide");
+                    $("#txtCorreo").val('');
+                });
+
+                $("#btnAceptarEnvio").click(function() {
+                    // $("#eviarDocumentoalCorreo").modal("hide");
+                    // $("#txtCorreo").val('');
+                    enviarDocumentoCorreo($("#txtCorreo").val(), idIngreso);
+                });
             });
 
             function onEventPaginacion() {
@@ -371,7 +424,7 @@ if (!isset($_SESSION['IdUsuario'])) {
                     beforeSend: function() {
                         tbTable.empty();
                         tbTable.append(
-                            '<tr class="text-center"><td colspan="9"><img src="./images/spiner.gif"/><p>Cargando información.</p></td></tr>'
+                            '<tr class="text-center"><td colspan="11"><img src="./images/spiner.gif"/><p>Cargando información.</p></td></tr>'
                         );
                         arrayIngresos = [];
                         state = true;
@@ -383,7 +436,7 @@ if (!isset($_SESSION['IdUsuario'])) {
                             if (arrayIngresos.length == 0) {
                                 tbTable.empty();
                                 tbTable.append(
-                                    '<tr class="text-center"><td colspan="9"><p>No hay ingresos para mostrar.</p></td></tr>'
+                                    '<tr class="text-center"><td colspan="11"><p>No hay ingresos para mostrar.</p></td></tr>'
                                 );
                                 totalPaginacion = parseInt(Math.ceil((parseFloat(result.total) / parseInt(
                                     filasPorPagina))));
@@ -403,6 +456,9 @@ if (!isset($_SESSION['IdUsuario'])) {
                                     let btnDetalle = '<button class="btn btn-warning btn-xs" onclick="openDetalle(\'' + ingresos.idIngreso + '\')">' +
                                         '<i class="fa fa-eye" style="font-size:25px;"></i></br>' +
                                         '</button>';
+                                    let btnEnviar = '<button class="btn btn-info btn-xs" onclick="getCorreo(\'' + ingresos.numeroDocumento + '\', \'' + ingresos.idIngreso + '\', \'' + '\')">' +
+                                        '<i class="fa fa-envelope" style="font-size:25px;"></i></br>' +
+                                        '</button>';
 
                                     let observacionsunat =
                                         (ingresos.xmldescripcion === "" ? "Por Generar Xml y Enviar" : ingresos.xmldescripcion);
@@ -417,7 +473,8 @@ if (!isset($_SESSION['IdUsuario'])) {
                                         '<td>' + ingresos.nombreDocumento + ' - ' + ingresos.numeroDocumento + '</br>' + ingresos.persona + '</td>' +
                                         '<td>' + (ingresos.estado == "C" ? '<span class="text-green">Pagado</span>' : '<span class="text-red">Anulado</span>') + '</td>' +
                                         '<td>' + tools.formatMoney(ingresos.total) + '</td>' +
-                                        '<td>' + ingresos.usuario + '<br>'+ ingresos.rol + '</td>' +
+                                        '<td>' + ingresos.usuario + '<br>' + ingresos.rol + '</td>' +
+                                        '<td>' + btnEnviar + '</td>' +
                                         '</tr>'
                                     );
                                 }
@@ -430,7 +487,7 @@ if (!isset($_SESSION['IdUsuario'])) {
                         } else {
                             tbTable.empty();
                             tbTable.append(
-                                '<tr class="text-center"><td colspan="9"><p>' + result.mensaje + '</p></td></tr>'
+                                '<tr class="text-center"><td colspan="11"><p>' + result.mensaje + '</p></td></tr>'
                             );
                             $("#lblPaginaActual").html(0);
                             $("#lblPaginaSiguiente").html(0);
@@ -441,7 +498,7 @@ if (!isset($_SESSION['IdUsuario'])) {
                     error: function(error) {
                         tbTable.empty();
                         tbTable.append(
-                            '<tr class="text-center"><td colspan="9"><p>' + error.responseText + '</p></td></tr>'
+                            '<tr class="text-center"><td colspan="11"><p>' + error.responseText + '</p></td></tr>'
                         );
                         $("#lblPaginaActual").html(0);
                         $("#lblPaginaSiguiente").html(0);
@@ -450,6 +507,34 @@ if (!isset($_SESSION['IdUsuario'])) {
                 });
             }
 
+            function getCorreo(dniColegiado, idIngres) {
+
+                idIngreso = idIngres;
+
+                $("#eviarDocumentoalCorreo").modal("show");
+
+                $.ajax({
+                    url: "../app/controller/ComprobanteController.php",
+                    method: "GET",
+                    data: {
+                        "type": "correo",
+                        "colegiado": dniColegiado
+                    },
+                    beforeSend: function() {
+                        $("#txtCorreo").val('');
+                    },
+                    success: function(result) {
+                        if (result.estado == 1) {
+                            if (result.data.length != 0) {
+                                $("#txtCorreo").val(result.data[0].email);
+                            }
+                        }
+                    },
+                    error: function(error) {
+                        $("#txtCorreo").val('');
+                    }
+                })
+            }
 
             function loadComprobantes() {
                 $.ajax({
@@ -557,6 +642,36 @@ if (!isset($_SESSION['IdUsuario'])) {
                         });
                     }
                 });
+            }
+
+            function enviarDocumentoCorreo(correo, idIngreso) {
+                $.ajax({
+                    url: "../app/sunat/mail.php",
+                    method: 'POST',
+
+                    data: {
+                        "correodestino": correo,
+                        "idIngreso": idIngreso
+                    },
+                    beforeSend: function() {
+                        $("#eviarDocumentoalCorreo").modal("hide");
+                        $("#txtCorreo").val('');
+                        tools.ModalAlertInfo("Envio Correo", "Procesando petición..");
+                    },
+                    success: function(result) {
+                        console.log(result);
+                        if (result.estado == 1) {
+                            tools.ModalAlertSuccess("Envio Correo", result.message);
+
+                        } else {
+                            tools.ModalAlertWarning("Envio Correo", result.message);
+                        }
+                    },
+                    error: function(error) {
+                        console.log(error);
+                        tools.ModalAlertError("Envio Correo", "Se produjo un error: " + error.responseText);
+                    }
+                })
             }
         </script>
     </body>

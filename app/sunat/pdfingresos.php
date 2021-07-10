@@ -45,7 +45,7 @@ if (!isset($_GET["idIngreso"])) {
 
             $qrCode = QrCode::png($textoCodBar, 'codbar.png', 'L', 4, 2);
 
-            $html .= '<html>
+            $html = '<html>
             <head>
                 <style>
                     body {
@@ -218,14 +218,14 @@ if (!isset($_GET["idIngreso"])) {
                                             </tr>  ';
                                     $html .= '<tr>
                                             <td style="line-height: 0px;padding:2px 0px;"><b>Cap. - Especia.</b></td>
-                                            <td style="line-height: 0px;padding:2px 0px;"><b>:</b> ' . $ingreso->Capitulo .' - '. $ingreso->Especialidad .'</td>
+                                            <td style="line-height: 0px;padding:2px 0px;"><b>:</b> ' . $ingreso->Capitulo . ' - ' . $ingreso->Especialidad . '</td>
                                             </tr>  ';
                                 }
-                            } else{
+                            } else {
                                 if ($ingreso->CIP != "") {
                                     $html .= '<tr>
                                             <td style="line-height: 0px;padding:2px 0px;"><b>Cap. - Especia.</b></td>
-                                            <td style="line-height: 0px;padding:2px 0px;"><b>:</b> ' . $ingreso->Capitulo .' - '. $ingreso->Especialidad .'</td>
+                                            <td style="line-height: 0px;padding:2px 0px;"><b>:</b> ' . $ingreso->Capitulo . ' - ' . $ingreso->Especialidad . '</td>
                                             </tr>  ';
                                 }
                             }
@@ -361,7 +361,7 @@ if (!isset($_GET["idIngreso"])) {
                             $mpdf->SetDisplayMode('fullpage');
                             $mpdf->WriteHTML($html);
                             // Output a PDF file directly to the browser
-                            $mpdf->Output($ingreso->Comprobante . " " . $ingreso->Serie . '-' . $ingreso->Numeracion . " CIP-JUNIN.pdf", 'D');
+                            $mpdf->Output($ingreso->Comprobante . " " . $ingreso->Serie . '-' . $ingreso->Numeracion . " CIP-JUNIN.pdf", 'I');
                         }
                     }
                 }

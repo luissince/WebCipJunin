@@ -66,6 +66,21 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
                 "message" => $result,
             ));
         }
+    } else if ($_GET["type"] === "correo") {
+        $dniColegiado = $_GET['colegiado'];
+
+        $result = ComprobanteAdo::getCorreoColegiado($dniColegiado);
+        if (is_array($result)) {
+            echo json_encode(array(
+                "estado" => 1,
+                "data" => $result,
+            ));
+        } else {
+            echo json_encode(array(
+                "estado" => 2,
+                "message" => $result,
+            ));
+        }
     }
 } else if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     if ($_POST["type"] === "addComprobante") {
