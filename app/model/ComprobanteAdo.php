@@ -272,4 +272,27 @@ class ComprobanteAdo
             return $ex->getMessage();
         }
     }
+
+    public static function getCorreoColegiado($dniColegiado)
+    {
+        try {
+            $arrayCorreo = array();
+            $cmdCorreo = Database::getInstance()->getDb()->prepare("SELECT p.idDNI, CONCAT(p.Apellidos, p.Nombres) AS INgeniero, w.Direccion FROM Persona AS p
+            INNER JOIN Web AS w ON w.idDNI = p.idDNI
+            WHERE p.idDNI = ?");
+            $cmdCorreo->bindParam(1, $dniColegiado, PDO::PARAM_INT);
+            $cmdCorreo->execute();
+            $count = 0;
+            while($row = $cmdCorreo->fetch()){
+                $count++;
+                array_push($arrayCorreo, array(
+                    "Id" => $count,
+                    "email" => $row["Direccion"]
+                ));
+            }
+            return $arrayCorreo;
+        } catch (Exception $ex) {
+            return $ex->getMessage();
+        }
+    }
 }
