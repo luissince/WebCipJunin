@@ -4,7 +4,7 @@ function CobroIngenieros() {
     let opcionHistorial = 0;
     let totalPaginacionHistorial = 0;
     let paginacionHistorial = 0;
-    let filasPorPaginacionHistorial = 10;
+    let filasPorPaginacionHistorial = 5;
     let tbHistorial = $("#tbHistorial");
 
     this.componentesIngenieros = function() {
@@ -236,7 +236,7 @@ function CobroIngenieros() {
                         $("#lblProgress").addClass("progress-bar progress-bar-green");
                         $("#lblProgress").css("width", "100%");
                     } else {
-                        $("#lblYears").html(data.years + " AÑOS PARA SER VITALICO( " + tools.getDateForma(data.date) + " )")
+                        $("#lblYears").html(data.years + " AÑOS PARA SER VITALICIO( " + tools.getDateForma(data.date) + " )")
                         $("#lblProgress").removeClass()
                         $("#lblProgress").addClass(porcentaje >= 0 && porcentaje <= 30 ? "progress-bar progress-bar-warning" : porcentaje > 30 && porcentaje <= 70 ? "progress-bar progress-bar-danger" : porcentaje > 70 && porcentaje < 100 ? "progress-bar progress-bar-info" : "progress-bar progress-bar-green");
                         $("#lblProgress").css("width", porcentaje + "%");

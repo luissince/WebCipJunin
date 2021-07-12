@@ -418,7 +418,7 @@ try {
 
                             //Content
                             $mail->isHTML(true);                                  //Set email format to HTML
-                            $mail->Subject = 'EMISIÓN DEL COMPROBANTE: ' . $fileName;
+                            $mail->Subject = ' EMISIÓN DEL COMPROBANTE: ' . $fileName;
                             $mail->Body = '<html>
                                 <head>
                                     <meta charset="utf-8">
@@ -457,7 +457,8 @@ try {
 
                             // $mail->Body    = 'Saludos Ingeniero(a): ' . $ingreso->Apellidos . ' ' . $ingreso->Nombres . '</b> 
                             //                     Se le adjunta el comprobante emitido hacia su persona </b> Saludos Coordiales';
-                            $mail->AltBody = 'This is the body in plain text for non-HTML mail clients';
+                            $mail->AltBody = 'Ingeniero(a): '. $ingreso->Apellidos . ' ' . $ingreso->Nombres .' Reciba nuestro más cordial saludo, se le escribe para informarle que el 
+                            comprobante emitido hacia su persona fue realizado con éxito. Adjuntamos dicho comprobante.';
 
                             //Attachments
                             $mail->addAttachment($fileName . " CIP-JUNIN.pdf");         //Add attachments

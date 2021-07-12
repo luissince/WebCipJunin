@@ -234,8 +234,8 @@ if (!isset($_SESSION['IdUsuario'])) {
                                                     <thead style="background-color: #FDB2B1;color: #B72928;">
                                                         <th style="text-align: center;" width="5%">#</th>
                                                         <th style="text-align: center;" width="10%">Recibo</th>
-                                                        <th style="text-align: center;" width="15%">Fecha de Cobro</th>
-                                                        <th style="text-align: center;" width="25%">Concepto</th>
+                                                        <th style="text-align: center;" width="20%">Fecha Cobro</th>
+                                                        <th style="text-align: center;" width="20%">Concepto</th>
                                                         <th style="text-align: center;" width="15%">Monto</th>
                                                         <th style="text-align: center;" width="30%">Observacion</th>
                                                         <th style="text-align: center;" width="10%">Detalle</th>
@@ -244,6 +244,43 @@ if (!isset($_SESSION['IdUsuario'])) {
                                                         <tr class="text-center">
                                                             <td colspan="7">
                                                                 <p>No se ha seleccionado ningún ingeniero.</p>
+                                                            </td>
+                                                        </tr>
+                                                    </tbody>
+                                                </table>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="panel panel-primary">
+                                <div class="panel-heading">
+                                    <h5 class="no-margin">Afiliación a la Resolución 15</h5>
+                                </div>
+                                <div class="panel-body">
+                                    <div class="row">
+                                        <div class="col-md-12">
+                                            <div Class="form-group" style="float: Right">
+                                                <button class="btn btn-success">
+                                                    <i class="fa fa-plus"></i> Añadir
+                                                </button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-md-12">
+                                            <div class="table-responsive">
+                                                <table class="table table-striped table-hover" style="border-width: 1px;border-style: dashed;border-color: #E31E25;">
+                                                    <thead style="background-color: #FDB2B1;color: #B72928;">
+                                                        <th style="text-align: center;" width="10%">#</th>
+                                                        <th style="text-align: center" width="45%">ABC</th>
+                                                        <th style="text-align: center" width="45%">DEF</th>
+                                                    </thead>
+                                                    <tbody>
+                                                        <tr class="text-center">
+                                                            <td colspan="3">
+                                                                <p>No se ha seleccionado ningún ingeniero</p>
                                                             </td>
                                                         </tr>
                                                     </tbody>
@@ -352,7 +389,7 @@ if (!isset($_SESSION['IdUsuario'])) {
 
                                         <div class="col-md-12 ">
                                             <div class="clearfix">
-                                                <span class="pull-left" id="lblYears">0 AÑOS PARA VITALICO</span>
+                                                <span class="pull-left" id="lblYears">0 AÑOS PARA VITALICIO</span>
                                                 <span class="pull-right"></span>
                                             </div>
                                             <div class="progress xs">
@@ -441,7 +478,7 @@ if (!isset($_SESSION['IdUsuario'])) {
             let UsarRuc = false;
             let newEmpresa = 0;
 
-            let idUsuario =<?= $_SESSION['IdUsuario'] ?>;
+            let idUsuario = <?= $_SESSION['IdUsuario'] ?>;
 
             let modelCobrosIngenieros = new CobroIngenieros();
             let modelColegiatura = new Colegiatura();
