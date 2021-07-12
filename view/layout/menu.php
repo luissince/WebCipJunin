@@ -174,7 +174,7 @@
               } else if (id == "tab-habilidadIngeniero") {
                   document.getElementById("tab-habilidadIngeniero").setAttribute("class", "nav-item active");
               }
-          } else if (id == "tab-notaCredito" || id == "tab-nuevaNotaCredito" || id == "tab-notaDebito" || id == "tab-nuevaNotaDebito" || id == "tab-consultaComprobante" || id == "tab-comprobantesElectronicos" || id=="tab-configEmpresa") {
+          } else if (id == "tab-notaCredito" || id == "tab-nuevaNotaCredito" || id == "tab-notaDebito" || id == "tab-nuevaNotaDebito" || id == "tab-consultaComprobante" || id == "tab-comprobantesElectronicos" || id == "tab-configEmpresa") {
               document.getElementById("tab-menu-factura").setAttribute("class", "nav-item active");
               if (id == "tab-notaCredito" || id == "tab-nuevaNotaCredito") {
                   document.getElementById("tab-notaCredito").setAttribute("class", "nav-link active");
@@ -184,8 +184,8 @@
                   document.getElementById("tab-consultaComprobante").setAttribute("class", "nav-link active");
               } else if (id == "tab-comprobantesElectronicos") {
                   document.getElementById("tab-comprobantesElectronicos").setAttribute("class", "nav-link active");
-              } else if(id=="tab-configEmpresa"){
-                document.getElementById("tab-configEmpresa").setAttribute("class", "nav-link active");
+              } else if (id == "tab-configEmpresa") {
+                  document.getElementById("tab-configEmpresa").setAttribute("class", "nav-link active");
               }
           } else {
               document.getElementById(id).setAttribute("class", "nav-item active");

@@ -101,7 +101,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
                 "estado" => 1,
                 "mensaje" => "Se completo correctamento el ingreso.",
             ));
-        }  else if ($result === "Actualizado") {
+        } else if ($result === "Actualizado") {
             echo json_encode(array(
                 "estado" => 2,
                 "mensaje" => "El comprobante se actualizó correctamente.",
@@ -111,12 +111,40 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
                 "estado" => 3,
                 "mensaje" => "Hay un comprobante con la misma serie.",
             ));
-        }  else {
+        } else {
             echo json_encode(array(
                 "estado" => 0,
                 "mensaje" => $result
             ));
         }
         // exit();
+    } else if ($_POST["type"] === "deleteComprobante") {
+        $result = ComprobanteAdo::deleteComprobante($_POST["idComprobante"]);
+        if ($result === "deleted") {
+            echo json_encode(array(
+                "estado" => 1,
+                "message" => "Se eliminó correctamente el comprobante."
+            ));
+        } else if ($result === "estado") {
+            echo json_encode(array(
+                "estado" => 3,
+                "message" => "No se puede eliminar el comprobante, ya que se encuentra activo."
+            ));
+        } else  if ($result === "ingreso") {
+            echo json_encode(array(
+                "estado" => 4,
+                "message" => "No se puede eliminar el comprobante porque esta ligado a unos ingresos."
+            ));
+        } else if ($result === "nota") {
+            echo json_encode(array(
+                "estado" => 5,
+                "message" => "No se puede eliminar el comprobante porque esta ligado a una nota de credito."
+            ));
+        } else {
+            echo json_encode(array(
+                "estado" => 0,
+                "message" => $result
+            ));
+        }
     }
 }

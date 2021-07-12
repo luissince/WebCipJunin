@@ -218,6 +218,46 @@ class ComprobanteAdo
         }
     }
 
+    public static function deleteComprobante($idComprobante)
+    {
+        try {
+            Database::getInstance()->getDb()->beginTransaction();
+
+            $cmdValidate = Database::getInstance()->getDb()->prepare("SELECT * FROM TipoComprobante WHERE IdTipoComprobante = ? AND Estado = 1");
+            $cmdValidate->bindParam(1, $idComprobante, PDO::PARAM_INT);
+            $cmdValidate->execute();
+            if ($cmdValidate->fetch()) {
+                Database::getInstance()->getDb()->rollback();
+                return "estado";
+            } else {
+                $cmdValidate = Database::getInstance()->getDb()->prepare("SELECT * FROM Ingreso WHERE TipoComprobante = ?");
+                $cmdValidate->bindParam(1, $idComprobante, PDO::PARAM_INT);
+                $cmdValidate->execute();
+                if ($cmdValidate->fetch()) {
+                    Database::getInstance()->getDb()->rollback();
+                    return "ingreso";
+                } else {
+                    $cmdValidate = Database::getInstance()->getDb()->prepare("SELECT * FROM NotaCredito WHERE TipoComprobante = ?");
+                    $cmdValidate->bindParam(1, $idComprobante, PDO::PARAM_INT);
+                    $cmdValidate->execute();
+                    if ($cmdValidate->fetch()) {
+                        Database::getInstance()->getDb()->rollback();
+                        return "nota";
+                    } else {
+                        $comandSelect = Database::getInstance()->getDb()->prepare("DELETE FROM Concepto WHERE idConcepto = ?");
+                        $comandSelect->bindParam(1, $idComprobante, PDO::PARAM_INT);
+                        $comandSelect->execute();
+                        Database::getInstance()->getDb()->commit();
+                        return "deleted";
+                    }
+                }
+            }
+        } catch (Exception $ex) {
+            Database::getInstance()->getDb()->rollback();
+            return $ex->getMessage();
+        }
+    }
+
     public static function getDataByIdComprobante($idComprobante)
     {
         try {
