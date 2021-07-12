@@ -42,7 +42,7 @@ if (!isset($_GET["idIngreso"])) {
         $Mes = $Datos['frMes'];
         $MesFormat = DateTime::createFromFormat('!m', $Mes);
         $MesRegistro = strftime("%B", $MesFormat->getTimestamp());
-        $AnioRegistro = substr($Datos['frAnio'],2,2);
+        $AnioRegistro = substr($Datos['frAnio'], 2, 2);
         $sesentaEspacios = '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
                             &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                             &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;';
@@ -51,7 +51,7 @@ if (!isset($_GET["idIngreso"])) {
         $tresEspacios = '&nbsp;&nbsp;&nbsp;';
 
 
-        $html .= '<html>
+        $html = '<html>
             <head>
                 <style>
                     body {
@@ -97,29 +97,29 @@ if (!isset($_GET["idIngreso"])) {
                         </div>
                     </div>
                     <div style="width:100%; padding-left: 42px;" face:"georgia";>
-                        El ingeniero (a): <strong>'.$tresEspacios .$Nombreingeniero.' '.$Apellidosingeniero.'</strong>
+                        El ingeniero (a): <strong>' . $tresEspacios . $Nombreingeniero . ' ' . $Apellidosingeniero . '</strong>
                     </div>
                     <div style="width:100%; padding-left: 42px; padding-top: 5px;">
-                        Adscrito al Consejo Departamental de: <strong>'.$tresEspacios .$ConsejoDepartamental.' </strong>'.$sesentaEspacios.'Registro CIP N°: <strong>'.$tresEspacios .$NumeroCIP.'</strong>
+                        Adscrito al Consejo Departamental de: <strong>' . $tresEspacios . $ConsejoDepartamental . ' </strong>' . $sesentaEspacios . 'Registro CIP N°: <strong>' . $tresEspacios . $NumeroCIP . '</strong>
                     </div>
                     <div style="width:100%; padding-left: 42px; padding-top: 5px;">
-                        Fecha de Incorporación: <strong>'.$tresEspacios .$FechaIncorporacion.'</strong>'.$sesentaEspacios.'Especialidad: <strong>'.$tresEspacios .$Especialidad.'</strong>
+                        Fecha de Incorporación: <strong>' . $tresEspacios . $FechaIncorporacion . '</strong>' . $sesentaEspacios . 'Especialidad: <strong>' . $tresEspacios . $Especialidad . '</strong>
                     </div>
                     <div style="width:100%; padding-left: 42px; padding-top: 8px;">
                         EL INGENIERO SE ENCUENTRA COLEGIADO Y HÁBIL, para el siguiente detalle:
                     </div>
                     <div style="width:100%; padding-left: 25px; padding-top: 8px;">
                         <div style="width:12%; font-weight:bold; float:left; text-align:center;padding-top:5px; font-size:8pt;">ASUNTO</div>
-                        <div style="width:83%; border:1px solid black; float:left; height:25px;"><div style="margin-top:4px">'.$cincoEspacios.'<strong>'.$Asunto.'</div><strong></div>
+                        <div style="width:83%; border:1px solid black; float:left; height:25px;"><div style="margin-top:4px">' . $cincoEspacios . '<strong>' . $Asunto . '</div><strong></div>
                     </div>
                     <div style="width:74%; padding-left: 25px; padding-top: 3px; float:left;">
                         <div style="width:100%;">
                             <div style="width:15.5%; font-weight:bold; float:left; text-align:center; font-size:8pt;">ENTIDAD O <br> PROPIETARIO</div>
-                            <div style="width:83.5%; border:1px solid black; float:left; height:25px;"><div style="margin-top:4px">'.$cincoEspacios.'<strong>'.$Entidad.'</div><strong></div>
+                            <div style="width:83.5%; border:1px solid black; float:left; height:25px;"><div style="margin-top:4px">' . $cincoEspacios . '<strong>' . $Entidad . '</div><strong></div>
                         </div>
                         <div style="width:100%; padding-top: 0px;">
                             <div style="width:15.5%; font-weight:bold; float:left; text-align:center; font-size:8pt; padding-top:5px">LUGAR </div>
-                            <div style="width:83.5%; border:1px solid black; float:left; height:25px;"><div style="margin-top:4px">'.$cincoEspacios.'<strong>'.$Lugar.'</div><strong></div>
+                            <div style="width:83.5%; border:1px solid black; float:left; height:25px;"><div style="margin-top:4px">' . $cincoEspacios . '<strong>' . $Lugar . '</div><strong></div>
                         </div>
                     </div>
                     <div style="width:20%; float:left;">
@@ -133,9 +133,9 @@ if (!isset($_GET["idIngreso"])) {
                                 <td style="width:20px; height:15px;  font-size:9px; text-align:center; border:1px solid #c55f52; border-bottom:0;">AÑO</td>
                             </tr>
                             <tr>
-                                <td style="width:20px; height:22px; text-align:center; border:1px solid #c55f52; border-top:0; font-size:10px;"><strong>'.$DiaVencimiento.'</strong></td>
-                                <td style="width:20px; height:22px;  text-align:center; border:1px solid #c55f52; border-top:0; font-size:10px;"><strong>'.$MesVencimiento.'</strong></td>
-                                <td style="width:20px; height:22px;  text-align:center; border:1px solid #c55f52; border-top:0; font-size:10px;"><strong>'.$AnioVencimiento.'</strong></td>
+                                <td style="width:20px; height:22px; text-align:center; border:1px solid #c55f52; border-top:0; font-size:10px;"><strong>' . $DiaVencimiento . '</strong></td>
+                                <td style="width:20px; height:22px;  text-align:center; border:1px solid #c55f52; border-top:0; font-size:10px;"><strong>' . $MesVencimiento . '</strong></td>
+                                <td style="width:20px; height:22px;  text-align:center; border:1px solid #c55f52; border-top:0; font-size:10px;"><strong>' . $AnioVencimiento . '</strong></td>
                             </tr>
                         </table>
                     </div>
@@ -144,7 +144,7 @@ if (!isset($_GET["idIngreso"])) {
 
                         </div>
                         <div style="float:left; width:55%; height:20px; margin-top: 3px; text-align:right;">
-                                <strong>'.$LugarRegistro.$cincoEspacios.$DiaRegistro.$tresEspacios.'</strong>, de<strong>'.$tresEspacios.$MesRegistro.$tresEspacios.'</strong> del 20<strong>'.$AnioRegistro.'</strong>
+                                <strong>' . $LugarRegistro . $cincoEspacios . $DiaRegistro . $tresEspacios . '</strong>, de<strong>' . $tresEspacios . $MesRegistro . $tresEspacios . '</strong> del 20<strong>' . $AnioRegistro . '</strong>
                         </div>
                     </div>
                 </div>
@@ -175,16 +175,16 @@ if (!isset($_GET["idIngreso"])) {
                         Los que suscriben certifican que:
                     </div>
                     <div style="width:100%; padding-left: 135px; padding-top:10px;">
-                        El ingeniero (a) :<strong>'.$tresEspacios .$Nombreingeniero.' '.$Apellidosingeniero.'</strong>
+                        El ingeniero (a) :<strong>' . $tresEspacios . $Nombreingeniero . ' ' . $Apellidosingeniero . '</strong>
                     </div>
                     <div style="width:100%; padding-left: 135px; padding-top: 10px;">
-                        Adscrito al Consejo Departamental de: <strong>'.$tresEspacios .$ConsejoDepartamental.'</strong>
+                        Adscrito al Consejo Departamental de: <strong>' . $tresEspacios . $ConsejoDepartamental . '</strong>
                     </div>
                     <div style="width:100%; padding-left: 135px; padding-top: 10px;">
-                        Con Registro de Matrícula del CIP N°: <strong>'.$tresEspacios .$NumeroCIP.$veinteEspacios.'</strong>Fecha de Incorporación: <strong>'.$tresEspacios .$FechaIncorporacion.'</strong>
+                        Con Registro de Matrícula del CIP N°: <strong>' . $tresEspacios . $NumeroCIP . $veinteEspacios . '</strong>Fecha de Incorporación: <strong>' . $tresEspacios . $FechaIncorporacion . '</strong>
                     </div>
                     <div style="width:100%; padding-left: 135px; padding-top: 10px;">
-                        Especialidad: <strong>'.$tresEspacios .$Especialidad.'</strong>
+                        Especialidad: <strong>' . $tresEspacios . $Especialidad . '</strong>
                     </div>
                     <div style="width:100%; padding-left: 135px; padding-top: 20px; font-size:8.7pt;">
                         De conformidad con la Ley N° 28858, Ley que complementa a la Ley N° 16053 del Ejercicio Profesional y el Estatuto                        
@@ -195,15 +195,15 @@ if (!isset($_GET["idIngreso"])) {
                     </div>                 
                     <div style="width:100%; padding-left: 135px; padding-top: 25px;">
                         <div style="width:15%; font-weight:bold; float:left; text-align:center;padding-top:8px; font-size:8pt;">ASUNTO</div>
-                        <div style="width:80%; border:1px solid black; float:left; height:35px;"><div style="margin-top:9px">'.$cincoEspacios.'<strong>'.$Asunto.'</div></div>
+                        <div style="width:80%; border:1px solid black; float:left; height:35px;"><div style="margin-top:9px">' . $cincoEspacios . '<strong>' . $Asunto . '</div></div>
                     </div>
                     <div style="width:100%; padding-left: 135px; padding-top: 8px;">
                         <div style="width:15%; font-weight:bold; float:left; text-align:center; font-size:8pt;">ENTIDAD <br> O <br> PROPIETARIO</div>
-                        <div style="width:80%; border:1px solid black; float:left; padding-top:8px; height:30px;"><div style="margin-top:3px">'.$cincoEspacios.'<strong>'.$Entidad.'</div></div>
+                        <div style="width:80%; border:1px solid black; float:left; padding-top:8px; height:30px;"><div style="margin-top:3px">' . $cincoEspacios . '<strong>' . $Entidad . '</div></div>
                     </div>
                     <div style="width:100%; padding-left: 135px; padding-top: 5px;">
                         <div style="width:15%; font-weight:bold; float:left; text-align:center;padding-top:5px; font-size:8pt;">LUGAR</div>
-                        <div style="width:80%; border:1px solid black; float:left; height:35px;"><div style="margin-top:10px">'.$cincoEspacios.'<strong>'.$Lugar.'</div></div>
+                        <div style="width:80%; border:1px solid black; float:left; height:35px;"><div style="margin-top:10px">' . $cincoEspacios . '<strong>' . $Lugar . '</div></div>
                     </div>
                     <!--######################################### Fin Cuerpo del documento ##################################################################-->
 
@@ -220,14 +220,14 @@ if (!isset($_GET["idIngreso"])) {
                                     <td style="width:20px; height:15px;  font-size:9px; text-align:center; border:1px solid #c55f52; border-bottom:0;">AÑO</td>
                                 </tr>
                                 <tr>
-                                    <td style="width:20px; height:22px; text-align:center; border:1px solid #c55f52; border-top:0; font-size:10px;"><strong>'.$DiaVencimiento.'</strong></td>
-                                    <td style="width:20px; height:22px;  text-align:center; border:1px solid #c55f52; border-top:0; font-size:10px;"><strong>'.$MesVencimiento.'</strong></td>
-                                    <td style="width:20px; height:22px;  text-align:center; border:1px solid #c55f52; border-top:0; font-size:10px;"><strong>'.$AnioVencimiento.'</strong></td>
+                                    <td style="width:20px; height:22px; text-align:center; border:1px solid #c55f52; border-top:0; font-size:10px;"><strong>' . $DiaVencimiento . '</strong></td>
+                                    <td style="width:20px; height:22px;  text-align:center; border:1px solid #c55f52; border-top:0; font-size:10px;"><strong>' . $MesVencimiento . '</strong></td>
+                                    <td style="width:20px; height:22px;  text-align:center; border:1px solid #c55f52; border-top:0; font-size:10px;"><strong>' . $AnioVencimiento . '</strong></td>
                                 </tr>
                             </table>
                         </div>
                         <div style=" width:70%; height:40px;  padding-top:55px; font-size:11pt; font-weight:bold; padding-left:135px">
-                        <strong>'.$LugarRegistro.$cincoEspacios.$DiaRegistro.$tresEspacios.'</strong>, de<strong>'.$tresEspacios.$MesRegistro.$tresEspacios.'</strong> del 20<strong>'.$AnioRegistro.'</strong>
+                        <strong>' . $LugarRegistro . $cincoEspacios . $DiaRegistro . $tresEspacios . '</strong>, de<strong>' . $tresEspacios . $MesRegistro . $tresEspacios . '</strong> del 20<strong>' . $AnioRegistro . '</strong>
                         </div>
                         <div style=" width:70%; height:40px;  padding-top:0px; font-size:15pt; font-weight:bold; padding-left:170px">
                             VÁLIDO SOLO ORIGINAL

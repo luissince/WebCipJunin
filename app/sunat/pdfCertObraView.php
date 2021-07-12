@@ -56,7 +56,7 @@ if (!isset($_GET["idIngreso"])) {
         $tresEspacios = '&nbsp;&nbsp;&nbsp;';
 
 
-        $html .= '<html>
+        $html = '<html>
             <head>
                 <style>
                     body {
@@ -102,22 +102,22 @@ if (!isset($_GET["idIngreso"])) {
                         </div>
                     </div>
                     <div style="width:100%; padding-left: 42px;" face:"georgia";>
-                        El ingeniero (a): <strong>'.$tresEspacios .$Nombreingeniero.' '.$Apellidosingeniero.'</strong>
+                        El ingeniero (a): <strong>' . $tresEspacios . $Nombreingeniero . ' ' . $Apellidosingeniero . '</strong>
                     </div>
                     <div style="width:100%; padding-left: 42px; padding-top: 5px;">
-                        Adscrito al Consejo Departamental de: <strong>'.$tresEspacios .$ConsejoDepartamental.' </strong>'.$veinteEspacios.'Registro CIP N°:<strong>'.$tresEspacios .$NumeroCIP.'</strong>
+                        Adscrito al Consejo Departamental de: <strong>' . $tresEspacios . $ConsejoDepartamental . ' </strong>' . $veinteEspacios . 'Registro CIP N°:<strong>' . $tresEspacios . $NumeroCIP . '</strong>
                     </div>
                     <div style="width:100%; padding-left: 42px; padding-top: 5px;">
-                        Fecha de Incorporación:<strong>'.$tresEspacios .$FechaIncorporacion.'</strong>'.$veinteEspacios.$cincoEspacios.'Especialidad: <strong>'.$tresEspacios .$Especialidad.'</strong>
+                        Fecha de Incorporación:<strong>' . $tresEspacios . $FechaIncorporacion . '</strong>' . $veinteEspacios . $cincoEspacios . 'Especialidad: <strong>' . $tresEspacios . $Especialidad . '</strong>
                     </div>
                     <div style="width:100%; padding-left: 42px; padding-top: 8px;">
                         EL INGENIERO SE ENCUENTRA COLEGIADO Y HÁBIL, para el siguiente detalle:
                     </div>
                     <div style="width:100%; padding-left: 42px; padding-top: 8px;">
-                        Modalidad:<strong>'.$tresEspacios .$Modalidad.'</strong>'.$veinteEspacios.$cincoEspacios.'Proyecto:<strong>'.$tresEspacios .IngresosAdo::limitar_cadena($Proyecto,25,"").'</strong>
+                        Modalidad:<strong>' . $tresEspacios . $Modalidad . '</strong>' . $veinteEspacios . $cincoEspacios . 'Proyecto:<strong>' . $tresEspacios . IngresosAdo::limitar_cadena($Proyecto, 25, "") . '</strong>
                     </div>
                     <div style="width:100%; padding-left: 42px; padding-top: 8px;">
-                        Propietario:<strong>'.$tresEspacios .$Propietario.'</strong>'.$veinteEspacios.$cincoEspacios.'Monto del contrato: <strong>'.$tresEspacios .$Monto.'</strong>
+                        Propietario:<strong>' . $tresEspacios . $Propietario . '</strong>' . $veinteEspacios . $cincoEspacios . 'Monto del contrato: <strong>' . $tresEspacios . $Monto . '</strong>
                     </div>
                     <div style="width:100%; height:50px; padding-left: 42px; padding-top: 5px;">
                         <div style="float:left; width:40%; height:40px; padding-left: 2px;">
@@ -129,14 +129,14 @@ if (!isset($_GET["idIngreso"])) {
                                     <td style="width:20px; height:13px;  font-size:8px; text-align:center; border:1px solid #c55f52; border-bottom:0;">AÑO</td>
                                 </tr>
                                 <tr>
-                                    <td style="width:20px; height:18px; text-align:center; border:1px solid #c55f52; border-top:0; font-size:8px;"><strong>'.$DiaVencimiento.'</strong></td>
-                                    <td style="width:20px; height:18px;  text-align:center; border:1px solid #c55f52; border-top:0; font-size:8px;"><strong>'.$MesVencimiento.'</strong></td>
-                                    <td style="width:20px; height:18px;  text-align:center; border:1px solid #c55f52; border-top:0; font-size:8px;"><strong>'.$AnioVencimiento.'</strong></td>
+                                    <td style="width:20px; height:18px; text-align:center; border:1px solid #c55f52; border-top:0; font-size:8px;"><strong>' . $DiaVencimiento . '</strong></td>
+                                    <td style="width:20px; height:18px;  text-align:center; border:1px solid #c55f52; border-top:0; font-size:8px;"><strong>' . $MesVencimiento . '</strong></td>
+                                    <td style="width:20px; height:18px;  text-align:center; border:1px solid #c55f52; border-top:0; font-size:8px;"><strong>' . $AnioVencimiento . '</strong></td>
                                 </tr>
                             </table>
                         </div>
                         <div style="float:left; width:55%; height:30px; margin-top: 15px; text-align:right;">
-                            <strong>'.$LugarRegistro.$cincoEspacios.$DiaRegistro.$tresEspacios.'</strong>, de<strong>'.$tresEspacios.$MesRegistro.$tresEspacios.'</strong> del 20<strong>'.$AnioRegistro.'</strong>
+                            <strong>' . $LugarRegistro . $cincoEspacios . $DiaRegistro . $tresEspacios . '</strong>, de<strong>' . $tresEspacios . $MesRegistro . $tresEspacios . '</strong> del 20<strong>' . $AnioRegistro . '</strong>
                         </div>
                     </div>
                 </div>
@@ -167,16 +167,16 @@ if (!isset($_GET["idIngreso"])) {
                         Los que suscriben certifican que:
                     </div>
                     <div style="width:100%; padding-left: 135px; padding-top:10px;">
-                        El ingeniero (a): <strong>'.$tresEspacios .$Nombreingeniero.' '.$Apellidosingeniero.'</strong>
+                        El ingeniero (a): <strong>' . $tresEspacios . $Nombreingeniero . ' ' . $Apellidosingeniero . '</strong>
                     </div>
                     <div style="width:100%; padding-left: 135px; padding-top: 10px;">
-                        Adscrito al Consejo Departamental de: <strong>'.$tresEspacios .$ConsejoDepartamental.'</strong>
+                        Adscrito al Consejo Departamental de: <strong>' . $tresEspacios . $ConsejoDepartamental . '</strong>
                     </div>
                     <div style="width:100%; padding-left: 135px; padding-top: 10px;">
-                        Con Registro de Matrícula del CIP N°: <strong>'.$tresEspacios .$NumeroCIP.$veinteEspacios.'</strong>Fecha de Incorporación: <strong>'.$tresEspacios .$FechaIncorporacion.'</strong>
+                        Con Registro de Matrícula del CIP N°: <strong>' . $tresEspacios . $NumeroCIP . $veinteEspacios . '</strong>Fecha de Incorporación: <strong>' . $tresEspacios . $FechaIncorporacion . '</strong>
                     </div>
                     <div style="width:100%; padding-left: 135px; padding-top: 10px;">
-                        Especialidad: <strong>'.$tresEspacios .$Especialidad.'</strong>
+                        Especialidad: <strong>' . $tresEspacios . $Especialidad . '</strong>
                     </div>
                     <div style="width:100%; padding-left: 135px; padding-top: 10px; font-size:8.7pt;">
                         De conformidad con la Ley N° 28858, Ley que complementa a la Ley N° 16053 del Ejercicio Profesional y el Estatuto
@@ -191,25 +191,25 @@ if (!isset($_GET["idIngreso"])) {
                          en consecuencia está autorizado para ejercer la profesión de Ingeniero(a) de acuerdo al siguiente detalle:
                     </div>
                     <div style="width:100%; padding-left: 135px; padding-top:10px;">
-                        Modalidad:<strong>'.$tresEspacios .$Modalidad.'</strong>
+                        Modalidad:<strong>' . $tresEspacios . $Modalidad . '</strong>
                     </div>
                     <div style="width:100%; padding-left: 135px; padding-top:10px;">
-                        Proyecto:<strong>'.$tresEspacios .$Proyecto.'</strong>
+                        Proyecto:<strong>' . $tresEspacios . $Proyecto . '</strong>
                     </div>
                     <div style="width:100%; padding-left: 135px; padding-top:10px;">
-                        Propietario:<strong>'.$tresEspacios .$Propietario.'</strong>
+                        Propietario:<strong>' . $tresEspacios . $Propietario . '</strong>
                     </div>
                     <div style="width:100%; padding-left: 135px; padding-top:10px;">
-                        Monto del contrato:<strong>'.$tresEspacios .$Monto.'</strong>
+                        Monto del contrato:<strong>' . $tresEspacios . $Monto . '</strong>
                     </div>
                     <div style="width:100%; padding-left: 135px; padding-top:10px; text-decoration: underline;">
                         Ubicación:
                     </div>
                     <div style="width:100%; padding-left: 135px; padding-top:10px;">
-                        Departamento:<strong>'.$tresEspacios .$Departamento.$sesentaEspacios.'</strong>Provincia:<strong>'.$tresEspacios .$Provincia.'</strong>
+                        Departamento:<strong>' . $tresEspacios . $Departamento . $sesentaEspacios . '</strong>Provincia:<strong>' . $tresEspacios . $Provincia . '</strong>
                     </div>
                     <div style="width:100%; padding-left: 135px; padding-top:10px;">
-                        Distrito:<strong>'.$tresEspacios .$Distrito.'</strong>
+                        Distrito:<strong>' . $tresEspacios . $Distrito . '</strong>
                     </div>
                     <!--######################################### Fin Cuerpo del documento ##################################################################-->
 
@@ -226,14 +226,14 @@ if (!isset($_GET["idIngreso"])) {
                                     <td style="width:20px; height:15px;  font-size:9px; text-align:center; border:1px solid #c55f52; border-bottom:0;">AÑO</td>
                                 </tr>
                                 <tr>
-                                    <td style="width:20px; height:22px; text-align:center; border:1px solid #c55f52; border-top:0; font-size:10px;"><strong>'.$DiaVencimiento.'</strong></td>
-                                    <td style="width:20px; height:22px;  text-align:center; border:1px solid #c55f52; border-top:0; font-size:10px;"><strong>'.$MesVencimiento.'</strong></td>
-                                    <td style="width:20px; height:22px;  text-align:center; border:1px solid #c55f52; border-top:0; font-size:10px;"><strong>'.$AnioVencimiento.'</strong></td>
+                                    <td style="width:20px; height:22px; text-align:center; border:1px solid #c55f52; border-top:0; font-size:10px;"><strong>' . $DiaVencimiento . '</strong></td>
+                                    <td style="width:20px; height:22px;  text-align:center; border:1px solid #c55f52; border-top:0; font-size:10px;"><strong>' . $MesVencimiento . '</strong></td>
+                                    <td style="width:20px; height:22px;  text-align:center; border:1px solid #c55f52; border-top:0; font-size:10px;"><strong>' . $AnioVencimiento . '</strong></td>
                                 </tr>
                             </table>
                         </div>
                         <div style="float:left; width:50%; height:40px;  padding-top:55px; font-size:11pt; font-weight:bold;">
-                            <strong>'.$LugarRegistro.$cincoEspacios.$DiaRegistro.$tresEspacios.'</strong>, de<strong>'.$tresEspacios.$MesRegistro.$tresEspacios.'</strong> del 20<strong>'.$AnioRegistro.'</strong>
+                            <strong>' . $LugarRegistro . $cincoEspacios . $DiaRegistro . $tresEspacios . '</strong>, de<strong>' . $tresEspacios . $MesRegistro . $tresEspacios . '</strong> del 20<strong>' . $AnioRegistro . '</strong>
                         </div>
                         <div style="float:right; width:70%; height:40px;  padding-top:0px; font-size:15pt; font-weight:bold;">
                             VÁLIDO SOLO ORIGINAL
