@@ -305,10 +305,12 @@ if (!isset($_SESSION['IdUsuario'])) {
                                 <!-- AFILIACIÓN-->
                                 <div class="panel panel-primary">
                                     <div class="panel-heading">
-                                        <h5 class="no-margin">Afiliación a la Resolución 15</h5>
+                                        <h5 class="no-margin">Afiliaciones</h5>
                                     </div>
                                     <div class="panel-body">
-                                        <div class="row">
+                                        <?php
+                                        if ($_SESSION["Permisos"][14]["crear"] == 1) {
+                                            echo '<div class="row">
                                             <div class="col-md-12">
                                                 <div class="form-group" style="float: Right">
                                                     <button class="btn btn-success" id="addAfiliacion">
@@ -316,7 +318,9 @@ if (!isset($_SESSION['IdUsuario'])) {
                                                     </button>
                                                 </div>
                                             </div>
-                                        </div>
+                                        </div>';
+                                        } ?>
+
                                         <div class="row">
                                             <div class="col-md-12">
                                                 <div class="table-responsive">
@@ -358,7 +362,7 @@ if (!isset($_SESSION['IdUsuario'])) {
                                     <div class="panel-body">
 
                                         <?php
-                                        if ($_SESSION["Permisos"][14]["crear"]) {
+                                        if ($_SESSION["Permisos"][14]["crear"] == 1) {
                                             echo '<div class="row">
                                                  <div class="col-md-12">
                                                 <button id="btnCobrar" class="btn btn-success btn-block">
@@ -374,7 +378,7 @@ if (!isset($_SESSION['IdUsuario'])) {
                                         } ?>
 
                                         <?php
-                                        if ($_SESSION["Permisos"][14]["crear"]) {
+                                        if ($_SESSION["Permisos"][14]["crear"] == 1) {
                                             echo ' <div class="row">
                                             <div class="col-md-12 col-sm-12 col-xs-12">
                                                 <h5>Empresa a Facturar</h5>
@@ -1158,8 +1162,6 @@ if (!isset($_SESSION['IdUsuario'])) {
                         }
                     });
                 }
-
-               
             </script>
         </body>
 
