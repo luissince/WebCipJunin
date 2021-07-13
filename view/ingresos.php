@@ -65,7 +65,7 @@ if (!isset($_SESSION['IdUsuario'])) {
                 </div>
                 <!--end modal history enginner  -->
 
-                <!-- modal detalle del ingreso -->
+                <!-- modal enviar por correo el ingreso -->
                 <div class="row">
                     <div class="modal fade" id="eviarDocumentoalCorreo" data-backdrop="static">
                         <div class="modal-dialog">
@@ -101,8 +101,7 @@ if (!isset($_SESSION['IdUsuario'])) {
                         </div>
                     </div>
                 </div>
-                <!-- </div> -->
-                <!--end modal history enginner  -->
+                <!--end modal enviar por correo el ingreso  -->
 
                 <!-- Content Wrapper. Contains page content -->
                 <div class="content-wrapper" style="background-color: #FFFFFF;">

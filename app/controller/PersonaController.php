@@ -47,6 +47,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
                 "colegiatura" => $persona[1],
                 "years" => $persona[2],
                 "date" => $persona[3],
+                "afiliaciones" => $persona[4]
             ));
         } else {
             echo json_encode(array(
@@ -292,6 +293,19 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
             echo json_encode(array(
                 "estado" => 2,
                 "message" => $habilidad
+            ));
+        }
+    } else if ($_GET["type"] === 'loadTableAfiliacion') {
+        $afiliaciones = PersonaAdo::getDataAfiliacion($_GET["ingeniero"]);
+        if (is_array($afiliaciones)) {
+            echo json_encode(array(
+                "estado" => 1,
+                "afiliaciones" => $afiliaciones
+            ));
+        } else {
+            echo json_encode(array(
+                "estado" => 2,
+                "message" => $afiliaciones
             ));
         }
     }
@@ -835,6 +849,32 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
         } else {
             echo json_encode(array(
                 "estado" => 2,
+                "message" => $result
+            ));
+        }
+    } else if ($_POST["type"] == "anularAfiliacion") {
+        $data["idAfiliacion"] = $_POST["idAfiliacion"];
+        $data["idUsuario"] = $_POST["idUsuario"];
+        $data["motivo"] = $_POST["motivo"];
+        $data["fecha"] = $_POST["fecha"];
+        $data["hora"] = $_POST["hora"];
+
+        $result = PersonaAdo::anularAfiliaciones($data);
+
+        if ($result == 'update') {
+            echo json_encode(array(
+                "estado" => 1,
+                "message" => "Se anularon correctamente los datos",
+                "data" =>$data
+            ));
+        } else if ($result == 'existed') {
+            echo json_encode(array(
+                "estado" => 2,
+                "message" => "La afiliación ya se encuentra anulada"
+            ));
+        } else {
+            echo json_encode(array(
+                "estado" => 3,
                 "message" => $result
             ));
         }

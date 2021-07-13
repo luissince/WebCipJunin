@@ -133,7 +133,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
             ));
         }
     } else if ($_GET["type"] == "listaNotificaciones") {
-        $result = IngresosAdo::ListarNotificaciones(intval($_GET["posicionPagina"]),intval($_GET["filasPorPagina"]));
+        $result = IngresosAdo::ListarNotificaciones(intval($_GET["posicionPagina"]), intval($_GET["filasPorPagina"]));
         if (is_array($result)) {
             print json_encode(array(
                 "estado" => 1,
@@ -172,5 +172,24 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
                 "message" => $result
             ));
         }
-    } 
+    } else if ($_POST["type"] == "addAfiliacion") {
+        $data["colegiado"] = $_POST["colegiado"];
+        $data["concepto"]= $_POST["concepto"];
+        $data["monto"] = $_POST["monto"];
+        $data["usuario"] = $_POST["usuario"];
+
+        $result = IngresosAdo::addAfiliacion($data);
+
+        if ($result == "inserted") {
+            echo json_encode(array(
+                "estado" => 1,
+                "message" => "Se registró la afiliación correctamente."
+            ));
+        } else {
+            echo json_encode(array(
+                "estado" => 0,
+                "message" => $result
+            ));
+        }
+    }
 }

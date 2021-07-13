@@ -250,7 +250,7 @@ class IngresosAdo
             $opcion = 1 AND p.Nombres LIKE CONCAT(?,'%')
             OR
             $opcion = 1 AND p.Apellidos LIKE CONCAT(?,'%')");
-            
+
             $comandoTotal->bindParam(1, $fechaInicio, PDO::PARAM_STR);
             $comandoTotal->bindParam(2, $fechaFinal, PDO::PARAM_STR);
             $comandoTotal->bindParam(3, $buscar, PDO::PARAM_STR);
@@ -694,6 +694,25 @@ class IngresosAdo
         }
     }
 
+    public static function addAfiliacion($data)
+    {
+        try {
+            Database::getInstance()->getDb()->beginTransaction();
+
+            $cmdAfiliacion = Database::getInstance()->getDb()->prepare("INSERT INTO Afiliacion(idDni,Descripcion,Monto,Fecha,Hora,idUsuario, Estado)VALUES(?,?,?,GETDATE(),GETDATE(),?,'1')");
+            $cmdAfiliacion->bindParam(1, $data["colegiado"], PDO::PARAM_STR);
+            $cmdAfiliacion->bindParam(2, $data["concepto"], PDO::PARAM_STR);
+            $cmdAfiliacion->bindParam(3, $data["monto"], PDO::PARAM_STR);
+            $cmdAfiliacion->bindParam(4, $data["usuario"], PDO::PARAM_INT);
+            $cmdAfiliacion->execute();
+            Database::getInstance()->getDb()->commit();
+            return "inserted";
+        } catch (Exception $ex) {
+            Database::getInstance()->getDb()->rollBack();
+            return $ex->getMessage();
+        }
+    }
+
     public static function ObtenerIngresoXML($idIngreso)
     {
         try {
@@ -718,7 +737,7 @@ class IngresosAdo
             case when not e.IdEmpresa is null then 'Razón Social' else 'Nombres' end as TipoNombrePersona,
             isnull(e.NumeroRuc,p.NumDoc) as NumeroDocumento,
             isnull(e.Nombre,concat(p.Apellidos,' ',p.Nombres)) as DatosPersona,
-            isnull(e.Direccion,p.RUC) as Direccion,
+            isnull(e.Direccion,ISNULL((select top 1 Direccion from Direccion where idDNI = p.idDNI),'')) as Direccion,
 			p.CIP,
             p.NumDoc, 
             p.Apellidos,
@@ -733,7 +752,7 @@ class IngresosAdo
 			LEFT JOIN Capitulo AS ca ON ca.idCapitulo = es.idCapitulo
 			LEFT JOIN EmpresaPersona AS e ON e.IdEmpresa = i.idEmpresaPersona
             INNER JOIN TipoComprobante AS t ON t.IdTipoComprobante = i.TipoComprobante 
-            WHERE i.idIngreso = ? ");
+            WHERE i.idIngreso = ?");
             $cmdIngreso->bindParam(1, $idIngreso, PDO::PARAM_INT);
             $cmdIngreso->execute();
             $resultIngreso = $cmdIngreso->fetchObject();

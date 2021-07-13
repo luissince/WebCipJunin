@@ -4,7 +4,7 @@ function CobroIngenieros() {
     let opcionHistorial = 0;
     let totalPaginacionHistorial = 0;
     let paginacionHistorial = 0;
-    let filasPorPaginacionHistorial = 10;
+    let filasPorPaginacionHistorial = 5;
     let tbHistorial = $("#tbHistorial");
 
     this.componentesIngenieros = function () {
@@ -201,6 +201,7 @@ function CobroIngenieros() {
                 tipoColegiado = "";
                 tools.AlertInfo("Ingeniero", "En proceso de busqueda.");
                 $("#tbHistorial").append('<tr class="text-center"><td colspan="7"><img src="./images/spiner.gif"/><p>cargando información.</p></td></tr>');
+                $("#tbAfiliacion").empty();
             },
             success: function (data) {
                 if (data.estado === 1) {
@@ -235,7 +236,7 @@ function CobroIngenieros() {
                         $("#lblProgress").addClass("progress-bar progress-bar-green");
                         $("#lblProgress").css("width", "100%");
                     } else {
-                        $("#lblYears").html(data.years + " AÑOS PARA SER VITALICO( " + tools.getDateForma(data.date) + " )")
+                        $("#lblYears").html(data.years + " AÑOS PARA SER VITALICIO( " + tools.getDateForma(data.date) + " )")
                         $("#lblProgress").removeClass()
                         $("#lblProgress").addClass(porcentaje >= 0 && porcentaje <= 30 ? "progress-bar progress-bar-warning" : porcentaje > 30 && porcentaje <= 70 ? "progress-bar progress-bar-danger" : porcentaje > 70 && porcentaje < 100 ? "progress-bar progress-bar-info" : "progress-bar progress-bar-green");
                         $("#lblProgress").css("width", porcentaje + "%");
@@ -245,9 +246,11 @@ function CobroIngenieros() {
                     $("#txtIngenieroObra").val(data.persona.Apellidos + " " + data.persona.Nombres);
                     $("#txtIngenieroProyecto").val(data.persona.Apellidos + " " + data.persona.Nombres);
 
+                    loadTableAfiliaciones(idDNI);
+
                     onSelectedHistorial(idDNI);
 
-                    tools.AlertSuccess("Ingeniero", "Los obtuvo los datos correctamente.");
+                    tools.AlertSuccess("Ingeniero", "Se obtuvo los datos correctamente.");
 
                 } else {
                     $("#tbHistorial").empty();
@@ -269,6 +272,11 @@ function CobroIngenieros() {
                     $("#txtIngenieroCertificado").val("");
                     $("#txtIngenieroObra").val("");
                     $("#txtIngenieroProyecto").val("");
+                    $("#tbAfiliacion").append('<tr class="text-center">' +
+                        '<td colspan="7">' +
+                        '<p>Se produjo un error al obtener los datos</p>' +
+                        '</td>' +
+                        '</tr>');
 
                     tools.AlertWarning("Ingeniero", "Se produjo un problema: " + data.message);
                 }
@@ -278,6 +286,131 @@ function CobroIngenieros() {
                 tools.AlertError("Ingeniero", "Error en obtener los datos: " + error.responseText);
             }
         });
+    }
+
+    function loadTableAfiliaciones(dni) {
+        $.ajax({
+            url: "../app/controller/PersonaController.php",
+            method: "GET",
+            data: {
+                "type": "loadTableAfiliacion",
+                "ingeniero": dni
+            },
+            beforeSend: function () {
+                $("#tbAfiliacion").empty();
+            },
+            success: function (data) {
+
+                if (data.afiliaciones.length > 0) {
+                    for (let afiliacion of data.afiliaciones) {
+                        let btnAnularAfiliacion = '<button class="btn btn-warning btn-xs" onclick="anularAfiliacion(\'' + afiliacion.idAfiliacion + '\')">' +
+                            '<i class="fa fa-ban" style="font-size:25px;"></i>' +
+                            '</button>';
+
+                        $("#tbAfiliacion").append('<tr>' +
+                            '<td>' + afiliacion.Id + '</td>' +
+                            '<td class="text-center">' + btnAnularAfiliacion + '</td>' +
+                            '<td>' + afiliacion.Descripcion + '</td>' +
+                            '<td class="text-center">' + afiliacion.Monto + '</td>' +
+                            '<td class="text-center">' + tools.getDateForma(afiliacion.Fecha) + '</td>' +
+                            '<td class="text-center">' + (afiliacion.Estado == 1 ? '<span class="text-green">Activo</span>' : '<span class="text-red">Anulado</span>')+ '</td>' +
+                            '<td>' + afiliacion.Usuario + '</br>' + afiliacion.Nombre + '</td>' +
+                            '</tr>');
+                    }
+                } else {
+                    $("#tbAfiliacion").append('<tr class="text-center">' +
+                        '<td colspan="7">' +
+                        '<p>No Hay datos que mostrar</p>' +
+                        '</td>' +
+                        '</tr>');
+                }
+            },
+            error: function (error) {
+                $("#tbAfiliacion").empty();
+                tools.AlertError("Afiliacion", "Error en obtener los datos: " + error.responseText);
+            }
+        });
+    }
+
+    this.crudAfiliacion = function () {
+        if ($("#txtAfiliacion").val() == "") {
+            tools.AlertWarning("Afiliacion", "Ingrese un concepto para continuar");
+        } else if ($("#txtMontoAfiliacion").val() == "") {
+            tools.AlertWarning("Afiliacion", "Ingrese un monto para continuar");
+        } else {
+            $.ajax({
+                url: "../app/controller/IngresoController.php",
+                method: "POST",
+                data: {
+                    "type": "addAfiliacion",
+                    "colegiado": idDNI,
+                    "concepto": $("#txtAfiliacion").val(),
+                    "monto": $("#txtMontoAfiliacion").val(),
+                    "usuario": idUsuario
+                },
+                beforeSend: function () {
+                    closeModalAfiliacion();
+                    tools.ModalAlertInfo("Afiliación", "Procesando petición..");
+                },
+                success: function (result) {
+                    if (result.estado === 1) {
+                        tools.ModalAlertSuccess("Afiliación", result.message);
+                        loadTableAfiliaciones(idDNI);
+                    } else {
+                        tools.ModalAlertWarning("Afiliacion", result.message);
+                    }
+                },
+                error: function (error) {
+                    tools.ModalAlertError("Afiliacion", "Se produjo un error: " + error.responseText);
+                }
+            })
+        }
+    }
+
+    function closeModalAfiliacion() {
+        $("#modalAfiliacion").modal("hide");
+        $("#txtAfiliacion").val('');
+        $("#txtMontoAfiliacion").val('');
+    }
+
+    anularAfiliacion = function (idAfiliacion) {
+        tools.ModalDialogInputText("Afiliacion", "¿Está seguro de anular la afiliación?", function (value) {
+            if (value.dismiss == "cancel") {
+
+            } else if (value.value.length == 0) {
+                tools.ModalAlertWarning("Afiliacion", "No ingreso ningún motivo :(");
+            } else {
+                $.ajax({
+                    url: "../app/controller/PersonaController.php",
+                    method: 'POST',
+                    data: {
+                        "type": "anularAfiliacion",
+                        "idAfiliacion": idAfiliacion,
+                        "idUsuario": idUsuario,
+                        "motivo": value.value.toUpperCase(),
+                        "fecha": tools.getCurrentDate(),
+                        "hora": tools.getCurrentTime()
+                    },
+                    beforeSend: function () {
+                        tools.ModalAlertInfo("Afiliación", "Procesando petición..");
+                    },
+                    success: function (result) {
+                        if (result.estado == 1) {
+                            tools.ModalAlertSuccess("Afiliación", result.message);
+                            loadTableAfiliaciones(idDNI);
+                        } else if (result.estado == 2) {
+                            tools.ModalAlertSuccess("Afiliación", result.message);
+                        } else {
+                            tools.ModalAlertWarning("Afiliación", result.message);
+                        }
+                    },
+                    error: function (error) {
+                        tools.ModalAlertError("Afiliación", "Se produjo un error: " + error.responseText);
+                    }
+                });
+            }
+        });
+
     }
 
     function onSelectedHistorial(dni) {
