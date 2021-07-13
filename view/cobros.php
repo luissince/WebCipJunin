@@ -140,6 +140,54 @@ if (!isset($_SESSION['IdUsuario'])) {
                 <?php include './layout/cobros/otros.php'; ?>
                 <!-- modal end otros -->
 
+                <!-- modal de afiliaciones -->
+                <div class="row">
+                    <div class="modal fade" id="modalAfiliacion" data-backdrop="static">
+                        <div class="modal-dialog">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <button type="button" class="close" data-dismiss="modal">
+                                        <i class="fa fa-close"></i>
+                                    </button>
+                                    <h4 class="modal-title">
+                                        <i class="fa fa-check-circle">
+                                        </i> Afiliaciones o Apoyos
+                                    </h4>
+                                </div>
+                                <div class="modal-body">
+                                    <div class="row">
+                                        <div class="col-md-12">
+                                            <div class="form-group">
+                                                <label for="Universidad" class="col-sm-4 control-label">Concepto de la Afiliación</label>
+                                                <div class="col-sm-8">
+                                                    <input id="txtAfiliacion" type="text" class="form-control" placeholder="Ingrese un concepto" required="">
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="row" style="padding-top: 0.5em;">
+                                        <div class="col-md-12">
+                                            <div class="form-group">
+                                                <label for="Universidad" class="col-sm-4 control-label">Monto de la afiliacion</label>
+                                                <div class="col-sm-8">
+                                                    <input id="txtMontoAfiliacion" type="number" class="form-control" placeholder="0.00" required="">
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-warning" id="btnAceptarAfiliacion">
+                                        <i class="fa fa-check"></i> Aceptar</button>
+                                    <button type="button" class="btn btn-primary" data-dismiss="modal" id="btnCancelAfiliacion">
+                                        <i class="fa fa-remove"></i> Cancelar</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- end modal afiliaciones -->
+
                 <!-- Content Wrapper. Contains page content -->
                 <div class="content-wrapper" style="background-color: #FFFFFF;">
                     <!-- Main content -->
@@ -263,7 +311,7 @@ if (!isset($_SESSION['IdUsuario'])) {
                                         <div class="row">
                                             <div class="col-md-12">
                                                 <div class="form-group" style="float: Right">
-                                                    <button class="btn btn-success">
+                                                    <button class="btn btn-success" id="addAfiliacion">
                                                         <i class="fa fa-plus"></i> Añadir
                                                     </button>
                                                 </div>
@@ -276,13 +324,17 @@ if (!isset($_SESSION['IdUsuario'])) {
                                                         <thead style="background-color: #FDB2B1;color: #B72928;">
                                                             <tr>
                                                                 <th style="text-align: center;" width="10%">#</th>
-                                                                <th style="text-align: center" width="45%">ABC</th>
-                                                                <th style="text-align: center" width="45%">DEF</th>
+                                                                <th style="text-align: center;" width="10%">Accion</th>
+                                                                <th style="text-align: center" width="25%">Concepto</th>
+                                                                <th style="text-align: center" width="15%">Monto</th>
+                                                                <th style="text-align: center" width="15%">Fecha</th>
+                                                                <th style="text-align: center" width="10%">Estado</th>
+                                                                <th style="text-align: center" width="15%">Usuario</th>
                                                             </tr>
                                                         </thead>
-                                                        <tbody>
+                                                        <tbody id="tbAfiliacion">
                                                             <tr class="text-center">
-                                                                <td colspan="3">
+                                                                <td colspan="7">
                                                                     <p>No se ha seleccionado ningún ingeniero</p>
                                                                 </td>
                                                             </tr>
@@ -590,6 +642,42 @@ if (!isset($_SESSION['IdUsuario'])) {
 
                     $("#cbEmpresa").on('change', function() {
                         console.log($("#cbEmpresa").val());
+                    });
+
+                    $("#addAfiliacion").click(function() {
+                        if (idDNI == 0) {
+                            tools.AlertWarning("Cuotas", "No selecciono ningún ingeniero para añadir una afiliación o apoyo.");
+                        } else {
+                            $("#txtAfiliacion").val('');
+                            $("#txtMontoAfiliacion").val('');
+                            $("#modalAfiliacion").modal('show');
+                        }
+                    });
+
+                    $("#btnCancelAfiliacion").click(function() {
+                        $("#modalAfiliacion").modal("hide");
+                        $("#txtAfiliacion").val('');
+                        $("#txtMontoAfiliacion").val('');
+                    });
+
+                    $("#btnCancelAfiliacion").keypress(function(event) {
+                        if (event.keyCode == 13) {
+                            $("#modalAfiliacion").modal("hide");
+                            $("#txtAfiliacion").val('');
+                            $("#txtMontoAfiliacion").val('');
+                        }
+                        event.preventDefault();
+                    });
+
+                    $("#btnAceptarAfiliacion").click(function() {
+                        modelCobrosIngenieros.crudAfiliacion();
+                    });
+
+                    $("#btnAceptarAfiliacion").keypress(function(event) {
+                        if (event.keyCode == 13) {
+                            crudAfiliacion(idDNI);
+                        }
+                        event.preventDefault();
                     });
 
                 });
@@ -1049,7 +1137,6 @@ if (!isset($_SESSION['IdUsuario'])) {
                     }
                 }
 
-
                 function loadSunatApi(numero) {
                     $.ajax({
                         url: "https://dniruc.apisperu.com/api/v1/ruc/" + numero + "?token=eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJlbWFpbCI6ImFsZXhhbmRlcl9keF8xMEBob3RtYWlsLmNvbSJ9.6TLycBwcRyW1d-f_hhCoWK1yOWG_HJvXo8b-EoS5MhE",
@@ -1071,6 +1158,8 @@ if (!isset($_SESSION['IdUsuario'])) {
                         }
                     });
                 }
+
+               
             </script>
         </body>
 

@@ -250,7 +250,7 @@ class IngresosAdo
             $opcion = 1 AND p.Nombres LIKE CONCAT(?,'%')
             OR
             $opcion = 1 AND p.Apellidos LIKE CONCAT(?,'%')");
-            
+
             $comandoTotal->bindParam(1, $fechaInicio, PDO::PARAM_STR);
             $comandoTotal->bindParam(2, $fechaFinal, PDO::PARAM_STR);
             $comandoTotal->bindParam(3, $buscar, PDO::PARAM_STR);
@@ -688,6 +688,25 @@ class IngresosAdo
                 Database::getInstance()->getDb()->rollBack();
                 return "nodata";
             }
+        } catch (Exception $ex) {
+            Database::getInstance()->getDb()->rollBack();
+            return $ex->getMessage();
+        }
+    }
+
+    public static function addAfiliacion($data)
+    {
+        try {
+            Database::getInstance()->getDb()->beginTransaction();
+
+            $cmdAfiliacion = Database::getInstance()->getDb()->prepare("INSERT INTO Afiliacion(idDni,Descripcion,Monto,Fecha,Hora,idUsuario, Estado)VALUES(?,?,?,GETDATE(),GETDATE(),?,'1')");
+            $cmdAfiliacion->bindParam(1, $data["colegiado"], PDO::PARAM_STR);
+            $cmdAfiliacion->bindParam(2, $data["concepto"], PDO::PARAM_STR);
+            $cmdAfiliacion->bindParam(3, $data["monto"], PDO::PARAM_STR);
+            $cmdAfiliacion->bindParam(4, $data["usuario"], PDO::PARAM_INT);
+            $cmdAfiliacion->execute();
+            Database::getInstance()->getDb()->commit();
+            return "inserted";
         } catch (Exception $ex) {
             Database::getInstance()->getDb()->rollBack();
             return $ex->getMessage();

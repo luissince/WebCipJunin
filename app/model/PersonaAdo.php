@@ -300,8 +300,63 @@ class PersonaAdo
             $cmdDate->execute();
             $resultDate =  $cmdDate->fetchColumn();
 
-            array_push($array, $object, $resultColegiatura, $resultYears, $resultDate);
+            $cmdAfiliaciones = Database::getInstance()->getDb()->prepare("SELECT a.idAfiliacion, a.Descripcion, a.Monto, a.Fecha, a.Hora, CONCAT(u.Nombres,', ', u.Apellidos) AS Usuario, r.Nombre, a.Estado FROM Afiliacion AS a
+            INNER JOIN Usuario AS u ON u.idUsuario = a.idUsuario
+            INNER JOIN Rol AS r ON r.idRol = u.Rol
+            WHERE idDNI = ?");
+            $cmdAfiliaciones->bindParam(1, $idPersona, PDO::PARAM_STR);
+            $cmdAfiliaciones->execute();
+
+            $count = 0;
+            $arrayAfiliaciones = array();
+            while ($row = $cmdAfiliaciones->fetch()){
+                $count++;
+                array_push($arrayAfiliaciones, array(
+                    "Id" => $count,
+                    "idAfiliacion" => $row["idAfiliacion"],
+                    "Descripcion" => $row["Descripcion"],
+                    "Monto" => $row["Monto"],
+                    "Fecha" => $row["Fecha"],
+                    "Usuario" => $row["Usuario"],
+                    "Nombre" => $row["Nombre"],
+                    "Estado" => $row["Estado"],
+                ));
+            }
+
+            array_push($array, $object, $resultColegiatura, $resultYears, $resultDate, $arrayAfiliaciones);
             return $array;
+        } catch (Exception $ex) {
+            return $ex->getMessage();
+        }
+    }
+
+    public static function getDataAfiliacion($idPersona)
+    {
+        try {
+            //trae informacion del usuario (por su dni)            
+            $cmdAfiliaciones = Database::getInstance()->getDb()->prepare("SELECT a.idAfiliacion, a.Descripcion, a.Monto, a.Fecha, a.Hora, CONCAT(u.Nombres,', ', u.Apellidos) AS Usuario, r.Nombre, a.Estado FROM Afiliacion AS a
+            INNER JOIN Usuario AS u ON u.idUsuario = a.idUsuario
+            INNER JOIN Rol AS r ON r.idRol = u.Rol
+            WHERE idDNI = ?");
+            $cmdAfiliaciones->bindParam(1, $idPersona, PDO::PARAM_STR);
+            $cmdAfiliaciones->execute();
+
+            $count = 0;
+            $arrayAfiliaciones = array();
+            while ($row = $cmdAfiliaciones->fetch()){
+                $count++;
+                array_push($arrayAfiliaciones, array(
+                    "Id" => $count,
+                    "idAfiliacion" => $row["idAfiliacion"],
+                    "Descripcion" => $row["Descripcion"],
+                    "Monto" => $row["Monto"],
+                    "Fecha" => $row["Fecha"],
+                    "Usuario" => $row["Usuario"],
+                    "Nombre" => $row["Nombre"],
+                    "Estado" => $row["Estado"],
+                ));
+            }
+            return $arrayAfiliaciones;
         } catch (Exception $ex) {
             return $ex->getMessage();
         }
@@ -1531,6 +1586,33 @@ class PersonaAdo
             $comandSelect->execute();
             Database::getInstance()->getDb()->commit();
             return "eliminado";
+        } catch (Exception $ex) {
+            Database::getInstance()->getDb()->rollback();
+            return $ex->getMessage();
+        }
+    }
+
+    public static function anularAfiliaciones($data)
+    {
+        try {
+            Database::getInstance()->getDb()->beginTransaction();
+            $cmdSelect = Database::getInstance()->getDb()->prepare('SELECT Estado FROM Afiliacion WHERE idAfiliacion = ? and Estado = 0');
+            $cmdSelect->bindParam(1, $data["idAfiliacion"], PDO::PARAM_INT);
+            $cmdSelect->execute();
+            if($cmdSelect->fetch() ){
+                Database::getInstance()->getDb()->rollback();
+                return "existed";
+            } else{
+                $comandSelect = Database::getInstance()->getDb()->prepare("UPDATE Afiliacion SET Motivo = ?, Fecha= ?, hora=?, idUsuario = ?, Estado = 0 WHERE idAfiliacion = ?");
+                $comandSelect->bindParam(1, $data["motivo"], PDO::PARAM_STR);
+                $comandSelect->bindParam(2, $data["fecha"], PDO::PARAM_STR);
+                $comandSelect->bindParam(3, $data["hora"], PDO::PARAM_STR);
+                $comandSelect->bindParam(4, $data["idUsuario"], PDO::PARAM_INT);
+                $comandSelect->bindParam(5, $data["idAfiliacion"], PDO::PARAM_INT);
+                $comandSelect->execute();
+                Database::getInstance()->getDb()->commit();
+                return "update";
+            }
         } catch (Exception $ex) {
             Database::getInstance()->getDb()->rollback();
             return $ex->getMessage();
