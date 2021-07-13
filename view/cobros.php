@@ -4,7 +4,7 @@ session_start();
 if (!isset($_SESSION['IdUsuario'])) {
     echo '<script>location.href = "./login.php";</script>';
 } else {
-    if ($_SESSION["Permisos"][8]["ver"] == 1) {
+    if ($_SESSION["Permisos"][14]["ver"] == 1) {
 ?>
         <!DOCTYPE html>
         <html lang="en">
@@ -266,7 +266,7 @@ if (!isset($_SESSION['IdUsuario'])) {
                                     <div class="panel-body">
 
                                         <?php
-                                        if ($_SESSION["Permisos"][8]["crear"]) {
+                                        if ($_SESSION["Permisos"][14]["crear"]) {
                                             echo '<div class="row">
                                                  <div class="col-md-12">
                                                 <button id="btnCobrar" class="btn btn-success btn-block">
@@ -282,7 +282,7 @@ if (!isset($_SESSION['IdUsuario'])) {
                                         } ?>
 
                                         <?php
-                                        if ($_SESSION["Permisos"][8]["crear"]) {
+                                        if ($_SESSION["Permisos"][14]["crear"]) {
                                             echo ' <div class="row">
                                             <div class="col-md-12 col-sm-12 col-xs-12">
                                                 <h5>Empresa a Facturar</h5>
@@ -449,8 +449,8 @@ if (!isset($_SESSION['IdUsuario'])) {
                 let UsarRuc = false;
                 let newEmpresa = 0;
 
-                let editView = "<?= $_SESSION["Permisos"][8]["actualizar"]; ?>";
-                let deleteView = "<?= $_SESSION["Permisos"][8]["eliminar"]; ?>";
+                let editView = "<?= $_SESSION["Permisos"][14]["actualizar"]; ?>";
+                let deleteView = "<?= $_SESSION["Permisos"][14]["eliminar"]; ?>";
                 let idUsuario = <?= $_SESSION['IdUsuario'] ?>;
 
                 let modelCobrosIngenieros = new CobroIngenieros();

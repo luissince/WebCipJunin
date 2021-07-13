@@ -4,7 +4,7 @@ session_start();
 if (!isset($_SESSION['IdUsuario'])) {
     echo '<script>location.href = "./login.php";</script>';
 } else {
-    if ($_SESSION["Permisos"][11]["ver"] == 1) {
+    if ($_SESSION["Permisos"][1]["ver"] == 1) {
 ?>
         <!DOCTYPE html>
         <html lang="en">
@@ -118,16 +118,16 @@ if (!isset($_SESSION['IdUsuario'])) {
                         <div class="row">
                             <?php
 
-                            if ($_SESSION["Permisos"][1]["crear"]) {
+                            if ($_SESSION["Permisos"][1]["crear"] == 1) {
                                 echo '
-                            <div class="col-lg-2 col-md-3 col-sm-12 col-xs-12">
-                                <label>Nuevo Usuario.</label>
-                                <div class="form-group">
-                                    <button type="button" class="btn btn-success" id="btnNuevo">
-                                        <i class="fa fa-plus"></i> Agregar Usuario
-                                    </button>
-                                </div>
-                            </div>';
+                                <div class="col-lg-2 col-md-3 col-sm-12 col-xs-12">
+                                    <label>Nuevo Usuario.</label>
+                                    <div class="form-group">
+                                        <button type="button" class="btn btn-success" id="btnNuevo">
+                                            <i class="fa fa-plus"></i> Agregar Usuario
+                                        </button>
+                                    </div>
+                                </div>';
                             } ?>
 
                             <div class="col-lg-2 col-md-3 col-sm-12 col-xs-12">

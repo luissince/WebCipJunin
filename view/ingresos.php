@@ -4,7 +4,7 @@ session_start();
 if (!isset($_SESSION['IdUsuario'])) {
     echo '<script>location.href = "./login.php";</script>';
 } else {
-    if ($_SESSION["Permisos"][3]["ver"] == 1) {
+    if ($_SESSION["Permisos"][4]["ver"] == 1) {
 ?>
         <!DOCTYPE html>
         <html lang="es">
@@ -245,6 +245,10 @@ if (!isset($_SESSION['IdUsuario'])) {
 
                 let arrayIngresos = [];
 
+
+                let editView = "<?= $_SESSION["Permisos"][4]["actualizar"]; ?>";
+                let deleteView = "<?= $_SESSION["Permisos"][4]["eliminar"]; ?>";
+
                 let idIngreso = '';
 
                 $(document).ready(function() {
@@ -448,7 +452,8 @@ if (!isset($_SESSION['IdUsuario'])) {
                                     tbTable.empty();
                                     for (let ingresos of arrayIngresos) {
 
-                                        let btnAnular = '<button class="btn btn-default btn-xs" onclick="anularIngreso(\'' + ingresos.idIngreso + '\')">' +
+                                        let btnAnular = deleteView == 0 ? '<i class="fa fa-minus" style="font-size:20px;"></i>' :
+                                            '<button class="btn btn-default btn-xs" onclick="anularIngreso(\'' + ingresos.idIngreso + '\')">' +
                                             '<i class="fa fa-ban" style="font-size:25px;"></i></br>' +
                                             '</button>';
                                         let btnPdf = '<button class="btn btn-danger btn-xs" onclick="openPdf(\'' + ingresos.idIngreso + '\')">' +

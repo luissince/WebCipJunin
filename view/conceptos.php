@@ -4,7 +4,7 @@ session_start();
 if (!isset($_SESSION['IdUsuario'])) {
     echo '<script>location.href = "./login.php";</script>';
 } else {
-    if ($_SESSION["Permisos"][6]["ver"] == 1) {
+    if ($_SESSION["Permisos"][10]["ver"] == 1) {
 ?>
         <!DOCTYPE html>
         <html lang="en">
@@ -203,7 +203,7 @@ if (!isset($_SESSION['IdUsuario'])) {
 
                         <div class="row">
                             <?php
-                            if ($_SESSION["Permisos"][6]["crear"]) {
+                            if ($_SESSION["Permisos"][10]["crear"]) {
                                 echo ' 
                                 <div class="col-md-2 col-sm-12 col-xs-12">
                                     <label>Nuevo Concepto.</label>
@@ -330,8 +330,8 @@ if (!isset($_SESSION['IdUsuario'])) {
                 let filasPorPagina = 10;
                 let tbTable = $("#tbTable");
 
-                let editView = "<?= $_SESSION["Permisos"][6]["actualizar"]; ?>";
-                let deleteView = "<?= $_SESSION["Permisos"][6]["eliminar"]; ?>";
+                let editView = "<?= $_SESSION["Permisos"][10]["actualizar"]; ?>";
+                let deleteView = "<?= $_SESSION["Permisos"][10]["eliminar"]; ?>";
 
                 $(document).ready(function() {
 

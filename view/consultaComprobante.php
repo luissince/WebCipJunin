@@ -4,41 +4,42 @@ session_start();
 if (!isset($_SESSION['IdUsuario'])) {
     echo '<script>location.href = "./login.php";</script>';
 } else {
+    if ($_SESSION["Permisos"][21]["ver"] == 1) {
 ?>
-    <!DOCTYPE html>
-    <html lang="en">
+        <!DOCTYPE html>
+        <html lang="en">
 
-    <head>
-        <?php include('./layout/head.php'); ?>
+        <head>
+            <?php include('./layout/head.php'); ?>
 
-    </head>
+        </head>
 
-    <body class="hold-transition skin-blue sidebar-mini">
-        <div class="wrapper">
+        <body class="hold-transition skin-blue sidebar-mini">
+            <div class="wrapper">
 
-            <!-- start header -->
-            <?php include('./layout/header.php') ?>
-            <!-- end header -->
-            <!-- start menu -->
-            <?php include('./layout/menu.php') ?>
-            <!-- end menu -->
-            <!-- Content Wrapper. Contains page content -->
-            <div class="content-wrapper" style="background-color: #FFFFFF;">
-                <!-- Main content -->
-                <section class="content-header">
-                    <h3 class="no-margin"> Comprobantes Electrónicos <small> Consulta </small> </h3>
-                </section>
+                <!-- start header -->
+                <?php include('./layout/header.php') ?>
+                <!-- end header -->
+                <!-- start menu -->
+                <?php include('./layout/menu.php') ?>
+                <!-- end menu -->
+                <!-- Content Wrapper. Contains page content -->
+                <div class="content-wrapper" style="background-color: #FFFFFF;">
+                    <!-- Main content -->
+                    <section class="content-header">
+                        <h3 class="no-margin"> Comprobantes Electrónicos <small> Consulta </small> </h3>
+                    </section>
 
-                <section class="content">
-                    <div class="row">
-                        <div class="col-md-12">
-                            <div class="nav-tabs-custom">
-                                <ul class="nav nav-tabs">
-                                    <!-- <li class="active"><a href="#tab_1" data-toggle="tab">Consulta Básica</a></li> -->
-                                    <li class="active"><a href="#tab_2" data-toggle="tab">Consulta avanzada</a></li>
-                                </ul>
-                                <div class="tab-content">
-                                    <!-- <div class="tab-pane active" id="tab_1">
+                    <section class="content">
+                        <div class="row">
+                            <div class="col-md-12">
+                                <div class="nav-tabs-custom">
+                                    <ul class="nav nav-tabs">
+                                        <!-- <li class="active"><a href="#tab_1" data-toggle="tab">Consulta Básica</a></li> -->
+                                        <li class="active"><a href="#tab_2" data-toggle="tab">Consulta avanzada</a></li>
+                                    </ul>
+                                    <div class="tab-content">
+                                        <!-- <div class="tab-pane active" id="tab_1">
                                         <div class="row">
                                             <div class="col-md-5">
                                                 <div class="form-group">
@@ -193,307 +194,311 @@ if (!isset($_SESSION['IdUsuario'])) {
 
                                         </div>
                                     </div> -->
-                                    <div class="tab-pane active" id="tab_2">
-                                        <div class="row">
-                                            <div class="col-md-6">
-                                                <div class="form-group">
-                                                    <h4>Credenciales </h4>
+                                        <div class="tab-pane active" id="tab_2">
+                                            <div class="row">
+                                                <div class="col-md-6">
+                                                    <div class="form-group">
+                                                        <h4>Credenciales </h4>
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-6">
+                                                    <div class="form-group">
+                                                        <h4>Datos del Comprobante </h4>
+                                                    </div>
                                                 </div>
                                             </div>
-                                            <div class="col-md-6">
-                                                <div class="form-group">
-                                                    <h4>Datos del Comprobante </h4>
+                                            <div class="row">
+                                                <div class="col-md-6">
+                                                    <label style="color: #676363;">Ruc: </label>
+                                                    <div class="form-group">
+                                                        <input id="txtRuc" class="form-control" type="text" placeholder="Ingrese su RUC">
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-6">
+                                                    <label style="color: #676363;">Ruc Emisor: </label>
+                                                    <div class="form-group">
+                                                        <input id="txtRucEmision" class="form-control" type="text" placeholder="Ingrese RUC">
+                                                    </div>
                                                 </div>
                                             </div>
-                                        </div>
-                                        <div class="row">
-                                            <div class="col-md-6">
-                                                <label style="color: #676363;">Ruc: </label>
-                                                <div class="form-group">
-                                                    <input id="txtRuc" class="form-control" type="text" placeholder="Ingrese su RUC">
+                                            <div class="row">
+                                                <div class="col-md-6">
+                                                    <label style="color: #676363;">usuario: </label>
+                                                    <div class="form-group">
+                                                        <input id="txtUsuario" class="form-control" type="text" placeholder="Ingrese su Usuario">
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-6">
+                                                    <label style="color: #676363;">Tipo: </label>
+                                                    <div class="form-group">
+                                                        <!-- <input id="txtTipo" class="form-control" type="text" placeholder="Ingrese Codigo de documento (factura: 01 / boleta: 03 / etc)"> -->
+                                                        <select id="txtTipo" class="form-control">
+                                                            <option value=""> -- Seleccione -- </option>
+                                                            <option value="01">01 - Factura</option>
+                                                            <option value="03">03 - Boleta De Venta</option>
+                                                            <option value="07">07 - Nota de Crédito</option>
+                                                            <option value="08">08 - Nota de Débito</option>
+                                                            <option value="R1">R1 - Recibo por Honorarios</option>
+                                                            <option value="R7">R7 - Nota Crédito Recibo por Honorarios </option>
+                                                            <option value="04">04 - Liquidación de Compra</option>
+                                                            <option value="23">23 - Póliza de Adjudicación Electrónica</option>
+                                                        </select>
+                                                    </div>
                                                 </div>
                                             </div>
-                                            <div class="col-md-6">
-                                                <label style="color: #676363;">Ruc Emisor: </label>
-                                                <div class="form-group">
-                                                    <input id="txtRucEmision" class="form-control" type="text" placeholder="Ingrese RUC">
+                                            <div class="row">
+                                                <div class="col-md-6">
+                                                    <label style="color: #676363;">Contraseña: </label>
+                                                    <div class="form-group">
+                                                        <input id="txtClave" class="form-control" type="password" placeholder="Ingrese Contraseña">
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-6">
+                                                    <label style="color: #676363;">Serie: </label>
+                                                    <div class="form-group">
+                                                        <input id="txtSerie" class="form-control" type="text" placeholder="F001 / B001 / etc" maxlength="4">
+                                                    </div>
                                                 </div>
                                             </div>
-                                        </div>
-                                        <div class="row">
-                                            <div class="col-md-6">
-                                                <label style="color: #676363;">usuario: </label>
-                                                <div class="form-group">
-                                                    <input id="txtUsuario" class="form-control" type="text" placeholder="Ingrese su Usuario">
-                                                </div>
-                                            </div>
-                                            <div class="col-md-6">
-                                                <label style="color: #676363;">Tipo: </label>
-                                                <div class="form-group">
-                                                    <!-- <input id="txtTipo" class="form-control" type="text" placeholder="Ingrese Codigo de documento (factura: 01 / boleta: 03 / etc)"> -->
-                                                    <select id="txtTipo" class="form-control">
-                                                        <option value=""> -- Seleccione -- </option>
-                                                        <option value="01">01 - Factura</option>
-                                                        <option value="03">03 - Boleta De Venta</option>
-                                                        <option value="07">07 - Nota de Crédito</option>
-                                                        <option value="08">08 - Nota de Débito</option>
-                                                        <option value="R1">R1 - Recibo por Honorarios</option>
-                                                        <option value="R7">R7 - Nota Crédito Recibo por Honorarios </option>
-                                                        <option value="04">04 - Liquidación de Compra</option>
-                                                        <option value="23">23 - Póliza de Adjudicación Electrónica</option>
-                                                    </select>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="row">
-                                            <div class="col-md-6">
-                                                <label style="color: #676363;">Contraseña: </label>
-                                                <div class="form-group">
-                                                    <input id="txtClave" class="form-control" type="password" placeholder="Ingrese Contraseña">
-                                                </div>
-                                            </div>
-                                            <div class="col-md-6">
-                                                <label style="color: #676363;">Serie: </label>
-                                                <div class="form-group">
-                                                    <input id="txtSerie" class="form-control" type="text" placeholder="F001 / B001 / etc" maxlength="4">
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="row">
-                                            <div class="col-md-6">
+                                            <div class="row">
+                                                <div class="col-md-6">
 
-                                            </div>
-                                            <div class="col-md-6">
-                                                <label style="color: #676363;">Correlativo: </label>
-                                                <div class="form-group">
-                                                    <input id="txtCorrelativo" class="form-control" type="number" placeholder="ingrese correlativo (1,2,3...)">
+                                                </div>
+                                                <div class="col-md-6">
+                                                    <label style="color: #676363;">Correlativo: </label>
+                                                    <div class="form-group">
+                                                        <input id="txtCorrelativo" class="form-control" type="number" placeholder="ingrese correlativo (1,2,3...)">
+                                                    </div>
                                                 </div>
                                             </div>
-                                        </div>
-                                        <div class="row">
-                                            <div class="col-md-6">
-                                                <div class="form-group">
-                                                    <button class="btn btn-success" id="consultarEstado"> Consultar Estado </button>
-                                                    <button class="btn btn-primary" id="consultarCdr"> Consultar CDR </button>
-                                                    <button class="btn btn-danger" id="limpiarConsulta"> Limpiar </button>
+                                            <div class="row">
+                                                <div class="col-md-6">
+                                                    <div class="form-group">
+                                                        <button class="btn btn-success" id="consultarEstado"> Consultar Estado </button>
+                                                        <button class="btn btn-primary" id="consultarCdr"> Consultar CDR </button>
+                                                        <button class="btn btn-danger" id="limpiarConsulta"> Limpiar </button>
+                                                    </div>
+                                                </div class="col-md-6">
+                                                <div>
                                                 </div>
-                                            </div class="col-md-6">
-                                            <div>
                                             </div>
                                         </div>
                                     </div>
                                 </div>
-                            </div>
-                            <div class="col-md-12" id="lblResponse">
+                                <div class="col-md-12" id="lblResponse">
 
+                                </div>
                             </div>
                         </div>
-                    </div>
-                </section>
-                <!-- /.content -->
+                    </section>
+                    <!-- /.content -->
+                </div>
+                <!-- /.content-wrapper -->
+                <!-- start footer -->
+                <?php include('./layout/footer.php') ?>
+                <!-- end footer -->
             </div>
-            <!-- /.content-wrapper -->
-            <!-- start footer -->
-            <?php include('./layout/footer.php') ?>
-            <!-- end footer -->
-        </div>
-        <!-- ./wrapper -->
-        <script src="js/tools.js"></script>
+            <!-- ./wrapper -->
+            <script src="js/tools.js"></script>
 
 
-        <script>
-            let tools = new Tools();
+            <script>
+                let tools = new Tools();
 
-            $(document).ready(function() {
-                loadInitConsultaAvanzada();
+                $(document).ready(function() {
+                    loadInitConsultaAvanzada();
 
-                $("#consultarEstado").click(function() {
-                    validateFields("");
-                });
-
-                $("#consultarEstado").on("keyup", function(event) {
-                    if (event.keyCode === 13) {
+                    $("#consultarEstado").click(function() {
                         validateFields("");
-                    }
-                });
+                    });
 
-                $("#limpiarConsulta").click(function() {
-                    limpiarResponse();
-                });
+                    $("#consultarEstado").on("keyup", function(event) {
+                        if (event.keyCode === 13) {
+                            validateFields("");
+                        }
+                    });
 
-                $("#limpiarConsulta").on("keyup", function(event) {
-                    if (event.keyCode === 13) {
+                    $("#limpiarConsulta").click(function() {
                         limpiarResponse();
-                    }
-                });
+                    });
 
-                $("#consultarCdr").click(function() {
-                    validateFields("cdr");
-                });
+                    $("#limpiarConsulta").on("keyup", function(event) {
+                        if (event.keyCode === 13) {
+                            limpiarResponse();
+                        }
+                    });
 
-                $("#consultarCdr").on("keyup", function(event) {
-                    if (event.keyCode === 13) {
+                    $("#consultarCdr").click(function() {
                         validateFields("cdr");
-                    }
-                });
+                    });
 
-            });
-
-            function loadInitConsultaAvanzada() {
-                $.ajax({
-                    url: "../app/controller/ConfigEmpresaController.php",
-                    method: "GET",
-                    data: {},
-                    beforeSend: function() {
-
-                    },
-                    success: function(result) {
-                        if (result.estado == 1) {
-                            $("#txtRuc").val(result.result.NumeroDocumento);
-                            $("#txtUsuario").val(result.result.UsuarioSol);
-                            $("#txtClave").val(result.result.ClaveSol);
-                            $("#txtRucEmision").val(result.result.NumeroDocumento);
+                    $("#consultarCdr").on("keyup", function(event) {
+                        if (event.keyCode === 13) {
+                            validateFields("cdr");
                         }
-                    },
-                    error: function(error) {
+                    });
 
-                    }
                 });
-            }
 
-            function validateFields(cdr) {
-                if ($("#txtRuc").val() == '' || $("#txtRuc").val().length != 11) {
-                    tools.AlertWarning("Advertencia", "ingrese un RUC válido.");
-                    $("#txtRuc").focus();
-                } else if ($("#txtUsuario").val() == '' || $("#txtUsuario").val().length == 0) {
-                    tools.AlertWarning("Advertencia", "El campo usuario es requerido.");
-                    $("#txtUsuario").focus();
-                } else if ($("#txtClave").val() == '' || $("#txtClave").val().length == 0) {
-                    tools.AlertWarning("Advertencia", "El campo contraseña es requerido.");
-                    $("#txtClave").focus();
-                } else if ($("#txtRucEmision").val() == '' || $("#txtRucEmision").val().length != 11) {
-                    tools.AlertWarning("Advertencia", "Ingrese un RUC de Emision Válido.");
-                    $("#txtRucEmision").focus();
-                } else if ($("#txtTipo").val() == '') {
-                    tools.AlertWarning("Advertencia", "Seleccione tipo de documento.");
-                    $("#txtTipo").focus();
-                } else if ($('#txtSerie').val() == '' || $("#txtSerie").val().length == 0) {
-                    tools.AlertWarning("Advertencia", "Ingrese una serie correcta.");
-                    $("#txtSerie").focus();
-                } else if ($('#txtCorrelativo').val() == '' || $("#txtCorrelativo").val().length == 0) {
-                    tools.AlertWarning("Advertencia", "Ingrese un correlativo.");
-                    $("#txtCorrelativo").focus();
-                } else {
-                    consultarCdr(cdr);
+                function loadInitConsultaAvanzada() {
+                    $.ajax({
+                        url: "../app/controller/ConfigEmpresaController.php",
+                        method: "GET",
+                        data: {},
+                        beforeSend: function() {
+
+                        },
+                        success: function(result) {
+                            if (result.estado == 1) {
+                                $("#txtRuc").val(result.result.NumeroDocumento);
+                                $("#txtUsuario").val(result.result.UsuarioSol);
+                                $("#txtClave").val(result.result.ClaveSol);
+                                $("#txtRucEmision").val(result.result.NumeroDocumento);
+                            }
+                        },
+                        error: function(error) {
+
+                        }
+                    });
                 }
-            }
 
-            function consultarCdr(cdr) {
-                $.ajax({
-                    url: "../app/examples/pages/cdrStatus.php",
-                    method: "GET",
-                    data: {
-                        rucSol: $("#txtRuc").val(),
-                        userSol: $("#txtUsuario").val(),
-                        passSol: $("#txtClave").val(),
-                        ruc: $("#txtRucEmision").val(),
-                        tipo: $("#txtTipo").val(),
-                        serie: $('#txtSerie').val().toUpperCase(),
-                        numero: $('#txtCorrelativo').val(),
-                        cdr: cdr
-                    },
-                    beforeSend: function() {
-                        $("#ReduxComponent").empty();
-                        tools.ModalAlertInfo("Consultar Datos", "Procesando petición..");
-                    },
-                    success: function(result) {
-                        cdrDiv = '';
-                        if (result.typecode == "0004") {
-                            cdrDiv =
+                function validateFields(cdr) {
+                    if ($("#txtRuc").val() == '' || $("#txtRuc").val().length != 11) {
+                        tools.AlertWarning("Advertencia", "ingrese un RUC válido.");
+                        $("#txtRuc").focus();
+                    } else if ($("#txtUsuario").val() == '' || $("#txtUsuario").val().length == 0) {
+                        tools.AlertWarning("Advertencia", "El campo usuario es requerido.");
+                        $("#txtUsuario").focus();
+                    } else if ($("#txtClave").val() == '' || $("#txtClave").val().length == 0) {
+                        tools.AlertWarning("Advertencia", "El campo contraseña es requerido.");
+                        $("#txtClave").focus();
+                    } else if ($("#txtRucEmision").val() == '' || $("#txtRucEmision").val().length != 11) {
+                        tools.AlertWarning("Advertencia", "Ingrese un RUC de Emision Válido.");
+                        $("#txtRucEmision").focus();
+                    } else if ($("#txtTipo").val() == '') {
+                        tools.AlertWarning("Advertencia", "Seleccione tipo de documento.");
+                        $("#txtTipo").focus();
+                    } else if ($('#txtSerie').val() == '' || $("#txtSerie").val().length == 0) {
+                        tools.AlertWarning("Advertencia", "Ingrese una serie correcta.");
+                        $("#txtSerie").focus();
+                    } else if ($('#txtCorrelativo').val() == '' || $("#txtCorrelativo").val().length == 0) {
+                        tools.AlertWarning("Advertencia", "Ingrese un correlativo.");
+                        $("#txtCorrelativo").focus();
+                    } else {
+                        consultarCdr(cdr);
+                    }
+                }
+
+                function consultarCdr(cdr) {
+                    $.ajax({
+                        url: "../app/examples/pages/cdrStatus.php",
+                        method: "GET",
+                        data: {
+                            rucSol: $("#txtRuc").val(),
+                            userSol: $("#txtUsuario").val(),
+                            passSol: $("#txtClave").val(),
+                            ruc: $("#txtRucEmision").val(),
+                            tipo: $("#txtTipo").val(),
+                            serie: $('#txtSerie').val().toUpperCase(),
+                            numero: $('#txtCorrelativo').val(),
+                            cdr: cdr
+                        },
+                        beforeSend: function() {
+                            $("#ReduxComponent").empty();
+                            tools.ModalAlertInfo("Consultar Datos", "Procesando petición..");
+                        },
+                        success: function(result) {
+                            cdrDiv = '';
+                            if (result.typecode == "0004") {
+                                cdrDiv =
+                                    '<div class="row" style="cursor:default;">' +
+                                    '<div class="col-md-12">' +
+                                    '<div class="col-md-1" style="font: 15px;">' +
+                                    'comprobante: ' +
+                                    '</div>' +
+                                    '<div class="col-md-11">' +
+                                    result.comprobante +
+                                    '</div>' +
+                                    '</div>' +
+                                    '</div>' +
+                                    '<div class="row" style="cursor:default;">' +
+                                    '<div class="col-md-12">' +
+                                    '<div class="col-md-1" style="font: 15px;">' +
+                                    'Ruta : ' +
+                                    '</div>' +
+                                    '<div class="col-md-11">' +
+                                    '<div class="row">' +
+                                    '<div class="col-md-4">' +
+                                    '<a onclick="descargarCdr(\'' + result.file + '\')"" style="cursor:pointer">' +
+                                    result.file +
+                                    '</a>' +
+                                    '</div>' +
+                                    '<div class="col-md-8">' +
+                                    '<div style="color: #A6A7A7">' +
+                                    'click en la ruta para descargar' +
+                                    '<div>' +
+                                    '</div>' +
+                                    '</div>' +
+                                    '</div>' +
+                                    '</div>' +
+                                    '</div>';
+                            }
+
+                            $("#lblResponse").html(
+                                '<div class="box box-success">' +
+                                '<div class="box-header">' +
+                                '<h3 class="box-title">RESULTADO</h3>' +
+                                '</div>' +
+                                '<div class="box-body">' +
                                 '<div class="row" style="cursor:default;">' +
                                 '<div class="col-md-12">' +
                                 '<div class="col-md-1" style="font: 15px;">' +
-                                'comprobante: ' +
+                                'Codigo: ' +
                                 '</div>' +
                                 '<div class="col-md-11">' +
-                                result.comprobante +
+                                result.typecode +
                                 '</div>' +
                                 '</div>' +
                                 '</div>' +
                                 '<div class="row" style="cursor:default;">' +
                                 '<div class="col-md-12">' +
                                 '<div class="col-md-1" style="font: 15px;">' +
-                                'Ruta : ' +
+                                'Mensaje: ' +
                                 '</div>' +
                                 '<div class="col-md-11">' +
-                                '<div class="row">' +
-                                '<div class="col-md-4">' +
-                                '<a onclick="descargarCdr(\'' + result.file + '\')"" style="cursor:pointer">' +
-                                result.file +
-                                '</a>' +
-                                '</div>' +
-                                '<div class="col-md-8">' +
-                                '<div style="color: #A6A7A7">' +
-                                'click en la ruta para descargar' +
-                                '<div>' +
+                                result.message +
                                 '</div>' +
                                 '</div>' +
                                 '</div>' +
+                                cdrDiv +
                                 '</div>' +
-                                '</div>';
-                        }
-
-                        $("#lblResponse").html(
-                            '<div class="box box-success">' +
-                            '<div class="box-header">' +
-                            '<h3 class="box-title">RESULTADO</h3>' +
-                            '</div>' +
-                            '<div class="box-body">' +
-                            '<div class="row" style="cursor:default;">' +
-                            '<div class="col-md-12">' +
-                            '<div class="col-md-1" style="font: 15px;">' +
-                            'Codigo: ' +
-                            '</div>' +
-                            '<div class="col-md-11">' +
-                            result.typecode +
-                            '</div>' +
-                            '</div>' +
-                            '</div>' +
-                            '<div class="row" style="cursor:default;">' +
-                            '<div class="col-md-12">' +
-                            '<div class="col-md-1" style="font: 15px;">' +
-                            'Mensaje: ' +
-                            '</div>' +
-                            '<div class="col-md-11">' +
-                            result.message +
-                            '</div>' +
-                            '</div>' +
-                            '</div>' +
-                            cdrDiv +
-                            '</div>' +
-                            '</div>')
+                                '</div>')
 
                             tools.ModalAlertSuccess("Consultar Datos", result.message);
-                    },
-                    error: function(error) {
-                        console.log(error.responseText)
-                    }
-                });
-            }
+                        },
+                        error: function(error) {
+                            console.log(error.responseText)
+                        }
+                    });
+                }
 
-            function limpiarResponse() {
-                $("#txtTipo").val(''),
-                    $('#txtSerie').val(''),
-                    $('#txtCorrelativo').val(''),
-                    $("#lblResponse").html('');
-            }
+                function limpiarResponse() {
+                    $("#txtTipo").val(''),
+                        $('#txtSerie').val(''),
+                        $('#txtCorrelativo').val(''),
+                        $("#lblResponse").html('');
+                }
 
-            function descargarCdr(ruta) {
-                ruta_completa = "../app" + ruta;
-                window.open(ruta_completa, 'Download');
-            }
-        </script>
-    </body>
+                function descargarCdr(ruta) {
+                    ruta_completa = "../app" + ruta;
+                    window.open(ruta_completa, 'Download');
+                }
+            </script>
+        </body>
 
-    </html>
-<?php }
+        </html>
+<?php
+    } else {
+        echo '<script>location.href = "./index.php";</script>';
+    }
+}

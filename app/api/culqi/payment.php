@@ -125,7 +125,7 @@ if ($http_code == 201) {
         print json_encode(
             array(
                 "estado" => 1,
-                "data" => "Se registro correctamente el pago.",
+                "message" => "La transacción se ha realizado correctamente.",
                 "result" => (object)json_decode($resp)
             )
         );

@@ -46,92 +46,111 @@
                 </li>';
                 }
                 if ($_SESSION["Permisos"][3]["ver"] == 1) {
-                    print '<li class="treeview" id="tab-menu-registros">
+                    $menuRegistro = '<li class="treeview" id="tab-menu-registros">
                     <a href="#">
-                        <i class="fa fa-sitemap"></i> <span>Registros</span>
+                        <i class="fa fa-sitemap"></i> <span>Ingresos</span>
                         <span class="pull-right-container">
                             <i class="fa fa-angle-left pull-right"></i>
                         </span>
-                    </a>
-                    <ul class="treeview-menu">
-                        <li id="tab-ingresos"><a href="./ingresos.php"><i class="fa fa-circle-o"></i> Ingresos</a></li>
-                        <li id="tab-certHabilidad"><a href="./certHabilidad.php"><i class="fa fa-circle-o"></i> Certificado de Habilidad</a></li>
-                        <li id="tab-certObra"><a href="./certObra.php"><i class="fa fa-circle-o"></i> Certificado de Obra</a></li>
-                        <li id="tab-certProyecto"><a href="./certProyecto.php"><i class="fa fa-circle-o"></i> Certificado de Proyecto</a></li>
-                    </ul>
-                </li>';
+                    </a>';
+
+                    $menuRegistro .= '<ul class="treeview-menu">';
+                    if ($_SESSION["Permisos"][4]["ver"] == 1) {
+                        $menuRegistro .= ' <li id="tab-ingresos"><a href="./ingresos.php"><i class="fa fa-circle-o"></i> Ingresos</a></li>';
+                    }
+                    if ($_SESSION["Permisos"][5]["ver"] == 1) {
+                        $menuRegistro .= '<li id="tab-certHabilidad"><a href="./certHabilidad.php"><i class="fa fa-circle-o"></i> Certificado de Habilidad</a></li>';
+                    }
+                    if ($_SESSION["Permisos"][6]["ver"] == 1) {
+                        $menuRegistro .= '<li id="tab-certObra"><a href="./certObra.php"><i class="fa fa-circle-o"></i> Certificado de Obra</a></li>';
+                    }
+                    if ($_SESSION["Permisos"][7]["ver"] == 1) {
+                        $menuRegistro .= ' <li id="tab-certProyecto"><a href="./certProyecto.php"><i class="fa fa-circle-o"></i> Certificado de Proyecto</a></li>';
+                    }
+
+                    $menuRegistro .= '</ul> </li>';
+                    print $menuRegistro;
                 }
-                if ($_SESSION["Permisos"][4]["ver"] == 1) {
+                if ($_SESSION["Permisos"][8]["ver"] == 1) {
                     print '<li id="tab-capitulos">
                     <a href="./capitulos.php"><i class="fa fa-clone"></i><span>Capítulos</span></a>
                 </li>';
                 }
-                if ($_SESSION["Permisos"][5]["ver"] == 1) {
+                if ($_SESSION["Permisos"][9]["ver"] == 1) {
                     print '  <li id="tab-universidad">
                     <a href="./universidad.php"><i class="fa fa-bank"></i><span>Universidades</span></a>
                 </li>';
                 }
-                if ($_SESSION["Permisos"][6]["ver"] == 1) {
+                if ($_SESSION["Permisos"][10]["ver"] == 1) {
                     print ' <li id="tab-conceptos">
                     <a href="./conceptos.php"><i class="fa fa fa-list-alt"></i><span>Conceptos</span></a>
                 </li>';
                 }
-                if ($_SESSION["Permisos"][7]["ver"] == 1) {
-                    print '<li class="treeview" id="tab-menu-ingenieros">
+                if ($_SESSION["Permisos"][11]["ver"] == 1) {
+                    $menuIngeniero = '<li class="treeview" id="tab-menu-ingenieros">
                     <a href="#">
                         <i class="fa fa-user"></i> <span>Ingenieros</span>
-                        <span class="pull-right-container">
+                        <span  class="pull-right-container">
                             <i class="fa fa-angle-left" pull-right"></i>
                         </span>
-                    </a>
-                    <ul class="treeview-menu">
-                        <li id="tab-ingenieros"><a href="./ingenieros.php"><i class="fa fa-circle-o"></i>Lista</a></li>
-                        <li id="tab-habilidadIngeniero"><a href="./habilidadIngeniero.php"><i class="fa fa-circle-o"></i>Habilidad</a></li>
-                    </ul>
-                </li>';
+                    </a>';
+                    $menuIngeniero .= '<ul class="treeview-menu">';
+                    if ($_SESSION["Permisos"][12]["ver"] == 1) {
+                        $menuIngeniero .= ' <li id="tab-ingenieros"><a href="./ingenieros.php"><i class="fa fa-circle-o"></i>Lista</a></li>';
+                    }
+                    if ($_SESSION["Permisos"][13]["ver"] == 1) {
+                        $menuIngeniero .= '  <li id="tab-habilidadIngeniero"><a href="./habilidadIngeniero.php"><i class="fa fa-circle-o"></i>Habilidad</a></li>';
+                    }
+                    $menuIngeniero .= '</ul></li>';
+                    print $menuIngeniero;
                 }
-                if ($_SESSION["Permisos"][8]["ver"] == 1) {
+                if ($_SESSION["Permisos"][14]["ver"] == 1) {
                     print '<li id="tab-cobros">
                     <a href="./cobros.php"><i class="fa fa-money"></i><span>Cobros</span></a>
                 </li>';
                 }
-                if ($_SESSION["Permisos"][9]["ver"] == 1) {
+                if ($_SESSION["Permisos"][15]["ver"] == 1) {
                     print '  <li id="tab-reportes">
                     <a href="./reportes.php"><i class="fa fa-bar-chart"></i><span>Reportes</span></a>
                 </li>';
                 }
-                if ($_SESSION["Permisos"][10]["ver"] == 1) {
+                if ($_SESSION["Permisos"][16]["ver"] == 1) {
                     print '<li id="tab-empresas">
                     <a href="./empresas.php"><i class="fa fa-building-o"></i> <span>Entidades</span></a>
                 </li>';
                 }
-                if ($_SESSION["Permisos"][11]["ver"] == 1) {
+                if ($_SESSION["Permisos"][17]["ver"] == 1) {
                     print '<li id="tab-comprobantes">
                     <a href="./comprobantes.php"><i class="fa fa-file-text-o"></i><span>Comprobantes</span></a>
                 </li>';
                 }
-                if ($_SESSION["Permisos"][12]["ver"] == 1) {
-                    print '<li class="treeview" id="tab-menu-factura">
+                if ($_SESSION["Permisos"][18]["ver"] == 1) {
+                    $menuFacturacion = '<li class="treeview" id="tab-menu-factura">
                     <a href="#">
                         <i class="fa fa-folder-open"></i><span>Facturación</span>
                         <span class="pull-right-container">
                             <i class="fa fa-angle-left pull-right"></i>
                         </span>
-                    </a>                   
-                    <ul class="treeview-menu">
-                        <li id="tab-comprobantesElectronicos"><a href="comprobantesElectronicos.php"><i class="fa fa-circle-o"></i>Boleta/Factura</a></li>
-                        <li id="tab-notaCredito"><a href="notaCredito.php"><i class="fa fa-circle-o"></i>Nota Crédito</a></li>                       
-                        <li id="tab-consultaComprobante"><a href="consultaComprobante.php"><i class="fa fa-circle-o"></i>Consultar Comprobante</a></li>
-                        <li id="tab-configEmpresa"><a href="configEmpresa.php"><i class="fa fa-circle-o"></i>Empresa</a></li>
-                    </ul>
-                </li>';
+                    </a>';
+                    $menuFacturacion .= '<ul class="treeview-menu">';
+                    if ($_SESSION["Permisos"][19]["ver"] == 1) {
+                        $menuFacturacion .= '<li id="tab-comprobantesElectronicos"><a href="comprobantesElectronicos.php"><i class="fa fa-circle-o"></i>Boleta/Factura</a></li>';
+                    }
+                    if ($_SESSION["Permisos"][20]["ver"] == 1) {
+                        $menuFacturacion .= '<li id="tab-notaCredito"><a href="notaCredito.php"><i class="fa fa-circle-o"></i>Nota Crédito</a></li>';
+                    }
+                    if ($_SESSION["Permisos"][21]["ver"] == 1) {
+                        $menuFacturacion .= '<li id="tab-consultaComprobante"><a href="consultaComprobante.php"><i class="fa fa-circle-o"></i>Consultar Comprobante</a></li>';
+                    }
+                    if ($_SESSION["Permisos"][22]["ver"] == 1) {
+                        $menuFacturacion .= '<li id="tab-configEmpresa"><a href="configEmpresa.php"><i class="fa fa-circle-o"></i>Empresa</a></li>';
+                    }
+                    $menuFacturacion .= '</ul></li>';
+                    print $menuFacturacion;
                 }
                 ?>
 
               <!-- <li id="tab-notaDebito"><a href="notaDebito.php"><i class="fa fa-circle-o"></i>Nota Débito</a></li> -->
-
-
-
       </section>
   </aside>
   <script>
