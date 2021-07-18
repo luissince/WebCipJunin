@@ -301,12 +301,10 @@ if (!isset($_SESSION['IdUsuario'])) {
                     });
 
                     $("#btnCancelarCertificado").click(function() {
-                        $('#mdCertHabilidad').modal('hide');
                         cleanModalHabilidad()
                     });
 
                     $("#btnCloseCertificado").click(function() {
-                        $('#mdCertHabilidad').modal('hide');
                         cleanModalHabilidad()
                     });
 
@@ -349,7 +347,7 @@ if (!isset($_SESSION['IdUsuario'])) {
                         beforeSend: function() {
                             tbTable.empty();
                             tbTable.append(
-                                '<tr class="text-center"><td colspan="11"><img src="./images/spiner.gif"/><p>Cargando información.</p></td></tr>'
+                                '<tr class="text-center"><td colspan="13"><img src="./images/spiner.gif"/><p>Cargando información.</p></td></tr>'
                             );
                             state = true;
                             totalPaginacion = 0;
@@ -359,7 +357,7 @@ if (!isset($_SESSION['IdUsuario'])) {
                                 tbTable.empty();
                                 if (result.data.length == 0) {
                                     tbTable.append(
-                                        '<tr class="text-center"><td colspan="11"><p>No hay ingresos para mostrar.</p></td></tr>'
+                                        '<tr class="text-center"><td colspan="13"><p>No hay ingresos para mostrar.</p></td></tr>'
                                     );
                                     $("#lblPaginaActual").html(0);
                                     $("#lblPaginaSiguiente").html(0);
@@ -367,9 +365,6 @@ if (!isset($_SESSION['IdUsuario'])) {
                                 } else {
                                     for (let ingresos of result.data) {
 
-                                        // let btnAnular = '<button class="btn btn-danger btn-xs" onclick="anularIngreso(\'' + ingresos.idIngreso + '\',\'' + ingresos.dni + '\')">' +
-                                        //     '<i class="fa fa-ban"></i></br>Anular' +
-                                        //     '</button>';
                                         let btnPdf = '<button class="btn btn-danger btn-xs" onclick="openPdf(\'' + ingresos.idIngreso + '\')">' +
                                             '<i class="fa fa-file-pdf-o" style="font-size:25px;"></i></br>' +
                                             '</button>';
@@ -404,7 +399,7 @@ if (!isset($_SESSION['IdUsuario'])) {
                             } else {
                                 tbTable.empty();
                                 tbTable.append(
-                                    '<tr class="text-center"><td colspan="11"><p>' + result.mensaje + '</p></td></tr>'
+                                    '<tr class="text-center"><td colspan="13"><p>' + result.mensaje + '</p></td></tr>'
                                 );
                                 $("#lblPaginaActual").html(0);
                                 $("#lblPaginaSiguiente").html(0);
@@ -415,7 +410,7 @@ if (!isset($_SESSION['IdUsuario'])) {
                         error: function(error) {
                             tbTable.empty();
                             tbTable.append(
-                                '<tr class="text-center"><td colspan="11"><p>' + error.responseText + '</p></td></tr>'
+                                '<tr class="text-center"><td colspan="13"><p>' + error.responseText + '</p></td></tr>'
                             );
                             $("#lblPaginaActual").html(0);
                             $("#lblPaginaSiguiente").html(0);
@@ -428,22 +423,25 @@ if (!isset($_SESSION['IdUsuario'])) {
                     window.open("../app/sunat/pdfCertHabilidad.php?idIngreso=" + idIngreso, "_blank");
                 }
 
-                function editCertHabilidad(idCertificado) {
+                function editCertHabilidad(idIngreso) {
                     $('#mdCertHabilidad').modal('show');
-
                     $.ajax({
                         url: "../app/controller/ConceptoController.php",
                         method: "GET",
                         dataType: "json",
                         data: {
                             "type": "certHabilidad",
-                            "idCertificado": idCertificado,
+                            "idIngreso": idIngreso,
                         },
                         beforeSend: function() {
+                            $("#cbEspecialidadCertificado").empty();
+                            $("#modal-title-certificado-habilidad").append('<img src="./images/spiner.gif" width="25" height="25" style="margin-left: 10px;"/>');
 
-                            cleanModalHabilidad();
+                            $("#lblCertificadoHabilidadEstado").removeClass();
+                            $("#lblCertificadoHabilidadEstado").empty();
                         },
                         success: function(result) {
+
                             $("#modal-title-certificado-habilidad").empty();
                             $("#modal-title-certificado-habilidad").append('<i class="fa fa fa-edit"> </i> Editar Certificado de Habilidad');
                             if (result.estado == 1) {
@@ -462,6 +460,12 @@ if (!isset($_SESSION['IdUsuario'])) {
                                 $("#txtEntidadCertificado").val(result.data.Entidad);
                                 $("#txtLugarCertificado").val(result.data.Lugar);
 
+                                if (result.especialidades.length > 1) {
+                                    $("#lblEspecialidadCertificado").html('Especialidad(es) <em class=" text-primary text-bold small"><i class="fa fa-info-circle"></i> Tiene más de 2 especialidades</em>');
+                                }
+
+                                $("#lblCertificadoHabilidadEstado").addClass("text-success");
+                                $("#lblCertificadoHabilidadEstado").append('<i class="fa fa-check"> </i> Se cargo correctamente lo datos.');
 
                             } else {
                                 $("#lblCertificadoHabilidadEstado").addClass("text-warning");
@@ -480,7 +484,6 @@ if (!isset($_SESSION['IdUsuario'])) {
                 }
 
                 function crudEditCertHabilidad(idCertHabilidad) {
-
                     if ($("#cbEspecialidadCertificado").val() == '') {
                         tools.AlertWarning("Certificado de Habilidad", "Seleccione una especialidad para continuar.");
                         $("#cbEspecialidadCertificado").focus();
@@ -506,6 +509,7 @@ if (!isset($_SESSION['IdUsuario'])) {
                                 "lugar": $("#txtLugarCertificado").val()
                             },
                             beforeSend: function() {
+                                cleanModalHabilidad();
                                 tools.ModalAlertInfo("Certificado Habilidad", "Procesando petición..");
                             },
                             success: function(result) {
@@ -515,10 +519,7 @@ if (!isset($_SESSION['IdUsuario'])) {
                                 } else {
                                     tools.ModalAlertWarning("Certificado Habilidad", result.message);
                                 }
-                                $('#mdCertHabilidad').modal('hide');
-                                cleanModalHabilidad();
                             },
-
                             error: function(error) {
                                 tools.ModalAlertError("Certificado Habilidad", "Se produjo un error: " + error.responseText);
                             }
@@ -526,45 +527,8 @@ if (!isset($_SESSION['IdUsuario'])) {
                     }
                 }
 
-                function anularIngreso(idIngreso, dni) {
-                    tools.ModalDialogInputText("Ingreso", "¿Está seguro de anular el comprobante?", function(value) {
-                        if (value.dismiss == "cancel") {} else if (value.value.length == 0) {
-                            tools.ModalAlertWarning("Ingreso", "No ingreso ningún motivo :(");
-                        } else {
-                            $.ajax({
-                                url: "../app/controller/IngresoController.php",
-                                method: 'POST',
-                                data: {
-                                    "type": "deleteCertHabilidad",
-                                    "idIngreso": idIngreso,
-                                    "idUsuario": dni,
-                                    "motivo": value.value.toUpperCase(),
-                                    "fecha": tools.getCurrentDate(),
-                                    "hora": tools.getCurrentTime()
-                                },
-                                beforeSend: function() {
-                                    tools.ModalAlertInfo("Ingreso", "Procesando petición..");
-                                },
-                                success: function(result) {
-                                    if (result.estado == 1) {
-                                        tools.ModalAlertSuccess("Ingreso", result.message);
-                                        loadInitIngresos();
-                                    } else if (result.estado == 2) {
-                                        tools.ModalAlertWarning("Ingreso", result.message);
-                                    } else {
-                                        tools.ModalAlertWarning("Ingreso", result.message);
-                                    }
-
-                                },
-                                error: function(error) {
-                                    tools.ModalAlertError("Ingreso", "Se produjo un error: " + error.responseText);
-                                }
-                            });
-                        }
-                    });
-                }
-
                 function cleanModalHabilidad() {
+                    $('#mdCertHabilidad').modal('hide');
                     $("#txtIngenieroCertificado").val('');
                     $("#cbEspecialidadCertificado").empty();
                     $("#txtFechaCertificado").val('');

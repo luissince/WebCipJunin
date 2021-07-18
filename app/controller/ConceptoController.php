@@ -209,8 +209,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
                 "estado" => $validate
             ));
         }
-    } else if($_GET["type"] === "certHabilidad"){
-        $result = ConceptoAdo::getCertHabilidad($_GET['idCertificado']);
+    } else if ($_GET["type"] === "certHabilidad") {
+        $result = ConceptoAdo::getCertHabilidad($_GET['idIngreso']);
         if (is_array($result)) {
             echo json_encode(array(
                 "estado" => 1,
@@ -223,7 +223,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
                 "message" => $result
             ));
         }
-    } else if($_GET["type"] === "certObra"){
+    } else if ($_GET["type"] === "certObra") {
         $result = ConceptoAdo::getCertObra($_GET['idIngreso']);
         if (is_array($result)) {
             echo json_encode(array(
@@ -238,7 +238,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
                 "message" => $result
             ));
         }
-    } else if($_GET["type"] === "certProyecto"){
+    } else if ($_GET["type"] === "certProyecto") {
         $result = ConceptoAdo::getCertProyecto($_GET['idIngreso']);
         if (is_array($result)) {
             echo json_encode(array(
@@ -325,12 +325,12 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
                 "message" => $result
             ));
         }
-    } else if($_POST["type"] == "certHabilidad"){
-        $data ["idCertHabilidad"] = $_POST["idCertificado"];
-        $data ["especialidad"] = $_POST["especialidad"];
-        $data ["asunto"] = $_POST["asunto"];
-        $data ["entidad"] = $_POST["entidad"];
-        $data ["lugar"] = $_POST["lugar"];
+    } else if ($_POST["type"] == "certHabilidad") {
+        $data["idCertHabilidad"] = $_POST["idCertificado"];
+        $data["especialidad"] = $_POST["especialidad"];
+        $data["asunto"] = $_POST["asunto"];
+        $data["entidad"] = $_POST["entidad"];
+        $data["lugar"] = $_POST["lugar"];
 
         $result = ConceptoAdo::updateCertHabilidad($data);
 
@@ -345,13 +345,13 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
                 "message" => $result
             ));
         }
-    } else if($_POST["type"] == "certObra"){
-        $data ["idCertObra"] = $_POST["idCertificado"];
-        $data ["especialidad"] = $_POST["especialidad"];
-        $data ["modalidad"] = $_POST["modalidad"];
-        $data ["proyecto"] = $_POST["proyecto"];
-        $data ["propietario"] = $_POST["propietario"];
-        $data ["ubigeo"] = $_POST["ubigeo"];
+    } else if ($_POST["type"] == "certObra") {
+        $data["idCertObra"] = $_POST["idCertificado"];
+        $data["especialidad"] = $_POST["especialidad"];
+        $data["modalidad"] = $_POST["modalidad"];
+        $data["proyecto"] = $_POST["proyecto"];
+        $data["propietario"] = $_POST["propietario"];
+        $data["ubigeo"] = $_POST["ubigeo"];
 
         $result = ConceptoAdo::updateCertObra($data);
 
@@ -366,15 +366,15 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
                 "message" => $result
             ));
         }
-    } else if($_POST["type"] == "certProyecto"){
-        $data ["idCertProyecto"] = $_POST["idCertificado"];
-        $data ["especialidad"] = $_POST["especialidad"];
-        $data ["modalidad"] = $_POST["modalidad"];
-        $data ["proyecto"] = $_POST["proyecto"];
-        $data ["propietario"] = $_POST["propietario"];
-        $data ["ubigeo"] = $_POST["ubigeo"];
-        $data ["adicional1"] = $_POST["adicional1"];
-        $data ["adicional2"] = $_POST["adicional2"];
+    } else if ($_POST["type"] == "certProyecto") {
+        $data["idCertProyecto"] = $_POST["idCertificado"];
+        $data["especialidad"] = $_POST["especialidad"];
+        $data["modalidad"] = $_POST["modalidad"];
+        $data["proyecto"] = $_POST["proyecto"];
+        $data["propietario"] = $_POST["propietario"];
+        $data["ubigeo"] = $_POST["ubigeo"];
+        $data["adicional1"] = $_POST["adicional1"];
+        $data["adicional2"] = $_POST["adicional2"];
 
         $result = ConceptoAdo::updateCertProyecto($data);
 
@@ -389,5 +389,5 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
                 "message" => $result
             ));
         }
-    } 
+    }
 }

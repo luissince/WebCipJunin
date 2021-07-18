@@ -391,7 +391,7 @@ try {
                             $mail = new PHPMailer(true);
 
                             $fromname = "Tesorería Colegio de Ingenieros del Perú - CD Junín";
-                            $fromEmail = "tesoreria2021@cip-junin.org.pe";
+                            $fromEmail = "tesoreria@cip-junin.org.pe";
 
 
 
@@ -402,7 +402,7 @@ try {
                             $mail->Host       = 'smtp.live.com';                     //Set the SMTP server to send through
                             $mail->SMTPAuth   = true; //"login";                    //Enable SMTP authentication
                             $mail->Username   = $fromEmail;                     //SMTP username
-                            $mail->Password   = 'Qz0966lb';                               //SMTP password
+                            $mail->Password   = 'Cipjunin2021';                               //SMTP password
                             $mail->SMTPSecure = "TLS";            //Enable implicit TLS encryption
                             $mail->Port       = 587;                                 //TCP port to connect to; use 587 if you have set `SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS`
 
@@ -457,7 +457,7 @@ try {
 
                             // $mail->Body    = 'Saludos Ingeniero(a): ' . $ingreso->Apellidos . ' ' . $ingreso->Nombres . '</b> 
                             //                     Se le adjunta el comprobante emitido hacia su persona </b> Saludos Coordiales';
-                            $mail->AltBody = 'Ingeniero(a): '. $ingreso->Apellidos . ' ' . $ingreso->Nombres .' Reciba nuestro más cordial saludo, se le escribe para informarle que el 
+                            $mail->AltBody = 'Ingeniero(a): ' . $ingreso->Apellidos . ' ' . $ingreso->Nombres . ' Reciba nuestro más cordial saludo, se le escribe para informarle que el 
                             comprobante emitido hacia su persona fue realizado con éxito. Adjuntamos dicho comprobante.';
 
                             //Attachments

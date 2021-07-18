@@ -299,8 +299,6 @@ if (!isset($_SESSION['IdUsuario'])) {
                         }
                     });
 
-                    loadInitIngresos();
-
                     $("#btnAceptarCertResidenciaObra").click(function() {
                         crudEditCertObra(idCertObra);
                     });
@@ -313,14 +311,14 @@ if (!isset($_SESSION['IdUsuario'])) {
                     });
 
                     $("#btnCloseCertRecidenciaObra").click(function() {
-                        $('#mdCertResidenciaObra').modal('hide');
-                        cleanModalObra()
+                        cleanModalObra();
                     });
 
                     $("#btnCloseCertResidenciaObra").click(function() {
-                        $('#mdCertResidenciaObra').modal('hide');
-                        cleanModalObra()
+                        cleanModalObra();
                     });
+
+                    loadInitIngresos();
                 });
 
                 function onEventPaginacion() {
@@ -359,9 +357,7 @@ if (!isset($_SESSION['IdUsuario'])) {
                         },
                         beforeSend: function() {
                             tbTable.empty();
-                            tbTable.append(
-                                '<tr class="text-center"><td colspan="13"><img src="./images/spiner.gif"/><p>Cargando información.</p></td></tr>'
-                            );
+                            tbTable.append('<tr class="text-center"><td colspan="14"><img src="./images/spiner.gif"/><p>Cargando información.</p></td></tr>');
                             totalPaginacion = 0;
                             state = true;
                         },
@@ -369,19 +365,13 @@ if (!isset($_SESSION['IdUsuario'])) {
                             if (result.estado == 1) {
                                 if (result.data.length == 0) {
                                     tbTable.empty();
-                                    tbTable.append(
-                                        '<tr class="text-center"><td colspan="13"><p>No hay ingresos para mostrar.</p></td></tr>'
-                                    );
+                                    tbTable.append('<tr class="text-center"><td colspan="14"><p>No hay ingresos para mostrar.</p></td></tr>');
                                     $("#lblPaginaActual").html(0);
                                     $("#lblPaginaSiguiente").html(0);
                                     state = false;
                                 } else {
                                     tbTable.empty();
                                     for (let ingresos of result.data) {
-
-                                        // let btnAnular = '<button class="btn btn-danger btn-xs" onclick="anularIngreso(\'' + ingresos.idIngreso + '\',\'' + ingresos.dni + '\')">' +
-                                        //     '<i class="fa fa-ban"></i></br>Anular' +
-                                        //     '</button>';
                                         let btnPdf = '<button class="btn btn-danger btn-xs" onclick="openPdf(\'' + ingresos.idIngreso + '\')">' +
                                             '<i class="fa fa-file-pdf-o" style="font-size:25px;"></i></br>' +
                                             '</button>';
@@ -418,18 +408,17 @@ if (!isset($_SESSION['IdUsuario'])) {
                             } else {
                                 tbTable.empty();
                                 tbTable.append(
-                                    '<tr class="text-center"><td colspan="13"><p>' + result.mensaje + '</p></td></tr>'
+                                    '<tr class="text-center"><td colspan="14"><p>' + result.mensaje + '</p></td></tr>'
                                 );
                                 $("#lblPaginaActual").html(0);
                                 $("#lblPaginaSiguiente").html(0);
                                 state = false;
                             }
                         },
-
                         error: function(error) {
                             tbTable.empty();
                             tbTable.append(
-                                '<tr class="text-center"><td colspan="13"><p>' + error.responseText + '</p></td></tr>'
+                                '<tr class="text-center"><td colspan="14"><p>' + error.responseText + '</p></td></tr>'
                             );
                             $("#lblPaginaActual").html(0);
                             $("#lblPaginaSiguiente").html(0);
@@ -454,8 +443,12 @@ if (!isset($_SESSION['IdUsuario'])) {
                             "idIngreso": idIngreso,
                         },
                         beforeSend: function() {
+                            $("#cbEspecialidadObra").empty();
+                            $("#cbDepartamentoObra").empty();
+                            $("#modal-title-residencia-obra").append('<img src="./images/spiner.gif" width="25" height="25" style="margin-left: 10px;"/>');
 
-                            cleanModalObra();
+                            $("#lblCertificadoResidenciaObraEstado").removeClass();
+                            $("#lblCertificadoResidenciaObraEstado").empty();
                         },
                         success: function(result) {
                             $("#modal-title-residencia-obra").empty();
@@ -484,6 +477,13 @@ if (!isset($_SESSION['IdUsuario'])) {
                                 $("#txtPropietarioObra").val(result.data.Propietario);
                                 $('#cbDepartamentoObra').val(result.data.idUbigeo).trigger('change.select2');
 
+                                if (result.especialidades.length > 1) {
+                                    $("#lblEspecialidadObra").html('Especialidad(es) <em class=" text-primary text-bold small"><i class="fa fa-info-circle"></i> Tiene más de 2 especialidades</em>');
+                                }
+
+                                $("#lblCertificadoResidenciaObraEstado").addClass("text-success");
+                                $("#lblCertificadoResidenciaObraEstado").append('<i class="fa fa-check"> </i> Se cargo correctamente lo datos.');
+
                             } else {
                                 $("#lblCertificadoResidenciaObraEstado").addClass("text-warning");
                                 $("#lblCertificadoResidenciaObraEstado").append('<i class="fa fa-check"> </i> ' + result.message);
@@ -503,7 +503,6 @@ if (!isset($_SESSION['IdUsuario'])) {
                 }
 
                 function crudEditCertObra(idCertObra) {
-
                     if ($("#cbEspecialidadObra").val() == '') {
                         tools.AlertWarning("Certificado de Obra", "Seleccione una especialidad para continuar.");
                         $("#cbEspecialidadObra").focus();
@@ -533,6 +532,7 @@ if (!isset($_SESSION['IdUsuario'])) {
                                 "ubigeo": $("#cbDepartamentoObra").val()
                             },
                             beforeSend: function() {
+                                cleanModalObra();
                                 tools.ModalAlertInfo("Certificado Obra", "Procesando petición..");
                             },
                             success: function(result) {
@@ -542,10 +542,7 @@ if (!isset($_SESSION['IdUsuario'])) {
                                 } else {
                                     tools.ModalAlertWarning("Certificado Obra", result.message);
                                 }
-                                $('#mdCertResidenciaObra').modal('hide');
-                                cleanModalObra();
                             },
-
                             error: function(error) {
                                 tools.ModalAlertError("Certificado Obra", "Se produjo un error: " + error.responseText);
                             }
@@ -554,6 +551,7 @@ if (!isset($_SESSION['IdUsuario'])) {
                 }
 
                 function cleanModalObra() {
+                    $('#mdCertResidenciaObra').modal('hide');
                     $("#txtIngenieroObra").val('');
                     $("#cbEspecialidadObra").empty();
                     $("#txtFechaObra").val('');
@@ -563,43 +561,6 @@ if (!isset($_SESSION['IdUsuario'])) {
                     $("#txtPropietarioObra").val('');
                     $("#cbDepartamentoObra").empty();
                     idCertObra = 0;
-                }
-
-                function anularIngreso(idIngreso, dni) {
-                    tools.ModalDialogInputText("Ingreso", "¿Está seguro de anular el comprobante?", function(value) {
-                        if (value.dismiss == "cancel") {} else if (value.value.length == 0) {
-                            tools.ModalAlertWarning("Ingreso", "No ingreso ningún motivo :(");
-                        } else {
-                            $.ajax({
-                                url: "../app/controller/IngresoController.php",
-                                method: 'POST',
-                                data: {
-                                    "type": "deleteCertObra",
-                                    "idIngreso": idIngreso,
-                                    "idUsuario": dni,
-                                    "motivo": value.value.toUpperCase(),
-                                    "fecha": tools.getCurrentDate(),
-                                    "hora": tools.getCurrentTime()
-                                },
-                                beforeSend: function() {
-                                    tools.ModalAlertInfo("Ingreso", "Procesando petición..");
-                                },
-                                success: function(result) {
-                                    if (result.estado == 1) {
-                                        tools.ModalAlertSuccess("Ingreso", result.message);
-                                        loadInitIngresos();
-                                    } else if (result.estado == 2) {
-                                        tools.ModalAlertWarning("Ingreso", result.message);
-                                    } else {
-                                        tools.ModalAlertWarning("Ingreso", result.message);
-                                    }
-                                },
-                                error: function(error) {
-                                    tools.ModalAlertError("Ingreso", "Se produjo un error: " + error.responseText);
-                                }
-                            });
-                        }
-                    });
                 }
             </script>
         </body>

@@ -472,12 +472,13 @@ if (!isset($_SESSION['IdUsuario'])) {
                                 '</div>' +
                                 cdrDiv +
                                 '</div>' +
-                                '</div>')
+                                '</div>');
 
                             tools.ModalAlertSuccess("Consultar Datos", result.message);
+
                         },
                         error: function(error) {
-                            console.log(error.responseText)
+                            tools.ModalAlertError("Consultar Datos", error.responseText);
                         }
                     });
                 }

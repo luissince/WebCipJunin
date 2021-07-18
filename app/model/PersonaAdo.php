@@ -309,7 +309,7 @@ class PersonaAdo
 
             $count = 0;
             $arrayAfiliaciones = array();
-            while ($row = $cmdAfiliaciones->fetch()){
+            while ($row = $cmdAfiliaciones->fetch()) {
                 $count++;
                 array_push($arrayAfiliaciones, array(
                     "Id" => $count,
@@ -343,7 +343,7 @@ class PersonaAdo
 
             $count = 0;
             $arrayAfiliaciones = array();
-            while ($row = $cmdAfiliaciones->fetch()){
+            while ($row = $cmdAfiliaciones->fetch()) {
                 $count++;
                 array_push($arrayAfiliaciones, array(
                     "Id" => $count,
@@ -1599,10 +1599,10 @@ class PersonaAdo
             $cmdSelect = Database::getInstance()->getDb()->prepare('SELECT Estado FROM Afiliacion WHERE idAfiliacion = ? and Estado = 0');
             $cmdSelect->bindParam(1, $data["idAfiliacion"], PDO::PARAM_INT);
             $cmdSelect->execute();
-            if($cmdSelect->fetch() ){
+            if ($cmdSelect->fetch()) {
                 Database::getInstance()->getDb()->rollback();
                 return "existed";
-            } else{
+            } else {
                 $comandSelect = Database::getInstance()->getDb()->prepare("UPDATE Afiliacion SET Motivo = ?, Fecha= ?, hora=?, idUsuario = ?, Estado = 0 WHERE idAfiliacion = ?");
                 $comandSelect->bindParam(1, $data["motivo"], PDO::PARAM_STR);
                 $comandSelect->bindParam(2, $data["fecha"], PDO::PARAM_STR);
@@ -1619,7 +1619,7 @@ class PersonaAdo
         }
     }
 
-    public static function getHabilidadIngeniero($opcion, $search, $tipoHabilidad, $capitulo, $especialidad, $posicionPagina, $filasPorPagina)
+    public static function getHabilidadIngeniero($opcion, $search, $tipoHabilidad, $capitulo, $especialidad, $fecha, $posicionPagina, $filasPorPagina)
     {
         try {
             $array = array();
@@ -1631,11 +1631,11 @@ class PersonaAdo
             p.Nombres, 
             p.Condicion as CodigoCondicion,
             CASE p.Condicion
-                WHEN 'T' THEN 'Transeunte'
-                WHEN 'F' THEN 'Fallecido'
-                WHEN 'R' THEN 'Retirado'
-                WHEN 'V' THEN 'Vitalicio'
-                ELSE 'Ordinario' END AS Condicion,
+            WHEN 'T' THEN 'Transeunte'
+            WHEN 'F' THEN 'Fallecido'
+            WHEN 'R' THEN 'Retirado'
+            WHEN 'V' THEN 'Vitalicio'
+            ELSE 'Ordinario' END AS Condicion,
 			ca.idCapitulo,
 			ca.Capitulo,
 			e.idEspecialidad,
@@ -1656,15 +1656,20 @@ class PersonaAdo
             OR $opcion = 1 and p.CIP = ? 
             OR $opcion = 1 and p.Apellidos LIKE CONCAT(?,'%') 
             OR $opcion = 1 and p.Nombres LIKE CONCAT(?,'%') 
+
             OR $opcion = 2 and $tipoHabilidad = 0 
             OR $opcion = 2 and $tipoHabilidad = 1 and CAST(DATEDIFF(M,DATEADD(MONTH,CASE p.Condicion WHEN 'O' THEN 3 WHEN 'V' THEN 9 ELSE 0 END,ISNULL(ul.FechaUltimaCuota, c.FechaColegiado)) , GETDATE()) AS INT) <=0 
             OR $opcion = 2 and $tipoHabilidad = 2 and CAST(DATEDIFF(M,DATEADD(MONTH,CASE p.Condicion WHEN 'O' THEN 3 WHEN 'V' THEN 9 ELSE 0 END,ISNULL(ul.FechaUltimaCuota, c.FechaColegiado)) , GETDATE()) AS INT) >0 
+           
             OR $opcion = 3 and $tipoHabilidad = 0 and ca.idCapitulo = ?
             OR $opcion = 3 and $tipoHabilidad = 1 and CAST(DATEDIFF(M,DATEADD(MONTH,CASE p.Condicion WHEN 'O' THEN 3 WHEN 'V' THEN 9 ELSE 0 END,ISNULL(ul.FechaUltimaCuota, c.FechaColegiado)) , GETDATE()) AS INT) <=0 and ca.idCapitulo = ?
             OR $opcion = 3 and $tipoHabilidad = 2 and CAST(DATEDIFF(M,DATEADD(MONTH,CASE p.Condicion WHEN 'O' THEN 3 WHEN 'V' THEN 9 ELSE 0 END,ISNULL(ul.FechaUltimaCuota, c.FechaColegiado)) , GETDATE()) AS INT) >0 and ca.idCapitulo = ?
+            
             OR $opcion = 4 and $tipoHabilidad = 0 and ca.idCapitulo = ? and e.idEspecialidad =?
             OR $opcion = 4 and $tipoHabilidad = 1 and CAST(DATEDIFF(M,DATEADD(MONTH,CASE p.Condicion WHEN 'O' THEN 3 WHEN 'V' THEN 9 ELSE 0 END,ISNULL(ul.FechaUltimaCuota, c.FechaColegiado)) , GETDATE()) AS INT) <=0 and ca.idCapitulo = ? and e.idEspecialidad =?
             OR $opcion = 4 and $tipoHabilidad = 2 and CAST(DATEDIFF(M,DATEADD(MONTH,CASE p.Condicion WHEN 'O' THEN 3 WHEN 'V' THEN 9 ELSE 0 END,ISNULL(ul.FechaUltimaCuota, c.FechaColegiado)) , GETDATE()) AS INT) >0 and ca.idCapitulo = ? and e.idEspecialidad =?
+
+            OR $opcion = 5 and CAST(ISNULL(ul.FechaUltimaCuota,c.FechaColegiado) AS DATE) = ?
 
             ORDER BY p.FechaReg 
             offset ? ROWS FETCH NEXT ? ROWS only");
@@ -1682,9 +1687,10 @@ class PersonaAdo
             $comandoHabilidad->bindParam(11, $especialidad, PDO::PARAM_INT);
             $comandoHabilidad->bindParam(12, $capitulo, PDO::PARAM_INT);
             $comandoHabilidad->bindParam(13, $especialidad, PDO::PARAM_INT);
+            $comandoHabilidad->bindParam(14, $fecha, PDO::PARAM_STR);
 
-            $comandoHabilidad->bindParam(14, $posicionPagina, PDO::PARAM_INT);
-            $comandoHabilidad->bindParam(15, $filasPorPagina, PDO::PARAM_INT);
+            $comandoHabilidad->bindParam(15, $posicionPagina, PDO::PARAM_INT);
+            $comandoHabilidad->bindParam(16, $filasPorPagina, PDO::PARAM_INT);
             $comandoHabilidad->execute();
             $count = 0;
             while ($row = $comandoHabilidad->fetch()) {
@@ -1722,15 +1728,21 @@ class PersonaAdo
             OR $opcion = 1 and p.CIP = ? 
             OR $opcion = 1 and p.Apellidos LIKE CONCAT(?,'%') 
             OR $opcion = 1 and p.Nombres LIKE CONCAT(?,'%') 
+            
             OR $opcion = 2 and $tipoHabilidad = 0 
             OR $opcion = 2 and $tipoHabilidad = 1 and CAST(DATEDIFF(M,DATEADD(MONTH,CASE p.Condicion WHEN 'O' THEN 3 WHEN 'V' THEN 9 ELSE 0 END,ISNULL(ul.FechaUltimaCuota, c.FechaColegiado)) , GETDATE()) AS INT) <=0 
             OR $opcion = 2 and $tipoHabilidad = 2 and CAST(DATEDIFF(M,DATEADD(MONTH,CASE p.Condicion WHEN 'O' THEN 3 WHEN 'V' THEN 9 ELSE 0 END,ISNULL(ul.FechaUltimaCuota, c.FechaColegiado)) , GETDATE()) AS INT) >0 
+            
             OR $opcion = 3 and $tipoHabilidad = 0 and ca.idCapitulo = ?
             OR $opcion = 3 and $tipoHabilidad = 1 and CAST(DATEDIFF(M,DATEADD(MONTH,CASE p.Condicion WHEN 'O' THEN 3 WHEN 'V' THEN 9 ELSE 0 END,ISNULL(ul.FechaUltimaCuota, c.FechaColegiado)) , GETDATE()) AS INT) <=0 and ca.idCapitulo = ?
             OR $opcion = 3 and $tipoHabilidad = 2 and CAST(DATEDIFF(M,DATEADD(MONTH,CASE p.Condicion WHEN 'O' THEN 3 WHEN 'V' THEN 9 ELSE 0 END,ISNULL(ul.FechaUltimaCuota, c.FechaColegiado)) , GETDATE()) AS INT) >0 and ca.idCapitulo = ?
+            
             OR $opcion = 4 and $tipoHabilidad = 0 and ca.idCapitulo = ? and e.idEspecialidad =?
             OR $opcion = 4 and $tipoHabilidad = 1 and CAST(DATEDIFF(M,DATEADD(MONTH,CASE p.Condicion WHEN 'O' THEN 3 WHEN 'V' THEN 9 ELSE 0 END,ISNULL(ul.FechaUltimaCuota, c.FechaColegiado)) , GETDATE()) AS INT) <=0 and ca.idCapitulo = ? and e.idEspecialidad =?
-            OR $opcion = 4 and $tipoHabilidad = 2 and CAST(DATEDIFF(M,DATEADD(MONTH,CASE p.Condicion WHEN 'O' THEN 3 WHEN 'V' THEN 9 ELSE 0 END,ISNULL(ul.FechaUltimaCuota, c.FechaColegiado)) , GETDATE()) AS INT) >0 and ca.idCapitulo = ? and e.idEspecialidad =?");
+            OR $opcion = 4 and $tipoHabilidad = 2 and CAST(DATEDIFF(M,DATEADD(MONTH,CASE p.Condicion WHEN 'O' THEN 3 WHEN 'V' THEN 9 ELSE 0 END,ISNULL(ul.FechaUltimaCuota, c.FechaColegiado)) , GETDATE()) AS INT) >0 and ca.idCapitulo = ? and e.idEspecialidad =?
+            
+            OR $opcion = 5 and CAST(ISNULL(ul.FechaUltimaCuota,c.FechaColegiado) AS DATE) = ?
+            ");
             $comandoTotal->bindParam(1, $search, PDO::PARAM_INT);
             $comandoTotal->bindParam(2, $search, PDO::PARAM_STR);
             $comandoTotal->bindParam(3, $search, PDO::PARAM_STR);
@@ -1744,6 +1756,7 @@ class PersonaAdo
             $comandoTotal->bindParam(11, $especialidad, PDO::PARAM_INT);
             $comandoTotal->bindParam(12, $capitulo, PDO::PARAM_INT);
             $comandoTotal->bindParam(13, $especialidad, PDO::PARAM_INT);
+            $comandoTotal->bindParam(14, $fecha, PDO::PARAM_STR);
             $comandoTotal->execute();
             $resultTotal =  $comandoTotal->fetchColumn();
 

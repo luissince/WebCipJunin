@@ -29,7 +29,7 @@ if (!isset($_GET["idIngreso"])) {
         $Modalidad = $Datos['modalidad'];
         $Proyecto = $Datos['proyecto'];
         $Propietario = $Datos['propietario'];
-        $Monto = number_format(round($Datos['monto'], 2, PHP_ROUND_HALF_UP), 2, '.', '');
+        $Monto = number_format(round($Datos['monto'], 2, PHP_ROUND_HALF_UP), 2, '.', ',');
         $MontoenLetras = 'CINCUENTA NUEVOS SOLES CON 00 SOLES';
         $Departamento = $Datos['departamento'];
         $Provincia = $Datos['provincia'];
@@ -140,7 +140,7 @@ if (!isset($_GET["idIngreso"])) {
                 <div class="body-two">
                     <div style="padding-left:210px; padding-top:2px;">' . $Modalidad . '</div>
                     <div style="padding-left:210px; padding-top:6px;">' . $Proyecto . '</div>
-                    <div style="padding-left:210px; padding-top:10px;">' . $Propietario . '</div>
+                    <div style="padding-left:210px; padding-top:27px;">' . $Propietario . '</div>
                     <div style="padding-left:250px; padding-top:6px;">' . $Monto . '</div>
                 </div>
                 <!--######################################### Fin Cuerpo del documento ##################################################################-->

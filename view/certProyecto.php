@@ -11,7 +11,6 @@ if (!isset($_SESSION['IdUsuario'])) {
 
         <head>
             <?php include('./layout/head.php'); ?>
-
         </head>
 
         <body class="hold-transition skin-blue sidebar-mini">
@@ -327,12 +326,10 @@ if (!isset($_SESSION['IdUsuario'])) {
                     });
 
                     $("#btnCloseCertProyecto").click(function() {
-                        $('#mdCertProyecto').modal('hide');
                         cleanModalProyecto()
                     });
 
                     $("#btnCancelCertProyecto").click(function() {
-                        $('#mdCertProyecto').modal('hide');
                         cleanModalProyecto()
                     });
                 });
@@ -374,7 +371,7 @@ if (!isset($_SESSION['IdUsuario'])) {
                         beforeSend: function() {
                             tbTable.empty();
                             tbTable.append(
-                                '<tr class="text-center"><td colspan="13"><img src="./images/spiner.gif"/><p>Cargando información.</p></td></tr>'
+                                '<tr class="text-center"><td colspan="14"><img src="./images/spiner.gif"/><p>Cargando información.</p></td></tr>'
                             );
                             totalPaginacion = 0;
                             state = true;
@@ -384,7 +381,7 @@ if (!isset($_SESSION['IdUsuario'])) {
                                 if (result.data.length == 0) {
                                     tbTable.empty();
                                     tbTable.append(
-                                        '<tr class="text-center"><td colspan="13"><p>No hay ingresos para mostrar.</p></td></tr>'
+                                        '<tr class="text-center"><td colspan="14"><p>No hay ingresos para mostrar.</p></td></tr>'
                                     );
                                     $("#lblPaginaActual").html(0);
                                     $("#lblPaginaSiguiente").html(0);
@@ -393,9 +390,6 @@ if (!isset($_SESSION['IdUsuario'])) {
                                     tbTable.empty();
                                     for (let ingresos of result.data) {
 
-                                        // let btnAnular = '<button class="btn btn-danger btn-xs" onclick="anularIngreso(\'' + ingresos.idIngreso + '\',\'' + ingresos.dni + '\')">' +
-                                        //     '<i class="fa fa-ban"></i></br>Anular' +
-                                        //     '</button>';
                                         let btnPdf = '<button class="btn btn-danger btn-xs" onclick="openPdf(\'' + ingresos.idIngreso + '\')">' +
                                             '<i class="fa fa-file-pdf-o" style="font-size:25px;"></i>' +
                                             '</button>';
@@ -432,7 +426,7 @@ if (!isset($_SESSION['IdUsuario'])) {
                             } else {
                                 tbTable.empty();
                                 tbTable.append(
-                                    '<tr class="text-center"><td colspan="13"><p>' + result.mensaje + '</p></td></tr>'
+                                    '<tr class="text-center"><td colspan="14"><p>' + result.mensaje + '</p></td></tr>'
                                 );
                                 $("#lblPaginaActual").html(0);
                                 $("#lblPaginaSiguiente").html(0);
@@ -443,7 +437,7 @@ if (!isset($_SESSION['IdUsuario'])) {
                         error: function(error) {
                             tbTable.empty();
                             tbTable.append(
-                                '<tr class="text-center"><td colspan="13"><p>' + error.responseText + '</p></td></tr>'
+                                '<tr class="text-center"><td colspan="14"><p>' + error.responseText + '</p></td></tr>'
                             );
                             $("#lblPaginaActual").html(0);
                             $("#lblPaginaSiguiente").html(0);
@@ -468,8 +462,12 @@ if (!isset($_SESSION['IdUsuario'])) {
                             "idIngreso": idIngreso,
                         },
                         beforeSend: function() {
+                            $("#cbEspecialidadProyecto").empty();
+                            $("#cbDepartamentoProyecto").empty();
+                            $("#modal-title-certificado-proyecto").append('<img src="./images/spiner.gif" width="25" height="25" style="margin-left: 10px;"/>');
 
-                            cleanModalProyecto();
+                            $("#lblCertificadoProyectoEstado").removeClass();
+                            $("#lblCertificadoProyectoEstado").empty();
                         },
                         success: function(result) {
                             $("#modal-title-certificado-proyecto").empty();
@@ -499,6 +497,8 @@ if (!isset($_SESSION['IdUsuario'])) {
                                 $("#txtUrbProyecto").val(result.data.Adicional1);
                                 $("#txtCalleProyecto").val(result.data.Adicional2);
 
+                                $("#lblCertificadoProyectoEstado").addClass("text-success");
+                                $("#lblCertificadoProyectoEstado").append('<i class="fa fa-check"> </i> Se cargo correctamente lo datos.');
                             } else {
                                 $("#lblCertificadoProyectoEstado").addClass("text-warning");
                                 $("#lblCertificadoProyectoEstado").append('<i class="fa fa-check"> </i> ' + result.message);
@@ -518,7 +518,6 @@ if (!isset($_SESSION['IdUsuario'])) {
                 }
 
                 function crudEditCertProyecto(idCertProyecto) {
-
                     if ($("#cbEspecialidadProyecto").val() == '') {
                         tools.AlertWarning("Certificado de Proyecto", "Seleccione una especialidad para continuar.");
                         $("#cbEspecialidadProyecto").focus();
@@ -554,9 +553,9 @@ if (!isset($_SESSION['IdUsuario'])) {
                                 "ubigeo": $("#cbDepartamentoProyecto").val(),
                                 "adicional1": $("#txtUrbProyecto").val(),
                                 "adicional2": $("#txtCalleProyecto").val()
-
                             },
                             beforeSend: function() {
+                                cleanModalProyecto();
                                 tools.ModalAlertInfo("Certificado Proyecto", "Procesando petición..");
                             },
                             success: function(result) {
@@ -566,10 +565,7 @@ if (!isset($_SESSION['IdUsuario'])) {
                                 } else {
                                     tools.ModalAlertWarning("Certificado Proyecto", result.message);
                                 }
-                                $('#mdCertProyecto').modal('hide');
-                                cleanModalProyecto();
                             },
-
                             error: function(error) {
                                 tools.ModalAlertError("Certificado Proyecto", "Se produjo un error: " + error.responseText);
                             }
@@ -578,6 +574,7 @@ if (!isset($_SESSION['IdUsuario'])) {
                 }
 
                 function cleanModalProyecto() {
+                    $('#mdCertProyecto').modal('hide');
                     $("#txtIngenieroProyecto").val('');
                     $("#cbEspecialidadProyecto").empty();
                     $("#txtFechaProyecto").val('');
@@ -590,48 +587,10 @@ if (!isset($_SESSION['IdUsuario'])) {
                     $("#txtCalleProyecto").val('');
                     idCertProyecto = 0;
                 }
-
-                function anularIngreso(idIngreso, dni) {
-                    tools.ModalDialogInputText("Ingreso", "¿Está seguro de anular el comprobante?", function(value) {
-                        if (value.dismiss == "cancel") {} else if (value.value.length == 0) {
-                            tools.ModalAlertWarning("Ingreso", "No ingreso ningún motivo :(");
-                        } else {
-                            $.ajax({
-                                url: "../app/controller/IngresoController.php",
-                                method: 'POST',
-                                data: {
-                                    "type": "deleteCertProyecto",
-                                    "idIngreso": idIngreso,
-                                    "idUsuario": dni,
-                                    "motivo": value.value.toUpperCase(),
-                                    "fecha": tools.getCurrentDate(),
-                                    "hora": tools.getCurrentTime()
-                                },
-                                beforeSend: function() {
-                                    tools.ModalAlertInfo("Ingreso", "Procesando petición..");
-                                },
-                                success: function(result) {
-                                    if (result.estado == 1) {
-                                        tools.ModalAlertSuccess("Ingreso", result.message);
-                                        loadInitIngresos();
-                                    } else if (result.estado == 2) {
-                                        tools.ModalAlertWarning("Ingreso", result.message);
-                                    } else {
-                                        tools.ModalAlertWarning("Ingreso", result.message);
-                                    }
-                                },
-                                error: function(error) {
-                                    tools.ModalAlertError("Ingreso", "Se produjo un error: " + error.responseText);
-                                }
-                            });
-                        }
-                    });
-                }
             </script>
         </body>
 
         </html>
-
 <?php
     } else {
         echo '<script>location.href = "./index.php";</script>';

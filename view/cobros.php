@@ -112,6 +112,32 @@ if (!isset($_SESSION['IdUsuario'])) {
                 </div>
                 <!-- end modal new Bussinees -->
 
+                <!-- modal cobrar  -->
+                <div class="modal fade in" id="linkListaIngresos" style="display: block; padding-right: 17px;">
+                    <div class="modal-dialog">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <button type="button" class="close" data-dismiss="modal">
+                                    <i class="fa fa-close"></i>
+                                </button>
+                                <h4 class="modal-title">
+                                    <i class="fa fa-info"></i> Lista de opciones
+                                </h4>
+                            </div>
+
+                            <div class="modal-footer" style="text-align: center;">
+                                <button type="submit" class="btn btn-info">
+                                    <i class="fa fa-check"></i> Aceptar</button>
+                                <button type="button" class="btn btn-info">
+                                    <i class="fa fa-check"></i> Aceptar</button>
+                                <button type="button" class="btn btn-danger">
+                                    <i class="fa fa-remove"></i> Cancelar</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- end modal cobrar -->
+
                 <!-- modal start ingenieros -->
                 <?php include './layout/cobros/cobrosingenieros.php'; ?>
                 <!-- modal end ingenieros -->
@@ -808,6 +834,7 @@ if (!isset($_SESSION['IdUsuario'])) {
                                         tools.ModalAlertInfo("Cobros", "Procesando petición..");
                                     },
                                     success: function(result) {
+                                        console.log(result);
                                         if (result.estado === 1) {
                                             tools.ModalAlertSuccess("Cobros", result.mensaje);
                                             openPdfComprobante(result.idIngreso);
@@ -818,8 +845,17 @@ if (!isset($_SESSION['IdUsuario'])) {
                                             loadComprobantes();
                                             if (result.estadoCuotas == true) {
                                                 if (result.colegiado != null) {
-                                                    EnviarHabilidad(result.colegiado.CIP, result.colegiado.Apellidos, result.colegiado.Nombres, result.colegiado.Condicion, result.colegiado.FechaColegiado, result.cuotasFin, result.colegiado.Especialidad, result.colegiado.Capitulo);
+                                                    //   EnviarHabilidad(result.colegiado.CIP, result.colegiado.Apellidos, result.colegiado.Nombres, result.colegiado.Condicion, result.colegiado.FechaColegiado, result.cuotasFin, result.colegiado.Especialidad, result.colegiado.Capitulo);
                                                 }
+                                            }
+                                            if (result.cerHabilidad == true) {
+
+                                            }
+                                            if (result.cerObra == true) {
+
+                                            }
+                                            if (result.cerProyecto == true) {
+
                                             }
                                         } else {
                                             tools.ModalAlertWarning("Cobros", result.mensaje);
@@ -1125,7 +1161,6 @@ if (!isset($_SESSION['IdUsuario'])) {
                                             tools.ModalAlertSuccess("Empresa", result.mensaje);
                                             clearModalAddEmpresa();
                                             newEmpresa = result.data.id;
-                                            // $("#cbEmpresa").val(result.data.id)
                                         } else if (result.estado === 2) {
                                             tools.ModalAlertWarning("Empresa", result.mensaje);
                                         } else {
