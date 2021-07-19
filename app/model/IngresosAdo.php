@@ -1724,4 +1724,22 @@ class IngresosAdo
             return $ex->getMessage();
         }
     }
+    public static function getIdIngresoDocumentos()
+    {
+        try {
+            $array = array();
+
+
+            $cmdIngreso = Database::getInstance()->getDb()->prepare("SELECT TOP 5 idIngreso FROM Ingreso AS i WHERE ISNULL(i.Xmlsunat,'') <> '0' AND ISNULL(i.Xmlsunat,'') <> '1032'");
+            $cmdIngreso->execute();
+            while ($row = $cmdIngreso->fetch()) {
+                array_push($array, array(
+                    "idIngreso" => $row["idIngreso"],
+                ));
+            }
+            return $array;
+        } catch (Exception $ex) {
+            return $ex->getMessage();
+        }
+    }
 }
