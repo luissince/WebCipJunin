@@ -377,8 +377,6 @@ if (!isset($_SESSION['IdUsuario'])) {
                     });
 
                     $("#btnAceptarEnvio").click(function() {
-                        // $("#eviarDocumentoalCorreo").modal("hide");
-                        // $("#txtCorreo").val('');
                         enviarDocumentoCorreo($("#txtCorreo").val(), idIngreso);
                     });
                 });
@@ -512,12 +510,9 @@ if (!isset($_SESSION['IdUsuario'])) {
                     });
                 }
 
-                function getCorreo(dniColegiado, idIngres) {
-
-                    idIngreso = idIngres;
-
+                function getCorreo(dniColegiado, id) {
+                    idIngreso = id;
                     $("#eviarDocumentoalCorreo").modal("show");
-
                     $.ajax({
                         url: "../app/controller/ComprobanteController.php",
                         method: "GET",

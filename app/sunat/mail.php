@@ -4,7 +4,6 @@ header("Access-Control-Allow-Headers: Origin, X-Requested-With, Content-Type, Ac
 header('Access-Control-Allow-Methods: GET, POST, PUT, DELETE');
 header('Content-Type: application/json; charset=UTF-8');
 
-
 define('_MPDF_PATH', '/lib');
 require('./lib/mpdf/vendor/autoload.php');
 include('../src/GenerateCoinToLetters.php');
@@ -18,8 +17,6 @@ use PHPMailer\PHPMailer\Exception;
 
 //Load Composer's autoloader
 require './lib/phpmail/vendor/autoload.php';
-
-
 
 try {
 

@@ -113,7 +113,7 @@ if (!isset($_SESSION['IdUsuario'])) {
                 <!-- end modal new Bussinees -->
 
                 <!-- modal cobrar  -->
-                <div class="modal fade in" id="linkListaIngresos" style="display: block; padding-right: 17px;">
+                <div class="modal fade in" id="modalEndIngreso">
                     <div class="modal-dialog">
                         <div class="modal-content">
                             <div class="modal-header">
@@ -125,18 +125,56 @@ if (!isset($_SESSION['IdUsuario'])) {
                                 </h4>
                             </div>
 
-                            <div class="modal-footer" style="text-align: center;">
-                                <button type="submit" class="btn btn-info">
+                            <div class="modal-footer" id="modalFotterEndIngresos" style="text-align: center;">
+                                <!-- <button type="submit" class="btn btn-info">
                                     <i class="fa fa-check"></i> Aceptar</button>
                                 <button type="button" class="btn btn-info">
                                     <i class="fa fa-check"></i> Aceptar</button>
                                 <button type="button" class="btn btn-danger">
-                                    <i class="fa fa-remove"></i> Cancelar</button>
+                                    <i class="fa fa-remove"></i> Cerrar</button> -->
                             </div>
                         </div>
                     </div>
                 </div>
                 <!-- end modal cobrar -->
+
+                <!-- modal enviar por correo el ingreso -->
+                <div class="row">
+                    <div class="modal fade" id="eviarDocumentoalCorreo" data-backdrop="static">
+                        <div class="modal-dialog">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <button type="button" class="close" id="btnCloseEnvio">
+                                        <i class="fa fa-close"></i>
+                                    </button>
+                                    <h4 class="modal-title">
+                                        <i class="fa fa-envelope">
+                                        </i> Enviar Documento por Correo
+                                    </h4>
+                                </div>
+                                <div class="modal-body">
+                                    <div class="row">
+                                        <div class="col-md-12">
+                                            <div class="form-group">
+                                                <label for="Universidad" class="col-sm-4 control-label">Correo del Colegiado</label>
+                                                <div class="col-sm-8">
+                                                    <input id="txtCorreo" type="text" class="form-control" placeholder="Ingrese un correo válido" required="">
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-warning" id="btnAceptarEnvio">
+                                        <i class="fa fa-check"></i> Aceptar</button>
+                                    <button type="button" class="btn btn-primary" data-dismiss="modal" id="btnCancelEnvio">
+                                        <i class="fa fa-remove"></i> Cancelar</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!--end modal enviar por correo el ingreso  -->
 
                 <!-- modal start ingenieros -->
                 <?php include './layout/cobros/cobrosingenieros.php'; ?>
@@ -834,29 +872,53 @@ if (!isset($_SESSION['IdUsuario'])) {
                                         tools.ModalAlertInfo("Cobros", "Procesando petición..");
                                     },
                                     success: function(result) {
-                                        console.log(result);
                                         if (result.estado === 1) {
-                                            tools.ModalAlertSuccess("Cobros", result.mensaje);
-                                            openPdfComprobante(result.idIngreso);
                                             $("#btnCertificado").attr('data-toggle', '');
                                             $("#btnCertificado").attr('aria-expanded', 'false');
-                                            newEmpresa = 0;
                                             loadEmpresaPersona();
                                             loadComprobantes();
+
                                             if (result.estadoCuotas == true) {
-                                                if (result.colegiado != null) {
-                                                    //   EnviarHabilidad(result.colegiado.CIP, result.colegiado.Apellidos, result.colegiado.Nombres, result.colegiado.Condicion, result.colegiado.FechaColegiado, result.cuotasFin, result.colegiado.Especialidad, result.colegiado.Capitulo);
+                                                EnviarHabilidad(result.colegiado.CIP, result.colegiado.Apellidos, result.colegiado.Nombres, result.colegiado.Condicion, result.colegiado.FechaColegiado, result.cuotasFin, result.colegiado.Especialidad, result.colegiado.Capitulo);
+                                            }
+
+                                            // console.log(result.colegiado)
+
+                                            tools.ModalAlertSuccess("Cobros", result.mensaje, function() {
+                                                $("#modalEndIngreso").modal("show");
+                                                $("#modalFotterEndIngresos").empty();
+                                                $("#modalFotterEndIngresos").append('' +
+                                                    '<a href="../app/sunat/pdfingresos.php?idIngreso=' + result.idIngreso + '" target="_blank" class="btn btn-success">' +
+                                                    '<i class="fa fa-file-pdf-o"></i> Ingreso' +
+                                                    '</a>');
+
+                                                $("#modalFotterEndIngresos").append('' +
+                                                    '<button class="btn btn-info" onclick="getCorreo(\'' + result.idDNI + '\', \'' + result.idIngreso + '\', \'' + '\')">' +
+                                                    '<i class="fa fa-envelope"></i> Correo</br>' +
+                                                    '</button>');
+
+                                                if (result.cerHabilidad == true) {
+                                                    $("#modalFotterEndIngresos").append('' +
+                                                        '<a href="../app/sunat/pdfCertHabilidad.php?idIngreso=' + result.idIngreso + '" target="_blank" class="btn btn-success">' +
+                                                        '<i class="fa fa-file-pdf-o"></i> Cert. Habilidad(A)' +
+                                                        '</a>');
                                                 }
-                                            }
-                                            if (result.cerHabilidad == true) {
-
-                                            }
-                                            if (result.cerObra == true) {
-
-                                            }
-                                            if (result.cerProyecto == true) {
-
-                                            }
+                                                if (result.cerObra == true) {
+                                                    $("#modalFotterEndIngresos").append('' +
+                                                        '<a href="../app/sunat/pdfCertObra.php?idIngreso=' + result.idIngreso + '" target="_blank" class="btn btn-success">' +
+                                                        '<i class="fa fa-file-pdf-o"></i> Cert. Obra(B)' +
+                                                        '</a>');
+                                                }
+                                                if (result.cerProyecto == true) {
+                                                    $("#modalFotterEndIngresos").append('' +
+                                                        '<a href="../app/sunat/pdfCertProyecto.php?idIngreso=' + result.idIngreso + '" target="_blank" class="btn btn-success">' +
+                                                        '<i class="fa fa-file-pdf-o"></i> Cert. Proyecto(C)' +
+                                                        '</a>');
+                                                }
+                                                $("#modalFotterEndIngresos").append('' +
+                                                    '<button type="button" data-dismiss="modal" class="btn btn-danger">' +
+                                                    '<i class="fa fa-remove"></i> Cerrar</button>');
+                                            });
                                         } else {
                                             tools.ModalAlertWarning("Cobros", result.mensaje);
                                         }
@@ -902,13 +964,76 @@ if (!isset($_SESSION['IdUsuario'])) {
                     });
                 }
 
-                function openPdfComprobante(idIngreso) {
-                    window.open("../app/sunat/pdfingresos.php?idIngreso=" + idIngreso, "_blank");
-                    // window.open("../app/sunat/pdfingresos.php?idIngreso=" + idIngreso, "_blank");
+                function getCorreo(idPersona, idIngreso) {
+                    $("#eviarDocumentoalCorreo").modal("show");
+
+                    $("#btnCloseEnvio").unbind();
+                    $("#btnCancelEnvio").unbind();
+
+                    $("#btnCloseEnvio").bind("click", function() {
+                        $("#eviarDocumentoalCorreo").modal("hide");
+                        $("#txtCorreo").val('');
+                    });
+                    $("#btnCancelEnvio").bind("click", function() {
+                        $("#eviarDocumentoalCorreo").modal("hide");
+                        $("#txtCorreo").val('');
+                    });
+                    $.ajax({
+                        url: "../app/controller/ComprobanteController.php",
+                        method: "GET",
+                        data: {
+                            "type": "correo",
+                            "colegiado": idPersona
+                        },
+                        beforeSend: function() {
+                            $("#txtCorreo").val('');
+                        },
+                        success: function(result) {
+                            if (result.estado == 1) {
+                                if (result.data.length != 0) {
+                                    $("#txtCorreo").val(result.data[0].email);
+                                }
+                            }
+                            $("#btnAceptarEnvio").unbind("click");
+                            $("#btnAceptarEnvio").bind("click", function() {
+                                enviarDocumentoCorreo($("#txtCorreo").val(), idIngreso);
+                            });
+                        },
+                        error: function(error) {
+                            $("#txtCorreo").val('');
+                            $("#btnAceptarEnvio").unbind("click");
+                            $("#btnAceptarEnvio").bind("click", function() {
+                                enviarDocumentoCorreo($("#txtCorreo").val(), idIngreso);
+                            });
+                        }
+                    })
                 }
 
-                function openPdfCertHabilidad() {
-                    window.open("../app/sunat/certHabilidad.php", "_blank");
+                function enviarDocumentoCorreo(correo, idIngreso) {
+                    $.ajax({
+                        url: "../app/sunat/mail.php",
+                        method: 'POST',
+                        data: {
+                            "correodestino": correo,
+                            "idIngreso": idIngreso
+                        },
+                        beforeSend: function() {
+                            $("#eviarDocumentoalCorreo").modal("hide");
+                            $("#txtCorreo").val('');
+                            tools.ModalAlertInfo("Envio Correo", "Procesando petición..");
+                        },
+                        success: function(result) {
+                            if (result.estado == 1) {
+                                tools.ModalAlertSuccess("Envio Correo", result.message);
+
+                            } else {
+                                tools.ModalAlertWarning("Envio Correo", result.message);
+                            }
+                        },
+                        error: function(error) {
+                            tools.ModalAlertError("Envio Correo", "Se produjo un error: " + error.responseText);
+                        }
+                    });
                 }
 
                 function addIngresos() {
@@ -1078,6 +1203,7 @@ if (!isset($_SESSION['IdUsuario'])) {
                     $("#txtIngenieroCertificado").val("");
                     $("#txtIngenieroObra").val("");
                     $("#txtIngenieroProyecto").val("");
+                    newEmpresa = 0;
                     idDNI = 0;
                     cip = 0;
                     tipoColegiado = "";
