@@ -18,7 +18,7 @@ if (!isset($_GET["idIngreso"])) {
         $Apellidosingeniero = $Datos['apellidos'];
         $ConsejoDepartamental = 'JUNIN';
         $NumeroCIP = $Datos['cip'];
-        
+
         $FechaIncorporacion = $Datos['fechaIncorporacion'];
         $DiaIncorporacion = $Datos['fiDia'];
         $MesIncorporacion = $Datos['fiMes'];
@@ -48,9 +48,9 @@ if (!isset($_GET["idIngreso"])) {
         $Mes = $Datos['frMes'];
         $MesFormat = DateTime::createFromFormat('!m', $Mes);
         $MesRegistro = strftime("%B", $MesFormat->getTimestamp());
-        $AnioRegistro = substr($Datos['frAnio'],2,2);
+        $AnioRegistro = substr($Datos['frAnio'], 2, 2);
 
-        $html .= '<html>
+        $html = '<html>
             <head>
                 <style>
                     body {
@@ -93,34 +93,34 @@ if (!isset($_GET["idIngreso"])) {
             <body>
                 <!--############################################## cabecera ###############################################################################-->
                 <div class="header-one">
-                    <div style="padding-left:140px; padding-top:15px;">'.$Nombreingeniero.' '.$Apellidosingeniero.'</div>
+                    <div style="padding-left:140px; padding-top:15px;">' . $Nombreingeniero . ' ' . $Apellidosingeniero . '</div>
                     <div style="padding-left:270px; padding-top:9px;">
-                        <div style="width:250px; float:left;">'.$ConsejoDepartamental.'</div>
-                        <div style="width:130px;padding-left:110px; float:left;">'.$NumeroCIP.'</div>
+                        <div style="width:250px; float:left;">' . $ConsejoDepartamental . '</div>
+                        <div style="width:130px;padding-left:110px; float:left;">' . $NumeroCIP . '</div>
                     </div>
                     <div style="padding-left:155px; padding-top:2px;">
-                        <div style="width:150px; float:left;padding-left:20px;">'.$FechaIncorporacion.'</div>
-                        <div style="width:180px;padding-left:90px; float:left;">'.$Especialidad.'</div>
+                        <div style="width:150px; float:left;padding-left:20px;">' . $FechaIncorporacion . '</div>
+                        <div style="width:180px;padding-left:90px; float:left;">' . $Especialidad . '</div>
                     </div>
                 </div>
                 <div class="header-two">
                     <div style="width:790px; padding-top:5px;">
-                        <div style="width: 350px; float:left; padding-left:140px;">'.$Proyecto.'</div>
+                        <div style="width: 350px; float:left; padding-left:140px;">' . $Proyecto . '</div>
                     </div>
                     <div style="width:790px; padding-top:15px;">
-                        <div style="width: 350px; float:left; padding-left:140px;">'.$Propietario.'</div>
+                        <div style="width: 350px; float:left; padding-left:140px;">' . $Propietario . '</div>
                     </div>
                     <div style="padding-top:5px; width: 790px;">
                         <div style="text-align:center; width:145px; padding-top: 17px; float:left; padding-left:120px; ">
-                            <div style="width: 40px; float:left; padding-left:16px;">'.$DiaVencimiento.'</div>
-                            <div style="width: 40px; float:left; padding-left:5px;">'.$MesVencimiento.'</div>
-                            <div style="width: 40px; float:left;">'.$AnioVencimiento.'</div>
+                            <div style="width: 40px; float:left; padding-left:16px;">' . $DiaVencimiento . '</div>
+                            <div style="width: 40px; float:left; padding-left:5px;">' . $MesVencimiento . '</div>
+                            <div style="width: 40px; float:left;">' . $AnioVencimiento . '</div>
                         </div>
                         <div style="width:520; float:left; padding-top: 19px;">
-                            <div style="width:120px; float:left;  padding-left:197px;">'.$LugarRegistro.'</div>
-                            <div style="width:25px; float:left; padding-left:10px;">'.$DiaRegistro.'</div>
-                            <div style="width:70px; float:left; padding-left:30px;">'.$MesRegistro.'</div>
-                            <div style="width:25px; float:left; padding-left:40px;">'.$AnioRegistro.'</div>
+                            <div style="width:120px; float:left;  padding-left:197px;">' . $LugarRegistro . '</div>
+                            <div style="width:25px; float:left; padding-left:10px;">' . $DiaRegistro . '</div>
+                            <div style="width:70px; float:left; padding-left:30px;">' . $MesRegistro . '</div>
+                            <div style="width:25px; float:left; padding-left:40px;">' . $AnioRegistro . '</div>
                         </div>
                     </div>
                 </div>
@@ -128,40 +128,40 @@ if (!isset($_GET["idIngreso"])) {
 
                 <!--########################################################## Cuerpo del documento ###################################################-->
                 <div class="body-one">
-                    <div style="padding-left:240px; padding-top: 4px;">'.$Nombreingeniero.' '.$Apellidosingeniero.'</div>
-                    <div style="padding-left:355px; padding-top:10px;">'.$ConsejoDepartamental.'</div>
+                    <div style="padding-left:240px; padding-top: 4px;">' . $Nombreingeniero . ' ' . $Apellidosingeniero . '</div>
+                    <div style="padding-left:355px; padding-top:10px;">' . $ConsejoDepartamental . '</div>
                     <div style="padding-left:355px; padding-top:15px; width: 700px;">
-                        <div style="width: 150px; float:left;">'.$NumeroCIP.'</div>
-                        <div style="width: 100px; float:left; padding-left:155px;">'.$FechaIncorporacion.'</div>
+                        <div style="width: 150px; float:left;">' . $NumeroCIP . '</div>
+                        <div style="width: 100px; float:left; padding-left:155px;">' . $FechaIncorporacion . '</div>
                     </div>
-                    <div style="padding-left:240px; padding-top:12px;">'.$Especialidad.'</div>
+                    <div style="padding-left:240px; padding-top:12px;">' . $Especialidad . '</div>
                 </div>
                 <div class="body-two">
-                    <div style="padding-left:270px;">'.$Propietario.'</div>
-                    <div style="padding-left:260px; padding-top:10px;">'.$Proyecto.'</div>
+                    <div style="padding-left:270px;">' . $Propietario . '</div>
+                    <div style="padding-left:260px; padding-top:10px;">' . $Proyecto . '</div>
                 </div>
                 <!--######################################### Fin Cuerpo del documento ##################################################################-->
 
                 <!--################################################## Pie del Documento ###############################################################-->
                 <div class="footer-one">
                     <div style="width:690px; padding-left:215px;">
-                        <div style="width:250px; float:left; padding-top:5px;">'.$Departamento.'</div>
-                        <div style="width:100px; float:left; padding-left:95px;">'.$Provincia.'</div>
+                        <div style="width:250px; float:left; padding-top:5px;">' . $Departamento . '</div>
+                        <div style="width:100px; float:left; padding-left:95px;">' . $Provincia . '</div>
                     </div>
-                    <div style="width:690px; padding-left:200px; padding-top:10px;">'.$Distrito.'</div>
-                    <div style="width:690px; padding-left:300px; padding-top:13px;">'.$UrbAahhPpjjAsoc.'</div>
-                    <div style="width:690px; padding-left:250px; padding-top:12px;">'.$JrAvCallePasaje.'</div>
+                    <div style="width:690px; padding-left:200px; padding-top:10px;">' . $Distrito . '</div>
+                    <div style="width:690px; padding-left:300px; padding-top:13px;">' . $UrbAahhPpjjAsoc . '</div>
+                    <div style="width:690px; padding-left:250px; padding-top:12px;">' . $JrAvCallePasaje . '</div>
                     <div style="width:690px; padding-left:145x; padding-top:63px;">
                         <div style="float:left; width:170; float:left;">
-                            <div style="width:65px; float:left;">'.$DiaVencimiento.'</div>
-                            <div style="width:50px; float:left;">'.$MesVencimiento.'</div>
-                            <div style="width:50px; float:left;">'.$AnioVencimiento.'</div>
+                            <div style="width:65px; float:left;">' . $DiaVencimiento . '</div>
+                            <div style="width:50px; float:left;">' . $MesVencimiento . '</div>
+                            <div style="width:50px; float:left;">' . $AnioVencimiento . '</div>
                         </div>
                         <div style="width:350px; float:left; padding-left: 65px;">
-                            <div style="width:65px; float:left;">'.$LugarRegistro.'</div>    
-                            <div style="width:65px; float:left;padding-left:50px;">'.$DiaRegistro.'</div>
-                            <div style="width:100px; float:left;">'.$MesRegistro.'</div>
-                            <div style="width:50px; float:left;padding-left:17px;">'.$AnioRegistro.'</div>
+                            <div style="width:65px; float:left;">' . $LugarRegistro . '</div>    
+                            <div style="width:65px; float:left;padding-left:50px;">' . $DiaRegistro . '</div>
+                            <div style="width:100px; float:left;">' . $MesRegistro . '</div>
+                            <div style="width:50px; float:left;padding-left:17px;">' . $AnioRegistro . '</div>
                         </div>
                     </div>
 

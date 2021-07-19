@@ -4,7 +4,7 @@ session_start();
 if (!isset($_SESSION['IdUsuario'])) {
     echo '<script>location.href = "./login.php";</script>';
 } else {
-    if ($_SESSION["Permisos"][4]["ver"] == 1) {
+    if ($_SESSION["Permisos"][8]["ver"] == 1) {
 ?>
         <!DOCTYPE html>
         <html lang="en">
@@ -164,7 +164,7 @@ if (!isset($_SESSION['IdUsuario'])) {
 
                         <div class="row">
                             <?php
-                            if ($_SESSION["Permisos"][4]["crear"]) {
+                            if ($_SESSION["Permisos"][8]["crear"]) {
                                 echo '<div class="col-lg-2 col-md-3 col-sm-12 col-xs-12">
                                 <label>Nuevo Cap./Espe.</label>
                                 <div class="form-group">
@@ -261,8 +261,8 @@ if (!isset($_SESSION['IdUsuario'])) {
                 let cbxCapitulos = $("#cbxCapitulo");
                 let cbxCapitulos1 = $("#cbxCapitulo1");
 
-                let editView = "<?= $_SESSION["Permisos"][4]["actualizar"]; ?>";
-                let deleteView = "<?= $_SESSION["Permisos"][4]["eliminar"]; ?>";
+                let editView = "<?= $_SESSION["Permisos"][8]["actualizar"]; ?>";
+                let deleteView = "<?= $_SESSION["Permisos"][8]["eliminar"]; ?>";
 
                 $(document).ready(function() {
 

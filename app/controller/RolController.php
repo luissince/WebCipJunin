@@ -15,7 +15,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
             echo json_encode(array(
                 "estado" => 1,
                 "roles" => $rol[0],
-                "total" =>$rol[1]
+                "total" => $rol[1]
             ));
         } else {
             echo json_encode(array(
@@ -74,12 +74,12 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
         if ($result == "insertado") {
             echo json_encode(array(
                 "estado" => 1,
-                "message" => "Se registraron correctamente los datos",
+                "message" => "Se registrarón correctamente los datos",
             ));
         } else if ($result == "actualizado") {
             echo json_encode(array(
                 "estado" => 1,
-                "message" => "Se actualizaron correctamente los datos",
+                "message" => "Se actualizarón correctamente los datos",
             ));
         } else if ($result == "duplicado") {
             echo json_encode(array(
@@ -92,19 +92,19 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
                 "message" => "Error al tratar de registrar los datos " . $result,
             ));
         }
-    }else if($_POST["type"] === "deletedRol"){
+    } else if ($_POST["type"] === "deletedRol") {
         $result = RolAdo::deleteRol($_POST["idRol"]);
-        if($result == "deleted"){
+        if ($result == "deleted") {
             echo json_encode(array(
                 "estado" => 1,
                 "message" => "Se eleminó correctamente el rol.",
             ));
-        }else if($result == "usuario"){
+        } else if ($result == "usuario") {
             echo json_encode(array(
                 "estado" => 2,
                 "message" => "No se pudo eliminar el rol, porque está asociado a un usuario.",
             ));
-        }else{
+        } else {
             echo json_encode(array(
                 "estado" => 0,
                 "message" => $result,

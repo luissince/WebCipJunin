@@ -280,9 +280,10 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
         $tipoHabilidad = $_GET['tipoHabilidad'];
         $capitulo = $_GET['capitulo'];
         $especialidad = $_GET['especialidad'];
+        $fecha = $_GET['fecha'];
         $posicionPagina = $_GET['posicionPagina'];
         $filasPorPagina = $_GET['filasPorPagina'];
-        $habilidad = PersonaAdo::getHabilidadIngeniero($opcion, $search, intval($tipoHabilidad), intval($capitulo), intval($especialidad), intval($posicionPagina), intval($filasPorPagina));
+        $habilidad = PersonaAdo::getHabilidadIngeniero($opcion, $search, intval($tipoHabilidad), intval($capitulo), intval($especialidad), $fecha, intval($posicionPagina), intval($filasPorPagina));
         if (is_array($habilidad)) {
             echo json_encode(array(
                 "estado" => 1,
@@ -865,7 +866,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
             echo json_encode(array(
                 "estado" => 1,
                 "message" => "Se anularon correctamente los datos",
-                "data" =>$data
+                "data" => $data
             ));
         } else if ($result == 'existed') {
             echo json_encode(array(

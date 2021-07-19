@@ -165,8 +165,10 @@ function Tools() {
     }
 
 
-    this.ModalAlertSuccess = function (title, message) {
-        swal({ title: title, text: message, type: "success", showConfirmButton: true, allowOutsideClick: false });
+    this.ModalAlertSuccess = function (title, message, callback = function () { }) {
+        swal({ title: title, text: message, type: "success", showConfirmButton: true, allowOutsideClick: false }).then(() => {
+            callback()
+        });
     }
     this.ModalAlertWarning = function (title, message) {
         swal({ title: title, text: message, type: "warning", showConfirmButton: true, allowOutsideClick: false });
@@ -262,5 +264,5 @@ function Tools() {
         toastr["info"](message, title)
     }
 
-    
+
 }

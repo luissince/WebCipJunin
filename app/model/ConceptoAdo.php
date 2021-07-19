@@ -685,24 +685,39 @@ class ConceptoAdo
         }
     }
 
-    public static function getCertHabilidad($data)
+    public static function getCertHabilidad($idIngreso)
     {
         try {
             $array = array();
-            $cmdCertificado = Database::getInstance()->getDb()->prepare("SELECT ch.idHabilidad, ch.Fecha, ch.Numero, ch.Asunto, ch.Lugar, 
-                ch.Entidad, ch.idColegiatura, e.Especialidad, p.idDNI, p.Apellidos, p.Nombres 
-                FROM CERTHabilidad AS ch  
-                INNER JOIN Especialidad AS e ON e.idEspecialidad = ch.idColegiatura
-                INNER JOIN Ingreso AS i ON i.idIngreso = ch.idIngreso
-                INNER JOIN Persona AS p ON p.idDNI = i.idDNI
-                where ch.idIngreso = ? ");
-            $cmdCertificado->bindParam(1, $data, PDO::PARAM_STR);
+            $cmdCertificado = Database::getInstance()->getDb()->prepare("SELECT 
+            ch.idHabilidad, 
+            ch.HastaFecha as Fecha, 
+            ch.Numero, 
+            ch.Asunto, 
+            ch.Lugar, 
+            ch.Entidad, 
+            ch.idColegiatura, 
+            e.Especialidad, 
+            p.idDNI, 
+            p.Apellidos, 
+            p.Nombres 
+            FROM CERTHabilidad AS ch  
+            INNER JOIN Especialidad AS e ON e.idEspecialidad = ch.idColegiatura
+            INNER JOIN Ingreso AS i ON i.idIngreso = ch.idIngreso
+            INNER JOIN Persona AS p ON p.idDNI = i.idDNI
+            WHERE ch.idIngreso = ? ");
+            $cmdCertificado->bindParam(1, $idIngreso, PDO::PARAM_STR);
             $cmdCertificado->execute();
 
             $objetCertificado = $cmdCertificado->fetchObject();
 
-            $cmdEspecialidad = Database::getInstance()->getDb()->prepare("SELECT c.idColegiado, c.idEspecialidad, e.Especialidad FROM Colegiatura AS c 
-                INNER JOIN Especialidad AS e ON e.idEspecialidad = c.idEspecialidad where c.idDNI = ?");
+            $cmdEspecialidad = Database::getInstance()->getDb()->prepare("SELECT 
+            c.idColegiado, 
+            c.idEspecialidad, 
+            e.Especialidad 
+            FROM Colegiatura AS c 
+            INNER JOIN Especialidad AS e ON e.idEspecialidad = c.idEspecialidad 
+            WHERE c.idDNI = ?");
             $cmdEspecialidad->bindParam(1, $objetCertificado->idDNI, PDO::PARAM_STR);
             $cmdEspecialidad->execute();
 

@@ -202,9 +202,9 @@ class NotaCreditoAdo
             case when not e.IdEmpresa is null then 6 else 1 end as TipoDocumento,
             case when not e.IdEmpresa is null then 'R.U.C' else 'D.N.I' end as NombreDocumento,
             case when not e.IdEmpresa is null then 'Razón Social' else 'Nombres' end as TipoNombrePersona,
-            isnull(e.NumeroRuc,p.idDNI) as NumeroDocumento,
+            isnull(e.NumeroRuc,p.NumDoc) as NumeroDocumento,
             isnull(e.Nombre,concat(p.Apellidos,' ',p.Nombres)) as DatosPersona,
-            isnull(e.Direccion,p.RUC) as Direccion,
+            isnull(e.Direccion,ISNULL((select top 1 Direccion from Direccion where idDNI = p.idDNI),'')) as Direccion,
             isnull(nc.CodigoHash,'') AS CodigoHash
             FROM  
             NotaCredito AS nc 
@@ -212,7 +212,7 @@ class NotaCreditoAdo
             INNER JOIN TablaMotivoAnulacion AS ta ON ta.IdTablaMotivoAnulacion = nc.idMotivoAnulacion
             INNER JOIN Ingreso AS i ON i.idIngreso = nc.idIngreso
             INNER JOIN TipoComprobante AS tc ON tc.IdTipoComprobante = i.TipoComprobante 
-            INNER JOIN Persona AS p ON p.idDNI = i.idDNI
+            LEFT JOIN Persona AS p ON p.idDNI = i.idDNI
 			LEFT JOIN EmpresaPersona AS e ON e.IdEmpresa = i.idEmpresaPersona            
             WHERE nc.idNotaCredito = ?");
             $cmdNotaCredito->bindParam(1, $idNotaCredito, PDO::PARAM_INT);
@@ -299,7 +299,7 @@ class NotaCreditoAdo
         try {
             Database::getInstance()->getDb()->beginTransaction();
 
-            $codigoSerieNumeracion = Database::getInstance()->getDb()->prepare("SELECT dbo.Fc_Serie_Numero(?)");
+            $codigoSerieNumeracion = Database::getInstance()->getDb()->prepare("SELECT dbo.Fc_Serie_Numero_NotaCredito(?)");
             $codigoSerieNumeracion->bindParam(1, $body["idTipoNotaCredito"], PDO::PARAM_STR);
             $codigoSerieNumeracion->execute();
             $serie_numeracion = explode("-", $codigoSerieNumeracion->fetchColumn());

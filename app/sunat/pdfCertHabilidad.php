@@ -44,7 +44,7 @@ if (!isset($_GET["idIngreso"])) {
         $MesRegistro = strftime("%B", $MesFormat->getTimestamp());
         $AnioRegistro = substr($Datos['frAnio'],2,2);
 
-        $html .= '<html>
+        $html = '<html>
             <head>
                 <style>
                     body {
@@ -185,4 +185,3 @@ if (!isset($_GET["idIngreso"])) {
         $mpdf->Output(" CIP-JUNIN.pdf", 'I');
     }
 }
-?>

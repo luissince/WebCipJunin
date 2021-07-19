@@ -31,8 +31,8 @@ class Informacion
             e.Especialidad,
             ca.Capitulo,
             CASE p.Condicion WHEN 'V' THEN 'VITALICIO' WHEN 'R' THEN 'RETIRADO' WHEN 'F' THEN 'FALLECIDO' WHEN 'T' THEN 'TRANSEUNTE' ELSE 'ORDINARIO' END AS Condicion,
-            CONVERT(VARCHAR,CAST(ISNULL(uc.FechaUltimaCuota,C.FechaColegiado) AS DATE),103) AS FechaUltimaCuota,
-            CONVERT(VARCHAR,CAST(DATEADD(MONTH,CASE p.Condicion WHEN 'O' THEN 3 WHEN 'V' THEN 9 ELSE 0 END,ISNULL(uc.FechaUltimaCuota,C.FechaColegiado)) AS DATE),103) AS HabilitadoHasta,
+            CAST(ISNULL(uc.FechaUltimaCuota,C.FechaColegiado) AS DATE) AS FechaUltimaCuota,
+            CAST(DATEADD(MONTH,CASE p.Condicion WHEN 'O' THEN 3 WHEN 'V' THEN 9 ELSE 0 END,ISNULL(uc.FechaUltimaCuota,C.FechaColegiado)) AS DATE) AS HabilitadoHasta,
             CASE
             WHEN CAST (DATEDIFF(M,DATEADD(MONTH,CASE p.Condicion WHEN 'O' THEN 3 WHEN 'V' THEN 9 ELSE 0 END,ISNULL(uc.FechaUltimaCuota, C.FechaColegiado)) , GETDATE()) AS INT) <=0 THEN 1
             ELSE 0 END AS Habilidad,

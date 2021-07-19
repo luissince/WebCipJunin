@@ -4,7 +4,7 @@ session_start();
 if (!isset($_SESSION['IdUsuario'])) {
     echo '<script>location.href = "./login.php";</script>';
 } else {
-    if ($_SESSION["Permisos"][1]["ver"] == 1) {
+    if ($_SESSION["Permisos"][17]["ver"] == 1) {
 ?>
         <!DOCTYPE html>
         <html lang="en">
@@ -24,158 +24,162 @@ if (!isset($_SESSION['IdUsuario'])) {
                 <?php include('./layout/menu.php') ?>
                 <!-- end menu -->
                 <!-- Content Wrapper. Contains page content -->
+                <!-- modal nuevo Comprobante  -->
+                <div class="row">
+                    <div class="modal fade" id="NuevoComprobante">
+                        <div class="modal-dialog">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <button type="button" class="close" id="btnCloseComprobante">
+                                        <i class="fa fa-close"></i>
+                                    </button>
+                                    <h4 class="modal-title" id="modal-comprobante-title">
+                                        <i class="fa fa-file-text-o"></i> Registrar comprobante
+                                    </h4>
+                                </div>
+                                <div class="modal-body">
+                                    <div class="row">
+                                        <div class="col-md-12">
+                                            <div class="form-group">
+                                                <label for="txtNombre">Nombre: <i class="fa fa-fw fa-asterisk text-danger"></i></label>
+                                                <input id="txtNombre" type="text" class="form-control" placeholder="Ingrese Nombre" required="" minlength="11">
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="row">
+                                        <div class="col-md-4">
+                                            <div class="form-group">
+                                                <label for="txtSerie">Serie: <i class="fa fa-fw fa-asterisk text-danger"></i></label>
+                                                <input id="txtSerie" type="text" class="form-control" placeholder="Serie ejemp (B001/F001)" required="">
+                                            </div>
+                                        </div>
+                                        <div class="col-md-4">
+                                            <div class="form-group">
+                                                <label for="txtNumeracion">Numeracion: <i class="fa fa-fw fa-asterisk text-danger"></i></label>
+                                                <input id="txtNumeracion" type="number" class="form-control" placeholder="Ingrese numeracion" required="">
+                                            </div>
+                                        </div>
+                                        <div class="col-md-4">
+                                            <div class="form-group">
+                                                <label for="txtAlterno">Codigo Alterno: <i class="fa fa-fw fa-asterisk text-danger"></i></label>
+                                                <input id="txtAlterno" type="number" class="form-control" placeholder="Codigo alterno" required="">
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="row">
+                                        <div class="col-md-4">
+                                            <div class="form-group">
+                                                <label for="cbPredeterminado">Predeterminado:</label>
+                                                <div class="checkbox">
+                                                    <label>
+                                                        <input type="checkbox" id="cbPredeterminado">
+                                                        Si
+                                                    </label>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-4">
+                                            <div class="form-group">
+                                                <label for="cbEstado">Estado:</label>
+                                                <div class="checkbox">
+                                                    <label>
+                                                        <input type="checkbox" id="cbEstado">
+                                                        Activo
+                                                    </label>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-4">
+                                            <div class="form-group">
+                                                <label for="cbUsaRuc">Usa RUC:</label>
+                                                <div class="checkbox">
+                                                    <label>
+                                                        <input type="checkbox" id="cbUsaRuc">
+                                                        Si
+                                                    </label>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="col-md-12" style="border-top: 1px solid #cacacb; margin: 5px 0 15px 0;">
+                                    </div>
+
+                                    <div class="row">
+                                        <div class="col-md-6">
+                                            <div class="form-group">
+                                                <label for="rbGuiaRemision">Comprobante para Guía de Remisión:</label>
+                                                <div class="radio">
+                                                    <label>
+                                                        <input type="radio" id="rbGuiaRemision" name="optionRadio">
+                                                        Si
+                                                    </label>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <div class="form-group">
+                                                <label for="rbFacturado">Comprobante Facturado:</label>
+                                                <div class="radio">
+                                                    <label>
+                                                        <input type="radio" id="rbFacturado" name="optionRadio">
+                                                        Si
+                                                    </label>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="row">
+                                        <div class="col-md-6">
+                                            <div class="form-group">
+                                                <label for="rbNotaCredito">Comprobante para Nota de crédito:</label>
+                                                <div class="radio">
+                                                    <label>
+                                                        <input type="radio" id="rbNotaCredito" name="optionRadio">
+                                                        Si
+                                                    </label>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                </div>
+                                <div class="modal-footer">
+                                    <p class="text-left text-danger">Todos los campos marcados con <i class="fa fa-fw fa-asterisk text-danger"></i> son obligatorios</p>
+                                    <button type="submit" class="btn btn-danger" id="btnAceptarAddComprobante">
+                                        <i class="fa fa-check"></i> Aceptar</button>
+                                    <button type="button" class="btn btn-primary" id="btnCancelarAddComprobante">
+                                        <i class="fa fa-remove"></i> Cancelar</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- final modal nuevo comprobante -->
                 <div class="content-wrapper" style="background-color: #FFFFFF;">
                     <!-- Main content -->
                     <section class="content-header">
                         <h3 class="no-margin"> Comprobantes <small> Lista </small> </h3>
                     </section>
 
-                    <!-- modal nuevo Comprobante  -->
-                    <div class="row">
-                        <div class="modal fade" id="NuevoComprobante">
-                            <div class="modal-dialog">
-                                <div class="modal-content">
-                                    <div class="modal-header">
-                                        <button type="button" class="close" id="btnCloseComprobante">
-                                            <i class="fa fa-close"></i>
-                                        </button>
-                                        <h4 class="modal-title" id="modal-comprobante-title">
-                                            <i class="fa fa-file-text-o"></i> Registrar comprobante
-                                        </h4>
-                                    </div>
-                                    <div class="modal-body">
-                                        <div class="row">
-                                            <div class="col-md-12">
-                                                <div class="form-group">
-                                                    <label for="txtNombre">Nombre: <i class="fa fa-fw fa-asterisk text-danger"></i></label>
-                                                    <input id="txtNombre" type="text" class="form-control" placeholder="Ingrese Nombre" required="" minlength="11">
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="row">
-                                            <div class="col-md-4">
-                                                <div class="form-group">
-                                                    <label for="txtSerie">Serie: <i class="fa fa-fw fa-asterisk text-danger"></i></label>
-                                                    <input id="txtSerie" type="text" class="form-control" placeholder="Serie ejemp (B001/F001)" required="">
-                                                </div>
-                                            </div>
-                                            <div class="col-md-4">
-                                                <div class="form-group">
-                                                    <label for="txtNumeracion">Numeracion: <i class="fa fa-fw fa-asterisk text-danger"></i></label>
-                                                    <input id="txtNumeracion" type="number" class="form-control" placeholder="Ingrese numeracion" required="">
-                                                </div>
-                                            </div>
-                                            <div class="col-md-4">
-                                                <div class="form-group">
-                                                    <label for="txtAlterno">Codigo Alterno: <i class="fa fa-fw fa-asterisk text-danger"></i></label>
-                                                    <input id="txtAlterno" type="number" class="form-control" placeholder="Codigo alterno" required="">
-                                                </div>
-                                            </div>
-                                        </div>
-
-                                        <div class="row">
-                                            <div class="col-md-4">
-                                                <div class="form-group">
-                                                    <label for="cbPredeterminado">Predeterminado:</label>
-                                                    <div class="checkbox">
-                                                        <label>
-                                                            <input type="checkbox" id="cbPredeterminado">
-                                                            Si
-                                                        </label>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            <div class="col-md-4">
-                                                <div class="form-group">
-                                                    <label for="cbEstado">Estado:</label>
-                                                    <div class="checkbox">
-                                                        <label>
-                                                            <input type="checkbox" id="cbEstado">
-                                                            Activo
-                                                        </label>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            <div class="col-md-4">
-                                                <div class="form-group">
-                                                    <label for="cbUsaRuc">Usa RUC:</label>
-                                                    <div class="checkbox">
-                                                        <label>
-                                                            <input type="checkbox" id="cbUsaRuc">
-                                                            Si
-                                                        </label>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-
-                                        <div class="col-md-12" style="border-top: 1px solid #cacacb; margin: 5px 0 15px 0;">
-                                        </div>
-
-                                        <div class="row">
-                                            <div class="col-md-6">
-                                                <div class="form-group">
-                                                    <label for="rbGuiaRemision">Comprobante para Guía de Remisión:</label>
-                                                    <div class="radio">
-                                                        <label>
-                                                            <input type="radio" id="rbGuiaRemision" name="optionRadio">
-                                                            Si
-                                                        </label>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            <div class="col-md-6">
-                                                <div class="form-group">
-                                                    <label for="rbFacturado">Comprobante Facturado:</label>
-                                                    <div class="radio">
-                                                        <label>
-                                                            <input type="radio" id="rbFacturado" name="optionRadio">
-                                                            Si
-                                                        </label>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-
-                                        <div class="row">
-                                            <div class="col-md-6">
-                                                <div class="form-group">
-                                                    <label for="rbNotaCredito">Comprobante para Nota de crédito:</label>
-                                                    <div class="radio">
-                                                        <label>
-                                                            <input type="radio" id="rbNotaCredito" name="optionRadio">
-                                                            Si
-                                                        </label>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-
-                                    </div>
-                                    <div class="modal-footer">
-                                        <p class="text-left text-danger">Todos los campos marcados con <i class="fa fa-fw fa-asterisk text-danger"></i> son obligatorios</p>
-                                        <button type="submit" class="btn btn-danger" id="btnAceptarAddComprobante">
-                                            <i class="fa fa-check"></i> Aceptar</button>
-                                        <button type="button" class="btn btn-primary" id="btnCancelarAddComprobante">
-                                            <i class="fa fa-remove"></i> Cancelar</button>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <!-- final modal nuevo comprobante -->
-
                     <section class="content">
 
                         <div class="row">
-                            <div class="col-lg-2 col-md-3 col-sm-12 col-xs-12">
-                                <label>Nuevo Comprobante.</label>
-                                <div class="form-group">
-                                    <button type="button" class="btn btn-success" id="btnNuevoComprobante">
-                                        <i class="fa fa-plus"></i> Agregar
-                                    </button>
-                                </div>
-                            </div>
+                            <?php
+
+                            if ($_SESSION["Permisos"][17]["crear"] == 1) {
+                                echo '
+                                <div class="col-lg-2 col-md-3 col-sm-12 col-xs-12">
+                                    <label>Nuevo Comprobante.</label>
+                                    <div class="form-group">
+                                        <button type="button" class="btn btn-success" id="btnNuevoComprobante">
+                                            <i class="fa fa-plus"></i> Agregar
+                                        </button>
+                                    </div>
+                                </div>';
+                            } ?>
 
                             <div class="col-lg-2 col-md-3 col-sm-12 col-xs-12">
                                 <label>Opción.</label>
@@ -266,8 +270,8 @@ if (!isset($_SESSION['IdUsuario'])) {
                 let filasPorPagina = 10;
                 let tbTable = $("#tbTable");
 
-                let editView = "<?= $_SESSION["Permisos"][11]["actualizar"]; ?>";
-                let deleteView = "<?= $_SESSION["Permisos"][11]["eliminar"]; ?>";
+                let editView = "<?= $_SESSION["Permisos"][17]["actualizar"]; ?>";
+                let deleteView = "<?= $_SESSION["Permisos"][17]["eliminar"]; ?>";
 
                 let idComprobante = 0;
 

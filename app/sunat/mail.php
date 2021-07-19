@@ -4,7 +4,6 @@ header("Access-Control-Allow-Headers: Origin, X-Requested-With, Content-Type, Ac
 header('Access-Control-Allow-Methods: GET, POST, PUT, DELETE');
 header('Content-Type: application/json; charset=UTF-8');
 
-
 define('_MPDF_PATH', '/lib');
 require('./lib/mpdf/vendor/autoload.php');
 include('../src/GenerateCoinToLetters.php');
@@ -18,8 +17,6 @@ use PHPMailer\PHPMailer\Exception;
 
 //Load Composer's autoloader
 require './lib/phpmail/vendor/autoload.php';
-
-
 
 try {
 
@@ -390,8 +387,8 @@ try {
                             //Create an instance; passing `true` enables exceptions
                             $mail = new PHPMailer(true);
 
-                            $fromname = "Rahamsis";
-                            $fromEmail = "mirhaslove_24@hotmail.com";
+                            $fromname = "Tesorería Colegio de Ingenieros del Perú - CD Junín";
+                            $fromEmail = "tesoreria@cip-junin.org.pe";
 
 
 
@@ -402,7 +399,7 @@ try {
                             $mail->Host       = 'smtp.live.com';                     //Set the SMTP server to send through
                             $mail->SMTPAuth   = true; //"login";                    //Enable SMTP authentication
                             $mail->Username   = $fromEmail;                     //SMTP username
-                            $mail->Password   = 'Rahamsislove';                               //SMTP password
+                            $mail->Password   = 'Cipjunin2021';                               //SMTP password
                             $mail->SMTPSecure = "TLS";            //Enable implicit TLS encryption
                             $mail->Port       = 587;                                 //TCP port to connect to; use 587 if you have set `SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS`
 
@@ -432,7 +429,7 @@ try {
                                         </tr>
                                         <tr style="width:100%;">
                                             <td style="width:20%;"></td>
-                                            <td style="width:60%; font-size:18px; padding-left:15px;">Ingeniero(a): '. $ingreso->Apellidos . ' ' . $ingreso->Nombres .'</td>
+                                            <td style="width:60%; font-size:18px; padding-left:15px;">Ingeniero(a): ' . $ingreso->Apellidos . ' ' . $ingreso->Nombres . '</td>
                                             <td style="width:20%;"></td>
                                         </tr>
                                         <tr style="width:100%;">
@@ -457,7 +454,7 @@ try {
 
                             // $mail->Body    = 'Saludos Ingeniero(a): ' . $ingreso->Apellidos . ' ' . $ingreso->Nombres . '</b> 
                             //                     Se le adjunta el comprobante emitido hacia su persona </b> Saludos Coordiales';
-                            $mail->AltBody = 'Ingeniero(a): '. $ingreso->Apellidos . ' ' . $ingreso->Nombres .' Reciba nuestro más cordial saludo, se le escribe para informarle que el 
+                            $mail->AltBody = 'Ingeniero(a): ' . $ingreso->Apellidos . ' ' . $ingreso->Nombres . ' Reciba nuestro más cordial saludo, se le escribe para informarle que el 
                             comprobante emitido hacia su persona fue realizado con éxito. Adjuntamos dicho comprobante.';
 
                             //Attachments
@@ -466,7 +463,7 @@ try {
                             // $mail->addAttachment('./images/ayuda.png', 'imagen');    //Optional name
 
                             $mail->send();
-                            
+
                             // echo 'Message has been sent';
                             print json_encode(array(
                                 "estado" => 1,
@@ -480,9 +477,8 @@ try {
                         "estado" => 0,
                         "message" => "El mensaje no pudo ser enviado. Mailer Error",
                     ));
-                }finally{
-                    if(!is_null($fileName )){
+                } finally {
+                    if (!is_null($fileName)) {
                         unlink($fileName . " CIP-JUNIN.pdf");
                     }
-                  
                 }

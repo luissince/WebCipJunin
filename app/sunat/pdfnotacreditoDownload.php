@@ -363,6 +363,6 @@ if (!isset($_GET["idNotaCredito"])) {
         $mpdf->WriteHTML($html);
 
         // Output a PDF file directly to the browser
-        $mpdf->Output("NOTA DE CRÉDITO " . $notacredito->NotaCreditoSerie . "-" . $notacredito->NotaCreditoNumeracion . '.pdf', 'I');
+        $mpdf->Output("NOTA DE CRÉDITO " . $notacredito->NotaCreditoSerie . "-" . $notacredito->NotaCreditoNumeracion . '.pdf', 'D');
     }
 }

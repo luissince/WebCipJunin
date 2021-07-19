@@ -453,7 +453,27 @@ class IngresosAdo
             Database::getInstance()->getDb()->beginTransaction();
 
             $array = array();
-            $resultCliente = null;
+            $cmdPersona = Database::getInstance()->getDb()->prepare("SELECT 
+            p.idDNI,
+            p.CIP,
+            p.Nombres,
+            p.Apellidos,
+            p.Sexo,
+            p.Condicion,
+            ca.Capitulo,
+            e.Especialidad,
+            c.FechaColegiado
+            FROM Persona AS p 
+            INNER JOIN Colegiatura AS c ON c.idDNI = p.idDNI AND c.Principal = 1
+            INNER JOIN Especialidad AS e ON e.idEspecialidad = c.idEspecialidad
+            INNER JOIN Capitulo AS ca ON ca.idCapitulo = e.idCapitulo
+            WHERE p.idDNI = ?");
+            $cmdPersona->bindParam(1, $body["idCliente"], PDO::PARAM_STR);
+            $cmdPersona->execute();
+            $resultCliente = $cmdPersona->fetchObject();
+            if (!$resultCliente) {
+                throw new Exception("No se pudo completar el cobro porque el Ingeniero no tiene registrado sus datos de colegiatura, comuníquese con el área de sistemas.");
+            }
 
             $codigoSerieNumeracion = Database::getInstance()->getDb()->prepare("SELECT dbo.Fc_Serie_Numero(?)");
             $codigoSerieNumeracion->bindParam(1, $body["idTipoDocumento"], PDO::PARAM_STR);
@@ -490,27 +510,6 @@ class IngresosAdo
                 $cmdCuota->bindParam(2, $body["cuotasInicio"], PDO::PARAM_STR);
                 $cmdCuota->bindParam(3, $body["cuotasFin"], PDO::PARAM_STR);
                 $cmdCuota->execute();
-
-                $cmdPersona = Database::getInstance()->getDb()->prepare("SELECT 
-                p.CIP,
-                p.Nombres,
-                p.Apellidos,
-                p.Sexo,
-                p.Condicion,
-                ca.Capitulo,
-                e.Especialidad,
-                c.FechaColegiado
-                FROM Persona AS p 
-                INNER JOIN Colegiatura AS c ON c.idDNI = p.idDNI AND c.Principal = 1
-                INNER JOIN Especialidad AS e ON e.idEspecialidad = c.idEspecialidad
-                INNER JOIN Capitulo AS ca ON ca.idCapitulo = e.idCapitulo
-                WHERE p.idDNI = ?");
-                $cmdPersona->bindParam(1, $body["idCliente"], PDO::PARAM_STR);
-                $cmdPersona->execute();
-                $resultCliente = $cmdPersona->fetchObject();
-                if (!$resultCliente) {
-                    throw new Exception("No se pudo completar el ingreso porque el colegiado no tiene registrado todo sus datos de colegiatura, comuníquese con el área de sistemas.");
-                }
 
                 $countResolucion15 = 0;
                 foreach ($body["ingresos"] as $value) {
@@ -737,7 +736,7 @@ class IngresosAdo
             case when not e.IdEmpresa is null then 'Razón Social' else 'Nombres' end as TipoNombrePersona,
             isnull(e.NumeroRuc,p.NumDoc) as NumeroDocumento,
             isnull(e.Nombre,concat(p.Apellidos,' ',p.Nombres)) as DatosPersona,
-            isnull(e.Direccion,p.RUC) as Direccion,
+            isnull(e.Direccion,ISNULL((select top 1 Direccion from Direccion where idDNI = p.idDNI),'')) as Direccion,
 			p.CIP,
             p.NumDoc, 
             p.Apellidos,
@@ -752,7 +751,7 @@ class IngresosAdo
 			LEFT JOIN Capitulo AS ca ON ca.idCapitulo = es.idCapitulo
 			LEFT JOIN EmpresaPersona AS e ON e.IdEmpresa = i.idEmpresaPersona
             INNER JOIN TipoComprobante AS t ON t.IdTipoComprobante = i.TipoComprobante 
-            WHERE i.idIngreso = ? ");
+            WHERE i.idIngreso = ?");
             $cmdIngreso->bindParam(1, $idIngreso, PDO::PARAM_INT);
             $cmdIngreso->execute();
             $resultIngreso = $cmdIngreso->fetchObject();

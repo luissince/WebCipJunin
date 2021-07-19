@@ -40,7 +40,7 @@ class RolAdo
             $comandoRoles->execute();
             $resultTotal = $comandoRoles->fetchColumn();
 
-            array_push($array,$arrayRoles,$resultTotal);
+            array_push($array, $arrayRoles, $resultTotal);
             return $array;
         } catch (Exception $ex) {
             return $ex->getMessage();
@@ -140,7 +140,7 @@ class RolAdo
 
                 $cmdRol = Database::getInstance()->getDb()->prepare("DELETE FROM Rol WHERE idRol = ?");
                 $cmdRol->bindParam(1, $idRol, PDO::PARAM_STR);
-                $cmdRol->execute();            
+                $cmdRol->execute();
 
                 Database::getInstance()->getDb()->commit();
                 return "deleted";
@@ -174,10 +174,17 @@ class RolAdo
     {
         try {
             $array = array();
-            $comando = Database::getInstance()->getDb()->prepare("SELECT p.idPermiso,p.idRol,m.nombre,p.ver,p.crear,p.actualizar,p.eliminar 
-           FROM Permiso AS p
-           INNER JOIN Modulo AS m ON m.idModulo = p.idModulo
-           WHERE idRol = ?");
+            $comando = Database::getInstance()->getDb()->prepare("SELECT 
+            p.idPermiso,
+            p.idRol,
+            m.nombre,
+            p.ver,
+            p.crear,
+            p.actualizar,
+            p.eliminar 
+            FROM Permiso AS p
+            INNER JOIN Modulo AS m ON m.idModulo = p.idModulo
+            WHERE idRol = ?");
             $comando->bindValue(1, $idRol, PDO::PARAM_INT);
             $comando->execute();
             $count = 0;

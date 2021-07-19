@@ -113,12 +113,11 @@ $result = process($get);
 
 if (isset($result)) {
     if ($result->isSuccess()) {
-
         if (!is_null($result->getCdrResponse())) {
-            if (!is_null($filename)){
-                $file = '/files/'.$filename;
-            }else{
-                $file="";
+            if (!is_null($filename)) {
+                $file = '/files/' . $filename;
+            } else {
+                $file = "";
             }
             echo json_encode(array(
                 "state" => true,
@@ -127,7 +126,7 @@ if (isset($result)) {
                 "message" => $result->getMessage(),
                 "comprobante" => $result->getCdrResponse()->getDescription(),
                 "descripcon" => $result->getCdrResponse()->getNotes(),
-                "file"=>$file
+                "file" => $file
             ));
         } else {
             echo json_encode(array(
