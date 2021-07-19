@@ -949,17 +949,17 @@ if (!isset($_SESSION['IdUsuario'])) {
                             "capitulo": capitulo
                         },
                         beforeSend: function() {
-                            tools.ModalAlertInfo("Cobros", "Actualizando su habilidad del Ingeniero...");
+                            //tools.ModalAlertInfo("Cobros", "Actualizando su habilidad del Ingeniero...");
                         },
                         success: function(result) {
-                            if (result.estado == 1) {
-                                tools.ModalAlertSuccess("Cobros", result.mensaje);
-                            } else {
-                                tools.ModalAlertWarning("Cobros", result.mensaje);
-                            }
+                            // if (result.estado == 1) {
+                            //     tools.ModalAlertSuccess("Cobros", result.mensaje);
+                            // } else {
+                            //     tools.ModalAlertWarning("Cobros", result.mensaje);
+                            // }
                         },
                         error: function(error) {
-                            tools.ModalAlertError("Cobros", "Error de conexión, actualize su habilidad desde el panel ingenieros/habilidad.");
+                            //tools.ModalAlertError("Cobros", "Error de conexión, actualize su habilidad desde el panel ingenieros/habilidad.");
                         }
                     });
                 }
