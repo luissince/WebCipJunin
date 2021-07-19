@@ -1,3 +1,4 @@
 /nbproject/private/
 # Ignora la carpeta file
 app/files
+app/cache

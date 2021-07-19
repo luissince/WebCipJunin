@@ -124,14 +124,19 @@ if (!isset($_SESSION['IdUsuario'])) {
                                     <input type="date" class="form-control" id="fechaFinal">
                                 </div>
                             </div>
-                            <div class="col-md-3 col-sm-12 col-xs-12">
+                            <?php
+                            if ($_SESSION["Permisos"][20]["crear"] == 1) {
+                                echo '<div class="col-md-3 col-sm-12 col-xs-12">
                                 <label>Envío masivo.</label>
                                 <div class="form-group">
                                     <div class="input-group">
                                         <button class="btn btn-danger" id="btnEnvioMasivo"><i class="fa fa-gg-circle"></i> Envío masivo a sunat</button>
                                     </div>
                                 </div>
-                            </div>
+                            </div>';
+                            }
+                            ?>
+
                         </div>
 
                         <div class="row">
@@ -217,6 +222,10 @@ if (!isset($_SESSION['IdUsuario'])) {
                 let paginacion = 0;
                 let filasPorPagina = 10;
                 let tbTable = $("#tbTable");
+
+                let addView = "<?= $_SESSION["Permisos"][20]["crear"]; ?>";
+                let editView = "<?= $_SESSION["Permisos"][20]["actualizar"]; ?>";
+                let deleteView = "<?= $_SESSION["Permisos"][20]["eliminar"]; ?>";
 
                 $(document).ready(function() {
 
@@ -396,7 +405,7 @@ if (!isset($_SESSION['IdUsuario'])) {
                                             '<i class="fa fa-eye" style="font-size:25px;"></i></br>' +
                                             '</button>';
 
-                                        let estadosunat =
+                                        let estadosunat = addView == 0 ? '<i class="fa fa-minus" style="font-size:20px;"></i>' :
                                             (notacredito.Xmlsunat === "" ?
                                                 '<button class="btn btn-default btn-xs" onclick="facturarXml(\'' + notacredito.idNotaCredito + '\')"><img src="./images/reuse.svg" width="26" /></button>' :
                                                 notacredito.Xmlsunat === "0" ?
