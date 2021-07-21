@@ -4,7 +4,7 @@ session_start();
 if (!isset($_SESSION['IdUsuario'])) {
     echo '<script>location.href = "./login.php";</script>';
 } else {
-    if ($_SESSION["Permisos"][16]["ver"] == 1) {
+    if ($_SESSION["Permisos"][23]["ver"] == 1) {
 ?>
         <!DOCTYPE html>
         <html lang="en">
@@ -67,7 +67,7 @@ if (!isset($_SESSION['IdUsuario'])) {
                                         <div class="col-md-12">
                                             <div class="form-group">
                                                 <label for="NumeroCuentaInterbancaria">Numero de Cuenta Interbancaria: <i class="fa fa-fw fa-asterisk text-danger"></i></label>
-                                                <input id="NumeroCuentaInterbancaria" type="number" class="form-control" placeholder="Numero de cuenta interbancaria" required="">
+                                                <input id="NumeroCuentaInterbancaria" type="text" class="form-control" placeholder="Numero de cuenta interbancaria" required="">
                                             </div>
                                         </div>
                                     </div>
@@ -106,7 +106,7 @@ if (!isset($_SESSION['IdUsuario'])) {
                         <div class="row">
 
                             <?php
-                            if ($_SESSION["Permisos"][16]["crear"]) {
+                            if ($_SESSION["Permisos"][23]["crear"]) {
                                 echo '<div class="col-lg-2 col-md-3 col-sm-12 col-xs-12">
                                 <label>Nueva Entidad.</label>
                                 <div class="form-group">
@@ -202,8 +202,8 @@ if (!isset($_SESSION['IdUsuario'])) {
                 let filasPorPagina = 10;
                 let tbTable = $("#tbTable");
 
-                let editView = "<?= $_SESSION["Permisos"][16]["actualizar"]; ?>";
-                let deleteView = "<?= $_SESSION["Permisos"][16]["eliminar"]; ?>";
+                let editView = "<?= $_SESSION["Permisos"][23]["actualizar"]; ?>";
+                let deleteView = "<?= $_SESSION["Permisos"][23]["eliminar"]; ?>";
 
                 let idBanco = 0;
 
@@ -396,7 +396,7 @@ if (!isset($_SESSION['IdUsuario'])) {
                         tools.ModalDialog("Banco", "¿Está seguro de continuar?", function(value) {
                             if (value == true) {
                                 $.ajax({
-                                    url: "../app/controller/bancoController.php",
+                                    url: "../app/controller/BancoController.php",
                                     method: "POST",
                                     data: {
                                         "type": "addBanco",
@@ -407,16 +407,12 @@ if (!isset($_SESSION['IdUsuario'])) {
                                         "estado": $("#estado").is(":checked"),
                                     },
                                     beforeSend: function() {
+                                        clearModalBanco();
                                         tools.ModalAlertInfo("Banco", "Procesando petición..");
                                     },
                                     success: function(result) {
                                         if (result.estado === 1) {
                                             loadInitBancos();
-                                            clearModalBanco();
-                                            tools.ModalAlertSuccess("Banco", result.mensaje);
-                                        } else if (result.estado === 2) {
-                                            loadInitBancos();
-                                            clearModalBanco();
                                             tools.ModalAlertSuccess("Banco", result.mensaje);
                                         } else {
                                             tools.ModalAlertWarning("Banco", result.mensaje);
@@ -462,7 +458,6 @@ if (!isset($_SESSION['IdUsuario'])) {
                             }
                         },
                         error: function(error) {
-                            console.log(error)
                             $("#modal-Banco-title").empty();
                             $("#modal-Banco-title").append('<i class="fa fa-bank"> </i> Entidad Bancaria');
                             tools.AlertError("Error", error.responseText);
@@ -474,7 +469,7 @@ if (!isset($_SESSION['IdUsuario'])) {
                     tools.ModalDialog("Banco", "¿Está seguro de eliminar la entidad bancaria?", function(value) {
                         if (value == true) {
                             $.ajax({
-                                url: "../app/controller/bancoController.php",
+                                url: "../app/controller/BancoController.php",
                                 method: "POST",
                                 data: {
                                     "type": "deleteBanco",
@@ -487,7 +482,7 @@ if (!isset($_SESSION['IdUsuario'])) {
                                 success: function(result) {
                                     if (result.estado == 1) {
                                         tools.ModalAlertSuccess("Banco", result.message);
-                                        loadInitBancos();                                       
+                                        loadInitBancos();
                                     } else {
                                         tools.ModalAlertWarning("Banco", result.message);
                                     }
@@ -500,7 +495,7 @@ if (!isset($_SESSION['IdUsuario'])) {
                     });
                 }
 
-                
+
                 function clearModalBanco() {
                     $("#NuevoBanco").modal("hide");
                     $("#Nombre").val("");
@@ -509,6 +504,7 @@ if (!isset($_SESSION['IdUsuario'])) {
                     $("#Pagina_web").val("");
                     $("#estado").prop('checked', true);
                     $("#lblEstado").html("Activo");
+                    idBanco = 0;
                 }
             </script>
         </body>

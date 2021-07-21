@@ -1175,8 +1175,8 @@ if (!isset($_SESSION['IdUsuario'])) {
 
                     $("#lblSumaTotal").html(tools.formatMoney(sumaTotal));
                     $("#totalModal").html('S/ ' + tools.formatMoney(sumaTotal));
-                    $("#txtMonto").val(sumaTotal);
-                    $("#txtMontoTarjeta").val(sumaTotal);
+                    $("#txtMonto").val(tools.formatMoney(sumaTotal));
+                    $("#txtMontoTarjeta").val(tools.formatMoney(sumaTotal));
                 }
 
                 function removeIngresos(idConcepto, categoria) {

@@ -68,10 +68,10 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
             ));
         } else if ($result == "Actualizado") {
             echo json_encode(array(
-                "estado" => 2,
+                "estado" => 1,
                 "mensaje" => "Se actualizó correctamente.",
             ));
-        }else {
+        } else {
             echo json_encode(array(
                 "estado" => 3,
                 "mensaje" => $result
@@ -86,13 +86,12 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
                 "estado" => 1,
                 "message" => "Se eliminaron correctamente los datos",
             ));
-        }else if ($result =="ingreso"){
+        } else if ($result == "ingreso") {
             echo json_encode(array(
                 "estado" => 2,
                 "message" => "No se pudo eliminar el banco, ya que esta ligado a un ingreso.",
             ));
-        }
-        else {
+        } else {
             echo json_encode(array(
                 "estado" => 0,
                 "message" => "Error al tratar de eliminar los datos " . $result,
