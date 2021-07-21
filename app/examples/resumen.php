@@ -56,7 +56,7 @@ if (!is_array($detalleventa)) {
                 ->setDireccion($empresa->Domicilio))
             ->setEmail($empresa->Telefono)
             ->setTelephone($empresa->Email);
-
+            
         $detiail1 = new SummaryDetail();
         $detiail1->setTipoDoc($ingreso->TipoComprobante)
             ->setSerieNro($ingreso->Serie . '-' . $ingreso->Numeracion)

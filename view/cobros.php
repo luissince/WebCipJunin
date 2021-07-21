@@ -252,6 +252,122 @@ if (!isset($_SESSION['IdUsuario'])) {
                 </div>
                 <!-- end modal afiliaciones -->
 
+                <!-- modal tipo de pago -->
+                <div class="row">
+                    <div class="modal fade" id="modalTipoPago" data-backdrop="static">
+                        <div class="modal-dialog">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <button type="button" class="close" data-dismiss="modal">
+                                        <i class="fa fa-close"></i>
+                                    </button>
+                                    <h4 class="modal-title">
+                                        <i class="fa fa-check-circle">
+                                        </i> Cobrar
+                                    </h4>
+                                </div>
+                                <div class="modal-body">
+                                    <div class="nav-tabs-custom">
+                                        <div class="row">
+                                            <div class="col-md-12">
+                                                <div class="row">
+                                                    <div class="col-md-3"></div>
+                                                    <div class="col-md-4">
+                                                        <h4>TOTAL A PAGAR:</h4>
+                                                    </div>
+                                                    <div class="col-md-3">
+                                                        <h4 id="totalModal" style="color: #C4373B;">0.00</h4>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <!-- <ul class="nav nav-tabs">
+                                            <li class="active"><a href="#tab_1" data-toggle="tab">Contado</a></li> -->
+                                        <!-- <li class="active"><a href="#tab_2" data-toggle="tab">Credito</a></li> -->
+                                        <!-- </ul> -->
+                                        <!-- <div class="tab-content">
+                                            <div class="tab-pane active" id="tab_1"> -->
+                                        <div class="row" style="padding-top: 10px">
+                                            <div class="col-md-12">
+
+                                                <div class="box-group" id="accordion">
+                                                    <!-- we are adding the .panel class so bootstrap.js collapse plugin detects it -->
+                                                    <div class="panel box box-primary">
+                                                        <div class="box-header with-border">
+                                                            <h4 class="box-title">
+                                                                <a data-toggle="collapse" data-parent="#accordion" href="#collapseOne">
+                                                                    Efectivo
+                                                                </a>
+                                                            </h4>
+                                                        </div>
+                                                        <div id="collapseOne" class="panel-collapse collapse in" aria-expanded="true">
+                                                            <div class="box-body">
+                                                                <div class="row">
+                                                                    <div class="col-md-12">
+                                                                        <label style="color: #676363;">Monto: <i class="fa fa-fw fa-asterisk text-danger"></i></label>
+                                                                        <div class="form-group">
+                                                                            <input id="txtMonto" class="form-control" type="text" placeholder="Ingrese un monto" disabled>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="panel box box-danger">
+                                                        <div class="box-header with-border">
+                                                            <h4 class="box-title">
+                                                                <a data-toggle="collapse" data-parent="#accordion" href="#collapseTwo">
+                                                                    Deposito
+                                                                </a>
+                                                            </h4>
+                                                        </div>
+                                                        <div id="collapseTwo" class="panel-collapse collapse">
+                                                            <div class="box-body">
+                                                                <div class="row">
+                                                                    <div class="col-md-12">
+                                                                        <label style="color: #676363;">Monto: <i class="fa fa-fw fa-asterisk text-danger"></i></label>
+                                                                        <div class="form-group">
+                                                                            <input id="txtMontoTarjeta" class="form-control" type="text" placeholder="Ingrese un monto" disabled>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                                <div class="row">
+                                                                    <div class="col-md-12 text-left no-margin">
+                                                                        <h5>Entidades Bancarias</h5>
+                                                                        <select class="form-control" id="cbBancos">
+                                                                        </select>
+                                                                    </div>
+                                                                </div>
+                                                                <div class="row" style="padding-top: 20px;">
+                                                                    <div class="col-md-12">
+                                                                        <label style="color: #676363;">Número de la operación: </label>
+                                                                        <div class="form-group">
+                                                                            <input id="txtNumeroOperacion" class="form-control" type="text">
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <!-- </div> -->
+                                        <!-- </div> -->
+                                    </div>
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-warning" id="btnAceptarTipoPago">
+                                        <i class="fa fa-check"></i> Aceptar</button>
+                                    <button type="button" class="btn btn-primary" data-dismiss="modal" id="btnCancelTipoPago">
+                                        <i class="fa fa-remove"></i> Cancelar</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- end modal tipo de pago -->
+
                 <!-- Content Wrapper. Contains page content -->
                 <div class="content-wrapper" style="background-color: #FFFFFF;">
                     <!-- Main content -->
@@ -625,6 +741,9 @@ if (!isset($_SESSION['IdUsuario'])) {
                     // comprobantes
                     loadComprobantes();
 
+                    // bancos
+                    loadBancos();
+
                     // empresas asociadas al ingeniero
                     loadEmpresaPersona();
 
@@ -748,6 +867,18 @@ if (!isset($_SESSION['IdUsuario'])) {
                         event.preventDefault();
                     });
 
+                    $("#btnAceptarTipoPago").click(function() {
+                        cobrarIngreso();
+                    })
+
+                    $("#btnCancelTipoPago").click(function() {
+                        $("#txtMonto").val('');
+                        $("#txtMontoTarjeta").val('');
+                        // $("#collapseOne").collapse('show');
+                        // $("#collapseTwo").collapse('toggle');
+                        $("#cbBancos").val('');
+                        $("#txtNumeroOperacion").val('');
+                    })
                 });
 
                 function loadComprobantes() {
@@ -780,6 +911,32 @@ if (!isset($_SESSION['IdUsuario'])) {
                         },
                         error: function(error) {
                             $("#cbComprobante").append('<option value="">- Seleccione -</option>');
+                        }
+                    });
+                }
+
+                function loadBancos() {
+                    $.ajax({
+                        url: "../app/controller/BancoController.php",
+                        method: "GET",
+                        data: {
+                            "type": "bancos"
+                        },
+                        beforeSend: function() {
+                            $("#cbBancos").empty();
+                        },
+                        success: function(result) {
+                            if (result.estado === 1) {
+                                $("#cbBancos").append('<option value="">- Seleccione -</option>');
+                                for (let value of result.data) {
+                                    $("#cbBancos").append('<option value="' + value.Idbanco + '">' + value.Nombre + '</option>')
+                                }
+                            } else {
+                                $("#cbBancos").append('<option value="">- Seleccione -</option>');
+                            }
+                        },
+                        error: function(error) {
+                            $("#cbBancos").append('<option value="">- Seleccione -</option>');
                         }
                     });
                 }
@@ -839,96 +996,7 @@ if (!isset($_SESSION['IdUsuario'])) {
                         tools.AlertWarning("Cobros", "El comprobante requiere usar una empresa asociada.");
                         $("#cbEmpresa").focus();
                     } else {
-                        tools.ModalDialog("Cobros", "¿Está seguro de continuar?", function(value) {
-                            if (value == true) {
-                                let cipupdate = cip;
-                                $.ajax({
-                                    url: "../app/controller/RegistrarIngresoController.php",
-                                    method: "POST",
-                                    accepts: "application/json",
-                                    contentType: "application/json",
-                                    data: JSON.stringify({
-                                        "idTipoDocumento": parseInt($("#cbComprobante").val()),
-                                        "idCliente": idDNI == 0 ? 0 : idDNI,
-                                        "idEmpresaPersona": $("#cbEmpresa").val() == '' ? null : $("#cbEmpresa").val(),
-                                        "idUsuario": idUsuario,
-                                        "estado": 'C',
-                                        "estadoCuotas": cuotasEstate,
-                                        "estadoColegiatura": colegiaturaEstado,
-                                        "estadoCertificadoHabilidad": certificadoHabilidadEstado,
-                                        "objectCertificadoHabilidad": certificadoHabilidad,
-                                        "estadoCertificadoResidenciaObra": certificadoResidenciaObraEstado,
-                                        "objectCertificadoResidenciaObra": certificadoResidenciaObra,
-                                        "estadoCertificadoProyecto": certificadoProyectoEstado,
-                                        "objectCertificadoProyecto": certificadoProyecto,
-                                        "estadoPeritaje": peritajeEstado,
-                                        "objectPeritaje": peritaje,
-                                        "ingresos": arrayIngresos,
-                                        "cuotasInicio": cuotasInicio,
-                                        "cuotasFin": cuotasFin
-                                    }),
-                                    beforeSend: function() {
-                                        cancelarIngreso();
-                                        tools.ModalAlertInfo("Cobros", "Procesando petición..");
-                                    },
-                                    success: function(result) {
-                                        if (result.estado === 1) {
-                                            $("#btnCertificado").attr('data-toggle', '');
-                                            $("#btnCertificado").attr('aria-expanded', 'false');
-                                            loadEmpresaPersona();
-                                            loadComprobantes();
-
-                                            if (result.estadoCuotas == true) {
-                                                EnviarHabilidad(result.colegiado.CIP, result.colegiado.Apellidos, result.colegiado.Nombres, result.colegiado.Condicion, result.colegiado.FechaColegiado, result.cuotasFin, result.colegiado.Especialidad, result.colegiado.Capitulo);
-                                            }
-
-                                            // console.log(result.colegiado)
-
-                                            tools.ModalAlertSuccess("Cobros", result.mensaje, function() {
-                                                $("#modalEndIngreso").modal("show");
-                                                $("#modalFotterEndIngresos").empty();
-                                                $("#modalFotterEndIngresos").append('' +
-                                                    '<a href="../app/sunat/pdfingresos.php?idIngreso=' + result.idIngreso + '" target="_blank" class="btn btn-success">' +
-                                                    '<i class="fa fa-file-pdf-o"></i> Ingreso' +
-                                                    '</a>');
-
-                                                $("#modalFotterEndIngresos").append('' +
-                                                    '<button class="btn btn-info" onclick="getCorreo(\'' + result.idDNI + '\', \'' + result.idIngreso + '\', \'' + '\')">' +
-                                                    '<i class="fa fa-envelope"></i> Correo</br>' +
-                                                    '</button>');
-
-                                                if (result.cerHabilidad == true) {
-                                                    $("#modalFotterEndIngresos").append('' +
-                                                        '<a href="../app/sunat/pdfCertHabilidad.php?idIngreso=' + result.idIngreso + '" target="_blank" class="btn btn-success">' +
-                                                        '<i class="fa fa-file-pdf-o"></i> Cert. Habilidad(A)' +
-                                                        '</a>');
-                                                }
-                                                if (result.cerObra == true) {
-                                                    $("#modalFotterEndIngresos").append('' +
-                                                        '<a href="../app/sunat/pdfCertObra.php?idIngreso=' + result.idIngreso + '" target="_blank" class="btn btn-success">' +
-                                                        '<i class="fa fa-file-pdf-o"></i> Cert. Obra(B)' +
-                                                        '</a>');
-                                                }
-                                                if (result.cerProyecto == true) {
-                                                    $("#modalFotterEndIngresos").append('' +
-                                                        '<a href="../app/sunat/pdfCertProyecto.php?idIngreso=' + result.idIngreso + '" target="_blank" class="btn btn-success">' +
-                                                        '<i class="fa fa-file-pdf-o"></i> Cert. Proyecto(C)' +
-                                                        '</a>');
-                                                }
-                                                $("#modalFotterEndIngresos").append('' +
-                                                    '<button type="button" data-dismiss="modal" class="btn btn-danger">' +
-                                                    '<i class="fa fa-remove"></i> Cerrar</button>');
-                                            });
-                                        } else {
-                                            tools.ModalAlertWarning("Cobros", result.mensaje);
-                                        }
-                                    },
-                                    error: function(error) {
-                                        tools.ModalAlertError("Cobros", "Se produjo un error: " + error.responseText);
-                                    }
-                                });
-                            }
-                        });
+                        $("#modalTipoPago").modal("show");
                     }
                 }
 
@@ -1106,6 +1174,9 @@ if (!isset($_SESSION['IdUsuario'])) {
                     }
 
                     $("#lblSumaTotal").html(tools.formatMoney(sumaTotal));
+                    $("#totalModal").html('S/ ' + tools.formatMoney(sumaTotal));
+                    $("#txtMonto").val(sumaTotal);
+                    $("#txtMontoTarjeta").val(sumaTotal);
                 }
 
                 function removeIngresos(idConcepto, categoria) {
@@ -1187,6 +1258,10 @@ if (!isset($_SESSION['IdUsuario'])) {
                     arrayIngresos.splice(0, arrayIngresos.length);
                     addIngresos();
 
+                    $("#modalTipoPago").modal("hide");
+                    $("#cbBancos").val("");
+                    $("#txtNumeroOperacion").val("");
+                    //masc cosas del modal                    
                     $("#lblCipSeleccionado").html("--");
                     $("#lblTipoIngenieroSeleccionado").html("--");
                     $("#lblDocumentSeleccionado").html("--");
@@ -1320,6 +1395,123 @@ if (!isset($_SESSION['IdUsuario'])) {
                         error: function(error) {
                             $("#divLoad").removeClass("overlay");
                             $("#divLoad").empty();
+                        }
+                    });
+                }
+
+                function cobrarIngreso() {
+                    if ($("#collapseOne").attr("aria-expanded") == 'true') {
+                        enviarCobro(1); //efectivo
+                    } else if ($("#collapseTwo").attr("aria-expanded") == 'true') {
+                        if ($("#cbBancos").val() == "") {
+                            tools.AlertWarning("Cobros", "Seleccione la entidad bancaria.");
+                            $("#cbBancos").focus();
+                        } else if ($("#txtNumeroOperacion").val() == "") {
+                            tools.AlertWarning("Cobros", "Ingrese un número de operación para continuar.");
+                            $("#txtNumeroOperacion").focus();
+                        } else {
+                            enviarCobro(2); //deposito
+                        }
+
+                    } else {
+                        tools.AlertWarning("Cobros", "Ningún medio de pago se ha seleccionado para continuar");
+                    }
+
+                }
+
+                function enviarCobro(tipo) {
+                    tools.ModalDialog("Cobros", "¿Está seguro de continuar?", function(value) {
+                        if (value == true) {
+                            $.ajax({
+                                url: "../app/controller/RegistrarIngresoController.php",
+                                method: "POST",
+                                accepts: "application/json",
+                                contentType: "application/json",
+                                data: JSON.stringify({
+                                    "idTipoDocumento": parseInt($("#cbComprobante").val()),
+                                    "idCliente": idDNI == 0 ? 0 : idDNI,
+                                    "idEmpresaPersona": $("#cbEmpresa").val() == '' ? null : $("#cbEmpresa").val(),
+                                    "idUsuario": idUsuario,
+                                    "estado": 'C',
+                                    "tipo": tipo,
+                                    "idBanco": $("#cbBancos").val() == "" ? 0 : $("#cbBancos").val(),
+                                    "numOperacion": $("#txtNumeroOperacion").val().trim(),
+                                    "estadoCuotas": cuotasEstate,
+                                    "estadoColegiatura": colegiaturaEstado,
+                                    "estadoCertificadoHabilidad": certificadoHabilidadEstado,
+                                    "objectCertificadoHabilidad": certificadoHabilidad,
+                                    "estadoCertificadoResidenciaObra": certificadoResidenciaObraEstado,
+                                    "objectCertificadoResidenciaObra": certificadoResidenciaObra,
+                                    "estadoCertificadoProyecto": certificadoProyectoEstado,
+                                    "objectCertificadoProyecto": certificadoProyecto,
+                                    "estadoPeritaje": peritajeEstado,
+                                    "objectPeritaje": peritaje,
+                                    "ingresos": arrayIngresos,
+                                    "cuotasInicio": cuotasInicio,
+                                    "cuotasFin": cuotasFin
+                                }),
+                                beforeSend: function() {
+                                    cancelarIngreso();
+                                    tools.ModalAlertInfo("Cobros", "Procesando petición..");
+                                },
+                                success: function(result) {
+                                    if (result.estado === 1) {
+                                        $("#btnCertificado").attr('data-toggle', '');
+                                        $("#btnCertificado").attr('aria-expanded', 'false');
+                                        loadEmpresaPersona();
+                                        loadComprobantes();
+
+                                        if (result.estadoCuotas == true) {
+                                            if (result.colegiado != null) {
+                                                EnviarHabilidad(result.colegiado.CIP, result.colegiado.Apellidos, result.colegiado.Nombres, result.colegiado.Condicion, result.colegiado.FechaColegiado, result.cuotasFin, result.colegiado.Especialidad, result.colegiado.Capitulo);
+                                            }
+                                        }
+
+                                        tools.ModalAlertSuccess("Cobros", result.mensaje, function() {
+                                            $("#modalEndIngreso").modal("show");
+                                            $("#modalFotterEndIngresos").empty();
+                                            $("#modalFotterEndIngresos").append('' +
+                                                '<a href="../app/sunat/pdfingresos.php?idIngreso=' + result.idIngreso + '" target="_blank" class="btn btn-success">' +
+                                                '<i class="fa fa-file-pdf-o"></i> Ingreso' +
+                                                '</a>');
+
+                                            if (result.colegiado != null) {
+                                                $("#modalFotterEndIngresos").append('' +
+                                                    '<button class="btn btn-info" onclick="getCorreo(\'' + result.colegiado.idDNI + '\', \'' + result.idIngreso + '\', \'' + '\')">' +
+                                                    '<i class="fa fa-envelope"></i> Correo</br>' +
+                                                    '</button>');
+                                            }
+
+                                            if (result.cerHabilidad == true) {
+                                                $("#modalFotterEndIngresos").append('' +
+                                                    '<a href="../app/sunat/pdfCertHabilidad.php?idIngreso=' + result.idIngreso + '" target="_blank" class="btn btn-success">' +
+                                                    '<i class="fa fa-file-pdf-o"></i> Cert. Habilidad(A)' +
+                                                    '</a>');
+                                            }
+                                            if (result.cerObra == true) {
+                                                $("#modalFotterEndIngresos").append('' +
+                                                    '<a href="../app/sunat/pdfCertObra.php?idIngreso=' + result.idIngreso + '" target="_blank" class="btn btn-success">' +
+                                                    '<i class="fa fa-file-pdf-o"></i> Cert. Obra(B)' +
+                                                    '</a>');
+                                            }
+                                            if (result.cerProyecto == true) {
+                                                $("#modalFotterEndIngresos").append('' +
+                                                    '<a href="../app/sunat/pdfCertProyecto.php?idIngreso=' + result.idIngreso + '" target="_blank" class="btn btn-success">' +
+                                                    '<i class="fa fa-file-pdf-o"></i> Cert. Proyecto(C)' +
+                                                    '</a>');
+                                            }
+                                            $("#modalFotterEndIngresos").append('' +
+                                                '<button type="button" data-dismiss="modal" class="btn btn-danger">' +
+                                                '<i class="fa fa-remove"></i> Cerrar</button>');
+                                        });
+                                    } else {
+                                        tools.ModalAlertWarning("Cobros", result.mensaje);
+                                    }
+                                },
+                                error: function(error) {
+                                    tools.ModalAlertError("Cobros", "Se produjo un error: " + error.responseText);
+                                }
+                            });
                         }
                     });
                 }
