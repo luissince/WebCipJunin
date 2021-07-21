@@ -154,9 +154,7 @@ if (!isset($_SESSION['IdUsuario'])) {
                                 <div class="modal-body">
 
                                     <div class="row">
-                                        <div class="col-md-1">
-                                        </div>
-                                        <div class="col-md-10">
+                                        <div class="col-md-12">
                                             <div class="form-group">
                                                 <div class="radio">
                                                     <label>
@@ -183,7 +181,7 @@ if (!isset($_SESSION['IdUsuario'])) {
                                     <div class="row">
                                         <div class="col-md-12">
                                             <div class="form-group">
-                                                <select class="form-control" id="cbTipodePago" style="text-align-last: center;">
+                                                <select class="form-control" id="cbTipodePago">
                                                     <option value="0">-- Cualquier medio de pago --</option>
                                                     <option value="1"> Efectivo</option>
                                                     <option value="2"> Deposito</option>
@@ -257,7 +255,7 @@ if (!isset($_SESSION['IdUsuario'])) {
                                                     </label>
                                                 </div>
                                             </div>
-                                            <div class="row" style="padding-left: 20px;">
+                                            <div class="row">
                                                 <div class="col-md-6">
                                                     <label>Fecha de inicio.</label>
                                                     <div class="form-group">
@@ -677,7 +675,7 @@ if (!isset($_SESSION['IdUsuario'])) {
                                 tools.AlertWarning("reportes", "La fecha inicial no puede ser mayor que la fecha final")
                                 $("#fi_comprobantes").focus();
                             } else {
-                                openExcel($("#fi_comprobantes").val(), $("#ff_comprobantes").val(), $("#cbTipodeDocumento").val(),$("#cbTipodePago").val());
+                                openExcel($("#fi_comprobantes").val(), $("#ff_comprobantes").val(), $("#cbTipodeDocumento").val(), $("#cbTipodePago").val());
                             }
                         } else {
                             tools.AlertWarning("reportes", "Ingrese un rango de fecha válido")
@@ -691,7 +689,7 @@ if (!isset($_SESSION['IdUsuario'])) {
                                 tools.AlertWarning("reportes", "La fecha inicial no puede ser mayor que la fecha final")
                                 $("#fi_comprobantes").focus();
                             } else {
-                                openPdf($("#fi_comprobantes").val(), $("#ff_comprobantes").val(), $("#cbTipodeDocumento").val(),$("#cbTipodePago").val());
+                                openPdf($("#fi_comprobantes").val(), $("#ff_comprobantes").val(), $("#cbTipodeDocumento").val(), $("#cbTipodePago").val());
                             }
                         } else {
                             tools.AlertWarning("reportes", "Ingrese un rango de fecha válido")
