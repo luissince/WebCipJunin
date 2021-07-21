@@ -145,6 +145,9 @@
                     if ($_SESSION["Permisos"][22]["ver"] == 1) {
                         $menuFacturacion .= '<li id="tab-configEmpresa"><a href="configEmpresa.php"><i class="fa fa-circle-o"></i>Empresa</a></li>';
                     }
+                    if ($_SESSION["Permisos"][23]["ver"] == 1) {
+                        $menuFacturacion .= '<li id="tab-bancos"><a href="bancos.php"><i class="fa fa-circle-o"></i>Bancos</a></li>';
+                    }
                     $menuFacturacion .= '</ul></li>';
                     print $menuFacturacion;
                 }
@@ -161,7 +164,7 @@
       const tabs = ["home", "usuario", "roles", "ingresos", "certHabilidad", "certObra", "certProyecto",
           "capitulos", "universidad", "conceptos", "ingenieros", "habilidadIngeniero", "empresas",
           "cobros", "comprobantes", "reportes", "notaCredito", "nuevaNotaCredito",
-          "notaDebito", "nuevaNotaDebito", "consultaComprobante", "comprobantesElectronicos", "configEmpresa"
+          "notaDebito", "nuevaNotaDebito", "consultaComprobante", "comprobantesElectronicos", "configEmpresa", "bancos"
       ];
 
       tabs.forEach(e => {
@@ -193,7 +196,7 @@
               } else if (id == "tab-habilidadIngeniero") {
                   document.getElementById("tab-habilidadIngeniero").setAttribute("class", "nav-item active");
               }
-          } else if (id == "tab-notaCredito" || id == "tab-nuevaNotaCredito" || id == "tab-notaDebito" || id == "tab-nuevaNotaDebito" || id == "tab-consultaComprobante" || id == "tab-comprobantesElectronicos" || id == "tab-configEmpresa") {
+          } else if (id == "tab-notaCredito" || id == "tab-nuevaNotaCredito" || id == "tab-notaDebito" || id == "tab-nuevaNotaDebito" || id == "tab-consultaComprobante" || id == "tab-comprobantesElectronicos" || id == "tab-configEmpresa" || id == "tab-bancos") {
               document.getElementById("tab-menu-factura").setAttribute("class", "nav-item active");
               if (id == "tab-notaCredito" || id == "tab-nuevaNotaCredito") {
                   document.getElementById("tab-notaCredito").setAttribute("class", "nav-link active");
@@ -205,6 +208,8 @@
                   document.getElementById("tab-comprobantesElectronicos").setAttribute("class", "nav-link active");
               } else if (id == "tab-configEmpresa") {
                   document.getElementById("tab-configEmpresa").setAttribute("class", "nav-link active");
+              } else if (id == "tab-bancos") {
+                  document.getElementById("tab-bancos").setAttribute("class", "nav-link active");
               }
           } else {
               document.getElementById(id).setAttribute("class", "nav-item active");

@@ -154,7 +154,9 @@ if (!isset($_SESSION['IdUsuario'])) {
                                 <div class="modal-body">
 
                                     <div class="row">
-                                        <div class="col-md-12">
+                                        <div class="col-md-1">
+                                        </div>
+                                        <div class="col-md-10">
                                             <div class="form-group">
                                                 <div class="radio">
                                                     <label>
@@ -173,6 +175,18 @@ if (!isset($_SESSION['IdUsuario'])) {
                                             </div>
                                             <div class="form-group">
                                                 <select class="form-control" id="cbTipodeDocumento" disabled="">
+                                                </select>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="row">
+                                        <div class="col-md-12">
+                                            <div class="form-group">
+                                                <select class="form-control" id="cbTipodePago" style="text-align-last: center;">
+                                                    <option value="0">-- Cualquier medio de pago --</option>
+                                                    <option value="1"> Efectivo</option>
+                                                    <option value="2"> Deposito</option>
                                                 </select>
                                             </div>
                                         </div>
@@ -663,7 +677,7 @@ if (!isset($_SESSION['IdUsuario'])) {
                                 tools.AlertWarning("reportes", "La fecha inicial no puede ser mayor que la fecha final")
                                 $("#fi_comprobantes").focus();
                             } else {
-                                openExcel($("#fi_comprobantes").val(), $("#ff_comprobantes").val(), $("#cbTipodeDocumento").val());
+                                openExcel($("#fi_comprobantes").val(), $("#ff_comprobantes").val(), $("#cbTipodeDocumento").val(),$("#cbTipodePago").val());
                             }
                         } else {
                             tools.AlertWarning("reportes", "Ingrese un rango de fecha válido")
@@ -677,7 +691,7 @@ if (!isset($_SESSION['IdUsuario'])) {
                                 tools.AlertWarning("reportes", "La fecha inicial no puede ser mayor que la fecha final")
                                 $("#fi_comprobantes").focus();
                             } else {
-                                openPdf($("#fi_comprobantes").val(), $("#ff_comprobantes").val(), $("#cbTipodeDocumento").val());
+                                openPdf($("#fi_comprobantes").val(), $("#ff_comprobantes").val(), $("#cbTipodeDocumento").val(),$("#cbTipodePago").val());
                             }
                         } else {
                             tools.AlertWarning("reportes", "Ingrese un rango de fecha válido")
@@ -749,32 +763,32 @@ if (!isset($_SESSION['IdUsuario'])) {
                     });
                 }
 
-                function openExcel(fechaInicio, fechaFinal, tipoDocumento) {
+                function openExcel(fechaInicio, fechaFinal, tipoDocumento, tipoPago) {
                     let nombreComprobante = $("#cbTipodeDocumento").find('option:selected').text().toLowerCase();
                     if ($("#brComprobantes").is(':checked')) {
-                        window.open("../app/sunat/excelventa.php?txtFechaInicial=" + fechaInicio + "&txtFechaFinal=" + fechaFinal + "&cbTipoDocumento=" + "null", "_blank");
+                        window.open("../app/sunat/excelventa.php?txtFechaInicial=" + fechaInicio + "&txtFechaFinal=" + fechaFinal + "&cbTipoDocumento=" + "null" + "&cbTipoPago=" + tipoPago, "_blank");
                         cleanModalComprobantes();
                     } else {
                         if ($("#cbTipodeDocumento").val() == '') {
                             tools.AlertWarning("reportes", "Seleccione un tipo de documento")
                             $("#cbTipodeDocumento").focus();
                         } else {
-                            window.open("../app/sunat/excelventa.php?txtFechaInicial=" + fechaInicio + "&txtFechaFinal=" + fechaFinal + "&cbTipoDocumento=" + tipoDocumento + "&nombreComprobante=" + nombreComprobante, "_blank");
+                            window.open("../app/sunat/excelventa.php?txtFechaInicial=" + fechaInicio + "&txtFechaFinal=" + fechaFinal + "&cbTipoDocumento=" + tipoDocumento + "&nombreComprobante=" + nombreComprobante + "&cbTipoPago=" + tipoPago, "_blank");
                             cleanModalComprobantes();
                         }
                     }
                 }
 
-                function openPdf(fechaInicio, fechaFinal, tipoDocumento) {
+                function openPdf(fechaInicio, fechaFinal, tipoDocumento, tipoPago) {
                     let nombreComprobante = $("#cbTipodeDocumento").find('option:selected').text().toLowerCase();
                     if ($("#brComprobantes").is(':checked')) {
-                        window.open("../app/sunat/resumenComprobantes.php?txtFechaInicial=" + fechaInicio + "&txtFechaFinal=" + fechaFinal + "&cbTipoDocumento=" + "null", "_blank");
+                        window.open("../app/sunat/resumenComprobantes.php?txtFechaInicial=" + fechaInicio + "&txtFechaFinal=" + fechaFinal + "&cbTipoDocumento=" + "null" + "&cbTipoPago=" + tipoPago, "_blank");
                     } else {
                         if ($("#cbTipodeDocumento").val() == '') {
                             tools.AlertWarning("reportes", "Seleccione un tipo de documento")
                             $("#cbTipodeDocumento").focus();
                         } else {
-                            window.open("../app/sunat/resumenComprobantes.php?txtFechaInicial=" + fechaInicio + "&txtFechaFinal=" + fechaFinal + "&cbTipoDocumento=" + tipoDocumento + "&nombreComprobante=" + nombreComprobante, "_blank");
+                            window.open("../app/sunat/resumenComprobantes.php?txtFechaInicial=" + fechaInicio + "&txtFechaFinal=" + fechaFinal + "&cbTipoDocumento=" + tipoDocumento + "&nombreComprobante=" + nombreComprobante + "&cbTipoPago=" + tipoPago, "_blank");
                         }
                     }
                 }
@@ -802,12 +816,13 @@ if (!isset($_SESSION['IdUsuario'])) {
 
                 function cleanModalComprobantes() {
                     $("#ComprobantesEmitidos").modal("hide");
-                    $("#brComprobantes").prop('checked', true)
-                    $("#brTipoComprobantes").prop('checked', false)
-                    $("#cbTipodeDocumento").attr('disabled', '')
-                    $("#cbTipodeDocumento").val('')
-                    $("#fi_comprobantes").val(tools.getCurrentDate())
-                    $("#ff_comprobantes").val(tools.getCurrentDate())
+                    $("#brComprobantes").prop('checked', true);
+                    $("#brTipoComprobantes").prop('checked', false);
+                    $("#cbTipodeDocumento").attr('disabled', '');
+                    $("#cbTipodeDocumento").val('');
+                    $("#fi_comprobantes").val(tools.getCurrentDate());
+                    $("#ff_comprobantes").val(tools.getCurrentDate());
+                    $("#cbTipodePago").val('0');
                 }
             </script>
         </body>

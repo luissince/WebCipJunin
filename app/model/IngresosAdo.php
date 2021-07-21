@@ -472,7 +472,7 @@ class IngresosAdo
             $cmdPersona->execute();
             $resultCliente = $cmdPersona->fetchObject();
             if (!$resultCliente) {
-                throw new Exception("No se pudo completar el cobro porque el Ingeniero no tiene registrado sus datos de colegiatura, comuníquese con el área de sistemas.");
+                $resultCliente = null;
             }
 
             $codigoSerieNumeracion = Database::getInstance()->getDb()->prepare("SELECT dbo.Fc_Serie_Numero(?)");
@@ -491,8 +491,11 @@ class IngresosAdo
             idUsuario,
             Estado,
             Deposito,
-            Observacion
-            )VALUES(?,?,?,?,?,GETDATE(),GETDATE(),?,?,0,'')");
+            Observacion,
+            Tipo,
+            idBanco,
+            NumOperacion
+            )VALUES(?,?,?,?,?,GETDATE(),GETDATE(),?,?,0,'',?,?,?)");
             $cmdIngreso->bindParam(1, $body["idCliente"], PDO::PARAM_STR);
             $cmdIngreso->bindParam(2, $body["idEmpresaPersona"], PDO::PARAM_INT);
             $cmdIngreso->bindParam(3, $body["idTipoDocumento"], PDO::PARAM_INT);
@@ -500,6 +503,9 @@ class IngresosAdo
             $cmdIngreso->bindParam(5, $serie_numeracion[1], PDO::PARAM_STR);
             $cmdIngreso->bindParam(6, $body["idUsuario"], PDO::PARAM_INT);
             $cmdIngreso->bindParam(7, $body["estado"], PDO::PARAM_STR);
+            $cmdIngreso->bindParam(8, $body["tipo"], PDO::PARAM_INT);
+            $cmdIngreso->bindParam(9, $body["idBanco"], PDO::PARAM_INT);
+            $cmdIngreso->bindParam(10, $body["numOperacion"], PDO::PARAM_STR);
             $cmdIngreso->execute();
 
             $idIngreso = Database::getInstance()->getDb()->lastInsertId();
@@ -1324,7 +1330,7 @@ class IngresosAdo
         return $ret;
     }
 
-    public static function ReporteGeneralIngresosPorFechas($fechaInicio, $fechaFinal)
+    public static function ReporteGeneralIngresosPorFechas($fechaInicio, $fechaFinal, $tipoPago)
     {
         try {
             $cmdDetalle = Database::getInstance()->getDb()->prepare("SELECT 
@@ -1343,6 +1349,10 @@ class IngresosAdo
              WHEN NOT pe.idPeritaje IS NULL THEN 8 
              ELSE 100 END AS TipoIngreso,
             i.Estado,
+            i.Tipo,
+			i.idBanco,
+			ISNULL(b.Nombre,'') AS NombreBanco,
+			ISNULL(i.NumOperacion,'') AS numeroOperacion,
             p.CIP,
             isnull(e.NumeroRuc,p.NumDoc) as NumeroDocumento,            
             isnull(e.Nombre, concat(p.Apellidos,' ',p.Nombres)) as Persona,
@@ -1361,13 +1371,22 @@ class IngresosAdo
             inner join Detalle as d on d.idIngreso = i.idIngreso 
             inner join Concepto as c on d.idConcepto = c.idConcepto
             left join Anulado as a on a.idDocumento = i.idIngreso
+            LEFT JOIN Banco as b ON b.idBanco = i.idBanco
             where
-            cast(i.Fecha as date) between ? and ?
+            $tipoPago = 0 AND cast(i.Fecha as date) between ? and ?
+            OR
+            $tipoPago = 1 AND (cast(i.Fecha as date) between ? and ?) AND i.tipo = 1
+            OR
+            $tipoPago = 2 AND (cast(i.Fecha as date) between ? and ?) AND i.tipo = 2
             group by i.idIngreso,
             i.Serie,
             i.NumRecibo,
             i.Fecha,
             i.Estado,
+            i.Tipo,
+			i.idBanco,
+			b.Nombre,
+			i.NumOperacion,
             p.NumDoc,
             p.CIP,
             p.Apellidos,
@@ -1387,6 +1406,10 @@ class IngresosAdo
             order by CAST(i.Fecha as date) desc, i.NumRecibo desc");
             $cmdDetalle->bindParam(1, $fechaInicio, PDO::PARAM_STR);
             $cmdDetalle->bindParam(2, $fechaFinal, PDO::PARAM_STR);
+            $cmdDetalle->bindParam(3, $fechaInicio, PDO::PARAM_STR);
+            $cmdDetalle->bindParam(4, $fechaFinal, PDO::PARAM_STR);
+            $cmdDetalle->bindParam(5, $fechaInicio, PDO::PARAM_STR);
+            $cmdDetalle->bindParam(6, $fechaFinal, PDO::PARAM_STR);
             $cmdDetalle->execute();
 
             $arrayDetalle = array();
@@ -1403,6 +1426,9 @@ class IngresosAdo
                     "FechaPago" => $row["FechaPago"],
                     "Concepto" => $row["TipoIngreso"],
                     "Estado" => $row["Estado"],
+                    "TipoPago" => $row["Tipo"],
+                    "NombreBanco" => $row["NombreBanco"],
+                    "NumeroOperacion" => $row["numeroOperacion"],
                     "NumeroDocumento" => $row["NumeroDocumento"],
                     "CIP" => $row["CIP"],
                     "Persona" => $row["Persona"],
@@ -1418,7 +1444,7 @@ class IngresosAdo
         }
     }
 
-    public static function ReporteGeneralIngresosPorFechasyTipoDocumento($fechaInicio, $fechaFinal, $tipoDocumento)
+    public static function ReporteGeneralIngresosPorFechasyTipoDocumento($fechaInicio, $fechaFinal, $tipoDocumento, $tipoPago)
     {
         try {
             $cmdDetalle = Database::getInstance()->getDb()->prepare("SELECT 
@@ -1437,6 +1463,10 @@ class IngresosAdo
              WHEN NOT pe.idPeritaje IS NULL THEN 8 
              ELSE 100 END AS TipoIngreso,
             i.Estado,
+            i.Tipo,
+			i.idBanco,
+			ISNULL(b.Nombre,'') AS NombreBanco,
+			ISNULL(i.NumOperacion,'') AS numeroOperacion,
             p.CIP,
             isnull(e.NumeroRuc,p.NumDoc) as NumeroDocumento,            
             isnull(e.Nombre, concat(p.Apellidos,' ',p.Nombres)) as Persona,
@@ -1455,13 +1485,22 @@ class IngresosAdo
             inner join Detalle as d on d.idIngreso = i.idIngreso 
             inner join Concepto as c on d.idConcepto = c.idConcepto
             left join Anulado as a on a.idDocumento = i.idIngreso
+            LEFT JOIN Banco as b ON b.idBanco = i.idBanco
             where
-            (cast(i.Fecha as date) between ? and ?) and i.TipoComprobante = ?
+            $tipoPago = 0 AND (cast(i.Fecha as date) between ? and ?) and i.TipoComprobante = ?
+            OR
+            $tipoPago = 1 AND (cast(i.Fecha as date) between ? and ?) and i.TipoComprobante = ? AND i.tipo = 1
+            OR
+            $tipoPago = 2 AND (cast(i.Fecha as date) between ? and ?) and i.TipoComprobante = ? AND i.tipo = 2
             group by i.idIngreso,
             i.Serie,
             i.NumRecibo,
             i.Fecha,
             i.Estado,
+            i.Tipo,
+			i.idBanco,
+			b.Nombre,
+			i.NumOperacion,
             p.NumDoc,
             p.CIP,
             p.Apellidos,
@@ -1482,6 +1521,12 @@ class IngresosAdo
             $cmdDetalle->bindParam(1, $fechaInicio, PDO::PARAM_STR);
             $cmdDetalle->bindParam(2, $fechaFinal, PDO::PARAM_STR);
             $cmdDetalle->bindParam(3, $tipoDocumento, PDO::PARAM_STR);
+            $cmdDetalle->bindParam(4, $fechaInicio, PDO::PARAM_STR);
+            $cmdDetalle->bindParam(5, $fechaFinal, PDO::PARAM_STR);
+            $cmdDetalle->bindParam(6, $tipoDocumento, PDO::PARAM_STR);
+            $cmdDetalle->bindParam(7, $fechaInicio, PDO::PARAM_STR);
+            $cmdDetalle->bindParam(8, $fechaFinal, PDO::PARAM_STR);
+            $cmdDetalle->bindParam(9, $tipoDocumento, PDO::PARAM_STR);
             $cmdDetalle->execute();
 
             $arrayDetalle = array();
@@ -1497,6 +1542,9 @@ class IngresosAdo
                     "NumRecibo" => $row["NumRecibo"],
                     "FechaPago" => $row["FechaPago"],
                     "Estado" => $row["Estado"],
+                    "TipoPago" => $row["Tipo"],
+                    "NombreBanco" => $row["NombreBanco"],
+                    "NumeroOperacion" => $row["numeroOperacion"],
                     "Concepto" => $row["TipoIngreso"],
                     "NumeroDocumento" => $row["NumeroDocumento"],
                     "CIP" => $row["CIP"],
