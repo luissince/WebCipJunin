@@ -73,7 +73,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
             ));
         } else {
             echo json_encode(array(
-                "estado" => 3,
+                "estado" => 0,
                 "mensaje" => $result
             ));
         }
