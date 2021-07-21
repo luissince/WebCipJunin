@@ -89,25 +89,22 @@ if (!isset($_SESSION['IdUsuario'])) {
                                         </div>
                                     </div>
                                     <div class="row">
-                                        <div class="col-md-4 col-sm-12 col-xs-12">
+                                        <div class="col-md-6 col-sm-12 col-xs-12">
                                             <div class="form-group">
                                                 <label for="precio">Precio: <i class="fa fa-fw fa-asterisk text-danger"></i></label>
                                                 <input id="txtPrecio" type="number" name="precio" class="form-control" placeholder="Monto del concepto" required="">
                                             </div>
                                         </div>
-                                        <div class="col-md-4 col-sm-12 col-xs-12">
+                                        <div class="col-md-6 col-sm-12 col-xs-12">
                                             <div class="form-group">
-                                                <label for="txtFecha_inicio">Fecha Inicio: <i class="fa fa-fw fa-asterisk text-danger"></i></label>
-                                                <input id="txtFecha_inicio" type="date" class="form-control" required="">
-                                            </div>
-                                        </div>
-                                        <div class="col-md-4 col-sm-12 col-xs-12">
-                                            <div class="form-group">
-                                                <label for="txtFecha_fin">Fecha Fin: <i class="fa fa-fw fa-asterisk text-danger"></i></label>
-                                                <input id="txtFecha_fin" type="date" class="form-control" required="">
+                                                <label>Impuesto: <i class="fa fa-fw fa-asterisk text-danger"></i></label>
+                                                <select class="form-control" id="cbImpuesto">
+                                                    <option value="">- - Seleccione - -</option>
+                                                </select>
                                             </div>
                                         </div>
                                     </div>
+
                                     <div class="row">
                                         <div class="col-md-12">
                                             <p>Referido a: <i class="fa fa-fw fa-asterisk text-danger"></i></p>
@@ -155,18 +152,22 @@ if (!isset($_SESSION['IdUsuario'])) {
                                             </div>
                                         </div>
                                     </div>
+
                                     <div class="row">
-                                        <div class="col-md-12">
-                                            <p>Impuesto: <i class="fa fa-fw fa-asterisk text-danger"></i></p>
+                                        <div class="col-md-6 col-sm-12 col-xs-12">
+                                            <div class="form-group">
+                                                <label for="txtFecha_inicio">Fecha Inicio: <i class="fa fa-fw fa-asterisk text-danger"></i></label>
+                                                <input id="txtFecha_inicio" type="date" class="form-control" required="">
+                                            </div>
                                         </div>
                                         <div class="col-md-6 col-sm-12 col-xs-12">
                                             <div class="form-group">
-                                                <select class="form-control" id="cbImpuesto">
-                                                    <option value="">- - Seleccione - -</option>
-                                                </select>
+                                                <label for="txtFecha_fin">Fecha Fin: <i class="fa fa-fw fa-asterisk text-danger"></i></label>
+                                                <input id="txtFecha_fin" type="date" class="form-control" required="">
                                             </div>
                                         </div>
                                     </div>
+
                                     <div class="row">
                                         <div class="col-md-12">
                                             <div class="form-group">
@@ -336,6 +337,9 @@ if (!isset($_SESSION['IdUsuario'])) {
                 $(document).ready(function() {
 
                     loadInitConceptos();
+
+                    $("#txtFecha_inicio").val(tools.getCurrentDate());
+                    $("#txtFecha_fin").val(tools.getCurrentDate());
 
                     $("#btnIzquierda").click(function() {
                         if (!state) {
