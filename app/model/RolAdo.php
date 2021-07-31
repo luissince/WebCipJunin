@@ -109,7 +109,7 @@ class RolAdo
 
                     $idRol = Database::getInstance()->getDb()->lastInsertId();
                     $comandoPermisos = Database::getInstance()->getDb()->prepare("INSERT INTO Permiso (idRol, idModulo, ver,crear,actualizar,eliminar) VALUES (?,?,?,?,?,?)");
-                    for ($i = 0; $i < 25; $i++) {
+                    for ($i = 0; $i < 27; $i++) {
                         $comandoPermisos->execute(array($idRol, ($i + 1), 0, 0, 0, 0));
                     }
                     Database::getInstance()->getDb()->commit();

@@ -47,7 +47,7 @@
                 }
                 if ($_SESSION["Permisos"][3]["ver"] == 1) {
                     $menuRegistro = '<li class="treeview" id="tab-menu-registros">
-                    <a href="#">
+                    <a href="javascript:void(0)">
                         <i class="fa fa-sitemap"></i> <span>Ingresos</span>
                         <span class="pull-right-container">
                             <i class="fa fa-angle-left pull-right"></i>
@@ -88,7 +88,7 @@
                 }
                 if ($_SESSION["Permisos"][11]["ver"] == 1) {
                     $menuIngeniero = '<li class="treeview" id="tab-menu-ingenieros">
-                    <a href="#">
+                    <a href="javascript:void(0)">
                         <i class="fa fa-user"></i> <span>Ingenieros</span>
                         <span  class="pull-right-container">
                             <i class="fa fa-angle-left" pull-right"></i>
@@ -126,7 +126,7 @@
                 }
                 if ($_SESSION["Permisos"][18]["ver"] == 1) {
                     $menuFacturacion = '<li class="treeview" id="tab-menu-factura">
-                    <a href="#">
+                    <a href="javascript:void(0)">
                         <i class="fa fa-folder-open"></i><span>Facturación</span>
                         <span class="pull-right-container">
                             <i class="fa fa-angle-left pull-right"></i>
@@ -142,18 +142,33 @@
                     if ($_SESSION["Permisos"][21]["ver"] == 1) {
                         $menuFacturacion .= '<li id="tab-consultaComprobante"><a href="consultaComprobante.php"><i class="fa fa-circle-o"></i>Consultar Comprobante</a></li>';
                     }
-                    if ($_SESSION["Permisos"][22]["ver"] == 1) {
-                        $menuFacturacion .= '<li id="tab-configEmpresa"><a href="configEmpresa.php"><i class="fa fa-circle-o"></i>Empresa</a></li>';
-                    }
-                    if ($_SESSION["Permisos"][23]["ver"] == 1) {
-                        $menuFacturacion .= '<li id="tab-bancos"><a href="bancos.php"><i class="fa fa-circle-o"></i>Bancos</a></li>';
-                    }
                     $menuFacturacion .= '</ul></li>';
                     print $menuFacturacion;
                 }
+                if ($_SESSION["Permisos"][22]["ver"] == 1) {
+                    $menuConfiguracion =  '<li class="treeview" id="tab-menu-configuracion">
+                    <a href="javascript:void(0)">
+                      <i class="fa fa-cog"></i> <span>Configuración</span>
+                      <span class="pull-right-container">
+                          <i class="fa fa-angle-left pull-right"></i>
+                      </span>
+                  </a>';
+                    $menuConfiguracion .= '<ul class="treeview-menu">';
+                    if ($_SESSION["Permisos"][23]["ver"] == 1) {
+                        $menuConfiguracion .= '<li id="tab-configuracion"><a href="configuracion.php"><i class="fa fa-circle-o"></i> Configurar</a></li>';
+                    }
+                    if ($_SESSION["Permisos"][24]["ver"] == 1) {
+                        $menuConfiguracion .= '<li id="tab-bancos"><a href="bancos.php"><i class="fa fa-circle-o"></i>Bancos</a></li>';
+                    }
+                    if ($_SESSION["Permisos"][25]["ver"] == 1) {
+                        $menuConfiguracion .= '<li id="tab-configEmpresa"><a href="configEmpresa.php"><i class="fa fa-circle-o"></i>Empresa</a></li>';
+                    }
+                    $menuConfiguracion .= '</ul></li>';
+                    print $menuConfiguracion;
+                }
                 ?>
-
-              <!-- <li id="tab-notaDebito"><a href="notaDebito.php"><i class="fa fa-circle-o"></i>Nota Débito</a></li> -->
+          </ul>
+          <!-- <li id="tab-notaDebito"><a href="notaDebito.php"><i class="fa fa-circle-o"></i>Nota Débito</a></li> -->
       </section>
   </aside>
   <script>
@@ -163,8 +178,9 @@
       /// Elementos de li
       const tabs = ["home", "usuario", "roles", "ingresos", "certHabilidad", "certObra", "certProyecto",
           "capitulos", "universidad", "conceptos", "ingenieros", "habilidadIngeniero", "empresas",
-          "cobros", "comprobantes", "reportes", "notaCredito", "nuevaNotaCredito",
-          "notaDebito", "nuevaNotaDebito", "consultaComprobante", "comprobantesElectronicos", "configEmpresa", "bancos"
+          "cobros", "comprobantes", "reportes",
+          "notaCredito", "nuevaNotaCredito", "consultaComprobante", "comprobantesElectronicos",
+          "configuracion", "bancos", "configEmpresa"
       ];
 
       tabs.forEach(e => {
@@ -196,7 +212,7 @@
               } else if (id == "tab-habilidadIngeniero") {
                   document.getElementById("tab-habilidadIngeniero").setAttribute("class", "nav-item active");
               }
-          } else if (id == "tab-notaCredito" || id == "tab-nuevaNotaCredito" || id == "tab-notaDebito" || id == "tab-nuevaNotaDebito" || id == "tab-consultaComprobante" || id == "tab-comprobantesElectronicos" || id == "tab-configEmpresa" || id == "tab-bancos") {
+          } else if (id == "tab-comprobantesElectronicos" || id == "tab-notaCredito" || id == "tab-nuevaNotaCredito" || id == "tab-consultaComprobante") {
               document.getElementById("tab-menu-factura").setAttribute("class", "nav-item active");
               if (id == "tab-notaCredito" || id == "tab-nuevaNotaCredito") {
                   document.getElementById("tab-notaCredito").setAttribute("class", "nav-link active");
@@ -206,6 +222,11 @@
                   document.getElementById("tab-consultaComprobante").setAttribute("class", "nav-link active");
               } else if (id == "tab-comprobantesElectronicos") {
                   document.getElementById("tab-comprobantesElectronicos").setAttribute("class", "nav-link active");
+              }
+          } else if (id == "tab-configuracion" || id == "tab-configEmpresa" || id == "tab-bancos") {
+              document.getElementById("tab-menu-configuracion").setAttribute("class", "nav-item active");
+              if (id == "tab-configuracion") {
+                  document.getElementById("tab-configuracion").setAttribute("class", "nav-link active");
               } else if (id == "tab-configEmpresa") {
                   document.getElementById("tab-configEmpresa").setAttribute("class", "nav-link active");
               } else if (id == "tab-bancos") {
