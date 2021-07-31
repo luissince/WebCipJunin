@@ -182,7 +182,7 @@ if (!isset($_SESSION['IdUsuario'])) {
                                         <div class="col-md-12">
                                             <div class="form-group">
                                                 <select class="form-control" id="cbTipodePago">
-                                                    <option value="0">-- Cualquier medio de pago --</option>
+                                                    <option value="0">- Cualquier medio de pago -</option>
                                                     <option value="1"> Efectivo</option>
                                                     <option value="2"> Deposito</option>
                                                 </select>

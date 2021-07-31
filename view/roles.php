@@ -512,14 +512,14 @@ if (!isset($_SESSION['IdUsuario'])) {
                                 },
                                 success: function(result) {
                                     if (result.estado == 1) {
-                                        tools.ModalAlertSuccess("Modulos", result.message);
+                                        tools.ModalAlertSuccess("Roles", result.message);
                                         loadInitRoles();
                                     } else {
-                                        tools.ModalAlertWarning("Modulos", result.message);
+                                        tools.ModalAlertWarning("Roles", result.message);
                                     }
                                 },
                                 error: function(error) {
-                                    tools.ModalAlertError("Modulos", error.responseText);
+                                    tools.ModalAlertError("Roles", error.responseText);
                                 }
                             });
                         }

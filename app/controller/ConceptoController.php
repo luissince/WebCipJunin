@@ -253,6 +253,19 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
                 "message" => $result
             ));
         }
+    } else if ($_GET["type"] === "allCorrelativoCert") {
+        $result = ConceptoAdo::getAllCorrelativoCert();
+        if (is_array($result)) {
+            echo json_encode(array(
+                "estado" => 1,
+                "data" => $result,
+            ));
+        } else {
+            echo json_encode(array(
+                "estado" => 0,
+                "message" => $result
+            ));
+        }
     }
 } else if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     if ($_POST["type"] === "create") {
@@ -382,6 +395,19 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
             echo json_encode(array(
                 "estado" => 1,
                 "message" => "El certificado ha sido actualizado correctamente."
+            ));
+        } else {
+            echo json_encode(array(
+                "estado" => 0,
+                "message" => $result
+            ));
+        }
+    } else if ($_POST["type"] == "correlativoCertCrud") {
+        $result = ConceptoAdo::updateResetCorrelativo($_POST["tipo"], $_POST["numeracion"]);
+        if ($result == "updated") {
+            echo json_encode(array(
+                "estado" => 1,
+                "message" => "Se actualizó correctamente el correlativo."
             ));
         } else {
             echo json_encode(array(

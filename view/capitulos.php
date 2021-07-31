@@ -661,7 +661,7 @@ if (!isset($_SESSION['IdUsuario'])) {
                             "type": "allCapitulos"
                         },
                         beforeSend: function() {
-
+                            cbxCapitulos.empty();
                         },
                         success: function(result) {
                             if (result.estado === 1) {

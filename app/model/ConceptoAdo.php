@@ -449,9 +449,16 @@ class ConceptoAdo
             }
 
 
-            $cmdCorrelativo = Database::getInstance()->getDb()->prepare("SELECT ISNULL(MAX(Numero)+1,1) FROM CERTHabilidad");
+            $cmdCorrelativo = Database::getInstance()->getDb()->prepare("SELECT * FROM CorrelativoCERT WHERE TipoCert = 1");
             $cmdCorrelativo->execute();
-            $resultCorrelativo = $cmdCorrelativo->fetchColumn();
+            if (!$cmdCorrelativo->fetch()) {
+                $resultCorrelativo = 1;
+            } else {
+                $cmdCorrelativo = Database::getInstance()->getDb()->prepare("SELECT MAX(Numero)+1 FROM CorrelativoCERT WHERE TipoCert = 1");
+                $cmdCorrelativo->execute();
+                $resultCorrelativo = $cmdCorrelativo->fetchColumn();
+            }
+
 
             array_push($array, $resultConcepto, $arrayEspecialidades, $date->format('Y-m-d'), $resultCorrelativo);
             return $array;
@@ -531,9 +538,15 @@ class ConceptoAdo
                 throw new Exception('Error en cargar el ubigeo.');
             }
 
-            $cmdCorrelativo = Database::getInstance()->getDb()->prepare("SELECT ISNULL(MAX(Numero)+1,1) FROM CERTResidencia");
+            $cmdCorrelativo = Database::getInstance()->getDb()->prepare("SELECT * FROM CorrelativoCERT WHERE TipoCert = 2");
             $cmdCorrelativo->execute();
-            $resultCorrelativo = $cmdCorrelativo->fetchColumn();
+            if (!$cmdCorrelativo->fetch()) {
+                $resultCorrelativo = 1;
+            } else {
+                $cmdCorrelativo = Database::getInstance()->getDb()->prepare("SELECT MAX(Numero)+1 FROM CorrelativoCERT WHERE TipoCert = 2");
+                $cmdCorrelativo->execute();
+                $resultCorrelativo = $cmdCorrelativo->fetchColumn();
+            }
 
             array_push($array, $resultConcepto, $arrayEspecialidades, $date->format('Y-m-d'), $arrayUbigeo, $resultCorrelativo);
             return $array;
@@ -613,9 +626,15 @@ class ConceptoAdo
                 throw new Exception('Error en cargar el ubigeo.');
             }
 
-            $cmdCorrelativo = Database::getInstance()->getDb()->prepare("SELECT ISNULL(MAX(Numero)+1,1) FROM CERTProyecto");
+            $cmdCorrelativo = Database::getInstance()->getDb()->prepare("SELECT * FROM CorrelativoCERT WHERE TipoCert = 3");
             $cmdCorrelativo->execute();
-            $resultCorrelativo = $cmdCorrelativo->fetchColumn();
+            if (!$cmdCorrelativo->fetch()) {
+                $resultCorrelativo = 1;
+            } else {
+                $cmdCorrelativo = Database::getInstance()->getDb()->prepare("SELECT MAX(Numero)+1 FROM CorrelativoCERT WHERE TipoCert = 3");
+                $cmdCorrelativo->execute();
+                $resultCorrelativo = $cmdCorrelativo->fetchColumn();
+            }
 
             array_push($array, $resultConcepto, $arrayEspecialidades, $date->format('Y-m-d'), $arrayUbigeo, $resultCorrelativo);
             return $array;
@@ -1043,6 +1062,98 @@ class ConceptoAdo
             }
         } catch (Exception $ex) {
             return false;
+        }
+    }
+
+    public static function getAllCorrelativoCert()
+    {
+        try {
+            $array = array();
+
+            $cmdCertificado = Database::getInstance()->getDb()->prepare("SELECT * FROM CorrelativoCERT WHERE TipoCert = 1");
+            $cmdCertificado->execute();
+
+            if (!$cmdCertificado->fetch()) {
+                array_push($array, array(
+                    "Id" => 1,
+                    "Nombre" => "Certificado de Habilidad",
+                    "Numero" => "0",
+                ));
+            } else {
+                $cmdCertificado = Database::getInstance()->getDb()->prepare("SELECT MIN(Numero) FROM CorrelativoCERT WHERE TipoCert = 1");
+                $cmdCertificado->execute();
+                $numeracion = $cmdCertificado->fetchColumn();
+                array_push($array, array(
+                    "Id" => 1,
+                    "Nombre" => "Certificado de Habilidad",
+                    "Numero" => $numeracion + 1,
+                ));
+            }
+
+            $cmdCertificado = Database::getInstance()->getDb()->prepare("SELECT * FROM CorrelativoCERT WHERE TipoCert = 2");
+            $cmdCertificado->execute();
+
+            if (!$cmdCertificado->fetch()) {
+                array_push($array, array(
+                    "Id" => 2,
+                    "Nombre" => "Certificado de Obra Pública",
+                    "Numero" => "0",
+                ));
+            } else {
+                $cmdCertificado = Database::getInstance()->getDb()->prepare("SELECT MIN(Numero) FROM CorrelativoCERT WHERE TipoCert = 2");
+                $cmdCertificado->execute();
+                $numeracion = $cmdCertificado->fetchColumn();
+                array_push($array, array(
+                    "Id" => 2,
+                    "Nombre" => "Certificado de Obra Pública",
+                    "Numero" => $numeracion + 1,
+                ));
+            }
+
+            $cmdCertificado = Database::getInstance()->getDb()->prepare("SELECT * FROM CorrelativoCERT WHERE TipoCert = 3");
+            $cmdCertificado->execute();
+
+            if (!$cmdCertificado->fetch()) {
+                array_push($array, array(
+                    "Id" => 3,
+                    "Nombre" => "Certificado de Proyecto",
+                    "Numero" => "0",
+                ));
+            } else {
+                $cmdCertificado = Database::getInstance()->getDb()->prepare("SELECT MIN(Numero) FROM CorrelativoCERT WHERE TipoCert = 3");
+                $cmdCertificado->execute();
+                $numeracion = $cmdCertificado->fetchColumn();
+                array_push($array, array(
+                    "Id" => 3,
+                    "Nombre" => "Certificado de Proyecto",
+                    "Numero" => $numeracion + 1,
+                ));
+            }
+
+            return $array;
+        } catch (Exception $ex) {
+            return $ex->getMessage();
+        }
+    }
+
+    public static function updateResetCorrelativo($tipo, $correlativo)
+    {
+        try {
+            Database::getInstance()->getDb()->beginTransaction();
+            $cmdDelete = Database::getInstance()->getDb()->prepare("DELETE FROM CorrelativoCERT WHERE TipoCert = ?");
+            $cmdDelete->bindParam(1, $tipo, PDO::PARAM_INT);
+            $cmdDelete->execute();
+
+            $cmdUpdate = Database::getInstance()->getDb()->prepare("INSERT INTO CorrelativoCERT(TipoCert,Numero) VALUES(?,?)");
+            $cmdUpdate->bindParam(1, $tipo, PDO::PARAM_INT);
+            $cmdUpdate->bindParam(2, $correlativo, PDO::PARAM_INT);
+            $cmdUpdate->execute();
+
+            Database::getInstance()->getDb()->commit();
+            return "updated";
+        } catch (Exception $ex) {
+            Database::getInstance()->getDb()->rollback();
+            return $ex->getMessage();
         }
     }
 }

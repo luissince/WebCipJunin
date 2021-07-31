@@ -558,6 +558,10 @@ class IngresosAdo
                 $cmdCertHabilidad->bindParam(9, $body["objectCertificadoHabilidad"]["anulado"], PDO::PARAM_BOOL);
                 $cmdCertHabilidad->bindParam(10, $idIngreso, PDO::PARAM_INT);
                 $cmdCertHabilidad->execute();
+
+                $cmdCorrelativo = Database::getInstance()->getDb()->prepare("INSERT INTO CorrelativoCERT(TipoCert,Numero) VALUES(1,?)");
+                $cmdCorrelativo->bindParam(1, $body["objectCertificadoHabilidad"]["numero"], PDO::PARAM_INT);
+                $cmdCorrelativo->execute();
             }
 
             if ($body["estadoCertificadoResidenciaObra"] == true) {
@@ -575,6 +579,10 @@ class IngresosAdo
                 $cmdCertResidenciaObra->bindParam(11, $body["objectCertificadoResidenciaObra"]["anulado"], PDO::PARAM_BOOL);
                 $cmdCertResidenciaObra->bindParam(12, $idIngreso, PDO::PARAM_INT);
                 $cmdCertResidenciaObra->execute();
+
+                $cmdCorrelativo = Database::getInstance()->getDb()->prepare("INSERT INTO CorrelativoCERT(TipoCert,Numero) VALUES(2,?)");
+                $cmdCorrelativo->bindParam(1, $body["objectCertificadoHabilidad"]["numero"], PDO::PARAM_INT);
+                $cmdCorrelativo->execute();
             }
 
 
@@ -595,6 +603,10 @@ class IngresosAdo
                 $cmdCertProyecto->bindParam(13, $body["objectCertificadoProyecto"]["anulado"], PDO::PARAM_BOOL);
                 $cmdCertProyecto->bindParam(14, $idIngreso, PDO::PARAM_INT);
                 $cmdCertProyecto->execute();
+
+                $cmdCorrelativo = Database::getInstance()->getDb()->prepare("INSERT INTO CorrelativoCERT(TipoCert,Numero) VALUES(3,?)");
+                $cmdCorrelativo->bindParam(1, $body["objectCertificadoHabilidad"]["numero"], PDO::PARAM_INT);
+                $cmdCorrelativo->execute();
             }
 
             if ($body["estadoPeritaje"] == true) {
@@ -1480,11 +1492,11 @@ class IngresosAdo
             LEFT OUTER JOIN CERTResidencia AS cr ON cr.idIngreso = i.idIngreso 
             LEFT OUTER JOIN CERTProyecto AS cp ON cp.idIngreso = i.idIngreso 
             LEFT OUTER JOIN Peritaje AS pe ON pe.idIngreso = i.idIngreso
-            left join Persona as p on i.idDNI = p.idDNI
-            left join EmpresaPersona AS e ON e.IdEmpresa = i.idEmpresaPersona 
-            inner join Detalle as d on d.idIngreso = i.idIngreso 
-            inner join Concepto as c on d.idConcepto = c.idConcepto
-            left join Anulado as a on a.idDocumento = i.idIngreso
+            LEFT JOIN Persona as p on i.idDNI = p.idDNI
+            LEFT JOIN EmpresaPersona AS e ON e.IdEmpresa = i.idEmpresaPersona 
+            INNER JOIN Detalle as d on d.idIngreso = i.idIngreso 
+            INNER JOIN Concepto as c on d.idConcepto = c.idConcepto
+            LEFT JOIN Anulado as a on a.idDocumento = i.idIngreso
             LEFT JOIN Banco as b ON b.idBanco = i.idBanco
             where
             $tipoPago = 0 AND (cast(i.Fecha as date) between ? and ?) and i.TipoComprobante = ?

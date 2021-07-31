@@ -371,7 +371,6 @@ if (!isset($_SESSION['IdUsuario'])) {
                         },
                         error: function(error) {
                             tbTable.empty();
-                            console.log(error);
                             tbTable.append(
                                 '<tr class="text-center"><td colspan="6"><p>Se produjo un error, intente nuevamente.</p></td></tr>'
                             );

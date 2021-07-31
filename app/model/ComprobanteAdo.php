@@ -283,7 +283,7 @@ class ComprobanteAdo
             $cmdCorreo->bindParam(1, $dniColegiado, PDO::PARAM_INT);
             $cmdCorreo->execute();
             $count = 0;
-            while($row = $cmdCorreo->fetch()){
+            while ($row = $cmdCorreo->fetch()) {
                 $count++;
                 array_push($arrayCorreo, array(
                     "Id" => $count,
