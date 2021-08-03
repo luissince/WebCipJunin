@@ -1342,6 +1342,12 @@ class IngresosAdo
         return $ret;
     }
 
+    public static function getMothName($month)
+    {
+        $arrmonth = ["Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio", "Julio", "Agosto", "Setiembre", "Octubre", "Noviembre", "Diciembre"];
+        return $arrmonth[$month - 1];
+    }
+
     public static function ReporteGeneralIngresosPorFechas($fechaInicio, $fechaFinal, $tipoPago)
     {
         try {

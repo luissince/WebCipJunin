@@ -41,8 +41,7 @@ if (!isset($_GET["idIngreso"])) {
         $DiaRegistro = $Datos['frDia'];
         $Mes = $Datos['frMes'];
         $numCertificado = $Datos['numCertificado'];
-        $MesFormat = DateTime::createFromFormat('!m', $Mes);
-        $MesRegistro = strftime("%B", $MesFormat->getTimestamp());
+        $MesRegistro = IngresosAdo::getMothName($Mes);
         $AnioRegistro = substr($Datos['frAnio'], 2, 2);
         $sesentaEspacios = '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
                             &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
@@ -272,6 +271,6 @@ if (!isset($_GET["idIngreso"])) {
         $mpdf->WriteHTML($html);
 
         // Output a PDF file directly to the browser
-        $mpdf->Output("CERT-HABILIDAD-".$numCertificado."-CIP-JUNIN.pdf", 'D');
+        $mpdf->Output("CERT-HABILIDAD-" . $numCertificado . "-CIP-JUNIN.pdf", 'D');
     }
 }

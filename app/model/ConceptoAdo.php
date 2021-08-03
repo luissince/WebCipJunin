@@ -32,6 +32,8 @@ class ConceptoAdo
             WHERE 
             ? = 0
             OR
+            ? = 1 AND c.Codigo = ?
+            OR
             ? = 1 AND c.Concepto LIKE CONCAT(?,'%') 
             OR
             ? = 2 AND c.Categoria = ?
@@ -43,10 +45,13 @@ class ConceptoAdo
             $comandoConcepto->bindParam(3, $nombres, PDO::PARAM_STR);
 
             $comandoConcepto->bindParam(4, $opcion, PDO::PARAM_INT);
-            $comandoConcepto->bindParam(5, $categoria, PDO::PARAM_INT);
+            $comandoConcepto->bindParam(5, $nombres, PDO::PARAM_STR);
 
-            $comandoConcepto->bindParam(6, $posicionPagina, PDO::PARAM_INT);
-            $comandoConcepto->bindParam(7, $filasPorPagina, PDO::PARAM_INT);
+            $comandoConcepto->bindParam(6, $opcion, PDO::PARAM_INT);
+            $comandoConcepto->bindParam(7, $categoria, PDO::PARAM_INT);
+
+            $comandoConcepto->bindParam(8, $posicionPagina, PDO::PARAM_INT);
+            $comandoConcepto->bindParam(9, $filasPorPagina, PDO::PARAM_INT);
             $comandoConcepto->execute();
             $count = 0;
             while ($row = $comandoConcepto->fetch()) {
@@ -73,16 +78,21 @@ class ConceptoAdo
             WHERE 
             ? = 0
             OR
-            ? = 1 AND Concepto LIKE concat(?,'%') 
+            ? = 1 AND c.Codigo = ?
             OR
-            ? = 2 AND Categoria = ?");
+            ? = 1 AND c.Concepto LIKE concat(?,'%') 
+            OR
+            ? = 2 AND c.Categoria = ?");
             $comandoTotal->bindParam(1, $opcion, PDO::PARAM_INT);
 
             $comandoTotal->bindParam(2, $opcion, PDO::PARAM_INT);
             $comandoTotal->bindParam(3, $nombres, PDO::PARAM_STR);
 
             $comandoTotal->bindParam(4, $opcion, PDO::PARAM_INT);
-            $comandoTotal->bindParam(5, $categoria, PDO::PARAM_INT);
+            $comandoTotal->bindParam(5, $nombres, PDO::PARAM_STR);
+
+            $comandoTotal->bindParam(6, $opcion, PDO::PARAM_INT);
+            $comandoTotal->bindParam(7, $categoria, PDO::PARAM_INT);
             $comandoTotal->execute();
             $resultTotal =  $comandoTotal->fetchColumn();
 

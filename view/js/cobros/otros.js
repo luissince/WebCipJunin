@@ -1,8 +1,8 @@
 function Otros() {
 
 
-    this.componentesOtros = function() {
-        $("#btnOtro").click(function() {
+    this.componentesOtros = function () {
+        $("#btnOtro").click(function () {
             if (idDNI == 0 && $("#cbEmpresa").val() == "") {
                 tools.AlertWarning("Cuotas", "No selecciono ningún ingeniero o empresa para aceder al modulo otros.")
             } else {
@@ -11,7 +11,7 @@ function Otros() {
             }
         });
 
-        $("#btnOtro").keypress(function(event) {
+        $("#btnOtro").keypress(function (event) {
             if (event.keyCode === 13) {
                 if (idDNI == 0 && $("#cbEmpresa").val() == "") {
                     tools.AlertWarning("Cuotas", "No selecciono ningún ingeniero o empresa para aceder al modulo otros.")
@@ -22,17 +22,17 @@ function Otros() {
             }
             event.preventDefault();
         });
-        $("#btnAceptarOtros").click(function() {
+        $("#btnAceptarOtros").click(function () {
             validateIngresoOtros();
         });
 
-        $("#btnAceptarOtros").keypress(function(event) {
+        $("#btnAceptarOtros").keypress(function (event) {
             if (event.keyCode === 13) {
                 validateIngresoOtros();
             }
             event.preventDefault();
         });
-        $("#cbOtrosConcepto").change(function(event) {
+        $("#cbOtrosConcepto").change(function (event) {
             $("#txtMontoOtrosConceptos").val($("#cbOtrosConcepto").find('option:selected').attr('id'))
         });
     }
@@ -45,19 +45,19 @@ function Otros() {
                 "type": "typecolegiatura",
                 "categoria": 100,
             },
-            beforeSend: function() {
+            beforeSend: function () {
                 $("#cbOtrosConcepto").empty();
                 $("#lblConceptos").empty();
                 $("#lblConceptos").append('Conceptos <img src="./images/spiner.gif" width="20"/>');
             },
-            success: function(result) {
+            success: function (result) {
                 if (result.estado === 1) {
                     $("#lblConceptos").empty();
                     $("#lblConceptos").css("color", "#333");
                     $("#lblConceptos").append('Conceptos');
                     $("#cbOtrosConcepto").append(' <option id="" value="">- Seleccione -</option>');
                     for (let value of result.data) {
-                        $("#cbOtrosConcepto").append('<option id="' + value.Precio + '" value="' + value.IdConcepto + '">' + value.Concepto + ' (' + value.Precio + ')</option>');
+                        $("#cbOtrosConcepto").append('<option id="' + value.Precio + '" value="' + value.IdConcepto + '">' + value.Concepto + ' (' + tools.formatMoney(value.Precio) + ')</option>');
                     }
                 } else {
                     $("#lblConceptos").empty();
@@ -65,7 +65,7 @@ function Otros() {
                     $("#lblConceptos").append(result.message);
                 }
             },
-            error: function(error) {
+            error: function (error) {
                 $("#lblConceptos").empty();
                 $("#lblConceptos").css("color", "red");
                 $("#lblConceptos").append("Se produjo un error del servidor intente nuevamente.");

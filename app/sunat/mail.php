@@ -399,7 +399,7 @@ try {
                             $mail->Host       = 'smtp.live.com';                     //Set the SMTP server to send through
                             $mail->SMTPAuth   = true; //"login";                    //Enable SMTP authentication
                             $mail->Username   = $fromEmail;                     //SMTP username
-                            $mail->Password   = 'Cipjunin2021';                               //SMTP password
+                            $mail->Password   = 'Cipjunin2020';                               //SMTP password
                             $mail->SMTPSecure = "TLS";            //Enable implicit TLS encryption
                             $mail->Port       = 587;                                 //TCP port to connect to; use 587 if you have set `SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS`
 
@@ -471,11 +471,12 @@ try {
                             ));
                         }
                     }
-                } catch (Exception $e) {
+                } catch (Exception $ex) {
                     //     // echo "Message could not be sent. Mailer Error: {$mail->ErrorInfo}";
                     print json_encode(array(
                         "estado" => 0,
                         "message" => "El mensaje no pudo ser enviado. Mailer Error",
+                        "error" => $ex->getMessage(),
                     ));
                 } finally {
                     if (!is_null($fileName)) {

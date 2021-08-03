@@ -46,8 +46,7 @@ if (!isset($_GET["idIngreso"])) {
         $FechaRegistro = $Datos['fechaRegistro'];
         $DiaRegistro = $Datos['frDia'];
         $Mes = $Datos['frMes'];
-        $MesFormat = DateTime::createFromFormat('!m', $Mes);
-        $MesRegistro = strftime("%B", $MesFormat->getTimestamp());
+        $MesRegistro = IngresosAdo::getMothName($Mes);
         $AnioRegistro = substr($Datos['frAnio'], 2, 2);
 
         $html = '<html>

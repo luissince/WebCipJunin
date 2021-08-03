@@ -258,9 +258,9 @@ class Environment
      */
     public function getTemplateClass(string $name, int $index = null): string
     {
-        $key = $this->getLoader()->getCacheKey($name).$this->optionsHash;
+        $key = $this->getLoader()->getCacheKey($name) . $this->optionsHash;
 
-        return $this->templateClassPrefix.hash('sha256', $key).(null === $index ? '' : '___'.$index);
+        return $this->templateClassPrefix . hash('sha256', $key) . (null === $index ? '' : '___' . $index);
     }
 
     /**
@@ -328,7 +328,7 @@ class Environment
     {
         $mainCls = $cls;
         if (null !== $index) {
-            $cls .= '___'.$index;
+            $cls .= '___' . $index;
         }
 
         if (isset($this->loadedTemplates[$cls])) {
@@ -355,7 +355,7 @@ class Environment
                      * where the cache was cleared between the above calls to write to and load from
                      * the cache.
                      */
-                    eval('?>'.$content);
+                    eval('?>' . $content);
                 }
 
                 if (!class_exists($cls, false)) {

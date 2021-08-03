@@ -48,8 +48,7 @@ if (!isset($_GET["idIngreso"])) {
         $FechaRegistro = $Datos['fechaRegistro'];
         $DiaRegistro = $Datos['frDia'];
         $Mes = $Datos['frMes'];
-        $MesFormat = DateTime::createFromFormat('!m', $Mes);
-        $MesRegistro = strftime("%B", $MesFormat->getTimestamp());
+        $MesRegistro = IngresosAdo::getMothName($Mes);
         $AnioRegistro = substr($Datos['frAnio'], 2, 2);
         $sesentaEspacios = '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
                             &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
@@ -280,6 +279,6 @@ if (!isset($_GET["idIngreso"])) {
         $mpdf->WriteHTML($html);
 
         // Output a PDF file directly to the browser
-        $mpdf->Output(" CIP-JUNIN.pdf", 'I');
+        $mpdf->Output(" CIP-JUNIN.pdf", 'D');
     }
 }
