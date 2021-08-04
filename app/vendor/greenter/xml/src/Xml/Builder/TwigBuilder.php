@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Created by PhpStorm.
  * User: Giansalex
@@ -52,7 +53,7 @@ class TwigBuilder
 
     private function initTwig($options)
     {
-        $loader = new FilesystemLoader(__DIR__.'/../Templates');
+        $loader = new FilesystemLoader(__DIR__ . '/../Templates');
 
         $twig = new Environment($loader, $options);
         $this->loadFilterAndFunctions($twig);
