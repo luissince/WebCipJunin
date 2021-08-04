@@ -56,18 +56,18 @@ if (!is_array($detalleventa)) {
                 ->setDireccion($empresa->Domicilio))
             ->setEmail($empresa->Telefono)
             ->setTelephone($empresa->Email);
-            
+
         $detiail1 = new SummaryDetail();
         $detiail1->setTipoDoc($ingreso->TipoComprobante)
             ->setSerieNro($ingreso->Serie . '-' . $ingreso->Numeracion)
             ->setEstado('3') //Anulación 3
             ->setClienteTipo($ingreso->TipoDocumento)
             ->setClienteNro($ingreso->NumeroDocumento)
-            ->setMtoOperGravadas(round($totales['opgravada'], 2, PHP_ROUND_HALF_UP)) 
+            ->setMtoOperGravadas(round($totales['opgravada'], 2, PHP_ROUND_HALF_UP))
             ->setMtoOperExoneradas(round($totales['opexonerada'], 2, PHP_ROUND_HALF_UP))
             ->setMtoIGV(round($totales['totalimpuesto'], 2, PHP_ROUND_HALF_UP))
             ->setTotal(round($totales['totalconimpuesto'], 2, PHP_ROUND_HALF_UP));
-           
+
 
         $sum = new Summary();
         // Fecha Generacion menor que Fecha Resumen 
@@ -82,7 +82,7 @@ if (!is_array($detalleventa)) {
         // Envio a SUNAT.
         //FE_BETA
         //FE_PRODUCCION
-        $point = SunatEndpoints::FE_BETA;
+        $point = SunatEndpoints::FE_PRODUCCION;
         $see = $util->getSee($point, $empresa->NumeroDocumento, $empresa->UsuarioSol, $empresa->ClaveSol);
         $res = $see->send($sum);
         $util->writeXml($sum, $see->getFactory()->getLastXml());
