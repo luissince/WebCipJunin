@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Created by PhpStorm.
  * User: Administrador
@@ -114,7 +115,7 @@ class See
      */
     public function setClaveSOL(string $ruc, string $user, string $password)
     {
-        $this->wsClient->setCredentials($ruc.$user, $password);
+        $this->wsClient->setCredentials($ruc . $user, $password);
     }
 
     /**

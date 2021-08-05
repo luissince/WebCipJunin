@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Created by PhpStorm.
  * User: Giansalex
@@ -44,7 +45,7 @@ class InvoiceBuilder extends TwigBuilder implements BuilderInterface
     {
         /** @var Invoice $invoice */
         $invoice = /*.(Invoice).*/ $document;
-        $template = 'invoice'.$invoice->getUblVersion().'.xml.twig';
+        $template = 'invoice' . $invoice->getUblVersion() . '.xml.twig';
 
         return $this->render($template, $document);
     }

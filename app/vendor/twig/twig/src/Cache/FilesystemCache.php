@@ -16,7 +16,7 @@ namespace Twig\Cache;
  *
  * @author Andrew Tch <andrew@noop.lv>
  */
-class FilesystemCache implements CacheInterface
+class FilesystemCache
 {
     const FORCE_BYTECODE_INVALIDATION = 1;
 
@@ -25,7 +25,7 @@ class FilesystemCache implements CacheInterface
 
     public function __construct(string $directory, int $options = 0)
     {
-        $this->directory = rtrim($directory, '\/').'/';
+        $this->directory = rtrim($directory, '\/') . '/';
         $this->options = $options;
     }
 
@@ -33,7 +33,7 @@ class FilesystemCache implements CacheInterface
     {
         $hash = hash('sha256', $className);
 
-        return $this->directory.$hash[0].$hash[1].'/'.$hash.'.php';
+        return $this->directory . $hash[0] . $hash[1] . '/' . $hash . '.php';
     }
 
     public function load(string $key): void
