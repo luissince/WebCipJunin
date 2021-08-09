@@ -399,7 +399,7 @@ try {
                             $mail->Host       = 'smtp.live.com';                     //Set the SMTP server to send through
                             $mail->SMTPAuth   = true; //"login";                    //Enable SMTP authentication
                             $mail->Username   = $fromEmail;                     //SMTP username
-                            $mail->Password   = 'Cipjunin2020';                               //SMTP password
+                            $mail->Password   = 'ingenieros_2021';                               //SMTP password
                             $mail->SMTPSecure = "TLS";            //Enable implicit TLS encryption
                             $mail->Port       = 587;                                 //TCP port to connect to; use 587 if you have set `SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS`
 
@@ -445,7 +445,7 @@ try {
                                         </tr>
                                         <tr style="width:100%; padding-top: 20px;">
                                             <td style="width:20%;"></td>
-                                            <td style="width:60%; font-size:18px;text-align: center; font-weight: bold;">La Administración.</td>
+                                            <td style="width:60%; font-size:18px;text-align: center; font-weight: bold;">Tesorería.</td>
                                             <td style="width:20%;"></td>
                                         </tr>
                                     </table>
