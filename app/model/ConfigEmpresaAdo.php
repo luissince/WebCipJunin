@@ -19,6 +19,7 @@ class configEmpresaAdo
                 "PaginaWeb" => $row['PaginaWeb'],
                 "Email" => $row['Email'],
                 "Domicilio" => $row['Domicilio'],
+                "Horario" => $row['Horario'],
                 "TipoDocumento" => $row['TipoDocumento'],
                 "NumeroDocumento" => $row['NumeroDocumento'],
                 "RazonSocial" => $row['RazonSocial'],
@@ -36,7 +37,8 @@ class configEmpresaAdo
         }
     }
 
-    public static function CrudEmpresa($body){
+    public static function CrudEmpresa($body)
+    {
         try {
             Database::getInstance()->getDb()->beginTransaction();
             $path = "";
@@ -56,12 +58,12 @@ class configEmpresaAdo
                 if ($respuesta) {
                     $publicKeyPem  = $certificados['cert']; //Archivo público
                     $privateKeyPem = $certificados['pkey']; //Archivo privado
-                    file_put_contents('../resources/cert.pem', $privateKeyPem.''. $publicKeyPem );
+                    file_put_contents('../resources/cert.pem', $privateKeyPem . '' . $publicKeyPem);
                     chmod("../resources/cert.pem", 0777);
-                   // file_put_contents('../../resources/private_key.pem', $privateKeyPem);
-                  //  file_put_contents('../../resources/public_key.pem', $publicKeyPem);
-                   // chmod("../../resources/private_key.pem", 0777);
-                 //   chmod("../../resources/public_key.pem", 0777);
+                    // file_put_contents('../../resources/private_key.pem', $privateKeyPem);
+                    //  file_put_contents('../../resources/public_key.pem', $publicKeyPem);
+                    // chmod("../../resources/private_key.pem", 0777);
+                    //   chmod("../../resources/public_key.pem", 0777);
                 } else {
                     throw new Exception('Error en crear las llaves del certificado.');
                 }
@@ -75,6 +77,7 @@ class configEmpresaAdo
                 RazonSocial=?,
                 NombreComercial=?,
                 Domicilio=?,
+                Horario=?,
                 Telefono = ?,
                 Celular=?,
                 PaginaWeb=?,
@@ -89,16 +92,17 @@ class configEmpresaAdo
                 $comando->bindParam(2, $body['txtRazonSocial'], PDO::PARAM_STR);
                 $comando->bindParam(3, $body['txtNomComercial'], PDO::PARAM_STR);
                 $comando->bindParam(4, $body['txtDireccion'], PDO::PARAM_STR);
-                $comando->bindParam(5, $body['txtTelefono'], PDO::PARAM_STR);
-                $comando->bindParam(6, $body['txtCelular'], PDO::PARAM_STR);
-                $comando->bindParam(7, $body['txtPaginWeb'], PDO::PARAM_STR);
-                $comando->bindParam(8, $body['txtEmail'], PDO::PARAM_STR);
-                $comando->bindParam(9, $body['image'],  PDO::PARAM_LOB, 0, PDO::SQLSRV_ENCODING_BINARY);
-                $comando->bindParam(10, $body['txtUsuarioSol'], PDO::PARAM_STR);
-                $comando->bindParam(11, $body['txtClaveSol'], PDO::PARAM_STR);
-                $comando->bindParam(12, $path, PDO::PARAM_STR);
-                $comando->bindParam(13, $body['txtClaveCertificado'], PDO::PARAM_STR);
-                $comando->bindParam(14, $body['idEmpresa'], PDO::PARAM_INT);
+                $comando->bindParam(5, $body['txtHorario'], PDO::PARAM_STR);
+                $comando->bindParam(6, $body['txtTelefono'], PDO::PARAM_STR);
+                $comando->bindParam(7, $body['txtCelular'], PDO::PARAM_STR);
+                $comando->bindParam(8, $body['txtPaginWeb'], PDO::PARAM_STR);
+                $comando->bindParam(9, $body['txtEmail'], PDO::PARAM_STR);
+                $comando->bindParam(10, $body['image'],  PDO::PARAM_LOB, 0, PDO::SQLSRV_ENCODING_BINARY);
+                $comando->bindParam(11, $body['txtUsuarioSol'], PDO::PARAM_STR);
+                $comando->bindParam(12, $body['txtClaveSol'], PDO::PARAM_STR);
+                $comando->bindParam(13, $path, PDO::PARAM_STR);
+                $comando->bindParam(14, $body['txtClaveCertificado'], PDO::PARAM_STR);
+                $comando->bindParam(15, $body['idEmpresa'], PDO::PARAM_INT);
                 $comando->execute();
             } else {
                 $comando = Database::getInstance()->getDb()->prepare("UPDATE Empresa SET 
@@ -106,6 +110,7 @@ class configEmpresaAdo
                 RazonSocial=?,
                 NombreComercial=?,
                 Domicilio=?,
+                Horario=?,
                 Telefono = ?,
                 Celular=?,
                 PaginaWeb=?,
@@ -119,15 +124,16 @@ class configEmpresaAdo
                 $comando->bindParam(2, $body['txtRazonSocial'], PDO::PARAM_STR);
                 $comando->bindParam(3, $body['txtNomComercial'], PDO::PARAM_STR);
                 $comando->bindParam(4, $body['txtDireccion'], PDO::PARAM_STR);
-                $comando->bindParam(5, $body['txtTelefono'], PDO::PARAM_STR);
-                $comando->bindParam(6, $body['txtCelular'], PDO::PARAM_STR);
-                $comando->bindParam(7, $body['txtPaginWeb'], PDO::PARAM_STR);
-                $comando->bindParam(8, $body['txtEmail'], PDO::PARAM_STR);
-                $comando->bindParam(9, $body['txtUsuarioSol'], PDO::PARAM_STR);
-                $comando->bindParam(10, $body['txtClaveSol'], PDO::PARAM_STR);
-                $comando->bindParam(11, $path, PDO::PARAM_STR);
-                $comando->bindParam(12, $body['txtClaveCertificado'], PDO::PARAM_STR);
-                $comando->bindParam(13, $body['idEmpresa'], PDO::PARAM_INT);
+                $comando->bindParam(5, $body['txtHorario'], PDO::PARAM_STR);
+                $comando->bindParam(6, $body['txtTelefono'], PDO::PARAM_STR);
+                $comando->bindParam(7, $body['txtCelular'], PDO::PARAM_STR);
+                $comando->bindParam(8, $body['txtPaginWeb'], PDO::PARAM_STR);
+                $comando->bindParam(9, $body['txtEmail'], PDO::PARAM_STR);
+                $comando->bindParam(10, $body['txtUsuarioSol'], PDO::PARAM_STR);
+                $comando->bindParam(11, $body['txtClaveSol'], PDO::PARAM_STR);
+                $comando->bindParam(12, $path, PDO::PARAM_STR);
+                $comando->bindParam(13, $body['txtClaveCertificado'], PDO::PARAM_STR);
+                $comando->bindParam(14, $body['idEmpresa'], PDO::PARAM_INT);
                 $comando->execute();
             }
 

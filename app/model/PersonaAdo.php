@@ -566,15 +566,29 @@ class PersonaAdo
     public static function getColegiatura($idDni)
     {
         try {
-            $cmdColegiatura = Database::getInstance()->getDb()->prepare("SELECT c.idColegiado, s.idConsejo, s.Consejo, ca.idCapitulo ,ISNULL(ca.Capitulo,'CAPITULO NO REGISTRAD0') AS Capitulo, e.idEspecialidad ,UPPER(ISNULL(e.Especialidad,'ESPECIALIDAD NO REGISTRADA')) AS Especialidad,
-            convert(VARCHAR,cast(c.FechaColegiado AS DATE),103) AS FechaColegiado, c.idUnivesidadEgreso AS idUnivEgreso,ISNULL(ue.Universidad,'UNIVERSIDAD NO REGISTRADA') AS UnivesidadEgreso, convert(VARCHAR,cast(c.FechaEgreso AS DATE),103) AS FechaEgreso, 
-            u.idUniversidad, ISNULL(u.Universidad,'UNIVERSIDAD NO REGISTRADA') AS Universidad, Convert(VARCHAR,cast(c.FechaTitulacion AS DATE),103) AS FechaTitulacion, 
-            c.Resolucion, c.Principal FROM Colegiatura  AS c
-                LEFT JOIN Sede AS s ON s.idConsejo = c.idSede
-                LEFT JOIN Especialidad AS e ON e.idEspecialidad = c.idEspecialidad
-                LEFT JOIN Capitulo AS ca ON ca.idCapitulo = e.idCapitulo
-				LEFT JOIN Universidad as ue ON ue.idUniversidad = c.idUnivesidadEgreso 
-                LEFT JOIN Universidad AS u ON u.idUniversidad = c.idUniversidad where idDNI = ?");
+            $cmdColegiatura = Database::getInstance()->getDb()->prepare("SELECT 
+            c.idColegiado, 
+            s.idConsejo, 
+            s.Consejo, 
+            ca.idCapitulo ,
+            ISNULL(ca.Capitulo,'CAPITULO NO REGISTRADO') AS Capitulo, 
+            e.idEspecialidad ,
+            UPPER(ISNULL(e.Especialidad,'ESPECIALIDAD NO REGISTRADA')) AS Especialidad,
+            convert(VARCHAR,cast(c.FechaColegiado AS DATE),103) AS FechaColegiado, 
+            c.idUnivesidadEgreso AS idUnivEgreso,
+            ISNULL(ue.Universidad,'UNIVERSIDAD NO REGISTRADA') AS UnivesidadEgreso, 
+            convert(VARCHAR,cast(c.FechaEgreso AS DATE),103) AS FechaEgreso, 
+            u.idUniversidad, 
+            ISNULL(u.Universidad,'UNIVERSIDAD NO REGISTRADA') AS Universidad, 
+            Convert(VARCHAR,cast(c.FechaTitulacion AS DATE),103) AS FechaTitulacion, 
+            c.Resolucion, 
+            c.Principal 
+            FROM Colegiatura  AS c
+            LEFT JOIN Sede AS s ON s.idConsejo = c.idSede
+            LEFT JOIN Especialidad AS e ON e.idEspecialidad = c.idEspecialidad
+            LEFT JOIN Capitulo AS ca ON ca.idCapitulo = e.idCapitulo
+			LEFT JOIN Universidad as ue ON ue.idUniversidad = c.idUnivesidadEgreso 
+            LEFT JOIN Universidad AS u ON u.idUniversidad = c.idUniversidad where idDNI = ?");
             $cmdColegiatura->bindParam(1, $idDni, PDO::PARAM_STR);
             $cmdColegiatura->execute();
 

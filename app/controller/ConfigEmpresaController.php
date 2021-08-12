@@ -26,6 +26,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
     $body["txtRazonSocial"] = $_POST["txtRazonSocial"];
     $body["txtNomComercial"] = $_POST["txtNomComercial"];
     $body["txtDireccion"] = $_POST["txtDireccion"];
+    $body["txtHorario"] = $_POST["txtHorario"];
     $body["txtTelefono"] = $_POST["txtTelefono"];
     $body["txtCelular"] = $_POST["txtCelular"];
     $body["txtPaginWeb"] = $_POST["txtPaginWeb"];

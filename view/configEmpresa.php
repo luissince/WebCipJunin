@@ -93,6 +93,19 @@ if (!isset($_SESSION['IdUsuario'])) {
                         </div>
 
                         <div class="row">
+                            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                                <label>
+                                    <i></i>
+                                    Horario de Atención:
+                                </label>
+                                <div class="form-group">
+                                    <input id="txtHorario" class="form-control" type="text" placeholder="Ingrese el horario de Atención">
+                                </div>
+                            </div>
+                        </div>
+
+
+                        <div class="row">
                             <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
                                 <label>
                                     <i></i>
@@ -222,6 +235,7 @@ if (!isset($_SESSION['IdUsuario'])) {
                 let lblImagen = $("#lblImagen");
                 let fileImage = $("#SubirImagen");
                 let txtDireccion = $("#txtDireccion");
+                let txtHorario = $("#txtHorario");
                 let txtTelefono = $("#txtTelefono");
                 let txtCelular = $("#txtCelular");
                 let txtPaginWeb = $("#txtPaginWeb");
@@ -280,6 +294,7 @@ if (!isset($_SESSION['IdUsuario'])) {
                                     lblImagen.attr("src", "data:image/png;base64," + data.result.Image);
                                 }
                                 txtDireccion.val(data.result.Domicilio);
+                                txtHorario.val(data.result.Horario);
                                 txtTelefono.val(data.result.Telefono);
                                 txtCelular.val(data.result.Celular);
                                 txtPaginWeb.val(data.result.PaginaWeb);
@@ -309,6 +324,7 @@ if (!isset($_SESSION['IdUsuario'])) {
                     formData.append("txtRazonSocial", txtRazonSocial.val());
                     formData.append("txtNomComercial", txtNomComercial.val());
                     formData.append("txtDireccion", txtDireccion.val());
+                    formData.append("txtHorario", txtHorario.val());
                     formData.append("txtTelefono", txtTelefono.val());
                     formData.append("txtCelular", txtCelular.val());
                     formData.append("txtPaginWeb", txtPaginWeb.val());
