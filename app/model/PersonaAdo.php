@@ -659,7 +659,12 @@ class PersonaAdo
     public static function getTelefono($idDni)
     {
         try {
-            $cmdTelefono = Database::getInstance()->getDb()->prepare("SELECT a.idTelefono, t.idTipo, ISNULL (t.Descripcion, 'TIPO NO REGISTRADO') AS Tipo , a.Telefono FROM Telefono AS a 
+            $cmdTelefono = Database::getInstance()->getDb()->prepare("SELECT 
+            a.idTelefono, 
+            t.idTipo, 
+            ISNULL (t.Descripcion, 'TIPO NO REGISTRADO') AS Tipo, 
+            a.Telefono 
+            FROM Telefono AS a 
             LEFT JOIN Tipos AS t ON t.idTipo = a.Tipo WHERE a.idDNI = ?");
             $cmdTelefono->bindParam(1, $idDni, PDO::PARAM_STR);
             $cmdTelefono->execute();
@@ -686,7 +691,11 @@ class PersonaAdo
     public static function getConyuge($idDni)
     {
         try {
-            $cmdConyuge = Database::getInstance()->getDb()->prepare('SELECT IdConyugue, UPPER(FullName) AS NombreCompleto, NumHijos FROM Conyuge WHERE idDNI = ?');
+            $cmdConyuge = Database::getInstance()->getDb()->prepare('SELECT 
+            IdConyugue, 
+            UPPER(FullName) AS NombreCompleto, 
+            NumHijos 
+            FROM Conyuge WHERE idDNI = ?');
             $cmdConyuge->bindParam(1, $idDni, PDO::PARAM_STR);
             $cmdConyuge->execute();
 
@@ -711,8 +720,12 @@ class PersonaAdo
     public static function getExperiencia($idDni)
     {
         try {
-            $cmdExperiencia = Database::getInstance()->getDb()->prepare("SELECT idExperiencia, UPPER(Entidad) AS Entidad, UPPER(ExpericienciaEn) AS  Experiencia,  
-            CONVERT(VARCHAR,cast(FechaInicio AS DATE),103) AS FechaInicio, CONVERT(VARCHAR,cast(FechaFin AS DATE),103) AS FechaFin
+            $cmdExperiencia = Database::getInstance()->getDb()->prepare("SELECT 
+            idExperiencia, 
+            UPPER(Entidad) AS Entidad, 
+            UPPER(ExpericienciaEn) AS  Experiencia,  
+            CONVERT(VARCHAR,cast(FechaInicio AS DATE),103) AS FechaInicio, 
+            CONVERT(VARCHAR,cast(FechaFin AS DATE),103) AS FechaFin
              FROM Experiencia WHERE idPersona = ?");
             $cmdExperiencia->bindParam(1, $idDni, PDO::PARAM_STR);
             $cmdExperiencia->execute();
@@ -740,8 +753,16 @@ class PersonaAdo
     public static function getGradosyEstudios($idDni)
     {
         try {
-            $cmdgradosyestudios = Database::getInstance()->getDb()->prepare("SELECT g.idEstudio, t.idTipo, UPPER(t.Descripcion) AS Grado, UPPER(Materia) AS Materia, u.idUniversidad, ISNULL(u.Universidad, 'UNIVERSIDAD NO REGISTRADA') AS Universidad, 
-            CONVERT(VARCHAR, cast(g.FechaGrado AS DATE), 103) AS Fecha FROM Grados AS g LEFT JOIN Universidad AS u ON u.idUniversidad = g.idUniversidad
+            $cmdgradosyestudios = Database::getInstance()->getDb()->prepare("SELECT 
+            g.idEstudio, 
+            t.idTipo, 
+            UPPER(t.Descripcion) AS Grado, 
+            UPPER(Materia) AS Materia, 
+            u.idUniversidad, 
+            ISNULL(u.Universidad, 'UNIVERSIDAD NO REGISTRADA') AS Universidad, 
+            CONVERT(VARCHAR, cast(g.FechaGrado AS DATE), 103) AS Fecha 
+            FROM Grados AS g 
+            LEFT JOIN Universidad AS u ON u.idUniversidad = g.idUniversidad
             LEFT JOIN Tipos AS t ON t.idTipo = g.Grado AND t.Categoria = 'D'
             WHERE g.idDNI = ?");
             $cmdgradosyestudios->bindParam(1, $idDni, PDO::PARAM_STR);
@@ -772,7 +793,12 @@ class PersonaAdo
     public static function getCorreoyWeb($idDni)
     {
         try {
-            $cmdcorreoyweb = Database::getInstance()->getDb()->prepare("SELECT w.idWeb, t.idTipo, ISNULL(t.Descripcion, 'TIPO NO REGISTRADO') AS Tipo, UPPER(w.Direccion) AS Direccion from Web AS w 
+            $cmdcorreoyweb = Database::getInstance()->getDb()->prepare("SELECT 
+            w.idWeb, 
+            t.idTipo, 
+            ISNULL(t.Descripcion, 'TIPO NO REGISTRADO') AS Tipo, 
+            UPPER(w.Direccion) AS Direccion 
+            FROM Web AS w 
             INNER JOIN Tipos AS t ON t.idTipo = w.Tipo WHERE idDNI = ?");
             $cmdcorreoyweb->bindParam(1, $idDni, PDO::PARAM_STR);
             $cmdcorreoyweb->execute();
