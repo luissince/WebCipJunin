@@ -1,21 +1,19 @@
 <?php
+try {
+    $ch = curl_init();
+    curl_setopt($ch, CURLOPT_URL, 'http://localhost/WebCipJunin/app/controller/PersonaController.php?type=dataestado&cip=' . $_GET['cip']);
+    curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
 
-$body = json_decode(file_get_contents("php://input"), true);
-$postdata = http_build_query(
-    array(
-        'idDni' => $_GET["idDni"],
-    )
-);
-$opts = array(
-    'http' =>
-    array(
-        'method'  => 'POST',
-        'header'  => 'Content-Type: application/x-www-form-urlencoded',
-        'content' => $postdata
-    )
-);
+    $output = curl_exec($ch);
+    $http_code = curl_getinfo($ch, CURLINFO_HTTP_CODE);
 
-$context  = stream_context_create($opts);
-$data = file_get_contents('http://localhost:5000/api/informacion', false, $context);
-$manage = json_decode($data);
-print json_encode($manage);
+    if ($http_code == 200) {
+        $object = (object)json_decode($output);
+        echo $object->estado;
+    } else {
+        echo '0';
+    }
+    curl_close($ch);
+} catch (Exception $e) {
+    echo '0';
+}

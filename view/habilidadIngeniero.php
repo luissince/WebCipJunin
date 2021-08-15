@@ -32,7 +32,7 @@ if (!isset($_SESSION['IdUsuario'])) {
 
                         <div class="row">
 
-                            <div class="col-lg-2 col-md-3 col-sm-12 col-xs-12">
+                            <div class="col-lg-3 col-md-3 col-sm-12 col-xs-12">
                                 <label>Habilidad.</label>
                                 <div class="form-group">
                                     <select class="form-control" id="cbTipoHabilidad">
@@ -43,7 +43,7 @@ if (!isset($_SESSION['IdUsuario'])) {
                                 </div>
                             </div>
 
-                            <div class="col-lg-2 col-md-3 col-sm-12 col-xs-12">
+                            <div class="col-lg-3 col-md-3 col-sm-12 col-xs-12">
                                 <label>Capitulo.</label>
                                 <div class="form-group">
                                     <select class="form-control select2" id="cbCapitulo">
@@ -51,7 +51,7 @@ if (!isset($_SESSION['IdUsuario'])) {
                                 </div>
                             </div>
 
-                            <div class="col-lg-2 col-md-3 col-sm-12 col-xs-12">
+                            <div class="col-lg-3 col-md-3 col-sm-12 col-xs-12">
                                 <label>Especialidad.</label>
                                 <div class="form-group">
                                     <select class="form-control select2" id="cbEspecialidad">
@@ -60,14 +60,14 @@ if (!isset($_SESSION['IdUsuario'])) {
                                 </div>
                             </div>
 
-                            <div class="col-lg-2 col-md-3 col-sm-12 col-xs-12">
+                            <!-- <div class="col-lg-2 col-md-3 col-sm-12 col-xs-12">
                                 <label>Opción.</label>
                                 <div class="form-group">
                                     <button class="btn btn-warning" id="btnEnvioMasivo">
                                         <i class="fa fa-paper-plane"></i> Envio masivo
                                     </button>
                                 </div>
-                            </div>
+                            </div> -->
 
                             <div class="col-lg-2 col-md-3 col-sm-12 col-xs-12">
                                 <label>Opción.</label>
@@ -93,11 +93,11 @@ if (!isset($_SESSION['IdUsuario'])) {
                                 </div>
                             </div>
 
-                            <div class="col-lg-2 col-md-3 col-sm-12 col-xs-12">
+                            <div class="col-lg-3 col-md-3 col-sm-12 col-xs-12">
                                 <label>Opción.</label>
                                 <div class="form-group">
                                     <div class="input-group">
-                                        <button type="button" class="btn btn-default" id="btnRecargar"><i class="fa fa-refresh"></i> Recargar</button>
+                                        <button type="button" class="btn btn-default" id="btnRecargar"><i class="fa fa-refresh"></i> Recargar Vista</button>
                                     </div>
                                 </div>
                             </div>
@@ -125,7 +125,6 @@ if (!isset($_SESSION['IdUsuario'])) {
                                             <th width="10%">Fecha Ult. Cuota</th>
                                             <th width="10%">Habilidad</th>
                                             <th width="10%">Habilitado Hasta</th>
-                                            <th width="5%" class="text-center">Actualizar</th>
                                         </thead>
                                         <tbody id="tbTableHabilidad">
 
@@ -255,15 +254,15 @@ if (!isset($_SESSION['IdUsuario'])) {
                         }
                     });
 
-                    $("#btnEnvioMasivo").click(function() {
-                        tools.ModalDialog("Habilidad", "¿Está seguro de continuar?", function(value) {
-                            if (value == true) {
-                                for (let ingeniero of arrayIngenieros) {
-                                    EnviarHabilidad(ingeniero.Cip, ingeniero.UltimaCuota);
-                                }
-                            }
-                        });
-                    });
+                    // $("#btnEnvioMasivo").click(function() {
+                    //     tools.ModalDialog("Habilidad", "¿Está seguro de continuar?", function(value) {
+                    //         if (value == true) {
+                    //             for (let ingeniero of arrayIngenieros) {
+                    //                 EnviarHabilidad(ingeniero.Cip, ingeniero.UltimaCuota);
+                    //             }
+                    //         }
+                    //     });
+                    // });
 
                     $("#btnExportExcel").click(function() {
                         if ($("#txtBuscar").val() == '' && $("#cbTipoHabilidad").val() == 0 && $("#cbCapitulo").val() == 0 && $("#cbEspecialidad").val() == 0) {
@@ -369,7 +368,7 @@ if (!isset($_SESSION['IdUsuario'])) {
                         },
                         beforeSend: function() {
                             tbTable.empty();
-                            tbTable.append('<tr class="text-center"><td colspan="10"><img src="./images/spiner.gif"/><p>cargando información.</p></td></tr>');
+                            tbTable.append('<tr class="text-center"><td colspan="9"><img src="./images/spiner.gif"/><p>cargando información.</p></td></tr>');
                             state = true;
                             totalPaginacion = 0;
                             arrayIngenieros = [];
@@ -379,7 +378,7 @@ if (!isset($_SESSION['IdUsuario'])) {
                                 tbTable.empty();
                                 arrayIngenieros = result.habilidad;
                                 if (arrayIngenieros.length == 0) {
-                                    tbTable.append('<tr class="text-center"><td colspan="10"><p>No hay datos para mostrar</p></td></tr>');
+                                    tbTable.append('<tr class="text-center"><td colspan="9"><p>No hay datos para mostrar</p></td></tr>');
                                     $("#lblPaginaActual").html(0);
                                     $("#lblPaginaSiguiente").html(0);
                                     state = false;
@@ -389,10 +388,10 @@ if (!isset($_SESSION['IdUsuario'])) {
                                         let ultimopago = habilidad.UltimaCuota;
                                         /* let ultimopago = (habilidad.FechaUltimaCuota).split('/').reverse().join('-');*/
 
-                                        let btnEnviar = editView == 0 ? '<i class="fa fa-minus" style="font-size:20px;"></i>' :
-                                            '<button class="btn btn-warning btn-xs" onclick="actualizarHabilidad(\'' + habilidad.Cip + '\',\'' + habilidad.Apellidos + '\',\'' + habilidad.Nombres + '\',\'' + habilidad.CodigoCondicion + '\',\'' + habilidad.Colegiatura + '\',\'' + ultimopago + '\',\'' + habilidad.Especialidad + '\',\'' + habilidad.Capitulo + '\')">' +
-                                            '<i class="fa  fa-history" style="font-size:25px;"></i> ' +
-                                            '</button>';
+                                        // let btnEnviar = editView == 0 ? '<i class="fa fa-minus" style="font-size:20px;"></i>' :
+                                        //     '<button class="btn btn-warning btn-xs" onclick="actualizarHabilidad(\'' + habilidad.Cip + '\',\'' + habilidad.Apellidos + '\',\'' + habilidad.Nombres + '\',\'' + habilidad.CodigoCondicion + '\',\'' + habilidad.Colegiatura + '\',\'' + ultimopago + '\',\'' + habilidad.Especialidad + '\',\'' + habilidad.Capitulo + '\')">' +
+                                        //     '<i class="fa  fa-history" style="font-size:25px;"></i> ' +
+                                        //     '</button>';
 
                                         tbTable.append('<tr>' +
                                             '<td class="text-center text-primary">' + habilidad.Id + '</td>' +
@@ -404,7 +403,6 @@ if (!isset($_SESSION['IdUsuario'])) {
                                             '<td>' + habilidad.FechaUltimaCuota + '</td>' +
                                             '<td>' + (habilidad.Habilidad == 'Habilitado' ? '<label class="text-primary text-bold">' + habilidad.Habilidad + '</label>' : '<label class="text-danger">' + habilidad.Habilidad + '</label>') + '</td>' +
                                             '<td>' + habilidad.HabilitadoHasta + '</td>' +
-                                            '<td class="text-center">' + btnEnviar + '</td>' +
                                             '</tr>');
                                     }
                                     totalPaginacion = parseInt(Math.ceil((parseFloat(result.total) / parseInt(
@@ -415,7 +413,7 @@ if (!isset($_SESSION['IdUsuario'])) {
                                 }
                             } else {
                                 tbTable.empty();
-                                tbTable.append('<tr class="text-center"><td colspan="10"><p>' + result.message + '</p></td></tr>');
+                                tbTable.append('<tr class="text-center"><td colspan="9"><p>' + result.message + '</p></td></tr>');
                                 $("#lblPaginaActual").html(0);
                                 $("#lblPaginaSiguiente").html(0);
                                 state = false;
@@ -423,7 +421,7 @@ if (!isset($_SESSION['IdUsuario'])) {
                         },
                         error: function(error) {
                             tbTable.empty();
-                            tbTable.append('<tr class="text-center"><td colspan="10"><p>' + error.responseText + '</p></td></tr>');
+                            tbTable.append('<tr class="text-center"><td colspan="9"><p>' + error.responseText + '</p></td></tr>');
                             $("#lblPaginaActual").html(0);
                             $("#lblPaginaSiguiente").html(0);
                             state = false;
@@ -431,58 +429,58 @@ if (!isset($_SESSION['IdUsuario'])) {
                     });
                 }
 
-                function EnviarHabilidad(cip, ultimopago) {
-                    $.ajax({
-                        url: "http://cip-junin.org.pe/sistema/UpdateLastPago.php",
-                        method: "POST",
-                        dataType: "json",
-                        data: {
-                            "cip": cip,
-                            "UltimoPago": ultimopago
-                        },
-                        beforeSend: function() {
-                            console.log("iniciando...")
-                        },
-                        success: function(result) {
-                            console.log(result);
-                        },
-                        error: function(error) {
-                            console.log(error)
-                        }
-                    });
-                }
+                // function EnviarHabilidad(cip, ultimopago) {
+                //     $.ajax({
+                //         url: "http://cip-junin.org.pe/sistema/UpdateLastPago.php",
+                //         method: "POST",
+                //         dataType: "json",
+                //         data: {
+                //             "cip": cip,
+                //             "UltimoPago": ultimopago
+                //         },
+                //         beforeSend: function() {
+                //             console.log("iniciando...")
+                //         },
+                //         success: function(result) {
+                //             console.log(result);
+                //         },
+                //         error: function(error) {
+                //             console.log(error)
+                //         }
+                //     });
+                // }
 
-                function actualizarHabilidad(cip, apellidos, nombres, condicion, colegiatura, ultimopago, especialidad, capitulo) {
-                    $.ajax({
-                        url: "http://cip-junin.org.pe/sistema/UpdateLastPago.php",
-                        method: "POST",
-                        dataType: "json",
-                        data: {
-                            "cip": cip,
-                            "apellidos": apellidos,
-                            "nombres": nombres,
-                            "condicion": condicion,
-                            "colegiatura": colegiatura,
-                            "ultimopago": ultimopago,
-                            "sede": "JUNIN",
-                            "especialidad": especialidad,
-                            "capitulo": capitulo
-                        },
-                        beforeSend: function() {
-                            tools.ModalAlertInfo("Habilidad", "Procesando petición...");
-                        },
-                        success: function(result) {
-                            if (result.estado == 1) {
-                                tools.ModalAlertSuccess("Habilidad", result.mensaje);
-                            } else {
-                                tools.ModalAlertWarning("Habilidad", result.mensaje);
-                            }
-                        },
-                        error: function(error) {
-                            tools.ModalAlertError("Habilidad", "Se produjo un error en actualizar la habilidad. Tiempo de conexión agotada, intente nuevamente.");
-                        }
-                    });
-                }
+                // function actualizarHabilidad(cip, apellidos, nombres, condicion, colegiatura, ultimopago, especialidad, capitulo) {
+                //     $.ajax({
+                //         url: "http://cip-junin.org.pe/sistema/UpdateLastPago.php",
+                //         method: "POST",
+                //         dataType: "json",
+                //         data: {
+                //             "cip": cip,
+                //             "apellidos": apellidos,
+                //             "nombres": nombres,
+                //             "condicion": condicion,
+                //             "colegiatura": colegiatura,
+                //             "ultimopago": ultimopago,
+                //             "sede": "JUNIN",
+                //             "especialidad": especialidad,
+                //             "capitulo": capitulo
+                //         },
+                //         beforeSend: function() {
+                //             tools.ModalAlertInfo("Habilidad", "Procesando petición...");
+                //         },
+                //         success: function(result) {
+                //             if (result.estado == 1) {
+                //                 tools.ModalAlertSuccess("Habilidad", result.mensaje);
+                //             } else {
+                //                 tools.ModalAlertWarning("Habilidad", result.mensaje);
+                //             }
+                //         },
+                //         error: function(error) {
+                //             tools.ModalAlertError("Habilidad", "Se produjo un error en actualizar la habilidad. Tiempo de conexión agotada, intente nuevamente.");
+                //         }
+                //     });
+                // }
 
                 function loadCapitulos() {
                     $.ajax({

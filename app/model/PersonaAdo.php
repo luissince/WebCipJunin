@@ -235,7 +235,6 @@ class PersonaAdo
     {
         try {
             $array = array();
-            //trae informacion del usuario (por su dni)
             $comandoPersona = Database::getInstance()->getDb()->prepare("SELECT 
             p.idDNI, 
             p.NumDoc,
@@ -260,7 +259,6 @@ class PersonaAdo
             $comandoPersona->execute();
             $object = $comandoPersona->fetchObject();
             if ($object) {
-                //trae la imagen del usuario
                 $cmdImage = Database::getInstance()->getDb()->prepare("SELECT TOP 1 
                 idDNI,Foto
                 FROM PersonaImagen WHERE idDNI = ?");
@@ -273,28 +271,15 @@ class PersonaAdo
                 }
 
                 $cmdColegiatura = Database::getInstance()->getDb()->prepare("SELECT 
-                c.idColegiado, 
-                s.idConsejo, 
-                s.Consejo, 
-                ca.idCapitulo ,
                 ISNULL(ca.Capitulo,'CAPITULO NO REGISTRADO') AS Capitulo, 
-                e.idEspecialidad ,
                 UPPER(ISNULL(e.Especialidad,'ESPECIALIDAD NO REGISTRADA')) AS Especialidad,
                 convert(VARCHAR,cast(c.FechaColegiado AS DATE),103) AS FechaColegiado, 
-                c.idUnivesidadEgreso AS idUnivEgreso,
-                ISNULL(ue.Universidad,'UNIVERSIDAD NO REGISTRADA') AS UnivesidadEgreso, 
-                convert(VARCHAR,cast(c.FechaEgreso AS DATE),103) AS FechaEgreso, 
-                u.idUniversidad, 
-                ISNULL(u.Universidad,'UNIVERSIDAD NO REGISTRADA') AS Universidad, 
-                Convert(VARCHAR,cast(c.FechaTitulacion AS DATE),103) AS FechaTitulacion, 
-                c.Resolucion, 
                 c.Principal 
                 FROM Colegiatura  AS c
-                LEFT JOIN Sede AS s ON s.idConsejo = c.idSede
                 LEFT JOIN Especialidad AS e ON e.idEspecialidad = c.idEspecialidad
                 LEFT JOIN Capitulo AS ca ON ca.idCapitulo = e.idCapitulo
-                LEFT JOIN Universidad as ue ON ue.idUniversidad = c.idUnivesidadEgreso 
-                LEFT JOIN Universidad AS u ON u.idUniversidad = c.idUniversidad where idDNI = ?");
+                WHERE idDNI = ?
+                ORDER BY c.FechaColegiado ASC");
                 $cmdColegiatura->bindParam(1, $object->idDNI, PDO::PARAM_STR);
                 $cmdColegiatura->execute();
 
@@ -307,6 +292,32 @@ class PersonaAdo
             }
         } catch (Exception $ex) {
             return $ex->getMessage();
+        }
+    }
+
+    public static function getIdEstado($cip)
+    {
+        try {
+            $array = array();
+            //trae informacion del usuario (por su dni)
+            $comandoPersona = Database::getInstance()->getDb()->prepare("SELECT 
+            CASE
+            WHEN CAST (DATEDIFF(M,DATEADD(MONTH,CASE p.Condicion WHEN 'O' THEN 3 WHEN 'V' THEN 9 ELSE 0 END,ISNULL(ul.FechaUltimaCuota, c.FechaColegiado)) , GETDATE()) AS INT) <=0 THEN 1
+            ELSE 2 END AS Habilidad
+            FROM Persona AS p 
+            INNER JOIN Colegiatura AS c ON c.idDNI = p.idDNI AND c.Principal = 1
+            LEFT OUTER JOIN ULTIMACuota AS ul ON ul.idDNI = p.idDNI
+            WHERE p.CIP = ?");
+            $comandoPersona->bindParam(1, $cip, PDO::PARAM_STR);
+            $comandoPersona->execute();
+            $object = $comandoPersona->fetchColumn();
+            if ($object) {
+                return $object;
+            } else {
+                return 0;
+            }
+        } catch (Exception $ex) {
+            return 0;
         }
     }
 

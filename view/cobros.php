@@ -1000,37 +1000,37 @@ if (!isset($_SESSION['IdUsuario'])) {
                     }
                 }
 
-                function EnviarHabilidad(cip, apellidos, nombres, condicion, colegiatura, ultimopago, especialidad, capitulo) {
-                    $.ajax({
-                        url: "http://cip-junin.org.pe/sistema/UpdateLastPago.php",
-                        method: "POST",
-                        dataType: "json",
-                        data: {
-                            "cip": cip,
-                            "apellidos": apellidos,
-                            "nombres": nombres,
-                            "condicion": condicion,
-                            "colegiatura": colegiatura,
-                            "ultimopago": ultimopago,
-                            "sede": "JUNIN",
-                            "especialidad": especialidad,
-                            "capitulo": capitulo
-                        },
-                        beforeSend: function() {
-                            //tools.ModalAlertInfo("Cobros", "Actualizando su habilidad del Ingeniero...");
-                        },
-                        success: function(result) {
-                            // if (result.estado == 1) {
-                            //     tools.ModalAlertSuccess("Cobros", result.mensaje);
-                            // } else {
-                            //     tools.ModalAlertWarning("Cobros", result.mensaje);
-                            // }
-                        },
-                        error: function(error) {
-                            //tools.ModalAlertError("Cobros", "Error de conexión, actualize su habilidad desde el panel ingenieros/habilidad.");
-                        }
-                    });
-                }
+                // function EnviarHabilidad(cip, apellidos, nombres, condicion, colegiatura, ultimopago, especialidad, capitulo) {
+                //     $.ajax({
+                //         url: "http://cip-junin.org.pe/sistema/UpdateLastPago.php",
+                //         method: "POST",
+                //         dataType: "json",
+                //         data: {
+                //             "cip": cip,
+                //             "apellidos": apellidos,
+                //             "nombres": nombres,
+                //             "condicion": condicion,
+                //             "colegiatura": colegiatura,
+                //             "ultimopago": ultimopago,
+                //             "sede": "JUNIN",
+                //             "especialidad": especialidad,
+                //             "capitulo": capitulo
+                //         },
+                //         beforeSend: function() {
+                //             //tools.ModalAlertInfo("Cobros", "Actualizando su habilidad del Ingeniero...");
+                //         },
+                //         success: function(result) {
+                //             // if (result.estado == 1) {
+                //             //     tools.ModalAlertSuccess("Cobros", result.mensaje);
+                //             // } else {
+                //             //     tools.ModalAlertWarning("Cobros", result.mensaje);
+                //             // }
+                //         },
+                //         error: function(error) {
+                //             //tools.ModalAlertError("Cobros", "Error de conexión, actualize su habilidad desde el panel ingenieros/habilidad.");
+                //         }
+                //     });
+                // }
 
                 function getCorreo(idPersona, idIngreso) {
                     $("#eviarDocumentoalCorreo").modal("show");
@@ -1461,11 +1461,11 @@ if (!isset($_SESSION['IdUsuario'])) {
                                         loadEmpresaPersona();
                                         loadComprobantes();
 
-                                        if (result.estadoCuotas == true) {
-                                            if (result.colegiado != null) {
-                                                EnviarHabilidad(result.colegiado.CIP, result.colegiado.Apellidos, result.colegiado.Nombres, result.colegiado.Condicion, result.colegiado.FechaColegiado, result.cuotasFin, result.colegiado.Especialidad, result.colegiado.Capitulo);
-                                            }
-                                        }
+                                        // if (result.estadoCuotas == true) {
+                                        //     if (result.colegiado != null) {
+                                        //         EnviarHabilidad(result.colegiado.CIP, result.colegiado.Apellidos, result.colegiado.Nombres, result.colegiado.Condicion, result.colegiado.FechaColegiado, result.cuotasFin, result.colegiado.Especialidad, result.colegiado.Capitulo);
+                                        //     }
+                                        // }
 
                                         tools.ModalAlertSuccess("Cobros", result.mensaje, function() {
                                             $("#modalEndIngreso").modal("show");

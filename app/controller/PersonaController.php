@@ -53,6 +53,9 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
                 "message" => $persona
             ));
         }
+    } else if ($_GET["type"] === "dataestado") {
+        $persona = PersonaAdo::getIdEstado($_GET["cip"]);
+        echo json_encode(array("estado" => $persona));
     } else if ($_GET["type"] === "datacobro") {
         $persona = PersonaAdo::getIdCobros($_GET["dni"]);
         if (is_array($persona)) {

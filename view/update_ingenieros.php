@@ -1242,7 +1242,7 @@ if (!isset($_SESSION['IdUsuario'])) {
                         <div class="col-lg-4 col-md-3 col-sm-12 col-xs-12 text-center">
                             <div class="row">
                                 <div class="form-group">
-                                    <img class="img-responsive img-thumbnail" style="width: 160px;height:150px;" id="lblImagen">
+                                    <img class="img-responsive img-thumbnail" style="width: 160px;height:160px;" id="lblImagen">
                                 </div>
                             </div>
                             <div class="row">
