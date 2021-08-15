@@ -38,6 +38,21 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
                 "message" => $persona
             ));
         }
+    } else if ($_GET["type"] === "datacip") {
+        $persona = PersonaAdo::getIdCip($_GET["cip"]);
+        if (is_array($persona)) {
+            echo json_encode(array(
+                "estado" => 1,
+                "persona" => $persona[0],
+                "imagen" => $persona[1],
+                "colegiatura" => $persona[2]
+            ));
+        } else {
+            echo json_encode(array(
+                "estado" => 2,
+                "message" => $persona
+            ));
+        }
     } else if ($_GET["type"] === "datacobro") {
         $persona = PersonaAdo::getIdCobros($_GET["dni"]);
         if (is_array($persona)) {
