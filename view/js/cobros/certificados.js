@@ -224,7 +224,7 @@ function Certificado() {
 
                     $("#cbEspecialidadCertificado").append('<option value="">- Seleccione -</option>');
                     for (let especialidades of result.especialidades) {
-                        $("#cbEspecialidadCertificado").append('<option value="' + especialidades.idEspecialidad + '">' + especialidades.Especialidad + '</option>');
+                        $("#cbEspecialidadCertificado").append('<option value="' + especialidades.idColegiado + '">' + especialidades.Especialidad + '</option>');
                     }
 
                     if (result.especialidades.length != 0) {
@@ -307,7 +307,7 @@ function Certificado() {
                     };
                     $("#cbEspecialidadObra").append('<option value="">- Seleccione -</option>');
                     for (let especialidades of result.especialidades) {
-                        $("#cbEspecialidadObra").append('<option value="' + especialidades.idEspecialidad + '">' + especialidades.Especialidad + '</option>');
+                        $("#cbEspecialidadObra").append('<option value="' + especialidades.idColegiado + '">' + especialidades.Especialidad + '</option>');
                     }
                     if (result.especialidades.length != 0) {
                         $("select#cbEspecialidadObra").prop('selectedIndex', 1);
@@ -394,7 +394,7 @@ function Certificado() {
                     };
                     $("#cbEspecialidadProyecto").append('<option value="">- Seleccione -</option>');
                     for (let especialidades of result.especialidades) {
-                        $("#cbEspecialidadProyecto").append('<option value="' + especialidades.idEspecialidad + '">' + especialidades.Especialidad + '</option>');
+                        $("#cbEspecialidadProyecto").append('<option value="' + especialidades.idColegiado + '">' + especialidades.Especialidad + '</option>');
                     }
                     if (result.especialidades.length != 0) {
                         $("select#cbEspecialidadProyecto").prop('selectedIndex', 1);

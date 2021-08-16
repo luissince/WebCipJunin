@@ -40,7 +40,8 @@ class CertificadoObra
             FROM CERTResidencia AS cr
             INNER JOIN Ingreso AS i ON i.idIngreso = cr.idIngreso
             INNER JOIN Persona AS p On p.idDNI = i.idDNI
-            INNER JOIN Especialidad AS e On e.idEspecialidad = cr.idColegiatura
+            INNER JOIN Colegiatura AS c ON p.idDNI = c.idDNI AND  c.idColegiado = cr.idColegiatura
+            INNER JOIN Especialidad AS e ON e.idEspecialidad = c.idEspecialidad
             INNER JOIN Ubigeo AS u ON u.IdUbigeo = cr.idUbigeo
             WHERE p.idDNI = ?
             ORDER BY i.Fecha DESC,i.Hora DESC");

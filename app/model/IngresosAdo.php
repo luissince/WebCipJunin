@@ -172,7 +172,8 @@ class IngresosAdo
             FROM CERTHabilidad AS ch
             INNER JOIN Ingreso AS i ON i.idIngreso = ch.idIngreso
             INNER JOIN Persona AS p On p.idDNI = i.idDNI
-            INNER JOIN Especialidad AS e On e.idEspecialidad = ch.idColegiatura
+            INNER JOIN Colegiatura AS c ON p.idDNI = c.idDNI AND  c.idColegiado = ch.idColegiatura
+            INNER JOIN Especialidad AS e ON e.idEspecialidad = c.idEspecialidad
             WHERE
             $opcion = 0 AND i.Fecha BETWEEN ? AND ?
             OR
@@ -231,7 +232,8 @@ class IngresosAdo
             $comandoTotal = Database::getInstance()->getDb()->prepare("SELECT COUNT(*) FROM CERTHabilidad AS ch
             INNER JOIN Ingreso AS i ON i.idIngreso = ch.idIngreso
             INNER JOIN Persona AS p On p.idDNI = i.idDNI
-            INNER JOIN Especialidad AS e On e.idEspecialidad = ch.idColegiatura 
+            INNER JOIN Colegiatura AS c ON p.idDNI = c.idDNI AND  c.idColegiado = ch.idColegiatura
+            INNER JOIN Especialidad AS e ON e.idEspecialidad = c.idEspecialidad
             WHERE
             $opcion = 0 AND i.Fecha BETWEEN ? AND ?
             OR
@@ -296,7 +298,8 @@ class IngresosAdo
             FROM CERTProyecto AS cp
             INNER JOIN Ingreso AS i ON i.idIngreso = cp.idIngreso
             INNER JOIN Persona AS p On p.idDNI = i.idDNI
-            INNER JOIN Especialidad AS e On e.idEspecialidad = cp.idColegiatura
+            INNER JOIN Colegiatura AS c ON p.idDNI = c.idDNI AND  c.idColegiado = cp.idColegiatura
+            INNER JOIN Especialidad AS e ON e.idEspecialidad = c.idEspecialidad
             INNER JOIN Ubigeo AS u ON u.IdUbigeo = cp.idUbigeo
             WHERE
             $opcion = 0 AND i.Fecha BETWEEN ? AND ?
@@ -338,7 +341,8 @@ class IngresosAdo
             $comandoTotal = Database::getInstance()->getDb()->prepare("SELECT COUNT(*) FROM CERTProyecto  AS cp
             INNER JOIN Ingreso AS i ON i.idIngreso = cp.idIngreso
             INNER JOIN Persona AS p On p.idDNI = i.idDNI
-            INNER JOIN Especialidad AS e On e.idEspecialidad = cp.idColegiatura
+            INNER JOIN Colegiatura AS c ON p.idDNI = c.idDNI AND  c.idColegiado = cp.idColegiatura
+            INNER JOIN Especialidad AS e ON e.idEspecialidad = c.idEspecialidad
             INNER JOIN Ubigeo AS u ON u.IdUbigeo = cp.idUbigeo
             WHERE
             $opcion = 0 AND i.Fecha BETWEEN ? AND ?
@@ -380,7 +384,8 @@ class IngresosAdo
             FROM CERTResidencia AS cr
             INNER JOIN Ingreso AS i ON i.idIngreso = cr.idIngreso
             INNER JOIN Persona AS p On p.idDNI = i.idDNI
-            INNER JOIN Especialidad AS e On e.idEspecialidad = cr.idColegiatura
+            INNER JOIN Colegiatura AS c ON p.idDNI = c.idDNI AND  c.idColegiado = cr.idColegiatura
+            INNER JOIN Especialidad AS e ON e.idEspecialidad = c.idEspecialidad
             INNER JOIN Ubigeo AS u ON u.IdUbigeo = cr.idUbigeo
             WHERE
             $opcion = 0 AND i.Fecha BETWEEN ? AND ?
@@ -420,7 +425,8 @@ class IngresosAdo
             $comandoTotal = Database::getInstance()->getDb()->prepare("SELECT COUNT(*) FROM CERTResidencia AS cr
             INNER JOIN Ingreso AS i ON i.idIngreso = cr.idIngreso
             INNER JOIN Persona AS p On p.idDNI = i.idDNI
-            INNER JOIN Especialidad AS e On e.idEspecialidad = cr.idColegiatura
+            INNER JOIN Colegiatura AS c ON p.idDNI = c.idDNI AND  c.idColegiado = cr.idColegiatura
+            INNER JOIN Especialidad AS e ON e.idEspecialidad = c.idEspecialidad
             INNER JOIN Ubigeo AS u ON u.IdUbigeo = cr.idUbigeo
             WHERE
             $opcion = 0 AND i.Fecha BETWEEN ? AND ?
@@ -456,7 +462,7 @@ class IngresosAdo
             $cmdPersona = Database::getInstance()->getDb()->prepare("SELECT 
             p.idDNI,
             p.CIP,
-            p.Nombres,
+            p.Nombres, 
             p.Apellidos,
             p.Sexo,
             p.Condicion,
@@ -581,7 +587,7 @@ class IngresosAdo
                 $cmdCertResidenciaObra->execute();
 
                 $cmdCorrelativo = Database::getInstance()->getDb()->prepare("INSERT INTO CorrelativoCERT(TipoCert,Numero) VALUES(2,?)");
-                $cmdCorrelativo->bindParam(1, $body["objectCertificadoHabilidad"]["numero"], PDO::PARAM_INT);
+                $cmdCorrelativo->bindParam(1, $body["objectCertificadoResidenciaObra"]["numero"], PDO::PARAM_INT);
                 $cmdCorrelativo->execute();
             }
 
@@ -605,7 +611,7 @@ class IngresosAdo
                 $cmdCertProyecto->execute();
 
                 $cmdCorrelativo = Database::getInstance()->getDb()->prepare("INSERT INTO CorrelativoCERT(TipoCert,Numero) VALUES(3,?)");
-                $cmdCorrelativo->bindParam(1, $body["objectCertificadoHabilidad"]["numero"], PDO::PARAM_INT);
+                $cmdCorrelativo->bindParam(1, $body["objectCertificadoProyecto"]["numero"], PDO::PARAM_INT);
                 $cmdCorrelativo->execute();
             }
 
@@ -892,11 +898,12 @@ class IngresosAdo
             DATEPART(DAY, ch.HastaFecha) AS FVDia,
             DATEPART(MONTH, ch.HastaFecha) AS FVMes, 
             DATEPART(YEAR, ch.HastaFecha) AS FVAnio,
-            ch.idIngreso from CERTHabilidad AS ch
+            ch.idIngreso 
+            FROM CERTHabilidad AS ch
             INNER JOIN Ingreso AS i ON i.idIngreso = ch.idIngreso
             INNER JOIN Persona AS p On p.idDNI = i.idDNI
-            INNER JOIN Colegiatura AS c ON c.idDNI = p.idDNI AND  c.Principal = 1
-			INNER JOIN Especialidad AS e On e.idEspecialidad = ch.idColegiatura
+            INNER JOIN Colegiatura AS c ON p.idDNI = c.idDNI AND  c.idColegiado = ch.idColegiatura
+            INNER JOIN Especialidad AS e ON e.idEspecialidad = c.idEspecialidad
             WHERE ch.idIngreso = ?");
             $cmdCertHabilidad->bindParam(1, $idIngreso, PDO::PARAM_INT);
             $cmdCertHabilidad->execute();
@@ -958,12 +965,13 @@ class IngresosAdo
             DATEPART(MONTH, cr.Fecha) AS FRMes, DATEPART(YEAR, cr.Fecha ) AS FRAnio, 
             convert(VARCHAR, CAST(cr.HastaFecha AS DATE),103) AS HastaFecha, DATEPART(DAY, cr.HastaFecha ) AS FVDia,
             DATEPART(MONTH, cr.HastaFecha ) AS FVMes, DATEPART(YEAR, cr.HastaFecha ) AS FVAnio,
-            cr.idIngreso  from CERTResidencia AS cr
+            cr.idIngreso  
+            FROM CERTResidencia AS cr
             INNER JOIN Ingreso AS i ON i.idIngreso = cr.idIngreso
             INNER JOIN Persona AS p On p.idDNI = i.idDNI
-            INNER JOIN Especialidad AS e On e.idEspecialidad = cr.idColegiatura
+            INNER JOIN Colegiatura AS c ON p.idDNI = c.idDNI AND  c.idColegiado = cr.idColegiatura
+            INNER JOIN Especialidad AS e ON e.idEspecialidad = c.idEspecialidad
             INNER JOIN Ubigeo AS u ON u.IdUbigeo = cr.idUbigeo
-            INNER JOIN Colegiatura AS c ON c.idEspecialidad = cr.idColegiatura
             WHERE cr.idIngreso = ?");
             $cmdCertObra->bindParam(1, $idIngreso, PDO::PARAM_INT);
             $cmdCertObra->execute();
@@ -1032,9 +1040,9 @@ class IngresosAdo
             DATEPART(YEAR,cp.HastaFecha) AS FVAnio,cp.idIngreso  from CERTProyecto AS cp
             INNER JOIN Ingreso AS i ON i.idIngreso = cp.idIngreso
             INNER JOIN Persona AS p On p.idDNI = i.idDNI
-            INNER JOIN Especialidad AS e On e.idEspecialidad = cp.idColegiatura
+            INNER JOIN Colegiatura AS c ON p.idDNI = c.idDNI AND  c.idColegiado = cp.idColegiatura
+            INNER JOIN Especialidad AS e ON e.idEspecialidad = c.idEspecialidad
             INNER JOIN Ubigeo AS u ON u.IdUbigeo = cp.idUbigeo
-            INNER JOIN Colegiatura AS c ON c.idEspecialidad = cp.idColegiatura
             WHERE cp.idIngreso = ?");
             $cmdCertProyecto->bindParam(1, $idIngreso, PDO::PARAM_INT);
             $cmdCertProyecto->execute();
