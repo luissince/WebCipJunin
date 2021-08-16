@@ -458,7 +458,7 @@ if (!isset($_SESSION['IdUsuario'])) {
 
                                 $("#cbEspecialidadObra").append('<option value="">- Seleccione -</option>');
                                 for (let especialidades of result.especialidades) {
-                                    $("#cbEspecialidadObra").append('<option value="' + especialidades.idEspecialidad + '">' + especialidades.Especialidad + '</option>');
+                                    $("#cbEspecialidadObra").append('<option value="' + especialidades.idColegiado + '">' + especialidades.Especialidad + '</option>');
                                 }
 
                                 $("#cbDepartamentoObra").append('<option value="">- Seleccione un Ubigeo -</option>');
@@ -469,7 +469,7 @@ if (!isset($_SESSION['IdUsuario'])) {
 
                                 idCertObra = result.data.idResidencia;
                                 $("#txtIngenieroObra").val(result.data.Apellidos + ', ' + result.data.Nombres);
-                                $("#cbEspecialidadObra").val(result.data.idEspecialidad);
+                                $("#cbEspecialidadObra").val(result.data.idColegiatura);
                                 $("#txtFechaObra").val(result.data.HastaFecha);
                                 $("#txtCertificadoNumeroObra").val(result.data.Numero);
                                 $("#txtModalidadObra").val(result.data.Modalidad);

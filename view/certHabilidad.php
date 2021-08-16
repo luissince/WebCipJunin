@@ -448,7 +448,7 @@ if (!isset($_SESSION['IdUsuario'])) {
 
                                 $("#cbEspecialidadCertificado").append('<option value="">- Seleccione -</option>');
                                 for (let especialidades of result.especialidades) {
-                                    $("#cbEspecialidadCertificado").append('<option value="' + especialidades.idEspecialidad + '">' + especialidades.Especialidad + '</option>');
+                                    $("#cbEspecialidadCertificado").append('<option value="' + especialidades.idColegiado + '">' + especialidades.Especialidad + '</option>');
                                 }
 
                                 idCertHabilidad = result.data.idHabilidad;

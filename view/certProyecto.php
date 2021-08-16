@@ -476,7 +476,7 @@ if (!isset($_SESSION['IdUsuario'])) {
                             if (result.estado == 1) {
                                 $("#cbEspecialidadProyecto").append('<option value="">- Seleccione -</option>');
                                 for (let especialidades of result.especialidades) {
-                                    $("#cbEspecialidadProyecto").append('<option value="' + especialidades.idEspecialidad + '">' + especialidades.Especialidad + '</option>');
+                                    $("#cbEspecialidadProyecto").append('<option value="' + especialidades.idColegiado + '">' + especialidades.Especialidad + '</option>');
                                 }
 
                                 $("#cbDepartamentoProyecto").append('<option value="">- Seleccione un Ubigeo -</option>');
@@ -487,7 +487,7 @@ if (!isset($_SESSION['IdUsuario'])) {
 
                                 idCertProyecto = result.data.idProyecto;
                                 $("#txtIngenieroProyecto").val(result.data.Apellidos + ', ' + result.data.Nombres);
-                                $("#cbEspecialidadProyecto").val(result.data.idEspecialidad);
+                                $("#cbEspecialidadProyecto").val(result.data.idColegiatura);
                                 $("#txtFechaProyecto").val(result.data.HastaFecha);
                                 $("#txtNumeroCertificadoProyecto").val(result.data.Numero);
                                 $("#txtModalidadProyecto").val(result.data.Modalidad);
