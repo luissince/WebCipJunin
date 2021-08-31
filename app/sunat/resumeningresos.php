@@ -10,16 +10,16 @@ include_once('../model/IngresosAdo.php');
 
 $rutaImage = __DIR__ . "/../../view/images/logologin.png";
 $title = "RESUMEN DE INGRESOS";
-$fechaIngreso = date("d-m-Y", strtotime($_GET["fechaInicial"]))." al ".date("d-m-Y", strtotime($_GET["fechaFinal"]));
+$fechaIngreso = date("d-m-Y", strtotime($_GET["fechaInicial"])) . " al " . date("d-m-Y", strtotime($_GET["fechaFinal"]));
 $recibos = "RECIBOS DEL : - al -";
 $totalCipJunin = 0;
 $totalCipNacional = 0;
-$result = IngresosAdo::ResumenIngresosPorFecha($_GET["fechaInicial"],$_GET["fechaFinal"]);
+$result = IngresosAdo::ResumenIngresosPorFecha($_GET["fechaInicial"], $_GET["fechaFinal"]);
 if (!is_array($result)) {
     echo $result;
 } else {
     $resumen = $result[0];
-    $recibos = "RECIBOS DEL:".$result[1]->SerieMin."-".$result[1]->NumReciboMin." al ".$result[1]->SerieMax."-".$result[1]->NumReciboMax;
+    $recibos = "RECIBOS DEL:" . $result[1]->SerieMin . "-" . $result[1]->NumReciboMin . " al " . $result[1]->SerieMax . "-" . $result[1]->NumReciboMax;
     $html = '
 <html>
 <head>
@@ -135,9 +135,34 @@ mpdf-->
 ?>
 
     <?php
+    $totalCipJuninEfectivo = 0;
+    $totalCipNacionalEfectivo = 0;
+
+    $totalCipJuninDeposito = 0;
+    $totalCipNacionalDesposito = 0;
+
     foreach ($resumen as $value) {
-        $totalCipJunin += $value["CIPJunin"];
-        $totalCipNacional+=$value["CIPNacional"];
+        $efectivoJunin = '';
+        $efectivoNacional = '';
+
+        $depositoJunin = '';
+        $depositoNacional = '';
+
+        if ($value["Tipo"] == 1) {
+            $efectivoJunin =  ($value["CIPJunin"] == 0 ? '' : number_format(round($value["CIPJunin"], 2, PHP_ROUND_HALF_UP), 2, '.', ''));
+            $efectivoNacional = ($value["CIPNacional"] == 0 ? '' : number_format(round($value["CIPNacional"], 2, PHP_ROUND_HALF_UP), 2, '.', ''));
+
+            $totalCipJuninEfectivo += $value["CIPJunin"];
+            $totalCipNacionalEfectivo += $value["CIPNacional"];
+        } else {
+            $depositoJunin =  ($value["CIPJunin"] == 0 ? '' : number_format(round($value["CIPJunin"], 2, PHP_ROUND_HALF_UP), 2, '.', ''));
+            $depositoNacional = ($value["CIPNacional"] == 0 ? '' : number_format(round($value["CIPNacional"], 2, PHP_ROUND_HALF_UP), 2, '.', ''));
+
+            $totalCipJuninDeposito += $value["CIPJunin"];
+            $totalCipNacionalDesposito += $value["CIPNacional"];
+        }
+
+
         $html .= ' <tr>
                     <td align="center" rowspan="1">
                         ' . $value["Id"] . '     
@@ -152,16 +177,16 @@ mpdf-->
                         ' . $value["Cantidad"] . '      
                     </td>
                     <td align="right">
-                        ' . ($value["CIPJunin"] == 0 ? '' : number_format(round($value["CIPJunin"], 2, PHP_ROUND_HALF_UP), 2, '.', '')) . '   
+                        ' . $efectivoJunin . '   
                     </td>
                     <td align="right">
-                           
+                        ' . $depositoJunin . ' 
                     </td>
                     <td align="right">
-                        ' . ($value["CIPNacional"] == 0 ? '' : number_format(round($value["CIPNacional"], 2, PHP_ROUND_HALF_UP), 2, '.', '')) . '   
+                        ' . $efectivoNacional . '   
                     </td>
                     <td align="right">
-                           
+                        ' . $depositoNacional . ' 
                     </td>
                 </tr>';
     }
@@ -173,10 +198,10 @@ mpdf-->
     <tfoot>
         <tr>
             <td align="center" colspan="4" style="border-left:1px solid white;border-bottom:1px solid white;"></td>
-            <td align="right">'.number_format(round($totalCipJunin, 2, PHP_ROUND_HALF_UP), 2, '.', '').'</td>
-            <td align="right">0.00</td>
-            <td align="right">'.number_format(round($totalCipNacional, 2, PHP_ROUND_HALF_UP), 2, '.', '').'</td>
-            <td align="right">0.00</td>
+            <td align="right">' . number_format(round($totalCipJuninEfectivo, 2, PHP_ROUND_HALF_UP), 2, '.', '') . '</td>
+            <td align="right">' . number_format(round($totalCipJuninDeposito, 2, PHP_ROUND_HALF_UP), 2, '.', '') . '</td>
+            <td align="right">' . number_format(round($totalCipNacionalEfectivo, 2, PHP_ROUND_HALF_UP), 2, '.', '') . '</td>
+            <td align="right">' . number_format(round($totalCipNacionalDesposito, 2, PHP_ROUND_HALF_UP), 2, '.', '') . '</td>
         </tr>
     </tfoot>
 </table>
@@ -188,15 +213,15 @@ mpdf-->
     <thead>        
         <tr>
             <th align="left" style="padding:8pt;font-weight:normal;">EFECTIVO:</th>
-            <th align="right" style="padding:8pt;">'.number_format(round($totalCipJunin+$totalCipNacional, 2, PHP_ROUND_HALF_UP), 2, '.', '').'</th>
+            <th align="right" style="padding:8pt;">' . number_format(round($totalCipJuninEfectivo + $totalCipNacionalEfectivo, 2, PHP_ROUND_HALF_UP), 2, '.', '') . '</th>
         </tr>
         <tr>
             <th align="left" style="padding:8pt;font-weight:normal;">DEPOSITO:</th>
-            <th align="right" style="padding:8pt;">0.00</th>
+            <th align="right" style="padding:8pt;">' . number_format(round($totalCipJuninDeposito + $totalCipNacionalDesposito, 2, PHP_ROUND_HALF_UP), 2, '.', '') . '</th>
         </tr>
         <tr>
             <th align="left" style="padding:8pt;font-weight:normal;">TOTAL:</th>
-            <th align="right" style="padding:8pt;">'.number_format(round($totalCipJunin+$totalCipNacional, 2, PHP_ROUND_HALF_UP), 2, '.', '').'</th>
+            <th align="right" style="padding:8pt;">' . number_format(round($totalCipJuninEfectivo + $totalCipNacionalEfectivo + $totalCipJuninDeposito + $totalCipNacionalDesposito, 2, PHP_ROUND_HALF_UP), 2, '.', '') . '</th>
         </tr>
     </thead>
 </table>
@@ -225,5 +250,5 @@ mpdf-->
 
     $mpdf->WriteHTML($html);
 
-    $mpdf->Output("Reporte de Ingresos CIP-JUNIN del ".$fechaIngreso.".pdf",'I');
+    $mpdf->Output("Reporte de Ingresos CIP-JUNIN del " . $fechaIngreso . ".pdf", 'I');
 }

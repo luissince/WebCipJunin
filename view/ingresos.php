@@ -188,6 +188,7 @@ if (!isset($_SESSION['IdUsuario'])) {
                                             <th style="width:10%;">Fecha</th>
                                             <th style="width:12%;">Comprobante</th>
                                             <th style="width:24%;">Colegiado</th>
+                                            <th style="width:15%;">Forma Pago</th>
                                             <th style="width:9%;">Estado</th>
                                             <th style="width:9%;">Total</th>
                                             <th style="width:15%;">Usuario</th>
@@ -463,6 +464,8 @@ if (!isset($_SESSION['IdUsuario'])) {
                                             '<i class="fa fa-envelope" style="font-size:25px;"></i></br>' +
                                             '</button>';
 
+                                        let formaPago = ingresos.tipo == 1 ? "EFECTIVO" : "DEPOSTIO" + "<br>" + "<span class='h6 text-blue'>" + ingresos.bancoName + ": " + ingresos.numOperacion + "</span>";
+
                                         let observacionsunat =
                                             (ingresos.xmldescripcion === "" ? "Por Generar Xml y Enviar" : ingresos.xmldescripcion);
 
@@ -474,6 +477,7 @@ if (!isset($_SESSION['IdUsuario'])) {
                                             '<td>' + ingresos.fecha + '<br>' + tools.getTimeForma(ingresos.hora, true) + '</td>' +
                                             '<td>' + ingresos.comprobante + '<br>' + ingresos.serie + '-' + ingresos.numRecibo + '</td>' +
                                             '<td>' + ingresos.nombreDocumento + ' - ' + ingresos.numeroDocumento + '</br>' + ingresos.persona + '</td>' +
+                                            '<td>' + formaPago + '</td>' +
                                             '<td>' + (ingresos.estado == "C" ? '<span class="text-green">Pagado</span>' : '<span class="text-red">Anulado</span>') + '</td>' +
                                             '<td>' + tools.formatMoney(ingresos.total) + '</td>' +
                                             '<td>' + ingresos.usuario + '<br>' + ingresos.rol + '</td>' +

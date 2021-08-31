@@ -484,10 +484,10 @@ if (!isset($_SESSION['IdUsuario'])) {
                 }
 
                 function limpiarResponse() {
-                    $("#txtTipo").val(''),
-                        $('#txtSerie').val(''),
-                        $('#txtCorrelativo').val(''),
-                        $("#lblResponse").html('');
+                    $("#txtTipo").val('');
+                    $('#txtSerie').val('');
+                    $('#txtCorrelativo').val('');
+                    $("#lblResponse").html('');
                 }
 
                 function descargarCdr(ruta) {

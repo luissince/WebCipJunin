@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Created by PhpStorm.
  * User: Administrador
@@ -61,7 +62,6 @@ class ConsultCdrService extends BaseSunat
             $response = $this->getClient()->call($method, ['parameters' => $params]);
             $statusCdr = $response->{$resultName};
             $this->loadFromResponse($result, $statusCdr);
-
         } catch (\SoapFault $e) {
             $result->setError($this->getErrorFromFault($e));
         }

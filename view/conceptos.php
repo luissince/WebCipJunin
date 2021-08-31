@@ -367,7 +367,7 @@ if (!isset($_SESSION['IdUsuario'])) {
                         if (event.keyCode === 13) {
                             if (!state) {
                                 paginacion = 1;
-                                loadTableConceptos(1, 0, $("#buscar").val());
+                                loadTableConceptos(1, 0, $("#buscar").val().trim());
                                 opcion = 1;
                             }
                         }
@@ -376,7 +376,7 @@ if (!isset($_SESSION['IdUsuario'])) {
                     $("#btnBuscar").click(function() {
                         if (!state) {
                             paginacion = 1;
-                            loadTableConceptos(1, 0, $("#buscar").val());
+                            loadTableConceptos(1, 0, $("#buscar").val().trim());
                             opcion = 1;
                         }
                     });
@@ -442,7 +442,7 @@ if (!isset($_SESSION['IdUsuario'])) {
                             loadTableConceptos(0, 0, "");
                             break;
                         case 1:
-                            loadTableConceptos(1, 0, $("#buscar").val());
+                            loadTableConceptos(1, 0, $("#buscar").val().trim());
                             break;
                         case 2:
                             loadTableConceptos(2, $("#cbTipoCategorias").val(), "");

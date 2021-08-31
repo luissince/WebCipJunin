@@ -810,13 +810,15 @@ if (!isset($_SESSION['IdUsuario'])) {
                             $("#Apellidos").val(result.apellidoPaterno + " " + result.apellidoMaterno);
                         },
                         error: function(error) {
-                            $("#lblOverlayModal").html(error.responseText);
+                            $("#divLoad").addClass("d-none");
+                            $("#lblOverlayModal").html("Se pudo obtener los datos por error del servidor, intente nuevamente en un par de minutos.");
                         }
                     });
                 }
 
                 function clearModalIngeniero() {
                     $("#confirmar").modal("hide")
+                    $("#divLoad").addClass("d-none")
                     $("#dni").val("")
                     $("#Nombres").val("")
                     $("#Apellidos").val("")

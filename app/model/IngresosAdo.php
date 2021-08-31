@@ -25,6 +25,9 @@ class IngresosAdo
             i.NumRecibo,
             i.Estado,
             p.CIP,
+            i.Tipo,
+            i.NumOperacion,    
+            isnull(b.Nombre,'') as BancoName,        
             case when not e.IdEmpresa is null then 'RUC' else 'DNI' end as NombreDocumento,
             isnull(e.NumeroRuc,p.NumDoc) as NumeroDocumento,
             isnull(e.Nombre,concat(p.Apellidos,' ', p.Nombres)) as Persona,
@@ -38,6 +41,7 @@ class IngresosAdo
             INNER JOIN Detalle AS d ON d.idIngreso = i.idIngreso
 			INNER JOIN Usuario AS u ON u.idUsuario = i.idUsuario
 			INNER JOIN Rol AS r ON r.idRol = u.Rol
+            LEFT JOIN Banco AS b ON b.idBanco = i.idBanco
             WHERE
             $opcion = 0 AND i.Fecha BETWEEN ? AND ?
             OR
@@ -56,8 +60,29 @@ class IngresosAdo
             $opcion = 2 AND i.TipoComprobante = ? AND i.Fecha BETWEEN ? AND ?
             OR
             $opcion = 3 AND i.Estado = ? AND i.Fecha BETWEEN ? AND ?
-            GROUP BY i.idIngreso,u.Nombres, u.Apellidos,i.Fecha,i.Hora,i.Serie,i.NumRecibo,i.Estado,
-            p.CIP,p.NumDoc,p.Apellidos,r.Nombre, p.Nombres,e.NumeroRuc,e.Nombre,i.Xmlsunat,i.Xmldescripcion,e.IdEmpresa,tc.Nombre
+            GROUP BY 
+            i.idIngreso,
+            u.Nombres, 
+            u.Apellidos,
+            i.Fecha,
+            i.Hora,
+            i.Serie,
+            i.NumRecibo,
+            i.Estado,
+            p.CIP,
+            i.Tipo,
+            i.NumOperacion,
+            b.Nombre,
+            p.NumDoc,
+            p.Apellidos,
+            r.Nombre, 
+            p.Nombres,
+            e.NumeroRuc,
+            e.Nombre,
+            i.Xmlsunat,
+            i.Xmldescripcion,
+            e.IdEmpresa,
+            tc.Nombre
             ORDER BY i.Fecha DESC,i.Hora DESC
             offset ? ROWS FETCH NEXT ? ROWS only");
             $cmdConcepto->bindParam(1, $fechaInicio, PDO::PARAM_STR);
@@ -93,6 +118,9 @@ class IngresosAdo
                     "numRecibo" => $row["NumRecibo"],
                     "estado" => $row["Estado"],
                     "cip" => $row["CIP"],
+                    "tipo" => $row["Tipo"],
+                    "numOperacion" => $row["NumOperacion"],
+                    "bancoName" => $row["BancoName"],
                     "nombreDocumento" => $row["NombreDocumento"],
                     "numeroDocumento" => $row["NumeroDocumento"],
                     "persona" => $row["Persona"],
@@ -1184,14 +1212,15 @@ class IngresosAdo
             CASE c.Propiedad 
             WHEN 16 then sum(d.Monto)
             WHEN 48 then sum(d.Monto)
-            ELSE 0 END AS 'CIPNacional'
+            ELSE 0 END AS 'CIPNacional',
+            i.Tipo
             FROM Ingreso AS i 
             INNER JOIN Detalle AS d
             ON i.idIngreso = d.idIngreso
             INNER JOIN Concepto AS c
             ON d.idConcepto = c.idConcepto
             WHERE i.Estado = 'C' AND  i.Fecha  >= ? and i.Fecha  <= ? 
-            GROUP BY c.Codigo,c.Concepto,c.Propiedad
+            GROUP BY c.Codigo,c.Concepto,c.Propiedad,i.Tipo
             ORDER BY c.Concepto ASC");
             $cmdConcepto->bindParam(1, $fechaInicio, PDO::PARAM_STR);
             $cmdConcepto->bindParam(2, $fechaFinal, PDO::PARAM_STR);
@@ -1206,7 +1235,8 @@ class IngresosAdo
                     "Concepto" => $row["Concepto"],
                     "Cantidad" => $row["Cantidad"],
                     "CIPJunin" => $row["CIPJunin"],
-                    "CIPNacional" => $row["CIPNacional"]
+                    "CIPNacional" => $row["CIPNacional"],
+                    "Tipo" => $row["Tipo"],
                 ));
             }
 
