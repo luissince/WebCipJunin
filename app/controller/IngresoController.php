@@ -174,7 +174,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
         }
     } else if ($_POST["type"] == "addAfiliacion") {
         $data["colegiado"] = $_POST["colegiado"];
-        $data["concepto"]= $_POST["concepto"];
+        $data["concepto"] = $_POST["concepto"];
         $data["monto"] = $_POST["monto"];
         $data["usuario"] = $_POST["usuario"];
 

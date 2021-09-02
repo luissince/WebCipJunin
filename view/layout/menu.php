@@ -47,7 +47,7 @@
                 }
                 if ($_SESSION["Permisos"][3]["ver"] == 1) {
                     $menuRegistro = '<li class="treeview" id="tab-menu-registros">
-                    <a href="javascript:void(0)">
+                    <a href="#">
                         <i class="fa fa-sitemap"></i> <span>Ingresos</span>
                         <span class="pull-right-container">
                             <i class="fa fa-angle-left pull-right"></i>
@@ -88,7 +88,7 @@
                 }
                 if ($_SESSION["Permisos"][11]["ver"] == 1) {
                     $menuIngeniero = '<li class="treeview" id="tab-menu-ingenieros">
-                    <a href="javascript:void(0)">
+                    <a href="#">
                         <i class="fa fa-user"></i> <span>Ingenieros</span>
                         <span  class="pull-right-container">
                             <i class="fa fa-angle-left" pull-right"></i>
@@ -126,7 +126,7 @@
                 }
                 if ($_SESSION["Permisos"][18]["ver"] == 1) {
                     $menuFacturacion = '<li class="treeview" id="tab-menu-factura">
-                    <a href="javascript:void(0)">
+                    <a href="#">
                         <i class="fa fa-folder-open"></i><span>Facturación</span>
                         <span class="pull-right-container">
                             <i class="fa fa-angle-left pull-right"></i>
@@ -147,7 +147,7 @@
                 }
                 if ($_SESSION["Permisos"][22]["ver"] == 1) {
                     $menuConfiguracion =  '<li class="treeview" id="tab-menu-configuracion">
-                    <a href="javascript:void(0)">
+                    <a href="#">
                       <i class="fa fa-cog"></i> <span>Configuración</span>
                       <span class="pull-right-container">
                           <i class="fa fa-angle-left pull-right"></i>

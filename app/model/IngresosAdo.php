@@ -1665,7 +1665,7 @@ class IngresosAdo
             i.Serie,i.NumRecibo AS Numeracion,
             i.Fecha AS FechaPago,
             i.Hora as HoraPago,
-            isnull(e.IdEmpresa,p.idDNI) as IdPersona,
+            isnull(cast(e.IdEmpresa as varchar),p.idDNI) as IdPersona,
             case when not e.IdEmpresa is null then 6 else 1 end as TipoDocumento,
             isnull(e.NumeroRuc,p.NumDoc) as NumeroDocumento,
             isnull(e.Nombre,concat(p.Apellidos,' ',p.Nombres)) as DatosPersona,

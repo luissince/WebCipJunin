@@ -317,7 +317,7 @@ if (!isset($_SESSION['IdUsuario'])) {
                             $("#cbMotivoNotaCredito").empty();
                             tbTable.empty();
                         },
-                        success: function(result) {                        
+                        success: function(result) {
                             if (result.estado == 1) {
                                 let notasCreditos = result.notasCredito;
                                 let facturados = result.facturados;
