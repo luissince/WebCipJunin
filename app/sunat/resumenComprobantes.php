@@ -123,21 +123,18 @@ mpdf-->
 <br />';
 ?>
 <?php
-    if($_GET["cbTipoPago"] == 1){
-        $html .='<table class="items" width="100%" style="font-size: 6pt; border-collapse: collapse; " cellpadding="8">
+    if ($_GET["cbTipoPago"] == 1) {
+        $html .= '<table class="items" width="100%" style="font-size: 6pt; border-collapse: collapse; " cellpadding="8">
         <thead>
             <tr style="background: #BFBFBF;">
                 <th width="3%" rowspan="1">ID</th>
-                <th width="9%" rowspan="1">MOTIVO ANUL.</th>
-                <th width="6%" rowspan="1">FECHA ANUL.</th>
                 <th width="5%" rowspan="1">SERIE</th>
                 <th width="4%" rowspan="1">CORRELATIVO</th>
                 <th width="6%" rowspan="1">FECHA REG.</th>
                 <th width="8%" rowspan="1">CONCEPTO</th>
                 <th width="5%" rowspan="1">ESTADO</th>
                 <th width="5%" rowspan="1">TIPO PAGO</th>
-                <th width="7%" rowspan="1">NUM. CIP</th>
-                <th width="7%" rowspan="1">NUM. DNI/RUC</th>            
+                <th width="7%" rowspan="1">NUM. CIP</th>        
                 <th width="21%" rowspan="1">PERSONA</th>
                 <th width="7%" rowspan="1">MONTO</th>
                 <th width="7%" rowspan="1">MONTO ANULADO</th>
@@ -166,20 +163,23 @@ mpdf-->
             } else if ($value["Concepto"] == 100) {
                 $Concepto = "Ingresos Diversos";
             }
-    
+
             // $totalCipJunin += $value["CIPJunin"];
             // $totalCipNacional += $value["CIPNacional"];
+
+            if ($value["TipoPago"] == 1) {
+                $tipoPago = 'EFECTIVO';
+            } else if ($value["TipoPago"] == 2) {
+                $tipoPago = 'DEPOSITO';
+            } else {
+                $tipoPago = 'TARJETA';
+            }
+
             if ($value["Estado"] === "C") {
                 $html .= ' <tr>
                     <td align="center" rowspan="1">
                         ' . $value["Id"] . '     
-                    </td>
-                    <td rowspan="1">
-                        ' . $value["MotivoAnulacion"] . '      
-                    </td>
-                    <td rowspan="1">
-                        ' . date("d/m/Y", strtotime($value["FechaAnulacion"])) . '       
-                    </td>
+                    </td>                   
                     <td align="center" rowspan="1">
                         ' . $value["Serie"] . '      
                     </td>
@@ -196,16 +196,13 @@ mpdf-->
                         ' . $value["Estado"] . '      
                     </td>
                     <td align="center" rowspan="1">
-                        ' . ($value["TipoPago"] == 1 ? 'EFECTIVO' : ''). '      
+                        ' . $tipoPago . '      
                     </td>
                     <td align="center" rowspan="1">
                         ' . $value["CIP"] . '      
-                    </td>
+                    </td>            
                     <td align="left" rowspan="1">
-                        ' . $value["NumeroDocumento"] . '      
-                    </td>                
-                    <td align="left" rowspan="1">
-                        ' . $value["Persona"] . '      
+                        ' . $value["NumeroDocumento"] . '<br>' . $value["Persona"] . '      
                     </td>
                     <td align="right" rowspan="1">
                         ' . number_format(round($value["Total"], 2, PHP_ROUND_HALF_UP), 2, '.', '') . '      
@@ -218,13 +215,7 @@ mpdf-->
                 $html .= ' <tr style="background: #D9D8D8;">
                     <td align="center" rowspan="1">
                         ' . $value["Id"] . '     
-                    </td>
-                    <td rowspan="1">
-                        ' . $value["MotivoAnulacion"] . '      
-                    </td>
-                    <td rowspan="1">
-                        ' . $value["FechaAnulacion"] . '       
-                    </td>
+                    </td>                    
                     <td align="center" rowspan="1">
                         ' . $value["Serie"] . '      
                     </td>
@@ -241,16 +232,13 @@ mpdf-->
                         ' . $value["Estado"] . '      
                     </td>
                     <td align="center" rowspan="1">
-                        ' . ($value["TipoPago"] == 1 ? 'EFECTIVO' : '') . '      
+                        ' . $tipoPago . '      
                     </td>
                     <td align="center" rowspan="1">
                         ' . $value["CIP"] . '      
-                    </td>
+                    </td> 
                     <td align="left" rowspan="1">
-                        ' . $value["NumeroDocumento"] . '      
-                    </td>  
-                    <td align="left" rowspan="1">
-                        ' . $value["Persona"] . '      
+                        ' . $value["NumeroDocumento"] . '<br>' . $value["Persona"] . '    
                     </td>
                     <td align="right" rowspan="1">
                         0.00      
@@ -267,14 +255,11 @@ mpdf-->
                 <br>
             </body>
         </html>';
-        
-    }else{
-        $html .='<table class="items" width="100%" style="font-size: 6pt; border-collapse: collapse; " cellpadding="8">
+    } else {
+        $html .= '<table class="items" width="100%" style="font-size: 6pt; border-collapse: collapse; " cellpadding="8">
         <thead>
             <tr style="background: #BFBFBF;">
                 <th width="3%" rowspan="1">ID</th>
-                <th width="9%" rowspan="1">MOTIVO ANUL.</th>
-                <th width="6%" rowspan="1">FECHA ANUL.</th>
                 <th width="3%" rowspan="1">SERIE</th>
                 <th width="6%" rowspan="1">CORRELATIVO</th>
                 <th width="6%" rowspan="1">FECHA REG.</th>
@@ -282,9 +267,7 @@ mpdf-->
                 <th width="4%" rowspan="1">ESTADO</th>
                 <th width="5%" rowspan="1">TIPO PAGO</th>
                 <th width="10%" rowspan="1">NOMBRE BANCO</th>
-                <th width="5%" rowspan="1">NUMERO OPERACION</th>
-                <th width="5%" rowspan="1">NUM. CIP</th>
-                <th width="7%" rowspan="1">NUM. DNI/RUC</th>            
+                <th width="5%" rowspan="1">NUM. CIP</th>          
                 <th width="16%" rowspan="1">PERSONA</th>
                 <th width="5%" rowspan="1">MONTO</th>
                 <th width="7%" rowspan="1">MONTO ANULADO</th>
@@ -313,20 +296,23 @@ mpdf-->
             } else if ($value["Concepto"] == 100) {
                 $Concepto = "Ingresos Diversos";
             }
-    
+
             // $totalCipJunin += $value["CIPJunin"];
             // $totalCipNacional += $value["CIPNacional"];
+
+            if ($value["TipoPago"] == 1) {
+                $tipoPago = 'EFECTIVO';
+            } else if ($value["TipoPago"] == 2) {
+                $tipoPago = 'DEPOSITO';
+            } else {
+                $tipoPago = 'TARJETA';
+            }
+
             if ($value["Estado"] === "C") {
                 $html .= ' <tr>
                     <td align="center" rowspan="1">
                         ' . $value["Id"] . '     
-                    </td>
-                    <td rowspan="1">
-                        ' . $value["MotivoAnulacion"] . '      
-                    </td>
-                    <td rowspan="1">
-                        ' . date("d/m/Y", strtotime($value["FechaAnulacion"])) . '       
-                    </td>
+                    </td>                    
                     <td align="center" rowspan="1">
                         ' . $value["Serie"] . '      
                     </td>
@@ -343,22 +329,16 @@ mpdf-->
                         ' . $value["Estado"] . '      
                     </td>
                     <td align="center" rowspan="1">
-                        ' . ($value["TipoPago"] == 1 ? 'EFECTIVO' : 'DEPOSITO'). '      
+                        ' . $tipoPago  . '      
                     </td>
                     <td align="center" rowspan="1">
-                        ' . $value["NombreBanco"] . '      
-                    </td>
-                    <td align="center" rowspan="1">
-                        ' . $value["NumeroOperacion"] . '      
+                        ' . $value["NombreBanco"] . '<br>' . $value["NumeroOperacion"] . '      
                     </td>
                     <td align="center" rowspan="1">
                         ' . $value["CIP"] . '      
-                    </td>
+                    </td>             
                     <td align="left" rowspan="1">
-                        ' . $value["NumeroDocumento"] . '      
-                    </td>                
-                    <td align="left" rowspan="1">
-                        ' . $value["Persona"] . '      
+                        ' . $value["NumeroDocumento"] . '<br>' . $value["Persona"] . '     
                     </td>
                     <td align="right" rowspan="1">
                         ' . number_format(round($value["Total"], 2, PHP_ROUND_HALF_UP), 2, '.', '') . '      
@@ -371,13 +351,7 @@ mpdf-->
                 $html .= ' <tr style="background: #D9D8D8;">
                     <td align="center" rowspan="1">
                         ' . $value["Id"] . '     
-                    </td>
-                    <td rowspan="1">
-                        ' . $value["MotivoAnulacion"] . '      
-                    </td>
-                    <td rowspan="1">
-                        ' . $value["FechaAnulacion"] . '       
-                    </td>
+                    </td>                    
                     <td align="center" rowspan="1">
                         ' . $value["Serie"] . '      
                     </td>
@@ -394,22 +368,16 @@ mpdf-->
                         ' . $value["Estado"] . '      
                     </td>
                     <td align="center" rowspan="1">
-                        ' . ($value["TipoPago"] == 1 ? 'EFECTIVO' : 'DEPOSITO'). '      
+                        ' .  $tipoPago . '      
                     </td>
                     <td align="center" rowspan="1">
-                        ' . $value["NombreBanco"] . '      
-                    </td>
-                    <td align="center" rowspan="1">
-                        ' . $value["NumeroOperacion"] . '      
-                    </td>
+                        ' . $value["NombreBanco"] . '<br>' . $value["NumeroOperacion"] . '      
+                    </td>                
                     <td align="center" rowspan="1">
                         ' . $value["CIP"] . '      
-                    </td>
+                    </td>                     
                     <td align="left" rowspan="1">
-                        ' . $value["NumeroDocumento"] . '      
-                    </td>  
-                    <td align="left" rowspan="1">
-                        ' . $value["Persona"] . '      
+                        ' . $value["NumeroDocumento"] . '<br>' . $value["Persona"] . '      
                     </td>
                     <td align="right" rowspan="1">
                         0.00      
@@ -426,7 +394,6 @@ mpdf-->
                 <br>
             </body>
         </html>';
-       
     }
 
     $mpdf = new \Mpdf\Mpdf([

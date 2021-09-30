@@ -18,19 +18,25 @@ class IngresosAdo
             i.idIngreso,
             convert(VARCHAR, CAST(i.Fecha AS DATE),103) AS Fecha,
             i.Hora,
-			CONCAT(UPPER(u.Nombres),', ', UPPER(u.Apellidos)) as Usuario,
-			r.Nombre AS Rol,
-            tc.Nombre as Comprobante,
+			CASE 
+            WHEN NOT u.idUsuario IS NULL THEN CONCAT(UPPER(u.Nombres),', ', UPPER(u.Apellidos)) 
+            ELSE 'USUARIO LIBRE' END AS Usuario,
+			CASE
+            WHEN NOT r.Nombre IS NULL THEN r.Nombre 
+            ELSE 'NO ROL' END AS Rol,
+            tc.Nombre AS Comprobante,
             i.Serie, 
             i.NumRecibo,
             i.Estado,
             p.CIP,
             i.Tipo,
-            i.NumOperacion,    
+            isnull(i.NumOperacion,'') AS NumOperacion,    
             isnull(b.Nombre,'') as BancoName,        
-            case when not e.IdEmpresa is null then 'RUC' else 'DNI' end as NombreDocumento,
-            isnull(e.NumeroRuc,p.NumDoc) as NumeroDocumento,
-            isnull(e.Nombre,concat(p.Apellidos,' ', p.Nombres)) as Persona,
+            CASE 
+            WHEN NOT e.IdEmpresa IS NULL THEN 'RUC' 
+            ELSE 'DNI' END AS NombreDocumento,
+            isnull(e.NumeroRuc,p.NumDoc) AS NumeroDocumento,
+            isnull(e.Nombre,concat(p.Apellidos,' ', p.Nombres)) AS Persona,
             sum(d.Monto) AS Total,
             isnull(i.Xmlsunat,'') as Xmlsunat,
             isnull(i.Xmldescripcion,'') as Xmldescripcion
@@ -39,8 +45,8 @@ class IngresosAdo
             LEFT JOIN Persona AS p ON i.idDNI = p.idDNI
             LEFT JOIN EmpresaPersona AS e ON e.IdEmpresa = i.idEmpresaPersona
             INNER JOIN Detalle AS d ON d.idIngreso = i.idIngreso
-			INNER JOIN Usuario AS u ON u.idUsuario = i.idUsuario
-			INNER JOIN Rol AS r ON r.idRol = u.Rol
+			LEFT JOIN Usuario AS u ON u.idUsuario = i.idUsuario
+			LEFT JOIN Rol AS r ON r.idRol = u.Rol
             LEFT JOIN Banco AS b ON b.idBanco = i.idBanco
             WHERE
             $opcion = 0 AND i.Fecha BETWEEN ? AND ?
@@ -64,6 +70,7 @@ class IngresosAdo
             $opcion = 3 AND i.Estado = ? AND i.Fecha BETWEEN ? AND ?
             GROUP BY 
             i.idIngreso,
+            u.idUsuario,
             u.Nombres, 
             u.Apellidos,
             i.Fecha,
@@ -138,8 +145,8 @@ class IngresosAdo
             INNER JOIN TipoComprobante AS tc ON tc.IdTipoComprobante = i.TipoComprobante
             LEFT JOIN Persona AS p ON i.idDNI = p.idDNI
             LEFT JOIN EmpresaPersona AS e ON e.IdEmpresa = i.idEmpresaPersona
-            INNER JOIN Usuario AS u ON u.idUsuario = i.idUsuario
-			INNER JOIN Rol AS r ON r.idRol = u.Rol
+            LEFT JOIN Usuario AS u ON u.idUsuario = i.idUsuario
+			LEFT JOIN Rol AS r ON r.idRol = u.Rol
             WHERE
             $opcion = 0 AND i.Fecha BETWEEN ? AND ?
             OR
@@ -691,6 +698,9 @@ class IngresosAdo
                 if ($row["Estado"] == "A") {
                     Database::getInstance()->getDb()->rollBack();
                     return "anulado";
+                } else if ($row["Tipo"] == 3) {
+                    Database::getInstance()->getDb()->rollBack();
+                    return "tarjeta";
                 } else {
                     $cmdIngreso = Database::getInstance()->getDb()->prepare("UPDATE Ingreso SET Estado = 'A' WHERE idIngreso = ?");
                     $cmdIngreso->bindParam(1, $idIngreso, PDO::PARAM_INT);
@@ -788,13 +798,13 @@ class IngresosAdo
             i.Fecha AS FechaPago,
             i.Hora as HoraPago,
             CONVERT(VARCHAR,cast(i.Fecha AS DATE), 103) AS FechaEmision,
-            i.Estado,isnull(i.CodigoHash,'') AS CodigoHash,
+            i.Estado,ISNULL(i.CodigoHash,'') AS CodigoHash,
             case when not e.IdEmpresa is null then 6 else 1 end as TipoDocumento,
             case when not e.IdEmpresa is null then 'R.U.C' else 'D.N.I' end as NombreDocumento,
             case when not e.IdEmpresa is null then 'Razón Social' else 'Nombres' end as TipoNombrePersona,
-            isnull(e.NumeroRuc,p.NumDoc) as NumeroDocumento,
-            isnull(e.Nombre,concat(p.Apellidos,' ',p.Nombres)) as DatosPersona,
-            isnull(e.Direccion,ISNULL((select top 1 Direccion from Direccion where idDNI = p.idDNI),'')) as Direccion,
+            ISNULL(e.NumeroRuc,p.NumDoc) as NumeroDocumento,
+            ISNULL(e.Nombre,concat(p.Apellidos,' ',p.Nombres)) as DatosPersona,
+            ISNULL(e.Direccion,ISNULL((select top 1 Direccion from Direccion where idDNI = p.idDNI),'')) as Direccion,
 			p.CIP,
             p.NumDoc, 
             p.Apellidos,

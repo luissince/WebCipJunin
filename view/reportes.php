@@ -738,7 +738,8 @@ if (!isset($_SESSION['IdUsuario'])) {
                         url: "../app/controller/ComprobanteController.php",
                         method: "GET",
                         data: {
-                            "type": "comprobante"
+                            "type": "comprobante",
+                            "destino": "1"
                         },
                         beforeSend: function() {
                             $("#cbTipodeDocumento").empty();
@@ -749,7 +750,7 @@ if (!isset($_SESSION['IdUsuario'])) {
                                 comprobantes = result.data;
                                 $("#cbTipodeDocumento").append('<option value="">- Seleccione -</option>');
                                 for (let value of comprobantes) {
-                                    $("#cbTipodeDocumento").append('<option value="' + value.IdTipoComprobante + '">' + value.Nombre + '</option>')
+                                    $("#cbTipodeDocumento").append('<option value="' + value.IdTipoComprobante + '">' + value.Nombre + ' (' + value.Serie + ')</option>')
                                 }
                             } else {
                                 $("#cbTipodeDocumento").append('<option value="">- Seleccione -</option>');

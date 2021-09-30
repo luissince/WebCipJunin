@@ -166,6 +166,11 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
                 "estado" => 2,
                 "message" => "El comprobante ya se encuentra anulado."
             ));
+        } else if ($result == "tarjeta") {
+            echo json_encode(array(
+                "estado" => 4,
+                "message" => "El comprobante no se puede anular por este medío por ser un cobro de plataforma."
+            ));
         } else {
             echo json_encode(array(
                 "estado" => 0,

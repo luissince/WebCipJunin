@@ -345,6 +345,14 @@ if (!is_array($ventas)) {
                 $documento->getActiveSheet()->getStyle("N" . $cel)->getNumberFormat()->setFormatCode('0.00');
                 $documento->getActiveSheet()->getStyle("O" . $cel)->getNumberFormat()->setFormatCode('0.00');
 
+                if ($value["TipoPago"] == 1) {
+                    $tipoPago = 'EFECTIVO';
+                } else if ($value["TipoPago"] == 2) {
+                    $tipoPago = 'DEPOSITO';
+                } else {
+                    $tipoPago = 'TARJETA';
+                }
+
                 $documento->setActiveSheetIndex(0)
                     ->setCellValue("A" . $cel,  strval($value["Id"]))
                     ->setCellValue("B" . $cel, strval($value["MotivoAnulacion"]))
@@ -353,7 +361,7 @@ if (!is_array($ventas)) {
                     ->setCellValue("E" . $cel, strval($value["NumRecibo"]))
                     ->setCellValue("F" . $cel, strval($value["FechaPago"]))
                     ->setCellValue("G" . $cel, strval($value["Estado"]))
-                    ->setCellValue("H" . $cel, strval($value["TipoPago"] == 1 ? 'EFECTIVO' : 'DEPOSITO'))
+                    ->setCellValue("H" . $cel, strval($tipoPago))
                     ->setCellValue("I" . $cel, strval($value["NombreBanco"]))
                     ->setCellValue("J" . $cel, strval($value["NumeroOperacion"]))
                     ->setCellValue("K" . $cel, strval($value["CIP"]))
@@ -388,6 +396,14 @@ if (!is_array($ventas)) {
                 $documento->getActiveSheet()->getStyle("N" . $cel)->getNumberFormat()->setFormatCode('0.00');
                 $documento->getActiveSheet()->getStyle("O" . $cel)->getNumberFormat()->setFormatCode('0.00');
 
+                if ($value["TipoPago"] == 1) {
+                    $tipoPago = 'EFECTIVO';
+                } else if ($value["TipoPago"] == 2) {
+                    $tipoPago = 'DEPOSITO';
+                } else {
+                    $tipoPago = 'TARJETA';
+                }
+
                 $documento->setActiveSheetIndex(0)
                     ->setCellValue("A" . $cel,  strval($value["Id"]))
                     ->setCellValue("B" . $cel, strval($value["MotivoAnulacion"]))
@@ -396,7 +412,7 @@ if (!is_array($ventas)) {
                     ->setCellValue("E" . $cel, strval($value["NumRecibo"]))
                     ->setCellValue("F" . $cel, strval($value["FechaPago"]))
                     ->setCellValue("G" . $cel, strval($value["Estado"]))
-                    ->setCellValue("H" . $cel, strval($value["TipoPago"] == 1 ? 'EFECTIVO' : 'DEPOSITO'))
+                    ->setCellValue("H" . $cel, strval($tipoPago))
                     ->setCellValue("I" . $cel, strval($value["NombreBanco"]))
                     ->setCellValue("J" . $cel, strval($value["NumeroOperacion"]))
                     ->setCellValue("K" . $cel, strval($value["CIP"]))

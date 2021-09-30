@@ -156,7 +156,6 @@ if (!isset($_SESSION['IdUsuario'])) {
                                             <th width="4%;" class="text-center">#</th>
                                             <th width="4%;" class="text-center">P.D.F</th>
                                             <th width="4%;" class="text-center">Editar</th>
-                                            <th width="8%;">N° CIP</th>
                                             <th width="10%;">Colegiado</th>
                                             <th width="10%;">Especialidad</th>
                                             <th width="9%;">N° Certificado</th>
@@ -377,8 +376,7 @@ if (!isset($_SESSION['IdUsuario'])) {
                                             '<td class="text-center text-primary">' + ingresos.id + '</td>' +
                                             '<td>' + btnPdf + '</td>' +
                                             '<td>' + btnEdit + '</td>' +
-                                            '<td>' + ingresos.numeroCip + '</td>' +
-                                            '<td>' + ingresos.dni + '</br>' + ingresos.usuario + ' ' + ingresos.apellidos + '</td>' +
+                                            '<td>' + ingresos.numeroCip + " - " + ingresos.dni + '</br>' + ingresos.usuario + ' ' + ingresos.apellidos + '</td>' +
                                             '<td>' + ingresos.especialidad + '</td>' +
                                             '<td>' + ingresos.numCertificado + '</td>' +
                                             '<td>' + (ingresos.estado == 0 ? '<label class="text-danger">ANULADO</label>' : '<label class="text-success">ACTIVO</label>') + '</td>' +

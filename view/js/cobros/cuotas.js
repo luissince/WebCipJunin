@@ -147,79 +147,87 @@ function Cuotas() {
     }
 
     function eventCuotaOrdinaria() {
-        $("#lblCuotasMensaje").html("Cuotas Ordinarias");
+        if (!stateCuotas) {
+            $("#lblCuotasMensaje").html("Cuotas Ordinarias");
 
-        $("#btnCuotaNormal").removeClass();
-        $("#btnCuotaNormal").addClass("btn btn-success");
+            $("#btnCuotaNormal").removeClass();
+            $("#btnCuotaNormal").addClass("btn btn-success");
 
-        $("#btnCuotaAmnistia").removeClass();
-        $("#btnCuotaAmnistia").addClass("btn btn-default");
+            $("#btnCuotaAmnistia").removeClass();
+            $("#btnCuotaAmnistia").addClass("btn btn-default");
 
-        $("#btnCuotaVitalicio").removeClass();
-        $("#btnCuotaVitalicio").addClass("btn btn-default");
+            $("#btnCuotaVitalicio").removeClass();
+            $("#btnCuotaVitalicio").addClass("btn btn-default");
 
-        $("#btnCuotaResolucion").removeClass();
-        $("#btnCuotaResolucion").addClass("btn btn-default");
+            $("#btnCuotaResolucion").removeClass();
+            $("#btnCuotaResolucion").addClass("btn btn-default");
 
-        tipoCuotas = 1;
-        loadCuotas(tipoCuotas);
+            tipoCuotas = 1;
+            loadCuotas(tipoCuotas);
+        }
     }
 
     function eventCuotaAdmistia() {
-        $("#lblCuotasMensaje").html("Cuotas de Amnistia");
+        if (!stateCuotas) {
+            $("#lblCuotasMensaje").html("Cuotas de Amnistia");
 
-        $("#btnCuotaNormal").removeClass();
-        $("#btnCuotaNormal").addClass("btn btn-default");
+            $("#btnCuotaNormal").removeClass();
+            $("#btnCuotaNormal").addClass("btn btn-default");
 
-        $("#btnCuotaAmnistia").removeClass();
-        $("#btnCuotaAmnistia").addClass("btn btn-success");
+            $("#btnCuotaAmnistia").removeClass();
+            $("#btnCuotaAmnistia").addClass("btn btn-success");
 
-        $("#btnCuotaVitalicio").removeClass();
-        $("#btnCuotaVitalicio").addClass("btn btn-default");
+            $("#btnCuotaVitalicio").removeClass();
+            $("#btnCuotaVitalicio").addClass("btn btn-default");
 
-        $("#btnCuotaResolucion").removeClass();
-        $("#btnCuotaResolucion").addClass("btn btn-default");
+            $("#btnCuotaResolucion").removeClass();
+            $("#btnCuotaResolucion").addClass("btn btn-default");
 
-        tipoCuotas = 2;
-        loadCuotas(tipoCuotas);
+            tipoCuotas = 2;
+            loadCuotas(tipoCuotas);
+        }
     }
 
     function eventCuotaVitalicio() {
-        $("#lblCuotasMensaje").html("Cuotas de Vitalicio");
+        if (!stateCuotas) {
+            $("#lblCuotasMensaje").html("Cuotas de Vitalicio");
 
-        $("#btnCuotaNormal").removeClass();
-        $("#btnCuotaNormal").addClass("btn btn-default");
+            $("#btnCuotaNormal").removeClass();
+            $("#btnCuotaNormal").addClass("btn btn-default");
 
-        $("#btnCuotaAmnistia").removeClass();
-        $("#btnCuotaAmnistia").addClass("btn btn-default");
+            $("#btnCuotaAmnistia").removeClass();
+            $("#btnCuotaAmnistia").addClass("btn btn-default");
 
-        $("#btnCuotaVitalicio").removeClass();
-        $("#btnCuotaVitalicio").addClass("btn btn-success");
+            $("#btnCuotaVitalicio").removeClass();
+            $("#btnCuotaVitalicio").addClass("btn btn-success");
 
-        $("#btnCuotaResolucion").removeClass();
-        $("#btnCuotaResolucion").addClass("btn btn-default");
+            $("#btnCuotaResolucion").removeClass();
+            $("#btnCuotaResolucion").addClass("btn btn-default");
 
-        tipoCuotas = 3;
-        loadCuotas(tipoCuotas);
+            tipoCuotas = 3;
+            loadCuotas(tipoCuotas);
+        }
     }
 
     function eventCuotaResolucion() {
-        $("#lblCuotasMensaje").html("Cuotas de Resolución 15");
+        if (!stateCuotas) {
+            $("#lblCuotasMensaje").html("Cuotas de Resolución 15");
 
-        $("#btnCuotaNormal").removeClass();
-        $("#btnCuotaNormal").addClass("btn btn-default");
+            $("#btnCuotaNormal").removeClass();
+            $("#btnCuotaNormal").addClass("btn btn-default");
 
-        $("#btnCuotaAmnistia").removeClass();
-        $("#btnCuotaAmnistia").addClass("btn btn-default");
+            $("#btnCuotaAmnistia").removeClass();
+            $("#btnCuotaAmnistia").addClass("btn btn-default");
 
-        $("#btnCuotaVitalicio").removeClass();
-        $("#btnCuotaVitalicio").addClass("btn btn-default");
+            $("#btnCuotaVitalicio").removeClass();
+            $("#btnCuotaVitalicio").addClass("btn btn-default");
 
-        $("#btnCuotaResolucion").removeClass();
-        $("#btnCuotaResolucion").addClass("btn btn-success");
+            $("#btnCuotaResolucion").removeClass();
+            $("#btnCuotaResolucion").addClass("btn btn-success");
 
-        tipoCuotas = 12;
-        loadCuotas(tipoCuotas);
+            tipoCuotas = 12;
+            loadCuotas(tipoCuotas);
+        }
     }
 
     function eventCloseCuota() {
@@ -241,8 +249,10 @@ function Cuotas() {
     }
 
     function addCuotas() {
-        countCurrentDate = 1;
-        loadCuotas(tipoCuotas);
+        if (!stateCuotas) {
+            countCurrentDate = 1;
+            loadCuotas(tipoCuotas);
+        }
     }
 
     function loadCuotas(categoria) {
@@ -258,6 +268,7 @@ function Cuotas() {
                 monthv: monthCurrentView,
             },
             beforeSend: function () {
+                stateCuotas = true;
                 $("#tbCuotas").empty();
                 $("#tbCuotas").append(
                     '<tr class="text-center"><td colspan="3"><img src="./images/spiner.gif"/><p>Cargando información...</p></td></tr>'
@@ -265,7 +276,6 @@ function Cuotas() {
                 cuotas.splice(0, cuotas.length);
             },
             success: function (result) {
-
                 if (result.estado == 1) {
                     $("#tbCuotas").empty();
 
@@ -312,6 +322,7 @@ function Cuotas() {
                         $("#lblTotalCuotas").html("TOTAL DE 0 CUOTAS: 0.00");
                         $("#lblNumeroCuotas").html("CUOTAS DEL: 00/0000 al 00/0000");
                     }
+                    stateCuotas = false;
                 } else {
                     $("#tbCuotas").empty();
                     $("#tbCuotas").append(
@@ -321,6 +332,7 @@ function Cuotas() {
                     );
                     $("#lblTotalCuotas").html("TOTAL DE 0 CUOTAS: 0.00");
                     $("#lblNumeroCuotas").html("CUOTAS DEL: 00/0000 al 00/0000");
+                    stateCuotas = false;
                 }
             },
             error: function (error) {
@@ -330,6 +342,7 @@ function Cuotas() {
                     error.responseText +
                     "</p></td></tr>"
                 );
+                stateCuotas = false;
             },
         });
     }
@@ -408,7 +421,6 @@ function Cuotas() {
         }
 
     }
-
 
     function removeCuota() {
         if (cuotas.length != 0) {

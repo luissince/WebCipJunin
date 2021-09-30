@@ -43,7 +43,7 @@ try {
             $empresa = $detalleventa[3];
             $totales = $detalleventa[4];
 
-            $rutaImage = "../../view/images/logologin.png";
+            $rutaImage = "../../view/images/logoemail.png";
             $nombre = $empresa->RazonSocial;
             $direccion = $empresa->Domicilio;
             $web = $empresa->PaginaWeb;
@@ -424,7 +424,7 @@ try {
                                     <table style="background:#ECECEC; padding-top:25px;padding-bottom:25px;border-radius:20px;">
                                         <tr style="width:100%;">
                                             <td style="width:20%;"></td>
-                                            <td style="width:60%; font-size:18px; font-weight:bold;text-align: center;"><img src="cid:logoCip" style="width:80px;"><h2> COLEGIO DE INGENIEROS DEL PERÚ</h2></td>
+                                            <td style="width:60%; font-size:18px; font-weight:bold;text-align: center;"><img src="cid:logoCip"><h2> COLEGIO DE INGENIEROS DEL PERÚ</h2></td>
                                             <td style="width:20%;"></td>
                                         </tr>
                                         <tr style="width:100%;">

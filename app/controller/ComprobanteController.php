@@ -7,7 +7,10 @@ include_once '../model/ComprobanteAdo.php';
 
 if ($_SERVER['REQUEST_METHOD'] == 'GET') {
     if ($_GET["type"] === "comprobante") {
-        $result = ComprobanteAdo::getAllComprobates();
+
+        $destino = isset($_GET["destino"]) ? $_GET["destino"] : "";
+
+        $result = ComprobanteAdo::getAllComprobates($destino);
         if (is_array($result)) {
             print json_encode(array(
                 "estado" => 1,
@@ -94,6 +97,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
         $data["Estado"] = $_POST["estado"];
         $data["UsaRuc"] = $_POST["usaRuc"];
         $data["Asignado"] = $_POST["comprobanteAfiliado"];
+        $data["Destino"] = $_POST["destino"];
 
         $result = ComprobanteAdo::RegistrarComprobante($data);
         if ($result === "Insertado") {

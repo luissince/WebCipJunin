@@ -1,12 +1,5 @@
 function CobroIngenieros() {
 
-    let stateHistorial = false;
-    let opcionHistorial = 0;
-    let totalPaginacionHistorial = 0;
-    let paginacionHistorial = 0;
-    let filasPorPaginacionHistorial = 5;
-    let tbHistorial = $("#tbHistorial");
-
     this.componentesIngenieros = function () {
 
         $("#btnIngenieros").click(function (event) {
@@ -313,7 +306,7 @@ function CobroIngenieros() {
                             '<td>' + afiliacion.Descripcion + '</td>' +
                             '<td class="text-center">' + afiliacion.Monto + '</td>' +
                             '<td class="text-center">' + tools.getDateForma(afiliacion.Fecha) + '</td>' +
-                            '<td class="text-center">' + (afiliacion.Estado == 1 ? '<span class="text-green">Activo</span>' : '<span class="text-red">Anulado</span>')+ '</td>' +
+                            '<td class="text-center">' + (afiliacion.Estado == 1 ? '<span class="text-green">Activo</span>' : '<span class="text-red">Anulado</span>') + '</td>' +
                             '<td>' + afiliacion.Usuario + '</br>' + afiliacion.Nombre + '</td>' +
                             '</tr>');
                     }
@@ -444,14 +437,16 @@ function CobroIngenieros() {
                 tbHistorial.append('<tr class="text-center"><td colspan="7"><img src="./images/spiner.gif"/><p>Cargando información.</p></td></tr>');
                 stateHistorial = true;
                 totalPaginacionHistorial = 0;
+                $("#lblPaginaActualHistorial").html(0);
+                $("#lblPaginSiguienteHistorial").html(0);
             },
             success: function (result) {
                 if (result.estado == 1) {
                     tbHistorial.empty()
                     if (result.historial.length == 0) {
                         tbHistorial.append('<tr class="text-center"><td colspan="7"><p>No hay datos para mostrar.</p></td></tr>');
-                        $("#lblPaginaActual").html(0);
-                        $("#lblPaginaSiguiente").html(0);
+                        $("#lblPaginaActualHistorial").html(0);
+                        $("#lblPaginSiguienteHistorial").html(0);
                         stateHistorial = false;
                     } else {
                         for (let historial of result.historial) {
@@ -497,16 +492,16 @@ function CobroIngenieros() {
                 } else {
                     tbHistorial.empty()
                     tbHistorial.append('<tr class="text-center"><td colspan="7"><p>' + result.message + '</p></td></tr>');
-                    $("#lblPaginaActual").html(0);
-                    $("#lblPaginaSiguiente").html(0);
+                    $("#lblPaginaActualHistorial").html(0);
+                    $("#lblPaginSiguienteHistorial").html(0);
                     stateHistorial = false;
                 }
             },
             error: function (error) {
                 tbHistorial.empty()
                 tbHistorial.append('<tr class="text-center"><td colspan="7"><p>' + error.responseText + '</p></td></tr>');
-                $("#lblPaginaActual").html(0);
-                $("#lblPaginaSiguiente").html(0);
+                $("#lblPaginaActualHistorial").html(0);
+                $("#lblPaginSiguienteHistorial").html(0);
                 stateHistorial = false;
             }
         });

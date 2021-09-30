@@ -593,6 +593,10 @@ class PersonaAdo
 
             $image = $body['image'] == null ? null : base64_decode($body['image']);
 
+            $cmdDelete = Database::getInstance()->getDb()->prepare('DELETE FROM PersonaImagen WHERE idDNI = ?');
+            $cmdDelete->bindParam(1, $body['dni'], PDO::PARAM_STR);
+            $cmdDelete->execute();
+
             $cmdImage = Database::getInstance()->getDb()->prepare('INSERT INTO PersonaImagen(idDNI,Foto)VALUES(?,?)');
             $cmdImage->bindParam(1, $body['dni'], PDO::PARAM_STR);
             $cmdImage->bindParam(2, $image,  PDO::PARAM_LOB, 0, PDO::SQLSRV_ENCODING_BINARY);

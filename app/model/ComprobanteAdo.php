@@ -9,16 +9,28 @@ class ComprobanteAdo
     {
     }
 
-    public static function getAllComprobates()
+    public static function getAllComprobates($destino)
     {
         try {
             $array = array();
-            $comandoConcepto = Database::getInstance()->getDb()->prepare("SELECT * FROM TipoComprobante WHERE Estado = 1 and ComprobanteAfiliado = 2");
+
+            if ($destino == "") {
+                $query = "SELECT * 
+                FROM TipoComprobante 
+                WHERE Estado = 1 AND ComprobanteAfiliado = 2 AND (Destino = 1 OR Destino = 2)";
+            } else {
+                $query = "SELECT * 
+                FROM TipoComprobante 
+                WHERE Estado = 1 AND ComprobanteAfiliado = 2 ";
+            }
+
+            $comandoConcepto = Database::getInstance()->getDb()->prepare($query);
             $comandoConcepto->execute();
             while ($row = $comandoConcepto->fetch()) {
                 array_push($array, array(
                     "IdTipoComprobante" => $row["IdTipoComprobante"],
                     "Nombre" => $row["Nombre"],
+                    "Serie" => $row["Serie"],
                     "Predeterminado" => $row["Predeterminado"],
                     "UsarRuc" => $row["UsarRuc"]
                 ));
@@ -84,7 +96,8 @@ class ComprobanteAdo
                     "CodigoAlterno" => $row["CodigoAlterno"],
                     "Predeterminado" => $row["Predeterminado"] == 1 ? 'SI' : 'NO',
                     "Estado" => $row["Estado"] == 1 ? 'ACTIVO' : 'INACTIVO',
-                    "Usa_ruc" => $row["UsarRuc"] == 1 ? 'SI' : 'NO'
+                    "Usa_ruc" => $row["UsarRuc"] == 1 ? 'SI' : 'NO',
+                    "Destino" => $row["Destino"],
                 ));
             }
 
@@ -134,13 +147,14 @@ class ComprobanteAdo
                     $cmdSelect->bindParam(1, $data["IdComprobante"], PDO::PARAM_INT);
                     $cmdSelect->execute();
                     if ($cmdSelect->fetch()) {
-                        $cmdInsert = Database::getInstance()->getDb()->prepare("UPDATE TipoComprobante SET Nombre = UPPER(?), CodigoAlterno = ?,  Predeterminado = ?, Estado = ?, UsarRuc = ? WHERE IdTipoComprobante = ?");
+                        $cmdInsert = Database::getInstance()->getDb()->prepare("UPDATE TipoComprobante SET Nombre = UPPER(?), CodigoAlterno = ?,  Predeterminado = ?, Estado = ?, UsarRuc = ?, Destino = ? WHERE IdTipoComprobante = ?");
                         $cmdInsert->bindParam(1, $data["Nombre"], PDO::PARAM_STR);
                         $cmdInsert->bindParam(2, $data["CodigoAlterno"], PDO::PARAM_STR);
                         $cmdInsert->bindParam(3, $data["Predeterminado"], PDO::PARAM_BOOL);
                         $cmdInsert->bindParam(4, $data["Estado"], PDO::PARAM_BOOL);
                         $cmdInsert->bindParam(5, $data["UsaRuc"], PDO::PARAM_BOOL);
-                        $cmdInsert->bindParam(6, $data["IdComprobante"], PDO::PARAM_INT);
+                        $cmdInsert->bindParam(6, $data["Destino"], PDO::PARAM_INT);
+                        $cmdInsert->bindParam(7, $data["IdComprobante"], PDO::PARAM_INT);
 
                         $cmdInsert->execute();
                         Database::getInstance()->getDb()->commit();
@@ -150,19 +164,20 @@ class ComprobanteAdo
                         $cmdSelect->bindParam(1, $data["IdComprobante"], PDO::PARAM_INT);
                         $cmdSelect->execute();
                         if ($cmdSelect->fetch()) {
-                            $cmdInsert = Database::getInstance()->getDb()->prepare("UPDATE TipoComprobante SET Nombre = UPPER(?), CodigoAlterno = ?,  Predeterminado = ?, Estado = ?, UsarRuc = ? WHERE IdTipoComprobante = ?");
+                            $cmdInsert = Database::getInstance()->getDb()->prepare("UPDATE TipoComprobante SET Nombre = UPPER(?), CodigoAlterno = ?,  Predeterminado = ?, Estado = ?, UsarRuc = ?, Destino = ? WHERE IdTipoComprobante = ?");
                             $cmdInsert->bindParam(1, $data["Nombre"], PDO::PARAM_STR);
                             $cmdInsert->bindParam(2, $data["CodigoAlterno"], PDO::PARAM_STR);
                             $cmdInsert->bindParam(3, $data["Predeterminado"], PDO::PARAM_BOOL);
                             $cmdInsert->bindParam(4, $data["Estado"], PDO::PARAM_BOOL);
                             $cmdInsert->bindParam(5, $data["UsaRuc"], PDO::PARAM_BOOL);
-                            $cmdInsert->bindParam(6, $data["IdComprobante"], PDO::PARAM_INT);
+                            $cmdInsert->bindParam(6, $data["Destino"], PDO::PARAM_INT);
+                            $cmdInsert->bindParam(7, $data["IdComprobante"], PDO::PARAM_INT);
 
                             $cmdInsert->execute();
                             Database::getInstance()->getDb()->commit();
                             return "Actualizado";
                         } else {
-                            $cmdInsert = Database::getInstance()->getDb()->prepare("UPDATE TipoComprobante SET Nombre = UPPER(?), Serie =UPPER(?), Numeracion = ?, CodigoAlterno = ?,  Predeterminado = ?, Estado = ?, UsarRuc = ?, ComprobanteAfiliado = ? WHERE IdTipoComprobante = ?");
+                            $cmdInsert = Database::getInstance()->getDb()->prepare("UPDATE TipoComprobante SET Nombre = UPPER(?), Serie =UPPER(?), Numeracion = ?, CodigoAlterno = ?,  Predeterminado = ?, Estado = ?, UsarRuc = ?, ComprobanteAfiliado = ?, Destino = ? WHERE IdTipoComprobante = ?");
                             $cmdInsert->bindParam(1, $data["Nombre"], PDO::PARAM_STR);
                             $cmdInsert->bindParam(2, $data["Serie"], PDO::PARAM_STR);
                             $cmdInsert->bindParam(3, $data["Numeracion"], PDO::PARAM_STR);
@@ -171,7 +186,8 @@ class ComprobanteAdo
                             $cmdInsert->bindParam(6, $data["Estado"], PDO::PARAM_BOOL);
                             $cmdInsert->bindParam(7, $data["UsaRuc"], PDO::PARAM_BOOL);
                             $cmdInsert->bindParam(8, $data["Asignado"], PDO::PARAM_INT);
-                            $cmdInsert->bindParam(9, $data["IdComprobante"], PDO::PARAM_INT);
+                            $cmdInsert->bindParam(9, $data["Destino"], PDO::PARAM_INT);
+                            $cmdInsert->bindParam(10, $data["IdComprobante"], PDO::PARAM_INT);
 
                             $cmdInsert->execute();
                             Database::getInstance()->getDb()->commit();
@@ -195,8 +211,9 @@ class ComprobanteAdo
                         Predeterminado,
                         Estado, 
                         UsarRuc,
-                        ComprobanteAfiliado)
-                    VALUES(UPPER(?),UPPER(?),?,?,?,?,?,?)");
+                        ComprobanteAfiliado,
+                        Destino)
+                    VALUES(UPPER(?),UPPER(?),?,?,?,?,?,?,?)");
 
                     $comandoInsert->bindParam(1, $data["Nombre"], PDO::PARAM_STR);
                     $comandoInsert->bindParam(2, $data["Serie"], PDO::PARAM_STR);
@@ -206,6 +223,7 @@ class ComprobanteAdo
                     $comandoInsert->bindParam(6, $data["Estado"], PDO::PARAM_BOOL);
                     $comandoInsert->bindParam(7, $data["UsaRuc"], PDO::PARAM_BOOL);
                     $comandoInsert->bindParam(8, $data["Asignado"], PDO::PARAM_INT);
+                    $comandoInsert->bindParam(9, $data["Destino"], PDO::PARAM_INT);
 
                     $comandoInsert->execute();
                     Database::getInstance()->getDb()->commit();
@@ -262,7 +280,7 @@ class ComprobanteAdo
     {
         try {
             $cmdComprobante = Database::getInstance()->getDb()->prepare("SELECT IdTipoComprobante, UPPER(Nombre) As Nombre, UPPER(Serie) AS Serie, Numeracion, CodigoAlterno, Predeterminado, 
-            Estado, UsarRuc, ComprobanteAfiliado from TipoComprobante            
+            Estado, UsarRuc, ComprobanteAfiliado,Destino from TipoComprobante            
             WHERE IdTipoComprobante = ?");
             $cmdComprobante->bindParam(1, $idComprobante, PDO::PARAM_INT);
             $cmdComprobante->execute();

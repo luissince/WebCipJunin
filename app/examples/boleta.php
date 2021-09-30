@@ -121,7 +121,7 @@ if (!is_array($detalleventa)) {
         // Envio a SUNAT.
         //FE_BETA
         //FE_PRODUCCION
-        $point = SunatEndpoints::FE_PRODUCCION;
+        $point = SunatEndpoints::FE_BETA;
         $see = $util->getSee($point, $empresa->NumeroDocumento, $empresa->UsuarioSol, $empresa->ClaveSol);
         $res = $see->send($invoice);
         $util->writeXml($invoice, $see->getFactory()->getLastXml());

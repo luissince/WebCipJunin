@@ -677,6 +677,7 @@ if (!isset($_SESSION['IdUsuario'])) {
             <script>
                 let tools = new Tools();
                 //cuotas
+                let stateCuotas = false;
                 let cuotas = [];
                 let countCurrentDate = 0;
                 let yearCurrentView = "";
@@ -716,6 +717,14 @@ if (!isset($_SESSION['IdUsuario'])) {
                 let totalPaginacion = 0;
                 let paginacion = 0;
                 let filasPorPagina = 10;
+
+                //paginacion historial
+                let stateHistorial = false;
+                let opcionHistorial = 0;
+                let totalPaginacionHistorial = 0;
+                let paginacionHistorial = 0;
+                let filasPorPaginacionHistorial = 5;
+                let tbHistorial = $("#tbHistorial");
 
                 let idDNI = 0;
                 let cip = 0;
@@ -897,7 +906,7 @@ if (!isset($_SESSION['IdUsuario'])) {
                                 comprobantes = result.data;
                                 $("#cbComprobante").append('<option value="">- Seleccione -</option>');
                                 for (let value of comprobantes) {
-                                    $("#cbComprobante").append('<option value="' + value.IdTipoComprobante + '">' + value.Nombre + '</option>')
+                                    $("#cbComprobante").append('<option value="' + value.IdTipoComprobante + '">' + value.Nombre + ' (' + value.Serie + ')' + '</option>')
                                 }
                                 for (let value of comprobantes) {
                                     if (value.Predeterminado == "1") {
@@ -999,38 +1008,6 @@ if (!isset($_SESSION['IdUsuario'])) {
                         $("#modalTipoPago").modal("show");
                     }
                 }
-
-                // function EnviarHabilidad(cip, apellidos, nombres, condicion, colegiatura, ultimopago, especialidad, capitulo) {
-                //     $.ajax({
-                //         url: "http://cip-junin.org.pe/sistema/UpdateLastPago.php",
-                //         method: "POST",
-                //         dataType: "json",
-                //         data: {
-                //             "cip": cip,
-                //             "apellidos": apellidos,
-                //             "nombres": nombres,
-                //             "condicion": condicion,
-                //             "colegiatura": colegiatura,
-                //             "ultimopago": ultimopago,
-                //             "sede": "JUNIN",
-                //             "especialidad": especialidad,
-                //             "capitulo": capitulo
-                //         },
-                //         beforeSend: function() {
-                //             //tools.ModalAlertInfo("Cobros", "Actualizando su habilidad del Ingeniero...");
-                //         },
-                //         success: function(result) {
-                //             // if (result.estado == 1) {
-                //             //     tools.ModalAlertSuccess("Cobros", result.mensaje);
-                //             // } else {
-                //             //     tools.ModalAlertWarning("Cobros", result.mensaje);
-                //             // }
-                //         },
-                //         error: function(error) {
-                //             //tools.ModalAlertError("Cobros", "Error de conexión, actualize su habilidad desde el panel ingenieros/habilidad.");
-                //         }
-                //     });
-                // }
 
                 function getCorreo(idPersona, idIngreso) {
                     $("#eviarDocumentoalCorreo").modal("show");
@@ -1294,6 +1271,11 @@ if (!isset($_SESSION['IdUsuario'])) {
                     peritajeEstado = {};
                     $("#btnCertificado").attr('aria-expanded', 'false');
                     $("#tbHistorial").empty();
+
+                    totalPaginacionHistorial = 0;
+                    $("#lblPaginaActualHistorial").html(0);
+                    $("#lblPaginSiguienteHistorial").html(0);
+
                     UsarRuc = false;
                     for (let i = 0; i < comprobantes.length; i++) {
                         if (comprobantes[i].Predeterminado == "1") {
@@ -1460,12 +1442,6 @@ if (!isset($_SESSION['IdUsuario'])) {
                                         $("#btnCertificado").attr('aria-expanded', 'false');
                                         loadEmpresaPersona();
                                         loadComprobantes();
-
-                                        // if (result.estadoCuotas == true) {
-                                        //     if (result.colegiado != null) {
-                                        //         EnviarHabilidad(result.colegiado.CIP, result.colegiado.Apellidos, result.colegiado.Nombres, result.colegiado.Condicion, result.colegiado.FechaColegiado, result.cuotasFin, result.colegiado.Especialidad, result.colegiado.Capitulo);
-                                        //     }
-                                        // }
 
                                         tools.ModalAlertSuccess("Cobros", result.mensaje, function() {
                                             $("#modalEndIngreso").modal("show");

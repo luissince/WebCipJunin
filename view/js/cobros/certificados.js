@@ -21,8 +21,8 @@ function Certificado() {
             if (event.keyCode === 13) {
                 $('#mdCertHabilidad').modal('show');
                 loadCertificadoHabilidad(idDNI);
+                event.preventDefault();
             }
-            event.preventDefault();
         });
 
         $("#txtCorrelativoCertificado").keypress(function (event) {
@@ -40,8 +40,8 @@ function Certificado() {
         $("#btnAceptarCertificado").keypress(function (event) {
             if (event.keyCode === 13) {
                 validateIngresosCertificadoHabilidad();
+                event.preventDefault();
             }
-            event.preventDefault();
         });
 
         $("#btnCancelarCertificado").click(function () {
@@ -65,8 +65,8 @@ function Certificado() {
             if (event.keyCode === 13) {
                 $('#mdCertResidenciaObra').modal('show');
                 loadCertificadoObra(idDNI);
+                event.preventDefault();
             }
-            event.preventDefault();
         });
 
         $("#txtCertificadoNumeroObra").keypress(function (event) {
@@ -107,8 +107,8 @@ function Certificado() {
         $("#btnAceptarCertResidenciaObra").keypress(function (event) {
             if (event.keyCode === 13) {
                 validateIngresosCertificadoResidenciaObra();
+                event.preventDefault();
             }
-            event.preventDefault();
         });
 
         $("#btnCloseCertResidenciaObra").click(function () {
@@ -132,8 +132,8 @@ function Certificado() {
             if (event.keyCode === 13) {
                 $('#mdCertProyecto').modal('show');
                 loadCertificadoProyecto(idDNI);
+                event.preventDefault();
             }
-            event.preventDefault();
         });
 
         $("#txtNumeroCertificadoProyecto").keypress(function (event) {
@@ -209,6 +209,7 @@ function Certificado() {
                 certificadoHabilidad = {}
             },
             success: function (result) {
+
                 $("#modal-title-certificado-habilidad").empty();
                 $("#modal-title-certificado-habilidad").append('<i class="fa fa-plus"> </i> Certificado de Habilidad');
                 if (result.estado == 1) {

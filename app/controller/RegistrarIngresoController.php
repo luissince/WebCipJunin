@@ -10,7 +10,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $body = json_decode(file_get_contents("php://input"), true);
     //$search = $_GET['search'];
     $result = IngresosAdo::RegistrarIngresos($body);
-    if($result[0] === "inserted"){
+    if ($result[0] === "inserted") {
         print json_encode(array(
             "estado" => 1,
             "mensaje" => "Se completo correctamento el ingreso.",
@@ -20,13 +20,13 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             "cerProyecto" => $result[4],
             "estadoCuotas" => $result[5],
             "cuotasFin" => $result[6],
-            "colegiado" => $result[7],
+            "colegiado" => $result[7]
         ));
-    }else{
+    } else {
         print json_encode(array(
             "estado" => 2,
             "mensaje" => $result
         ));
-    }        
+    }
     exit();
 }

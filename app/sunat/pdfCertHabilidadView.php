@@ -271,6 +271,6 @@ if (!isset($_GET["idIngreso"])) {
         $mpdf->WriteHTML($html);
 
         // Output a PDF file directly to the browser
-        $mpdf->Output("CERT-HABILIDAD-" . $numCertificado . "-CIP-JUNIN.pdf", 'D');
+        $mpdf->Output("CERT HABILIDAD - " . $numCertificado . "-CIP-JUNIN.pdf", 'I');
     }
 }

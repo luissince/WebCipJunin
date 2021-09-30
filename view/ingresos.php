@@ -427,7 +427,7 @@ if (!isset($_SESSION['IdUsuario'])) {
                         beforeSend: function() {
                             tbTable.empty();
                             tbTable.append(
-                                '<tr class="text-center"><td colspan="11"><img src="./images/spiner.gif"/><p>Cargando información.</p></td></tr>'
+                                '<tr class="text-center"><td colspan="12"><img src="./images/spiner.gif"/><p>Cargando información.</p></td></tr>'
                             );
                             arrayIngresos = [];
                             state = true;
@@ -439,7 +439,7 @@ if (!isset($_SESSION['IdUsuario'])) {
                                 if (arrayIngresos.length == 0) {
                                     tbTable.empty();
                                     tbTable.append(
-                                        '<tr class="text-center"><td colspan="11"><p>No hay ingresos para mostrar.</p></td></tr>'
+                                        '<tr class="text-center"><td colspan="12"><p>No hay ingresos para mostrar.</p></td></tr>'
                                     );
                                     totalPaginacion = parseInt(Math.ceil((parseFloat(result.total) / parseInt(
                                         filasPorPagina))));
@@ -464,7 +464,14 @@ if (!isset($_SESSION['IdUsuario'])) {
                                             '<i class="fa fa-envelope" style="font-size:25px;"></i></br>' +
                                             '</button>';
 
-                                        let formaPago = ingresos.tipo == 1 ? "EFECTIVO" : "DEPOSTIO" + "<br>" + "<span class='h6 text-blue'>" + ingresos.bancoName + ": " + ingresos.numOperacion + "</span>";
+                                        let formaPago = "";
+                                        if (ingresos.tipo == 1) {
+                                            formaPago = "EFECTIVO";
+                                        } else if (ingresos.tipo == 2) {
+                                            formaPago = "DEPOSTIO" + "<br>" + "<span class='h6 text-blue'>" + ingresos.bancoName + ": " + ingresos.numOperacion + "</span>";
+                                        } else {
+                                            formaPago = "TARJETA";
+                                        }
 
                                         let observacionsunat =
                                             (ingresos.xmldescripcion === "" ? "Por Generar Xml y Enviar" : ingresos.xmldescripcion);
@@ -494,7 +501,7 @@ if (!isset($_SESSION['IdUsuario'])) {
                             } else {
                                 tbTable.empty();
                                 tbTable.append(
-                                    '<tr class="text-center"><td colspan="11"><p>' + result.mensaje + '</p></td></tr>'
+                                    '<tr class="text-center"><td colspan="12"><p>' + result.mensaje + '</p></td></tr>'
                                 );
                                 $("#lblPaginaActual").html(0);
                                 $("#lblPaginaSiguiente").html(0);
@@ -505,7 +512,7 @@ if (!isset($_SESSION['IdUsuario'])) {
                         error: function(error) {
                             tbTable.empty();
                             tbTable.append(
-                                '<tr class="text-center"><td colspan="11"><p>' + error.responseText + '</p></td></tr>'
+                                '<tr class="text-center"><td colspan="12"><p>' + error.responseText + '</p></td></tr>'
                             );
                             $("#lblPaginaActual").html(0);
                             $("#lblPaginaSiguiente").html(0);
@@ -545,7 +552,8 @@ if (!isset($_SESSION['IdUsuario'])) {
                         url: "../app/controller/ComprobanteController.php",
                         method: "GET",
                         data: {
-                            "type": "comprobante"
+                            "type": "comprobante",
+                            "destino": "1"
                         },
                         beforeSend: function() {
                             $("#cbComprobantes").empty();
@@ -554,7 +562,7 @@ if (!isset($_SESSION['IdUsuario'])) {
                         success: function(result) {
                             if (result.estado == 1) {
                                 for (let value of result.data) {
-                                    $("#cbComprobantes").append('<option value="' + value.IdTipoComprobante + '">' + value.Nombre + '</option>');
+                                    $("#cbComprobantes").append('<option value="' + value.IdTipoComprobante + '">' + value.Nombre + ' (' + value.Serie + ')</option>');
                                 }
                             }
                         },

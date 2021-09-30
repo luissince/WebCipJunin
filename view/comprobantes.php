@@ -123,7 +123,7 @@ if (!isset($_SESSION['IdUsuario'])) {
                                                 <label for="rbFacturado">Comprobante Facturado:</label>
                                                 <div class="radio">
                                                     <label>
-                                                        <input type="radio" id="rbFacturado" name="optionRadio">
+                                                        <input type="radio" id="rbFacturado" name="optionRadio" checked>
                                                         Si
                                                     </label>
                                                 </div>
@@ -141,6 +141,16 @@ if (!isset($_SESSION['IdUsuario'])) {
                                                         Si
                                                     </label>
                                                 </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-6">
+                                            <div class="form-group">
+                                                <label for="cbDestino">Destino: <i class="fa fa-fw fa-asterisk text-danger"></i></label>
+                                                <select id="cbDestino" class="form-control">
+                                                    <option value="1">MIXTO</option>
+                                                    <option value="2">INTRANET</option>
+                                                    <option value="3">CIP VIRTUAL</option>
+                                                </select>
                                             </div>
                                         </div>
                                     </div>
@@ -217,6 +227,7 @@ if (!isset($_SESSION['IdUsuario'])) {
                                             <th width="10%">Predeterminado</th>
                                             <th width="10%">Estado</th>
                                             <th width="10%">Usa Ruc</th>
+                                            <th width="10%">Destino</th>
                                             <th width="5%" class="text-center">Editar</th>
                                             <th width="5%" class="text-center">Eliminar</th>
                                         </thead>
@@ -419,6 +430,7 @@ if (!isset($_SESSION['IdUsuario'])) {
 
                                         let estado = comprobante.Estado == "ACTIVO" ? '<span class="text-primary">' + comprobante.Estado + '</span>' : '<span class="text-danger">' + comprobante.Estado + '</span>';
 
+                                        let destino = comprobante.Destino == 1 ? "MIXTO" : comprobante.Destino == 2 ? "INTRANET" : "CIP VIRTUAL";
 
                                         tbTable.append('<tr>' +
                                             '<td class="text-center text-primary">' + comprobante.Id + '</td>' +
@@ -429,6 +441,7 @@ if (!isset($_SESSION['IdUsuario'])) {
                                             '<td>' + predeterminado + '</td>' +
                                             '<td>' + estado + '</td>' +
                                             '<td>' + comprobante.Usa_ruc + '</td>' +
+                                            '<td>' + destino + '</td>' +
                                             '<td class="text-center">' + btnUpdate + '</td>' +
                                             '<td class="text-center">' + btnDelete + '</td>' +
                                             '</tr>');
@@ -464,7 +477,6 @@ if (!isset($_SESSION['IdUsuario'])) {
                 }
 
                 function crudComprobante() {
-
                     if ($("#txtNombre").val() == '') {
                         $("#txtNombre").focus();
                         tools.AlertWarning("Comprobante", "Ingrese un Nombre")
@@ -494,6 +506,7 @@ if (!isset($_SESSION['IdUsuario'])) {
                                         "estado": $("#cbEstado").is(":checked"),
                                         "usaRuc": $("#cbUsaRuc").is(":checked"),
                                         "comprobanteAfiliado": $("#rbGuiaRemision").is(":checked") ? 1 : $("#rbFacturado").is(":checked") ? 2 : $("#rbNotaCredito").is(":checked") ? 3 : 0,
+                                        "destino": $("#cbDestino").val()
                                     },
                                     beforeSend: function() {
                                         clearModalAddComprobante();
@@ -532,6 +545,7 @@ if (!isset($_SESSION['IdUsuario'])) {
                     $("#rbGuiaRemision").prop("checked", false);
                     $("#rbFacturado").prop("checked", false);
                     $("#rbNotaCredito").prop("checked", false);
+                    $("#cbDestino").val("1");
                     idComprobante = 0;
                 }
 
@@ -574,6 +588,8 @@ if (!isset($_SESSION['IdUsuario'])) {
                                 } else if (comprobante.ComprobanteAfiliado == "3") {
                                     $("#rbNotaCredito").prop("checked", true);
                                 }
+
+                                $("#cbDestino").val(comprobante.Destino);
 
                                 tools.AlertInfo("Información", "Se cargo correctamente los datos.");
                             } else {

@@ -3,7 +3,8 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <link rel="icon" href="images/insignia.png">
 
-<title>CIPJUNIN</title>
+<title>INTRANET CIP-JUNIN</title>
+<meta name="description" content="Intranet Cip Junín">
 <!-- Tell the browser to be responsive to screen width -->
 <meta conMPVirtualtent="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
 <!-- -->
@@ -47,4 +48,3 @@
 <script src="adminlte/dist/js/demo.js"></script>
 <script src="js/sweetalert.min.js"></script>
 <script src="js/toastr.min.js"></script>
-

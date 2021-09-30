@@ -361,7 +361,7 @@ if (!isset($_GET["idIngreso"])) {
                             $mpdf->SetDisplayMode('fullpage');
                             $mpdf->WriteHTML($html);
                             // Output a PDF file directly to the browser
-                            $mpdf->Output($ingreso->Comprobante . " " . $ingreso->Serie . '-' . $ingreso->Numeracion . " CIP-JUNIN.pdf", 'D');
+                            $mpdf->Output($ingreso->Comprobante . " " . $ingreso->Serie . '-' . $ingreso->Numeracion . " CIP-JUNIN.pdf", 'I');
                         }
                     }
                 }

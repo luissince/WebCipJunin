@@ -193,22 +193,25 @@ class ConceptoAdo
                                 $cmdConceptos->bindParam(1, $categoria, PDO::PARAM_INT);
                                 $cmdConceptos->bindParam(2, $inicioFormat, PDO::PARAM_STR);
                                 $cmdConceptos->execute();
+                                $resultConcepto =  $cmdConceptos->fetchAll();
 
-                                $arryConcepto = array();
-                                while ($rowc = $cmdConceptos->fetch()) {
-                                    array_push($arryConcepto, array(
-                                        "IdConcepto" => $rowc["idConcepto"],
-                                        "Categoria" => $rowc["Categoria"],
-                                        "Concepto" => $rowc["Concepto"],
-                                        "Precio" => $rowc["Precio"],
+                                if (count($resultConcepto) != 0) {
+                                    $arryConcepto = array();
+                                    foreach ($resultConcepto as $rowc) {
+                                        array_push($arryConcepto, array(
+                                            "IdConcepto" => $rowc["idConcepto"],
+                                            "Categoria" => $rowc["Categoria"],
+                                            "Concepto" => $rowc["Concepto"],
+                                            "Precio" => $rowc["Precio"],
+                                        ));
+                                    }
+                                    array_push($array, array(
+                                        "day" => $inicio->format('d'),
+                                        "mes" => $inicio->format('m'),
+                                        "year" => $inicio->format('Y'),
+                                        "concepto" => $arryConcepto
                                     ));
                                 }
-                                array_push($array, array(
-                                    "day" => $inicio->format('d'),
-                                    "mes" => $inicio->format('m'),
-                                    "year" => $inicio->format('Y'),
-                                    "concepto" => $arryConcepto
-                                ));
                                 $inicio->modify('+ 1 month');
                             }
                         }
@@ -226,23 +229,26 @@ class ConceptoAdo
                                 $cmdConceptos->bindParam(1, $categoria, PDO::PARAM_INT);
                                 $cmdConceptos->bindParam(2, $inicioFormat, PDO::PARAM_STR);
                                 $cmdConceptos->execute();
+                                $resultConcepto =  $cmdConceptos->fetchAll();
 
-                                $arryConcepto = array();
-                                while ($rowc = $cmdConceptos->fetch()) {
-                                    array_push($arryConcepto, array(
-                                        "IdConcepto" => $rowc["idConcepto"],
-                                        "Categoria" => $rowc["Categoria"],
-                                        "Concepto" => $rowc["Concepto"],
-                                        "Precio" => $rowc["Precio"],
+                                if (count($resultConcepto) != 0) {
+                                    $arryConcepto = array();
+                                    foreach ($resultConcepto as $rowc) {
+                                        array_push($arryConcepto, array(
+                                            "IdConcepto" => $rowc["idConcepto"],
+                                            "Categoria" => $rowc["Categoria"],
+                                            "Concepto" => $rowc["Concepto"],
+                                            "Precio" => $rowc["Precio"],
+                                        ));
+                                    }
+
+                                    array_push($array, array(
+                                        "day" => $inicio->format('d'),
+                                        "mes" => $inicio->format('m'),
+                                        "year" => $inicio->format('Y'),
+                                        "concepto" => $arryConcepto
                                     ));
                                 }
-
-                                array_push($array, array(
-                                    "day" => $inicio->format('d'),
-                                    "mes" => $inicio->format('m'),
-                                    "year" => $inicio->format('Y'),
-                                    "concepto" => $arryConcepto
-                                ));
                                 $inicio->modify('+ 1 month');
                             }
                         }
@@ -453,11 +459,15 @@ class ConceptoAdo
             if ($resultIngeniero["Condicion"] == "V") {
                 $date->modify('+9 month');
                 $date->modify('last day of this month');
+            } else if ($resultIngeniero["Condicion"] == "T") {
+                $fechaactual = new DateTime('now');
+                $date =  $fechaactual;
+                $date->modify('+3 month');
+                $date->modify('last day of this month');
             } else {
                 $date->modify('+3 month');
                 $date->modify('last day of this month');
             }
-
 
             $cmdCorrelativo = Database::getInstance()->getDb()->prepare("SELECT * FROM CorrelativoCERT WHERE TipoCert = 1");
             $cmdCorrelativo->execute();
@@ -470,7 +480,7 @@ class ConceptoAdo
             }
 
 
-            array_push($array, $resultConcepto, $arrayEspecialidades, $date->format('Y-m-d'), $resultCorrelativo);
+            array_push($array, $resultConcepto, $arrayEspecialidades, $date->format('Y-m-d'), $resultCorrelativo, $resultPago);
             return $array;
         } catch (Exception $ex) {
             return $ex->getMessage();

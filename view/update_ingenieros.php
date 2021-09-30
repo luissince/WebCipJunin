@@ -1251,7 +1251,7 @@ if (!isset($_SESSION['IdUsuario'])) {
                                     <input type="file" id="SubirImagen" style="display:none" accept="image/png, image/jpeg, image/gif, image/svg">
                                 </div>
                                 <div class="form-group">
-                                    <label class="btn btn-dark">Quitar imagen</label>
+                                    <label class="btn btn-default">Quitar imagen</label>
                                 </div>
                                 <div>
                                     <div class="form-group">
@@ -1801,7 +1801,7 @@ if (!isset($_SESSION['IdUsuario'])) {
                             if (result.imagen == null) {
                                 lblImagen.attr("src", "images/ayuda.png");
                             } else {
-                                lblImagen.attr("src", "data:image/png;base64," + result.imagen[1]);
+                                lblImagen.attr("src", "data:image/(png|jpg|jpge|gif);base64," + result.imagen[1]);
                             }
 
                             $("#numDoc").val(persona.NumDoc);
