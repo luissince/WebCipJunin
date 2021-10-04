@@ -460,8 +460,7 @@ class ConceptoAdo
                 $date->modify('+9 month');
                 $date->modify('last day of this month');
             } else if ($resultIngeniero["Condicion"] == "T") {
-                $fechaactual = new DateTime('now');
-                $date =  $fechaactual;
+                $date = new DateTime('now');
                 $date->modify('+3 month');
                 $date->modify('last day of this month');
             } else {
@@ -536,6 +535,10 @@ class ConceptoAdo
             $date = new DateTime($resultPago);
             if ($resultIngeniero["Condicion"] == "V") {
                 $date->modify('+9 month');
+                $date->modify('last day of this month');
+            } else   if ($resultIngeniero["Condicion"] == "T") {
+                $date =  new DateTime('now');
+                $date->modify('+3 month');
                 $date->modify('last day of this month');
             } else {
                 $date->modify('+3 month');
@@ -624,6 +627,10 @@ class ConceptoAdo
             $date = new DateTime($resultPago);
             if ($resultIngeniero["Condicion"] == "V") {
                 $date->modify('+9 month');
+                $date->modify('last day of this month');
+            } else if ($resultIngeniero["Condicion"] == "T") {
+                $date =  new DateTime('now');
+                $date->modify('+3 month');
                 $date->modify('last day of this month');
             } else {
                 $date->modify('+3 month');

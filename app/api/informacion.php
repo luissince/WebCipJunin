@@ -47,6 +47,18 @@ class Informacion
             $cmdValidate->execute();
             $resultInformacion = $cmdValidate->fetch(PDO::FETCH_ASSOC);
 
+            $web = Database::getInstance()->getDb()->prepare("SELECT TOP 1 w.Direccion FROM Persona AS p
+            INNER JOIN Web AS w
+            ON p.idDNI = w.idDNI
+            WHERE p.idDNI = ?");
+            $web->bindParam(1, $idDni, PDO::PARAM_STR);
+            $web->execute();
+
+            $email = "";
+            if ($row = $web->fetchObject()) {
+                $email = $row->Direccion;
+            }
+
             $cmdCuota = Database::getInstance()->getDb()->prepare("SELECT 
             cast(ISNULL(ul.FechaUltimaCuota, c.FechaColegiado)as date) as UltimoPago     
             from Persona as p inner join Colegiatura as c
@@ -143,7 +155,7 @@ class Informacion
                 }
             }
 
-            return array("state" => 1, "persona" => $resultInformacion, "deuda" => $montodeuda);
+            return array("state" => 1, "persona" => $resultInformacion, "email" => $email, "deuda" => $montodeuda);
         } catch (Exception $ex) {
             return array("state" => 0, "message" => "Error de conexión del servidor, intente nuevamente en un par de minutos.");
         }

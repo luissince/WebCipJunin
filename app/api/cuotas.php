@@ -101,22 +101,25 @@ class Cuotas
                                 $cmdConceptos->bindParam(1, $condicion, PDO::PARAM_INT);
                                 $cmdConceptos->bindParam(2, $inicioFormat, PDO::PARAM_STR);
                                 $cmdConceptos->execute();
+                                $resultConcepto =  $cmdConceptos->fetchAll();
 
-                                $arryConcepto = array();
-                                while ($rowc = $cmdConceptos->fetch()) {
-                                    array_push($arryConcepto, array(
-                                        "IdConcepto" => $rowc["idConcepto"],
-                                        "Categoria" => $rowc["Categoria"],
-                                        "Concepto" => $rowc["Concepto"],
-                                        "Precio" => $rowc["Precio"],
+                                if (count($resultConcepto) != 0) {
+                                    $arryConcepto = array();
+                                    foreach ($resultConcepto as $rowc) {
+                                        array_push($arryConcepto, array(
+                                            "IdConcepto" => $rowc["idConcepto"],
+                                            "Categoria" => $rowc["Categoria"],
+                                            "Concepto" => $rowc["Concepto"],
+                                            "Precio" => $rowc["Precio"],
+                                        ));
+                                    }
+                                    array_push($array, array(
+                                        "day" => $inicio->format('d'),
+                                        "mes" => $inicio->format('m'),
+                                        "year" => $inicio->format('Y'),
+                                        "concepto" => $arryConcepto
                                     ));
                                 }
-                                array_push($array, array(
-                                    "day" => $inicio->format('d'),
-                                    "mes" => $inicio->format('m'),
-                                    "year" => $inicio->format('Y'),
-                                    "concepto" => $arryConcepto
-                                ));
                                 $inicio->modify('+ 1 month');
                             }
                         }
@@ -135,23 +138,26 @@ class Cuotas
                                 $cmdConceptos->bindParam(1, $condicion, PDO::PARAM_INT);
                                 $cmdConceptos->bindParam(2, $inicioFormat, PDO::PARAM_STR);
                                 $cmdConceptos->execute();
+                                $resultConcepto =  $cmdConceptos->fetchAll();
 
-                                $arryConcepto = array();
-                                while ($rowc = $cmdConceptos->fetch()) {
-                                    array_push($arryConcepto, array(
-                                        "IdConcepto" => $rowc["idConcepto"],
-                                        "Categoria" => $rowc["Categoria"],
-                                        "Concepto" => $rowc["Concepto"],
-                                        "Precio" => $rowc["Precio"],
+                                if (count($resultConcepto) != 0) {
+                                    $arryConcepto = array();
+                                    foreach ($resultConcepto as $rowc) {
+                                        array_push($arryConcepto, array(
+                                            "IdConcepto" => $rowc["idConcepto"],
+                                            "Categoria" => $rowc["Categoria"],
+                                            "Concepto" => $rowc["Concepto"],
+                                            "Precio" => $rowc["Precio"],
+                                        ));
+                                    }
+
+                                    array_push($array, array(
+                                        "day" => $inicio->format('d'),
+                                        "mes" => $inicio->format('m'),
+                                        "year" => $inicio->format('Y'),
+                                        "concepto" => $arryConcepto
                                     ));
                                 }
-
-                                array_push($array, array(
-                                    "day" => $inicio->format('d'),
-                                    "mes" => $inicio->format('m'),
-                                    "year" => $inicio->format('Y'),
-                                    "concepto" => $arryConcepto
-                                ));
                                 $inicio->modify('+ 1 month');
                             }
                         }
