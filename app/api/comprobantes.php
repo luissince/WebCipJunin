@@ -48,12 +48,12 @@ class Cuotas
             }
 
             return array(
-                'status' => 1,
+                'state' => 1,
                 'data' => $array,
                 'ubicacion' => $ubicacion
             );
         } catch (Exception $ex) {
-            return array("status" => 0, "message" => "Error de conexión del servidor, intente nuevamente en un par de minutos.");
+            return array("state" => 0, "message" => "Error de conexión del servidor, intente nuevamente en un par de minutos.");
         }
     }
 }

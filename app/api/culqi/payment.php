@@ -184,12 +184,12 @@ try {
                         $resultPago = $request->cuotasFin;
                     } else {
                         $cmdUltimoPago = Database::getInstance()->getDb()->prepare("SELECT 
-                CAST(ISNULL(ul.FechaUltimaCuota, c.FechaColegiado) AS DATE) AS UltimoPago     
-                FROM Persona AS p INNER JOIN Colegiatura AS c
-                ON p.idDNI = c.idDNI AND c.Principal = 1
-                LEFT OUTER JOIN ULTIMACuota AS ul
-                ON p.idDNI = ul.idDNI
-                WHERE p.idDNI = ?");
+                        CAST(ISNULL(ul.FechaUltimaCuota, c.FechaColegiado) AS DATE) AS UltimoPago     
+                        FROM Persona AS p INNER JOIN Colegiatura AS c
+                        ON p.idDNI = c.idDNI AND c.Principal = 1
+                        LEFT OUTER JOIN ULTIMACuota AS ul
+                        ON p.idDNI = ul.idDNI
+                        WHERE p.idDNI = ?");
                         $cmdUltimoPago->execute(array($request->idPersona));
                         $resultUltimoPago = $cmdUltimoPago->fetchObject();
 
@@ -247,11 +247,11 @@ try {
 
                 foreach ($request->ingresos as $value) {
                     $cmdDetalle = Database::getInstance()->getDb()->prepare("INSERT INTO Detalle(
-            idIngreso,
-            idConcepto,
-            Cantidad,
-            Monto
-            )VALUES(?,?,?,?)");
+                    idIngreso,
+                    idConcepto,
+                    Cantidad,
+                    Monto
+                    )VALUES(?,?,?,?)");
                     $cmdDetalle->execute(array(
                         $idIngreso,
                         $value['idConcepto'],
@@ -262,19 +262,19 @@ try {
 
                 Database::getInstance()->getDb()->commit();
                 print json_encode([
-                    "status" => 1,
+                    "state" => 1,
                     "message" => "Se registro correctamente el pago."
                 ]);
             } catch (PDOException $ex) {
                 Database::getInstance()->getDb()->rollBack();
                 print json_encode([
-                    'status' => 0,
+                    'state' => 0,
                     'message' => $ex->getMessage(),
                 ]);
             } catch (Exception $ex) {
                 Database::getInstance()->getDb()->rollBack();
                 print json_encode([
-                    'status' => 0,
+                    'state' => 0,
                     'message' => $ex->getMessage(),
                 ]);
             }
