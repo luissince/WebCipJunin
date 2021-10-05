@@ -27,17 +27,25 @@ class Login
             p.NumDoc,
             p.Nombres,
             p.Apellidos,
-            p.CIP
+            p.CIP,
+            p.Clave
             FROM Persona AS p
-            WHERE p.CIP = ? AND p.CIP = ? OR p.NumDoc = ? AND p.NumDoc = ? ");
+            WHERE p.CIP = ? ");
             $cmdValidate->bindParam(1, $usuario, PDO::PARAM_STR);
-            $cmdValidate->bindParam(2, $clave, PDO::PARAM_STR);
-            $cmdValidate->bindParam(3, $usuario, PDO::PARAM_STR);
-            $cmdValidate->bindParam(4, $clave, PDO::PARAM_STR);
+            // $cmdValidate->bindParam(2, $clave, PDO::PARAM_STR);
+            // $cmdValidate->bindParam(3, $usuario, PDO::PARAM_STR);
+            // $cmdValidate->bindParam(4, $clave, PDO::PARAM_STR);
             $cmdValidate->execute();
-            $resultUsuario = $cmdValidate->fetch(PDO::FETCH_ASSOC);
+            $resultUsuario = $cmdValidate->fetchObject();
             if ($resultUsuario) {
-                return array("state" => 1, "persona" => $resultUsuario);
+                if (password_verify($clave, $resultUsuario->Clave)) {
+                    return array("state" => 1, "persona" => $resultUsuario);
+                } else {
+                    return array(
+                        'state' => '0',
+                        'message' => 'Usuario o contraseña incorrectas.',
+                    );
+                }
             } else {
                 return array("state" => 2, "message" => "El usuario o contraseña son incorrectas.");
             }
