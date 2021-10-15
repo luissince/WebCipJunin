@@ -58,8 +58,14 @@ class configEmpresaAdo
                 if ($respuesta) {
                     $publicKeyPem  = $certificados['cert']; //Archivo público
                     $privateKeyPem = $certificados['pkey']; //Archivo privado
-                    file_put_contents('../resources/cert.pem', $privateKeyPem . '' . $publicKeyPem);
-                    chmod("../resources/cert.pem", 0777);
+
+                    file_put_contents('../resources/private_key.pem', $privateKeyPem);
+                    file_put_contents('../resources/public_key.pem', $publicKeyPem);
+                    chmod("../resources/private_key.pem", 0777);
+                    chmod("../resources/public_key.pem", 0777);
+                    
+                    // file_put_contents('../resources/cert.pem', $privateKeyPem . '' . $publicKeyPem);
+                    // chmod("../resources/cert.pem", 0777);
                     // file_put_contents('../../resources/private_key.pem', $privateKeyPem);
                     //  file_put_contents('../../resources/public_key.pem', $publicKeyPem);
                     // chmod("../../resources/private_key.pem", 0777);
