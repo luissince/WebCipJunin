@@ -1149,7 +1149,7 @@ class IngresosAdo
         }
     }
 
-    public static function CambiarEstadoSunatResumen($idIngreso, $codigo, $descripcion, $hash, $correlativo, $fechaCorrelativo)
+    public static function CambiarEstadoSunatResumen($idIngreso, $codigo, $descripcion, $correlativo, $fechaCorrelativo)
     {
         try {
             Database::getInstance()->getDb()->beginTransaction();
@@ -1157,16 +1157,14 @@ class IngresosAdo
             Ingreso SET 
             Xmlsunat = ? , 
             Xmldescripcion = ?, 
-            CodigoHash = ?,
             Correlativo = ?,
             FechaCorrelativo = ? 
             WHERE idIngreso = ?");
             $comando->bindParam(1, $codigo, PDO::PARAM_STR);
             $comando->bindParam(2, $descripcion, PDO::PARAM_STR);
-            $comando->bindParam(3, $hash, PDO::PARAM_STR);
-            $comando->bindParam(4, $correlativo, PDO::PARAM_INT);
-            $comando->bindParam(5, $fechaCorrelativo, PDO::PARAM_STR);
-            $comando->bindParam(6, $idIngreso, PDO::PARAM_INT);
+            $comando->bindParam(3, $correlativo, PDO::PARAM_INT);
+            $comando->bindParam(4, $fechaCorrelativo, PDO::PARAM_STR);
+            $comando->bindParam(5, $idIngreso, PDO::PARAM_INT);
             $comando->execute();
             Database::getInstance()->getDb()->commit();
             return "updated";

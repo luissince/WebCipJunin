@@ -562,6 +562,7 @@ if (!isset($_SESSION['IdUsuario'])) {
                                     tools.ModalAlertInfo("Ingreso", "Firmando xml y enviando a la sunat.");
                                 },
                                 success: function(result) {
+                                    // console.log(result)
                                     let object = result;
                                     if (object.state === true) {
                                         if (object.accept === true) {
@@ -575,6 +576,7 @@ if (!isset($_SESSION['IdUsuario'])) {
                                     }
                                 },
                                 error: function(error) {
+                                    // console.log(error)
                                     tools.ModalAlertError("Ingreso", "Error en el momento de firmar el xml: " + error.responseText);
                                 }
                             });
@@ -594,7 +596,7 @@ if (!isset($_SESSION['IdUsuario'])) {
                                 beforeSend: function() {
                                     tools.ModalAlertInfo("Ingreso", "Firmando xml y enviando a la sunat.");
                                 },
-                                success: function(result) {
+                                success: function(result) {                                    
                                     let object = result;
                                     if (object.state === true) {
                                         if (object.accept === true) {

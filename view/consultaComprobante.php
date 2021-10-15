@@ -275,7 +275,7 @@ if (!isset($_SESSION['IdUsuario'])) {
                                                 <div class="col-md-6">
                                                     <div class="form-group">
                                                         <button class="btn btn-success" id="consultarEstado"> Consultar Estado </button>
-                                                        <button class="btn btn-primary" id="consultarCdr"> Consultar CDR </button>
+                                                        <!-- <button class="btn btn-primary" id="consultarCdr"> Consultar CDR </button> -->
                                                         <button class="btn btn-danger" id="limpiarConsulta"> Limpiar </button>
                                                     </div>
                                                 </div class="col-md-6">
@@ -285,8 +285,28 @@ if (!isset($_SESSION['IdUsuario'])) {
                                         </div>
                                     </div>
                                 </div>
-                                <div class="col-md-12" id="lblResponse">
-
+                                <div class="col-md-12">
+                                    <div class="box box-primary" style="border-radius: 5px;">
+                                        <div class="box-header">
+                                            <h3 class="box-title">RESULTADO</h3>
+                                        </div>
+                                        <div class="box-body">
+                                            <div class="row" style="cursor:default;">
+                                                <div class="col-md-12">
+                                                    <div style="font-size: 15px;">
+                                                        Codigo : <span id="lblCodigoRpt"></span>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="row" style="cursor:default;">
+                                                <div class="col-md-12">
+                                                    <div style="font-size: 15px;">
+                                                        Mensaje : <span id="lblMensajeRpt"></span>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -408,73 +428,54 @@ if (!isset($_SESSION['IdUsuario'])) {
                             tools.ModalAlertInfo("Consultar Datos", "Procesando petición..");
                         },
                         success: function(result) {
-                            cdrDiv = '';
-                            if (result.typecode == "0004") {
-                                cdrDiv =
-                                    '<div class="row" style="cursor:default;">' +
-                                    '<div class="col-md-12">' +
-                                    '<div class="col-md-1" style="font: 15px;">' +
-                                    'comprobante: ' +
-                                    '</div>' +
-                                    '<div class="col-md-11">' +
-                                    result.comprobante +
-                                    '</div>' +
-                                    '</div>' +
-                                    '</div>' +
-                                    '<div class="row" style="cursor:default;">' +
-                                    '<div class="col-md-12">' +
-                                    '<div class="col-md-1" style="font: 15px;">' +
-                                    'Ruta : ' +
-                                    '</div>' +
-                                    '<div class="col-md-11">' +
-                                    '<div class="row">' +
-                                    '<div class="col-md-4">' +
-                                    '<a onclick="descargarCdr(\'' + result.file + '\')"" style="cursor:pointer">' +
-                                    result.file +
-                                    '</a>' +
-                                    '</div>' +
-                                    '<div class="col-md-8">' +
-                                    '<div style="color: #A6A7A7">' +
-                                    'click en la ruta para descargar' +
-                                    '<div>' +
-                                    '</div>' +
-                                    '</div>' +
-                                    '</div>' +
-                                    '</div>' +
-                                    '</div>';
+
+                            if(result.state == true){
+                                if(result.accepted == true){
+                                    tools.ModalAlertSuccess("Consultar Comprobante", "Resultado: Código " + result.code + " " + result.message);
+                                }else{
+                                    tools.ModalAlertWarning("Consultar Comprobante", "Resultado: Código " + result.code + " " + result.message);
+                                }
+                            } else{
+                                tools.ModalAlertWarning("Consultar Comprobante", "Resultado: Código " + result.code + " " + result.message);
                             }
 
-                            $("#lblResponse").html(
-                                '<div class="box box-success">' +
-                                '<div class="box-header">' +
-                                '<h3 class="box-title">RESULTADO</h3>' +
-                                '</div>' +
-                                '<div class="box-body">' +
-                                '<div class="row" style="cursor:default;">' +
-                                '<div class="col-md-12">' +
-                                '<div class="col-md-1" style="font: 15px;">' +
-                                'Codigo: ' +
-                                '</div>' +
-                                '<div class="col-md-11">' +
-                                result.typecode +
-                                '</div>' +
-                                '</div>' +
-                                '</div>' +
-                                '<div class="row" style="cursor:default;">' +
-                                '<div class="col-md-12">' +
-                                '<div class="col-md-1" style="font: 15px;">' +
-                                'Mensaje: ' +
-                                '</div>' +
-                                '<div class="col-md-11">' +
-                                result.message +
-                                '</div>' +
-                                '</div>' +
-                                '</div>' +
-                                cdrDiv +
-                                '</div>' +
-                                '</div>');
-
-                            tools.ModalAlertSuccess("Consultar Datos", result.message);
+                            $("#lblCodigoRpt").html(result.code);
+                            $("#lblMensajeRpt").html(result.message);
+                            // cdrDiv = '';
+                            // if (result.typecode == "0004") {
+                            //     cdrDiv =
+                            //         '<div class="row" style="cursor:default;">' +
+                            //         '<div class="col-md-12">' +
+                            //         '<div class="col-md-1" style="font: 15px;">' +
+                            //         'comprobante: ' +
+                            //         '</div>' +
+                            //         '<div class="col-md-11">' +
+                            //         result.comprobante +
+                            //         '</div>' +
+                            //         '</div>' +
+                            //         '</div>' +
+                            //         '<div class="row" style="cursor:default;">' +
+                            //         '<div class="col-md-12">' +
+                            //         '<div class="col-md-1" style="font: 15px;">' +
+                            //         'Ruta : ' +
+                            //         '</div>' +
+                            //         '<div class="col-md-11">' +
+                            //         '<div class="row">' +
+                            //         '<div class="col-md-4">' +
+                            //         '<a onclick="descargarCdr(\'' + result.file + '\')"" style="cursor:pointer">' +
+                            //         result.file +
+                            //         '</a>' +
+                            //         '</div>' +
+                            //         '<div class="col-md-8">' +
+                            //         '<div style="color: #A6A7A7">' +
+                            //         'click en la ruta para descargar' +
+                            //         '<div>' +
+                            //         '</div>' +
+                            //         '</div>' +
+                            //         '</div>' +
+                            //         '</div>' +
+                            //         '</div>';
+                            // }
 
                         },
                         error: function(error) {
@@ -487,7 +488,8 @@ if (!isset($_SESSION['IdUsuario'])) {
                     $("#txtTipo").val('');
                     $('#txtSerie').val('');
                     $('#txtCorrelativo').val('');
-                    $("#lblResponse").html('');
+                    $("#lblCodigoRpt").html('');
+                    $("#lblMensajeRpt").html('');
                 }
 
                 function descargarCdr(ruta) {
