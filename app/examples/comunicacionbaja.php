@@ -54,8 +54,6 @@ if (!is_array($detalleventa)) {
     $Invoice->setAttribute('xmlns:cbc', 'urn:oasis:names:specification:ubl:schema:xsd:CommonBasicComponents-2');
     $Invoice->setAttribute('xmlns:cac', 'urn:oasis:names:specification:ubl:schema:xsd:CommonAggregateComponents-2');
 
-
-
     $UBLExtension = $xml->createElement('ext:UBLExtensions');
     $UBLExtension = $Invoice->appendChild($UBLExtension);
 
@@ -189,5 +187,4 @@ if (!is_array($detalleventa)) {
             "description" => $soapResult->getDescription()
         ));
     }
-
 }
