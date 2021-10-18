@@ -6,6 +6,7 @@ use RobRichards\XMLSecLibs\XMLSecurityDSig;
 use RobRichards\XMLSecLibs\XMLSecurityKey;
 use DOMDocument;
 use ZipArchive;
+use Exception;
 
 class Sunat
 {
@@ -51,6 +52,24 @@ class Sunat
         return $DOM->saveXML();
     }
 
+    public static function getHashCode()
+    {
+        try {
+            $xml = file_get_contents(self::$filename);
+            $DOM = new DOMDocument('1.0', 'ISO-8859-1');
+            $DOM->preserveWhiteSpace = FALSE;
+            $DOM->loadXML($xml);
+            $DocXML = $DOM->getElementsByTagName('DigestValue');
+            $hashCode = "";
+            foreach ($DocXML as $Nodo) {
+                $hashCode = $Nodo->nodeValue;
+            }
+            return $hashCode;
+        } catch (Exception $ex) {
+            return "";
+        }
+    }
+
     public static function createZip($fileoutput, $fileinput, $filename)
     {
         $zip = new ZipArchive();
@@ -59,7 +78,7 @@ class Sunat
         $zip->close();
     }
 
-    public static function extractZip($fileintput, $directoryextract)
+    public static function extractZip(string $fileintput, string $directoryextract): bool
     {
         $zip = new ZipArchive();
         if ($zip->open($fileintput) === TRUE) {
@@ -68,6 +87,22 @@ class Sunat
             return true;
         } else {
             return false;
+        }
+    }
+
+    public static function extractZipGetName(string $fileintput, string $directoryextract): string
+    {
+        $zip = new ZipArchive();
+        if ($zip->open($fileintput) === TRUE) {
+            $zip->extractTo($directoryextract);
+            $fileName = "";
+            if ($zip->numFiles == 1) {
+                $fileName = $zip->getNameIndex(0);
+            }
+            $zip->close();
+            return $fileName;
+        } else {
+            return "";
         }
     }
 

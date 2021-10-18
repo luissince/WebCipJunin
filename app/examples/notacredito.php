@@ -342,7 +342,7 @@ if (!is_array($detalleventa)) {
 
     if ($soapResult->isSuccess()) {
         if ($soapResult->isAccepted()) {
-            NotaCreditoAdo::CambiarEstadoSunatNotaCredito($idNotaCredito, $soapResult->getCode(), $soapResult->getDescription(), $soapResult->getHashCode(), Sunat::getXmlSign());
+            NotaCreditoAdo::CambiarEstadoSunatNotaCredito($idNotaCredito, $soapResult->getCode(), $soapResult->getDescription(), Sunat::getHashCode(), Sunat::getXmlSign());
             echo json_encode(array(
                 "state" => $soapResult->isSuccess(),
                 "accept" => $soapResult->isAccepted(),
@@ -350,7 +350,7 @@ if (!is_array($detalleventa)) {
                 "description" => $soapResult->getDescription()
             ));
         } else {
-            NotaCreditoAdo::CambiarEstadoSunatNotaCredito($idNotaCredito, $soapResult->getCode(), $soapResult->getDescription(), $soapResult->getHashCode(), Sunat::getXmlSign());
+            NotaCreditoAdo::CambiarEstadoSunatNotaCredito($idNotaCredito, $soapResult->getCode(), $soapResult->getDescription(), Sunat::getHashCode(), Sunat::getXmlSign());
             echo json_encode(array(
                 "state" => $soapResult->isSuccess(),
                 "accept" => $soapResult->isAccepted(),
@@ -360,14 +360,14 @@ if (!is_array($detalleventa)) {
         }
     } else {
         if ($soapResult->getCode() == "1033") {
-            NotaCreditoAdo::CambiarEstadoSunatNotaCredito($idNotaCredito, "0", $soapResult->getDescription(), $soapResult->getHashCode());
+            NotaCreditoAdo::CambiarEstadoSunatNotaCreditoUnico($idNotaCredito, "0", $soapResult->getDescription());
             echo json_encode(array(
                 "state" => false,
                 "code" => $soapResult->getCode(),
                 "description" => $soapResult->getDescription()
             ));
         } else {
-            NotaCreditoAdo::CambiarEstadoSunatNotaCredito($idNotaCredito, $soapResult->getCode(), $soapResult->getDescription(), $soapResult->getHashCode(), Sunat::getXmlSign());
+            NotaCreditoAdo::CambiarEstadoSunatNotaCreditoUnico($idNotaCredito, $soapResult->getCode(), $soapResult->getDescription());
             echo json_encode(array(
                 "state" => false,
                 "code" => $soapResult->getCode(),

@@ -1130,16 +1130,35 @@ class IngresosAdo
         }
     }
 
-    public static function CambiarEstadoSunatVenta($idVenta, $codigo, $descripcion, $hash)
+    public static function CambiarEstadoSunatVenta($idVenta, $codigo, $descripcion, $hash, $xml)
     {
         try {
             Database::getInstance()->getDb()->beginTransaction();
             $comando = Database::getInstance()->getDb()->prepare("UPDATE Ingreso SET 
-            Xmlsunat = ? , Xmldescripcion = ?, CodigoHash = ? WHERE idIngreso = ?");
+            Xmlsunat = ? , Xmldescripcion = ?, CodigoHash = ?, Xmlgenerado = ? WHERE idIngreso = ?");
             $comando->bindParam(1, $codigo, PDO::PARAM_STR);
             $comando->bindParam(2, $descripcion, PDO::PARAM_STR);
             $comando->bindParam(3, $hash, PDO::PARAM_STR);
-            $comando->bindParam(4, $idVenta, PDO::PARAM_STR);
+            $comando->bindParam(4, $xml, PDO::PARAM_STR);
+            $comando->bindParam(5, $idVenta, PDO::PARAM_STR);
+            $comando->execute();
+            Database::getInstance()->getDb()->commit();
+            return "updated";
+        } catch (Exception $ex) {
+            Database::getInstance()->getDb()->rollback();
+            return $ex->getMessage();
+        }
+    }
+
+    public static function CambiarEstadoSunatVentaUnico($idVenta, $codigo, $descripcion)
+    {
+        try {
+            Database::getInstance()->getDb()->beginTransaction();
+            $comando = Database::getInstance()->getDb()->prepare("UPDATE Ingreso SET 
+            Xmlsunat = ? , Xmldescripcion =  ? WHERE idIngreso = ?");
+            $comando->bindParam(1, $codigo, PDO::PARAM_STR);
+            $comando->bindParam(2, $descripcion, PDO::PARAM_STR);
+            $comando->bindParam(3, $idVenta, PDO::PARAM_STR);
             $comando->execute();
             Database::getInstance()->getDb()->commit();
             return "updated";

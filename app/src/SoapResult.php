@@ -12,6 +12,8 @@ class SoapResult
 {
     private $wsdlURL;
 
+    private $file;
+
     private $filename;
 
     private $success = false;
@@ -42,74 +44,75 @@ class SoapResult
 
             $DOM = new DOMDocument('1.0', 'utf-8');
             $DOM->preserveWhiteSpace = FALSE;
-            $DOM->loadXML($result);
+            if ($DOM->loadXML($result)) {
 
-            $DocXML = $DOM->getElementsByTagName('applicationResponse');
-            $response = "";
-            foreach ($DocXML as $Nodo) {
-                $response = $Nodo->nodeValue;
+                $DocXML = $DOM->getElementsByTagName('applicationResponse');
+                $response = "";
+                foreach ($DocXML as $Nodo) {
+                    $response = $Nodo->nodeValue;
+                }
+
+                $cdr = base64_decode($response);
+                file_put_contents('../files/R-' . $this->filename . '.zip', $cdr);
+                chmod('../files/R-' . $this->filename . '.zip', 0777);
+
+                $isExtract = Sunat::extractZip('../files/R-' . $this->filename . '.zip', '../files/');
+                if (!$isExtract) {
+                    throw new Exception("No se pudo extraer el contenido del archivo zip.");
+                }
+
+                $xml = file_get_contents('../files/R-' . $this->filename . '.xml');
+                $DOM = new DOMDocument('1.0', 'utf-8');
+                $DOM->preserveWhiteSpace = FALSE;
+                $DOM->loadXML($xml);
+
+                $DocXML = $DOM->getElementsByTagName('ResponseCode');
+                $code = "";
+                foreach ($DocXML as $Nodo) {
+                    $code = $Nodo->nodeValue;
+                }
+
+                $DocXML = $DOM->getElementsByTagName('Description');
+                $description = "";
+                foreach ($DocXML as $Nodo) {
+                    $description = $Nodo->nodeValue;
+                }
+
+                $DocXML = $DOM->getElementsByTagName('DigestValue');
+                $hashCode = "";
+                foreach ($DocXML as $Nodo) {
+                    $hashCode = $Nodo->nodeValue;
+                }
+
+                if (file_exists('../files/' . $this->filename . '.zip')) {
+                    unlink('../files/' . $this->filename . '.zip');
+                }
+                if (file_exists('../files/R-' . $this->filename . '.zip')) {
+                    unlink('../files/R-' . $this->filename . '.zip');
+                }
+
+                if ($code == "0") {
+                    $this->setAccepted(true);
+                } else {
+                    $this->setAccepted(false);
+                }
+                $this->setCode($code);
+                $this->setDescription($description);
+                $this->setHashCode($hashCode);
+                $this->setSuccess(true);
+            } else {
+                $this->setCode("-1");
+                $this->setAccepted(true);
+                $this->setDescription("No se pudo obtener el xml de respuesta.");
+                $this->setHashCode('');
+                $this->setSuccess(false);
             }
-
-            if ($response == "" || $response == null) {
-                throw new Exception("No se pudo obtener el contenido del nodo applicationResponse.");
-            }
-
-            $cdr = base64_decode($response);
-            $archivo = fopen('../files/R-' . $this->filename . '.zip', 'w+');
-            fputs($archivo, $cdr);
-            fclose($archivo);
-            chmod('../files/R-' . $this->filename . '.zip', 0777);
-
-            $isExtract = Sunat::extractZip('../files/R-' . $this->filename . '.zip', '../files/');
-            if (!$isExtract) {
-                throw new Exception("No se pudo extraer el contenido del archivo zip.");
-            }
-
-            $xml = file_get_contents('../files/R-' . $this->filename . '.xml');
-            $DOM = new DOMDocument('1.0', 'utf-8');
-            $DOM->preserveWhiteSpace = FALSE;
-            $DOM->loadXML($xml);
-
-            $DocXML = $DOM->getElementsByTagName('ResponseCode');
-            $code = "";
-            foreach ($DocXML as $Nodo) {
-                $code = $Nodo->nodeValue;
-            }
-
-            $DocXML = $DOM->getElementsByTagName('Description');
-            $description = "";
-            foreach ($DocXML as $Nodo) {
-                $description = $Nodo->nodeValue;
-            }
-
-            $DocXML = $DOM->getElementsByTagName('DigestValue');
-            $hashCode = "";
-            foreach ($DocXML as $Nodo) {
-                $hashCode = $Nodo->nodeValue;
-            }
-
+        } catch (SoapFault $ex) {
             if (file_exists('../files/' . $this->filename . '.zip')) {
                 unlink('../files/' . $this->filename . '.zip');
             }
             if (file_exists('../files/R-' . $this->filename . '.zip')) {
                 unlink('../files/R-' . $this->filename . '.zip');
-            }
-
-            if ($code == "0") {
-                $this->setAccepted(true);
-            } else {
-                $this->setAccepted(false);
-            }
-            $this->setCode($code);
-            $this->setDescription($description);
-            $this->setHashCode($hashCode);
-            $this->setSuccess(true);
-        } catch (SoapFault $ex) {
-            if (file_exists('../files/' . $this->filename . '.xml')) {
-                unlink('../files/' . $this->filename . '.xml');
-            }
-            if (file_exists('../files/' . $this->filename . '.zip')) {
-                unlink('../files/' . $this->filename . '.zip');
             }
             $code = preg_replace('/[^0-9]/', '', $ex->faultcode);
             $message = $ex->faultstring;
@@ -117,9 +120,6 @@ class SoapResult
             $this->setCode($code);
             $this->setDescription($message);
         } catch (Exception $ex) {
-            if (file_exists('../files/' . $this->filename . '.xml')) {
-                unlink('../files/' . $this->filename . '.xml');
-            }
             if (file_exists('../files/' . $this->filename . '.zip')) {
                 unlink('../files/' . $this->filename . '.zip');
             }
@@ -186,9 +186,7 @@ class SoapResult
                 throw new Exception("No se pudo obtener el contenido del nodo status.");
             }
             $cdr = base64_decode($status);
-            $archivo = fopen('../files/R-' . $this->filename . '.zip', 'w+');
-            fputs($archivo, $cdr);
-            fclose($archivo);
+            file_put_contents('../files/R-' . $this->filename . '.zip', $cdr);
             chmod('../files/R-' . $this->filename . '.zip', 0777);
 
             $isExtract = Sunat::extractZip('../files/R-' . $this->filename . '.zip', '../files/');
@@ -287,33 +285,35 @@ class SoapResult
                     $content = $Nodo->nodeValue;
                 }
 
-                if ($content != "") {
-                    $cdr = base64_decode($content);
-                    $archivo = fopen('../../files/R-' . $this->filename . '.zip', 'w+');
-                    fputs($archivo, $cdr);
-                    fclose($archivo);
-                    chmod('../../files/R-' . $this->filename . '.zip', 0777);
+                if ($code == "0004") {
 
-                    $isExtract = Sunat::extractZip('../../files/R-' . $this->filename . '.zip', '../../files/');
-                    if (!$isExtract) {
-                        throw new Exception("No se pudo extraer el contenido del archivo zip.");
-                    }
+                    if ($content != "") {
+                        $cdr = base64_decode($content);
+                        file_put_contents('../../files/R-' . $this->filename . '.zip', $cdr);
+                        chmod('../../files/R-' . $this->filename . '.zip', 0777);
 
-                    $xml = file_get_contents('../../files/R-' . $this->filename . '.xml');
-                    $DOM = new DOMDocument('1.0', 'utf-8');
-                    $DOM->preserveWhiteSpace = FALSE;
-                    $DOM->loadXML($xml);
 
-                    $DocXML = $DOM->getElementsByTagName('ResponseCode');
-                    $code = "";
-                    foreach ($DocXML as $Nodo) {
-                        $code = $Nodo->nodeValue;
-                    }
+                        $isExtract = Sunat::extractZipGetName('../../files/R-' . $this->filename . '.zip', '../../files/');
+                        if ($isExtract == "") {
+                            throw new Exception("No se pudo extraer el contenido del archivo zip.");
+                        }
 
-                    $DocXML = $DOM->getElementsByTagName('Description');
-                    $description = "";
-                    foreach ($DocXML as $Nodo) {
-                        $description = $Nodo->nodeValue;
+                        $xml = file_get_contents('../../files/' . $isExtract);
+                        $DOM = new DOMDocument('1.0', 'utf-8');
+                        $DOM->preserveWhiteSpace = FALSE;
+                        $DOM->loadXML($xml);
+
+                        $DocXML = $DOM->getElementsByTagName('ResponseCode');
+                        $code = "";
+                        foreach ($DocXML as $Nodo) {
+                            $code = $Nodo->nodeValue;
+                        }
+
+                        $DocXML = $DOM->getElementsByTagName('Description');
+                        $description = "";
+                        foreach ($DocXML as $Nodo) {
+                            $description = $Nodo->nodeValue;
+                        }
                     }
 
                     $this->setAccepted(true);
@@ -321,6 +321,7 @@ class SoapResult
                     $this->setMessage($message);
                     $this->setDescription($description);
                     $this->setSuccess(true);
+                    $this->setFile('R-' . $this->filename . '.zip');
                 } else {
                     $this->setAccepted(false);
                     $this->setCode($code);
@@ -460,5 +461,15 @@ class SoapResult
     public function setMessage($message)
     {
         $this->message = $message;
+    }
+
+    public function getFile()
+    {
+        return $this->file;
+    }
+
+    public function setFile($file)
+    {
+        $this->file = $file;
     }
 }

@@ -1,6 +1,6 @@
 <?php
 
-set_time_limit(300); 
+set_time_limit(300);
 
 header("Access-Control-Allow-Origin: *");
 header("Access-Control-Allow-Headers: Origin, X-Requested-With, Content-Type, Accept");
@@ -342,10 +342,11 @@ if (!is_array($detalleventa)) {
     $soapResult = new SoapResult('../resources/wsdl/billService.wsdl', $filename);
     $soapResult->sendBill(Sunat::xmlSendBill($empresa->NumeroDocumento, $empresa->UsuarioSol, $empresa->ClaveSol, $filename . '.zip', base64_encode(file_get_contents('../files/' . $filename . '.zip'))));
 
+    Sunat::getXmlSign();
 
     if ($soapResult->isSuccess()) {
         if ($soapResult->isAccepted()) {
-            IngresosAdo::CambiarEstadoSunatVenta($idIngreso, $soapResult->getCode(), $soapResult->getDescription(), $soapResult->getHashCode());
+            IngresosAdo::CambiarEstadoSunatVenta($idIngreso, $soapResult->getCode(), $soapResult->getDescription(), Sunat::getHashCode(), Sunat::getXmlSign());
             echo json_encode(array(
                 "state" => $soapResult->isSuccess(),
                 "accept" => $soapResult->isAccepted(),
@@ -353,7 +354,7 @@ if (!is_array($detalleventa)) {
                 "description" => $soapResult->getDescription()
             ));
         } else {
-            IngresosAdo::CambiarEstadoSunatVenta($idIngreso, $soapResult->getCode(), $soapResult->getDescription(), $soapResult->getHashCode());
+            IngresosAdo::CambiarEstadoSunatVenta($idIngreso, $soapResult->getCode(), $soapResult->getDescription(), Sunat::getHashCode(), Sunat::getXmlSign());
             echo json_encode(array(
                 "state" => $soapResult->isSuccess(),
                 "accept" => $soapResult->isAccepted(),
@@ -363,14 +364,14 @@ if (!is_array($detalleventa)) {
         }
     } else {
         if ($soapResult->getCode() == "1033") {
-            IngresosAdo::CambiarEstadoSunatVenta($idIngreso, "0", $soapResult->getDescription(), $soapResult->getHashCode());
+            IngresosAdo::CambiarEstadoSunatVentaUnico($idIngreso, "0", $soapResult->getDescription());
             echo json_encode(array(
                 "state" => false,
                 "code" => $soapResult->getCode(),
                 "description" => $soapResult->getDescription()
             ));
         } else {
-            IngresosAdo::CambiarEstadoSunatVenta($idIngreso, $soapResult->getCode(), $soapResult->getDescription(), $soapResult->getHashCode());
+            IngresosAdo::CambiarEstadoSunatVentaUnico($idIngreso, $soapResult->getCode(), $soapResult->getDescription());
             echo json_encode(array(
                 "state" => false,
                 "code" => $soapResult->getCode(),
@@ -378,5 +379,4 @@ if (!is_array($detalleventa)) {
             ));
         }
     }
-
 }
