@@ -1,4 +1,7 @@
 <?php
+
+use SysSoftIntegra\Src\NumberLleters;
+
 if (!isset($_GET["idIngreso"])) {
     echo '<script>location.href = "404.php";</script>';
 } else {
@@ -6,7 +9,9 @@ if (!isset($_GET["idIngreso"])) {
     require('./lib/mpdf/vendor/autoload.php');
     include('../src/GenerateCoinToLetters.php');
     require_once("./lib/phpqrcode/qrlib.php");
-    include_once('../model/IngresosAdo.php');
+
+    require __DIR__ . './../model/IngresosAdo.php';
+    require __DIR__ . './../src/autoload.php';
 
     $detalleventa = IngresosAdo::ObtenerIngresoXML($_GET["idIngreso"]);
     if (!is_array($detalleventa)) {
@@ -29,7 +34,7 @@ if (!isset($_GET["idIngreso"])) {
             $telefono = "Tesorería " . $empresa->Telefono . " Anexo 202";
             $ruc = $empresa->NumeroDocumento;
 
-            $gcl = new GenerateCoinToLetters();
+            $gcl = new NumberLleters();
 
             $textoCodBar =
                 '|' . $ruc

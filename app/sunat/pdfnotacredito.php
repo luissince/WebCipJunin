@@ -1,4 +1,7 @@
 <?php
+
+use SysSoftIntegra\Src\NumberLleters;
+
 if (!isset($_GET["idNotaCredito"])) {
     echo '<script>location.href = "404.php";</script>';
 } else {
@@ -8,6 +11,7 @@ if (!isset($_GET["idNotaCredito"])) {
     include('../src/GenerateCoinToLetters.php');
     require_once("./lib/phpqrcode/qrlib.php");
     include_once('../model/NotaCreditoAdo.php');
+    require __DIR__ . './../src/autoload.php';
 
     $detallnotacredito = NotaCreditoAdo::ObtenerNotaCreditoXML($_GET["idNotaCredito"]);
     if (!is_array($detallnotacredito)) {
@@ -28,7 +32,7 @@ if (!isset($_GET["idNotaCredito"])) {
         $telefono = "Tesorería " . $empresa->Telefono . " Anexo 202";
         $ruc = $empresa->NumeroDocumento;
 
-        $gcl = new GenerateCoinToLetters();
+        $gcl = new NumberLleters();
 
         $textoCodBar =
             '|' . $ruc
@@ -314,9 +318,7 @@ if (!isset($_GET["idNotaCredito"])) {
         </thead>                        
     </table>
  
-        <div style="border-top: 1px solid #000000">
-            <p style="padding:7px 0px;">SON:<strong> ' . $gcl->getResult(round($totales['totalconimpuesto'], 2, PHP_ROUND_HALF_UP), "SOL") . '</strong></p>
-        </div>
+   
 
         <div style="border-left: 6px solid #b72928; font-size:11pt; text-align: center; padding-top: 3mm; ">
             <p style="text-align:center; margin_bottom:5px;">Representación Impresa de la Factura Electrónica Autorizado para ser Emisor electrónico mediante la Resolución de Intendencia N° 0340050004781/SUNAT/ Para consultar el comprobante ingrese a: https://sunat.god.pe</p>

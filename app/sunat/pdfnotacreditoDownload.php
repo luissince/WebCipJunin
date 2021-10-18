@@ -1,4 +1,7 @@
 <?php
+
+use SysSoftIntegra\Src\NumberLleters;
+
 if (!isset($_GET["idNotaCredito"])) {
     echo '<script>location.href = "404.php";</script>';
 } else {
@@ -8,6 +11,7 @@ if (!isset($_GET["idNotaCredito"])) {
     include('../src/GenerateCoinToLetters.php');
     require_once("./lib/phpqrcode/qrlib.php");
     include_once('../model/NotaCreditoAdo.php');
+    require __DIR__ . './../src/autoload.php';
 
     $detallnotacredito = NotaCreditoAdo::ObtenerNotaCreditoXML($_GET["idNotaCredito"]);
     if (!is_array($detallnotacredito)) {
@@ -28,7 +32,7 @@ if (!isset($_GET["idNotaCredito"])) {
         $telefono = "Tesorería " . $empresa->Telefono . " Anexo 202";
         $ruc = $empresa->NumeroDocumento;
 
-        $gcl = new GenerateCoinToLetters();
+        $gcl = new NumberLleters();
 
         $textoCodBar =
             '|' . $ruc
