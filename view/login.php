@@ -89,6 +89,9 @@ if (isset($_SESSION['IdUsuario'])) {
                                 Centenario 604 – Urb. San Carlos Huancayo</small>
                             <i class="fa fa-phone" style="color: #E31E25;"></i> <small>(064) - 203033</small>
                         </p>
+                        <p style="text-align: center;font-size: 11pt;color: #46433C;">
+                            <small>V. 1.0.1</small>
+                        </p>
 
                     </div>
                 </div>
@@ -104,14 +107,14 @@ if (isset($_SESSION['IdUsuario'])) {
                     if (event.keyCode == 13) {
                         login();
                         event.preventDefault();
-                    }                   
+                    }
                 });
 
                 $("#txtClave").keydown(function(event) {
                     if (event.keyCode == 13) {
                         login();
                         event.preventDefault();
-                    }                   
+                    }
                 });
 
                 $("#btnIngresar").click(function() {
@@ -147,7 +150,7 @@ if (isset($_SESSION['IdUsuario'])) {
                         beforeSend: function() {
                             tools.ModalAlertInfo("Login", "Procesando petición..");
                         },
-                        success: function(result) {                           
+                        success: function(result) {
                             if (result.estado === 1) {
                                 let dato = result.datos;
                                 tools.ModalAlertSuccess("Login", "Los datos son correctos su sesión va iniciar en 2 segundos.");
