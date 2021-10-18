@@ -1,6 +1,6 @@
 <footer class="main-footer">
     <div class="pull-right hidden-xs">
-        <b>Versión</b> 1.0.0
+        <b>Versión</b> 1.0.1
     </div>
     <strong>Copyright © 2020. <a class="text-primary" href="http://www.cip-junin.org.pe/" target="_blank">Colegio de Ingenieros del Perú - CD Junín.</a> </strong> Todos los derechos reservados.
 </footer>
@@ -21,7 +21,7 @@
                     $("#lblTituloNotificaciones").html("Tiene " + result.data.length + " notificaciones")
                     for (let value of result.data) {
                         $("#ulListaNotificaciones").append('<li>' +
-                            '<a href="notificaciones.php"><i class="fa fa-hand-paper-o text-aqua"></i> ' + value.Cantidad + ' ' + value.Nombre + ' - ' + value.Estado +  '</a>' +
+                            '<a href="notificaciones.php"><i class="fa fa-hand-paper-o text-aqua"></i> ' + value.Cantidad + ' ' + value.Nombre + ' - ' + value.Estado + '</a>' +
                             '</li>');
                     }
                 } else {
