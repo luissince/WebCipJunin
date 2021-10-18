@@ -58,7 +58,7 @@ try {
 
     $headers = array(
         'Content-Type: application/json',
-        'Authorization: Bearer pk_test_69979cc0fa24d426'
+        'Authorization: Bearer pk_live_1a97fceff3c6af2b'
     );
     curl_setopt($curl, CURLOPT_HTTPHEADER, $headers);
     curl_setopt($curl, CURLOPT_CUSTOMREQUEST, "POST");
@@ -94,7 +94,7 @@ try {
 
         $headers = array(
             'Content-Type: application/json',
-            'Authorization: Bearer sk_test_6d00f5f32b58adea'
+            'Authorization: Bearer sk_live_a5979cee8160335b'
         );
         curl_setopt($curl, CURLOPT_HTTPHEADER, $headers);
         curl_setopt($curl, CURLOPT_CUSTOMREQUEST, "POST");
