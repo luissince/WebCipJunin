@@ -438,7 +438,9 @@ if (!isset($_SESSION['IdUsuario'])) {
                             if (result.state == true) {
                                 if (result.accepted == true) {
                                     tools.ModalAlertSuccess("Consultar Comprobante", "Resultado: Código " + result.code + " " + result.message);
-                                    $("#lblRutaDescarga").append('<a onclick="descargarCdr(\'' + result.file + '\')"" style="cursor:pointer">' + result.file + '</a>');
+                                    if (cdr != "") {
+                                        $("#lblRutaDescarga").append('<a onclick="descargarCdr(\'' + result.file + '\')"" style="cursor:pointer">' + result.file + '</a>');
+                                    }
                                 } else {
                                     tools.ModalAlertWarning("Consultar Comprobante", "Resultado: Código " + result.code + " " + result.message);
                                 }
