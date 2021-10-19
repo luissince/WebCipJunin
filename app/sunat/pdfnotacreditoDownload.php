@@ -357,7 +357,7 @@ if (!isset($_GET["idNotaCredito"])) {
         ]);
 
         $mpdf->SetProtection(array('print'));
-        $mpdf->SetTitle("NOTA DE CRÉDITO " . $notacredito->NotaCreditoSerie . "-" . $notacredito->NotaCreditoNumeracion);
+        $mpdf->SetTitle("NOTA DE CRÉDITO " . $notacredito->SerieNotaCredito  . "-" . $notacredito->NumeracionNotaCredito);
         $mpdf->SetAuthor("Cip Junin");
         $mpdf->SetWatermarkText("");   // anulada
         $mpdf->showWatermarkText = true;
@@ -367,6 +367,6 @@ if (!isset($_GET["idNotaCredito"])) {
         $mpdf->WriteHTML($html);
 
         // Output a PDF file directly to the browser
-        $mpdf->Output("NOTA DE CRÉDITO " . $notacredito->NotaCreditoSerie . "-" . $notacredito->NotaCreditoNumeracion . '.pdf', 'D');
+        $mpdf->Output("NOTA DE CRÉDITO " . $notacredito->SerieNotaCredito . "-" . $notacredito->NumeracionNotaCredito . ".pdf", 'I');
     }
 }
