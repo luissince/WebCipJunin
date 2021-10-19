@@ -9,11 +9,14 @@ require('./lib/mpdf/vendor/autoload.php');
 include('../src/GenerateCoinToLetters.php');
 require_once("./lib/phpqrcode/qrlib.php");
 include_once('../model/IngresosAdo.php');
+require __DIR__ . './../src/autoload.php';
+
 //Import PHPMailer classes into the global namespace
 //These must be at the top of your script, not inside a function
 use PHPMailer\PHPMailer\PHPMailer;
 use PHPMailer\PHPMailer\SMTP;
 use PHPMailer\PHPMailer\Exception;
+use SysSoftIntegra\Src\NumberLleters;
 
 //Load Composer's autoloader
 require './lib/phpmail/vendor/autoload.php';
@@ -51,7 +54,7 @@ try {
             $telefono = "Tesorería " . $empresa->Telefono . " Anexo 202";
             $ruc = $empresa->NumeroDocumento;
 
-            $gcl = new GenerateCoinToLetters();
+            $gcl = new NumberLleters();
 
             $textoCodBar =
                 '|' . $ruc
