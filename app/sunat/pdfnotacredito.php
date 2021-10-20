@@ -8,7 +8,6 @@ if (!isset($_GET["idNotaCredito"])) {
 
     define('_MPDF_PATH', '/lib');
     require('./lib/mpdf/vendor/autoload.php');
-    include('../src/GenerateCoinToLetters.php');
     require_once("./lib/phpqrcode/qrlib.php");
     include_once('../model/NotaCreditoAdo.php');
     require __DIR__ . './../src/autoload.php';

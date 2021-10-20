@@ -6,7 +6,6 @@ header('Content-Type: application/json; charset=UTF-8');
 
 define('_MPDF_PATH', '/lib');
 require('./lib/mpdf/vendor/autoload.php');
-include('../src/GenerateCoinToLetters.php');
 require_once("./lib/phpqrcode/qrlib.php");
 include_once('../model/IngresosAdo.php');
 require __DIR__ . './../src/autoload.php';

@@ -9,7 +9,6 @@ if (!isset($_GET["idIngreso"])) {
     require('./lib/mpdf/vendor/autoload.php');
     include_once('../model/IngresosAdo.php');
 
-
     $CertificadoProyecto = IngresosAdo::ObtenerDatosPdfCertProyecto($_GET["idIngreso"]);
     if (!is_array($CertificadoProyecto)) {
         echo $CertificadoProyecto;
