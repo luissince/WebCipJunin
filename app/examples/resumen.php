@@ -146,7 +146,7 @@ if (!is_array($detalleventa)) {
         $PaidAmount = $xml->createElement('cbc:PaidAmount', number_format(round($totales['opgravada'], 2, PHP_ROUND_HALF_UP), 2, '.', ''));
         $BillingPayment->appendChild($PaidAmount);
         $PaidAmount->setAttribute('currencyID', $tipomoneda);
-        $InstructionID = $xml->createElement('cbc:InstructionID', "02");
+        $InstructionID = $xml->createElement('cbc:InstructionID', "01");
         $BillingPayment->appendChild($InstructionID);
 
         $cac_TaxTotal = $xml->createElement('cac:TaxTotal');
