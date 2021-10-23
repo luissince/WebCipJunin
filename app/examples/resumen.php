@@ -136,21 +136,29 @@ if (!is_array($detalleventa)) {
     $ConditionCode = $xml->createElement('cbc:ConditionCode', '3');
     $ConditionCode = $Status->appendChild($ConditionCode);
 
-    $TotalAmount = $xml->createElement('sac:TotalAmount', number_format(round($totales['totalconimpuesto'], 2, PHP_ROUND_HALF_UP), 2, '.', '')); //
-    $TotalAmount = $SummaryDocumentsLine->appendChild($TotalAmount);
-    $TotalAmount->setAttribute('currencyID',  $tipomoneda);
-
-    $cac_TaxTotal = $xml->createElement('cac:TaxTotal');
-    $cac_TaxTotal = $SummaryDocumentsLine->appendChild($cac_TaxTotal);
-    $cbc = $xml->createElement('cbc:TaxAmount', number_format(round($totales['totalimpuesto'], 2, PHP_ROUND_HALF_UP), 2, '.', ''));
-    $cbc->setAttribute('currencyID', $tipomoneda);
-    $cbc = $cac_TaxTotal->appendChild($cbc);
-
     if ($totales['totalimpuesto'] > 0) {
+        $TotalAmount = $xml->createElement('sac:TotalAmount', number_format(round($totales['totalconimpuesto'], 2, PHP_ROUND_HALF_UP), 2, '.', '')); //
+        $TotalAmount = $SummaryDocumentsLine->appendChild($TotalAmount);
+        $TotalAmount->setAttribute('currencyID',  $tipomoneda);
+
+        $BillingPayment = $xml->createElement('sac:BillingPayment');
+        $BillingPayment = $SummaryDocumentsLine->appendChild($BillingPayment);
+        $PaidAmount = $xml->createElement('cbc:PaidAmount', number_format(round($totales['opgravada'], 2, PHP_ROUND_HALF_UP), 2, '.', ''));
+        $BillingPayment->appendChild($PaidAmount);
+        $PaidAmount->setAttribute('currencyID', $tipomoneda);
+        $InstructionID = $xml->createElement('cbc:InstructionID', "02");
+        $BillingPayment->appendChild($InstructionID);
+
+        $cac_TaxTotal = $xml->createElement('cac:TaxTotal');
+        $cac_TaxTotal = $SummaryDocumentsLine->appendChild($cac_TaxTotal);
+        $cbc = $xml->createElement('cbc:TaxAmount', number_format(round($totales['totalimpuesto'], 2, PHP_ROUND_HALF_UP), 2, '.', ''));
+        $cbc->setAttribute('currencyID', $tipomoneda);
+        $cbc = $cac_TaxTotal->appendChild($cbc);
+
         $cac_TaxSubtotal = $xml->createElement('cac:TaxSubtotal');
         $cac_TaxSubtotal = $cac_TaxTotal->appendChild($cac_TaxSubtotal);
-        $cbc = $xml->createElement('cbc:TaxableAmount', number_format(round($totales['opgravada'], 2, PHP_ROUND_HALF_UP), 2, '.', ''));
-        $cbc = $cac_TaxSubtotal->appendChild($cbc);
+        // $cbc = $xml->createElement('cbc:TaxableAmount', number_format(round($totales['opgravada'], 2, PHP_ROUND_HALF_UP), 2, '.', ''));
+        // $cbc = $cac_TaxSubtotal->appendChild($cbc);
         $cbc->setAttribute('currencyID', $tipomoneda);
         $cbc = $xml->createElement('cbc:TaxAmount', number_format(round($totales['totalimpuesto'], 2, PHP_ROUND_HALF_UP), 2, '.', ''));
         $cbc = $cac_TaxSubtotal->appendChild($cbc);
@@ -166,10 +174,28 @@ if (!is_array($detalleventa)) {
         $cbc = $xml->createElement('cbc:TaxTypeCode', 'VAT');
         $cbc = $cac_TaxScheme->appendChild($cbc);
     } else {
+        $TotalAmount = $xml->createElement('sac:TotalAmount', number_format(round($totales['totalconimpuesto'], 2, PHP_ROUND_HALF_UP), 2, '.', ''));
+        $TotalAmount = $SummaryDocumentsLine->appendChild($TotalAmount);
+        $TotalAmount->setAttribute('currencyID',  $tipomoneda);
+
+        $BillingPayment = $xml->createElement('sac:BillingPayment');
+        $BillingPayment = $SummaryDocumentsLine->appendChild($BillingPayment);
+        $PaidAmount = $xml->createElement('cbc:PaidAmount', number_format(round($totales['opexonerada'], 2, PHP_ROUND_HALF_UP), 2, '.', ''));
+        $BillingPayment->appendChild($PaidAmount);
+        $PaidAmount->setAttribute('currencyID', $tipomoneda);
+        $InstructionID = $xml->createElement('cbc:InstructionID', "02");
+        $BillingPayment->appendChild($InstructionID);
+
+        $cac_TaxTotal = $xml->createElement('cac:TaxTotal');
+        $cac_TaxTotal = $SummaryDocumentsLine->appendChild($cac_TaxTotal);
+        $cbc = $xml->createElement('cbc:TaxAmount', number_format(round($totales['totalimpuesto'], 2, PHP_ROUND_HALF_UP), 2, '.', ''));
+        $cbc->setAttribute('currencyID', $tipomoneda);
+        $cbc = $cac_TaxTotal->appendChild($cbc);
+
         $cac_TaxSubtotal = $xml->createElement('cac:TaxSubtotal');
         $cac_TaxSubtotal = $cac_TaxTotal->appendChild($cac_TaxSubtotal);
-        $cbc = $xml->createElement('cbc:TaxableAmount', number_format(round($totales['opexonerada'], 2, PHP_ROUND_HALF_UP), 2, '.', ''));
-        $cbc = $cac_TaxSubtotal->appendChild($cbc);
+        // $cbc = $xml->createElement('cbc:TaxableAmount', number_format(round($totales['opexonerada'], 2, PHP_ROUND_HALF_UP), 2, '.', ''));
+        // $cbc = $cac_TaxSubtotal->appendChild($cbc);
         $cbc->setAttribute('currencyID', $tipomoneda);
         $cbc = $xml->createElement('cbc:TaxAmount', number_format(round($totales['totalimpuesto'], 2, PHP_ROUND_HALF_UP), 2, '.', ''));
         $cbc = $cac_TaxSubtotal->appendChild($cbc);
@@ -178,9 +204,9 @@ if (!is_array($detalleventa)) {
         $cac_TaxCategory = $cac_TaxSubtotal->appendChild($cac_TaxCategory);
         $cac_TaxScheme = $xml->createElement('cac:TaxScheme');
         $cac_TaxScheme = $cac_TaxCategory->appendChild($cac_TaxScheme);
-        $cbc = $xml->createElement('cbc:ID', '9997');
+        $cbc = $xml->createElement('cbc:ID', '1000');
         $cbc = $cac_TaxScheme->appendChild($cbc);
-        $cbc = $xml->createElement('cbc:Name', 'EXO');
+        $cbc = $xml->createElement('cbc:Name', 'IGV');
         $cbc = $cac_TaxScheme->appendChild($cbc);
         $cbc = $xml->createElement('cbc:TaxTypeCode', 'VAT');
         $cbc = $cac_TaxScheme->appendChild($cbc);

@@ -228,9 +228,9 @@ class SoapResult
             $this->setDescription($description);
             $this->setSuccess(true);
         } catch (SoapFault $ex) {
-            if (file_exists('../files/' . $this->filename . '.xml')) {
-                unlink('../files/' . $this->filename . '.xml');
-            }
+            // if (file_exists('../files/' . $this->filename . '.xml')) {
+            //     unlink('../files/' . $this->filename . '.xml');
+            // }
             if (file_exists('../files/' . $this->filename . '.zip')) {
                 unlink('../files/' . $this->filename . '.zip');
             }
@@ -240,9 +240,9 @@ class SoapResult
             $this->setCode($code);
             $this->setDescription($message);
         } catch (Exception $ex) {
-            if (file_exists('../files/' . $this->filename . '.xml')) {
-                unlink('../files/' . $this->filename . '.xml');
-            }
+            // if (file_exists('../files/' . $this->filename . '.xml')) {
+            //     unlink('../files/' . $this->filename . '.xml');
+            // }
             if (file_exists('../files/' . $this->filename . '.zip')) {
                 unlink('../files/' . $this->filename . '.zip');
             }
