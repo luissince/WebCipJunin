@@ -1316,8 +1316,6 @@ class IngresosAdo
                 Persona.Apellidos+' '+Persona.Nombres AS Ingeniero,
                 Especialidad.Especialidad,
                 Capitulo.Capitulo,
-                --MAX(CASE WHEN Condicion='V' and Concepto.concepto <> 'Cuotas Sociales CIP' THEN 0 ELSE Monto2 END) AS Monto2,
-                --MAX(Monto1) AS Monto1,
                 MAX(CASE WHEN Concepto.Concepto = 'Cuotas al ISS CIP'
                         THEN  Detalle.Monto/Detalle.Cantidad 
                         ELSE 0		    
@@ -1361,8 +1359,6 @@ class IngresosAdo
                 Persona.Apellidos+' '+Persona.Nombres AS Ingeniero,
                 Especialidad.Especialidad,
                 Capitulo.Capitulo,
-                --MAX(CASE WHEN Condicion='V' and Concepto.concepto <> 'Cuotas Sociales CIP' THEN 0 ELSE Monto2 END) AS Monto2,
-                --MAX(Monto1) AS Monto1,
                 MAX(CASE WHEN Concepto.Concepto = 'Cuotas al ISS CIP'
                     THEN  Detalle.Monto/Detalle.Cantidad 
                     ELSE 0		    

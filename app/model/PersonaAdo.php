@@ -2039,4 +2039,105 @@ class PersonaAdo
             return $ex->getMessage();
         }
     }
+
+    public static function reincorporacion($idDni, $fecha, $idUsuario)
+    {
+        try {
+            Database::getInstance()->getDb()->beginTransaction();
+            $cmdPago = Database::getInstance()->getDb()->prepare("SELECT 
+            cast(ISNULL(ul.FechaUltimaCuota, c.FechaColegiado)as date) as UltimoPago     
+            from Persona as p 
+            inner join Colegiatura as c
+            on p.idDNI = c.idDNI and c.Principal = 1
+            left outer join ULTIMACuota as ul
+            on p.idDNI = ul.idDNI
+            WHERE p.idDNI = ?");
+            $cmdPago->bindParam(1, $idDni, PDO::PARAM_INT);
+            $cmdPago->execute();
+            if ($row = $cmdPago->fetch()) {
+                $ultimoPago = new DateTime($row["UltimoPago"]);
+                $ultimoPago->setDate($ultimoPago->format("Y"), $ultimoPago->format("m"), 1);
+                $ultimoPago->modify('+1 month');
+
+                $fechaActual = new DateTime($fecha . " 00:00:00");
+                $fechaActual->setDate($fechaActual->format("Y"), $fechaActual->format("m"), 1);
+
+                if ($fechaActual <= $ultimoPago) {
+                    throw new Exception('La fecha que desea cambiar es menor o igual al ultimo pago.');
+                } else {
+
+                    $cmdIngreso = Database::getInstance()->getDb()->prepare("INSERT INTO Ingreso(
+                        idDni,
+                        idEmpresaPersona,
+                        TipoComprobante,
+                        Serie,
+                        NumRecibo,
+                        Fecha,
+                        Hora,
+                        idUsuario,
+                        Estado,
+                        Deposito,
+                        Observacion,
+                        Tipo,
+                        idBanco,
+                        NumOperacion
+                        )VALUES(?,null,0,'','',GETDATE(),GETDATE(),?,'C',0,'',0,0,'')");
+                    $cmdIngreso->bindParam(1, $idDni, PDO::PARAM_STR);
+                    $cmdIngreso->bindParam(2, $idUsuario, PDO::PARAM_INT);
+                    $cmdIngreso->execute();
+
+                    $idIngreso = Database::getInstance()->getDb()->lastInsertId();
+
+                    $fechaIni = $ultimoPago->format('Y') . '-' . $ultimoPago->format('m') . '-' . $ultimoPago->format('d');
+                    $fechaFin = $fechaActual->format('Y') . '-' . $fechaActual->format('m') . '-' . $fechaActual->format('d');
+
+                    $cmdCuota = Database::getInstance()->getDb()->prepare("INSERT INTO Cuota(idIngreso,FechaIni,FechaFin) VALUES(?,?,?)");
+                    $cmdCuota->bindParam(1, $idIngreso, PDO::PARAM_INT);
+                    $cmdCuota->bindParam(2, $fechaIni, PDO::PARAM_STR);
+                    $cmdCuota->bindParam(3, $fechaFin, PDO::PARAM_STR);
+                    $cmdCuota->execute();
+
+                    $idConcepto = 4;
+                    $cantidad = 1;
+                    $monto = 0;
+
+                    $cmdDetalle = Database::getInstance()->getDb()->prepare("INSERT INTO Detalle(
+                        idIngreso,
+                        idConcepto,
+                        Cantidad,
+                        Monto
+                        )VALUES(?,?,?,?)");
+                    $cmdDetalle->bindParam(1, $idIngreso, PDO::PARAM_INT);
+                    $cmdDetalle->bindParam(2, $idConcepto, PDO::PARAM_INT);
+                    $cmdDetalle->bindParam(3, $cantidad, PDO::PARAM_INT);
+                    $cmdDetalle->bindParam(4, $monto, PDO::PARAM_INT);
+                    $cmdDetalle->execute();
+
+                    $idConcepto = 6;
+                    $cantidad = 1;
+                    $monto = 0;
+
+                    $cmdDetalle = Database::getInstance()->getDb()->prepare("INSERT INTO Detalle(
+                        idIngreso,
+                        idConcepto,
+                        Cantidad,
+                        Monto
+                        )VALUES(?,?,?,?)");
+                    $cmdDetalle->bindParam(1, $idIngreso, PDO::PARAM_INT);
+                    $cmdDetalle->bindParam(2, $idConcepto, PDO::PARAM_INT);
+                    $cmdDetalle->bindParam(3, $cantidad, PDO::PARAM_INT);
+                    $cmdDetalle->bindParam(4, $monto, PDO::PARAM_INT);
+                    $cmdDetalle->execute();
+
+                    Database::getInstance()->getDb()->commit();
+                    return "update";
+                }
+            } else {
+                throw new Exception('El cliente no tiene ultimo pago para poder realizar la reincorporación.');
+            }
+        } catch (Exception $ex) {
+            Database::getInstance()->getDb()->rollBack();
+            return $ex->getMessage();
+        }
+    }
 }

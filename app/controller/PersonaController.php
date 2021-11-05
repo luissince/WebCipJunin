@@ -897,5 +897,18 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
                 "message" => $result
             ));
         }
+    } else if ($_POST["type"] == "reincorporacion") {
+        $result = PersonaAdo::reincorporacion($_POST["idDNI"], $_POST["fecha"], $_POST["idUsuario"]);
+        if ($result == "update") {
+            echo json_encode(array(
+                "estado" => 1,
+                "message" => "Se registro la reincorporación correctamente."
+            ));
+        } else {
+            echo json_encode(array(
+                "estado" => 0,
+                "message" => $result
+            ));
+        }
     }
 }

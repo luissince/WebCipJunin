@@ -1217,6 +1217,49 @@ if (!isset($_SESSION['IdUsuario'])) {
             </div>
             <!-- end modal eliminar correo y web -->
             <!-- *******************************************************-->
+
+            <!-- *******************************************************-->
+            <!-- modal reincorporación -->
+            <div class="row">
+                <div class="modal fade" id="mdReincorporacion">
+                    <div class="modal-dialog modal-xs" style="width: 500px;">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <button type="button" class="close" data-dismiss="modal">
+                                    <i class="fa fa-close"></i>
+                                </button>
+                                <h4 class="modal-title">
+                                    <i class="fa fa-user">
+                                    </i> Reincorparación del Ingeniero
+                                </h4>
+                            </div>
+                            <div class="modal-body">
+
+                                <div class="row" style="padding-top: 0.5em;">
+                                    <div class="col-md-12">
+                                        <div class="form-group">
+                                            <label class="col-sm-3 control-label">Fecha</label>
+                                            <div class="col-sm-9">
+                                                <input id="txtFechaReincorporacion" type="date" class="form-control" />
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-warning" id="btnSaveReincorporacion">
+                                    <i class="fa fa-check"></i> Aceptar</button>
+                                <button type="button" class="btn btn-primary" data-dismiss="modal">
+                                    <i class="fa fa-remove"></i> Cancelar</button>
+                            </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!--end modal reincorporación  -->
+
             <div class="content-wrapper" style="background-color: #FFFFFF;">
                 <!-- Main content -->
                 <section class="content-header">
@@ -1390,6 +1433,7 @@ if (!isset($_SESSION['IdUsuario'])) {
                                     <li class=""><a href="#tab_5" data-toggle="tab" aria-expanded="false">Experiencia</a></li>
                                     <li class=""><a href="#tab_6" data-toggle="tab" aria-expanded="false">Grados y Estudios</a></li>
                                     <li class=""><a href="#tab_7" data-toggle="tab" aria-expanded="false">Correo y Web</a></li>
+                                    <li class="pull-right"><button class="btn btn-info btn-sm" id="btnReincorporacion"><i class="fa fa-plus"></i> Reincorparación</button></li>
                                     <li class="pull-right"><button class="btn btn-success btn-sm" id="btnNuevo"><i class="fa fa-plus"></i> Nuevo</button></li>
                                 </ul>
                                 <div class="tab-content">
@@ -1561,6 +1605,7 @@ if (!isset($_SESSION['IdUsuario'])) {
             let fileImage = $("#SubirImagen");
 
             let idDNI = "<?php echo  $_GET["idPersona"]; ?>";
+            let idUsuario = "<?php echo $_SESSION['IdUsuario']; ?>";
             let state = false;
 
             let tools = new Tools();
@@ -1631,6 +1676,53 @@ if (!isset($_SESSION['IdUsuario'])) {
                         selectModal();
                     }
                     event.preventDefault();
+                });
+
+                $("#btnReincorporacion").click(function() {
+                    $("#mdReincorporacion").modal("show");
+                });
+
+                $("#btnReincorporacion").keypress(function(event) {
+                    if (event.keyCode === 13) {
+                        $("#mdReincorporacion").modal("show");
+                    }
+                    event.preventDefault();
+                });
+
+                $("#btnSaveReincorporacion").click(function() {
+                    if (!tools.validateDate($("#txtFechaReincorporacion").val())) {
+                        tools.AlertWarning("", "Ingrese la fecha de reincorporación");
+                    } else {
+                        tools.ModalDialog("Empresa", "¿Está seguro de continuar?", function(value) {
+                            if (value == true) {
+                                $.ajax({
+                                    url: "../app/controller/PersonaController.php",
+                                    method: "POST",
+                                    data: {
+                                        "type": "reincorporacion",
+                                        "idDNI": idDNI,
+                                        "fecha": $("#txtFechaReincorporacion").val(),
+                                        "idUsuario": idUsuario
+                                    },
+                                    beforeSend: function() {
+                                        $("#mdReincorporacion").modal("hide");
+                                        tools.ModalAlertInfo("Ingeniero", "Procesando petición..");
+                                    },
+                                    success: function(result) {
+                                        if (result.estado === 1) {
+                                            tools.ModalAlertSuccess("Ingeniero", result.message);
+                                        } else {
+                                            tools.ModalAlertWarning("Ingeniero", result.message);
+                                        }
+                                    },
+                                    error: function(error) {
+                                        tools.ModalAlertError("Ingeniero", "Se produjo un error: " + error.responseText);
+                                    }
+                                });
+                            }
+                        });
+
+                    }
                 });
 
                 $("#SubirImagen").on('change', function(event) {
