@@ -100,6 +100,7 @@ if (isset($_SESSION['IdUsuario'])) {
         <script src="js/tools.js"></script>
         <script>
             let tools = new Tools();
+            let isLogin = false;
 
             $(document).ready(function() {
 
@@ -131,6 +132,9 @@ if (isset($_SESSION['IdUsuario'])) {
             })
 
             function login() {
+                if (isLogin) {
+                    return;
+                }
                 if ($("#txtUsuario").val() == '') {
                     tools.AlertWarning('Mensaje', "Ingrese un usuario por favor");
                     $("#txtUsuario").focus();
@@ -148,6 +152,7 @@ if (isset($_SESSION['IdUsuario'])) {
                             "clave": $("#txtClave").val()
                         },
                         beforeSend: function() {
+                            isLogin = true;
                             tools.ModalAlertInfo("Login", "Procesando petición..");
                         },
                         success: function(result) {
@@ -155,27 +160,30 @@ if (isset($_SESSION['IdUsuario'])) {
                                 let dato = result.datos;
                                 tools.ModalAlertSuccess("Login", "Los datos son correctos su sesión va iniciar en 2 segundos.");
 
-                                tools.AlertSuccess('Login', 'Bienvenido al Sistema ' + dato.Apellidos + ' ' + dato
-                                    .Nombres)
+                                tools.AlertSuccess('Login', 'Bienvenido al Sistema ' + dato.Apellidos + ' ' + dato.Nombres)
                                 setTimeout(function() {
-                                    location.href = "../view/index.php"
+                                    location.href = "../view/index.php";
                                 }, 1000);
                             } else if (result.estado === 2) {
                                 $("#txtUsuario").focus();
                                 tools.ModalAlertWarning("Login", result.message);
+                                isLogin = false;
                             } else if (result.estado === 3) {
                                 $("#txtClave").val('')
                                 $("#txtClave").focus();
                                 tools.ModalAlertWarning("Login", result.message);
+                                isLogin = false;
                             } else if (result.estado === 4) {
                                 $("#txtUsuario").val('')
                                 $("#txtUsuario").focus();
                                 tools.ModalAlertWarning("Login", result.message);
+                                isLogin = false;
                             } else {
                                 $("#txtUsuario").val('')
                                 $("#txtClave").val('')
                                 $("#txtUsuario").focus();
                                 tools.ModalAlertWarning("Login", result.message);
+                                isLogin = false;
                             }
                         },
                         error: function(error) {
@@ -183,6 +191,7 @@ if (isset($_SESSION['IdUsuario'])) {
                             $("#txtClave").val('')
                             $("#txtUsuario").focus();
                             tools.ModalAlertError("Login", error.responseText);
+                            isLogin = false;
                         }
                     });
                 }

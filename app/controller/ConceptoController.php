@@ -340,6 +340,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
         }
     } else if ($_POST["type"] == "certHabilidad") {
         $data["idCertHabilidad"] = $_POST["idCertificado"];
+        $data["numerico"] = $_POST["numerico"];
         $data["especialidad"] = $_POST["especialidad"];
         $data["asunto"] = $_POST["asunto"];
         $data["entidad"] = $_POST["entidad"];

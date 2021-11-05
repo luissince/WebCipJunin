@@ -71,7 +71,7 @@ if (!isset($_SESSION['IdUsuario'])) {
                                         <div class="col-md-6">
                                             <div class="form-group">
                                                 <label for="txtCorrelativoCertificado">Certificado N°</label>
-                                                <input type="text" class="form-control" id="txtCorrelativoCertificado" placeholder="0" disabled>
+                                                <input type="text" class="form-control" id="txtCorrelativoCertificado" placeholder="0">
                                             </div>
                                         </div>
                                     </div>
@@ -224,6 +224,14 @@ if (!isset($_SESSION['IdUsuario'])) {
                     $("#fechaInicio").val(tools.getCurrentDate());
 
                     $("#fechaFinal").val(tools.getCurrentDate());
+
+                    $("#txtCorrelativoCertificado").keypress(function(event) {
+                        var key = window.Event ? event.which : event.keyCode;
+                        var c = String.fromCharCode(key);
+                        if ((c < '0' || c > '9') && (c != '\b')) {
+                            event.preventDefault();
+                        }
+                    });
 
                     $("#btnIzquierda").click(function() {
                         if (!state) {
@@ -485,6 +493,9 @@ if (!isset($_SESSION['IdUsuario'])) {
                     if ($("#cbEspecialidadCertificado").val() == '') {
                         tools.AlertWarning("Certificado de Habilidad", "Seleccione una especialidad para continuar.");
                         $("#cbEspecialidadCertificado").focus();
+                    } else if ($("#txtCorrelativoCertificado").val() == "") {
+                        tools.AlertWarning("Certificado de Habilidad", "Ingrese el n° del certificado.");
+                        $("#txtCorrelativoCertificado").focus();
                     } else if ($("#txtAsuntoCertificado").val() == '') {
                         tools.AlertWarning("Certificado de Habilidad", "Ingrese un asunto para continuar.");
                         $("#txtAsuntoCertificado").focus();
@@ -495,34 +506,41 @@ if (!isset($_SESSION['IdUsuario'])) {
                         tools.AlertWarning("Certificado de Habilidad", "Ingrese un lugar para continuar.");
                         $("#txtLugarCertificado").focus();
                     } else {
-                        $.ajax({
-                            url: "../app/controller/ConceptoController.php",
-                            method: "POST",
-                            data: {
-                                "type": "certHabilidad",
-                                "idCertificado": idCertHabilidad,
-                                "especialidad": $("#cbEspecialidadCertificado").val(),
-                                "asunto": $("#txtAsuntoCertificado").val(),
-                                "entidad": $("#txtEntidadCertificado").val(),
-                                "lugar": $("#txtLugarCertificado").val()
-                            },
-                            beforeSend: function() {
-                                cleanModalHabilidad();
-                                tools.ModalAlertInfo("Certificado Habilidad", "Procesando petición..");
-                            },
-                            success: function(result) {
-                                if (result.estado == 1) {
-                                    tools.ModalAlertSuccess("Certificado Habilidad", result.message);
-                                    loadInitIngresos();
-                                } else {
-                                    tools.ModalAlertWarning("Certificado Habilidad", result.message);
-                                }
-                            },
-                            error: function(error) {
-                                tools.ModalAlertError("Certificado Habilidad", "Se produjo un error: " + error.responseText);
+                        tools.ModalDialog("Certificado de Habilidad", "¿Está seguro de continuar?", function(value) {
+                            if (value == true) {
+                                $.ajax({
+                                    url: "../app/controller/ConceptoController.php",
+                                    method: "POST",
+                                    data: {
+                                        "type": "certHabilidad",
+                                        "idCertificado": idCertHabilidad,
+                                        "numerico": $("#txtCorrelativoCertificado").val(),
+                                        "especialidad": $("#cbEspecialidadCertificado").val(),
+                                        "asunto": $("#txtAsuntoCertificado").val(),
+                                        "entidad": $("#txtEntidadCertificado").val(),
+                                        "lugar": $("#txtLugarCertificado").val()
+                                    },
+                                    beforeSend: function() {
+                                        cleanModalHabilidad();
+                                        tools.ModalAlertInfo("Certificado Habilidad", "Procesando petición..");
+                                    },
+                                    success: function(result) {
+                                        if (result.estado == 1) {
+                                            tools.ModalAlertSuccess("Certificado Habilidad", result.message);
+                                            loadInitIngresos();
+                                        } else {
+                                            tools.ModalAlertWarning("Certificado Habilidad", result.message);
+                                        }
+                                    },
+                                    error: function(error) {
+                                        tools.ModalAlertError("Certificado Habilidad", "Se produjo un error: " + error.responseText);
+                                    }
+                                });
                             }
                         });
+
                     }
+
                 }
 
                 function cleanModalHabilidad() {

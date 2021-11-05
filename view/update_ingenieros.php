@@ -1693,7 +1693,7 @@ if (!isset($_SESSION['IdUsuario'])) {
                     if (!tools.validateDate($("#txtFechaReincorporacion").val())) {
                         tools.AlertWarning("", "Ingrese la fecha de reincorporación");
                     } else {
-                        tools.ModalDialog("Empresa", "¿Está seguro de continuar?", function(value) {
+                        tools.ModalDialog("Ingeniero", "¿Está seguro de continuar?", function(value) {
                             if (value == true) {
                                 $.ajax({
                                     url: "../app/controller/PersonaController.php",
