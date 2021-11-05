@@ -1433,7 +1433,7 @@ if (!isset($_SESSION['IdUsuario'])) {
                                     <li class=""><a href="#tab_5" data-toggle="tab" aria-expanded="false">Experiencia</a></li>
                                     <li class=""><a href="#tab_6" data-toggle="tab" aria-expanded="false">Grados y Estudios</a></li>
                                     <li class=""><a href="#tab_7" data-toggle="tab" aria-expanded="false">Correo y Web</a></li>
-                                    <li class="pull-right"><button class="btn btn-info btn-sm" id="btnReincorporacion"><i class="fa fa-plus"></i> Reincorparación</button></li>
+                                    <li class="pull-right"><button class="btn btn-info btn-sm" id="btnReincorporacion"><i class="fa fa-plus"></i> Reincorporación</button></li>
                                     <li class="pull-right"><button class="btn btn-success btn-sm" id="btnNuevo"><i class="fa fa-plus"></i> Nuevo</button></li>
                                 </ul>
                                 <div class="tab-content">
