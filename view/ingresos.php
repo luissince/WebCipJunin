@@ -474,7 +474,7 @@ if (!isset($_SESSION['IdUsuario'])) {
                                         }
 
                                         let observacionsunat =
-                                            (ingresos.xmldescripcion === "" ? "Por Generar Xml y Enviar" : ingresos.xmldescripcion);
+                                            (ingresos.xmldescripcion === "" ? "Por Generar Xml y Enviar" : limitar_cadena(ingresos.xmldescripcion, 90, "..."));
 
                                         tbTable.append('<tr>' +
                                             '<td class="text-center text-primary">' + ingresos.id + '</td>' +
@@ -482,7 +482,7 @@ if (!isset($_SESSION['IdUsuario'])) {
                                             '<td>' + btnPdf + '</td>' +
                                             '<td>' + btnDetalle + '</td>' +
                                             '<td>' + ingresos.fecha + '<br>' + tools.getTimeForma(ingresos.hora, true) + '</td>' +
-                                            '<td>' + ingresos.comprobante + '<br>' + ingresos.serie + '-' + ingresos.numRecibo + '</td>' +
+                                            '<td>' + ingresos.comprobante + '<br>' + ingresos.serie + '-' + ingresos.numRecibo + '<br>' + (ingresos.idNotaCredito != null ? '<span class="text-danger">MODIFICADO ' + ingresos.serieNc + '-' + ingresos.numerReciboNc + '</span>' : '') + '</td>' +
                                             '<td>' + ingresos.nombreDocumento + ' - ' + ingresos.numeroDocumento + '</br>' + ingresos.persona + '</td>' +
                                             '<td>' + formaPago + '</td>' +
                                             '<td>' + (ingresos.estado == "C" ? '<span class="text-green">Pagado</span>' : '<span class="text-red">Anulado</span>') + '</td>' +
@@ -519,6 +519,13 @@ if (!isset($_SESSION['IdUsuario'])) {
                             state = false;
                         }
                     });
+                }
+
+                function limitar_cadena(cadena, limite, sufijo) {
+                    if (cadena.length > limite) {
+                        return cadena.substr(0, limite) + sufijo;
+                    }
+                    return cadena;
                 }
 
                 function getCorreo(dniColegiado, id) {

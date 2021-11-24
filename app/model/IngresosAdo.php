@@ -38,6 +38,9 @@ class IngresosAdo
             isnull(e.NumeroRuc,p.NumDoc) AS NumeroDocumento,
             isnull(e.Nombre,concat(p.Apellidos,' ', p.Nombres)) AS Persona,
             sum(d.Monto) AS Total,
+            nc.idNotaCredito,
+            nc.Serie AS SerieNc,
+            nc.NumRecibo AS NumReciboNc,
             isnull(i.Xmlsunat,'') as Xmlsunat,
             isnull(i.Xmldescripcion,'') as Xmldescripcion
             FROM Ingreso AS i 
@@ -48,6 +51,7 @@ class IngresosAdo
 			LEFT JOIN Usuario AS u ON u.idUsuario = i.idUsuario
 			LEFT JOIN Rol AS r ON r.idRol = u.Rol
             LEFT JOIN Banco AS b ON b.idBanco = i.idBanco
+            LEFT JOIN NotaCredito AS nc ON nc.idIngreso = i.idIngreso
             WHERE
             $opcion = 0 AND i.Fecha BETWEEN ? AND ?
             OR
@@ -91,7 +95,10 @@ class IngresosAdo
             i.Xmlsunat,
             i.Xmldescripcion,
             e.IdEmpresa,
-            tc.Nombre
+            tc.Nombre,
+            nc.idNotaCredito,
+            nc.Serie,
+            nc.NumRecibo
             ORDER BY i.Fecha DESC,i.Hora DESC
             offset ? ROWS FETCH NEXT ? ROWS only");
             $cmdConcepto->bindParam(1, $fechaInicio, PDO::PARAM_STR);
@@ -136,7 +143,10 @@ class IngresosAdo
                     "persona" => $row["Persona"],
                     "total" => $row["Total"],
                     "xmlsunat" => $row["Xmlsunat"],
-                    "xmldescripcion" => IngresosAdo::limitar_cadena($row["Xmldescripcion"], 100, "..."),
+                    "idNotaCredito" => $row["idNotaCredito"],
+                    "serieNc" => $row["Serie"],
+                    "numerReciboNc" => $row["NumRecibo"],
+                    "xmldescripcion" => $row["Xmldescripcion"]
                 ));
             }
 
@@ -147,6 +157,7 @@ class IngresosAdo
             LEFT JOIN EmpresaPersona AS e ON e.IdEmpresa = i.idEmpresaPersona
             LEFT JOIN Usuario AS u ON u.idUsuario = i.idUsuario
 			LEFT JOIN Rol AS r ON r.idRol = u.Rol
+            LEFT JOIN NotaCredito AS nc ON nc.idIngreso = i.idIngreso
             WHERE
             $opcion = 0 AND i.Fecha BETWEEN ? AND ?
             OR
@@ -484,14 +495,6 @@ class IngresosAdo
         } catch (PDOException $ex) {
             return $ex->getMessage();
         }
-    }
-
-    public static function limitar_cadena($cadena, $limite, $sufijo)
-    {
-        if (strlen($cadena) > $limite) {
-            return substr($cadena, 0, $limite) . $sufijo;
-        }
-        return $cadena;
     }
 
     public static function RegistrarIngresos($body)
@@ -1248,11 +1251,10 @@ class IngresosAdo
             ELSE 0 END AS 'CIPNacional',
             i.Tipo
             FROM Ingreso AS i 
-            INNER JOIN Detalle AS d
-            ON i.idIngreso = d.idIngreso
-            INNER JOIN Concepto AS c
-            ON d.idConcepto = c.idConcepto
-            WHERE i.Estado = 'C' AND  i.Fecha  >= ? and i.Fecha  <= ? 
+            INNER JOIN Detalle AS d ON i.idIngreso = d.idIngreso
+            INNER JOIN Concepto AS c ON d.idConcepto = c.idConcepto
+            LEFT JOIN NotaCredito AS nc ON nc.idIngreso = i.idIngreso
+            WHERE i.Estado = 'C' AND nc.idNotaCredito IS NULL AND  i.Fecha  >= ? and i.Fecha  <= ? 
             GROUP BY c.Codigo,c.Concepto,c.Propiedad,i.Tipo
             ORDER BY c.Concepto ASC");
             $cmdConcepto->bindParam(1, $fechaInicio, PDO::PARAM_STR);
@@ -1333,7 +1335,7 @@ class IngresosAdo
                 INNER JOIN Especialidad ON Especialidad.idEspecialidad = Colegiatura.idEspecialidad
                 INNER JOIN Capitulo ON Capitulo.idCapitulo = Especialidad.idCapitulo
                 WHERE Ingreso.Fecha  BETWEEN ? AND ? AND Ingreso.Estado<>'A'
-                AND (Concepto.Concepto = 'Cuotas al ISS CIP' or Concepto.Concepto =  'Cuotas Sociales CIP')
+                AND (Concepto.Concepto = 'Cuotas al ISS CIP' OR Concepto.Concepto =  'Cuotas Sociales CIP')
                 GROUP BY Persona.CIP, Concepto.Concepto, Ingreso.idIngreso, Ingreso.idDNI,Persona.Condicion, Persona.Apellidos+' '+Persona.Nombres,
                 Cuota.FechaIni,Cuota.FechaFin,Ingreso.Fecha,Especialidad.Especialidad,Capitulo.Capitulo
                 ORDER BY Persona.Apellidos+' '+Persona.Nombres ASC");
@@ -1376,7 +1378,7 @@ class IngresosAdo
                 INNER JOIN Especialidad ON Especialidad.idEspecialidad = Colegiatura.idEspecialidad
                 INNER JOIN Capitulo ON Capitulo.idCapitulo = Especialidad.idCapitulo
                 WHERE Persona.NumDoc = ? AND Ingreso.Fecha  BETWEEN ? AND ? AND Ingreso.Estado<>'A'
-                AND (Concepto.Concepto = 'Cuotas al ISS CIP' or Concepto.Concepto =  'Cuotas Sociales CIP')
+                AND (Concepto.Concepto = 'Cuotas al ISS CIP' OR Concepto.Concepto =  'Cuotas Sociales CIP')
                 GROUP BY Persona.CIP, Concepto.Concepto, Ingreso.idIngreso, Ingreso.idDNI,Persona.Condicion, Persona.Apellidos+' '+Persona.Nombres,
                 Cuota.FechaIni,Cuota.FechaFin,Ingreso.Fecha,Especialidad.Especialidad,Capitulo.Capitulo
                 ORDER BY Persona.Apellidos+' '+Persona.Nombres ASC");

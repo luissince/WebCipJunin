@@ -414,7 +414,7 @@ if (!isset($_SESSION['IdUsuario'])) {
 
 
                                         let observacionsunat =
-                                            (notacredito.Xmldescripcion === "" ? "Por Generar Xml y Enviar" : notacredito.Xmldescripcion);
+                                            (notacredito.Xmldescripcion === "" ? "Por Generar Xml y Enviar" : limitar_cadena(notacredito.Xmldescripcion, 90, "..."));
 
 
                                         tbTable.append('<tr>' +
@@ -458,6 +458,13 @@ if (!isset($_SESSION['IdUsuario'])) {
                             state = false;
                         }
                     });
+                }
+
+                function limitar_cadena(cadena, limite, sufijo) {
+                    if (cadena.length > limite) {
+                        return cadena.substr(0, limite) + sufijo;
+                    }
+                    return cadena;
                 }
 
                 function facturarXml(idNotaCredito) {

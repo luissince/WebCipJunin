@@ -87,7 +87,7 @@ class NotaCreditoAdo
                     "NumeracionModificado" => $row["NumeracionModificado"],
                     "Total" => $row["Total"],
                     "Xmlsunat" => $row["Xmlsunat"],
-                    "Xmldescripcion" => NotaCreditoAdo::limitar_cadena($row["Xmldescripcion"], 100, "..."),
+                    "Xmldescripcion" => $row["Xmldescripcion"],
                 ));
             }
 
@@ -127,14 +127,6 @@ class NotaCreditoAdo
         } catch (PDOException $ex) {
             return $ex->getMessage();
         }
-    }
-
-    public static function limitar_cadena($cadena, $limite, $sufijo)
-    {
-        if (strlen($cadena) > $limite) {
-            return substr($cadena, 0, $limite) . $sufijo;
-        }
-        return $cadena;
     }
 
     public static function DetalleNotaCreditoById($idNotaCredito)

@@ -457,29 +457,35 @@ class PersonaAdo
         try {
             $array = array();
 
-            $cmdHistorial = Database::getInstance()->getDb()->prepare("SELECT i.idIngreso, i.idDNI, CONCAT(i.Serie,' - ', i.NumRecibo) AS Recibo, 
-            i.Fecha, i.Hora,
-                CASE 
-                    WHEN NOT idCuota IS NULL THEN RIGHT(CONVERT(VARCHAR(10), cu.FechaIni, 103), 7) + ' a ' + RIGHT(CONVERT(VARCHAR(10), cu.FechaFin, 103), 7) 
-                        ELSE i.Observacion END AS Observacion, vit.Total,
-                            CASE 
-                                WHEN NOT idCuota IS NULL THEN 1
-                                WHEN NOT idAltaColegio IS NULL THEN 4 
-                                WHEN NOT idHabilidad IS NULL THEN  5
-                                WHEN NOT idResidencia IS NULL THEN 6 
-                                WHEN NOT idProyecto IS NULL THEN 7 
-                                WHEN NOT idPeritaje IS NULL THEN 8 
-                                ELSE 100 END AS TipoIngreso, ISNULL(ch.Numero, '-') AS NmroCertHabilidad
-                FROM Ingreso AS i INNER JOIN vINGRESOTotal AS vit ON vit.idIngreso = i.idIngreso 
-                                LEFT OUTER JOIN Cuota AS cu ON cu.idIngreso = i.idIngreso 
-                                LEFT OUTER JOIN AltaColegio AS ac ON ac.idIngreso = i.idIngreso 
-                                LEFT OUTER JOIN CERTHabilidad AS ch ON ch.idIngreso = i.idIngreso 
-                                LEFT OUTER JOIN CERTResidencia AS cr ON cr.idIngreso = i.idIngreso 
-                                LEFT OUTER JOIN CERTProyecto AS cp ON cp.idIngreso = i.idIngreso 
-                                LEFT OUTER JOIN Peritaje AS pe ON pe.idIngreso = i.idIngreso
-                WHERE (i.Estado = 'C') AND idDNI = ?
-                ORDER BY i.Fecha DESC,i.Hora DESC
-                offset ? ROWS FETCH NEXT ? ROWS only");
+            $cmdHistorial = Database::getInstance()->getDb()->prepare("SELECT 
+            i.idIngreso, 
+            i.idDNI, 
+            CONCAT(i.Serie,' - ', i.NumRecibo) AS Recibo, 
+            i.Fecha, 
+            i.Hora,
+            CASE 
+                WHEN NOT idCuota IS NULL THEN RIGHT(CONVERT(VARCHAR(10), cu.FechaIni, 103), 7) + ' a ' + RIGHT(CONVERT(VARCHAR(10), cu.FechaFin, 103), 7) 
+                    ELSE i.Observacion END AS Observacion, vit.Total,
+                        CASE 
+                            WHEN NOT idCuota IS NULL THEN 1
+                            WHEN NOT idAltaColegio IS NULL THEN 4 
+                            WHEN NOT idHabilidad IS NULL THEN  5
+                            WHEN NOT idResidencia IS NULL THEN 6 
+                            WHEN NOT idProyecto IS NULL THEN 7 
+                            WHEN NOT idPeritaje IS NULL THEN 8 
+                            ELSE 100 END AS TipoIngreso, ISNULL(ch.Numero, '-') AS NmroCertHabilidad
+            FROM Ingreso AS i 
+            INNER JOIN vINGRESOTotal AS vit ON vit.idIngreso = i.idIngreso 
+            LEFT OUTER JOIN Cuota AS cu ON cu.idIngreso = i.idIngreso 
+            LEFT OUTER JOIN AltaColegio AS ac ON ac.idIngreso = i.idIngreso 
+            LEFT OUTER JOIN CERTHabilidad AS ch ON ch.idIngreso = i.idIngreso 
+            LEFT OUTER JOIN CERTResidencia AS cr ON cr.idIngreso = i.idIngreso 
+            LEFT OUTER JOIN CERTProyecto AS cp ON cp.idIngreso = i.idIngreso 
+            LEFT OUTER JOIN Peritaje AS pe ON pe.idIngreso = i.idIngreso
+            LEFT OUTER JOIN NotaCredito AS nc ON nc.idIngreso = i.idIngreso
+            WHERE i.Estado = 'C' AND nc.idNotaCredito IS NULL AND idDNI = ?
+            ORDER BY i.Fecha DESC,i.Hora DESC
+            offset ? ROWS FETCH NEXT ? ROWS only");
             $cmdHistorial->bindParam(1, $idPersona, PDO::PARAM_STR);
             $cmdHistorial->bindParam(2, $posicionPagina, PDO::PARAM_INT);
             $cmdHistorial->bindParam(3, $filasPorPagina, PDO::PARAM_INT);
@@ -501,15 +507,18 @@ class PersonaAdo
                 ));
             }
 
-            $cmdTotales = Database::getInstance()->getDb()->prepare("SELECT COUNT(i.idIngreso)
-                FROM Ingreso AS i INNER JOIN vINGRESOTotal AS vit ON vit.idIngreso = i.idIngreso 
-                                LEFT OUTER JOIN Cuota AS cu ON cu.idIngreso = i.idIngreso 
-                                LEFT OUTER JOIN AltaColegio AS ac ON ac.idIngreso = i.idIngreso 
-                                LEFT OUTER JOIN CERTHabilidad AS ch ON ch.idIngreso = i.idIngreso 
-                                LEFT OUTER JOIN CERTResidencia AS cr ON cr.idIngreso = i.idIngreso 
-                                LEFT OUTER JOIN CERTProyecto AS cp ON cp.idIngreso = i.idIngreso 
-                                LEFT OUTER JOIN Peritaje AS pe ON pe.idIngreso = i.idIngreso
-                WHERE (i.Estado = 'C') AND idDNI = ?");
+            $cmdTotales = Database::getInstance()->getDb()->prepare("SELECT 
+            COUNT(i.idIngreso)
+            FROM Ingreso AS i 
+            INNER JOIN vINGRESOTotal AS vit ON vit.idIngreso = i.idIngreso 
+            LEFT OUTER JOIN Cuota AS cu ON cu.idIngreso = i.idIngreso 
+            LEFT OUTER JOIN AltaColegio AS ac ON ac.idIngreso = i.idIngreso 
+            LEFT OUTER JOIN CERTHabilidad AS ch ON ch.idIngreso = i.idIngreso 
+            LEFT OUTER JOIN CERTResidencia AS cr ON cr.idIngreso = i.idIngreso 
+            LEFT OUTER JOIN CERTProyecto AS cp ON cp.idIngreso = i.idIngreso 
+            LEFT OUTER JOIN Peritaje AS pe ON pe.idIngreso = i.idIngreso
+            LEFT OUTER JOIN NotaCredito AS nc ON nc.idIngreso = i.idIngreso
+            WHERE i.Estado = 'C' AND nc.idNotaCredito IS NULL AND idDNI = ?");
             $cmdTotales->bindParam(1, $idPersona, PDO::PARAM_STR);
             $cmdTotales->execute();
             $resultTotal = $cmdTotales->fetchColumn();
