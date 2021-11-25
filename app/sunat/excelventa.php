@@ -26,13 +26,13 @@ if (!is_array($ventas)) {
     $documento
         ->getProperties()
         ->setCreator("Creado por SysSoftIntegra")
-        ->setTitle('Reporte de Ingresos')
+        ->setTitle('Reporte de comprobantes emitidos')
         ->setSubject('Reporte')
-        ->setDescription('Reporte general de ingresos de la fecha ' . $_GET["txtFechaInicial"] . ' al ' . $_GET["txtFechaFinal"])
-        ->setKeywords('Reporte de Ingresos')
-        ->setCategory('Ingresos');
+        ->setDescription('Reporte de comprobantes emitidos del ' . $_GET["txtFechaInicial"] . ' al ' . $_GET["txtFechaFinal"])
+        ->setKeywords('Comprobantes')
+        ->setCategory('Comprobantes');
 
-    $documento->getActiveSheet()->setTitle("Ingresos");
+    $documento->getActiveSheet()->setTitle("Comprobantes");
 
     if ($_GET["cbTipoPago"] == '1') {
 
@@ -57,7 +57,7 @@ if (!is_array($ventas)) {
         ));
         $documento->setActiveSheetIndex(0)->mergeCells('A1:M1');
         $documento->setActiveSheetIndex(0)
-            ->setCellValue("A1", "REPORTE GENERAL DE INGRESOS DE CIP-JUNIN");
+            ->setCellValue("A1", "REPORTE GENERAL DE COMPROBANTES DE CIP-JUNIN");
 
         $documento->getActiveSheet()->getStyle('K2:M2')->applyFromArray(array(
             'borders' => array(
@@ -112,18 +112,6 @@ if (!is_array($ventas)) {
 
         $cel = 4;
         foreach ($ventas as $key => $value) {
-            // $documento->getActiveSheet()->getStyle('A' . $cel . ':K' . $cel . '')->applyFromArray(array(
-            //     'fill' => array(
-            //         'type' => Fill::FILL_SOLID,
-            //         'color' => array('rgb' => 'E5E4E2')
-            //     ),
-            //     'font'  => array(
-            //         'bold'  =>  false
-            //     ),
-            //     'alignment' => array(
-            //         'horizontal' => Alignment::HORIZONTAL_LEFT
-            //     )
-            // ));            
 
             if ($value["Estado"] === "C") {
                 $documento->getActiveSheet()->getStyle('A' . $cel . ':K' . $cel . '')->applyFromArray(array(
@@ -248,7 +236,7 @@ if (!is_array($ventas)) {
         ));
         $documento->setActiveSheetIndex(0)->mergeCells('A1:O1');
         $documento->setActiveSheetIndex(0)
-            ->setCellValue("A1", "REPORTE GENERAL DE INGRESOS DE CIP-JUNIN");
+            ->setCellValue("A1", "REPORTE GENERAL DE COMPROBANTES DE CIP-JUNIN");
 
         $documento->getActiveSheet()->getStyle('M2:O2')->applyFromArray(array(
             'borders' => array(
@@ -305,18 +293,6 @@ if (!is_array($ventas)) {
 
         $cel = 4;
         foreach ($ventas as $key => $value) {
-            // $documento->getActiveSheet()->getStyle('A' . $cel . ':K' . $cel . '')->applyFromArray(array(
-            //     'fill' => array(
-            //         'type' => Fill::FILL_SOLID,
-            //         'color' => array('rgb' => 'E5E4E2')
-            //     ),
-            //     'font'  => array(
-            //         'bold'  =>  false
-            //     ),
-            //     'alignment' => array(
-            //         'horizontal' => Alignment::HORIZONTAL_LEFT
-            //     )
-            // ));            
 
             if ($value["Estado"] === "C") {
                 $documento->getActiveSheet()->getStyle('A' . $cel . ':M' . $cel . '')->applyFromArray(array(
@@ -444,9 +420,8 @@ if (!is_array($ventas)) {
     }
 
 
-
     if ($_GET["cbTipoDocumento"] == 'null') {
-        $nombreDelDocumento = "Reporte de Ingresos del " . $_GET["txtFechaInicial"] . " al " . $_GET["txtFechaFinal"] . ".xlsx";
+        $nombreDelDocumento = "Reporte de Comprobantes Emitidos del " . $_GET["txtFechaInicial"] . " al " . $_GET["txtFechaFinal"] . ".xlsx";
     } else {
         $nombreDelDocumento = "Reporte de " . $_GET["nombreComprobante"] . "(s) del " . $_GET["txtFechaInicial"] . " al " . $_GET["txtFechaFinal"] . ".xlsx";
     }

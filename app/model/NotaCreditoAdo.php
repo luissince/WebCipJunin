@@ -291,44 +291,79 @@ class NotaCreditoAdo
         try {
             Database::getInstance()->getDb()->beginTransaction();
 
-            $codigoSerieNumeracion = Database::getInstance()->getDb()->prepare("SELECT dbo.Fc_Serie_Numero_NotaCredito(?)");
-            $codigoSerieNumeracion->bindParam(1, $body["idTipoNotaCredito"], PDO::PARAM_STR);
-            $codigoSerieNumeracion->execute();
-            $serie_numeracion = explode("-", $codigoSerieNumeracion->fetchColumn());
+            $cmdValidate = Database::getInstance()->getDb()->prepare("SELECT * FROM Ingreso WHERE idIngreso = ? AND Estado = 'A' ");
+            $cmdValidate->bindParam(1, $body["idIngreso"], PDO::PARAM_INT);
+            $cmdValidate->execute();
+            if ($cmdValidate->fetch()) {
+                Database::getInstance()->getDb()->rollback();
+                return "anulado";
+            } else {
 
-            $cmdIngreso = Database::getInstance()->getDb()->prepare("INSERT INTO NotaCredito(
-                idIngreso,
-                idMotivoAnulacion,
-                TipoComprobante,
-                Serie,
-                NumRecibo,
-                Fecha,
-                Hora
-                )VALUES(?,?,?,?,?,GETDATE(),GETDATE())");
-            $cmdIngreso->bindParam(1, $body["idIngreso"], PDO::PARAM_STR);
-            $cmdIngreso->bindParam(2, $body["idMotivoNotaCredito"], PDO::PARAM_INT);
-            $cmdIngreso->bindParam(3, $body["idTipoNotaCredito"], PDO::PARAM_INT);
-            $cmdIngreso->bindParam(4, $serie_numeracion[0], PDO::PARAM_STR);
-            $cmdIngreso->bindParam(5, $serie_numeracion[1], PDO::PARAM_STR);
-            $cmdIngreso->execute();
+                $cmdValidate = Database::getInstance()->getDb()->prepare("SELECT * FROM NotaCredito WHERE idIngreso = ?");
+                $cmdValidate->bindParam(1, $body["idIngreso"], PDO::PARAM_INT);
+                $cmdValidate->execute();
+                if ($cmdValidate->fetch()) {
+                    Database::getInstance()->getDb()->rollback();
+                    return "nota";
+                } else {
 
-            $idNotaCredito = Database::getInstance()->getDb()->lastInsertId();
+                    $codigoSerieNumeracion = Database::getInstance()->getDb()->prepare("SELECT dbo.Fc_Serie_Numero_NotaCredito(?)");
+                    $codigoSerieNumeracion->bindParam(1, $body["idTipoNotaCredito"], PDO::PARAM_STR);
+                    $codigoSerieNumeracion->execute();
+                    $serie_numeracion = explode("-", $codigoSerieNumeracion->fetchColumn());
 
-            foreach ($body["detalleComprobante"] as $value) {
-                $cmdDetalle = Database::getInstance()->getDb()->prepare("INSERT INTO NotaCreditoDetalle(
-                    idNotaCredito,
-                    idConcepto,
-                    Cantidad,
-                    Monto
-                    )VALUES(?,?,?,?)");
-                $cmdDetalle->bindParam(1, $idNotaCredito, PDO::PARAM_INT);
-                $cmdDetalle->bindParam(2, $value['idConcepto'], PDO::PARAM_INT);
-                $cmdDetalle->bindParam(3, $value['Cantidad'], PDO::PARAM_INT);
-                $cmdDetalle->bindParam(4, $value['Total'], PDO::PARAM_INT);
-                $cmdDetalle->execute();
+                    $cmdIngreso = Database::getInstance()->getDb()->prepare("INSERT INTO NotaCredito(
+                    idIngreso,
+                    idMotivoAnulacion,
+                    TipoComprobante,
+                    Serie,
+                    NumRecibo,
+                    Fecha,
+                    Hora
+                    )VALUES(?,?,?,?,?,GETDATE(),GETDATE())");
+                    $cmdIngreso->bindParam(1, $body["idIngreso"], PDO::PARAM_STR);
+                    $cmdIngreso->bindParam(2, $body["idMotivoNotaCredito"], PDO::PARAM_INT);
+                    $cmdIngreso->bindParam(3, $body["idTipoNotaCredito"], PDO::PARAM_INT);
+                    $cmdIngreso->bindParam(4, $serie_numeracion[0], PDO::PARAM_STR);
+                    $cmdIngreso->bindParam(5, $serie_numeracion[1], PDO::PARAM_STR);
+                    $cmdIngreso->execute();
+
+                    $idNotaCredito = Database::getInstance()->getDb()->lastInsertId();
+
+                    foreach ($body["detalleComprobante"] as $value) {
+                        $cmdDetalle = Database::getInstance()->getDb()->prepare("INSERT INTO NotaCreditoDetalle(
+                        idNotaCredito,
+                        idConcepto,
+                        Cantidad,
+                        Monto
+                        )VALUES(?,?,?,?)");
+                        $cmdDetalle->bindParam(1, $idNotaCredito, PDO::PARAM_INT);
+                        $cmdDetalle->bindParam(2, $value['idConcepto'], PDO::PARAM_INT);
+                        $cmdDetalle->bindParam(3, $value['Cantidad'], PDO::PARAM_INT);
+                        $cmdDetalle->bindParam(4, $value['Total'], PDO::PARAM_INT);
+                        $cmdDetalle->execute();
+                    }
+
+                    $cmdCuotas = Database::getInstance()->getDb()->prepare("DELETE FROM Cuota WHERE idIngreso = ?");
+                    $cmdCuotas->bindParam(1, $body["idIngreso"], PDO::PARAM_INT);
+                    $cmdCuotas->execute();
+
+                    $cmdHabilidad = Database::getInstance()->getDb()->prepare("UPDATE CERTHabilidad SET Anulado = 1 WHERE idIngreso = ?");
+                    $cmdHabilidad->bindParam(1, $body["idIngreso"], PDO::PARAM_INT);
+                    $cmdHabilidad->execute();
+
+                    $cmdObra = Database::getInstance()->getDb()->prepare("UPDATE CERTResidencia SET Anulado = 1 WHERE idIngreso = ?");
+                    $cmdObra->bindParam(1, $body["idIngreso"], PDO::PARAM_INT);
+                    $cmdObra->execute();
+
+                    $cmdProyecto = Database::getInstance()->getDb()->prepare("UPDATE CERTProyecto SET Anulado = 1 WHERE idIngreso = ?");
+                    $cmdProyecto->bindParam(1, $body["idIngreso"], PDO::PARAM_INT);
+                    $cmdProyecto->execute();
+
+                    Database::getInstance()->getDb()->commit();
+                    return 'Insertado';
+                }
             }
-            Database::getInstance()->getDb()->commit();
-            return 'Insertado';
         } catch (Exception $ex) {
             Database::getInstance()->getDb()->rollback();
             return $ex->getMessage();

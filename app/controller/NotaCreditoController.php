@@ -50,10 +50,15 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
                 "estado" => 1,
                 "message" => "Se registró correctamente la nota de crédito..",
             ));
-        } else if ($result === "Duplicado") {
+        } else if ($result === "anulado") {
             print json_encode(array(
                 "estado" => 2,
-                "message" => "Ya existe una nota de credito para dicho documento",
+                "message" => "El ingreso se encuentra anulado, no se puede realizar la nota de crédito.",
+            ));
+        } else if ($result == "nota") {
+            print json_encode(array(
+                "estado" => 3,
+                "message" => "El ingreso ya tiene asociado una nota de crédito.",
             ));
         } else {
             print json_encode(array(

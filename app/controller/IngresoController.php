@@ -156,6 +156,11 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
                 "estado" => 1,
                 "message" => "Se anuló el ingreso correctamente."
             ));
+        } else if ($result == "fecha") {
+            echo json_encode(array(
+                "estado" => 4,
+                "message" => "No se puede eliminar por 2 días de retraso."
+            ));
         } elseif ($result == "nodata") {
             echo json_encode(array(
                 "estado" => 3,

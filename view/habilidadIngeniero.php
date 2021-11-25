@@ -386,12 +386,6 @@ if (!isset($_SESSION['IdUsuario'])) {
                                     for (let habilidad of arrayIngenieros) {
 
                                         let ultimopago = habilidad.UltimaCuota;
-                                        /* let ultimopago = (habilidad.FechaUltimaCuota).split('/').reverse().join('-');*/
-
-                                        // let btnEnviar = editView == 0 ? '<i class="fa fa-minus" style="font-size:20px;"></i>' :
-                                        //     '<button class="btn btn-warning btn-xs" onclick="actualizarHabilidad(\'' + habilidad.Cip + '\',\'' + habilidad.Apellidos + '\',\'' + habilidad.Nombres + '\',\'' + habilidad.CodigoCondicion + '\',\'' + habilidad.Colegiatura + '\',\'' + ultimopago + '\',\'' + habilidad.Especialidad + '\',\'' + habilidad.Capitulo + '\')">' +
-                                        //     '<i class="fa  fa-history" style="font-size:25px;"></i> ' +
-                                        //     '</button>';
 
                                         tbTable.append('<tr>' +
                                             '<td class="text-center text-primary">' + habilidad.Id + '</td>' +
@@ -428,59 +422,6 @@ if (!isset($_SESSION['IdUsuario'])) {
                         }
                     });
                 }
-
-                // function EnviarHabilidad(cip, ultimopago) {
-                //     $.ajax({
-                //         url: "http://cip-junin.org.pe/sistema/UpdateLastPago.php",
-                //         method: "POST",
-                //         dataType: "json",
-                //         data: {
-                //             "cip": cip,
-                //             "UltimoPago": ultimopago
-                //         },
-                //         beforeSend: function() {
-                //             console.log("iniciando...")
-                //         },
-                //         success: function(result) {
-                //             console.log(result);
-                //         },
-                //         error: function(error) {
-                //             console.log(error)
-                //         }
-                //     });
-                // }
-
-                // function actualizarHabilidad(cip, apellidos, nombres, condicion, colegiatura, ultimopago, especialidad, capitulo) {
-                //     $.ajax({
-                //         url: "http://cip-junin.org.pe/sistema/UpdateLastPago.php",
-                //         method: "POST",
-                //         dataType: "json",
-                //         data: {
-                //             "cip": cip,
-                //             "apellidos": apellidos,
-                //             "nombres": nombres,
-                //             "condicion": condicion,
-                //             "colegiatura": colegiatura,
-                //             "ultimopago": ultimopago,
-                //             "sede": "JUNIN",
-                //             "especialidad": especialidad,
-                //             "capitulo": capitulo
-                //         },
-                //         beforeSend: function() {
-                //             tools.ModalAlertInfo("Habilidad", "Procesando petición...");
-                //         },
-                //         success: function(result) {
-                //             if (result.estado == 1) {
-                //                 tools.ModalAlertSuccess("Habilidad", result.mensaje);
-                //             } else {
-                //                 tools.ModalAlertWarning("Habilidad", result.mensaje);
-                //             }
-                //         },
-                //         error: function(error) {
-                //             tools.ModalAlertError("Habilidad", "Se produjo un error en actualizar la habilidad. Tiempo de conexión agotada, intente nuevamente.");
-                //         }
-                //     });
-                // }
 
                 function loadCapitulos() {
                     $.ajax({

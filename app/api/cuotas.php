@@ -40,11 +40,10 @@ class Cuotas
             $resultInformacion = $cmdValidate->fetch(PDO::FETCH_ASSOC);
 
             $cmdCuota = Database::getInstance()->getDb()->prepare("SELECT 
-            cast(ISNULL(ul.FechaUltimaCuota, c.FechaColegiado)as date) as UltimoPago     
-            from Persona as p inner join Colegiatura as c
-            on p.idDNI = c.idDNI and c.Principal = 1
-            left outer join ULTIMACuota as ul
-            on p.idDNI = ul.idDNI
+            cast(ISNULL(ul.FechaUltimaCuota, c.FechaColegiado) AS DATE) AS UltimoPago     
+            FROM Persona AS p 
+            INNER JOIN Colegiatura AS c ON p.idDNI = c.idDNI AND c.Principal = 1
+            LEFT OUTER JOIN ULTIMACuota AS ul ON p.idDNI = ul.idDNI
             WHERE p.idDNI = ?");
             $cmdCuota->bindParam(1, $idDni, PDO::PARAM_STR);
             $cmdCuota->execute();
@@ -82,9 +81,10 @@ class Cuotas
                 }
 
 
-                $cmdAltaColegiado = Database::getInstance()->getDb()->prepare("SELECT * FROM Persona AS  p
+                $cmdAltaColegiado = Database::getInstance()->getDb()->prepare("SELECT * FROM 
+                Persona AS  p
                 INNER JOIN Ingreso AS i ON i.idDNI = p.idDNI
-                INNER JOIN Cuota as c on c.idIngreso = i.idIngreso
+                INNER JOIN Cuota as c ON c.idIngreso = i.idIngreso
                 WHERE i.idDNI = ? ");
                 $cmdAltaColegiado->bindParam(1, $idDni, PDO::PARAM_INT);
                 $cmdAltaColegiado->execute();
@@ -95,9 +95,13 @@ class Cuotas
                             while ($inicio <= $fechaactual) {
                                 $inicioFormat = $inicio->format('Y') . '-' . $inicio->format('m') . '-' . $inicio->format('d');
 
-                                $cmdConceptos = Database::getInstance()->getDb()->prepare("SELECT co.idConcepto,co.Concepto,co.Categoria,co.Precio       
-                                FROM Concepto as co
-                                WHERE  Categoria = ? and ? between Inicio and Fin");
+                                $cmdConceptos = Database::getInstance()->getDb()->prepare("SELECT 
+                                co.idConcepto,
+                                co.Concepto,
+                                co.Categoria,
+                                co.Precio       
+                                FROM Concepto AS co
+                                WHERE Categoria = ? AND ? BETWEEN Inicio AND Fin");
                                 $cmdConceptos->bindParam(1, $condicion, PDO::PARAM_INT);
                                 $cmdConceptos->bindParam(2, $inicioFormat, PDO::PARAM_STR);
                                 $cmdConceptos->execute();
@@ -132,9 +136,13 @@ class Cuotas
                             while ($inicio <= $fechaactual) {
                                 $inicioFormat = $inicio->format('Y') . '-' . $inicio->format('m') . '-' . $inicio->format('d');
 
-                                $cmdConceptos = Database::getInstance()->getDb()->prepare("SELECT co.idConcepto,co.Concepto,co.Categoria,co.Precio       
-                                FROM Concepto as co
-                                WHERE Categoria = ? and ? between Inicio and Fin");
+                                $cmdConceptos = Database::getInstance()->getDb()->prepare("SELECT 
+                                co.idConcepto,
+                                co.Concepto,
+                                co.Categoria,
+                                co.Precio       
+                                FROM Concepto AS co
+                                WHERE Categoria = ? AND ? BETWEEN Inicio AND Fin");
                                 $cmdConceptos->bindParam(1, $condicion, PDO::PARAM_INT);
                                 $cmdConceptos->bindParam(2, $inicioFormat, PDO::PARAM_STR);
                                 $cmdConceptos->execute();

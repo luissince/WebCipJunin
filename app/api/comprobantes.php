@@ -21,7 +21,8 @@ class Cuotas
     {
         try {
             $array = array();
-            $comandoConcepto = Database::getInstance()->getDb()->prepare("SELECT * FROM TipoComprobante 
+            $comandoConcepto = Database::getInstance()->getDb()->prepare("SELECT * FROM 
+            TipoComprobante 
             WHERE Estado = 1 AND ComprobanteAfiliado = 2 AND (Destino = 1 OR Destino = 3)");
             $comandoConcepto->execute();
 

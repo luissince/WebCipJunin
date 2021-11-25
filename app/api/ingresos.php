@@ -41,8 +41,21 @@ class Ingresos
             INNER JOIN Detalle AS d ON d.idIngreso = i.idIngreso
             WHERE
             p.idDNI = ?
-            GROUP BY i.idIngreso,i.Fecha,i.Hora,i.Serie,i.NumRecibo,i.Estado,
-            p.CIP,p.idDNI,p.Apellidos,p.Nombres,e.NumeroRuc,e.Nombre,e.IdEmpresa,tc.Nombre
+            GROUP BY 
+            i.idIngreso,
+            i.Fecha,
+            i.Hora,
+            i.Serie,
+            i.NumRecibo,
+            i.Estado,
+            p.CIP,
+            p.idDNI,
+            p.Apellidos,
+            p.Nombres,
+            e.NumeroRuc,
+            e.Nombre,
+            e.IdEmpresa,
+            tc.Nombre
             ORDER BY i.Fecha DESC,i.Hora DESC");
             $cmdValidate->bindParam(1, $idDni, PDO::PARAM_STR);
             $cmdValidate->execute();

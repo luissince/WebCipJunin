@@ -238,6 +238,9 @@ if (!is_array($detalleventa)) {
         if ($soapResult->isSuccess()) {
             if ($soapResult->isAccepted()) {
                 IngresosAdo::CambiarEstadoSunatResumen($idIngreso, $soapResult->getCode(),  $soapResult->getDescription(), $correlativo, $currentDate->format('Y-m-d'));
+                $protocol = (isset($_SERVER['SERVER_PROTOCOL']) ? $_SERVER['SERVER_PROTOCOL'] : 'HTTP/1.0');
+                header($protocol . ' ' . 200 . ' ' . "OK");
+
                 echo json_encode(array(
                     "state" => $soapResult->isSuccess(),
                     "accept" => $soapResult->isAccepted(),
@@ -246,6 +249,9 @@ if (!is_array($detalleventa)) {
                 ));
             } else {
                 IngresosAdo::CambiarEstadoSunatResumen($idIngreso, $soapResult->getCode(),  $soapResult->getDescription(), $correlativo, $currentDate->format('Y-m-d'));
+                $protocol = (isset($_SERVER['SERVER_PROTOCOL']) ? $_SERVER['SERVER_PROTOCOL'] : 'HTTP/1.0');
+                header($protocol . ' ' . 200 . ' ' . "OK");
+
                 echo json_encode(array(
                     "state" => $soapResult->isSuccess(),
                     "accept" => $soapResult->isAccepted(),
@@ -255,6 +261,9 @@ if (!is_array($detalleventa)) {
             }
         } else {
             IngresosAdo::CambiarEstadoSunatResumen($idIngreso, $soapResult->getCode(),  $soapResult->getDescription(), $correlativo, $currentDate->format('Y-m-d'));
+            $protocol = (isset($_SERVER['SERVER_PROTOCOL']) ? $_SERVER['SERVER_PROTOCOL'] : 'HTTP/1.0');
+            header($protocol . ' ' . 200 . ' ' . "OK");
+
             echo json_encode(array(
                 "state" => false,
                 "code" => $soapResult->getCode(),
@@ -263,10 +272,9 @@ if (!is_array($detalleventa)) {
         }
     } else {
         IngresosAdo::CambiarEstadoSunatResumen($idIngreso, $soapResult->getCode(),  $soapResult->getDescription(), $correlativo, $currentDate->format('Y-m-d'));
-        echo json_encode(array(
-            "state" => false,
-            "code" => $soapResult->getCode(),
-            "description" => $soapResult->getDescription()
-        ));
+        $protocol = (isset($_SERVER['SERVER_PROTOCOL']) ? $_SERVER['SERVER_PROTOCOL'] : 'HTTP/1.0');
+        header($protocol . ' ' . 500 . ' ' . "Internal Server Error");
+
+        echo json_encode($soapResult->getDescription());
     }
 }

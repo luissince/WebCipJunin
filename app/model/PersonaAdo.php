@@ -298,7 +298,6 @@ class PersonaAdo
     public static function getIdEstado($cip)
     {
         try {
-            $array = array();
             //trae informacion del usuario (por su dni)
             $comandoPersona = Database::getInstance()->getDb()->prepare("SELECT 
             CASE
@@ -464,16 +463,16 @@ class PersonaAdo
             i.Fecha, 
             i.Hora,
             CASE 
-                WHEN NOT idCuota IS NULL THEN RIGHT(CONVERT(VARCHAR(10), cu.FechaIni, 103), 7) + ' a ' + RIGHT(CONVERT(VARCHAR(10), cu.FechaFin, 103), 7) 
-                    ELSE i.Observacion END AS Observacion, vit.Total,
-                        CASE 
-                            WHEN NOT idCuota IS NULL THEN 1
-                            WHEN NOT idAltaColegio IS NULL THEN 4 
-                            WHEN NOT idHabilidad IS NULL THEN  5
-                            WHEN NOT idResidencia IS NULL THEN 6 
-                            WHEN NOT idProyecto IS NULL THEN 7 
-                            WHEN NOT idPeritaje IS NULL THEN 8 
-                            ELSE 100 END AS TipoIngreso, ISNULL(ch.Numero, '-') AS NmroCertHabilidad
+            WHEN NOT idCuota IS NULL THEN RIGHT(CONVERT(VARCHAR(10), cu.FechaIni, 103), 7) + ' a ' + RIGHT(CONVERT(VARCHAR(10), cu.FechaFin, 103), 7) 
+            ELSE i.Observacion END AS Observacion, vit.Total,
+            CASE 
+            WHEN NOT idCuota IS NULL THEN 1
+            WHEN NOT idAltaColegio IS NULL THEN 4 
+            WHEN NOT idHabilidad IS NULL THEN  5
+            WHEN NOT idResidencia IS NULL THEN 6 
+            WHEN NOT idProyecto IS NULL THEN 7 
+            WHEN NOT idPeritaje IS NULL THEN 8 
+            ELSE 100 END AS TipoIngreso, ISNULL(ch.Numero, '-') AS NmroCertHabilidad
             FROM Ingreso AS i 
             INNER JOIN vINGRESOTotal AS vit ON vit.idIngreso = i.idIngreso 
             LEFT OUTER JOIN Cuota AS cu ON cu.idIngreso = i.idIngreso 
@@ -2015,13 +2014,69 @@ class PersonaAdo
 
         try {
             $cmdOrdinario = Database::getInstance()->getDb()->prepare("SELECT count(1) FROM Persona WHERE Condicion='O'");
+
             $cmdTranseunte = Database::getInstance()->getDb()->prepare("SELECT count(1) FROM Persona WHERE Condicion='T'");
+
             $cmdFallecido = Database::getInstance()->getDb()->prepare("SELECT count(1) FROM Persona WHERE Condicion='F'");
+
             $cmdRetirado = Database::getInstance()->getDb()->prepare("SELECT count(1) FROM Persona WHERE Condicion='R'");
+
             $cmdVitalicio = Database::getInstance()->getDb()->prepare("SELECT count(1) FROM Persona WHERE Condicion='V'");
+
             $cmdTotalPersonas = Database::getInstance()->getDb()->prepare('SELECT count(1) FROM Persona');
-            $cmdTotalHabilitados = Database::getInstance()->getDb()->prepare('SELECT  count(1) FROM ULTIMACuota WHERE DATEDIFF(M,GETDATE(), FechaUltimaCuota) >= 0');
-            $cmdTotalInhabilitados = Database::getInstance()->getDb()->prepare('SELECT  count(1) FROM ULTIMACuota WHERE DATEDIFF(M,GETDATE(), FechaUltimaCuota) < 0');
+
+            $cmdTotalHabilitados = Database::getInstance()->getDb()->prepare("SELECT 
+            COUNT(1)
+            FROM Persona AS p
+            INNER JOIN Colegiatura AS c ON c.idDNI = p.idDNI AND c.Principal = 1
+            INNER JOIN Especialidad AS e on e.idEspecialidad = c.idEspecialidad
+            INNER JOIN Capitulo as ca on ca.idCapitulo = e.idCapitulo
+            INNER JOIN ULTIMACuota AS ul ON  ul.idDNI = p.idDNI
+            WHERE
+			CAST (DATEDIFF(M,DATEADD(MONTH,CASE p.Condicion WHEN 'O' THEN 3 WHEN 'V' THEN 9 ELSE 0 END,ISNULL(ul.FechaUltimaCuota, c.FechaColegiado)) , GETDATE()) AS INT) <= 0
+            ");
+
+            $cmdTotalInhabilitados = Database::getInstance()->getDb()->prepare("SELECT 
+            COUNT(1)
+            FROM Persona AS p
+            INNER JOIN Colegiatura AS c ON c.idDNI = p.idDNI AND c.Principal = 1
+            INNER JOIN Especialidad AS e on e.idEspecialidad = c.idEspecialidad
+            INNER JOIN Capitulo as ca on ca.idCapitulo = e.idCapitulo
+            INNER JOIN ULTIMACuota AS ul ON  ul.idDNI = p.idDNI
+            WHERE
+			CAST (DATEDIFF(M,DATEADD(MONTH,CASE p.Condicion WHEN 'O' THEN 3 WHEN 'V' THEN 9 ELSE 0 END,ISNULL(ul.FechaUltimaCuota, c.FechaColegiado)) , GETDATE()) AS INT) > 0");
+
+            $cmdColegiados = Database::getInstance()->getDb()->prepare("SELECT count(1) 
+            FROM Persona AS p
+            LEFT JOIN Colegiatura AS c ON c.idDNI = p.idDNI AND c.Principal = 1 
+			WHERE 
+			c.idColegiado IS NOT NULL");
+
+            $cmdSinColegiatura = Database::getInstance()->getDb()->prepare("SELECT COUNT(1)  
+            FROM Persona AS p
+            LEFT JOIN Colegiatura AS c ON c.idDNI = p.idDNI AND c.Principal = 1 
+			WHERE 
+			c.idColegiado IS NULL");
+
+            $cmdConCuotas = Database::getInstance()->getDb()->prepare("SELECT 
+            COUNT(1)
+            FROM Persona AS p
+            INNER JOIN Colegiatura AS c ON c.idDNI = p.idDNI AND c.Principal = 1
+            INNER JOIN Especialidad AS e ON e.idEspecialidad = c.idEspecialidad
+            INNER JOIN Capitulo AS ca ON ca.idCapitulo = e.idCapitulo
+            LEFT JOIN ULTIMACuota AS ul ON  ul.idDNI = p.idDNI
+            WHERE
+			ul.FechaUltimaCuota IS NOT NULL");
+
+            $cmdSinCuotas = Database::getInstance()->getDb()->prepare("SELECT 
+            COUNT(1)
+            FROM Persona AS p
+            INNER JOIN Colegiatura AS c ON c.idDNI = p.idDNI AND c.Principal = 1
+            INNER JOIN Especialidad AS e ON e.idEspecialidad = c.idEspecialidad
+            INNER JOIN Capitulo AS ca ON ca.idCapitulo = e.idCapitulo
+            LEFT JOIN ULTIMACuota AS ul ON  ul.idDNI = p.idDNI
+            WHERE
+            ul.FechaUltimaCuota IS NULL");
 
             $cmdOrdinario->execute();
             $cmdTranseunte->execute();
@@ -2029,6 +2084,10 @@ class PersonaAdo
             $cmdRetirado->execute();
             $cmdVitalicio->execute();
             $cmdTotalPersonas->execute();
+            $cmdColegiados->execute();
+            $cmdSinColegiatura->execute();
+            $cmdConCuotas->execute();
+            $cmdSinCuotas->execute();
             $cmdTotalHabilitados->execute();
             $cmdTotalInhabilitados->execute();
 
@@ -2039,8 +2098,13 @@ class PersonaAdo
                 'Retirado' => $cmdRetirado->fetchColumn(),
                 'Vitalicio' => $cmdVitalicio->fetchColumn(),
                 'Personas' => $cmdTotalPersonas->fetchColumn(),
+                'Colegiados' => $cmdColegiados->fetchColumn(),
+                'SinColegiatura' => $cmdSinColegiatura->fetchColumn(),
+                'ConCuotas' => $cmdConCuotas->fetchColumn(),
+                'SinCuotas' => $cmdSinCuotas->fetchColumn(),
                 'Habilitados' => $cmdTotalHabilitados->fetchColumn(),
-                'Inhabilitados' => $cmdTotalInhabilitados->fetchColumn()
+                'Inbilitados' => $cmdTotalInhabilitados->fetchColumn(),
+
             ];
 
             return $resultCondicion;

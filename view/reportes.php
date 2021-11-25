@@ -739,7 +739,7 @@ if (!isset($_SESSION['IdUsuario'])) {
                         method: "GET",
                         data: {
                             "type": "comprobante",
-                            "destino": "1"
+                            "destino": "all"
                         },
                         beforeSend: function() {
                             $("#cbTipodeDocumento").empty();

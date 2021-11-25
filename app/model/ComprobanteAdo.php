@@ -18,6 +18,10 @@ class ComprobanteAdo
                 $query = "SELECT * 
                 FROM TipoComprobante 
                 WHERE Estado = 1 AND ComprobanteAfiliado = 2 AND (Destino = 1 OR Destino = 2)";
+            } else if ($destino == "all") {
+                $query = "SELECT * 
+                FROM TipoComprobante 
+                WHERE Estado = 1";
             } else {
                 $query = "SELECT * 
                 FROM TipoComprobante 
@@ -262,7 +266,7 @@ class ComprobanteAdo
                         Database::getInstance()->getDb()->rollback();
                         return "nota";
                     } else {
-                        $comandSelect = Database::getInstance()->getDb()->prepare("DELETE FROM Concepto WHERE idConcepto = ?");
+                        $comandSelect = Database::getInstance()->getDb()->prepare("DELETE FROM TipoComprobante WHERE IdTipoComprobante = ?");
                         $comandSelect->bindParam(1, $idComprobante, PDO::PARAM_INT);
                         $comandSelect->execute();
                         Database::getInstance()->getDb()->commit();

@@ -244,7 +244,7 @@ if (!isset($_SESSION['IdUsuario'])) {
                 let opcion = 0;
                 let totalPaginacion = 0;
                 let paginacion = 0;
-                let filasPorPagina = 10;
+                let filasPorPagina = 20;
                 let tbTable = $("#tbTable");
 
                 let arrayIngresos = [];
@@ -276,19 +276,7 @@ if (!isset($_SESSION['IdUsuario'])) {
                     $("#btnEnvioMasivo").click(function() {
                         tools.ModalDialog("Ingreso", "Está seguro de continuar con el envío?", function(value) {
                             if (value == true) {
-                                for (let ingresos of arrayIngresos) {
-                                    if (ingresos.estado == "C") {
-                                        if (ingresos.xmlsunat !== "0") {
-                                            firmaMasivaXml(ingresos.idIngreso);
-                                        }
-                                    } else {
-                                        if (ingresos.serie.toUpperCase().includes("B")) {
-                                            resumenDiarioMasivoXml(ingresos.idIngreso);
-                                        } else {
-                                            comunicacionBajaMasivoXml(ingresos.idIngreso);
-                                        }
-                                    }
-                                }
+                                envioMasivo();
                             }
                         });
                     });
@@ -297,19 +285,7 @@ if (!isset($_SESSION['IdUsuario'])) {
                         if (event.keyCode === 13) {
                             tools.ModalDialog("Ingreso", "Está seguro de continuar con el envío?", function(value) {
                                 if (value == true) {
-                                    for (let ingresos of arrayIngresos) {
-                                        if (ingresos.estado == "C") {
-                                            if (ingresos.xmlsunat !== "0") {
-                                                firmaMasivaXml(ingresos.idIngreso);
-                                            }
-                                        } else {
-                                            if (ingresos.serie.toUpperCase().includes("B")) {
-                                                resumenDiarioMasivoXml(ingresos.idIngreso);
-                                            } else {
-                                                comunicacionBajaMasivoXml(ingresos.idIngreso);
-                                            }
-                                        }
-                                    }
+                                    envioMasivo();
                                 }
                             });
                         }
@@ -503,7 +479,7 @@ if (!isset($_SESSION['IdUsuario'])) {
                                                 '<button class="btn btn-default btn-xs" onclick="facturarXml(\'' + ingresos.idIngreso + '\',\'' + ingresos.estado + '\')"><img src="./images/unable.svg" width="26"/></button>');
 
                                         let observacionsunat =
-                                            (ingresos.xmldescripcion === "" ? "Por Generar Xml y Enviar" : ingresos.xmldescripcion);
+                                            (ingresos.xmldescripcion === "" ? "Por Generar Xml y Enviar" : limitar_cadena(ingresos.xmldescripcion, 90, '...'));
 
                                         tbTable.append('<tr>' +
                                             '<td class="text-center text-primary">' + ingresos.id + '</td>' +
@@ -547,6 +523,13 @@ if (!isset($_SESSION['IdUsuario'])) {
                             state = false;
                         }
                     });
+                }
+
+                function limitar_cadena(cadena, limite, sufijo) {
+                    if (cadena.length > limite) {
+                        return cadena.substr(0, limite) + sufijo;
+                    }
+                    return cadena;
                 }
 
                 function facturarXml(idIngreso, estado) {
@@ -596,7 +579,7 @@ if (!isset($_SESSION['IdUsuario'])) {
                                 beforeSend: function() {
                                     tools.ModalAlertInfo("Ingreso", "Firmando xml y enviando a la sunat.");
                                 },
-                                success: function(result) {                                    
+                                success: function(result) {
                                     let object = result;
                                     if (object.state === true) {
                                         if (object.accept === true) {
@@ -651,88 +634,76 @@ if (!isset($_SESSION['IdUsuario'])) {
                     });
                 }
 
+                async function envioMasivo() {
+                    tools.ModalAlertInfo("Ingreso", "Firmando xml y enviando a la sunat, espere por favor...");
+                    for (let ingresos of arrayIngresos) {
+                        if (ingresos.estado == "C") {
+                            if (ingresos.xmlsunat !== "0") {
+                                await firmaMasivaXml(ingresos.idIngreso);
+                            }
+                        } else {
+                            if (ingresos.serie.toUpperCase().includes("B")) {
+                                await resumenDiarioMasivoXml(ingresos.idIngreso);
+                            } else {
+                                await comunicacionBajaMasivoXml(ingresos.idIngreso);
+                            }
+                        }
+                    }
+                    tools.ModalAlertSuccess("Ingreso", "Se completo el envío de comprobantes, revise para verificar el envió.");
+                    onEventPaginacion();
+                }
 
                 function firmaMasivaXml(idIngreso) {
-                    $.ajax({
-                        url: "../app/examples/boleta.php",
-                        method: "GET",
-                        data: {
-                            "idIngreso": idIngreso
-                        },
-                        beforeSend: function() {
-                            tools.ModalAlertInfo("Ingreso", "Firmando xml y enviando a la sunat.");
-                        },
-                        success: function(result) {
-                            let object = result;
-                            if (object.state === true) {
-                                if (object.accept === true) {
-                                    tools.ModalAlertSuccess("Ingreso", "Resultado: Código " + object.code + " " + object.description);
-                                } else {
-                                    tools.ModalAlertWarning("Ingreso", "Resultado: Código " + object.code + " " + object.description);
-                                }
-                            } else {
-                                tools.ModalAlertWarning("Ingreso", "Resultado: Código " + object.code + " " + object.description);
+                    return new Promise(function(resolve, reject) {
+                        $.ajax({
+                            url: "../app/examples/boleta.php",
+                            method: "GET",
+                            data: {
+                                "idIngreso": idIngreso
+                            },
+                            success: function(result) {
+                                resolve(result);
+                            },
+                            error: function(error) {
+                                reject("Error en el momento de firmar el xml: " + error.responseText);
                             }
-                        },
-                        error: function(error) {
-                            tools.ModalAlertError("Ingreso", "Error en el momento de firmar el xml: " + error.responseText);
-                        }
+                        });
                     });
                 }
 
                 function resumenDiarioMasivoXml(idIngreso) {
-                    $.ajax({
-                        url: "../app/examples/resumen.php",
-                        method: "GET",
-                        data: {
-                            "idIngreso": idIngreso
-                        },
-                        beforeSend: function() {
-                            tools.ModalAlertInfo("Ingreso", "Firmando xml y enviando a la sunat.");
-                        },
-                        success: function(result) {
-                            let object = result;
-                            if (object.state === true) {
-                                if (object.accept === true) {
-                                    tools.ModalAlertSuccess("Ingreso", "Resultado: Código " + object.code + " " + object.description);
-                                } else {
-                                    tools.ModalAlertWarning("Ingreso", "Resultado: Código " + object.code + " " + object.description);
-                                }
-                            } else {
-                                tools.ModalAlertWarning("Ingreso", "Resultado: Código " + object.code + " " + object.description);
+                    return new Promise(function(resolve, reject) {
+                        $.ajax({
+                            url: "../app/examples/resumen.php",
+                            method: "GET",
+                            data: {
+                                "idIngreso": idIngreso
+                            },
+                            success: function(result) {
+                                resolve(result);
+                            },
+                            error: function(error) {
+                                reject("Error en el momento de firmar el xml: " + error.responseText);
                             }
-                        },
-                        error: function(error) {
-                            tools.ModalAlertError("Ingreso", "Error en el momento de firmar el xml: " + error.responseText);
-                        }
+                        });
                     });
                 }
 
                 function comunicacionBajaMasivoXml(idIngreso) {
-                    $.ajax({
-                        url: "../app/examples/comunicacionbaja.php",
-                        method: "GET",
-                        data: {
-                            "idIngreso": idIngreso
-                        },
-                        beforeSend: function() {
-                            tools.ModalAlertInfo("Ingreso", "Firmando xml y enviando a la sunat.");
-                        },
-                        success: function(result) {
-                            let object = result;
-                            if (object.state === true) {
-                                if (object.accept === true) {
-                                    tools.ModalAlertSuccess("Ingreso", "Resultado: Código " + object.code + " " + object.description);
-                                } else {
-                                    tools.ModalAlertWarning("Ingreso", "Resultado: Código " + object.code + " " + object.description);
-                                }
-                            } else {
-                                tools.ModalAlertWarning("Ingreso", "Resultado: Código " + object.code + " " + object.description);
+                    return new Promise(function(resolve, reject) {
+                        $.ajax({
+                            url: "../app/examples/comunicacionbaja.php",
+                            method: "GET",
+                            data: {
+                                "idIngreso": idIngreso
+                            },
+                            success: function(result) {
+                                resolve(result);
+                            },
+                            error: function(error) {
+                                reject("Error en el momento de firmar el xml: " + error.responseText);
                             }
-                        },
-                        error: function(error) {
-                            tools.ModalAlertError("Ingreso", "Error en el momento de firmar el xml: " + error.responseText);
-                        }
+                        });
                     });
                 }
 

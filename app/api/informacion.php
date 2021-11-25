@@ -31,10 +31,10 @@ class Informacion
             e.Especialidad,
             ca.Capitulo,
             CASE p.Condicion WHEN 'V' THEN 'VITALICIO' WHEN 'R' THEN 'RETIRADO' WHEN 'F' THEN 'FALLECIDO' WHEN 'T' THEN 'TRANSEUNTE' ELSE 'ORDINARIO' END AS Condicion,
-            CAST(ISNULL(uc.FechaUltimaCuota,C.FechaColegiado) AS DATE) AS FechaUltimaCuota,
-            CAST(DATEADD(MONTH,CASE p.Condicion WHEN 'O' THEN 3 WHEN 'V' THEN 9 ELSE 0 END,ISNULL(uc.FechaUltimaCuota,C.FechaColegiado)) AS DATE) AS HabilitadoHasta,
+            CAST(ISNULL(uc.FechaUltimaCuota,c.FechaColegiado) AS DATE) AS FechaUltimaCuota,
+            CAST(DATEADD(MONTH,CASE p.Condicion WHEN 'O' THEN 3 WHEN 'V' THEN 9 ELSE 0 END,ISNULL(uc.FechaUltimaCuota,c.FechaColegiado)) AS DATE) AS HabilitadoHasta,
             CASE
-            WHEN CAST (DATEDIFF(M,DATEADD(MONTH,CASE p.Condicion WHEN 'O' THEN 3 WHEN 'V' THEN 9 ELSE 0 END,ISNULL(uc.FechaUltimaCuota, C.FechaColegiado)) , GETDATE()) AS INT) <=0 THEN 1
+            WHEN CAST (DATEDIFF(M,DATEADD(MONTH,CASE p.Condicion WHEN 'O' THEN 3 WHEN 'V' THEN 9 ELSE 0 END,ISNULL(uc.FechaUltimaCuota, c.FechaColegiado)) , GETDATE()) AS INT) <=0 THEN 1
             ELSE 0 END AS Habilidad,
             DATEDIFF(YEAR,GETDATE(),DATEADD(MONTH,c.MesAumento,DATEADD(YEAR,30,c.FechaColegiado))) CumplirTreinta
             FROM Persona AS p
@@ -47,7 +47,8 @@ class Informacion
             $cmdValidate->execute();
             $resultInformacion = $cmdValidate->fetch(PDO::FETCH_ASSOC);
 
-            $web = Database::getInstance()->getDb()->prepare("SELECT TOP 1 w.Direccion FROM Persona AS p
+            $web = Database::getInstance()->getDb()->prepare("SELECT TOP 1 w.Direccion 
+            FROM Persona AS p
             INNER JOIN Web AS w
             ON p.idDNI = w.idDNI
             WHERE p.idDNI = ?");
@@ -60,11 +61,10 @@ class Informacion
             }
 
             $cmdCuota = Database::getInstance()->getDb()->prepare("SELECT 
-            cast(ISNULL(ul.FechaUltimaCuota, c.FechaColegiado)as date) as UltimoPago     
-            from Persona as p inner join Colegiatura as c
-            on p.idDNI = c.idDNI and c.Principal = 1
-            left outer join ULTIMACuota as ul
-            on p.idDNI = ul.idDNI
+            cast(ISNULL(ul.FechaUltimaCuota, c.FechaColegiado) AS DATE) AS UltimoPago     
+            FROM Persona AS p 
+            INNER JOIN Colegiatura AS c ON p.idDNI = c.idDNI AND c.Principal = 1
+            LEFT OUTER JOIN ULTIMACuota AS ul ON p.idDNI = ul.idDNI
             WHERE p.idDNI = ?");
             $cmdCuota->bindParam(1, $idDni, PDO::PARAM_STR);
             $cmdCuota->execute();
@@ -116,9 +116,13 @@ class Informacion
                             while ($inicio <= $fechaactual) {
                                 $inicioFormat = $inicio->format('Y') . '-' . $inicio->format('m') . '-' . $inicio->format('d');
 
-                                $cmdConceptos = Database::getInstance()->getDb()->prepare("SELECT co.idConcepto,co.Concepto,co.Categoria,co.Precio       
+                                $cmdConceptos = Database::getInstance()->getDb()->prepare("SELECT 
+                                co.idConcepto,
+                                co.Concepto,
+                                co.Categoria,
+                                co.Precio       
                                 FROM Concepto as co
-                                WHERE  Categoria = ? and ? between Inicio and Fin");
+                                WHERE Categoria = ? and ? between Inicio and Fin");
                                 $cmdConceptos->bindParam(1, $condicion, PDO::PARAM_INT);
                                 $cmdConceptos->bindParam(2, $inicioFormat, PDO::PARAM_STR);
                                 $cmdConceptos->execute();
@@ -138,7 +142,11 @@ class Informacion
                             while ($inicio <= $fechaactual) {
                                 $inicioFormat = $inicio->format('Y') . '-' . $inicio->format('m') . '-' . $inicio->format('d');
 
-                                $cmdConceptos = Database::getInstance()->getDb()->prepare("SELECT co.idConcepto,co.Concepto,co.Categoria,co.Precio       
+                                $cmdConceptos = Database::getInstance()->getDb()->prepare("SELECT 
+                                co.idConcepto,
+                                co.Concepto,
+                                co.Categoria,
+                                co.Precio       
                                 FROM Concepto as co
                                 WHERE Categoria = ? and ? between Inicio and Fin");
                                 $cmdConceptos->bindParam(1, $condicion, PDO::PARAM_INT);

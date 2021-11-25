@@ -705,54 +705,73 @@ class IngresosAdo
                     Database::getInstance()->getDb()->rollBack();
                     return "tarjeta";
                 } else {
-                    $cmdIngreso = Database::getInstance()->getDb()->prepare("UPDATE Ingreso SET Estado = 'A' WHERE idIngreso = ?");
-                    $cmdIngreso->bindParam(1, $idIngreso, PDO::PARAM_INT);
-                    $cmdIngreso->execute();
 
-                    $countResolucion15 = 0;
+                    $cmdValidate = Database::getInstance()->getDb()->prepare("SELECT * FROM Ingreso WHERE idIngreso = ? 
+                    AND
+                    (
+                        Fecha = dateadd(day,-2,cast(GETDATE() AS DATE))
+                        OR
+                        Fecha = dateadd(day,-1,cast(GETDATE() AS DATE))
+                        OR
+                        Fecha = cast(GETDATE() AS DATE)
+                    )");
+                    $cmdValidate->bindParam(1, $idIngreso, PDO::PARAM_STR);
+                    $cmdValidate->execute();
+                    if ($cmdValidate->fetch()) {
+                        $cmdIngreso = Database::getInstance()->getDb()->prepare("UPDATE Ingreso SET Estado = 'A' WHERE idIngreso = ?");
+                        $cmdIngreso->bindParam(1, $idIngreso, PDO::PARAM_INT);
+                        $cmdIngreso->execute();
 
-                    $cmdDetalle = Database::getInstance()->getDb()->prepare("SELECT c.Categoria FROM Detalle AS d INNER JOIN Concepto AS c ON c.idConcepto = d.idConcepto
-                    WHERE d.idIngreso = ? ");
-                    $cmdDetalle->bindParam(1, $idIngreso, PDO::PARAM_INT);
-                    $cmdDetalle->execute();
-                    while ($rowd = $cmdDetalle->fetch()) {
-                        if ($rowd["Categoria"] == 12) {
-                            $countResolucion15++;
+                        $countResolucion15 = 0;
+
+                        $cmdDetalle = Database::getInstance()->getDb()->prepare("SELECT 
+                        c.Categoria 
+                        FROM Detalle AS d INNER JOIN Concepto AS c ON c.idConcepto = d.idConcepto
+                        WHERE d.idIngreso = ? ");
+                        $cmdDetalle->bindParam(1, $idIngreso, PDO::PARAM_INT);
+                        $cmdDetalle->execute();
+                        while ($rowd = $cmdDetalle->fetch()) {
+                            if ($rowd["Categoria"] == 12) {
+                                $countResolucion15++;
+                            }
                         }
+
+                        if ($countResolucion15 > 0) {
+                            $cmdResolucion15 = Database::getInstance()->getDb()->prepare("UPDATE Colegiatura SET Resolucion15 = 0, MesAumento = 0 WHERE idDNI = ?");
+                            $cmdResolucion15->bindParam(1, $row["idDNI"], PDO::PARAM_STR);
+                            $cmdResolucion15->execute();
+                        }
+
+                        $cmdAnular = Database::getInstance()->getDb()->prepare("INSERT INTO Anulado(Tipo,idDocumento,idUsuario,Motivo,Fecha,Hora)VALUES('R',?,?,?,?,?)");
+                        $cmdAnular->bindParam(1, $idIngreso, PDO::PARAM_INT);
+                        $cmdAnular->bindParam(2, $idUsuario, PDO::PARAM_INT);
+                        $cmdAnular->bindParam(3, $motivo, PDO::PARAM_INT);
+                        $cmdAnular->bindParam(4, $fecha, PDO::PARAM_INT);
+                        $cmdAnular->bindParam(5, $hora, PDO::PARAM_INT);
+                        $cmdAnular->execute();
+
+                        $cmdCuotas = Database::getInstance()->getDb()->prepare("DELETE FROM Cuota WHERE idIngreso = ?");
+                        $cmdCuotas->bindParam(1, $idIngreso, PDO::PARAM_INT);
+                        $cmdCuotas->execute();
+
+                        $cmdHabilidad = Database::getInstance()->getDb()->prepare("UPDATE CERTHabilidad SET Anulado = 1 WHERE idIngreso = ?");
+                        $cmdHabilidad->bindParam(1, $idIngreso, PDO::PARAM_INT);
+                        $cmdHabilidad->execute();
+
+                        $cmdObra = Database::getInstance()->getDb()->prepare("UPDATE CERTResidencia SET Anulado = 1 WHERE idIngreso = ?");
+                        $cmdObra->bindParam(1, $idIngreso, PDO::PARAM_INT);
+                        $cmdObra->execute();
+
+                        $cmdProyecto = Database::getInstance()->getDb()->prepare("UPDATE CERTProyecto SET Anulado = 1 WHERE idIngreso = ?");
+                        $cmdProyecto->bindParam(1, $idIngreso, PDO::PARAM_INT);
+                        $cmdProyecto->execute();
+
+                        Database::getInstance()->getDb()->commit();
+                        return "deleted";
+                    } else {
+                        Database::getInstance()->getDb()->rollBack();
+                        return "fecha";
                     }
-
-                    if ($countResolucion15 > 0) {
-                        $cmdResolucion15 = Database::getInstance()->getDb()->prepare("UPDATE Colegiatura SET Resolucion15 = 0, MesAumento = 0 WHERE idDNI = ?");
-                        $cmdResolucion15->bindParam(1, $row["idDNI"], PDO::PARAM_STR);
-                        $cmdResolucion15->execute();
-                    }
-
-                    $cmdAnular = Database::getInstance()->getDb()->prepare("INSERT INTO Anulado(Tipo,idDocumento,idUsuario,Motivo,Fecha,Hora)VALUES('R',?,?,?,?,?)");
-                    $cmdAnular->bindParam(1, $idIngreso, PDO::PARAM_INT);
-                    $cmdAnular->bindParam(2, $idUsuario, PDO::PARAM_INT);
-                    $cmdAnular->bindParam(3, $motivo, PDO::PARAM_INT);
-                    $cmdAnular->bindParam(4, $fecha, PDO::PARAM_INT);
-                    $cmdAnular->bindParam(5, $hora, PDO::PARAM_INT);
-                    $cmdAnular->execute();
-
-                    $cmdCuotas = Database::getInstance()->getDb()->prepare("DELETE FROM Cuota WHERE idIngreso = ?");
-                    $cmdCuotas->bindParam(1, $idIngreso, PDO::PARAM_INT);
-                    $cmdCuotas->execute();
-
-                    $cmdHabilidad = Database::getInstance()->getDb()->prepare("UPDATE CERTHabilidad SET Anulado = 1 WHERE idIngreso = ?");
-                    $cmdHabilidad->bindParam(1, $idIngreso, PDO::PARAM_INT);
-                    $cmdHabilidad->execute();
-
-                    $cmdObra = Database::getInstance()->getDb()->prepare("UPDATE CERTResidencia SET Anulado = 1 WHERE idIngreso = ?");
-                    $cmdObra->bindParam(1, $idIngreso, PDO::PARAM_INT);
-                    $cmdObra->execute();
-
-                    $cmdProyecto = Database::getInstance()->getDb()->prepare("UPDATE CERTProyecto SET Anulado = 1 WHERE idIngreso = ?");
-                    $cmdProyecto->bindParam(1, $idIngreso, PDO::PARAM_INT);
-                    $cmdProyecto->execute();
-
-                    Database::getInstance()->getDb()->commit();
-                    return "deleted";
                 }
             } else {
                 Database::getInstance()->getDb()->rollBack();
@@ -1422,50 +1441,50 @@ class IngresosAdo
         try {
             $cmdDetalle = Database::getInstance()->getDb()->prepare("SELECT 
             i.idIngreso,
-            isnull(a.Motivo,'') as MotivoAnulacion,
-            isnull(a.Fecha,'') as FechaAnulacion,
+            isnull(a.Motivo,'') AS MotivoAnulacion,
+            isnull(a.Fecha,'') AS FechaAnulacion,
             i.Serie,
             i.NumRecibo,
-            convert(varchar, cast(i.Fecha as date), 103) as FechaPago,
+            convert(VARCHAR, cast(i.Fecha AS DATE), 103) AS FechaPago,
 			CASE 
-             WHEN NOT cu.idCuota IS NULL THEN 1
-             WHEN NOT ac.idAltaColegio IS NULL THEN 4 
-             WHEN NOT ch.idHabilidad IS NULL THEN 5 
-             WHEN NOT cr.idResidencia IS NULL THEN 6 
-             WHEN NOT cp.idProyecto IS NULL THEN 7 
-             WHEN NOT pe.idPeritaje IS NULL THEN 8 
-             ELSE 100 END AS TipoIngreso,
+            WHEN NOT cu.idCuota IS NULL THEN 1
+            WHEN NOT ac.idAltaColegio IS NULL THEN 4 
+            WHEN NOT ch.idHabilidad IS NULL THEN 5 
+            WHEN NOT cr.idResidencia IS NULL THEN 6 
+            WHEN NOT cp.idProyecto IS NULL THEN 7 
+            WHEN NOT pe.idPeritaje IS NULL THEN 8 
+            ELSE 100 END AS TipoIngreso,
             i.Estado,
             i.Tipo,
 			i.idBanco,
 			ISNULL(b.Nombre,'') AS NombreBanco,
 			ISNULL(i.NumOperacion,'') AS numeroOperacion,
             p.CIP,
-            isnull(e.NumeroRuc,p.NumDoc) as NumeroDocumento,            
-            isnull(e.Nombre, concat(p.Apellidos,' ',p.Nombres)) as Persona,
-            sum(d.Monto) as Total,
-            isnull(i.Xmlsunat,'') as Xmlsunat,
-            isnull(i.Xmldescripcion,'') as Xmldescripcion							
-            from Ingreso as i 
+            isnull(e.NumeroRuc,p.NumDoc) AS NumeroDocumento,            
+            isnull(e.Nombre, concat(p.Apellidos,' ',p.Nombres)) AS Persona,
+            sum(d.Monto) AS Total,
+            isnull(i.Xmlsunat,'') AS Xmlsunat,
+            isnull(i.Xmldescripcion,'') AS Xmldescripcion							
+            from Ingreso AS i 
 			LEFT OUTER JOIN Cuota AS cu ON cu.idIngreso = i.idIngreso 
             LEFT OUTER JOIN AltaColegio AS ac ON ac.idIngreso = i.idIngreso 
             LEFT OUTER JOIN CERTHabilidad AS ch ON ch.idIngreso = i.idIngreso 
             LEFT OUTER JOIN CERTResidencia AS cr ON cr.idIngreso = i.idIngreso 
             LEFT OUTER JOIN CERTProyecto AS cp ON cp.idIngreso = i.idIngreso 
             LEFT OUTER JOIN Peritaje AS pe ON pe.idIngreso = i.idIngreso
-            left join Persona as p on i.idDNI = p.idDNI
-            left join EmpresaPersona AS e ON e.IdEmpresa = i.idEmpresaPersona 
-            inner join Detalle as d on d.idIngreso = i.idIngreso 
-            inner join Concepto as c on d.idConcepto = c.idConcepto
-            left join Anulado as a on a.idDocumento = i.idIngreso
-            LEFT JOIN Banco as b ON b.idBanco = i.idBanco
-            where
-            $tipoPago = 0 AND cast(i.Fecha as date) between ? and ?
+            LEFT JOIN Persona AS p ON i.idDNI = p.idDNI
+            LEFT JOIN EmpresaPersona AS e ON e.IdEmpresa = i.idEmpresaPersona 
+            INNER JOIN Detalle AS d on d.idIngreso = i.idIngreso 
+            INNER JOIN Concepto AS c on d.idConcepto = c.idConcepto
+            LEFT JOIN Anulado AS a on a.idDocumento = i.idIngreso
+            LEFT JOIN Banco AS b ON b.idBanco = i.idBanco
+            WHERE
+            $tipoPago = 0 AND cast(i.Fecha AS DATE) BETWEEN ? AND ?
             OR
-            $tipoPago = 1 AND (cast(i.Fecha as date) between ? and ?) AND i.tipo = 1
+            $tipoPago = 1 AND (cast(i.Fecha AS DATE) BETWEEN ? AND ?) AND i.tipo = 1
             OR
-            $tipoPago = 2 AND (cast(i.Fecha as date) between ? and ?) AND i.tipo = 2
-            group by i.idIngreso,
+            $tipoPago = 2 AND (cast(i.Fecha AS DATE) BETWEEN ? AND ?) AND i.tipo = 2
+            GROUP BY i.idIngreso,
             i.Serie,
             i.NumRecibo,
             i.Fecha,
@@ -1490,7 +1509,7 @@ class IngresosAdo
 			cr.idResidencia,
 			cp.idProyecto,
 			pe.idPeritaje
-            order by CAST(i.Fecha as date) desc, i.NumRecibo desc");
+            ORDER BY CAST(i.Fecha AS DATE) DESC, i.NumRecibo ASC");
             $cmdDetalle->bindParam(1, $fechaInicio, PDO::PARAM_STR);
             $cmdDetalle->bindParam(2, $fechaFinal, PDO::PARAM_STR);
             $cmdDetalle->bindParam(3, $fechaInicio, PDO::PARAM_STR);
@@ -1525,6 +1544,60 @@ class IngresosAdo
                 ));
             }
 
+            $cmdNotaCredito = Database::getInstance()->getDb()->prepare("SELECT 
+            nc.Serie,
+            nc.NumRecibo,
+            nc.Fecha,
+            nc.Hora,
+            isnull(e.NumeroRuc,p.NumDoc) as NumeroDocumento,            
+            isnull(e.Nombre, concat(p.Apellidos,' ',p.Nombres)) as Persona,
+            sum(ncd.Monto) as Total
+            FROM NotaCredito AS nc
+            INNER JOIN Ingreso AS i ON i.idIngreso = nc.idIngreso
+            LEFT JOIN Persona AS p ON i.idDNI = p.idDNI
+            LEFT JOIN EmpresaPersona AS e ON e.IdEmpresa = i.idEmpresaPersona 
+            INNER JOIN NotaCreditoDetalle AS ncd ON ncd.idNotaCredito = nc.idNotaCredito
+            WHERE 
+            nc.Fecha BETWEEN ? AND ?
+            GROUP BY 
+            nc.Serie,
+            nc.NumRecibo,
+            nc.Fecha,
+            nc.Hora,
+            e.NumeroRuc,
+            p.NumDoc,            
+            e.Nombre,
+            p.Apellidos,
+            p.Nombres
+            ORDER BY CAST(nc.Fecha AS DATE) DESC, nc.NumRecibo ASC");
+            $cmdNotaCredito->bindParam(1, $fechaInicio, PDO::PARAM_STR);
+            $cmdNotaCredito->bindParam(2, $fechaFinal, PDO::PARAM_STR);
+            $cmdNotaCredito->execute();
+
+            while ($row = $cmdNotaCredito->fetch()) {
+                $count++;
+                array_push($arrayDetalle, array(
+                    "Id" => $count,
+                    "idIngreso" => "",
+                    "MotivoAnulacion" => "",
+                    "FechaAnulacion" => "",
+                    "Serie" => $row["Serie"],
+                    "NumRecibo" => $row["NumRecibo"],
+                    "FechaPago" => $row["Fecha"],
+                    "Concepto" => "",
+                    "Estado" => "C",
+                    "TipoPago" => "1",
+                    "NombreBanco" => "",
+                    "NumeroOperacion" => "",
+                    "NumeroDocumento" => $row["NumeroDocumento"],
+                    "CIP" => $row["CIP"],
+                    "Persona" => $row["Persona"],
+                    "Total" => -floatval($row["Total"]),
+                    "Xmlsunat" => "",
+                    "Xmldescripcion" => "",
+                ));
+            }
+
             return $arrayDetalle;
         } catch (Exception $ex) {
             return $ex;
@@ -1536,31 +1609,31 @@ class IngresosAdo
         try {
             $cmdDetalle = Database::getInstance()->getDb()->prepare("SELECT 
             i.idIngreso,
-            isnull(a.Motivo,'') as MotivoAnulacion,
-            isnull(a.Fecha,'') as FechaAnulacion,
+            isnull(a.Motivo,'') AS MotivoAnulacion,
+            isnull(a.Fecha,'') AS FechaAnulacion,
             i.Serie,
             i.NumRecibo,
-            convert(varchar, cast(i.Fecha as date), 103) as FechaPago,
+            convert(VARCHAR, cast(i.Fecha AS DATE), 103) AS FechaPago,
 			CASE 
-             WHEN NOT cu.idCuota IS NULL THEN 1
-             WHEN NOT ac.idAltaColegio IS NULL THEN 4 
-             WHEN NOT ch.idHabilidad IS NULL THEN 5 
-             WHEN NOT cr.idResidencia IS NULL THEN 6 
-             WHEN NOT cp.idProyecto IS NULL THEN 7 
-             WHEN NOT pe.idPeritaje IS NULL THEN 8 
-             ELSE 100 END AS TipoIngreso,
+            WHEN NOT cu.idCuota IS NULL THEN 1
+            WHEN NOT ac.idAltaColegio IS NULL THEN 4 
+            WHEN NOT ch.idHabilidad IS NULL THEN 5 
+            WHEN NOT cr.idResidencia IS NULL THEN 6 
+            WHEN NOT cp.idProyecto IS NULL THEN 7 
+            WHEN NOT pe.idPeritaje IS NULL THEN 8 
+            ELSE 100 END AS TipoIngreso,
             i.Estado,
             i.Tipo,
 			i.idBanco,
 			ISNULL(b.Nombre,'') AS NombreBanco,
 			ISNULL(i.NumOperacion,'') AS numeroOperacion,
             p.CIP,
-            isnull(e.NumeroRuc,p.NumDoc) as NumeroDocumento,            
-            isnull(e.Nombre, concat(p.Apellidos,' ',p.Nombres)) as Persona,
-            sum(d.Monto) as Total,
-            isnull(i.Xmlsunat,'') as Xmlsunat,
-            isnull(i.Xmldescripcion,'') as Xmldescripcion							
-            from Ingreso as i 
+            isnull(e.NumeroRuc,p.NumDoc) AS NumeroDocumento,            
+            isnull(e.Nombre, concat(p.Apellidos,' ',p.Nombres)) AS Persona,
+            sum(d.Monto) AS Total,
+            isnull(i.Xmlsunat,'') AS Xmlsunat,
+            isnull(i.Xmldescripcion,'') AS Xmldescripcion							
+            from Ingreso AS i 
 			LEFT OUTER JOIN Cuota AS cu ON cu.idIngreso = i.idIngreso 
             LEFT OUTER JOIN AltaColegio AS ac ON ac.idIngreso = i.idIngreso 
             LEFT OUTER JOIN CERTHabilidad AS ch ON ch.idIngreso = i.idIngreso 
@@ -1573,13 +1646,13 @@ class IngresosAdo
             INNER JOIN Concepto as c on d.idConcepto = c.idConcepto
             LEFT JOIN Anulado as a on a.idDocumento = i.idIngreso
             LEFT JOIN Banco as b ON b.idBanco = i.idBanco
-            where
-            $tipoPago = 0 AND (cast(i.Fecha as date) between ? and ?) and i.TipoComprobante = ?
+            WHERE
+            $tipoPago = 0 AND (cast(i.Fecha AS DATE) BETWEEN ? AND ?) AND i.TipoComprobante = ?
             OR
-            $tipoPago = 1 AND (cast(i.Fecha as date) between ? and ?) and i.TipoComprobante = ? AND i.tipo = 1
+            $tipoPago = 1 AND (cast(i.Fecha AS DATE) BETWEEN ? AND ?) AND i.TipoComprobante = ? AND i.tipo = 1
             OR
-            $tipoPago = 2 AND (cast(i.Fecha as date) between ? and ?) and i.TipoComprobante = ? AND i.tipo = 2
-            group by i.idIngreso,
+            $tipoPago = 2 AND (cast(i.Fecha AS DATE) BETWEEN ? AND ?) AND i.TipoComprobante = ? AND i.tipo = 2
+            GROUP BY i.idIngreso,
             i.Serie,
             i.NumRecibo,
             i.Fecha,
@@ -1604,7 +1677,7 @@ class IngresosAdo
 			cr.idResidencia,
 			cp.idProyecto,
 			pe.idPeritaje
-            order by CAST(i.Fecha as date) desc, i.NumRecibo desc");
+            ORDER BY CAST(i.Fecha AS DATE) DESC, i.NumRecibo DESC");
             $cmdDetalle->bindParam(1, $fechaInicio, PDO::PARAM_STR);
             $cmdDetalle->bindParam(2, $fechaFinal, PDO::PARAM_STR);
             $cmdDetalle->bindParam(3, $tipoDocumento, PDO::PARAM_STR);
@@ -1639,6 +1712,61 @@ class IngresosAdo
                     "Total" => floatval($row["Total"]),
                     "Xmlsunat" => $row["Xmlsunat"],
                     "Xmldescripcion" => $row["Xmldescripcion"],
+                ));
+            }
+
+            $cmdNotaCredito = Database::getInstance()->getDb()->prepare("SELECT 
+            nc.Serie,
+            nc.NumRecibo,
+            nc.Fecha,
+            nc.Hora,
+            isnull(e.NumeroRuc,p.NumDoc) as NumeroDocumento,            
+            isnull(e.Nombre, concat(p.Apellidos,' ',p.Nombres)) as Persona,
+            sum(ncd.Monto) as Total
+            FROM NotaCredito AS nc
+            INNER JOIN Ingreso AS i ON i.idIngreso = nc.idIngreso
+            LEFT JOIN Persona AS p ON i.idDNI = p.idDNI
+            LEFT JOIN EmpresaPersona AS e ON e.IdEmpresa = i.idEmpresaPersona 
+            INNER JOIN NotaCreditoDetalle AS ncd ON ncd.idNotaCredito = nc.idNotaCredito
+            WHERE 
+            nc.Fecha BETWEEN ? AND ? AND nc.TipoComprobante = ?
+            GROUP BY 
+            nc.Serie,
+            nc.NumRecibo,
+            nc.Fecha,
+            nc.Hora,
+            e.NumeroRuc,
+            p.NumDoc,            
+            e.Nombre,
+            p.Apellidos,
+            p.Nombres
+            ORDER BY CAST(nc.Fecha AS DATE) DESC, nc.NumRecibo ASC");
+            $cmdNotaCredito->bindParam(1, $fechaInicio, PDO::PARAM_STR);
+            $cmdNotaCredito->bindParam(2, $fechaFinal, PDO::PARAM_STR);
+            $cmdNotaCredito->bindParam(3, $tipoDocumento, PDO::PARAM_STR);
+            $cmdNotaCredito->execute();
+
+            while ($row = $cmdNotaCredito->fetch()) {
+                $count++;
+                array_push($arrayDetalle, array(
+                    "Id" => $count,
+                    "idIngreso" => "",
+                    "MotivoAnulacion" => "",
+                    "FechaAnulacion" => "",
+                    "Serie" => $row["Serie"],
+                    "NumRecibo" => $row["NumRecibo"],
+                    "FechaPago" => $row["Fecha"],
+                    "Concepto" => "",
+                    "Estado" => "C",
+                    "TipoPago" => "1",
+                    "NombreBanco" => "",
+                    "NumeroOperacion" => "",
+                    "NumeroDocumento" => $row["NumeroDocumento"],
+                    "CIP" => $row["CIP"],
+                    "Persona" => $row["Persona"],
+                    "Total" => -floatval($row["Total"]),
+                    "Xmlsunat" => "",
+                    "Xmldescripcion" => "",
                 ));
             }
 
@@ -1705,7 +1833,7 @@ class IngresosAdo
             $resultIngreso = $cmdIngreso->fetchObject();
 
             if (!is_object($resultIngreso)) {
-                throw new Exception("No se puedo encontrar el comprobante, ingrese correctamente la serie y numeración.");
+                throw new Exception("No se pudo encontrar el comprobante, ingrese correctamente la serie y numeración o verificar el estado que no se encuentre anulado.");
             }
 
             $detalleIngreso = array();
