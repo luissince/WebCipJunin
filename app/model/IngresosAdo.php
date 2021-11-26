@@ -1788,6 +1788,8 @@ class IngresosAdo
             INNER JOIN NotaCreditoDetalle AS ncd ON ncd.idNotaCredito = nc.idNotaCredito
             WHERE 
             nc.Fecha BETWEEN ? AND ? AND (? = '' OR us.idUsuario = ?)
+            OR
+            $tipoPago = 1 AND nc.Fecha BETWEEN ? AND ? AND (? = '' OR us.idUsuario = ?)
             GROUP BY 
             nc.Serie,
             nc.NumRecibo,
@@ -1803,6 +1805,11 @@ class IngresosAdo
             $cmdNotaCredito->bindParam(2, $fechaFinal, PDO::PARAM_STR);
             $cmdNotaCredito->bindParam(3, $usuario, PDO::PARAM_STR);
             $cmdNotaCredito->bindParam(4, $usuario, PDO::PARAM_STR);
+
+            $cmdNotaCredito->bindParam(5, $fechaInicio, PDO::PARAM_STR);
+            $cmdNotaCredito->bindParam(6, $fechaFinal, PDO::PARAM_STR);
+            $cmdNotaCredito->bindParam(7, $usuario, PDO::PARAM_STR);
+            $cmdNotaCredito->bindParam(8, $usuario, PDO::PARAM_STR);
             $cmdNotaCredito->execute();
 
             while ($row = $cmdNotaCredito->fetch()) {
@@ -2159,6 +2166,8 @@ class IngresosAdo
             INNER JOIN NotaCreditoDetalle AS ncd ON ncd.idNotaCredito = nc.idNotaCredito
             WHERE 
             nc.Fecha BETWEEN ? AND ? AND nc.TipoComprobante = ? AND (? = '' OR us.idUsuario = ?)
+            OR
+            $tipoPago = 1 AND nc.Fecha BETWEEN ? AND ? AND nc.TipoComprobante = ? AND (? = '' OR us.idUsuario = ?)
             GROUP BY 
             nc.Serie,
             nc.NumRecibo,
@@ -2175,6 +2184,12 @@ class IngresosAdo
             $cmdNotaCredito->bindParam(3, $tipoDocumento, PDO::PARAM_STR);
             $cmdNotaCredito->bindParam(4, $usuario, PDO::PARAM_STR);
             $cmdNotaCredito->bindParam(5, $usuario, PDO::PARAM_STR);
+
+            $cmdNotaCredito->bindParam(6, $fechaInicio, PDO::PARAM_STR);
+            $cmdNotaCredito->bindParam(7, $fechaFinal, PDO::PARAM_STR);
+            $cmdNotaCredito->bindParam(8, $tipoDocumento, PDO::PARAM_STR);
+            $cmdNotaCredito->bindParam(9, $usuario, PDO::PARAM_STR);
+            $cmdNotaCredito->bindParam(10, $usuario, PDO::PARAM_STR);
             $cmdNotaCredito->execute();
 
             while ($row = $cmdNotaCredito->fetch()) {
