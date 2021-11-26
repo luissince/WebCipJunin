@@ -265,18 +265,16 @@ if (!isset($_SESSION['IdUsuario'])) {
                     });
 
                     $("#btnExportExcel").click(function() {
-                        if ($("#txtBuscar").val() == '' && $("#cbTipoHabilidad").val() == 0 && $("#cbCapitulo").val() == 0 && $("#cbEspecialidad").val() == 0 && !tools.validateDate($("#txtFechaPago").val()) && !tools.validateDate($("#txtFechaFinal").val())) {
+                        if ($("#txtBuscar").val() == '' && $("#cbTipoHabilidad").val() == 0 && $("#cbCapitulo").val() == 0) {
                             openExcelHabilidad(0, '', 0, 0, 0);
-                        } else if ($("#txtBuscar").val() != '' && $("#cbTipoHabilidad").val() == 0 && $("#cbCapitulo").val() == 0 && $("#cbEspecialidad").val() == 0 && !tools.validateDate($("#txtFechaPago").val()) && !tools.validateDate($("#txtFechaFinal").val())) {
+                        } else if ($("#txtBuscar").val() != '' && $("#cbTipoHabilidad").val() == 0 && $("#cbCapitulo").val() == 0) {
                             openExcelHabilidad(1, '', $("#txtBuscar").val(), 0, 0, 0);
-                        } else if ($("#txtBuscar").val() == '' && $("#cbTipoHabilidad").val() != 0 && $("#cbCapitulo").val() == 0 && $("#cbEspecialidad").val() == 0 && !tools.validateDate($("#txtFechaPago").val()) && !tools.validateDate($("#txtFechaFinal").val())) {
+                        } else if ($("#txtBuscar").val() == '' && $("#cbTipoHabilidad").val() != 0 && $("#cbCapitulo").val() == 0) {
                             openExcelHabilidad(2, '', $("#cbTipoHabilidad").val(), 0, 0);
-                        } else if ($("#txtBuscar").val() == '' && $("#cbTipoHabilidad").val() != 0 && $("#cbCapitulo").val() != 0 && $("#cbEspecialidad").val() == 0 && !tools.validateDate($("#txtFechaPago").val()) && !tools.validateDate($("#txtFechaFinal").val())) {
+                        } else if ($("#txtBuscar").val() == '' && $("#cbTipoHabilidad").val() != 0 && $("#cbCapitulo").val() != 0) {
                             openExcelHabilidad(3, '', $("#cbTipoHabilidad").val(), $("#cbCapitulo").val(), 0);
-                        } else if ($("#txtBuscar").val() == '' && $("#cbTipoHabilidad").val() != 0 && $("#cbCapitulo").val() != 0 && $("#cbEspecialidad").val() != 0 && !tools.validateDate($("#txtFechaPago").val()) && !tools.validateDate($("#txtFechaFinal").val())) {
+                        } else if ($("#txtBuscar").val() == '' && $("#cbTipoHabilidad").val() != 0 && $("#cbCapitulo").val() != 0) {
                             openExcelHabilidad(4, '', $("#cbTipoHabilidad").val(), $("#cbCapitulo").val(), $("#cbEspecialidad").val());
-                        } else if (tools.validateDate($("#txtFechaPago").val()) && tools.validateDate($("#txtFechaFinal").val())) {
-                            openExcelHabilidad(5, '', '', '', '', '', $("#txtFechaPago").val(), $("#txtFechaFinal").val());
                         }
                     });
 
