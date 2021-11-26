@@ -1787,7 +1787,7 @@ class IngresosAdo
             INNER JOIN Usuario AS us ON us.idUsuario = nc.idUsuario 
             INNER JOIN NotaCreditoDetalle AS ncd ON ncd.idNotaCredito = nc.idNotaCredito
             WHERE 
-            nc.Fecha BETWEEN ? AND ? AND (? = '' OR us.idUsuario = ?)
+            $tipoPago = 0 AND nc.Fecha BETWEEN ? AND ? AND (? = '' OR us.idUsuario = ?)
             OR
             $tipoPago = 1 AND nc.Fecha BETWEEN ? AND ? AND (? = '' OR us.idUsuario = ?)
             GROUP BY 
@@ -2165,7 +2165,7 @@ class IngresosAdo
             LEFT JOIN Usuario AS us ON us.idUsuario = nc.idUsuario 
             INNER JOIN NotaCreditoDetalle AS ncd ON ncd.idNotaCredito = nc.idNotaCredito
             WHERE 
-            nc.Fecha BETWEEN ? AND ? AND nc.TipoComprobante = ? AND (? = '' OR us.idUsuario = ?)
+            $tipoPago = 0 AND nc.Fecha BETWEEN ? AND ? AND nc.TipoComprobante = ? AND (? = '' OR us.idUsuario = ?)
             OR
             $tipoPago = 1 AND nc.Fecha BETWEEN ? AND ? AND nc.TipoComprobante = ? AND (? = '' OR us.idUsuario = ?)
             GROUP BY 
