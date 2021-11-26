@@ -342,6 +342,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
         $persona["rason_social"] = $_POST["rason_social"];
         $persona["cip"] = $_POST["cip"];
         $persona["condicion"] = $_POST["condicion"];
+        $persona["idUsuario"] = $_POST["idUsuario"];
 
         $result = PersonaAdo::insert($persona);
         if ($result == "create") {
@@ -544,6 +545,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
         $persona["rason_social"] = $_POST["rason_social"];
         $persona["cip"] = $_POST["cip"];
         $persona["condicion"] = $_POST["condicion"];
+        $persona["idUsuario"] = $_POST["idUsuario"];
 
         $result = PersonaAdo::update($persona);
         if ($result == "updated") {

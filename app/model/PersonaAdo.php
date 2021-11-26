@@ -564,7 +564,10 @@ class PersonaAdo
                         RUC = ?,
                         RAZONSOCIAL = ?,
                         CIP = ?,
-                        Condicion = ?
+                        Condicion = ?,
+                        idUsuario = ?,
+                        FechaMo = GETDATE(),
+                        HoraMo = GETDATE()
                         WHERE idDNI = ?");
 
                         $comandoPersona->bindParam(1, $persona['num_duc'], PDO::PARAM_STR);
@@ -577,7 +580,8 @@ class PersonaAdo
                         $comandoPersona->bindParam(8, $persona['rason_social'], PDO::PARAM_STR);
                         $comandoPersona->bindParam(9, $persona['cip'], PDO::PARAM_STR);
                         $comandoPersona->bindParam(10, $persona['condicion'], PDO::PARAM_STR);
-                        $comandoPersona->bindParam(11, $persona['dni'], PDO::PARAM_STR);
+                        $comandoPersona->bindParam(11, $persona['idUsuario'], PDO::PARAM_STR);
+                        $comandoPersona->bindParam(12, $persona['dni'], PDO::PARAM_STR);
                         $comandoPersona->execute();
 
                         Database::getInstance()->getDb()->commit();
@@ -638,20 +642,35 @@ class PersonaAdo
                     return "cip";
                 } else {
 
-                    $comandoPersona = Database::getInstance()->getDb()->prepare("INSERT INTO Persona (idDNI,NumDoc,idUsuario,Nombres,Apellidos,Sexo,FechaNac,EstadoCivil,RUC,RAZONSOCIAL,CIP,Condicion)
-                VALUES (?,?,'-1',UPPER(?),UPPER(?),?,?,?,?,?,?,?)");
+                    $comandoPersona = Database::getInstance()->getDb()->prepare("INSERT INTO Persona (
+                        idDNI,
+                        NumDoc,
+                        idUsuario,
+                        Nombres,
+                        Apellidos,
+                        Sexo,
+                        FechaNac,
+                        EstadoCivil,
+                        RUC,
+                        RAZONSOCIAL,
+                        CIP,
+                        Condicion,
+                        FechaMo,
+                        HoraMo)
+                        VALUES (?,?,?,UPPER(?),UPPER(?),?,?,?,?,?,?,?,GETDATE(),GETDATE())");
 
                     $comandoPersona->bindParam(1, $persona['dni'], PDO::PARAM_STR);
                     $comandoPersona->bindParam(2, $persona['num_duc'], PDO::PARAM_STR);
-                    $comandoPersona->bindParam(3, $persona['nombres'], PDO::PARAM_STR);
-                    $comandoPersona->bindParam(4, $persona['apellidos'], PDO::PARAM_STR);
-                    $comandoPersona->bindParam(5, $persona['sexo'], PDO::PARAM_STR);
-                    $comandoPersona->bindParam(6, $persona['nacimiento'], PDO::PARAM_STR);
-                    $comandoPersona->bindParam(7, $persona['estado_civil'], PDO::PARAM_STR);
-                    $comandoPersona->bindParam(8, $persona['ruc'], PDO::PARAM_STR);
-                    $comandoPersona->bindParam(9, $persona['rason_social'], PDO::PARAM_STR);
-                    $comandoPersona->bindParam(10, $persona['cip'], PDO::PARAM_STR);
-                    $comandoPersona->bindParam(11, $persona['condicion'], PDO::PARAM_STR);
+                    $comandoPersona->bindParam(3, $persona['idUsuario'], PDO::PARAM_STR);
+                    $comandoPersona->bindParam(4, $persona['nombres'], PDO::PARAM_STR);
+                    $comandoPersona->bindParam(5, $persona['apellidos'], PDO::PARAM_STR);
+                    $comandoPersona->bindParam(6, $persona['sexo'], PDO::PARAM_STR);
+                    $comandoPersona->bindParam(7, $persona['nacimiento'], PDO::PARAM_STR);
+                    $comandoPersona->bindParam(8, $persona['estado_civil'], PDO::PARAM_STR);
+                    $comandoPersona->bindParam(9, $persona['ruc'], PDO::PARAM_STR);
+                    $comandoPersona->bindParam(10, $persona['rason_social'], PDO::PARAM_STR);
+                    $comandoPersona->bindParam(11, $persona['cip'], PDO::PARAM_STR);
+                    $comandoPersona->bindParam(12, $persona['condicion'], PDO::PARAM_STR);
 
                     $comandoPersona->execute();
                     Database::getInstance()->getDb()->commit();

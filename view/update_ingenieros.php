@@ -1645,6 +1645,7 @@ if (!isset($_SESSION['IdUsuario'])) {
                             formData.append("rason_social", $("#Razon_social").val().trim());
                             formData.append("cip", $("#Codigo").val().trim());
                             formData.append("condicion", $("#Condicion").val());
+                            formData.append("idUsuario", idUsuario);
                             updatePersona(formData);
                         }
                     } else {

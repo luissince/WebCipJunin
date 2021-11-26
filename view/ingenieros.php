@@ -365,7 +365,7 @@ if (!isset($_SESSION['IdUsuario'])) {
                 let tbHistorial = $("#tbHistorial");
                 let dni = 0;
 
-
+                let idUsuario = "<?php echo $_SESSION['IdUsuario']; ?>";
                 let editView = "<?= $_SESSION["Permisos"][12]["actualizar"]; ?>";
                 let deleteView = "<?= $_SESSION["Permisos"][12]["eliminar"]; ?>";
 
@@ -647,6 +647,7 @@ if (!isset($_SESSION['IdUsuario'])) {
                                     "rason_social": rason_social,
                                     "cip": cip,
                                     "condicion": condicion,
+                                    "idUsuario": idUsuario
                                 },
                                 beforeSend: function() {
                                     clearModalIngeniero();
