@@ -1477,7 +1477,6 @@ class IngresosAdo
     public static function ReporteGeneralIngresosPorFechas($fechaInicio, $fechaFinal, $tipoPago, $usuario)
     {
         try {
-
             if ($usuario == "") {
                 $cmdDetalle = Database::getInstance()->getDb()->prepare("SELECT 
                 i.idIngreso,
@@ -1506,6 +1505,7 @@ class IngresosAdo
                 isnull(i.Xmlsunat,'') AS Xmlsunat,
                 isnull(i.Xmldescripcion,'') AS Xmldescripcion							
                 FROM Ingreso AS i 
+                INNER JOIN TipoComprobante AS tc ON tc.IdTipoComprobante = i.TipoComprobante
                 LEFT OUTER JOIN Cuota AS cu ON cu.idIngreso = i.idIngreso 
                 LEFT OUTER JOIN AltaColegio AS ac ON ac.idIngreso = i.idIngreso 
                 LEFT OUTER JOIN CERTHabilidad AS ch ON ch.idIngreso = i.idIngreso 
@@ -1594,6 +1594,7 @@ class IngresosAdo
                     isnull(i.Xmlsunat,'') AS Xmlsunat,
                     isnull(i.Xmldescripcion,'') AS Xmldescripcion							
                     FROM Ingreso AS i 
+                    INNER JOIN TipoComprobante AS tc ON tc.IdTipoComprobante = i.TipoComprobante
                     LEFT OUTER JOIN Cuota AS cu ON cu.idIngreso = i.idIngreso 
                     LEFT OUTER JOIN AltaColegio AS ac ON ac.idIngreso = i.idIngreso 
                     LEFT OUTER JOIN CERTHabilidad AS ch ON ch.idIngreso = i.idIngreso 
@@ -1680,6 +1681,7 @@ class IngresosAdo
                     isnull(i.Xmlsunat,'') AS Xmlsunat,
                     isnull(i.Xmldescripcion,'') AS Xmldescripcion							
                     FROM Ingreso AS i 
+                    INNER JOIN TipoComprobante AS tc ON tc.IdTipoComprobante = i.TipoComprobante
                     LEFT OUTER JOIN Cuota AS cu ON cu.idIngreso = i.idIngreso 
                     LEFT OUTER JOIN AltaColegio AS ac ON ac.idIngreso = i.idIngreso 
                     LEFT OUTER JOIN CERTHabilidad AS ch ON ch.idIngreso = i.idIngreso 
@@ -1781,6 +1783,7 @@ class IngresosAdo
             isnull(e.Nombre, concat(p.Apellidos,' ',p.Nombres)) as Persona,
             sum(ncd.Monto) as Total
             FROM NotaCredito AS nc
+            INNER JOIN TipoComprobante AS tc ON tc.IdTipoComprobante = nc.TipoComprobante
             INNER JOIN Ingreso AS i ON i.idIngreso = nc.idIngreso
             LEFT JOIN Persona AS p ON i.idDNI = p.idDNI
             LEFT JOIN EmpresaPersona AS e ON e.IdEmpresa = i.idEmpresaPersona 
@@ -1872,7 +1875,8 @@ class IngresosAdo
                     sum(d.Monto) AS Total,
                     isnull(i.Xmlsunat,'') AS Xmlsunat,
                     isnull(i.Xmldescripcion,'') AS Xmldescripcion							
-                    from Ingreso AS i 
+                    FROM Ingreso AS i 
+                    INNER JOIN TipoComprobante AS tc ON tc.IdTipoComprobante = i.TipoComprobante
                     LEFT OUTER JOIN Cuota AS cu ON cu.idIngreso = i.idIngreso 
                     LEFT OUTER JOIN AltaColegio AS ac ON ac.idIngreso = i.idIngreso 
                     LEFT OUTER JOIN CERTHabilidad AS ch ON ch.idIngreso = i.idIngreso 
@@ -1963,7 +1967,8 @@ class IngresosAdo
                     sum(d.Monto) AS Total,
                     isnull(i.Xmlsunat,'') AS Xmlsunat,
                     isnull(i.Xmldescripcion,'') AS Xmldescripcion							
-                    from Ingreso AS i 
+                    FROM Ingreso AS i 
+                    INNER JOIN TipoComprobante AS tc ON tc.IdTipoComprobante = i.TipoComprobante
                     LEFT OUTER JOIN Cuota AS cu ON cu.idIngreso = i.idIngreso 
                     LEFT OUTER JOIN AltaColegio AS ac ON ac.idIngreso = i.idIngreso 
                     LEFT OUTER JOIN CERTHabilidad AS ch ON ch.idIngreso = i.idIngreso 
@@ -2053,7 +2058,8 @@ class IngresosAdo
                     sum(d.Monto) AS Total,
                     isnull(i.Xmlsunat,'') AS Xmlsunat,
                     isnull(i.Xmldescripcion,'') AS Xmldescripcion							
-                    from Ingreso AS i 
+                    FROM Ingreso AS i 
+                    INNER JOIN TipoComprobante AS tc ON tc.IdTipoComprobante = i.TipoComprobante
                     LEFT OUTER JOIN Cuota AS cu ON cu.idIngreso = i.idIngreso 
                     LEFT OUTER JOIN AltaColegio AS ac ON ac.idIngreso = i.idIngreso 
                     LEFT OUTER JOIN CERTHabilidad AS ch ON ch.idIngreso = i.idIngreso 
@@ -2159,6 +2165,7 @@ class IngresosAdo
             isnull(e.Nombre, concat(p.Apellidos,' ',p.Nombres)) as Persona,
             sum(ncd.Monto) as Total
             FROM NotaCredito AS nc
+            INNER JOIN TipoComprobante AS tc ON tc.IdTipoComprobante = nc.TipoComprobante
             INNER JOIN Ingreso AS i ON i.idIngreso = nc.idIngreso
             LEFT JOIN Persona AS p ON i.idDNI = p.idDNI
             LEFT JOIN EmpresaPersona AS e ON e.IdEmpresa = i.idEmpresaPersona 
