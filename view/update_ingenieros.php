@@ -1238,7 +1238,7 @@ if (!isset($_SESSION['IdUsuario'])) {
                                 <div class="row" style="padding-top: 0.5em;">
                                     <div class="col-md-12">
                                         <div class="form-group">
-                                            <label class="col-sm-3 control-label">Fecha</label>
+                                            <label class="col-sm-3 control-label">Fecha (Ingrese la fecha de su ultima cuota en su sede anterior)</label>
                                             <div class="col-sm-9">
                                                 <input id="txtFechaReincorporacion" type="date" class="form-control" />
                                             </div>

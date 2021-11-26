@@ -13,14 +13,14 @@ $title = "RESUMEN DE COMPROBANTES";
 $fechaInicial = $_GET["txtFechaInicial"];
 $fechaFinal = $_GET["txtFechaFinal"];
 $tipoDocumento = $_GET["cbTipoDocumento"];
-
+$monto = 0;
 
 $recibos = "Detalle del resumen";
 
 if ($_GET["cbTipoDocumento"] == 'null') {
-    $ventas = IngresosAdo::ReporteGeneralIngresosPorFechas($_GET["txtFechaInicial"], $_GET["txtFechaFinal"], $_GET["cbTipoPago"]);
+    $ventas = IngresosAdo::ReporteGeneralIngresosPorFechas($_GET["txtFechaInicial"], $_GET["txtFechaFinal"], $_GET["cbTipoPago"], $_GET["usuario"]);
 } else {
-    $ventas = IngresosAdo::ReporteGeneralIngresosPorFechasyTipoDocumento($_GET["txtFechaInicial"], $_GET["txtFechaFinal"], $_GET["cbTipoDocumento"], $_GET["cbTipoPago"]);
+    $ventas = IngresosAdo::ReporteGeneralIngresosPorFechasyTipoDocumento($_GET["txtFechaInicial"], $_GET["txtFechaFinal"], $_GET["cbTipoDocumento"], $_GET["cbTipoPago"], $_GET["usuario"]);
 }
 
 if (!is_array($ventas)) {
@@ -107,7 +107,7 @@ mpdf-->
             </div>
         </td>
         <td width="85%" style="border: 0mm solid #888888;text-align: center;vertical-align: middle;">
-            <span style="font-size: 14pt; color: black; font-family: sans;">
+            <span style="font-size: 13pt; color: black; font-family: sans;">
                 <b>' . $title . ' </b>
             </span>
             <br>
@@ -117,27 +117,25 @@ mpdf-->
         </td>
     </tr>
 </table>
-<div style="text-align: right;font-size: 11pt;">
-    ' . $recibos . '
-</div>
+
 <br />';
 ?>
 <?php
     if ($_GET["cbTipoPago"] == 1) {
-        $html .= '<table class="items" width="100%" style="font-size: 6pt; border-collapse: collapse; " cellpadding="8">
+        $html .= '<table class="items" width="100%" style="font-size: 8pt; border-collapse: collapse; " cellpadding="8">
         <thead>
             <tr style="background: #BFBFBF;">
-                <th width="3%" rowspan="1">ID</th>
-                <th width="5%" rowspan="1">SERIE</th>
-                <th width="4%" rowspan="1">CORRELATIVO</th>
-                <th width="6%" rowspan="1">FECHA REG.</th>
-                <th width="8%" rowspan="1">CONCEPTO</th>
-                <th width="5%" rowspan="1">ESTADO</th>
-                <th width="5%" rowspan="1">TIPO PAGO</th>
-                <th width="7%" rowspan="1">NUM. CIP</th>        
-                <th width="21%" rowspan="1">PERSONA</th>
-                <th width="7%" rowspan="1">MONTO</th>
-                <th width="7%" rowspan="1">MONTO ANULADO</th>
+                <th rowspan="1">ID</th>
+                <th rowspan="1">SERIE</th>
+                <th rowspan="1">CORRELATIVO</th>
+                <th rowspan="1">FECHA REG.</th>
+                <th rowspan="1">CONCEPTO</th>
+                <th rowspan="1">ESTADO</th>
+                <th rowspan="1">TIPO PAGO</th>
+                <th rowspan="1">NUM. CIP</th>        
+                <th rowspan="1">PERSONA</th>
+                <th rowspan="1">MONTO</th>
+                <th rowspan="1">MONTO ANULADO</th>
             </tr>
         </thead>
         <tbody>';
@@ -189,7 +187,7 @@ mpdf-->
                     <td align="center" rowspan="1">
                         ' . $value["FechaPago"] . '      
                     </td>
-                    <td align="center" rowspan="1">
+                    <td align="left" rowspan="1">
                         ' . $Concepto . '     
                     </td>
                     <td align="center" rowspan="1">
@@ -211,6 +209,7 @@ mpdf-->
                         0.00      
                     </td>
                 </tr>';
+                $monto += $value["Total"];
             } else {
                 $html .= ' <tr style="background: #D9D8D8;">
                     <td align="center" rowspan="1">
@@ -225,7 +224,7 @@ mpdf-->
                     <td align="center" rowspan="1">
                         ' . $value["FechaPago"] . '      
                     </td>
-                    <td align="center" rowspan="1">
+                    <td align="left" rowspan="1">
                         ' . $Concepto . '     
                     </td>
                     <td align="center" rowspan="1">
@@ -252,25 +251,36 @@ mpdf-->
 
         $html .= '</tbody>
                     </table>
-                <br>
+                <br>               
+                <h3>
+                    ' . $recibos . '
+                </h3>
+                <table  border="0" cellspacing="0">
+                    <tr>
+                        <td align="left" style="border: 1px solid black;padding:8px;">MONTO TOTAL:</td>
+                        <td align="left" style="border: 1px solid black;padding:8px;">' . number_format(round($monto, 2, PHP_ROUND_HALF_UP), 2, '.', '') . '</td>
+                    </tr>                    
+                </table>
+
             </body>
         </html>';
     } else {
-        $html .= '<table class="items" width="100%" style="font-size: 6pt; border-collapse: collapse; " cellpadding="8">
+        $html .= '
+    <table class="items" width="100%" style="font-size: 8pt; border-collapse: collapse; " cellpadding="8">
         <thead>
             <tr style="background: #BFBFBF;">
-                <th width="3%" rowspan="1">ID</th>
-                <th width="3%" rowspan="1">SERIE</th>
-                <th width="6%" rowspan="1">CORRELATIVO</th>
-                <th width="6%" rowspan="1">FECHA REG.</th>
-                <th width="8%" rowspan="1">CONCEPTO</th>
-                <th width="4%" rowspan="1">ESTADO</th>
-                <th width="5%" rowspan="1">TIPO PAGO</th>
-                <th width="10%" rowspan="1">NOMBRE BANCO</th>
-                <th width="5%" rowspan="1">NUM. CIP</th>          
-                <th width="16%" rowspan="1">PERSONA</th>
-                <th width="5%" rowspan="1">MONTO</th>
-                <th width="7%" rowspan="1">MONTO ANULADO</th>
+                <th rowspan="1">ID</th>
+                <th rowspan="1">SERIE</th>
+                <th rowspan="1">CORRELATIVO</th>
+                <th rowspan="1">FECHA REG.</th>
+                <th rowspan="1">CONCEPTO</th>
+                <th rowspan="1">ESTADO</th>
+                <th rowspan="1">TIPO PAGO</th>
+                <th rowspan="1">NOMBRE BANCO</th>
+                <th rowspan="1">NUM. CIP</th>          
+                <th rowspan="1">PERSONA</th>
+                <th rowspan="1">MONTO</th>
+                <th rowspan="1">MONTO ANULADO</th>
             </tr>
         </thead>
         <tbody>';
@@ -322,7 +332,7 @@ mpdf-->
                     <td align="center" rowspan="1">
                         ' . $value["FechaPago"] . '      
                     </td>
-                    <td align="center" rowspan="1">
+                    <td align="left" rowspan="1">
                         ' . $Concepto . '     
                     </td>
                     <td align="center" rowspan="1">
@@ -347,6 +357,7 @@ mpdf-->
                         0.00      
                     </td>
                 </tr>';
+                $monto += $value["Total"];
             } else {
                 $html .= ' <tr style="background: #D9D8D8;">
                     <td align="center" rowspan="1">
@@ -361,7 +372,7 @@ mpdf-->
                     <td align="center" rowspan="1">
                         ' . $value["FechaPago"] . '      
                     </td>
-                    <td align="center" rowspan="1">
+                    <td align="left" rowspan="1">
                         ' . $Concepto . '     
                     </td>
                     <td align="center" rowspan="1">
@@ -392,6 +403,15 @@ mpdf-->
         $html .= '</tbody>
                     </table>
                 <br>
+                <h3>
+                    ' . $recibos . '
+                </h3>
+                <table  border="0" cellspacing="0">
+                    <tr>
+                        <td align="left" style="border: 1px solid black;padding:8px;">MONTO TOTAL:</td>
+                        <td align="left" style="border: 1px solid black;padding:8px;">' . number_format(round($monto, 2, PHP_ROUND_HALF_UP), 2, '.', '') . '</td>
+                    </tr>                    
+                </table>
             </body>
         </html>';
     }
@@ -417,29 +437,9 @@ mpdf-->
 
     $mpdf->WriteHTML($html);
     if ($tipoDocumento == "null") {
-        $mpdf->Output("Reporte de Ingresos del " . $fechaInicial . " al " . $fechaFinal . ".pdf", 'I');
+        $mpdf->Output("Reporte de Comprobantes del " . $fechaInicial . " al " . $fechaFinal . ".pdf", 'I');
     } else {
         $mpdf->Output("Reporte de " . $nombreComprobante . "(s) del " . $fechaInicial . " al " . $fechaFinal . ".pdf", 'I');
     }
 }
 ?>
-
-<!-- <div>
-<span style="font-size:10pt;font-weight:bold;">RESUMEN GENERAL</span>
-</div>
-<table class="items" width="30%" style="font-size: 9pt; border-collapse: collapse;" >
-<thead>        
-    <tr>
-        <th align="left" style="padding:8pt;font-weight:normal;">EFECTIVO:</th>
-        <th align="right" style="padding:8pt;">'.number_format(round($totalCipJunin+$totalCipNacional, 2, PHP_ROUND_HALF_UP), 2, '.', '').'</th>
-    </tr>
-    <tr>
-        <th align="left" style="padding:8pt;font-weight:normal;">DEPOSITO:</th>
-        <th align="right" style="padding:8pt;">0.00</th>
-    </tr>
-    <tr>
-        <th align="left" style="padding:8pt;font-weight:normal;">TOTAL:</th>
-        <th align="right" style="padding:8pt;">'.number_format(round($totalCipJunin+$totalCipNacional, 2, PHP_ROUND_HALF_UP), 2, '.', '').'</th>
-    </tr>
-</thead>
-</table> -->

@@ -93,7 +93,7 @@ if (!isset($_SESSION['IdUsuario'])) {
                                 </div>
                             </div>
 
-                            <div class="col-lg-3 col-md-3 col-sm-12 col-xs-12">
+                            <div class="col-lg-2 col-md-3 col-sm-12 col-xs-12">
                                 <label>Opción.</label>
                                 <div class="form-group">
                                     <div class="input-group">
@@ -106,6 +106,13 @@ if (!isset($_SESSION['IdUsuario'])) {
                                 <label>Fecha Ult. Cuota.</label>
                                 <div class="form-group">
                                     <input type="date" id="txtFechaPago" class="form-control">
+                                </div>
+                            </div>
+
+                            <div class="col-lg-2 col-md-3 col-sm-12 col-xs-12">
+                                <label>Fecha Ult. Cuota.</label>
+                                <div class="form-group">
+                                    <input type="date" id="txtFechaHasta" class="form-control">
                                 </div>
                             </div>
                         </div>

@@ -125,7 +125,7 @@ mpdf-->
         <tbody>
             <tr>
                 <td>1</td>
-                <td>Total de personas registradas</td>
+                <td>Total de ingenieros Registradas</td>
                 <td>' . $total_condicion["Personas"] . '</td>
             </tr>
             <tr>
@@ -169,18 +169,23 @@ mpdf-->
         <tbody>
             <tr>
                 <td>1</td>
-                <td>Total personas con Colegiatura</td>
+                <td>Total de ingenieros con Colegiatura</td>
                 <td>' . $total_condicion["Colegiados"] . '</td>
             </tr>       
             <tr>
                 <td>2</td>
-                <td>Total personas sin Colegiatura</td>
+                <td>Total de ingenieros sin Colegiatura</td>
                 <td>' . $total_condicion["SinColegiatura"] . '</td>
-            </tr>      
+            </tr>   
+            <tr>
+                <td>3</td>
+                <td>Total de ingenieros Registradas</td>
+                <td>' . ($total_condicion["Colegiados"] + $total_condicion["SinColegiatura"]) . '</td>
+            </tr>    
         </tbody>
     </table>
 
-    <h4>Resumen Cuotas y Habilidad</h4>
+    <h4>Resumen Cuotas</h4>
     <table width="100%" border="0" cellspacing="0">
         <thead>
             <tr style="background: #cccccc;">
@@ -193,24 +198,50 @@ mpdf-->
         <tbody>
             <tr>
                 <td>1</td>
-                <td>Total personas con Cuotas</td>
+                <td>Total ingenieros con Cuotas</td>
                 <td>' . $total_condicion["ConCuotas"] . '</td>
-            </tr>   
+            </tr>               
             <tr>
                 <td>2</td>
-                <td>Total personas sin Cuotas</td>
+                <td>Total ingenieros sin Cuotas</td>
                 <td>' . $total_condicion["SinCuotas"] . '</td>
-            </tr>   
+            </tr>  
             <tr>
                 <td>3</td>
+                <td>Total ingenieros con Colegiatura</td>
+                <td>' . ($total_condicion["ConCuotas"] + $total_condicion["SinCuotas"]) . '</td>
+            </tr> 
+           
+        </tbody>
+    </table>
+
+    <h4>Resumen Habilidad</h4>
+    <table width="100%" border="0" cellspacing="0">
+        <thead>
+            <tr style="background: #cccccc;">
+                <th width="5%" rowspan="1">N°</th>
+                <th width="75%" rowspan="1">Descripción</th>
+                <th width="10%" rowspan="1">Cantidad</th>
+            </tr>
+        </thead>
+
+        <tbody>              
+            <tr>
+                <td>1</td>
                 <td>Total de Habilitados</td>
                 <td>' . $total_condicion["Habilitados"] . '</td>
             </tr> 
             <tr>
-                <td>4</td>
+                <td>2</td>
                 <td>Total de Inhabilitados</td>
                 <td>' . $total_condicion["Inbilitados"] . '</td>
             </tr> 
+            <tr>
+                <td>3</td>
+                <td>Total personas con Cuotas</td>
+                <td>' . ($total_condicion["Habilitados"] + $total_condicion["Inbilitados"]) . '</td>
+            </tr> 
+           
         </tbody>
     </table>
 

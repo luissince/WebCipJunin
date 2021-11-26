@@ -1250,63 +1250,101 @@ class IngresosAdo
         }
     }
 
-    public static function ResumenIngresosPorFecha($fechaInicio, $fechaFinal)
+    public static function ResumenIngresosPorFecha($opcion, $fechaInicio, $fechaFinal)
     {
         try {
             $array = array();
+            if ($opcion == "1") {
+                $arrayIngresos = array();
+                $cmdConcepto = Database::getInstance()->getDb()->prepare("SELECT 
+                c.Codigo,
+                c.Concepto,
+                sum(d.Cantidad) AS 'Cantidad',
+                CASE c.Propiedad 
+                WHEN 16 then 0
+                WHEN 48 then 0
+                ELSE sum(d.Monto) END AS 'CIPJunin',
+                CASE c.Propiedad 
+                WHEN 16 then sum(d.Monto)
+                WHEN 48 then sum(d.Monto)
+                ELSE 0 END AS 'CIPNacional',
+                i.Tipo
+                FROM Ingreso AS i 
+                INNER JOIN Detalle AS d ON i.idIngreso = d.idIngreso
+                INNER JOIN Concepto AS c ON d.idConcepto = c.idConcepto
+                LEFT JOIN NotaCredito AS nc ON nc.idIngreso = i.idIngreso
+                WHERE i.Estado = 'C' AND nc.idNotaCredito IS NULL AND i.Fecha  >= ? AND i.Fecha  <= ? 
+                GROUP BY c.Codigo,c.Concepto,c.Propiedad,i.Tipo
+                ORDER BY c.Concepto ASC");
+                $cmdConcepto->bindParam(1, $fechaInicio, PDO::PARAM_STR);
+                $cmdConcepto->bindParam(2, $fechaFinal, PDO::PARAM_STR);
+                $cmdConcepto->execute();
+                $count = 0;
 
-            $arrayIngresos = array();
-            $cmdConcepto = Database::getInstance()->getDb()->prepare("SELECT 
-            c.Codigo,
-            c.Concepto,
-            sum(d.Cantidad) AS 'Cantidad',
-            CASE c.Propiedad 
-            WHEN 16 then 0
-            WHEN 48 then 0
-            ELSE sum(d.Monto) END AS 'CIPJunin',
-            CASE c.Propiedad 
-            WHEN 16 then sum(d.Monto)
-            WHEN 48 then sum(d.Monto)
-            ELSE 0 END AS 'CIPNacional',
-            i.Tipo
-            FROM Ingreso AS i 
-            INNER JOIN Detalle AS d ON i.idIngreso = d.idIngreso
-            INNER JOIN Concepto AS c ON d.idConcepto = c.idConcepto
-            LEFT JOIN NotaCredito AS nc ON nc.idIngreso = i.idIngreso
-            WHERE i.Estado = 'C' AND nc.idNotaCredito IS NULL AND  i.Fecha  >= ? and i.Fecha  <= ? 
-            GROUP BY c.Codigo,c.Concepto,c.Propiedad,i.Tipo
-            ORDER BY c.Concepto ASC");
-            $cmdConcepto->bindParam(1, $fechaInicio, PDO::PARAM_STR);
-            $cmdConcepto->bindParam(2, $fechaFinal, PDO::PARAM_STR);
-            $cmdConcepto->execute();
-            $count = 0;
+                while ($row = $cmdConcepto->fetch()) {
+                    $count++;
+                    array_push($arrayIngresos, array(
+                        "Id" => $count,
+                        "Codigo" => $row["Codigo"],
+                        "Concepto" => $row["Concepto"],
+                        "Cantidad" => $row["Cantidad"],
+                        "CIPJunin" => $row["CIPJunin"],
+                        "CIPNacional" => $row["CIPNacional"],
+                        "Tipo" => $row["Tipo"],
+                    ));
+                }
 
-            while ($row = $cmdConcepto->fetch()) {
-                $count++;
-                array_push($arrayIngresos, array(
-                    "Id" => $count,
-                    "Codigo" => $row["Codigo"],
-                    "Concepto" => $row["Concepto"],
-                    "Cantidad" => $row["Cantidad"],
-                    "CIPJunin" => $row["CIPJunin"],
-                    "CIPNacional" => $row["CIPNacional"],
-                    "Tipo" => $row["Tipo"],
-                ));
+                $cmdMinMaxRecibos = Database::getInstance()->getDb()->prepare("SELECT 
+                min(Serie) as SerieMin,
+                min(NumRecibo) NumReciboMin,
+                max(Serie) as SerieMax,
+                max(NumRecibo) as NumReciboMax 
+                from Ingreso 
+                where Estado = 'C' AND Fecha >= ? and Fecha  <= ?");
+                $cmdMinMaxRecibos->bindParam(1, $fechaInicio, PDO::PARAM_STR);
+                $cmdMinMaxRecibos->bindParam(2, $fechaFinal, PDO::PARAM_STR);
+                $cmdMinMaxRecibos->execute();
+                $resultRecibos = $cmdMinMaxRecibos->fetchObject();
+
+                array_push($array, $arrayIngresos, $resultRecibos);
+            } else {
+                $cmdIngresosColegiado = Database::getInstance()->getDb()->prepare("SELECT 
+                isnull(p.idDNI,ep.IdEmpresa) as IdPersona,
+                isnull(p.CIP,'-') as Cip,
+                isnull(concat(p.Apellidos,', ',p.Nombres),ep.Nombre) as Persona,
+                sum(d.Monto) as Total 
+                from Ingreso as i 
+                left join Persona as p on p.idDNI = i.idDNI
+                left join EmpresaPersona as ep on ep.IdEmpresa = i.idEmpresaPersona
+                left join NotaCredito as nc on nc.idIngreso = i.idIngreso
+                inner join Detalle as d on d.idIngreso = i.idIngreso
+                where i.Estado <> 'A' and i.Fecha between ? and ? and nc.idIngreso is null
+                group by
+                p.idDNI,
+                ep.IdEmpresa,
+                p.CIP,
+                p.Apellidos,
+                p.Nombres,
+                ep.Nombre
+                ORDER BY Persona DESC");
+                $cmdIngresosColegiado->bindParam(1, $fechaInicio, PDO::PARAM_STR);
+                $cmdIngresosColegiado->bindParam(2, $fechaFinal, PDO::PARAM_STR);
+                $cmdIngresosColegiado->execute();
+
+                $arrayDetalle = array();
+                $count  = 0;
+                while ($row = $cmdIngresosColegiado->fetch()) {
+                    $count++;
+                    array_push($arrayDetalle, array(
+                        "Id" => $count,
+                        "Cip" => $row["Cip"],
+                        "Persona" => $row["Persona"],
+                        "Total" => $row["Total"]
+                    ));
+                }
+
+                array_push($array, $arrayDetalle);
             }
-
-            $cmdMinMaxRecibos = Database::getInstance()->getDb()->prepare("SELECT 
-            min(Serie) as SerieMin,
-            min(NumRecibo) NumReciboMin,
-            max(Serie) as SerieMax,
-            max(NumRecibo) as NumReciboMax 
-            from Ingreso 
-            where Estado = 'C' AND Fecha >= ? and Fecha  <= ?");
-            $cmdMinMaxRecibos->bindParam(1, $fechaInicio, PDO::PARAM_STR);
-            $cmdMinMaxRecibos->bindParam(2, $fechaFinal, PDO::PARAM_STR);
-            $cmdMinMaxRecibos->execute();
-            $resultRecibos = $cmdMinMaxRecibos->fetchObject();
-
-            array_push($array, $arrayIngresos, $resultRecibos);
 
             return $array;
         } catch (PDOException $ex) {
@@ -1436,87 +1474,266 @@ class IngresosAdo
         return $arrmonth[$month - 1];
     }
 
-    public static function ReporteGeneralIngresosPorFechas($fechaInicio, $fechaFinal, $tipoPago)
+    public static function ReporteGeneralIngresosPorFechas($fechaInicio, $fechaFinal, $tipoPago, $usuario)
     {
         try {
-            $cmdDetalle = Database::getInstance()->getDb()->prepare("SELECT 
-            i.idIngreso,
-            isnull(a.Motivo,'') AS MotivoAnulacion,
-            isnull(a.Fecha,'') AS FechaAnulacion,
-            i.Serie,
-            i.NumRecibo,
-            convert(VARCHAR, cast(i.Fecha AS DATE), 103) AS FechaPago,
-			CASE 
-            WHEN NOT cu.idCuota IS NULL THEN 1
-            WHEN NOT ac.idAltaColegio IS NULL THEN 4 
-            WHEN NOT ch.idHabilidad IS NULL THEN 5 
-            WHEN NOT cr.idResidencia IS NULL THEN 6 
-            WHEN NOT cp.idProyecto IS NULL THEN 7 
-            WHEN NOT pe.idPeritaje IS NULL THEN 8 
-            ELSE 100 END AS TipoIngreso,
-            i.Estado,
-            i.Tipo,
-			i.idBanco,
-			ISNULL(b.Nombre,'') AS NombreBanco,
-			ISNULL(i.NumOperacion,'') AS numeroOperacion,
-            p.CIP,
-            isnull(e.NumeroRuc,p.NumDoc) AS NumeroDocumento,            
-            isnull(e.Nombre, concat(p.Apellidos,' ',p.Nombres)) AS Persona,
-            sum(d.Monto) AS Total,
-            isnull(i.Xmlsunat,'') AS Xmlsunat,
-            isnull(i.Xmldescripcion,'') AS Xmldescripcion							
-            from Ingreso AS i 
-			LEFT OUTER JOIN Cuota AS cu ON cu.idIngreso = i.idIngreso 
-            LEFT OUTER JOIN AltaColegio AS ac ON ac.idIngreso = i.idIngreso 
-            LEFT OUTER JOIN CERTHabilidad AS ch ON ch.idIngreso = i.idIngreso 
-            LEFT OUTER JOIN CERTResidencia AS cr ON cr.idIngreso = i.idIngreso 
-            LEFT OUTER JOIN CERTProyecto AS cp ON cp.idIngreso = i.idIngreso 
-            LEFT OUTER JOIN Peritaje AS pe ON pe.idIngreso = i.idIngreso
-            LEFT JOIN Persona AS p ON i.idDNI = p.idDNI
-            LEFT JOIN EmpresaPersona AS e ON e.IdEmpresa = i.idEmpresaPersona 
-            INNER JOIN Detalle AS d on d.idIngreso = i.idIngreso 
-            INNER JOIN Concepto AS c on d.idConcepto = c.idConcepto
-            LEFT JOIN Anulado AS a on a.idDocumento = i.idIngreso
-            LEFT JOIN Banco AS b ON b.idBanco = i.idBanco
-            WHERE
-            $tipoPago = 0 AND cast(i.Fecha AS DATE) BETWEEN ? AND ?
-            OR
-            $tipoPago = 1 AND (cast(i.Fecha AS DATE) BETWEEN ? AND ?) AND i.tipo = 1
-            OR
-            $tipoPago = 2 AND (cast(i.Fecha AS DATE) BETWEEN ? AND ?) AND i.tipo = 2
-            GROUP BY i.idIngreso,
-            i.Serie,
-            i.NumRecibo,
-            i.Fecha,
-            i.Estado,
-            i.Tipo,
-			i.idBanco,
-			b.Nombre,
-			i.NumOperacion,
-            p.NumDoc,
-            p.CIP,
-            p.Apellidos,
-            p.Nombres,
-            e.NumeroRuc,
-            e.Nombre,
-            i.Xmlsunat,
-            i.Xmldescripcion,
-            a.Motivo,
-            a.Fecha,
-			cu.idCuota,
-			ac.idAltaColegio,
-			ch.idHabilidad,
-			cr.idResidencia,
-			cp.idProyecto,
-			pe.idPeritaje
-            ORDER BY CAST(i.Fecha AS DATE) DESC, i.NumRecibo ASC");
-            $cmdDetalle->bindParam(1, $fechaInicio, PDO::PARAM_STR);
-            $cmdDetalle->bindParam(2, $fechaFinal, PDO::PARAM_STR);
-            $cmdDetalle->bindParam(3, $fechaInicio, PDO::PARAM_STR);
-            $cmdDetalle->bindParam(4, $fechaFinal, PDO::PARAM_STR);
-            $cmdDetalle->bindParam(5, $fechaInicio, PDO::PARAM_STR);
-            $cmdDetalle->bindParam(6, $fechaFinal, PDO::PARAM_STR);
-            $cmdDetalle->execute();
+
+            if ($usuario == "") {
+                $cmdDetalle = Database::getInstance()->getDb()->prepare("SELECT 
+                i.idIngreso,
+                isnull(a.Motivo,'') AS MotivoAnulacion,
+                isnull(a.Fecha,'') AS FechaAnulacion,
+                i.Serie,
+                i.NumRecibo,
+                convert(VARCHAR, cast(i.Fecha AS DATE), 103) AS FechaPago,
+                CASE 
+                WHEN NOT cu.idCuota IS NULL THEN 1
+                WHEN NOT ac.idAltaColegio IS NULL THEN 4 
+                WHEN NOT ch.idHabilidad IS NULL THEN 5 
+                WHEN NOT cr.idResidencia IS NULL THEN 6 
+                WHEN NOT cp.idProyecto IS NULL THEN 7 
+                WHEN NOT pe.idPeritaje IS NULL THEN 8 
+                ELSE 100 END AS TipoIngreso,
+                i.Estado,
+                i.Tipo,
+                i.idBanco,
+                ISNULL(b.Nombre,'') AS NombreBanco,
+                ISNULL(i.NumOperacion,'') AS numeroOperacion,
+                p.CIP,
+                isnull(e.NumeroRuc,p.NumDoc) AS NumeroDocumento,            
+                isnull(e.Nombre, concat(p.Apellidos,' ',p.Nombres)) AS Persona,
+                sum(d.Monto) AS Total,
+                isnull(i.Xmlsunat,'') AS Xmlsunat,
+                isnull(i.Xmldescripcion,'') AS Xmldescripcion							
+                FROM Ingreso AS i 
+                LEFT OUTER JOIN Cuota AS cu ON cu.idIngreso = i.idIngreso 
+                LEFT OUTER JOIN AltaColegio AS ac ON ac.idIngreso = i.idIngreso 
+                LEFT OUTER JOIN CERTHabilidad AS ch ON ch.idIngreso = i.idIngreso 
+                LEFT OUTER JOIN CERTResidencia AS cr ON cr.idIngreso = i.idIngreso 
+                LEFT OUTER JOIN CERTProyecto AS cp ON cp.idIngreso = i.idIngreso 
+                LEFT OUTER JOIN Peritaje AS pe ON pe.idIngreso = i.idIngreso
+                LEFT JOIN Persona AS p ON i.idDNI = p.idDNI
+                LEFT JOIN EmpresaPersona AS e ON e.IdEmpresa = i.idEmpresaPersona 
+                INNER JOIN Detalle AS d on d.idIngreso = i.idIngreso 
+                INNER JOIN Concepto AS c on d.idConcepto = c.idConcepto
+                LEFT JOIN Anulado AS a on a.idDocumento = i.idIngreso
+                LEFT JOIN Banco AS b ON b.idBanco = i.idBanco               
+                WHERE
+                $tipoPago = 0 AND cast(i.Fecha AS DATE) BETWEEN ? AND ?  
+                OR
+                $tipoPago = 1 AND cast(i.Fecha AS DATE) BETWEEN ? AND ? AND i.tipo = 1 
+                OR
+                $tipoPago = 2 AND cast(i.Fecha AS DATE) BETWEEN ? AND ? AND i.tipo = 2 
+                GROUP BY i.idIngreso,
+                i.Serie,
+                i.NumRecibo,
+                i.Fecha,
+                i.Estado,
+                i.Tipo,
+                i.idBanco,
+                b.Nombre,
+                i.NumOperacion,
+                p.NumDoc,
+                p.CIP,
+                p.Apellidos,
+                p.Nombres,
+                e.NumeroRuc,
+                e.Nombre,
+                i.Xmlsunat,
+                i.Xmldescripcion,
+                a.Motivo,
+                a.Fecha,
+                cu.idCuota,
+                ac.idAltaColegio,
+                ch.idHabilidad,
+                cr.idResidencia,
+                cp.idProyecto,
+                pe.idPeritaje
+                ORDER BY CAST(i.Fecha AS DATE) DESC, i.NumRecibo ASC");
+                $cmdDetalle->bindParam(1, $fechaInicio, PDO::PARAM_STR);
+                $cmdDetalle->bindParam(2, $fechaFinal, PDO::PARAM_STR);
+                $cmdDetalle->bindParam(3, $usuario, PDO::PARAM_STR);
+                $cmdDetalle->bindParam(4, $usuario, PDO::PARAM_STR);
+
+                $cmdDetalle->bindParam(5, $fechaInicio, PDO::PARAM_STR);
+                $cmdDetalle->bindParam(6, $fechaFinal, PDO::PARAM_STR);
+                $cmdDetalle->bindParam(7, $usuario, PDO::PARAM_STR);
+                $cmdDetalle->bindParam(8, $usuario, PDO::PARAM_STR);
+
+                $cmdDetalle->bindParam(9, $fechaInicio, PDO::PARAM_STR);
+                $cmdDetalle->bindParam(10, $fechaFinal, PDO::PARAM_STR);
+                $cmdDetalle->bindParam(11, $usuario, PDO::PARAM_STR);
+                $cmdDetalle->bindParam(12, $usuario, PDO::PARAM_STR);
+                $cmdDetalle->execute();
+            } else {
+                if ($usuario == "-1") {
+                    $cmdDetalle = Database::getInstance()->getDb()->prepare("SELECT 
+                    i.idIngreso,
+                    isnull(a.Motivo,'') AS MotivoAnulacion,
+                    isnull(a.Fecha,'') AS FechaAnulacion,
+                    i.Serie,
+                    i.NumRecibo,
+                    convert(VARCHAR, cast(i.Fecha AS DATE), 103) AS FechaPago,
+                    CASE 
+                    WHEN NOT cu.idCuota IS NULL THEN 1
+                    WHEN NOT ac.idAltaColegio IS NULL THEN 4 
+                    WHEN NOT ch.idHabilidad IS NULL THEN 5 
+                    WHEN NOT cr.idResidencia IS NULL THEN 6 
+                    WHEN NOT cp.idProyecto IS NULL THEN 7 
+                    WHEN NOT pe.idPeritaje IS NULL THEN 8 
+                    ELSE 100 END AS TipoIngreso,
+                    i.Estado,
+                    i.Tipo,
+                    i.idBanco,
+                    ISNULL(b.Nombre,'') AS NombreBanco,
+                    ISNULL(i.NumOperacion,'') AS numeroOperacion,
+                    p.CIP,
+                    isnull(e.NumeroRuc,p.NumDoc) AS NumeroDocumento,            
+                    isnull(e.Nombre, concat(p.Apellidos,' ',p.Nombres)) AS Persona,
+                    sum(d.Monto) AS Total,
+                    isnull(i.Xmlsunat,'') AS Xmlsunat,
+                    isnull(i.Xmldescripcion,'') AS Xmldescripcion							
+                    FROM Ingreso AS i 
+                    LEFT OUTER JOIN Cuota AS cu ON cu.idIngreso = i.idIngreso 
+                    LEFT OUTER JOIN AltaColegio AS ac ON ac.idIngreso = i.idIngreso 
+                    LEFT OUTER JOIN CERTHabilidad AS ch ON ch.idIngreso = i.idIngreso 
+                    LEFT OUTER JOIN CERTResidencia AS cr ON cr.idIngreso = i.idIngreso 
+                    LEFT OUTER JOIN CERTProyecto AS cp ON cp.idIngreso = i.idIngreso 
+                    LEFT OUTER JOIN Peritaje AS pe ON pe.idIngreso = i.idIngreso
+                    LEFT JOIN Persona AS p ON i.idDNI = p.idDNI
+                    LEFT JOIN EmpresaPersona AS e ON e.IdEmpresa = i.idEmpresaPersona 
+                    INNER JOIN Detalle AS d on d.idIngreso = i.idIngreso 
+                    INNER JOIN Concepto AS c on d.idConcepto = c.idConcepto
+                    LEFT JOIN Anulado AS a on a.idDocumento = i.idIngreso
+                    LEFT JOIN Banco AS b ON b.idBanco = i.idBanco               
+                    WHERE
+                    $tipoPago = 0 AND cast(i.Fecha AS DATE) BETWEEN ? AND ? AND i.idUsuario = -1 
+                    OR
+                    $tipoPago = 1 AND cast(i.Fecha AS DATE) BETWEEN ? AND ? AND i.tipo = 1 AND i.idUsuario = -1 
+                    OR
+                    $tipoPago = 2 AND cast(i.Fecha AS DATE) BETWEEN ? AND ? AND i.tipo = 2 AND i.idUsuario = -1 
+                    GROUP BY i.idIngreso,
+                    i.Serie,
+                    i.NumRecibo,
+                    i.Fecha,
+                    i.Estado,
+                    i.Tipo,
+                    i.idBanco,
+                    b.Nombre,
+                    i.NumOperacion,
+                    p.NumDoc,
+                    p.CIP,
+                    p.Apellidos,
+                    p.Nombres,
+                    e.NumeroRuc,
+                    e.Nombre,
+                    i.Xmlsunat,
+                    i.Xmldescripcion,
+                    a.Motivo,
+                    a.Fecha,
+                    cu.idCuota,
+                    ac.idAltaColegio,
+                    ch.idHabilidad,
+                    cr.idResidencia,
+                    cp.idProyecto,
+                    pe.idPeritaje
+                    ORDER BY CAST(i.Fecha AS DATE) DESC, i.NumRecibo ASC");
+                    $cmdDetalle->bindParam(1, $fechaInicio, PDO::PARAM_STR);
+                    $cmdDetalle->bindParam(2, $fechaFinal, PDO::PARAM_STR);
+
+                    $cmdDetalle->bindParam(3, $fechaInicio, PDO::PARAM_STR);
+                    $cmdDetalle->bindParam(4, $fechaFinal, PDO::PARAM_STR);
+
+                    $cmdDetalle->bindParam(5, $fechaInicio, PDO::PARAM_STR);
+                    $cmdDetalle->bindParam(6, $fechaFinal, PDO::PARAM_STR);
+                    $cmdDetalle->execute();
+                } else {
+                    $cmdDetalle = Database::getInstance()->getDb()->prepare("SELECT 
+                    i.idIngreso,
+                    isnull(a.Motivo,'') AS MotivoAnulacion,
+                    isnull(a.Fecha,'') AS FechaAnulacion,
+                    i.Serie,
+                    i.NumRecibo,
+                    convert(VARCHAR, cast(i.Fecha AS DATE), 103) AS FechaPago,
+                    CASE 
+                    WHEN NOT cu.idCuota IS NULL THEN 1
+                    WHEN NOT ac.idAltaColegio IS NULL THEN 4 
+                    WHEN NOT ch.idHabilidad IS NULL THEN 5 
+                    WHEN NOT cr.idResidencia IS NULL THEN 6 
+                    WHEN NOT cp.idProyecto IS NULL THEN 7 
+                    WHEN NOT pe.idPeritaje IS NULL THEN 8 
+                    ELSE 100 END AS TipoIngreso,
+                    i.Estado,
+                    i.Tipo,
+                    i.idBanco,
+                    ISNULL(b.Nombre,'') AS NombreBanco,
+                    ISNULL(i.NumOperacion,'') AS numeroOperacion,
+                    p.CIP,
+                    isnull(e.NumeroRuc,p.NumDoc) AS NumeroDocumento,            
+                    isnull(e.Nombre, concat(p.Apellidos,' ',p.Nombres)) AS Persona,
+                    sum(d.Monto) AS Total,
+                    isnull(i.Xmlsunat,'') AS Xmlsunat,
+                    isnull(i.Xmldescripcion,'') AS Xmldescripcion							
+                    FROM Ingreso AS i 
+                    LEFT OUTER JOIN Cuota AS cu ON cu.idIngreso = i.idIngreso 
+                    LEFT OUTER JOIN AltaColegio AS ac ON ac.idIngreso = i.idIngreso 
+                    LEFT OUTER JOIN CERTHabilidad AS ch ON ch.idIngreso = i.idIngreso 
+                    LEFT OUTER JOIN CERTResidencia AS cr ON cr.idIngreso = i.idIngreso 
+                    LEFT OUTER JOIN CERTProyecto AS cp ON cp.idIngreso = i.idIngreso 
+                    LEFT OUTER JOIN Peritaje AS pe ON pe.idIngreso = i.idIngreso
+                    LEFT JOIN Persona AS p ON i.idDNI = p.idDNI
+                    LEFT JOIN EmpresaPersona AS e ON e.IdEmpresa = i.idEmpresaPersona 
+                    INNER JOIN Detalle AS d on d.idIngreso = i.idIngreso 
+                    INNER JOIN Concepto AS c on d.idConcepto = c.idConcepto
+                    LEFT JOIN Anulado AS a on a.idDocumento = i.idIngreso
+                    LEFT JOIN Banco AS b ON b.idBanco = i.idBanco
+                    INNER JOIN Usuario AS us ON us.idUsuario = i.idUsuario 
+                    WHERE
+                    $tipoPago = 0 AND cast(i.Fecha AS DATE) BETWEEN ? AND ? AND us.idUsuario = ?
+                    OR
+                    $tipoPago = 1 AND cast(i.Fecha AS DATE) BETWEEN ? AND ? AND i.tipo = 1 AND us.idUsuario = ?
+                    OR
+                    $tipoPago = 2 AND cast(i.Fecha AS DATE) BETWEEN ? AND ? AND i.tipo = 2 AND us.idUsuario = ?
+                    GROUP BY i.idIngreso,
+                    i.Serie,
+                    i.NumRecibo,
+                    i.Fecha,
+                    i.Estado,
+                    i.Tipo,
+                    i.idBanco,
+                    b.Nombre,
+                    i.NumOperacion,
+                    p.NumDoc,
+                    p.CIP,
+                    p.Apellidos,
+                    p.Nombres,
+                    e.NumeroRuc,
+                    e.Nombre,
+                    i.Xmlsunat,
+                    i.Xmldescripcion,
+                    a.Motivo,
+                    a.Fecha,
+                    cu.idCuota,
+                    ac.idAltaColegio,
+                    ch.idHabilidad,
+                    cr.idResidencia,
+                    cp.idProyecto,
+                    pe.idPeritaje
+                    ORDER BY CAST(i.Fecha AS DATE) DESC, i.NumRecibo ASC");
+                    $cmdDetalle->bindParam(1, $fechaInicio, PDO::PARAM_STR);
+                    $cmdDetalle->bindParam(2, $fechaFinal, PDO::PARAM_STR);
+                    $cmdDetalle->bindParam(3, $usuario, PDO::PARAM_STR);
+
+                    $cmdDetalle->bindParam(4, $fechaInicio, PDO::PARAM_STR);
+                    $cmdDetalle->bindParam(5, $fechaFinal, PDO::PARAM_STR);
+                    $cmdDetalle->bindParam(6, $usuario, PDO::PARAM_STR);
+
+                    $cmdDetalle->bindParam(7, $fechaInicio, PDO::PARAM_STR);
+                    $cmdDetalle->bindParam(8, $fechaFinal, PDO::PARAM_STR);
+                    $cmdDetalle->bindParam(9, $usuario, PDO::PARAM_STR);
+                    $cmdDetalle->execute();
+                }
+            }
 
             $arrayDetalle = array();
             $count = 0;
@@ -1556,9 +1773,10 @@ class IngresosAdo
             INNER JOIN Ingreso AS i ON i.idIngreso = nc.idIngreso
             LEFT JOIN Persona AS p ON i.idDNI = p.idDNI
             LEFT JOIN EmpresaPersona AS e ON e.IdEmpresa = i.idEmpresaPersona 
+            INNER JOIN Usuario AS us ON us.idUsuario = nc.idUsuario 
             INNER JOIN NotaCreditoDetalle AS ncd ON ncd.idNotaCredito = nc.idNotaCredito
             WHERE 
-            nc.Fecha BETWEEN ? AND ?
+            nc.Fecha BETWEEN ? AND ? AND (? = '' OR us.idUsuario = ?)
             GROUP BY 
             nc.Serie,
             nc.NumRecibo,
@@ -1572,6 +1790,8 @@ class IngresosAdo
             ORDER BY CAST(nc.Fecha AS DATE) DESC, nc.NumRecibo ASC");
             $cmdNotaCredito->bindParam(1, $fechaInicio, PDO::PARAM_STR);
             $cmdNotaCredito->bindParam(2, $fechaFinal, PDO::PARAM_STR);
+            $cmdNotaCredito->bindParam(3, $usuario, PDO::PARAM_STR);
+            $cmdNotaCredito->bindParam(4, $usuario, PDO::PARAM_STR);
             $cmdNotaCredito->execute();
 
             while ($row = $cmdNotaCredito->fetch()) {
@@ -1604,90 +1824,268 @@ class IngresosAdo
         }
     }
 
-    public static function ReporteGeneralIngresosPorFechasyTipoDocumento($fechaInicio, $fechaFinal, $tipoDocumento, $tipoPago)
+    public static function ReporteGeneralIngresosPorFechasyTipoDocumento($fechaInicio, $fechaFinal, $tipoDocumento, $tipoPago, $usuario)
     {
         try {
-            $cmdDetalle = Database::getInstance()->getDb()->prepare("SELECT 
-            i.idIngreso,
-            isnull(a.Motivo,'') AS MotivoAnulacion,
-            isnull(a.Fecha,'') AS FechaAnulacion,
-            i.Serie,
-            i.NumRecibo,
-            convert(VARCHAR, cast(i.Fecha AS DATE), 103) AS FechaPago,
-			CASE 
-            WHEN NOT cu.idCuota IS NULL THEN 1
-            WHEN NOT ac.idAltaColegio IS NULL THEN 4 
-            WHEN NOT ch.idHabilidad IS NULL THEN 5 
-            WHEN NOT cr.idResidencia IS NULL THEN 6 
-            WHEN NOT cp.idProyecto IS NULL THEN 7 
-            WHEN NOT pe.idPeritaje IS NULL THEN 8 
-            ELSE 100 END AS TipoIngreso,
-            i.Estado,
-            i.Tipo,
-			i.idBanco,
-			ISNULL(b.Nombre,'') AS NombreBanco,
-			ISNULL(i.NumOperacion,'') AS numeroOperacion,
-            p.CIP,
-            isnull(e.NumeroRuc,p.NumDoc) AS NumeroDocumento,            
-            isnull(e.Nombre, concat(p.Apellidos,' ',p.Nombres)) AS Persona,
-            sum(d.Monto) AS Total,
-            isnull(i.Xmlsunat,'') AS Xmlsunat,
-            isnull(i.Xmldescripcion,'') AS Xmldescripcion							
-            from Ingreso AS i 
-			LEFT OUTER JOIN Cuota AS cu ON cu.idIngreso = i.idIngreso 
-            LEFT OUTER JOIN AltaColegio AS ac ON ac.idIngreso = i.idIngreso 
-            LEFT OUTER JOIN CERTHabilidad AS ch ON ch.idIngreso = i.idIngreso 
-            LEFT OUTER JOIN CERTResidencia AS cr ON cr.idIngreso = i.idIngreso 
-            LEFT OUTER JOIN CERTProyecto AS cp ON cp.idIngreso = i.idIngreso 
-            LEFT OUTER JOIN Peritaje AS pe ON pe.idIngreso = i.idIngreso
-            LEFT JOIN Persona as p on i.idDNI = p.idDNI
-            LEFT JOIN EmpresaPersona AS e ON e.IdEmpresa = i.idEmpresaPersona 
-            INNER JOIN Detalle as d on d.idIngreso = i.idIngreso 
-            INNER JOIN Concepto as c on d.idConcepto = c.idConcepto
-            LEFT JOIN Anulado as a on a.idDocumento = i.idIngreso
-            LEFT JOIN Banco as b ON b.idBanco = i.idBanco
-            WHERE
-            $tipoPago = 0 AND (cast(i.Fecha AS DATE) BETWEEN ? AND ?) AND i.TipoComprobante = ?
-            OR
-            $tipoPago = 1 AND (cast(i.Fecha AS DATE) BETWEEN ? AND ?) AND i.TipoComprobante = ? AND i.tipo = 1
-            OR
-            $tipoPago = 2 AND (cast(i.Fecha AS DATE) BETWEEN ? AND ?) AND i.TipoComprobante = ? AND i.tipo = 2
-            GROUP BY i.idIngreso,
-            i.Serie,
-            i.NumRecibo,
-            i.Fecha,
-            i.Estado,
-            i.Tipo,
-			i.idBanco,
-			b.Nombre,
-			i.NumOperacion,
-            p.NumDoc,
-            p.CIP,
-            p.Apellidos,
-            p.Nombres,
-            e.NumeroRuc,
-            e.Nombre,
-            i.Xmlsunat,
-            i.Xmldescripcion,
-            a.Motivo,
-            a.Fecha,
-			cu.idCuota,
-			ac.idAltaColegio,
-			ch.idHabilidad,
-			cr.idResidencia,
-			cp.idProyecto,
-			pe.idPeritaje
-            ORDER BY CAST(i.Fecha AS DATE) DESC, i.NumRecibo DESC");
-            $cmdDetalle->bindParam(1, $fechaInicio, PDO::PARAM_STR);
-            $cmdDetalle->bindParam(2, $fechaFinal, PDO::PARAM_STR);
-            $cmdDetalle->bindParam(3, $tipoDocumento, PDO::PARAM_STR);
-            $cmdDetalle->bindParam(4, $fechaInicio, PDO::PARAM_STR);
-            $cmdDetalle->bindParam(5, $fechaFinal, PDO::PARAM_STR);
-            $cmdDetalle->bindParam(6, $tipoDocumento, PDO::PARAM_STR);
-            $cmdDetalle->bindParam(7, $fechaInicio, PDO::PARAM_STR);
-            $cmdDetalle->bindParam(8, $fechaFinal, PDO::PARAM_STR);
-            $cmdDetalle->bindParam(9, $tipoDocumento, PDO::PARAM_STR);
-            $cmdDetalle->execute();
+            if ($usuario == "") {
+                $cmdDetalle = Database::getInstance()->getDb()->prepare("SELECT 
+                    i.idIngreso,
+                    isnull(a.Motivo,'') AS MotivoAnulacion,
+                    isnull(a.Fecha,'') AS FechaAnulacion,
+                    i.Serie,
+                    i.NumRecibo,
+                    convert(VARCHAR, cast(i.Fecha AS DATE), 103) AS FechaPago,
+                    CASE 
+                    WHEN NOT cu.idCuota IS NULL THEN 1
+                    WHEN NOT ac.idAltaColegio IS NULL THEN 4 
+                    WHEN NOT ch.idHabilidad IS NULL THEN 5 
+                    WHEN NOT cr.idResidencia IS NULL THEN 6 
+                    WHEN NOT cp.idProyecto IS NULL THEN 7 
+                    WHEN NOT pe.idPeritaje IS NULL THEN 8 
+                    ELSE 100 END AS TipoIngreso,
+                    i.Estado,
+                    i.Tipo,
+                    i.idBanco,
+                    ISNULL(b.Nombre,'') AS NombreBanco,
+                    ISNULL(i.NumOperacion,'') AS numeroOperacion,
+                    p.CIP,
+                    isnull(e.NumeroRuc,p.NumDoc) AS NumeroDocumento,            
+                    isnull(e.Nombre, concat(p.Apellidos,' ',p.Nombres)) AS Persona,
+                    sum(d.Monto) AS Total,
+                    isnull(i.Xmlsunat,'') AS Xmlsunat,
+                    isnull(i.Xmldescripcion,'') AS Xmldescripcion							
+                    from Ingreso AS i 
+                    LEFT OUTER JOIN Cuota AS cu ON cu.idIngreso = i.idIngreso 
+                    LEFT OUTER JOIN AltaColegio AS ac ON ac.idIngreso = i.idIngreso 
+                    LEFT OUTER JOIN CERTHabilidad AS ch ON ch.idIngreso = i.idIngreso 
+                    LEFT OUTER JOIN CERTResidencia AS cr ON cr.idIngreso = i.idIngreso 
+                    LEFT OUTER JOIN CERTProyecto AS cp ON cp.idIngreso = i.idIngreso 
+                    LEFT OUTER JOIN Peritaje AS pe ON pe.idIngreso = i.idIngreso
+                    LEFT JOIN Persona as p on i.idDNI = p.idDNI
+                    LEFT JOIN EmpresaPersona AS e ON e.IdEmpresa = i.idEmpresaPersona 
+                    INNER JOIN Detalle as d on d.idIngreso = i.idIngreso 
+                    INNER JOIN Concepto as c on d.idConcepto = c.idConcepto
+                    LEFT JOIN Anulado as a on a.idDocumento = i.idIngreso
+                    LEFT JOIN Banco as b ON b.idBanco = i.idBanco               
+                    WHERE
+                    $tipoPago = 0 AND (cast(i.Fecha AS DATE) BETWEEN ? AND ?) AND i.TipoComprobante = ?
+                    OR
+                    $tipoPago = 1 AND (cast(i.Fecha AS DATE) BETWEEN ? AND ?) AND i.TipoComprobante = ? AND i.tipo = 1 
+                    OR
+                    $tipoPago = 2 AND (cast(i.Fecha AS DATE) BETWEEN ? AND ?) AND i.TipoComprobante = ? AND i.tipo = 2
+                    GROUP BY i.idIngreso,
+                    i.Serie,
+                    i.NumRecibo,
+                    i.Fecha,
+                    i.Estado,
+                    i.Tipo,
+                    i.idBanco,
+                    b.Nombre,
+                    i.NumOperacion,
+                    p.NumDoc,
+                    p.CIP,
+                    p.Apellidos,
+                    p.Nombres,
+                    e.NumeroRuc,
+                    e.Nombre,
+                    i.Xmlsunat,
+                    i.Xmldescripcion,
+                    a.Motivo,
+                    a.Fecha,
+                    cu.idCuota,
+                    ac.idAltaColegio,
+                    ch.idHabilidad,
+                    cr.idResidencia,
+                    cp.idProyecto,
+                    pe.idPeritaje
+                    ORDER BY CAST(i.Fecha AS DATE) DESC, i.NumRecibo DESC");
+                $cmdDetalle->bindParam(1, $fechaInicio, PDO::PARAM_STR);
+                $cmdDetalle->bindParam(2, $fechaFinal, PDO::PARAM_STR);
+                $cmdDetalle->bindParam(3, $tipoDocumento, PDO::PARAM_STR);
+
+                $cmdDetalle->bindParam(4, $fechaInicio, PDO::PARAM_STR);
+                $cmdDetalle->bindParam(5, $fechaFinal, PDO::PARAM_STR);
+                $cmdDetalle->bindParam(6, $tipoDocumento, PDO::PARAM_STR);
+
+                $cmdDetalle->bindParam(7, $fechaInicio, PDO::PARAM_STR);
+                $cmdDetalle->bindParam(8, $fechaFinal, PDO::PARAM_STR);
+                $cmdDetalle->bindParam(9, $tipoDocumento, PDO::PARAM_STR);
+                $cmdDetalle->execute();
+            } else {
+                if ($usuario == "-1") {
+                    $cmdDetalle = Database::getInstance()->getDb()->prepare("SELECT 
+                    i.idIngreso,
+                    isnull(a.Motivo,'') AS MotivoAnulacion,
+                    isnull(a.Fecha,'') AS FechaAnulacion,
+                    i.Serie,
+                    i.NumRecibo,
+                    convert(VARCHAR, cast(i.Fecha AS DATE), 103) AS FechaPago,
+                    CASE 
+                    WHEN NOT cu.idCuota IS NULL THEN 1
+                    WHEN NOT ac.idAltaColegio IS NULL THEN 4 
+                    WHEN NOT ch.idHabilidad IS NULL THEN 5 
+                    WHEN NOT cr.idResidencia IS NULL THEN 6 
+                    WHEN NOT cp.idProyecto IS NULL THEN 7 
+                    WHEN NOT pe.idPeritaje IS NULL THEN 8 
+                    ELSE 100 END AS TipoIngreso,
+                    i.Estado,
+                    i.Tipo,
+                    i.idBanco,
+                    ISNULL(b.Nombre,'') AS NombreBanco,
+                    ISNULL(i.NumOperacion,'') AS numeroOperacion,
+                    p.CIP,
+                    isnull(e.NumeroRuc,p.NumDoc) AS NumeroDocumento,            
+                    isnull(e.Nombre, concat(p.Apellidos,' ',p.Nombres)) AS Persona,
+                    sum(d.Monto) AS Total,
+                    isnull(i.Xmlsunat,'') AS Xmlsunat,
+                    isnull(i.Xmldescripcion,'') AS Xmldescripcion							
+                    from Ingreso AS i 
+                    LEFT OUTER JOIN Cuota AS cu ON cu.idIngreso = i.idIngreso 
+                    LEFT OUTER JOIN AltaColegio AS ac ON ac.idIngreso = i.idIngreso 
+                    LEFT OUTER JOIN CERTHabilidad AS ch ON ch.idIngreso = i.idIngreso 
+                    LEFT OUTER JOIN CERTResidencia AS cr ON cr.idIngreso = i.idIngreso 
+                    LEFT OUTER JOIN CERTProyecto AS cp ON cp.idIngreso = i.idIngreso 
+                    LEFT OUTER JOIN Peritaje AS pe ON pe.idIngreso = i.idIngreso
+                    LEFT JOIN Persona as p on i.idDNI = p.idDNI
+                    LEFT JOIN EmpresaPersona AS e ON e.IdEmpresa = i.idEmpresaPersona 
+                    INNER JOIN Detalle as d on d.idIngreso = i.idIngreso 
+                    INNER JOIN Concepto as c on d.idConcepto = c.idConcepto
+                    LEFT JOIN Anulado as a on a.idDocumento = i.idIngreso
+                    LEFT JOIN Banco as b ON b.idBanco = i.idBanco               
+                    WHERE
+                    $tipoPago = 0 AND (cast(i.Fecha AS DATE) BETWEEN ? AND ?) AND i.TipoComprobante = ? AND i.idUsuario = -1 
+                    OR
+                    $tipoPago = 1 AND (cast(i.Fecha AS DATE) BETWEEN ? AND ?) AND i.TipoComprobante = ? AND i.tipo = 1 AND i.idUsuario = -1 
+                    OR
+                    $tipoPago = 2 AND (cast(i.Fecha AS DATE) BETWEEN ? AND ?) AND i.TipoComprobante = ? AND i.tipo = 2 AND i.idUsuario = -1 
+                    GROUP BY i.idIngreso,
+                    i.Serie,
+                    i.NumRecibo,
+                    i.Fecha,
+                    i.Estado,
+                    i.Tipo,
+                    i.idBanco,
+                    b.Nombre,
+                    i.NumOperacion,
+                    p.NumDoc,
+                    p.CIP,
+                    p.Apellidos,
+                    p.Nombres,
+                    e.NumeroRuc,
+                    e.Nombre,
+                    i.Xmlsunat,
+                    i.Xmldescripcion,
+                    a.Motivo,
+                    a.Fecha,
+                    cu.idCuota,
+                    ac.idAltaColegio,
+                    ch.idHabilidad,
+                    cr.idResidencia,
+                    cp.idProyecto,
+                    pe.idPeritaje
+                    ORDER BY CAST(i.Fecha AS DATE) DESC, i.NumRecibo DESC");
+                    $cmdDetalle->bindParam(1, $fechaInicio, PDO::PARAM_STR);
+                    $cmdDetalle->bindParam(2, $fechaFinal, PDO::PARAM_STR);
+                    $cmdDetalle->bindParam(3, $tipoDocumento, PDO::PARAM_STR);
+
+                    $cmdDetalle->bindParam(4, $fechaInicio, PDO::PARAM_STR);
+                    $cmdDetalle->bindParam(5, $fechaFinal, PDO::PARAM_STR);
+                    $cmdDetalle->bindParam(6, $tipoDocumento, PDO::PARAM_STR);
+
+                    $cmdDetalle->bindParam(7, $fechaInicio, PDO::PARAM_STR);
+                    $cmdDetalle->bindParam(8, $fechaFinal, PDO::PARAM_STR);
+                    $cmdDetalle->bindParam(9, $tipoDocumento, PDO::PARAM_STR);
+                    $cmdDetalle->execute();
+                } else {
+                    $cmdDetalle = Database::getInstance()->getDb()->prepare("SELECT 
+                    i.idIngreso,
+                    isnull(a.Motivo,'') AS MotivoAnulacion,
+                    isnull(a.Fecha,'') AS FechaAnulacion,
+                    i.Serie,
+                    i.NumRecibo,
+                    convert(VARCHAR, cast(i.Fecha AS DATE), 103) AS FechaPago,
+                    CASE 
+                    WHEN NOT cu.idCuota IS NULL THEN 1
+                    WHEN NOT ac.idAltaColegio IS NULL THEN 4 
+                    WHEN NOT ch.idHabilidad IS NULL THEN 5 
+                    WHEN NOT cr.idResidencia IS NULL THEN 6 
+                    WHEN NOT cp.idProyecto IS NULL THEN 7 
+                    WHEN NOT pe.idPeritaje IS NULL THEN 8 
+                    ELSE 100 END AS TipoIngreso,
+                    i.Estado,
+                    i.Tipo,
+                    i.idBanco,
+                    ISNULL(b.Nombre,'') AS NombreBanco,
+                    ISNULL(i.NumOperacion,'') AS numeroOperacion,
+                    p.CIP,
+                    isnull(e.NumeroRuc,p.NumDoc) AS NumeroDocumento,            
+                    isnull(e.Nombre, concat(p.Apellidos,' ',p.Nombres)) AS Persona,
+                    sum(d.Monto) AS Total,
+                    isnull(i.Xmlsunat,'') AS Xmlsunat,
+                    isnull(i.Xmldescripcion,'') AS Xmldescripcion							
+                    from Ingreso AS i 
+                    LEFT OUTER JOIN Cuota AS cu ON cu.idIngreso = i.idIngreso 
+                    LEFT OUTER JOIN AltaColegio AS ac ON ac.idIngreso = i.idIngreso 
+                    LEFT OUTER JOIN CERTHabilidad AS ch ON ch.idIngreso = i.idIngreso 
+                    LEFT OUTER JOIN CERTResidencia AS cr ON cr.idIngreso = i.idIngreso 
+                    LEFT OUTER JOIN CERTProyecto AS cp ON cp.idIngreso = i.idIngreso 
+                    LEFT OUTER JOIN Peritaje AS pe ON pe.idIngreso = i.idIngreso
+                    LEFT JOIN Persona as p on i.idDNI = p.idDNI
+                    LEFT JOIN EmpresaPersona AS e ON e.IdEmpresa = i.idEmpresaPersona 
+                    INNER JOIN Detalle as d on d.idIngreso = i.idIngreso 
+                    INNER JOIN Concepto as c on d.idConcepto = c.idConcepto
+                    LEFT JOIN Anulado as a on a.idDocumento = i.idIngreso
+                    LEFT JOIN Banco as b ON b.idBanco = i.idBanco
+                    INNER JOIN Usuario AS us ON us.idUsuario = i.idUsuario 
+                    WHERE
+                    $tipoPago = 0 AND (cast(i.Fecha AS DATE) BETWEEN ? AND ?) AND i.TipoComprobante = ? AND us.idUsuario = ?
+                    OR
+                    $tipoPago = 1 AND (cast(i.Fecha AS DATE) BETWEEN ? AND ?) AND i.TipoComprobante = ? AND i.tipo = 1 AND us.idUsuario = ?
+                    OR
+                    $tipoPago = 2 AND (cast(i.Fecha AS DATE) BETWEEN ? AND ?) AND i.TipoComprobante = ? AND i.tipo = 2 AND us.idUsuario = ?
+                    GROUP BY i.idIngreso,
+                    i.Serie,
+                    i.NumRecibo,
+                    i.Fecha,
+                    i.Estado,
+                    i.Tipo,
+                    i.idBanco,
+                    b.Nombre,
+                    i.NumOperacion,
+                    p.NumDoc,
+                    p.CIP,
+                    p.Apellidos,
+                    p.Nombres,
+                    e.NumeroRuc,
+                    e.Nombre,
+                    i.Xmlsunat,
+                    i.Xmldescripcion,
+                    a.Motivo,
+                    a.Fecha,
+                    cu.idCuota,
+                    ac.idAltaColegio,
+                    ch.idHabilidad,
+                    cr.idResidencia,
+                    cp.idProyecto,
+                    pe.idPeritaje
+                    ORDER BY CAST(i.Fecha AS DATE) DESC, i.NumRecibo DESC");
+                    $cmdDetalle->bindParam(1, $fechaInicio, PDO::PARAM_STR);
+                    $cmdDetalle->bindParam(2, $fechaFinal, PDO::PARAM_STR);
+                    $cmdDetalle->bindParam(3, $tipoDocumento, PDO::PARAM_STR);
+                    $cmdDetalle->bindParam(4, $usuario, PDO::PARAM_STR);
+
+                    $cmdDetalle->bindParam(5, $fechaInicio, PDO::PARAM_STR);
+                    $cmdDetalle->bindParam(6, $fechaFinal, PDO::PARAM_STR);
+                    $cmdDetalle->bindParam(7, $tipoDocumento, PDO::PARAM_STR);
+                    $cmdDetalle->bindParam(8, $usuario, PDO::PARAM_STR);
+
+                    $cmdDetalle->bindParam(9, $fechaInicio, PDO::PARAM_STR);
+                    $cmdDetalle->bindParam(10, $fechaFinal, PDO::PARAM_STR);
+                    $cmdDetalle->bindParam(11, $tipoDocumento, PDO::PARAM_STR);
+                    $cmdDetalle->bindParam(12, $usuario, PDO::PARAM_STR);
+                    $cmdDetalle->execute();
+                }
+            }
 
             $arrayDetalle = array();
             $count = 0;
@@ -1727,9 +2125,10 @@ class IngresosAdo
             INNER JOIN Ingreso AS i ON i.idIngreso = nc.idIngreso
             LEFT JOIN Persona AS p ON i.idDNI = p.idDNI
             LEFT JOIN EmpresaPersona AS e ON e.IdEmpresa = i.idEmpresaPersona 
+            LEFT JOIN Usuario AS us ON us.idUsuario = nc.idUsuario 
             INNER JOIN NotaCreditoDetalle AS ncd ON ncd.idNotaCredito = nc.idNotaCredito
             WHERE 
-            nc.Fecha BETWEEN ? AND ? AND nc.TipoComprobante = ?
+            nc.Fecha BETWEEN ? AND ? AND nc.TipoComprobante = ? AND (? = '' OR us.idUsuario = ?)
             GROUP BY 
             nc.Serie,
             nc.NumRecibo,
@@ -1744,6 +2143,8 @@ class IngresosAdo
             $cmdNotaCredito->bindParam(1, $fechaInicio, PDO::PARAM_STR);
             $cmdNotaCredito->bindParam(2, $fechaFinal, PDO::PARAM_STR);
             $cmdNotaCredito->bindParam(3, $tipoDocumento, PDO::PARAM_STR);
+            $cmdNotaCredito->bindParam(4, $usuario, PDO::PARAM_STR);
+            $cmdNotaCredito->bindParam(5, $usuario, PDO::PARAM_STR);
             $cmdNotaCredito->execute();
 
             while ($row = $cmdNotaCredito->fetch()) {

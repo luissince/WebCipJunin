@@ -185,7 +185,7 @@ if (!is_array($listarColegiados)) {
             ->setCellValue("H2", "FECHA COLEGIADO")
             ->setCellValue("I2", "MESES DE DEUDA")
             ->setCellValue("J2", "FECHA A VITALICIO");
-    } else if ($data['opcion'] == 5){
+    } else if ($data['opcion'] == 5) {
         $documento->setActiveSheetIndex(0)
             ->setCellValue("A2", "N°")
             ->setCellValue("B2", "DNI")
@@ -266,7 +266,7 @@ if (!is_array($listarColegiados)) {
                 )
             ));
 
-            $documento->getActiveSheet()->getStyle('I' . $cel . ':K' . $cel. '')->applyFromArray(array(
+            $documento->getActiveSheet()->getStyle('I' . $cel . ':K' . $cel . '')->applyFromArray(array(
                 'font'  => array(
                     'bold'  =>  false,
                     'color' => array('rgb' => '000000')
@@ -290,12 +290,12 @@ if (!is_array($listarColegiados)) {
                 ->setCellValue("A" . $cel,  strval($count))
                 ->setCellValue("B" . $cel, strval($value["idDNI"]))
                 ->setCellValue("C" . $cel, strval($value["CIP"]))
-                ->setCellValue("D" . $cel, strval($value["Apellidos"].', '.$value["Nombres"]))
+                ->setCellValue("D" . $cel, strval($value["Apellidos"] . ', ' . $value["Nombres"]))
                 ->setCellValue("E" . $cel, strval($value["Condicion"]))
                 ->setCellValue("F" . $cel, strval($value["Capitulo"]))
                 ->setCellValue("G" . $cel, strval($value["Especialidad"]))
                 ->setCellValue("H" . $cel, strval($value["FechaColegiado"]))
-                ->setCellValue("I" . $cel, strval($value["MesAumento"]). " Meses")
+                ->setCellValue("I" . $cel, strval($value["MesAumento"]) . " Meses")
                 ->setCellValue("J" . $cel, strval($value["Cumple"]));
             $cel++;
         }
@@ -330,7 +330,7 @@ if (!is_array($listarColegiados)) {
                 ->setCellValue("A" . $cel,  strval($count))
                 ->setCellValue("B" . $cel, strval($value["idDNI"]))
                 ->setCellValue("C" . $cel, strval($value["CIP"]))
-                ->setCellValue("D" . $cel, strval($value["Apellidos"].', '.$value["Nombres"]))
+                ->setCellValue("D" . $cel, strval($value["Apellidos"] . ', ' . $value["Nombres"]))
                 ->setCellValue("E" . $cel, strval($value["Condicion"]))
                 ->setCellValue("F" . $cel, strval($value["FechaColegiado"]))
                 ->setCellValue("G" . $cel, strval($value["FechaRegistro"]))
@@ -338,7 +338,7 @@ if (!is_array($listarColegiados)) {
                 ->setCellValue("I" . $cel, strval($value["Especialidad"]));
             $cel++;
         }
-    }else {
+    } else {
         foreach ($listarColegiados as $key => $value) {
             $count++;
             $documento->getActiveSheet()->getStyle('A' . $cel . ':I' . $cel . '')->applyFromArray(array(

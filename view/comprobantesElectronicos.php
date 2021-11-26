@@ -665,7 +665,7 @@ if (!isset($_SESSION['IdUsuario'])) {
                                 resolve(result);
                             },
                             error: function(error) {
-                                reject("Error en el momento de firmar el xml: " + error.responseText);
+                                reject(error.responseText == null || error.responseText == '' ? "Error en el momento de firmar el xml, intente nuevamente." : error.responseText);
                             }
                         });
                     });
@@ -683,7 +683,7 @@ if (!isset($_SESSION['IdUsuario'])) {
                                 resolve(result);
                             },
                             error: function(error) {
-                                reject("Error en el momento de firmar el xml: " + error.responseText);
+                                reject(error.responseText == null || error.responseText == '' ? "Error en el momento de firmar el xml, intente nuevamente." : error.responseText);
                             }
                         });
                     });
@@ -701,7 +701,7 @@ if (!isset($_SESSION['IdUsuario'])) {
                                 resolve(result);
                             },
                             error: function(error) {
-                                reject("Error en el momento de firmar el xml: " + error.responseText);
+                                reject(error.responseText == null || error.responseText == '' ? "Error en el momento de firmar el xml, intente nuevamente." : error.responseText);
                             }
                         });
                     });

@@ -77,6 +77,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
                 "message" => $result,
             ));
         }
+    } else if ($_GET["type"] == "listUsuario") {
+        echo json_encode(UsuarioAdo::listUsuarios($_GET["fInicio"], $_GET["fFinal"]));
     }
 } else if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     if ($_POST["type"] === "insertUsuario") {

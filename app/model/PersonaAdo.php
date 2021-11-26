@@ -1774,7 +1774,7 @@ class PersonaAdo
             p.Condicion as CodigoCondicion,
             CASE p.Condicion
             WHEN 'T' THEN 'Transeunte'
-            WHEN 'F' THEN 'Fallecido'
+            WHEN 'F' THEN 'Fallecido' 
             WHEN 'R' THEN 'Retirado'
             WHEN 'V' THEN 'Vitalicio'
             ELSE 'Ordinario' END AS Condicion,

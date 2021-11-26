@@ -196,6 +196,30 @@ class UsuarioAdo
         }
     }
 
+    public static function listUsuarios($fechaInicio, $fechaFinal)
+    {
+        try {
+            $cmdUsuarios = Database::getInstance()->getDb()->prepare("SELECT DISTINCT
+            i.idUsuario,
+            CASE
+            WHEN NOT u.idUsuario IS NULL THEN CONCAT(u.Apellidos,', ',u.Nombres)
+            ELSE 'USUARIO LIBRE' END AS Usuario
+            FROM Ingreso AS i 
+            LEFT JOIN Usuario AS u ON u.idUsuario = i.idUsuario
+            WHERE i.Fecha BETWEEN ? AND ?");
+            $cmdUsuarios->execute(array($fechaInicio, $fechaFinal));
+            $protocol = (isset($_SERVER['SERVER_PROTOCOL']) ? $_SERVER['SERVER_PROTOCOL'] : 'HTTP/1.0');
+            header($protocol . ' ' . 200 . ' ' . "OK");
+
+            return $cmdUsuarios->fetchAll(PDO::FETCH_OBJ);
+        } catch (Exception $ex) {
+            $protocol = (isset($_SERVER['SERVER_PROTOCOL']) ? $_SERVER['SERVER_PROTOCOL'] : 'HTTP/1.0');
+            header($protocol . ' ' . 500 . ' ' . "Internal Server Error");
+
+            return $ex->getMessage();
+        }
+    }
+
     public static function login($usuario, $clave)
     {
         try {

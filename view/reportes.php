@@ -40,6 +40,30 @@ if (!isset($_SESSION['IdUsuario'])) {
                                 <div class="modal-body">
 
                                     <div class="row">
+                                        <div class="col-md-6 col-sm-12 col-xs-12">
+                                            <div class="form-group">
+                                                <div class="radio">
+                                                    <label>
+                                                        <input type="radio" name="rbIngresos" id="rbAllIngresos" checked>
+                                                        Todos los Ingresos
+                                                    </label>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <div class="col-md-6 col-sm-12 col-xs-12">
+                                            <div class="form-group">
+                                                <div class="radio">
+                                                    <label>
+                                                        <input type="radio" name="rbIngresos" id="tbColIngresos">
+                                                        Ingresos por Agremiado
+                                                    </label>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="row">
                                         <div class="col-md-6">
                                             <div class="form-group">
                                                 <label for="fi_ingresos">Fecha Inicio: <i class="fa fa-fw fa-asterisk text-danger"></i></label>
@@ -194,13 +218,28 @@ if (!isset($_SESSION['IdUsuario'])) {
                                         <div class="col-md-6">
                                             <div class="form-group">
                                                 <label for="fi_comprobantes">Fecha Inicio: <i class="fa fa-fw fa-asterisk text-danger"></i></label>
-                                                <input id="fi_comprobantes" type="date" name="fi_comprobantes" class="form-control" required="">
+                                                <input id="fi_comprobantes" type="date" class="form-control" required="">
                                             </div>
                                         </div>
                                         <div class="col-md-6">
                                             <div class="form-group">
                                                 <label for="ff_comprobantes">Fecha Fin: <i class="fa fa-fw fa-asterisk text-danger"></i></label>
-                                                <input id="ff_comprobantes" type="date" name="ff_ingresos" class="form-control" required="">
+                                                <input id="ff_comprobantes" type="date" class="form-control" required="">
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="row">
+                                        <div class="col-md-12">
+                                            <div class="form-group">
+                                                <div class="input-group">
+                                                    <select class="form-control" id="cbUsuario">
+                                                        <option value="">- Usuarios -</option>
+                                                    </select>
+                                                    <div class="input-group-btn">
+                                                        <button type="button" class="btn btn-info" id="btnBuscarComprobante">Buscar</button>
+                                                    </div>
+                                                </div>
                                             </div>
                                         </div>
                                     </div>
@@ -380,7 +419,7 @@ if (!isset($_SESSION['IdUsuario'])) {
                                                                 <div class="panel-body" style="text-align: center;">
                                                                     <img src="images/informe-medico.png" alt="Vender" width="87">
                                                                     <p style="margin-top: 10px;font-size: 14pt;color:#C68907;">
-                                                                        Lista de Colegiados
+                                                                        Reporte de Colegiados
                                                                     </p>
                                                                 </div>
                                                             </div>
@@ -487,8 +526,9 @@ if (!isset($_SESSION['IdUsuario'])) {
                     $("#btnAceptarIngresos").click(function() {
                         let fechaInicial = $("#fi_ingresos").val();
                         let fechaFinal = $("#ff_ingresos").val();
+                        let opcion = $("#rbAllIngresos").is(":checked") ? 1 : 2;
                         if (fechaInicial != '' && fechaFinal != null) {
-                            window.open("../app/sunat/resumeningresos.php?fechaInicial=" + fechaInicial + "&fechaFinal=" + fechaFinal, "_blank");
+                            window.open("../app/sunat/resumenIngresos.php?fechaInicial=" + fechaInicial + "&fechaFinal=" + fechaFinal + "&opcion=" + opcion, "_blank");
                         }
                     });
 
@@ -550,6 +590,62 @@ if (!isset($_SESSION['IdUsuario'])) {
 
                     $("#brTipoComprobantes").click(function() {
                         $("#cbTipodeDocumento").removeAttr('disabled')
+                    });
+
+                    $("#btnBuscarComprobante").click(function() {
+                        $.ajax({
+                            url: "../app/controller/UsuarioController.php",
+                            method: "GET",
+                            data: {
+                                "type": "listUsuario",
+                                "fInicio": $("#fi_comprobantes").val(),
+                                "fFinal": $("#ff_comprobantes").val()
+                            },
+                            beforeSend: function() {
+                                $("#cbUsuario").empty();
+                                $("#cbUsuario").append('<option value="">Buscando...</option>');
+                            },
+                            success: function(result) {
+                                $("#cbUsuario").empty();
+                                $("#cbUsuario").append('<option value="">- Usuarios -</option>');
+                                for (let value of result) {
+                                    $("#cbUsuario").append('<option value="' + value.idUsuario + '">' + value.Usuario + '</option>');
+                                }
+                            },
+                            error: function(error) {
+                                $("#cbUsuario").empty();
+                                $("#cbUsuario").append('<option value="">- Usuarios -</option>');
+
+                            }
+                        });
+                    });
+
+                    $("#btnBuscarComprobante").keypress(function(event) {
+                        if (event.keyCode == 13) {
+                            $.ajax({
+                                url: "../app/controller/UsuarioController.php",
+                                method: "GET",
+                                data: {
+                                    "type": "listUsuario",
+                                    "fInicio": $("#fi_comprobantes").val(),
+                                    "fFinal": $("#ff_comprobantes").val()
+                                },
+                                beforeSend: function() {
+                                    $("#cbUsuario").empty();
+                                },
+                                success: function(result) {
+                                    $("#cbUsuario").append('<option value="">- Usuarios -</option>');
+                                    for (let value of result) {
+                                        $("#cbUsuario").append('<option value="' + value.idUsuario + '">' + value.Apellidos + ', ' + value.Nombres + '</option>');
+                                    }
+                                },
+                                error: function(error) {
+                                    $("#cbUsuario").append('<option value="">- Usuarios -</option>');
+
+                                }
+                            });
+                            event.preventDefault();
+                        }
                     });
 
                     //Radio Buttons Aportes del CIN
@@ -675,7 +771,7 @@ if (!isset($_SESSION['IdUsuario'])) {
                                 tools.AlertWarning("reportes", "La fecha inicial no puede ser mayor que la fecha final")
                                 $("#fi_comprobantes").focus();
                             } else {
-                                openExcel($("#fi_comprobantes").val(), $("#ff_comprobantes").val(), $("#cbTipodeDocumento").val(), $("#cbTipodePago").val());
+                                openExcel($("#fi_comprobantes").val(), $("#ff_comprobantes").val(), $("#cbTipodeDocumento").val(), $("#cbTipodePago").val(), $("#cbUsuario").val());
                             }
                         } else {
                             tools.AlertWarning("reportes", "Ingrese un rango de fecha válido")
@@ -689,7 +785,7 @@ if (!isset($_SESSION['IdUsuario'])) {
                                 tools.AlertWarning("reportes", "La fecha inicial no puede ser mayor que la fecha final")
                                 $("#fi_comprobantes").focus();
                             } else {
-                                openPdf($("#fi_comprobantes").val(), $("#ff_comprobantes").val(), $("#cbTipodeDocumento").val(), $("#cbTipodePago").val());
+                                openPdf($("#fi_comprobantes").val(), $("#ff_comprobantes").val(), $("#cbTipodeDocumento").val(), $("#cbTipodePago").val(), $("#cbUsuario").val());
                             }
                         } else {
                             tools.AlertWarning("reportes", "Ingrese un rango de fecha válido")
@@ -762,32 +858,32 @@ if (!isset($_SESSION['IdUsuario'])) {
                     });
                 }
 
-                function openExcel(fechaInicio, fechaFinal, tipoDocumento, tipoPago) {
+                function openExcel(fechaInicio, fechaFinal, tipoDocumento, tipoPago, usuario) {
                     let nombreComprobante = $("#cbTipodeDocumento").find('option:selected').text().toLowerCase();
                     if ($("#brComprobantes").is(':checked')) {
-                        window.open("../app/sunat/excelventa.php?txtFechaInicial=" + fechaInicio + "&txtFechaFinal=" + fechaFinal + "&cbTipoDocumento=" + "null" + "&cbTipoPago=" + tipoPago, "_blank");
-                        cleanModalComprobantes();
+                        window.open("../app/sunat/excelComprobantes.php?txtFechaInicial=" + fechaInicio + "&txtFechaFinal=" + fechaFinal + "&cbTipoDocumento=" + "null" + "&cbTipoPago=" + tipoPago + "&usuario=" + usuario, "_blank");
+
                     } else {
                         if ($("#cbTipodeDocumento").val() == '') {
                             tools.AlertWarning("reportes", "Seleccione un tipo de documento")
                             $("#cbTipodeDocumento").focus();
                         } else {
-                            window.open("../app/sunat/excelventa.php?txtFechaInicial=" + fechaInicio + "&txtFechaFinal=" + fechaFinal + "&cbTipoDocumento=" + tipoDocumento + "&nombreComprobante=" + nombreComprobante + "&cbTipoPago=" + tipoPago, "_blank");
-                            cleanModalComprobantes();
+                            window.open("../app/sunat/excelComprobantes.php?txtFechaInicial=" + fechaInicio + "&txtFechaFinal=" + fechaFinal + "&cbTipoDocumento=" + tipoDocumento + "&nombreComprobante=" + nombreComprobante + "&cbTipoPago=" + tipoPago + "&usuario=" + usuario, "_blank");
+
                         }
                     }
                 }
 
-                function openPdf(fechaInicio, fechaFinal, tipoDocumento, tipoPago) {
+                function openPdf(fechaInicio, fechaFinal, tipoDocumento, tipoPago, usuario) {
                     let nombreComprobante = $("#cbTipodeDocumento").find('option:selected').text().toLowerCase();
                     if ($("#brComprobantes").is(':checked')) {
-                        window.open("../app/sunat/resumenComprobantes.php?txtFechaInicial=" + fechaInicio + "&txtFechaFinal=" + fechaFinal + "&cbTipoDocumento=" + "null" + "&cbTipoPago=" + tipoPago, "_blank");
+                        window.open("../app/sunat/resumenComprobantes.php?txtFechaInicial=" + fechaInicio + "&txtFechaFinal=" + fechaFinal + "&cbTipoDocumento=" + "null" + "&cbTipoPago=" + tipoPago + "&usuario=" + usuario, "_blank");
                     } else {
                         if ($("#cbTipodeDocumento").val() == '') {
                             tools.AlertWarning("reportes", "Seleccione un tipo de documento")
                             $("#cbTipodeDocumento").focus();
                         } else {
-                            window.open("../app/sunat/resumenComprobantes.php?txtFechaInicial=" + fechaInicio + "&txtFechaFinal=" + fechaFinal + "&cbTipoDocumento=" + tipoDocumento + "&nombreComprobante=" + nombreComprobante + "&cbTipoPago=" + tipoPago, "_blank");
+                            window.open("../app/sunat/resumenComprobantes.php?txtFechaInicial=" + fechaInicio + "&txtFechaFinal=" + fechaFinal + "&cbTipoDocumento=" + tipoDocumento + "&nombreComprobante=" + nombreComprobante + "&cbTipoPago=" + tipoPago + "&usuario=" + usuario, "_blank");
                         }
                     }
                 }
@@ -821,6 +917,8 @@ if (!isset($_SESSION['IdUsuario'])) {
                     $("#cbTipodeDocumento").val('');
                     $("#fi_comprobantes").val(tools.getCurrentDate());
                     $("#ff_comprobantes").val(tools.getCurrentDate());
+                    $("#cbUsuario").empty();
+                    $("#cbUsuario").append('<option value="">- Usuarios -</option>');
                     $("#cbTipodePago").val('0');
                 }
             </script>

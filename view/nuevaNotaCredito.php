@@ -241,6 +241,8 @@ if (!isset($_SESSION['IdUsuario'])) {
             let idPersona = 0;
             let arrayDetalle = [];
 
+            let idUsuario = <?= $_SESSION['IdUsuario'] ?>;
+
             $(document).ready(function() {
 
                 $("#registrarNotaCredito").click(function() {
@@ -415,6 +417,7 @@ if (!isset($_SESSION['IdUsuario'])) {
                                     "type": "registro",
                                     "idIngreso": idIngreso,
                                     "idPersona": idPersona,
+                                    "idUsuario": idUsuario,
                                     "idTipoNotaCredito": $("#cbNotaCredito").val(),
                                     "fechaRegistro": $("#txtFechaRegistro").val(),
                                     "idMotivoNotaCredito": $("#cbMotivoNotaCredito").val(),

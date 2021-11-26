@@ -314,18 +314,20 @@ class NotaCreditoAdo
 
                     $cmdIngreso = Database::getInstance()->getDb()->prepare("INSERT INTO NotaCredito(
                     idIngreso,
+                    idUsuario,
                     idMotivoAnulacion,
                     TipoComprobante,
                     Serie,
                     NumRecibo,
                     Fecha,
                     Hora
-                    )VALUES(?,?,?,?,?,GETDATE(),GETDATE())");
+                    )VALUES(?,?,?,?,?,?,GETDATE(),GETDATE())");
                     $cmdIngreso->bindParam(1, $body["idIngreso"], PDO::PARAM_STR);
-                    $cmdIngreso->bindParam(2, $body["idMotivoNotaCredito"], PDO::PARAM_INT);
-                    $cmdIngreso->bindParam(3, $body["idTipoNotaCredito"], PDO::PARAM_INT);
-                    $cmdIngreso->bindParam(4, $serie_numeracion[0], PDO::PARAM_STR);
-                    $cmdIngreso->bindParam(5, $serie_numeracion[1], PDO::PARAM_STR);
+                    $cmdIngreso->bindParam(2, $body["idUsuario"], PDO::PARAM_STR);
+                    $cmdIngreso->bindParam(3, $body["idMotivoNotaCredito"], PDO::PARAM_INT);
+                    $cmdIngreso->bindParam(4, $body["idTipoNotaCredito"], PDO::PARAM_INT);
+                    $cmdIngreso->bindParam(5, $serie_numeracion[0], PDO::PARAM_STR);
+                    $cmdIngreso->bindParam(6, $serie_numeracion[1], PDO::PARAM_STR);
                     $cmdIngreso->execute();
 
                     $idNotaCredito = Database::getInstance()->getDb()->lastInsertId();
