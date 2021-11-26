@@ -1521,9 +1521,11 @@ class IngresosAdo
                 WHERE
                 $tipoPago = 0 AND cast(i.Fecha AS DATE) BETWEEN ? AND ?  
                 OR
-                $tipoPago = 1 AND cast(i.Fecha AS DATE) BETWEEN ? AND ? AND i.tipo = 1 
+                $tipoPago = 1 AND cast(i.Fecha AS DATE) BETWEEN ? AND ? AND i.Tipo = 1 
                 OR
-                $tipoPago = 2 AND cast(i.Fecha AS DATE) BETWEEN ? AND ? AND i.tipo = 2 
+                $tipoPago = 2 AND cast(i.Fecha AS DATE) BETWEEN ? AND ? AND i.Tipo = 2 
+                OR
+                $tipoPago = 3 AND cast(i.Fecha AS DATE) BETWEEN ? AND ? AND i.Tipo = 3 
                 GROUP BY i.idIngreso,
                 i.Serie,
                 i.NumRecibo,
@@ -1552,18 +1554,16 @@ class IngresosAdo
                 ORDER BY CAST(i.Fecha AS DATE) DESC, i.NumRecibo ASC");
                 $cmdDetalle->bindParam(1, $fechaInicio, PDO::PARAM_STR);
                 $cmdDetalle->bindParam(2, $fechaFinal, PDO::PARAM_STR);
-                $cmdDetalle->bindParam(3, $usuario, PDO::PARAM_STR);
-                $cmdDetalle->bindParam(4, $usuario, PDO::PARAM_STR);
+
+                $cmdDetalle->bindParam(3, $fechaInicio, PDO::PARAM_STR);
+                $cmdDetalle->bindParam(4, $fechaFinal, PDO::PARAM_STR);
 
                 $cmdDetalle->bindParam(5, $fechaInicio, PDO::PARAM_STR);
                 $cmdDetalle->bindParam(6, $fechaFinal, PDO::PARAM_STR);
-                $cmdDetalle->bindParam(7, $usuario, PDO::PARAM_STR);
-                $cmdDetalle->bindParam(8, $usuario, PDO::PARAM_STR);
 
-                $cmdDetalle->bindParam(9, $fechaInicio, PDO::PARAM_STR);
-                $cmdDetalle->bindParam(10, $fechaFinal, PDO::PARAM_STR);
-                $cmdDetalle->bindParam(11, $usuario, PDO::PARAM_STR);
-                $cmdDetalle->bindParam(12, $usuario, PDO::PARAM_STR);
+                $cmdDetalle->bindParam(7, $fechaInicio, PDO::PARAM_STR);
+                $cmdDetalle->bindParam(8, $fechaFinal, PDO::PARAM_STR);
+
                 $cmdDetalle->execute();
             } else {
                 if ($usuario == "-1") {
@@ -1609,9 +1609,11 @@ class IngresosAdo
                     WHERE
                     $tipoPago = 0 AND cast(i.Fecha AS DATE) BETWEEN ? AND ? AND i.idUsuario = -1 
                     OR
-                    $tipoPago = 1 AND cast(i.Fecha AS DATE) BETWEEN ? AND ? AND i.tipo = 1 AND i.idUsuario = -1 
+                    $tipoPago = 1 AND cast(i.Fecha AS DATE) BETWEEN ? AND ? AND i.Tipo = 1 AND i.idUsuario = -1 
                     OR
-                    $tipoPago = 2 AND cast(i.Fecha AS DATE) BETWEEN ? AND ? AND i.tipo = 2 AND i.idUsuario = -1 
+                    $tipoPago = 2 AND cast(i.Fecha AS DATE) BETWEEN ? AND ? AND i.Tipo = 2 AND i.idUsuario = -1 
+                    OR
+                    $tipoPago = 3 AND cast(i.Fecha AS DATE) BETWEEN ? AND ? AND i.Tipo = 3 AND i.idUsuario = -1 
                     GROUP BY i.idIngreso,
                     i.Serie,
                     i.NumRecibo,
@@ -1646,6 +1648,9 @@ class IngresosAdo
 
                     $cmdDetalle->bindParam(5, $fechaInicio, PDO::PARAM_STR);
                     $cmdDetalle->bindParam(6, $fechaFinal, PDO::PARAM_STR);
+
+                    $cmdDetalle->bindParam(7, $fechaInicio, PDO::PARAM_STR);
+                    $cmdDetalle->bindParam(8, $fechaFinal, PDO::PARAM_STR);
                     $cmdDetalle->execute();
                 } else {
                     $cmdDetalle = Database::getInstance()->getDb()->prepare("SELECT 
@@ -1691,9 +1696,11 @@ class IngresosAdo
                     WHERE
                     $tipoPago = 0 AND cast(i.Fecha AS DATE) BETWEEN ? AND ? AND us.idUsuario = ?
                     OR
-                    $tipoPago = 1 AND cast(i.Fecha AS DATE) BETWEEN ? AND ? AND i.tipo = 1 AND us.idUsuario = ?
+                    $tipoPago = 1 AND cast(i.Fecha AS DATE) BETWEEN ? AND ? AND i.Tipo = 1 AND us.idUsuario = ?
                     OR
-                    $tipoPago = 2 AND cast(i.Fecha AS DATE) BETWEEN ? AND ? AND i.tipo = 2 AND us.idUsuario = ?
+                    $tipoPago = 2 AND cast(i.Fecha AS DATE) BETWEEN ? AND ? AND i.Tipo = 2 AND us.idUsuario = ?
+                    OR
+                    $tipoPago = 3 AND cast(i.Fecha AS DATE) BETWEEN ? AND ? AND i.Tipo = 3 AND us.idUsuario = ?
                     GROUP BY i.idIngreso,
                     i.Serie,
                     i.NumRecibo,
@@ -1731,6 +1738,10 @@ class IngresosAdo
                     $cmdDetalle->bindParam(7, $fechaInicio, PDO::PARAM_STR);
                     $cmdDetalle->bindParam(8, $fechaFinal, PDO::PARAM_STR);
                     $cmdDetalle->bindParam(9, $usuario, PDO::PARAM_STR);
+
+                    $cmdDetalle->bindParam(10, $fechaInicio, PDO::PARAM_STR);
+                    $cmdDetalle->bindParam(11, $fechaFinal, PDO::PARAM_STR);
+                    $cmdDetalle->bindParam(12, $usuario, PDO::PARAM_STR);
                     $cmdDetalle->execute();
                 }
             }
@@ -1870,9 +1881,11 @@ class IngresosAdo
                     WHERE
                     $tipoPago = 0 AND (cast(i.Fecha AS DATE) BETWEEN ? AND ?) AND i.TipoComprobante = ?
                     OR
-                    $tipoPago = 1 AND (cast(i.Fecha AS DATE) BETWEEN ? AND ?) AND i.TipoComprobante = ? AND i.tipo = 1 
+                    $tipoPago = 1 AND (cast(i.Fecha AS DATE) BETWEEN ? AND ?) AND i.TipoComprobante = ? AND i.Tipo = 1 
                     OR
-                    $tipoPago = 2 AND (cast(i.Fecha AS DATE) BETWEEN ? AND ?) AND i.TipoComprobante = ? AND i.tipo = 2
+                    $tipoPago = 2 AND (cast(i.Fecha AS DATE) BETWEEN ? AND ?) AND i.TipoComprobante = ? AND i.Tipo = 2
+                    OR
+                    $tipoPago = 3 AND (cast(i.Fecha AS DATE) BETWEEN ? AND ?) AND i.TipoComprobante = ? AND i.Tipo = 3
                     GROUP BY i.idIngreso,
                     i.Serie,
                     i.NumRecibo,
@@ -1910,6 +1923,10 @@ class IngresosAdo
                 $cmdDetalle->bindParam(7, $fechaInicio, PDO::PARAM_STR);
                 $cmdDetalle->bindParam(8, $fechaFinal, PDO::PARAM_STR);
                 $cmdDetalle->bindParam(9, $tipoDocumento, PDO::PARAM_STR);
+
+                $cmdDetalle->bindParam(10, $fechaInicio, PDO::PARAM_STR);
+                $cmdDetalle->bindParam(11, $fechaFinal, PDO::PARAM_STR);
+                $cmdDetalle->bindParam(12, $tipoDocumento, PDO::PARAM_STR);
                 $cmdDetalle->execute();
             } else {
                 if ($usuario == "-1") {
@@ -1955,9 +1972,11 @@ class IngresosAdo
                     WHERE
                     $tipoPago = 0 AND (cast(i.Fecha AS DATE) BETWEEN ? AND ?) AND i.TipoComprobante = ? AND i.idUsuario = -1 
                     OR
-                    $tipoPago = 1 AND (cast(i.Fecha AS DATE) BETWEEN ? AND ?) AND i.TipoComprobante = ? AND i.tipo = 1 AND i.idUsuario = -1 
+                    $tipoPago = 1 AND (cast(i.Fecha AS DATE) BETWEEN ? AND ?) AND i.TipoComprobante = ? AND i.Tipo = 1 AND i.idUsuario = -1 
                     OR
-                    $tipoPago = 2 AND (cast(i.Fecha AS DATE) BETWEEN ? AND ?) AND i.TipoComprobante = ? AND i.tipo = 2 AND i.idUsuario = -1 
+                    $tipoPago = 2 AND (cast(i.Fecha AS DATE) BETWEEN ? AND ?) AND i.TipoComprobante = ? AND i.Tipo = 2 AND i.idUsuario = -1 
+                    OR
+                    $tipoPago = 3 AND (cast(i.Fecha AS DATE) BETWEEN ? AND ?) AND i.TipoComprobante = ? AND i.Tipo = 3 AND i.idUsuario = -1
                     GROUP BY i.idIngreso,
                     i.Serie,
                     i.NumRecibo,
@@ -1995,6 +2014,10 @@ class IngresosAdo
                     $cmdDetalle->bindParam(7, $fechaInicio, PDO::PARAM_STR);
                     $cmdDetalle->bindParam(8, $fechaFinal, PDO::PARAM_STR);
                     $cmdDetalle->bindParam(9, $tipoDocumento, PDO::PARAM_STR);
+
+                    $cmdDetalle->bindParam(10, $fechaInicio, PDO::PARAM_STR);
+                    $cmdDetalle->bindParam(11, $fechaFinal, PDO::PARAM_STR);
+                    $cmdDetalle->bindParam(12, $tipoDocumento, PDO::PARAM_STR);
                     $cmdDetalle->execute();
                 } else {
                     $cmdDetalle = Database::getInstance()->getDb()->prepare("SELECT 
@@ -2040,9 +2063,11 @@ class IngresosAdo
                     WHERE
                     $tipoPago = 0 AND (cast(i.Fecha AS DATE) BETWEEN ? AND ?) AND i.TipoComprobante = ? AND us.idUsuario = ?
                     OR
-                    $tipoPago = 1 AND (cast(i.Fecha AS DATE) BETWEEN ? AND ?) AND i.TipoComprobante = ? AND i.tipo = 1 AND us.idUsuario = ?
+                    $tipoPago = 1 AND (cast(i.Fecha AS DATE) BETWEEN ? AND ?) AND i.TipoComprobante = ? AND i.Tipo = 1 AND us.idUsuario = ?
                     OR
-                    $tipoPago = 2 AND (cast(i.Fecha AS DATE) BETWEEN ? AND ?) AND i.TipoComprobante = ? AND i.tipo = 2 AND us.idUsuario = ?
+                    $tipoPago = 2 AND (cast(i.Fecha AS DATE) BETWEEN ? AND ?) AND i.TipoComprobante = ? AND i.Tipo = 2 AND us.idUsuario = ?
+                    OR
+                    $tipoPago = 3 AND (cast(i.Fecha AS DATE) BETWEEN ? AND ?) AND i.TipoComprobante = ? AND i.Tipo = 3 AND us.idUsuario = ?
                     GROUP BY i.idIngreso,
                     i.Serie,
                     i.NumRecibo,
@@ -2083,6 +2108,11 @@ class IngresosAdo
                     $cmdDetalle->bindParam(10, $fechaFinal, PDO::PARAM_STR);
                     $cmdDetalle->bindParam(11, $tipoDocumento, PDO::PARAM_STR);
                     $cmdDetalle->bindParam(12, $usuario, PDO::PARAM_STR);
+
+                    $cmdDetalle->bindParam(13, $fechaInicio, PDO::PARAM_STR);
+                    $cmdDetalle->bindParam(14, $fechaFinal, PDO::PARAM_STR);
+                    $cmdDetalle->bindParam(15, $tipoDocumento, PDO::PARAM_STR);
+                    $cmdDetalle->bindParam(16, $usuario, PDO::PARAM_STR);
                     $cmdDetalle->execute();
                 }
             }

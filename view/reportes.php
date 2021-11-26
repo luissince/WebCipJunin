@@ -209,6 +209,7 @@ if (!isset($_SESSION['IdUsuario'])) {
                                                     <option value="0">- Cualquier medio de pago -</option>
                                                     <option value="1"> Efectivo</option>
                                                     <option value="2"> Deposito</option>
+                                                    <option value="3"> Tarjeta</option>
                                                 </select>
                                             </div>
                                         </div>
