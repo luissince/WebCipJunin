@@ -567,7 +567,7 @@ if (!isset($_SESSION['IdUsuario'])) {
                                                         <div class="input-group-btn">
                                                             <button type="button" id="btnAddEmpresa" class="btn btn-primary btn-flat">Nuevo</button>
                                                         </div>
-                                                        <select class="form-control select2" id="cbEmpresa">
+                                                        <select class="form-control select2" id="cbEmpresa" style="width:100%">
                                                         </select>
                                                     </div>
                                                 </div>

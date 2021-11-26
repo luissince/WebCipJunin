@@ -18,22 +18,16 @@ $search = $_GET['txtBuscar'];
 $tipoHabilidad = $_GET['cbHabilidad'];
 $capitulo = $_GET['cbCapitulo'];
 $especialidad = $_GET['cbEspecialidad'];
+$fecha = $_GET['fecha'];
+$fechaFin = $_GET['fechaFin'];
 
 $subtitulo = "LISTA COLEGIADOS HABILITADOS/NO HABILITADOS";
 
 
-$data = PersonaAdo::getHabilidadIngenieroForExcel($opcion, $search, intval($tipoHabilidad), intval($capitulo), intval($especialidad));
-
-// $data['condicion'] = $getCodicion;
-// $data['fiColegiado'] = $_GET['fiColegiado'];
-// $data['ffColegiado'] = $_GET['ffColegiado'];
-// $data['opcion'] = $_GET['opcion'];
-
-
-// $listarColegiados = ListarIngenierosAdo::allIngenieros($data);
+$data = PersonaAdo::getHabilidadIngenieroForExcel($opcion, $search, intval($tipoHabilidad), intval($capitulo), intval($especialidad), $fecha, $fechaFin);
 
 if (!is_array($data)) {
-    echo 'error';
+    echo $data;
 } else {
 
     $documento = new Spreadsheet();
@@ -105,66 +99,66 @@ if (!is_array($data)) {
 
     $cel = 3;
     // if ($data['Habilidad'] == "") {
-        foreach ($data as $key => $value) {
-            $documento->getActiveSheet()->getStyle('A' . $cel . ':K' . $cel)->applyFromArray(array(
-                'fill' => array(
-                    'type' => Fill::FILL_SOLID,
-                    'color' => array('rgb' => 'E5E4E2')
-                ),
+    foreach ($data as $key => $value) {
+        $documento->getActiveSheet()->getStyle('A' . $cel . ':K' . $cel)->applyFromArray(array(
+            'fill' => array(
+                'type' => Fill::FILL_SOLID,
+                'color' => array('rgb' => 'E5E4E2')
+            ),
+            'font'  => array(
+                'bold'  =>  false
+            ),
+            'alignment' => array(
+                'horizontal' => Alignment::HORIZONTAL_LEFT
+            )
+        ));
+
+        $documento->getActiveSheet()->getStyle('H' . $cel . ':I' . $cel . '', 'K' . $cel)->applyFromArray(array(
+            'font'  => array(
+                'bold'  =>  false,
+                'color' => array('rgb' => '000000')
+            ),
+            'alignment' => array(
+                'horizontal' => Alignment::HORIZONTAL_CENTER
+            )
+        ));
+
+        if (strtolower($value['Habilidad']) == "habilitado") {
+            $documento->getActiveSheet()->getStyle('j' . $cel)->applyFromArray(array(
                 'font'  => array(
-                    'bold'  =>  false
+                    'bold'  =>  false,
+                    'color' => array('rgb' => '1C64C0')
                 ),
                 'alignment' => array(
                     'horizontal' => Alignment::HORIZONTAL_LEFT
                 )
             ));
-
-            $documento->getActiveSheet()->getStyle('H' . $cel . ':I' . $cel . '', 'K'.$cel)->applyFromArray(array(
+        } else {
+            $documento->getActiveSheet()->getStyle('j' . $cel)->applyFromArray(array(
                 'font'  => array(
                     'bold'  =>  false,
-                    'color' => array('rgb' => '000000')
+                    'color' => array('rgb' => 'EE2C2C')
                 ),
                 'alignment' => array(
-                    'horizontal' => Alignment::HORIZONTAL_CENTER
+                    'horizontal' => Alignment::HORIZONTAL_LEFT
                 )
             ));
-
-            if (strtolower($value['Habilidad']) == "habilitado") {
-                $documento->getActiveSheet()->getStyle('j' . $cel)->applyFromArray(array(
-                    'font'  => array(
-                        'bold'  =>  false,
-                        'color' => array('rgb' => '1C64C0')
-                    ),
-                    'alignment' => array(
-                        'horizontal' => Alignment::HORIZONTAL_LEFT
-                    )
-                ));
-            } else{
-                $documento->getActiveSheet()->getStyle('j' . $cel)->applyFromArray(array(
-                    'font'  => array(
-                        'bold'  =>  false,
-                        'color' => array('rgb' => 'EE2C2C')
-                    ),
-                    'alignment' => array(
-                        'horizontal' => Alignment::HORIZONTAL_LEFT
-                    )
-                ));
-            }
-
-            $documento->setActiveSheetIndex(0)
-                ->setCellValue("A" . $cel,  strval($value["Id"]))
-                ->setCellValue("B" . $cel, strval($value["Cip"]))
-                ->setCellValue("C" . $cel, strval($value["Dni"]))
-                ->setCellValue("D" . $cel, strval($value["Apellidos"].", ".$value["Nombres"]))
-                ->setCellValue("E" . $cel, strval($value["Condicion"]))
-                ->setCellValue("F" . $cel, strval($value["Capitulo"]))
-                ->setCellValue("G" . $cel, strval($value["Especialidad"]))
-                ->setCellValue("H" . $cel, strval($value["FechaColegiado"]))
-                ->setCellValue("I" . $cel, strval($value["FechaUltimaCuota"]))
-                ->setCellValue("J" . $cel, strval($value["Habilidad"]))
-                ->setCellValue("K" . $cel, strval($value["HabilitadoHasta"]));
-            $cel++;
         }
+
+        $documento->setActiveSheetIndex(0)
+            ->setCellValue("A" . $cel,  strval($value["Id"]))
+            ->setCellValue("B" . $cel, strval($value["Cip"]))
+            ->setCellValue("C" . $cel, strval($value["Dni"]))
+            ->setCellValue("D" . $cel, strval($value["Apellidos"] . ", " . $value["Nombres"]))
+            ->setCellValue("E" . $cel, strval($value["Condicion"]))
+            ->setCellValue("F" . $cel, strval($value["Capitulo"]))
+            ->setCellValue("G" . $cel, strval($value["Especialidad"]))
+            ->setCellValue("H" . $cel, strval($value["FechaColegiado"]))
+            ->setCellValue("I" . $cel, strval($value["FechaUltimaCuota"]))
+            ->setCellValue("J" . $cel, strval($value["Habilidad"]))
+            ->setCellValue("K" . $cel, strval($value["HabilitadoHasta"]));
+        $cel++;
+    }
     // }
 
     //Ancho de las columnas

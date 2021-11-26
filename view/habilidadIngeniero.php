@@ -31,6 +31,24 @@ if (!isset($_SESSION['IdUsuario'])) {
                     <section class="content">
 
                         <div class="row">
+                            <div class="col-lg-2 col-md-2 col-sm-12 col-xs-12">
+                                <div class="form-group">
+                                    <div class="input-group">
+                                        <button type="button" class="btn btn-default" id="btnRecargar"><i class="fa fa-refresh"></i> Recargar Vista</button>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="col-lg-2 col-md-2 col-sm-12 col-xs-12">
+                                <div class="form-group">
+                                    <button class="btn btn-success" id="btnExportExcel">
+                                        <i class="fa fa-file-excel-o"></i> Generar Excel
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row">
 
                             <div class="col-lg-3 col-md-3 col-sm-12 col-xs-12">
                                 <label>Habilidad.</label>
@@ -46,7 +64,7 @@ if (!isset($_SESSION['IdUsuario'])) {
                             <div class="col-lg-3 col-md-3 col-sm-12 col-xs-12">
                                 <label>Capitulo.</label>
                                 <div class="form-group">
-                                    <select class="form-control select2" id="cbCapitulo">
+                                    <select class="form-control select2" id="cbCapitulo" style="width: 100%;">
                                     </select>
                                 </div>
                             </div>
@@ -59,25 +77,6 @@ if (!isset($_SESSION['IdUsuario'])) {
                                     </select>
                                 </div>
                             </div>
-
-                            <!-- <div class="col-lg-2 col-md-3 col-sm-12 col-xs-12">
-                                <label>Opción.</label>
-                                <div class="form-group">
-                                    <button class="btn btn-warning" id="btnEnvioMasivo">
-                                        <i class="fa fa-paper-plane"></i> Envio masivo
-                                    </button>
-                                </div>
-                            </div> -->
-
-                            <div class="col-lg-2 col-md-3 col-sm-12 col-xs-12">
-                                <label>Opción.</label>
-                                <div class="form-group">
-                                    <button class="btn btn-success" id="btnExportExcel">
-                                        <i class="fa fa-file-excel-o"></i> Generar Excel
-                                    </button>
-                                </div>
-                            </div>
-
                         </div>
 
                         <div class="row">
@@ -93,29 +92,21 @@ if (!isset($_SESSION['IdUsuario'])) {
                                 </div>
                             </div>
 
-                            <div class="col-lg-2 col-md-3 col-sm-12 col-xs-12">
-                                <label>Opción.</label>
-                                <div class="form-group">
-                                    <div class="input-group">
-                                        <button type="button" class="btn btn-default" id="btnRecargar"><i class="fa fa-refresh"></i> Recargar Vista</button>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div class="col-lg-2 col-md-3 col-sm-12 col-xs-12">
-                                <label>Fecha Ult. Cuota.</label>
+                            <div class="col-lg-3 col-md-3 col-sm-12 col-xs-12">
+                                <label>Fecha Inicial Pago Cuota.</label>
                                 <div class="form-group">
                                     <input type="date" id="txtFechaPago" class="form-control">
                                 </div>
                             </div>
 
-                            <div class="col-lg-2 col-md-3 col-sm-12 col-xs-12">
-                                <label>Fecha Ult. Cuota.</label>
+                            <div class="col-lg-3 col-md-3 col-sm-12 col-xs-12">
+                                <label>Fecha Final Pago Cuota.</label>
                                 <div class="form-group">
-                                    <input type="date" id="txtFechaHasta" class="form-control">
+                                    <input type="date" id="txtFechaFinal" class="form-control">
                                 </div>
                             </div>
                         </div>
+
 
                         <!-- TABLA -->
                         <div class="row" style="margin-top: -5px;">
@@ -214,11 +205,11 @@ if (!isset($_SESSION['IdUsuario'])) {
                         if (!state) {
                             if ($("#cbCapitulo").val() != 0) {
                                 paginacion = 1;
-                                loadTableHabilidad(3, '', $("#cbTipoHabilidad").val(), $("#cbCapitulo").val(), 0, "");
+                                loadTableHabilidad(3, '', $("#cbTipoHabilidad").val(), $("#cbCapitulo").val(), 0, "", "");
                                 opcion = 3;
                             } else {
                                 paginacion = 1;
-                                loadTableHabilidad(2, '', $("#cbTipoHabilidad").val(), 0, 0, "");
+                                loadTableHabilidad(2, '', $("#cbTipoHabilidad").val(), 0, 0, "", "");
                                 opcion = 2;
                             }
                         }
@@ -229,11 +220,11 @@ if (!isset($_SESSION['IdUsuario'])) {
                         if (!state) {
                             if ($("#cbCapitulo").val() != 0) {
                                 paginacion = 1;
-                                loadTableHabilidad(3, $("#txtBuscar").val(), $("#cbTipoHabilidad").val(), $("#cbCapitulo").val(), 0, "");
+                                loadTableHabilidad(3, $("#txtBuscar").val(), $("#cbTipoHabilidad").val(), $("#cbCapitulo").val(), 0, "", "");
                                 opcion = 3;
                             } else {
                                 paginacion = 1;
-                                loadTableHabilidad(2, $("#txtBuscar").val(), $("#cbTipoHabilidad").val(), 0, 0, "");
+                                loadTableHabilidad(2, $("#txtBuscar").val(), $("#cbTipoHabilidad").val(), 0, 0, "", "");
                                 opcion = 2;
                             }
                         }
@@ -243,11 +234,11 @@ if (!isset($_SESSION['IdUsuario'])) {
                         if (!state) {
                             if ($("#cbEspecialidad").val() != 0) {
                                 paginacion = 1;
-                                loadTableHabilidad(4, $("#txtBuscar").val(), $("#cbTipoHabilidad").val(), $("#cbCapitulo").val(), $("#cbEspecialidad").val(), "");
+                                loadTableHabilidad(4, $("#txtBuscar").val(), $("#cbTipoHabilidad").val(), $("#cbCapitulo").val(), $("#cbEspecialidad").val(), "", "");
                                 opcion = 4;
                             } else {
                                 paginacion = 1;
-                                loadTableHabilidad(3, $("#txtBuscar").val(), $("#cbTipoHabilidad").val(), $("#cbCapitulo").val(), 0, "");
+                                loadTableHabilidad(3, $("#txtBuscar").val(), $("#cbTipoHabilidad").val(), $("#cbCapitulo").val(), 0, "", "");
                                 opcion = 3;
                             }
                         }
@@ -255,38 +246,37 @@ if (!isset($_SESSION['IdUsuario'])) {
 
                     $("#txtFechaPago").change(function() {
                         if (!state) {
-                            paginacion = 1;
-                            loadTableHabilidad(5, '', 0, 0, 0, $("#txtFechaPago").val());
-                            opcion = 5;
+                            if (tools.validateDate($("#txtFechaPago").val()) && tools.validateDate($("#txtFechaFinal").val())) {
+                                paginacion = 1;
+                                loadTableHabilidad(5, '', 0, 0, 0, $("#txtFechaPago").val(), $("#txtFechaFinal").val());
+                                opcion = 5;
+                            }
                         }
                     });
 
-                    // $("#btnEnvioMasivo").click(function() {
-                    //     tools.ModalDialog("Habilidad", "¿Está seguro de continuar?", function(value) {
-                    //         if (value == true) {
-                    //             for (let ingeniero of arrayIngenieros) {
-                    //                 EnviarHabilidad(ingeniero.Cip, ingeniero.UltimaCuota);
-                    //             }
-                    //         }
-                    //     });
-                    // });
+                    $("#txtFechaFinal").change(function() {
+                        if (!state) {
+                            if (tools.validateDate($("#txtFechaPago").val()) && tools.validateDate($("#txtFechaFinal").val())) {
+                                paginacion = 1;
+                                loadTableHabilidad(5, '', 0, 0, 0, $("#txtFechaPago").val(), $("#txtFechaFinal").val());
+                                opcion = 5;
+                            }
+                        }
+                    });
 
                     $("#btnExportExcel").click(function() {
-                        if ($("#txtBuscar").val() == '' && $("#cbTipoHabilidad").val() == 0 && $("#cbCapitulo").val() == 0 && $("#cbEspecialidad").val() == 0) {
+                        if ($("#txtBuscar").val() == '' && $("#cbTipoHabilidad").val() == 0 && $("#cbCapitulo").val() == 0 && $("#cbEspecialidad").val() == 0 && !tools.validateDate($("#txtFechaPago").val()) && !tools.validateDate($("#txtFechaFinal").val())) {
                             openExcelHabilidad(0, '', 0, 0, 0);
-                            console.log(0)
-                        } else if ($("#txtBuscar").val() != '' && $("#cbTipoHabilidad").val() == 0 && $("#cbCapitulo").val() == 0 && $("#cbEspecialidad").val() == 0) {
-                            openExcelHabilidad(1, '', $("#txtBuscar").val(), 0, 0, 0)
-                            console.log(1)
-                        } else if ($("#txtBuscar").val() == '' && $("#cbTipoHabilidad").val() != 0 && $("#cbCapitulo").val() == 0 && $("#cbEspecialidad").val() == 0) {
+                        } else if ($("#txtBuscar").val() != '' && $("#cbTipoHabilidad").val() == 0 && $("#cbCapitulo").val() == 0 && $("#cbEspecialidad").val() == 0 && !tools.validateDate($("#txtFechaPago").val()) && !tools.validateDate($("#txtFechaFinal").val())) {
+                            openExcelHabilidad(1, '', $("#txtBuscar").val(), 0, 0, 0);
+                        } else if ($("#txtBuscar").val() == '' && $("#cbTipoHabilidad").val() != 0 && $("#cbCapitulo").val() == 0 && $("#cbEspecialidad").val() == 0 && !tools.validateDate($("#txtFechaPago").val()) && !tools.validateDate($("#txtFechaFinal").val())) {
                             openExcelHabilidad(2, '', $("#cbTipoHabilidad").val(), 0, 0);
-                            console.log(2)
-                        } else if ($("#txtBuscar").val() == '' && $("#cbTipoHabilidad").val() != 0 && $("#cbCapitulo").val() != 0 && $("#cbEspecialidad").val() == 0) {
+                        } else if ($("#txtBuscar").val() == '' && $("#cbTipoHabilidad").val() != 0 && $("#cbCapitulo").val() != 0 && $("#cbEspecialidad").val() == 0 && !tools.validateDate($("#txtFechaPago").val()) && !tools.validateDate($("#txtFechaFinal").val())) {
                             openExcelHabilidad(3, '', $("#cbTipoHabilidad").val(), $("#cbCapitulo").val(), 0);
-                            console.log(3)
-                        } else if ($("#txtBuscar").val() == '' && $("#cbTipoHabilidad").val() != 0 && $("#cbCapitulo").val() != 0 && $("#cbEspecialidad").val() != 0) {
+                        } else if ($("#txtBuscar").val() == '' && $("#cbTipoHabilidad").val() != 0 && $("#cbCapitulo").val() != 0 && $("#cbEspecialidad").val() != 0 && !tools.validateDate($("#txtFechaPago").val()) && !tools.validateDate($("#txtFechaFinal").val())) {
                             openExcelHabilidad(4, '', $("#cbTipoHabilidad").val(), $("#cbCapitulo").val(), $("#cbEspecialidad").val());
-                            console.log(4)
+                        } else if (tools.validateDate($("#txtFechaPago").val()) && tools.validateDate($("#txtFechaFinal").val())) {
+                            openExcelHabilidad(5, '', '', '', '', '', $("#txtFechaPago").val(), $("#txtFechaFinal").val());
                         }
                     });
 
@@ -294,7 +284,7 @@ if (!isset($_SESSION['IdUsuario'])) {
                         if (event.keyCode === 13) {
                             if (!state) {
                                 paginacion = 1;
-                                loadTableHabilidad(1, $("#txtBuscar").val(), 0, 0, 0, "");
+                                loadTableHabilidad(1, $("#txtBuscar").val(), 0, 0, 0, "", "");
                                 opcion = 1;
                             }
                             $("#cbTipoHabilidad").val(0);
@@ -306,7 +296,7 @@ if (!isset($_SESSION['IdUsuario'])) {
                     $("#btnBuscar").click(function() {
                         if (!state) {
                             paginacion = 1;
-                            loadTableHabilidad(1, $("#txtBuscar").val(), 0, 0, 0);
+                            loadTableHabilidad(1, $("#txtBuscar").val(), 0, 0, 0, "", "");
                             opcion = 1;
                             $("#cbTipoHabilidad").val(0);
                             $("#cbCapitulo").select2("val", "0");
@@ -315,37 +305,40 @@ if (!isset($_SESSION['IdUsuario'])) {
 
                     $("#btnRecargar").click(function() {
                         loadInitHabilidad();
+                        $("#txtFechaPago").val(null);
+                        $("#txtFechaFinal").val(null);
                     });
 
                     $("#btnRecargar").keypress(function(event) {
                         if (event.which == 13) {
                             loadInitHabilidad();
+                            $("#txtFechaPago").val(null);
+                            $("#txtFechaFinal").val(null);
                         }
                         event.preventDefault();
                     });
 
                 });
 
-
                 function onEventPaginacion() {
                     switch (opcion) {
                         case 0:
-                            loadTableHabilidad(0, "", 0, 0, 0, "");
+                            loadTableHabilidad(0, "", 0, 0, 0, "", "");
                             break;
                         case 1:
-                            loadTableHabilidad(1, $("#txtBuscar").val(), 0, 0, 0, "");
+                            loadTableHabilidad(1, $("#txtBuscar").val(), 0, 0, 0, "", "");
                             break;
                         case 2:
-                            loadTableHabilidad(2, "", $("#cbTipoHabilidad").val(), 0, 0, "");
+                            loadTableHabilidad(2, "", $("#cbTipoHabilidad").val(), 0, 0, "", "");
                             break;
                         case 3:
-                            loadTableHabilidad(3, "", $("#cbTipoHabilidad").val(), $("#cbCapitulo").val(), 0, "");
+                            loadTableHabilidad(3, "", $("#cbTipoHabilidad").val(), $("#cbCapitulo").val(), 0, "", "");
                             break;
                         case 4:
-                            loadTableHabilidad(4, "", $("#cbTipoHabilidad").val(), $("#cbCapitulo").val(), $("#cbEspecialidad").val(), "");
+                            loadTableHabilidad(4, "", $("#cbTipoHabilidad").val(), $("#cbCapitulo").val(), $("#cbEspecialidad").val(), "", "");
                             break;
                         case 5:
-                            loadTableHabilidad(5, "", 0, 0, 0, $("#txtFechaPago").val());
+                            loadTableHabilidad(5, "", 0, 0, 0, $("#txtFechaPago").val(), $("#txtFechaFinal").val());
                             break;
                     }
                 }
@@ -353,12 +346,12 @@ if (!isset($_SESSION['IdUsuario'])) {
                 function loadInitHabilidad() {
                     if (!state) {
                         paginacion = 1;
-                        loadTableHabilidad(0, "", 0, 0, 0, "");
+                        loadTableHabilidad(0, "", 0, 0, 0, "", "");
                         opcion = 0;
                     }
                 }
 
-                function loadTableHabilidad(opcion, search, tipoHabilidad, capitulo, especialidad, fecha) {
+                function loadTableHabilidad(opcion, search, tipoHabilidad, capitulo, especialidad, fecha, fechaFin) {
                     $.ajax({
                         url: "../app/controller/PersonaController.php",
                         method: "GET",
@@ -370,6 +363,7 @@ if (!isset($_SESSION['IdUsuario'])) {
                             "capitulo": capitulo,
                             "especialidad": especialidad,
                             "fecha": fecha,
+                            "fechaFin": fechaFin,
                             "posicionPagina": ((paginacion - 1) * filasPorPagina),
                             "filasPorPagina": filasPorPagina
                         },
@@ -485,8 +479,8 @@ if (!isset($_SESSION['IdUsuario'])) {
                     });
                 }
 
-                function openExcelHabilidad(opcion, buscar, habilitado, capitulo, especialidad) {
-                    window.open("../app/sunat/excelHabilidad.php?opcion=" + opcion + "&txtBuscar=" + buscar + "&cbHabilidad=" + habilitado + "&cbCapitulo=" + capitulo + "&cbEspecialidad=" + especialidad, "_blank");
+                function openExcelHabilidad(opcion, buscar, habilitado, capitulo, especialidad, fecha = '', fechaFin = '') {
+                    window.open("../app/sunat/excelHabilidad.php?opcion=" + opcion + "&txtBuscar=" + buscar + "&cbHabilidad=" + habilitado + "&cbCapitulo=" + capitulo + "&cbEspecialidad=" + especialidad + "&fecha=" + fecha + "&fechaFin=" + fechaFin, "_blank");
                 }
             </script>
         </body>
