@@ -264,6 +264,10 @@ class UsuarioAdo
                                 "eliminar" => $row["eliminar"]
                             ));
                         }
+
+                        // $cmdReporte = Database::getInstance()->getDb()->prepare("INSERT INTO Reporte(idUsuario,Tipo,Descripcion,Fecha,Hora) VALUES(?,?,?,GETDATE(),GETDATE())");
+                        // $cmdReporte->execute(array());
+
                         array_push($array, $usuario, $arrayPermisos);
                         return $array;
                     } else {
