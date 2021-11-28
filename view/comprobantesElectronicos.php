@@ -637,21 +637,32 @@ if (!isset($_SESSION['IdUsuario'])) {
                 async function envioMasivo() {
                     tools.ModalAlertInfo("Ingreso", "Firmando xml y enviando a la sunat, espere por favor...");
                     for (let ingresos of arrayIngresos) {
-                        try {
-                            if (ingresos.estado == "C") {
-                                if (ingresos.xmlsunat !== "0") {
+
+                        if (ingresos.estado == "C") {
+                            if (ingresos.xmlsunat !== "0") {
+                                try {
                                     await firmaMasivaXml(ingresos.idIngreso);
-                                }
-                            } else {
-                                if (ingresos.serie.toUpperCase().includes("B")) {
-                                    await resumenDiarioMasivoXml(ingresos.idIngreso);
-                                } else {
-                                    await comunicacionBajaMasivoXml(ingresos.idIngreso);
+                                } catch (error) {
+
                                 }
                             }
-                        } catch (error) {
+                        } else {
+                            if (ingresos.serie.toUpperCase().includes("B")) {
+                                try {
+                                    await resumenDiarioMasivoXml(ingresos.idIngreso);
+                                } catch (error) {
 
+                                }
+
+                            } else {
+                                try {
+                                    await comunicacionBajaMasivoXml(ingresos.idIngreso);
+                                } catch (error) {
+
+                                }
+                            }
                         }
+
                     }
                     tools.ModalAlertSuccess("Ingreso", "Se completo el envío de comprobantes, revise para verificar el envió.");
                     onEventPaginacion();
@@ -669,7 +680,7 @@ if (!isset($_SESSION['IdUsuario'])) {
                                 resolve(result);
                             },
                             error: function(error) {
-                                reject(error.responseText == null || error.responseText == '' ? "Error en el momento de firmar el xml, intente nuevamente." : error.responseText);
+                                reject("Error en el momento de firmar el xml, intente nuevamente.");
                             }
                         });
                     });
@@ -687,7 +698,7 @@ if (!isset($_SESSION['IdUsuario'])) {
                                 resolve(result);
                             },
                             error: function(error) {
-                                reject(error.responseText == null || error.responseText == '' ? "Error en el momento de firmar el xml, intente nuevamente." : error.responseText);
+                                reject("Error en el momento de firmar el xml, intente nuevamente.");
                             }
                         });
                     });
@@ -705,7 +716,7 @@ if (!isset($_SESSION['IdUsuario'])) {
                                 resolve(result);
                             },
                             error: function(error) {
-                                reject(error.responseText == null || error.responseText == '' ? "Error en el momento de firmar el xml, intente nuevamente." : error.responseText);
+                                reject("Error en el momento de firmar el xml, intente nuevamente.");
                             }
                         });
                     });
