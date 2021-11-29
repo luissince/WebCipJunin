@@ -410,7 +410,7 @@ if (!is_array($result)) {
         ]);
 
         $mpdf->SetProtection(array('print'));
-        $mpdf->SetTitle("CIPJUNIN");
+        $mpdf->SetTitle("INTRANET CIP-JUNIN");
         $mpdf->SetAuthor("SysSoftIntegra");
         $mpdf->SetWatermarkText("");
         $mpdf->showWatermarkText = true;

@@ -1805,7 +1805,7 @@ class IngresosAdo
             e.Nombre,
             p.Apellidos,
             p.Nombres
-            ORDER BY CAST(nc.Fecha AS DATE) DESC, nc.NumRecibo ASC");
+            ORDER BY nc.Fecha ASC, nc.Hora ASC");
             $cmdNotaCredito->bindParam(1, $fechaInicio, PDO::PARAM_STR);
             $cmdNotaCredito->bindParam(2, $fechaFinal, PDO::PARAM_STR);
             $cmdNotaCredito->bindParam(3, $usuario, PDO::PARAM_STR);
@@ -2188,7 +2188,7 @@ class IngresosAdo
             e.Nombre,
             p.Apellidos,
             p.Nombres
-            ORDER BY CAST(nc.Fecha AS DATE) DESC, nc.NumRecibo ASC");
+            ORDER BY nc.Fecha DESC,  nc.Hora DESC");
             $cmdNotaCredito->bindParam(1, $fechaInicio, PDO::PARAM_STR);
             $cmdNotaCredito->bindParam(2, $fechaFinal, PDO::PARAM_STR);
             $cmdNotaCredito->bindParam(3, $tipoDocumento, PDO::PARAM_STR);

@@ -408,9 +408,9 @@ mpdf-->
                 </h3>
                 <table  border="0" cellspacing="0">
                     <tr>
-                        <td align="left" style="border: 1px solid black;padding:8px;">MONTO TOTAL:</td>
+                        <td align="left" style="border: 1px solid black;padding:8px;">FACTURAS TOTAL:</td>
                         <td align="left" style="border: 1px solid black;padding:8px;">' . number_format(round($monto, 2, PHP_ROUND_HALF_UP), 2, '.', '') . '</td>
-                    </tr>                    
+                    </tr>                             
                 </table>
             </body>
         </html>';
@@ -427,7 +427,7 @@ mpdf-->
     ]);
 
     $mpdf->SetProtection(array('print'));
-    $mpdf->SetTitle("CIPJUNIN");
+    $mpdf->SetTitle("INTRANET CIP-JUNIN");
     $mpdf->SetAuthor("SysSoftIntegra");
     $mpdf->SetWatermarkText("");
     $mpdf->showWatermarkText = true;
