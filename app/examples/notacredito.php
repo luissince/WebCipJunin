@@ -226,7 +226,7 @@ if (!is_array($detalleventa)) {
     // LEGAL MONETARY TOTAL  
     $cac_LegalMonetaryTotal = $xml->createElement('cac:LegalMonetaryTotal');
     $cac_LegalMonetaryTotal = $Invoice->appendChild($cac_LegalMonetaryTotal);
-    $cbc = $xml->createElement('cbc:PayableAmount', number_format(round($totales['totalimpuesto'], 2, PHP_ROUND_HALF_UP), 2, '.', '')); //
+    $cbc = $xml->createElement('cbc:PayableAmount', number_format(round($totales['totalconimpuesto'], 2, PHP_ROUND_HALF_UP), 2, '.', '')); //
     $cbc = $cac_LegalMonetaryTotal->appendChild($cbc);
     $cbc->setAttribute('currencyID', $tipomoneda);
 

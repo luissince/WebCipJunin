@@ -431,7 +431,7 @@ if (!isset($_SESSION['IdUsuario'])) {
                             cdr: cdr
                         },
                         beforeSend: function() {
-                            $("#ReduxComponent").empty();
+                            limpiarResponse();
                             tools.ModalAlertInfo("Consultar Datos", "Procesando petición..");
                         },
                         success: function(result) {
@@ -463,7 +463,7 @@ if (!isset($_SESSION['IdUsuario'])) {
                     $('#txtCorrelativo').val('');
                     $("#lblCodigoRpt").html('');
                     $("#lblMensajeRpt").html('');
-                    $("#lblRutaDescarga").empty();
+                    $("#lblRutaDescarga").html('');
                 }
 
                 function descargarCdr(ruta) {

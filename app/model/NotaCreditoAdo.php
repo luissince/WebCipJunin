@@ -197,7 +197,8 @@ class NotaCreditoAdo
             isnull(e.NumeroRuc,p.NumDoc) as NumeroDocumento,
             isnull(e.Nombre,concat(p.Apellidos,' ',p.Nombres)) as DatosPersona,
             isnull(e.Direccion,ISNULL((select top 1 Direccion from Direccion where idDNI = p.idDNI),'')) as Direccion,
-            isnull(nc.CodigoHash,'') AS CodigoHash
+            isnull(nc.CodigoHash,'') AS CodigoHash,
+            ISNULL(i.Correlativo,0) as Correlativo
             FROM  
             NotaCredito AS nc 
             INNER JOIN TipoComprobante AS t ON t.IdTipoComprobante = nc.TipoComprobante 
@@ -253,6 +254,12 @@ class NotaCreditoAdo
                 $impuesto += $cantidad  * ($preciobruto * ($valorImpuesto / 100.00));
             }
 
+            $cmdCorrelativo = Database::getInstance()->getDb()->prepare("SELECT 
+            MAX(ISNULL(Correlativo,0)) as Correlativo 
+            FROM NotaCredito WHERE FechaCorrelativo = CAST(GETDATE() AS DATE)");
+            $cmdCorrelativo->execute();
+            $resultCorrelativo = $cmdCorrelativo->fetchColumn();
+
             $cmdEmpresa = Database::getInstance()->getDb()->prepare("SELECT 
             TOP 1 NumeroDocumento,
             NombreComercial,
@@ -278,7 +285,8 @@ class NotaCreditoAdo
                     "totalsinimpuesto" => $totalsinimpuesto,
                     "totalimpuesto" => $impuesto,
                     "totalconimpuesto" => $totalsinimpuesto + $impuesto,
-                )
+                ),
+                $resultCorrelativo
             );
             return $array;
         } catch (Exception $ex) {
@@ -401,6 +409,31 @@ class NotaCreditoAdo
             $comando->bindParam(1, $codigo, PDO::PARAM_STR);
             $comando->bindParam(2, $descripcion, PDO::PARAM_STR);
             $comando->bindParam(3, $idNotaCredito, PDO::PARAM_STR);
+            $comando->execute();
+            Database::getInstance()->getDb()->commit();
+            return "updated";
+        } catch (Exception $ex) {
+            Database::getInstance()->getDb()->rollback();
+            return $ex->getMessage();
+        }
+    }
+
+    public static function CambiarEstadoSunatResumen($idNotaCredito, $codigo, $descripcion, $correlativo, $fechaCorrelativo)
+    {
+        try {
+            Database::getInstance()->getDb()->beginTransaction();
+            $comando = Database::getInstance()->getDb()->prepare("UPDATE 
+            NotaCredito SET 
+            Xmlsunat = ? , 
+            Xmldescripcion = ?, 
+            Correlativo = ?,
+            FechaCorrelativo = ? 
+            WHERE idNotaCredito = ?");
+            $comando->bindParam(1, $codigo, PDO::PARAM_STR);
+            $comando->bindParam(2, $descripcion, PDO::PARAM_STR);
+            $comando->bindParam(3, $correlativo, PDO::PARAM_INT);
+            $comando->bindParam(4, $fechaCorrelativo, PDO::PARAM_STR);
+            $comando->bindParam(5, $idNotaCredito, PDO::PARAM_INT);
             $comando->execute();
             Database::getInstance()->getDb()->commit();
             return "updated";

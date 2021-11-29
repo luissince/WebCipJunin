@@ -167,6 +167,7 @@ if (!isset($_SESSION['IdUsuario'])) {
                                     <table class="table table-striped" style="border-width: 1px;border-style: dashed;border-color: #E31E25;">
                                         <thead style="background-color: #FDB2B1;color: #B72928;">
                                             <th style="width:5%;" class="text-center">#</th>
+                                            <th style="width:5%;">Anular</th>
                                             <th style="width:5%;">P.D.F</th>
                                             <th style="width:5%;">Detalle</th>
                                             <th style="width:10%;">Fecha</th>
@@ -397,6 +398,7 @@ if (!isset($_SESSION['IdUsuario'])) {
                                 } else {
                                     tbTable.empty();
                                     for (let notacredito of arrayIngresos) {
+                                        let resumen = '<button class="btn btn-default btn-xs" onclick="resumenDiarioXml(\'' + notacredito.idNotaCredito + '\',\'' + notacredito.Serie + "-" + notacredito.NumRecibo + '\',\'' + tools.getDateYYMMDD(notacredito.FechadeRegistro) + '\')"><img src="./images/documentoanular.svg" width="26" /></button>';
 
                                         let btnPdf = '<button class="btn btn-danger btn-xs" onclick="openPdf(\'' + notacredito.idNotaCredito + '\')">' +
                                             '<i class="fa fa-file-pdf-o" style="font-size:25px;"></i></br>' +
@@ -419,6 +421,7 @@ if (!isset($_SESSION['IdUsuario'])) {
 
                                         tbTable.append('<tr>' +
                                             '<td class="text-center text-primary">' + notacredito.id + '</td>' +
+                                            '<td>' + resumen + '</td>' +
                                             '<td>' + btnPdf + '</td>' +
                                             '<td>' + btnDetalle + '</td>' +
                                             '<td>' + notacredito.FechadeRegistro + '</td>' +
@@ -468,7 +471,7 @@ if (!isset($_SESSION['IdUsuario'])) {
                 }
 
                 function facturarXml(idNotaCredito) {
-                    tools.ModalDialog("Ingreso", "¿Está seguro de continuar con el envío?", function(value) {
+                    tools.ModalDialog("Nota de Crédito", "¿Está seguro de continuar con el envío?", function(value) {
                         if (value == true) {
                             $.ajax({
                                 url: "../app/examples/notacredito.php",
@@ -494,6 +497,41 @@ if (!isset($_SESSION['IdUsuario'])) {
                                 },
                                 error: function(error) {
                                     tools.ModalAlertError("Nota de Crédito", "Error en el momento de firmar el xml: " + error.responseText);
+                                }
+                            });
+                        }
+                    });
+                }
+
+                function resumenDiarioXml(idNotaCredito, comprobante, resumen) {
+                    tools.ModalDialog("Emitir resumen díario", "¿Se anulará el documento: " + comprobante + ", y se creará el siguiente resumen individual: RC-" + resumen + "-1, estás seguro de anular el documento? los cambios no se podrán revertir!", function(value) {
+                        if (value == true) {
+                            $.ajax({
+                                url: "../app/examples/resumennotacredito.php",
+                                method: "GET",
+                                data: {
+                                    "idNotaCredito": idNotaCredito
+                                },
+                                beforeSend: function() {
+                                    tools.ModalAlertInfo("Emitir resumen díario", "Firmando xml y enviando a la sunat.");
+                                },
+                                success: function(result) {
+                                    console.log(result);
+                                    let object = result;
+                                    if (object.state === true) {
+                                        if (object.accept === true) {
+                                            tools.ModalAlertSuccess("Emitir resumen díario", "Resultado: Código " + object.code + " " + object.description);
+                                            onEventPaginacion();
+                                        } else {
+                                            tools.ModalAlertWarning("Emitir resumen díario", "Resultado: Código " + object.code + " " + object.description);
+                                        }
+                                    } else {
+                                        tools.ModalAlertWarning("Emitir resumen díario", "Resultado: Código " + object.code + " " + object.description);
+                                    }
+                                },
+                                error: function(error) {
+                                    console.log(error)
+                                    tools.ModalAlertError("Emitir resumen díario", "Error en el momento de firmar el xml: " + error.responseText);
                                 }
                             });
                         }
