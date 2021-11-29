@@ -122,7 +122,7 @@ if (!is_array($detalleventa)) {
     $LineID = $SummaryDocumentsLine->appendChild($LineID);
     $DocumentTypeCode = $xml->createElement('cbc:DocumentTypeCode', '07');
     $DocumentTypeCode = $SummaryDocumentsLine->appendChild($DocumentTypeCode);
-    $ID = $xml->createElement('cbc:ID', $notacredito->Serie . '-' . $notacredito->NumRecibo);
+    $ID = $xml->createElement('cbc:ID', $notacredito->SerieNotaCredito . '-' . $notacredito->NumeracionNotaCredito);
     $ID = $SummaryDocumentsLine->appendChild($ID);
 
     $AccountingCustomerParty = $xml->createElement('cac:AccountingCustomerParty');
