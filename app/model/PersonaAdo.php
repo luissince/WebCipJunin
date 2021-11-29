@@ -481,7 +481,7 @@ class PersonaAdo
             LEFT OUTER JOIN CERTResidencia AS cr ON cr.idIngreso = i.idIngreso 
             LEFT OUTER JOIN CERTProyecto AS cp ON cp.idIngreso = i.idIngreso 
             LEFT OUTER JOIN Peritaje AS pe ON pe.idIngreso = i.idIngreso
-            LEFT OUTER JOIN NotaCredito AS nc ON nc.idIngreso = i.idIngreso
+            LEFT OUTER JOIN NotaCredito AS nc ON nc.idIngreso = i.idIngreso AND nc.Estado = 'C'
             WHERE i.Estado = 'C' AND nc.idNotaCredito IS NULL AND idDNI = ?
             ORDER BY i.Fecha DESC,i.Hora DESC
             offset ? ROWS FETCH NEXT ? ROWS only");
@@ -516,7 +516,7 @@ class PersonaAdo
             LEFT OUTER JOIN CERTResidencia AS cr ON cr.idIngreso = i.idIngreso 
             LEFT OUTER JOIN CERTProyecto AS cp ON cp.idIngreso = i.idIngreso 
             LEFT OUTER JOIN Peritaje AS pe ON pe.idIngreso = i.idIngreso
-            LEFT OUTER JOIN NotaCredito AS nc ON nc.idIngreso = i.idIngreso
+            LEFT OUTER JOIN NotaCredito AS nc ON nc.idIngreso = i.idIngreso AND nc.Estado = 'C'
             WHERE i.Estado = 'C' AND nc.idNotaCredito IS NULL AND idDNI = ?");
             $cmdTotales->bindParam(1, $idPersona, PDO::PARAM_STR);
             $cmdTotales->execute();
