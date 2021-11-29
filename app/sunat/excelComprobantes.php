@@ -180,6 +180,16 @@ if (!is_array($ventas)) {
 
                 $documento->getActiveSheet()->getStyle("L" . $cel)->getNumberFormat()->setFormatCode('0.00');
                 $documento->getActiveSheet()->getStyle("M" . $cel)->getNumberFormat()->setFormatCode('0.00');
+                $documento->getActiveSheet()->getStyle("L" . $cel)->applyFromArray(array(
+                    'alignment' => array(
+                        'horizontal' => Alignment::HORIZONTAL_RIGHT
+                    )
+                ));
+                $documento->getActiveSheet()->getStyle("M" . $cel)->applyFromArray(array(
+                    'alignment' => array(
+                        'horizontal' => Alignment::HORIZONTAL_RIGHT
+                    )
+                ));
 
                 $documento->setActiveSheetIndex(0)
                     ->setCellValue("A" . $cel,  strval($value["Id"]))
@@ -371,6 +381,16 @@ if (!is_array($ventas)) {
 
                 $documento->getActiveSheet()->getStyle("N" . $cel)->getNumberFormat()->setFormatCode('0.00');
                 $documento->getActiveSheet()->getStyle("O" . $cel)->getNumberFormat()->setFormatCode('0.00');
+                $documento->getActiveSheet()->getStyle("N" . $cel)->applyFromArray(array(
+                    'alignment' => array(
+                        'horizontal' => Alignment::HORIZONTAL_RIGHT
+                    )
+                ));
+                $documento->getActiveSheet()->getStyle("O" . $cel)->applyFromArray(array(
+                    'alignment' => array(
+                        'horizontal' => Alignment::HORIZONTAL_RIGHT
+                    )
+                ));
 
                 if ($value["TipoPago"] == 1) {
                     $tipoPago = 'EFECTIVO';
