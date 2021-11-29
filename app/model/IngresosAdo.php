@@ -40,9 +40,7 @@ class IngresosAdo
             sum(d.Monto) AS Total,
             nc.idNotaCredito,
             nc.Serie AS SerieNc,
-            nc.NumRecibo AS NumReciboNc,
-            isnull(i.Xmlsunat,'') as Xmlsunat,
-            isnull(i.Xmldescripcion,'') as Xmldescripcion
+            nc.NumRecibo AS NumReciboNc         
             FROM Ingreso AS i 
             INNER JOIN TipoComprobante AS tc ON tc.IdTipoComprobante = i.TipoComprobante
             LEFT JOIN Persona AS p ON i.idDNI = p.idDNI
@@ -91,9 +89,7 @@ class IngresosAdo
             r.Nombre, 
             p.Nombres,
             e.NumeroRuc,
-            e.Nombre,
-            i.Xmlsunat,
-            i.Xmldescripcion,
+            e.Nombre,         
             e.IdEmpresa,
             tc.Nombre,
             nc.idNotaCredito,
@@ -142,11 +138,9 @@ class IngresosAdo
                     "numeroDocumento" => $row["NumeroDocumento"],
                     "persona" => $row["Persona"],
                     "total" => $row["Total"],
-                    "xmlsunat" => $row["Xmlsunat"],
                     "idNotaCredito" => $row["idNotaCredito"],
-                    "serieNc" => $row["Serie"],
-                    "numerReciboNc" => $row["NumRecibo"],
-                    "xmldescripcion" => $row["Xmldescripcion"]
+                    "serieNc" => $row["SerieNc"],
+                    "numerReciboNc" => $row["NumReciboNc"]
                 ));
             }
 

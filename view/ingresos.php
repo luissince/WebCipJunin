@@ -473,9 +473,6 @@ if (!isset($_SESSION['IdUsuario'])) {
                                             formaPago = "TARJETA";
                                         }
 
-                                        let observacionsunat =
-                                            (ingresos.xmldescripcion === "" ? "Por Generar Xml y Enviar" : limitar_cadena(ingresos.xmldescripcion, 90, "..."));
-
                                         tbTable.append('<tr>' +
                                             '<td class="text-center text-primary">' + ingresos.id + '</td>' +
                                             '<td>' + btnAnular + '</td>' +
