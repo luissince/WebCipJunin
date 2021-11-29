@@ -545,22 +545,20 @@ if (!isset($_SESSION['IdUsuario'])) {
                                     tools.ModalAlertInfo("Ingreso", "Firmando xml y enviando a la sunat.");
                                 },
                                 success: function(result) {
-                                    // console.log(result)
                                     let object = result;
                                     if (object.state === true) {
                                         if (object.accept === true) {
-                                            tools.ModalAlertSuccess("Ingreso", "Resultado: Código " + object.code + " " + object.description);
+                                            tools.ModalAlertSuccess("Ingreso", "Código " + object.code + " " + object.description);
                                             onEventPaginacion();
                                         } else {
-                                            tools.ModalAlertWarning("Ingreso", "Resultado: Código " + object.code + " " + object.description);
+                                            tools.ModalAlertWarning("Ingreso", "Código " + object.code + " " + object.description);
                                         }
                                     } else {
-                                        tools.ModalAlertWarning("Ingreso", "Resultado: Código " + object.code + " " + object.description);
+                                        tools.ModalAlertWarning("Ingreso", "Código " + object.code + " " + object.description);
                                     }
                                 },
                                 error: function(error) {
-                                    // console.log(error)
-                                    tools.ModalAlertError("Ingreso", "Error en el momento de firmar el xml: " + error.responseText);
+                                    tools.ModalAlertError("Ingreso", error.responseText == "" || error.responseText == null ? "Se produjo un error interno, intente nuevamente." : error.responseText);
                                 }
                             });
                         }
@@ -583,17 +581,17 @@ if (!isset($_SESSION['IdUsuario'])) {
                                     let object = result;
                                     if (object.state === true) {
                                         if (object.accept === true) {
-                                            tools.ModalAlertSuccess("Ingreso", "Resultado: Código " + object.code + " " + object.description);
+                                            tools.ModalAlertSuccess("Ingreso", "Código " + object.code + " " + object.description);
                                             onEventPaginacion();
                                         } else {
-                                            tools.ModalAlertWarning("Ingreso", "Resultado: Código " + object.code + " " + object.description);
+                                            tools.ModalAlertWarning("Ingreso", "Código " + object.code + " " + object.description);
                                         }
                                     } else {
-                                        tools.ModalAlertWarning("Ingreso", "Resultado: Código " + object.code + " " + object.description);
+                                        tools.ModalAlertWarning("Ingreso", "Código " + object.code + " " + object.description);
                                     }
                                 },
                                 error: function(error) {
-                                    tools.ModalAlertError("Ingreso", "Error en el momento de firmar el xml: " + error.responseText);
+                                    tools.ModalAlertError("Ingreso", error.responseText == "" || error.responseText == null ? "Se produjo un error interno, intente nuevamente." : error.responseText);
                                 }
                             });
 
@@ -617,17 +615,17 @@ if (!isset($_SESSION['IdUsuario'])) {
                                     let object = result;
                                     if (object.state === true) {
                                         if (object.accept === true) {
-                                            tools.ModalAlertSuccess("Ingreso", "Resultado: Código " + object.code + " " + object.description);
+                                            tools.ModalAlertSuccess("Ingreso", "Código " + object.code + " " + object.description);
                                             onEventPaginacion();
                                         } else {
-                                            tools.ModalAlertWarning("Ingreso", "Resultado: Código " + object.code + " " + object.description);
+                                            tools.ModalAlertWarning("Ingreso", "Código " + object.code + " " + object.description);
                                         }
                                     } else {
-                                        tools.ModalAlertWarning("Ingreso", "Resultado: Código " + object.code + " " + object.description);
+                                        tools.ModalAlertWarning("Ingreso", "Código " + object.code + " " + object.description);
                                     }
                                 },
                                 error: function(error) {
-                                    tools.ModalAlertError("Ingreso", "Error en el momento de firmar el xml: " + error.responseText);
+                                    tools.ModalAlertError("Ingreso", error.responseText == "" || error.responseText == null ? "Se produjo un error interno, intente nuevamente." : error.responseText);
                                 }
                             });
                         }

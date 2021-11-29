@@ -437,15 +437,15 @@ if (!isset($_SESSION['IdUsuario'])) {
                         success: function(result) {
                             if (result.state == true) {
                                 if (result.accepted == true) {
-                                    tools.ModalAlertSuccess("Consultar Comprobante", "Resultado: Código " + result.code + " " + result.message);
+                                    tools.ModalAlertSuccess("Consultar Comprobante", "Código " + result.code + " " + result.message);
                                     if (cdr != "") {
                                         $("#lblRutaDescarga").append('<a onclick="descargarCdr(\'' + result.file + '\')"" style="cursor:pointer">' + result.file + '</a>');
                                     }
                                 } else {
-                                    tools.ModalAlertWarning("Consultar Comprobante", "Resultado: Código " + result.code + " " + result.message);
+                                    tools.ModalAlertWarning("Consultar Comprobante", "Código " + result.code + " " + result.message);
                                 }
                             } else {
-                                tools.ModalAlertWarning("Consultar Comprobante", "Resultado: Código " + result.code + " " + result.message);
+                                tools.ModalAlertWarning("Consultar Comprobante", "Código " + result.code + " " + result.message);
                             }
                             $("#lblCodigoRpt").html(result.code);
                             $("#lblMensajeRpt").html(result.message);

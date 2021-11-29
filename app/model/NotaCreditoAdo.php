@@ -15,18 +15,19 @@ class NotaCreditoAdo
             nc.Hora, 
             nc.Serie, 
             nc.NumRecibo, 
+            nc.Estado,
             isnull(ep.NumeroRuc,p.NumDoc) AS NumeroDocumento,
             isnull(ep.Nombre,concat(p.Apellidos,' ',p.Nombres)) AS Persona,
-            i.Serie AS SerieModificado,
-            i.NumRecibo AS NumeracionModificado,
+            isnull(i.Serie,'') AS SerieModificado,
+            isnull(i.NumRecibo,'') AS NumeracionModificado,
             isnull(nc.Xmlsunat,'') as Xmlsunat,
             isnull(nc.Xmldescripcion,'') as Xmldescripcion,
             sum(dn.Monto) AS Total
             FROM NotaCredito AS nc
             INNER JOIN TablaMotivoAnulacion AS ta ON ta.IdTablaMotivoAnulacion = nc.idMotivoAnulacion
             INNER JOIN TipoComprobante AS tc ON tc.IdTipoComprobante = nc.TipoComprobante
-            INNER JOIN Ingreso AS i ON i.idIngreso = nc.idIngreso
-            INNER JOIN Persona AS p ON p.idDNI = i.idDNI
+            LEFT JOIN Ingreso AS i ON i.idIngreso = nc.idIngreso
+            LEFT JOIN Persona AS p ON p.idDNI = i.idDNI
             LEFT JOIN EmpresaPersona AS ep ON ep.IdEmpresa =i.idEmpresaPersona
             INNER JOIN NotaCreditoDetalle AS dn ON dn.idNotaCredito = nc.idNotaCredito
             WHERE
@@ -49,6 +50,7 @@ class NotaCreditoAdo
             nc.Hora, 
             nc.Serie, 
             nc.NumRecibo,
+            nc.Estado,
             ep.NumeroRuc,
             p.NumDoc,
             ep.Nombre,
@@ -81,6 +83,7 @@ class NotaCreditoAdo
                     "Hora" => $row["Hora"],
                     "Serie" => $row["Serie"],
                     "NumRecibo" => $row["NumRecibo"],
+                    "Estado" => $row["Estado"],
                     "NumeroDocumento" => $row["NumeroDocumento"],
                     "Persona" => $row["Persona"],
                     "SerieModificado" => $row["SerieModificado"],
@@ -95,8 +98,8 @@ class NotaCreditoAdo
             FROM NotaCredito AS nc 
             INNER JOIN TablaMotivoAnulacion AS ta ON ta.IdTablaMotivoAnulacion = nc.idMotivoAnulacion
             INNER JOIN TipoComprobante AS tc ON tc.IdTipoComprobante = nc.TipoComprobante
-            INNER JOIN Ingreso AS i ON i.idIngreso = nc.idIngreso
-            INNER JOIN Persona AS p ON p.idDNI = i.idDNI
+            LEFT JOIN Ingreso AS i ON i.idIngreso = nc.idIngreso
+            LEFT JOIN Persona AS p ON p.idDNI = i.idDNI
             LEFT JOIN EmpresaPersona AS ep ON ep.IdEmpresa =i.idEmpresaPersona
             WHERE
             ($opcion = 0)
@@ -186,6 +189,7 @@ class NotaCreditoAdo
             nc.NumRecibo AS NumeracionNotaCredito,
             nc.Fecha AS FechaNotaCredito,
             nc.Hora as HoraNotaCredito,
+            nc.Estado,
             tc.CodigoAlterno,
             i.Serie,
             i.NumRecibo,
@@ -204,7 +208,7 @@ class NotaCreditoAdo
             INNER JOIN TipoComprobante AS t ON t.IdTipoComprobante = nc.TipoComprobante 
             INNER JOIN TablaMotivoAnulacion AS ta ON ta.IdTablaMotivoAnulacion = nc.idMotivoAnulacion
             INNER JOIN Ingreso AS i ON i.idIngreso = nc.idIngreso
-            INNER JOIN TipoComprobante AS tc ON tc.IdTipoComprobante = i.TipoComprobante 
+            LEFT JOIN TipoComprobante AS tc ON tc.IdTipoComprobante = i.TipoComprobante 
             LEFT JOIN Persona AS p ON p.idDNI = i.idDNI
 			LEFT JOIN EmpresaPersona AS e ON e.IdEmpresa = i.idEmpresaPersona            
             WHERE nc.idNotaCredito = ?");
@@ -307,7 +311,7 @@ class NotaCreditoAdo
                 return "anulado";
             } else {
 
-                $cmdValidate = Database::getInstance()->getDb()->prepare("SELECT * FROM NotaCredito WHERE idIngreso = ?");
+                $cmdValidate = Database::getInstance()->getDb()->prepare("SELECT * FROM NotaCredito WHERE idIngreso = ? AND Estado = 'C'");
                 $cmdValidate->bindParam(1, $body["idIngreso"], PDO::PARAM_INT);
                 $cmdValidate->execute();
                 if ($cmdValidate->fetch()) {
@@ -321,15 +325,16 @@ class NotaCreditoAdo
                     $serie_numeracion = explode("-", $codigoSerieNumeracion->fetchColumn());
 
                     $cmdIngreso = Database::getInstance()->getDb()->prepare("INSERT INTO NotaCredito(
-                    idIngreso,
-                    idUsuario,
-                    idMotivoAnulacion,
-                    TipoComprobante,
-                    Serie,
-                    NumRecibo,
-                    Fecha,
-                    Hora
-                    )VALUES(?,?,?,?,?,?,GETDATE(),GETDATE())");
+                        idIngreso,
+                        idUsuario,
+                        idMotivoAnulacion,
+                        TipoComprobante,
+                        Serie,
+                        NumRecibo,
+                        Fecha,
+                        Hora,
+                        Estado
+                        )VALUES(?,?,?,?,?,?,GETDATE(),GETDATE(),'C')");
                     $cmdIngreso->bindParam(1, $body["idIngreso"], PDO::PARAM_STR);
                     $cmdIngreso->bindParam(2, $body["idUsuario"], PDO::PARAM_STR);
                     $cmdIngreso->bindParam(3, $body["idMotivoNotaCredito"], PDO::PARAM_INT);
@@ -425,9 +430,10 @@ class NotaCreditoAdo
             $comando = Database::getInstance()->getDb()->prepare("UPDATE 
             NotaCredito SET 
             Xmlsunat = ? , 
-            Xmldescripcion = ?, 
+            Xmldescripcion = ?,
             Correlativo = ?,
-            FechaCorrelativo = ? 
+            FechaCorrelativo = ?,
+            Estado = 'A' 
             WHERE idNotaCredito = ?");
             $comando->bindParam(1, $codigo, PDO::PARAM_STR);
             $comando->bindParam(2, $descripcion, PDO::PARAM_STR);

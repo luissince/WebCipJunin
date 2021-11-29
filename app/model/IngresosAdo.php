@@ -51,7 +51,7 @@ class IngresosAdo
 			LEFT JOIN Usuario AS u ON u.idUsuario = i.idUsuario
 			LEFT JOIN Rol AS r ON r.idRol = u.Rol
             LEFT JOIN Banco AS b ON b.idBanco = i.idBanco
-            LEFT JOIN NotaCredito AS nc ON nc.idIngreso = i.idIngreso
+            LEFT JOIN NotaCredito AS nc ON nc.idIngreso = i.idIngreso AND nc.Estado = 'C'
             WHERE
             $opcion = 0 AND i.Fecha BETWEEN ? AND ?
             OR
@@ -157,7 +157,7 @@ class IngresosAdo
             LEFT JOIN EmpresaPersona AS e ON e.IdEmpresa = i.idEmpresaPersona
             LEFT JOIN Usuario AS u ON u.idUsuario = i.idUsuario
 			LEFT JOIN Rol AS r ON r.idRol = u.Rol
-            LEFT JOIN NotaCredito AS nc ON nc.idIngreso = i.idIngreso
+            LEFT JOIN NotaCredito AS nc ON nc.idIngreso = i.idIngreso AND nc.Estado = 'C'
             WHERE
             $opcion = 0 AND i.Fecha BETWEEN ? AND ?
             OR
@@ -1272,7 +1272,7 @@ class IngresosAdo
                 FROM Ingreso AS i 
                 INNER JOIN Detalle AS d ON i.idIngreso = d.idIngreso
                 INNER JOIN Concepto AS c ON d.idConcepto = c.idConcepto
-                LEFT JOIN NotaCredito AS nc ON nc.idIngreso = i.idIngreso
+                LEFT JOIN NotaCredito AS nc ON nc.idIngreso = i.idIngreso AND nc.Estado = 'C'
                 WHERE i.Estado = 'C' AND nc.idNotaCredito IS NULL AND i.Fecha  >= ? AND i.Fecha  <= ? 
                 GROUP BY c.Codigo,c.Concepto,c.Propiedad,i.Tipo
                 ORDER BY c.Concepto ASC");
@@ -1316,7 +1316,7 @@ class IngresosAdo
                 from Ingreso as i 
                 left join Persona as p on p.idDNI = i.idDNI
                 left join EmpresaPersona as ep on ep.IdEmpresa = i.idEmpresaPersona
-                left join NotaCredito as nc on nc.idIngreso = i.idIngreso
+                left join NotaCredito as nc on nc.idIngreso = i.idIngreso AND nc.Estado = 'C'
                 inner join Detalle as d on d.idIngreso = i.idIngreso
                 where i.Estado <> 'A' and i.Fecha between ? and ? and nc.idIngreso is null
                 group by
@@ -1388,10 +1388,10 @@ class IngresosAdo
                 INNER JOIN Detalle ON Detalle.idIngreso=Ingreso.idIngreso
                 INNER JOIN Concepto ON Concepto.idConcepto=Detalle.idConcepto 	
                 INNER JOIN Persona ON Persona.idDNI=Ingreso.idDNI
-                INNER JOIN Colegiatura ON Colegiatura.idDNI=PERSONA.idDNI AND Colegiatura.Principal=1
+                INNER JOIN Colegiatura ON Colegiatura.idDNI=PERSONA.idDNI AND Colegiatura.Principal = 1
                 INNER JOIN Especialidad ON Especialidad.idEspecialidad = Colegiatura.idEspecialidad
                 INNER JOIN Capitulo ON Capitulo.idCapitulo = Especialidad.idCapitulo
-                WHERE Ingreso.Fecha  BETWEEN ? AND ? AND Ingreso.Estado<>'A'
+                WHERE Ingreso.Fecha  BETWEEN ? AND ? AND Ingreso.Estado <> 'A'
                 AND (Concepto.Concepto = 'Cuotas al ISS CIP' OR Concepto.Concepto =  'Cuotas Sociales CIP')
                 GROUP BY Persona.CIP, Concepto.Concepto, Ingreso.idIngreso, Ingreso.idDNI,Persona.Condicion, Persona.Apellidos+' '+Persona.Nombres,
                 Cuota.FechaIni,Cuota.FechaFin,Ingreso.Fecha,Especialidad.Especialidad,Capitulo.Capitulo
@@ -1431,7 +1431,7 @@ class IngresosAdo
                 INNER JOIN Detalle ON Detalle.idIngreso=Ingreso.idIngreso
                 INNER JOIN Concepto ON Concepto.idConcepto=Detalle.idConcepto 	
                 INNER JOIN Persona ON Persona.idDNI=Ingreso.idDNI
-                INNER JOIN Colegiatura ON Colegiatura.idDNI=PERSONA.idDNI AND Colegiatura.Principal=1
+                INNER JOIN Colegiatura ON Colegiatura.idDNI=PERSONA.idDNI AND Colegiatura.Principal = 1
                 INNER JOIN Especialidad ON Especialidad.idEspecialidad = Colegiatura.idEspecialidad
                 INNER JOIN Capitulo ON Capitulo.idCapitulo = Especialidad.idCapitulo
                 WHERE Persona.NumDoc = ? AND Ingreso.Fecha  BETWEEN ? AND ? AND Ingreso.Estado<>'A'
@@ -1779,6 +1779,7 @@ class IngresosAdo
             nc.NumRecibo,
             nc.Fecha,
             nc.Hora,
+            nc.Estado,
             isnull(e.NumeroRuc,p.NumDoc) as NumeroDocumento,            
             isnull(e.Nombre, concat(p.Apellidos,' ',p.Nombres)) as Persona,
             sum(ncd.Monto) as Total
@@ -1798,6 +1799,7 @@ class IngresosAdo
             nc.NumRecibo,
             nc.Fecha,
             nc.Hora,
+            nc.Estado,
             e.NumeroRuc,
             p.NumDoc,            
             e.Nombre,
@@ -1826,7 +1828,7 @@ class IngresosAdo
                     "NumRecibo" => $row["NumRecibo"],
                     "FechaPago" => $row["Fecha"],
                     "Concepto" => "",
-                    "Estado" => "C",
+                    "Estado" => $row["Estado"],
                     "TipoPago" => "1",
                     "NombreBanco" => "",
                     "NumeroOperacion" => "",
@@ -2161,6 +2163,7 @@ class IngresosAdo
             nc.NumRecibo,
             nc.Fecha,
             nc.Hora,
+            nc.Estado,
             isnull(e.NumeroRuc,p.NumDoc) as NumeroDocumento,            
             isnull(e.Nombre, concat(p.Apellidos,' ',p.Nombres)) as Persona,
             sum(ncd.Monto) as Total
@@ -2210,7 +2213,7 @@ class IngresosAdo
                     "NumRecibo" => $row["NumRecibo"],
                     "FechaPago" => $row["Fecha"],
                     "Concepto" => "",
-                    "Estado" => "C",
+                    "Estado" => $row["Estado"],
                     "TipoPago" => "1",
                     "NombreBanco" => "",
                     "NumeroOperacion" => "",

@@ -174,6 +174,7 @@ if (!isset($_SESSION['IdUsuario'])) {
                                             <th style="width:10%;">Comprobante</th>
                                             <th style="width:15%;">Colegiado</th>
                                             <th style="width:10%;">Modificado</th>
+                                            <th style="width:10%;">Estado</th>
                                             <th style="width:5%;">Total</th>
                                             <th style="width:10%;" class="text-center">Estado Sunat</th>
                                             <th style="width:15%;">Observaciones Sunat</th>
@@ -378,7 +379,7 @@ if (!isset($_SESSION['IdUsuario'])) {
                         beforeSend: function() {
                             tbTable.empty();
                             tbTable.append(
-                                '<tr class="text-center"><td colspan="10"><img src="./images/spiner.gif"/><p>Cargando información.</p></td></tr>'
+                                '<tr class="text-center"><td colspan="12"><img src="./images/spiner.gif"/><p>Cargando información.</p></td></tr>'
                             );
                             totalPaginacion = 0;
                             arrayIngresos = [];
@@ -390,7 +391,7 @@ if (!isset($_SESSION['IdUsuario'])) {
                                 if (arrayIngresos.length == 0) {
                                     tbTable.empty();
                                     tbTable.append(
-                                        '<tr class="text-center"><td colspan="10"><p>No hay comprobantes para mostrar.</p></td></tr>'
+                                        '<tr class="text-center"><td colspan="12"><p>No hay comprobantes para mostrar.</p></td></tr>'
                                     );
                                     $("#lblPaginaActual").html(0);
                                     $("#lblPaginaSiguiente").html(0);
@@ -408,6 +409,8 @@ if (!isset($_SESSION['IdUsuario'])) {
                                             '</button>';
 
                                         let estadosunat = addView == 0 ? '<i class="fa fa-minus" style="font-size:20px;"></i>' :
+                                            notacredito.Estado === "A" ?
+                                            '<button class="btn btn-default btn-xs" onclick="facturarXml(\'' + notacredito.idNotaCredito + '\')"><img src="./images/error.svg" width="26" /></button>' :
                                             (notacredito.Xmlsunat === "" ?
                                                 '<button class="btn btn-default btn-xs" onclick="facturarXml(\'' + notacredito.idNotaCredito + '\')"><img src="./images/reuse.svg" width="26" /></button>' :
                                                 notacredito.Xmlsunat === "0" ?
@@ -428,6 +431,7 @@ if (!isset($_SESSION['IdUsuario'])) {
                                             '<td>' + notacredito.Serie + '-' + notacredito.NumRecibo + '</td>' +
                                             '<td>' + notacredito.NumeroDocumento + '<br>' + notacredito.Persona + '</td>' +
                                             '<td>' + notacredito.SerieModificado + '-' + notacredito.NumeracionModificado + '</td>' +
+                                            '<td>' + (notacredito.Estado == "C" ? '<span class="text-green">Cobrado</span>' : '<span class="text-red">Anulado</span>') + '</td>' +
                                             '<td>' + tools.formatMoney(notacredito.Total) + '</td>' +
                                             '<td class="text-center">' + estadosunat + '</td>' +
                                             '<td>' + observacionsunat + '</td>' +
@@ -443,7 +447,7 @@ if (!isset($_SESSION['IdUsuario'])) {
                             } else {
                                 tbTable.empty();
                                 tbTable.append(
-                                    '<tr class="text-center"><td colspan="10"><p>' + result.message + '</p></td></tr>'
+                                    '<tr class="text-center"><td colspan="12"><p>' + result.message + '</p></td></tr>'
                                 );
                                 $("#lblPaginaActual").html(0);
                                 $("#lblPaginaSiguiente").html(0);
@@ -454,7 +458,7 @@ if (!isset($_SESSION['IdUsuario'])) {
                         error: function(error) {
                             tbTable.empty();
                             tbTable.append(
-                                '<tr class="text-center"><td colspan="10"><p>' + error.responseText + '</p></td></tr>'
+                                '<tr class="text-center"><td colspan="12"><p>' + error.responseText + '</p></td></tr>'
                             );
                             $("#lblPaginaActual").html(0);
                             $("#lblPaginaSiguiente").html(0);
@@ -486,17 +490,17 @@ if (!isset($_SESSION['IdUsuario'])) {
                                     let object = result;
                                     if (object.state === true) {
                                         if (object.accept === true) {
-                                            tools.ModalAlertSuccess("Nota de Crédito", "Resultado: Código " + object.code + " " + object.description);
+                                            tools.ModalAlertSuccess("Nota de Crédito", "Código " + object.code + " " + object.description);
                                             onEventPaginacion();
                                         } else {
-                                            tools.ModalAlertWarning("Nota de Crédito", "Resultado: Código " + object.code + " " + object.description);
+                                            tools.ModalAlertWarning("Nota de Crédito", "Código " + object.code + " " + object.description);
                                         }
                                     } else {
-                                        tools.ModalAlertWarning("Nota de Crédito", "Resultado: Código " + object.code + " " + object.description);
+                                        tools.ModalAlertWarning("Nota de Crédito", "Código " + object.code + " " + object.description);
                                     }
                                 },
                                 error: function(error) {
-                                    tools.ModalAlertError("Nota de Crédito", "Error en el momento de firmar el xml: " + error.responseText);
+                                    tools.ModalAlertError("Nota de Crédito", error.responseText == "" || error.responseText == null ? "Se produjo un error interno, intente nuevamente." : error.responseText);
                                 }
                             });
                         }
@@ -516,22 +520,20 @@ if (!isset($_SESSION['IdUsuario'])) {
                                     tools.ModalAlertInfo("Emitir resumen díario", "Firmando xml y enviando a la sunat.");
                                 },
                                 success: function(result) {
-                                    console.log(result);
                                     let object = result;
                                     if (object.state === true) {
                                         if (object.accept === true) {
-                                            tools.ModalAlertSuccess("Emitir resumen díario", "Resultado: Código " + object.code + " " + object.description);
+                                            tools.ModalAlertSuccess("Emitir resumen díario", "Código " + object.code + " " + object.description);
                                             onEventPaginacion();
                                         } else {
-                                            tools.ModalAlertWarning("Emitir resumen díario", "Resultado: Código " + object.code + " " + object.description);
+                                            tools.ModalAlertWarning("Emitir resumen díario", "Código " + object.code + " " + object.description);
                                         }
                                     } else {
-                                        tools.ModalAlertWarning("Emitir resumen díario", "Resultado: Código " + object.code + " " + object.description);
+                                        tools.ModalAlertWarning("Emitir resumen díario", "Código " + object.code + " " + object.description);
                                     }
                                 },
                                 error: function(error) {
-                                    console.log(error)
-                                    tools.ModalAlertError("Emitir resumen díario", "Error en el momento de firmar el xml: " + error.responseText);
+                                    tools.ModalAlertError("Nota de Crédito", error.responseText == "" || error.responseText == null ? "Se produjo un error interno, intente nuevamente." : error.responseText);
                                 }
                             });
                         }

@@ -356,7 +356,7 @@ if (!isset($_GET["idNotaCredito"])) {
         $mpdf->SetProtection(array('print'));
         $mpdf->SetTitle("NOTA DE CRÉDITO " . $notacredito->SerieNotaCredito  . "-" . $notacredito->NumeracionNotaCredito);
         $mpdf->SetAuthor("Cip Junin");
-        $mpdf->SetWatermarkText("");   // anulada
+        $mpdf->SetWatermarkText(($notacredito->Estado === "C" ? "ACEPTADO" : "ANULADO"));
         $mpdf->showWatermarkText = true;
         $mpdf->watermark_font = 'DejaVuSansCondensed';
         $mpdf->watermarkTextAlpha = 0.1;
