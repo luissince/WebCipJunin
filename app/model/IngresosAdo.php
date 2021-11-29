@@ -2183,6 +2183,7 @@ class IngresosAdo
             nc.NumRecibo,
             nc.Fecha,
             nc.Hora,
+            nc.Estado,
             e.NumeroRuc,
             p.NumDoc,            
             e.Nombre,
