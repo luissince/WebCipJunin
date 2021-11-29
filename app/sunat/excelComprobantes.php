@@ -155,7 +155,7 @@ if (!is_array($ventas)) {
                     ->setCellValue("L" . $cel, strval($value["Total"]))
                     ->setCellValue("M" . $cel, strval(0));
             } else {
-                $documento->getActiveSheet()->getStyle('A' . $cel . ':J' . $cel . '')->applyFromArray(array(
+                $documento->getActiveSheet()->getStyle('A' . $cel . ':M' . $cel . '')->applyFromArray(array(
                     'font'  => array(
                         'bold'  =>  false,
                         'color' => array('rgb' => 'd10505')
@@ -346,7 +346,7 @@ if (!is_array($ventas)) {
                     ->setCellValue("N" . $cel, strval($value["Total"]))
                     ->setCellValue("O" . $cel, strval(0));
             } else {
-                $documento->getActiveSheet()->getStyle('A' . $cel . ':M' . $cel . '')->applyFromArray(array(
+                $documento->getActiveSheet()->getStyle('A' . $cel . ':O' . $cel . '')->applyFromArray(array(
                     'font'  => array(
                         'bold'  =>  false,
                         'color' => array('rgb' => 'd10505')
