@@ -40,7 +40,9 @@ class IngresosAdo
             sum(d.Monto) AS Total,
             nc.idNotaCredito,
             nc.Serie AS SerieNc,
-            nc.NumRecibo AS NumReciboNc         
+            nc.NumRecibo AS NumReciboNc,
+            isnull(i.Xmlsunat,'') as Xmlsunat, 
+            isnull(i.Xmldescripcion,'') as Xmldescripcion       
             FROM Ingreso AS i 
             INNER JOIN TipoComprobante AS tc ON tc.IdTipoComprobante = i.TipoComprobante
             LEFT JOIN Persona AS p ON i.idDNI = p.idDNI
@@ -94,7 +96,9 @@ class IngresosAdo
             tc.Nombre,
             nc.idNotaCredito,
             nc.Serie,
-            nc.NumRecibo
+            nc.NumRecibo,
+            i.Xmlsunat, 
+            i.Xmldescripcion  
             ORDER BY i.Fecha DESC,i.Hora DESC
             offset ? ROWS FETCH NEXT ? ROWS only");
             $cmdConcepto->bindParam(1, $fechaInicio, PDO::PARAM_STR);
@@ -140,7 +144,9 @@ class IngresosAdo
                     "total" => $row["Total"],
                     "idNotaCredito" => $row["idNotaCredito"],
                     "serieNc" => $row["SerieNc"],
-                    "numerReciboNc" => $row["NumReciboNc"]
+                    "numerReciboNc" => $row["NumReciboNc"],
+                    "xmlsunat" => $row["Xmlsunat"],
+                    "xmldescripcion" => $row["Xmldescripcion"],
                 ));
             }
 
