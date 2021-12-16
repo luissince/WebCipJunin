@@ -807,7 +807,7 @@ if (!isset($_SESSION['IdUsuario'])) {
 
                     $('#cbIngeniero').select2({
                         placeholder: "Buscar Ingeniero",
-
+                        width: '100%',
                         ajax: {
                             url: "../app/controller/ListarIngenierosController.php",
                             type: "GET",

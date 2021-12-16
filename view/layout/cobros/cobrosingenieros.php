@@ -14,25 +14,29 @@
                 <div class="modal-body">
                     <div class="row" style="margin-bottom: 15px;">
                         <div class="col-md-4 col-sm-12 col-xs-12">
-                            <button class="btn btn-danger" id="btnIzquierda">
+                            <button class="btn btn-info" id="btnIzquierda">
                                 <i class="fa fa-toggle-left"></i>
                             </button>
                             <span id="lblPaginaActual" class="font-weight-bold margin">0</span>
                             <span class="margin">a</span>
                             <span id="lblPaginaSiguiente" class="font-weight-bold margin">0</span>
-                            <button class="btn btn-danger" id="btnDerecha">
+                            <button class="btn btn-info" id="btnDerecha">
                                 <i class="fa fa-toggle-right"></i>
                             </button>
                         </div>
-                        <div class="col-md-6 col-sm-12 col-xs-12">
+                        <div class="col-md-8 col-sm-12 col-xs-12">
                             <div class="form-group">
-                                <input type="search" id="txtBuscarIngeniero" class="form-control" placeholder="Buscar por información, n° cip o dni" aria-describedby="search">
+                                <div class="input-group">
+                                    <input type="search" id="txtBuscarIngeniero" class="form-control" placeholder="Buscar por información, n° cip o dni" aria-describedby="search">
+                                    <div class="input-group-btn">
+                                        <button id="btnBuscarIngeniero" class="btn btn-primary">
+                                            <i class="fa fa-search"></i> Buscar
+                                        </button>
+                                    </div>
+                                </div>
+
+
                             </div>
-                        </div>
-                        <div class="col-md-2 col-sm-12 col-xs-12">
-                            <button id="btnBuscarIngeniero" class="btn btn-default">
-                                <i class="fa fa-search"></i> Buscar
-                            </button>
                         </div>
                     </div>
                     <div class="row" style="overflow-x: auto; height:280px">
@@ -66,7 +70,7 @@
                             </h5>
                         </div>
                         <div class="col-lg-6 col-md-6">
-                            <button type="button" class="btn btn-primary" data-dismiss="modal">
+                            <button type="button" class="btn btn-danger" data-dismiss="modal">
                                 <i class="fa fa-remove"></i> Cancelar</button>
                         </div>
                     </div>

@@ -967,7 +967,7 @@ if (!isset($_SESSION['IdUsuario'])) {
                                 for (let value of result.data) {
                                     $("#cbEmpresa").append('<option value="' + value.IdEmpresa + '">' + value.RazonSocial + '</option>');
                                 }
-                                $('#cbEmpresa').select2();
+                                $('#cbEmpresa').select2({width: '100%',});
                                 if (newEmpresa != 0) {
                                     $('#cbEmpresa').val(newEmpresa).trigger('change.select2');
                                 }
@@ -1339,8 +1339,7 @@ if (!isset($_SESSION['IdUsuario'])) {
                                         tools.ModalAlertInfo("Empresa", "Procesando petición..");
                                     },
                                     success: function(result) {
-                                        if (result.estado === 1) {
-                                            console.log(result.data.id)
+                                        if (result.estado === 1) {                                          
                                             tools.ModalAlertSuccess("Empresa", result.mensaje);
                                             clearModalAddEmpresa();
                                             newEmpresa = result.data.id;

@@ -306,6 +306,7 @@ if (!isset($_SESSION['IdUsuario'])) {
                                             <th width="5%" class="text-center">Historial</th>
                                             <th width="5%" class="text-center">Editar</th>
                                             <th width="5%" class="text-center">Eliminar</th>
+                                            <th width="5%" class="text-center">Reporte</th>
                                         </thead>
                                         <tbody id="tbTable">
 
@@ -550,7 +551,7 @@ if (!isset($_SESSION['IdUsuario'])) {
                                 tbTable.empty();
                                 if (result.personas.length == 0) {
                                     tbTable.append(
-                                        '<tr class="text-center"><td colspan="11"><p>No hay datos para mostrar.</p></td></tr>'
+                                        '<tr class="text-center"><td colspan="12"><p>No hay datos para mostrar.</p></td></tr>'
                                     );
                                     $("#lblPaginaActual").html(0);
                                     $("#lblPaginaSiguiente").html(0);
@@ -570,6 +571,10 @@ if (!isset($_SESSION['IdUsuario'])) {
                                         let btnDelete = deleteView == 0 ? '<i class="fa fa-minus" style="font-size:20px;"></i>' :
                                             '<button class="btn btn-danger btn-xs" onclick="deleteIngeniero(\'' + persona.idDNI + '\')">' +
                                             '<i class="fa fa-trash" style="font-size:25px;"></i> ' +
+                                            '</button>';
+
+                                        let btnReporte = '<button class="btn btn-default btn-xs" onclick="reporteColegiado(\'' + persona.idDNI + '\')">' +
+                                            '<i class="fa fa-file-pdf-o" style="font-size:25px;"></i> ' +
                                             '</button>';
 
                                         let estadoCivil = (persona.EstadoCivil == 'S') ? 'Soltero/a' :
@@ -593,6 +598,7 @@ if (!isset($_SESSION['IdUsuario'])) {
                                             '<td>' + btnHistorial + '</td>' +
                                             '<td>' + btnUpdate + '</td>' +
                                             '<td>' + btnDelete + '</td>' +
+                                            '<td>' + btnReporte + '</td>' +
                                             '</tr>');
                                     }
                                     totalPaginacion = parseInt(Math.ceil((parseFloat(result.total) / parseInt(
@@ -604,7 +610,7 @@ if (!isset($_SESSION['IdUsuario'])) {
                             } else {
                                 tbTable.empty();
                                 tbTable.append(
-                                    '<tr class="text-center"><td colspan="11"><p>' + result.message + '</p></td></tr>'
+                                    '<tr class="text-center"><td colspan="12"><p>' + result.message + '</p></td></tr>'
                                 );
                                 $("#lblPaginaActual").html(0);
                                 $("#lblPaginaSiguiente").html(0);
@@ -614,7 +620,7 @@ if (!isset($_SESSION['IdUsuario'])) {
                         error: function(error) {
                             tbTable.empty();
                             tbTable.append(
-                                '<tr class="text-center"><td colspan="11"><p>' + error.responseText + '</p></td></tr>'
+                                '<tr class="text-center"><td colspan="12"><p>' + error.responseText + '</p></td></tr>'
                             );
                             $("#lblPaginaActual").html(0);
                             $("#lblPaginaSiguiente").html(0);
@@ -787,6 +793,10 @@ if (!isset($_SESSION['IdUsuario'])) {
                             stateHistorial = false;
                         }
                     });
+                }
+
+                function reporteColegiado(dni) {
+                    window.open("../app/sunat/pdfColegiado.php?idDni=" + dni, "_blank");
                 }
 
                 function onSelectedIngeniero(idIngeniero) {

@@ -451,6 +451,103 @@ class PersonaAdo
         }
     }
 
+    public static function reporteColegiado($idDni)
+    {
+        try {
+            $cmdPersona = Database::getInstance()->getDb()->prepare("SELECT 
+            NumDoc,
+            Nombres,
+            Apellidos,
+            CIP,
+            FechaNac,
+            CASE Sexo
+            WHEN 'M' THEN 'MASCULINO'
+            ELSE 'FEMENINO' END AS Sexo,
+            CASE condicion
+            WHEN 'V' THEN 'VITALICIO'
+            WHEN 'F' THEN 'FALLECIDO'
+            WHEN 'R' THEN 'RETIRADO'
+            WHEN 'T' THEN 'TRANSEUNTE'
+            ELSE 'ORDINARIO' END AS condicion
+            FROM Persona WHERE idDNI = ?");
+            $cmdPersona->bindParam(1, $idDni, PDO::PARAM_STR);
+            $cmdPersona->execute();
+
+            $cmdImage = Database::getInstance()->getDb()->prepare("SELECT TOP 1 
+            idDNI,Foto
+            FROM PersonaImagen WHERE idDNI = ?");
+            $cmdImage->bindParam(1, $idDni, PDO::PARAM_STR);
+            $cmdImage->execute();
+            $image = null;
+
+            if ($row = $cmdImage->fetch()) {
+                $image = base64_encode($row['Foto']);
+            }
+
+            $cmdColegiatura = Database::getInstance()->getDb()->prepare("SELECT 
+            c.idColegiado, 
+            s.idConsejo, 
+            s.Consejo, 
+            ca.idCapitulo ,
+            ISNULL(ca.Capitulo,'CAPITULO NO REGISTRADO') AS Capitulo, 
+            e.idEspecialidad ,
+            UPPER(ISNULL(e.Especialidad,'ESPECIALIDAD NO REGISTRADA')) AS Especialidad,
+            convert(VARCHAR,cast(c.FechaColegiado AS DATE),103) AS FechaColegiado, 
+            c.idUnivesidadEgreso AS idUnivEgreso,
+            ISNULL(ue.Universidad,'UNIVERSIDAD NO REGISTRADA') AS UnivesidadEgreso, 
+            convert(VARCHAR,cast(c.FechaEgreso AS DATE),103) AS FechaEgreso, 
+            u.idUniversidad, 
+            ISNULL(u.Universidad,'UNIVERSIDAD NO REGISTRADA') AS Universidad, 
+            Convert(VARCHAR,cast(c.FechaTitulacion AS DATE),103) AS FechaTitulacion, 
+            c.Resolucion, 
+            c.Principal 
+            FROM Colegiatura  AS c
+            LEFT JOIN Sede AS s ON s.idConsejo = c.idSede
+            LEFT JOIN Especialidad AS e ON e.idEspecialidad = c.idEspecialidad
+            LEFT JOIN Capitulo AS ca ON ca.idCapitulo = e.idCapitulo
+			LEFT JOIN Universidad as ue ON ue.idUniversidad = c.idUnivesidadEgreso 
+            LEFT JOIN Universidad AS u ON u.idUniversidad = c.idUniversidad where idDNI = ?");
+            $cmdColegiatura->bindParam(1, $idDni, PDO::PARAM_STR);
+            $cmdColegiatura->execute();
+
+            $cmdHistorial = Database::getInstance()->getDb()->prepare("SELECT 
+            i.idIngreso, 
+            i.idDNI, 
+            CONCAT(i.Serie,' - ', i.NumRecibo) AS Recibo, 
+            i.Fecha, 
+            i.Hora,
+            CASE 
+            WHEN NOT idCuota IS NULL THEN RIGHT(CONVERT(VARCHAR(10), cu.FechaIni, 103), 7) + ' a ' + RIGHT(CONVERT(VARCHAR(10), cu.FechaFin, 103), 7) 
+            ELSE i.Observacion END AS Observacion, vit.Total,
+            CASE 
+            WHEN NOT idCuota IS NULL THEN 'Cuota Ordinaria'
+            WHEN NOT idAltaColegio IS NULL THEN 'Colegiatura'
+            WHEN NOT idHabilidad IS NULL THEN  'Certificado de habilidad'
+            WHEN NOT idResidencia IS NULL THEN 'Cuota de residencia de obra' 
+            WHEN NOT idProyecto IS NULL THEN 'Certificado de proyecto' 
+            WHEN NOT idPeritaje IS NULL THEN 'Peritaje' 
+            ELSE 'Ingresos Diversos' END AS TipoIngreso,
+            ISNULL(ch.Numero, '-') AS NmroCertHabilidad
+            FROM Ingreso AS i             
+            INNER JOIN vINGRESOTotal AS vit ON vit.idIngreso = i.idIngreso 
+            LEFT OUTER JOIN Cuota AS cu ON cu.idIngreso = i.idIngreso 
+            LEFT OUTER JOIN AltaColegio AS ac ON ac.idIngreso = i.idIngreso 
+            LEFT OUTER JOIN CERTHabilidad AS ch ON ch.idIngreso = i.idIngreso 
+            LEFT OUTER JOIN CERTResidencia AS cr ON cr.idIngreso = i.idIngreso 
+            LEFT OUTER JOIN CERTProyecto AS cp ON cp.idIngreso = i.idIngreso 
+            LEFT OUTER JOIN Peritaje AS pe ON pe.idIngreso = i.idIngreso
+            LEFT OUTER JOIN NotaCredito AS nc ON nc.idIngreso = i.idIngreso AND nc.Estado = 'C'
+            WHERE i.Estado = 'C' AND nc.idNotaCredito IS NULL AND idDNI = ?
+            ORDER BY i.Fecha DESC,i.Hora DESC");
+            $cmdHistorial->bindParam(1, $idDni, PDO::PARAM_STR);
+            $cmdHistorial->execute();
+
+            return array($cmdPersona->fetchObject(), $image, $cmdColegiatura->fetchAll(PDO::FETCH_OBJ), $cmdHistorial->fetchAll(PDO::FETCH_OBJ));
+        } catch (Exception $ex) {
+            return $ex->getMessage();
+        }
+    }
+
     public static function getHistorialPagos($idPersona, $posicionPagina, $filasPorPagina)
     {
         try {
