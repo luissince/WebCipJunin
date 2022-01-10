@@ -1118,7 +1118,7 @@ class ConceptoAdo
     public static function validateCertNum($numero)
     {
         try {
-            $comandSelect = Database::getInstance()->getDb()->prepare("SELECT * FROM CorrelativoCERT WHERE Numero = ?");
+            $comandSelect = Database::getInstance()->getDb()->prepare("SELECT * FROM CorrelativoCERT WHERE Numero = ? AND TipoCert = 1");
             $comandSelect->bindParam(1, $numero, PDO::PARAM_INT);
             $comandSelect->execute();
             if ($comandSelect->fetch()) {
