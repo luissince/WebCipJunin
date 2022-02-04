@@ -64,8 +64,8 @@ if (!isset($_SESSION['IdUsuario'])) {
                                     <div class="row">
                                         <div class="col-md-6">
                                             <div class="form-group">
-                                                <label for="txtFechaCertificado">Fecha</label>
-                                                <input type="date" class="form-control" id="txtFechaCertificado" disabled>
+                                                <label for="txtFechaCertificado">Fecha Vencimiento</label>
+                                                <input type="date" class="form-control" id="txtFechaCertificado">
                                             </div>
                                         </div>
                                         <div class="col-md-6">
@@ -493,6 +493,9 @@ if (!isset($_SESSION['IdUsuario'])) {
                     if ($("#cbEspecialidadCertificado").val() == '') {
                         tools.AlertWarning("Certificado de Habilidad", "Seleccione una especialidad para continuar.");
                         $("#cbEspecialidadCertificado").focus();
+                    } else if (!tools.validateDate($("#txtFechaCertificado").val())) {
+                        tools.AlertWarning("Certificado de Habilidad", "Ingrese la fecha de vencimiento.");
+                        $("#txtFechaCertificado").focus();
                     } else if ($("#txtCorrelativoCertificado").val() == "") {
                         tools.AlertWarning("Certificado de Habilidad", "Ingrese el n° del certificado.");
                         $("#txtCorrelativoCertificado").focus();
@@ -518,7 +521,8 @@ if (!isset($_SESSION['IdUsuario'])) {
                                         "especialidad": $("#cbEspecialidadCertificado").val(),
                                         "asunto": $("#txtAsuntoCertificado").val(),
                                         "entidad": $("#txtEntidadCertificado").val(),
-                                        "lugar": $("#txtLugarCertificado").val()
+                                        "lugar": $("#txtLugarCertificado").val(),
+                                        "fecha": $("#txtFechaCertificado").val(),
                                     },
                                     beforeSend: function() {
                                         cleanModalHabilidad();

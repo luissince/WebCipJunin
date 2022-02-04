@@ -919,12 +919,16 @@ class ConceptoAdo
         try {
             Database::getInstance()->getDb()->beginTransaction();
 
+            $date = new DateTime($data["fecha"] . " 00:00:00");
+            $fechaVencimiento = $date->format('Y-m-d');
+
             $cmdConcepto = Database::getInstance()->getDb()->prepare("UPDATE CERTHabilidad SET
                 Numero = ?,
                 Asunto = ?,
                 Entidad = ?,
                 Lugar = ?,
-                idColegiatura = ?
+                idColegiatura = ?,
+                HastaFecha = ?
                 WHERE idHabilidad = ?");
 
             $cmdConcepto->bindParam(1, $data["numerico"], PDO::PARAM_STR);
@@ -932,7 +936,8 @@ class ConceptoAdo
             $cmdConcepto->bindParam(3, $data["entidad"], PDO::PARAM_STR);
             $cmdConcepto->bindParam(4, $data["lugar"], PDO::PARAM_STR);
             $cmdConcepto->bindParam(5, $data["especialidad"], PDO::PARAM_INT);
-            $cmdConcepto->bindParam(6, $data["idCertHabilidad"], PDO::PARAM_INT);
+            $cmdConcepto->bindParam(6, $fechaVencimiento, PDO::PARAM_STR);
+            $cmdConcepto->bindParam(7, $data["idCertHabilidad"], PDO::PARAM_INT);
             $cmdConcepto->execute();
 
             $cmdCorrelativo = Database::getInstance()->getDb()->prepare("INSERT INTO CorrelativoCERT(TipoCert,Numero) VALUES(1,?)");

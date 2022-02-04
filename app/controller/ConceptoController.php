@@ -345,6 +345,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
         $data["asunto"] = $_POST["asunto"];
         $data["entidad"] = $_POST["entidad"];
         $data["lugar"] = $_POST["lugar"];
+        $data["fecha"] = $_POST["fecha"];
 
         $result = ConceptoAdo::updateCertHabilidad($data);
 
