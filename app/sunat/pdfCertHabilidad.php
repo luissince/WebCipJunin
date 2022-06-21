@@ -8,6 +8,7 @@ if (!isset($_GET["idIngreso"])) {
     define('_MPDF_PATH', '/lib');
     require('./lib/mpdf/vendor/autoload.php');
     include_once('../model/IngresosAdo.php');
+    require_once("./lib/phpqrcode/qrlib.php");
 
     $CertificadoHabilidad = IngresosAdo::ObtenerDatosPdfCertHabilidad($_GET["idIngreso"]);
     if (!is_array($CertificadoHabilidad)) {
@@ -42,6 +43,8 @@ if (!isset($_GET["idIngreso"])) {
         $Mes = $Datos['frMes'];
         $MesRegistro = IngresosAdo::getMothName($Mes);
         $AnioRegistro = substr($Datos['frAnio'], 2, 2);
+
+        $qrCode = QrCode::png("https://www.intranet.cip-junin.org.pe/view/validatecert.php", 'codbarcera.png', 'L', 4, 2);
 
         $html = '<html>
             <head>
@@ -158,9 +161,14 @@ if (!isset($_GET["idIngreso"])) {
                     <div style="width:100; float:left;" class="background-div">' . $MesRegistro . '</div>
                     <div style="width:50; float:left; padding-left: 27px;" class="background-div">' . $AnioRegistro . '</div>
                 </div>
-                
-                <img width="196" height="90" style="margin-left:490px;margin-top:40px;background-color:transparent;" src="firmadecano.png" />
-                
+                <div>
+                    <span>
+                        <img width="100" height="100" style="margin-left:160px;margin-top:40px;" src="codbarcera.png" />
+                    </span>
+                    <span>
+                        <img width="196" height="90" style="margin-left:230px;margin-top:40px;background-color:transparent;" src="firmadecano.png" />
+                    </span>                 
+                </div>
                 <!--################################################## Fin del Pie del Documento ###############################################################-->
             </body>
         </html>';
