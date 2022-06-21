@@ -165,9 +165,9 @@ if (!isset($_GET["idIngreso"])) {
                     <span>
                         <img width="100" height="100" style="margin-left:140px;margin-top:40px;" src="codbarcera.png" />
                     </span>
-                    <span>
+                    <!--<span>
                         <img width="196" height="90" style="margin-left:250px;margin-top:40px;background-color:transparent;" src="firmadecano.png" />
-                    </span>                 
+                    </span>-->                 
                 </div>
                 <!--################################################## Fin del Pie del Documento ###############################################################-->
             </body>
