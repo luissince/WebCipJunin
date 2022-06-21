@@ -166,7 +166,7 @@ if (!isset($_GET["idIngreso"])) {
                 <div class="cont-header">
                     <div class="caja-info-cero">
                         <img src="' . $rutaImage . '" style="width:70%;"><br>
-                        <span style="font-size:10pt;font-style: italic;color: #b72928;font-weight: bold;">"A más Ingeniería, Cero corrupción"</span>
+                        <span style="font-size:10pt;font-style: italic;color: #b72928;font-weight: bold;">"Ingenieros por la competitividad y productividad"</span>
                     </div>
                     <div class="caja-info-uno">
                         <div class="my-img" >                
