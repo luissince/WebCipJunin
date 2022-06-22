@@ -162,9 +162,9 @@ if (!isset($_GET["idIngreso"])) {
                     <div style="width:50; float:left; padding-left: 27px;" class="background-div">' . $AnioRegistro . '</div>
                 </div>
                 <div>
-                    <span>
+                    <!--<span>
                         <img width="100" height="100" style="margin-left:150px;margin-top:35px;" src="codbarcera.png" />
-                    </span>
+                    </span>-->
                     <!--<span>
                         <img width="196" height="90" style="margin-left:240px;margin-top:35px;background-color:transparent;" src="firmadecano.png" />
                     </span>-->           
