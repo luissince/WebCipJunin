@@ -208,9 +208,9 @@
                     console.log(result);
                     if (result.estado == "1") {
                         if (result.image == null) {
-                            lblImagen.attr("src", "images/ayuda.png");
+                            lblImagen.attr("src", "images/noimage.jpg");
                         } else {
-                            lblImagen.attr("src", "data:image/(png|jpg|jpge|gif);base64," + result.imagen[1]);
+                            lblImagen.attr("src", "data:image/(png|jpg|jpge|gif);base64," + result.image[1]);
                         }
 
                         $("#lblDatos").html(result.data.Nombres + " " + result.data.Apellidos);
