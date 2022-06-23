@@ -173,10 +173,10 @@ if (!isset($_GET["idIngreso"])) {
                 </div>
                 <div>
                     <span>
-                        <img width="100" height="100" style="margin-left:150px;margin-top:35px;" src="codbarcera.png" />
+                        <img width="100" height="100" style="margin-left:160px;margin-top:35px;" src="codbarcera.png" />
                     </span>
                     <span>
-                        <img width="196" height="90" style="margin-left:240px;margin-top:35px;background-color:transparent;" src="firmadecano.png" />
+                        <img width="196" height="90" style="margin-left:230px;margin-top:35px;background-color:transparent;" src="firmadecano.png" />
                     </span>           
                 </div>
                 <!--################################################## Fin del Pie del Documento ###############################################################-->
