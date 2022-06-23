@@ -1,6 +1,11 @@
 <?php
+require('./lib/mpdf/vendor/autoload.php');
+include('./../model/IngresosAdo.php');
+require './lib/phpqrcode/vendor/autoload.php';
+require('./../src/autoload.php');
 
 use SysSoftIntegra\Src\Tools;
+use chillerlan\QRCode\QRCode;
 
 date_default_timezone_set('America/Lima');
 
@@ -8,10 +13,6 @@ if (!isset($_GET["idIngreso"])) {
     echo '<script>location.href = "404.php";</script>';
 } else {
 
-    require('./lib/mpdf/vendor/autoload.php');
-    include('./../model/IngresosAdo.php');
-    require("./lib/phpqrcode/qrlib.php");
-    require('./../src/autoload.php');
 
     $CertificadoHabilidad = IngresosAdo::ObtenerDatosPdfCertHabilidad($_GET["idIngreso"]);
     if (!is_array($CertificadoHabilidad)) {
@@ -53,8 +54,7 @@ if (!isset($_GET["idIngreso"])) {
         ));
 
         $token = Tools::my_encrypt($json, "bRuD5WYw5wd0rdHR9yLlM6wt2vteuiniQBqE70nAuhU=CIPJUNIN");
-
-        $qrCode = QrCode::png("https://www.intranet.cip-junin.org.pe/view/validatecert.php?token=" . $token . "", 'codbarcera.png', 'L', 4, 2);
+        $codbar = "https://www.intranet.cip-junin.org.pe/view/validatecert.php?token=" . $token;
 
         $html = '<html>
             <head>
@@ -173,7 +173,7 @@ if (!isset($_GET["idIngreso"])) {
                 </div>
                 <div>
                     <span>
-                        <img width="100" height="100" style="margin-left:160px;margin-top:35px;" src="codbarcera.png" />
+                        <img width="100" height="100" style="margin-left:160px;margin-top:35px;" src="' . (new QRCode)->render($codbar) . '" />
                     </span>
                     <span>
                         <img width="196" height="90" style="margin-left:230px;margin-top:35px;background-color:transparent;" src="firmadecano.png" />

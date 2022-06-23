@@ -1,16 +1,17 @@
 <?php
+define('_MPDF_PATH', '/lib');
+require('./lib/mpdf/vendor/autoload.php');
+require './lib/phpqrcode/vendor/autoload.php';
+
+require __DIR__ . './../model/IngresosAdo.php';
+require __DIR__ . './../src/autoload.php';
 
 use SysSoftIntegra\Src\NumberLleters;
+use chillerlan\QRCode\QRCode;
 
 if (!isset($_GET["idIngreso"])) {
     echo '<script>location.href = "404.php";</script>';
 } else {
-    define('_MPDF_PATH', '/lib');
-    require('./lib/mpdf/vendor/autoload.php');
-    require_once("./lib/phpqrcode/qrlib.php");
-
-    require __DIR__ . './../model/IngresosAdo.php';
-    require __DIR__ . './../src/autoload.php';
 
     $detalleventa = IngresosAdo::ObtenerIngresoXML($_GET["idIngreso"]);
     if (!is_array($detalleventa)) {
@@ -47,7 +48,6 @@ if (!isset($_GET["idIngreso"])) {
                 . '|' . $ingreso->NumeroDocumento
                 . '|';
 
-            $qrCode = QrCode::png($textoCodBar, 'codbar.png', 'L', 4, 2);
 
             $html = '<html>
             <head>
@@ -327,7 +327,7 @@ if (!isset($_GET["idIngreso"])) {
                     <div style="border-left: 6px solid #b72928; font-size:11pt; text-align: center; padding-top: 3mm; ">
                         <p style="text-align:center; margin_bottom:5px;">Representación Impresa de la Factura Electrónica Autorizado para ser Emisor electrónico mediante la Resolución de Intendencia N° 0340050004781/SUNAT/ Para consultar el comprobante ingrese a: https://sunat.god.pe</p>
                         <div style="margin-bottom:0px;" width="100%">
-                            <img style="width:100px; height:100px;" src="codbar.png" />
+                            <img style="width:100px; height:100px;" src="' . (new QRCode)->render($textoCodBar) . '"  />
                             <div>Hashcode: ' . $ingreso->CodigoHash . '</div>
                         </div>
                     </div>

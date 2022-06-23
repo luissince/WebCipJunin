@@ -1,16 +1,19 @@
 <?php
 
+define('_MPDF_PATH', '/lib');
+require('./lib/mpdf/vendor/autoload.php');
+require './lib/phpqrcode/vendor/autoload.php';
+
+include_once('../model/NotaCreditoAdo.php');
+require __DIR__ . './../src/autoload.php';
+
 use SysSoftIntegra\Src\NumberLleters;
+use chillerlan\QRCode\QRCode;
 
 if (!isset($_GET["idNotaCredito"])) {
     echo '<script>location.href = "404.php";</script>';
 } else {
 
-    define('_MPDF_PATH', '/lib');
-    require('./lib/mpdf/vendor/autoload.php');
-    require_once("./lib/phpqrcode/qrlib.php");
-    include_once('../model/NotaCreditoAdo.php');
-    require __DIR__ . './../src/autoload.php';
 
     $detallnotacredito = NotaCreditoAdo::ObtenerNotaCreditoXML($_GET["idNotaCredito"]);
     if (!is_array($detallnotacredito)) {
@@ -45,7 +48,6 @@ if (!isset($_GET["idNotaCredito"])) {
             . '|' . $notacredito->NumeroDocumento
             . '|';
 
-        $qrCode = QrCode::png($textoCodBar, 'codbar.png', 'L', 4, 2);
 
 
         // $pdf417 = new PDF417();
@@ -324,7 +326,7 @@ if (!isset($_GET["idNotaCredito"])) {
         <div style="border-left: 6px solid #b72928; font-size:11pt; text-align: center; padding-top: 3mm; ">
             <p style="text-align:center; margin_bottom:5px;">Representación Impresa de la Factura Electrónica Autorizado para ser Emisor electrónico mediante la Resolución de Intendencia N° 0340050004781/SUNAT/ Para consultar el comprobante ingrese a: https://sunat.god.pe</p>
             <div style="margin-bottom:0px;" width="100%">
-                <img style="width:100px; height:100px;" src="codbar.png" />
+                <img style="width:100px; height:100px;" src="' . (new QRCode)->render($textoCodBar) . '"  />
                 <div>Hashcode: ' . $notacredito->CodigoHash . '</div>
             </div>
             <p style="text-align:left; margin_bottom:5px;"><b>&nbsp;Motivo de Emisión:</b> ' . $notacredito->CodigoAnulacion . "-" . $notacredito->MotivoAnulacion . '</p>
