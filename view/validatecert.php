@@ -174,7 +174,7 @@
     <script src="js/tools.js"></script>
     <script>
         let tools = new Tools();
-        let token = "<?php echo isset($_GET['token']) ? $_GET['token'] : ""; ?>";
+        let token = "<?= isset($_GET['token']) ? $_GET['token'] : ""; ?>";
         let lblImagen = $("#lblImagen");
 
         $(document).ready(function() {
@@ -204,11 +204,13 @@
             $.ajax({
                 url: "../app/controller/IngresoController.php",
                 method: "POST",
+                headers: {
+                    'Authorization': `Bearer ${token}`,
+                },
                 data: {
                     "type": "validateCert",
                 },
                 beforeSend: function(xhr) {
-                    xhr.setRequestHeader('Authorization', 'Bearer ' + token);
                     $("#divOverlayModal").removeClass("d-none");
                 },
                 success: function(result) {

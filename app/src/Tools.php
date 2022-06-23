@@ -8,33 +8,34 @@ use Exception;
 class Tools
 {
 
-    public static function my_encrypt($data, $key)
+    public static function my_encrypt($encrypt, $key)
     {
-        $encryption_key = base64_decode($key);
-        $iv = openssl_random_pseudo_bytes(openssl_cipher_iv_length('aes-256-cbc'));
-        $encrypted = openssl_encrypt($data, 'aes-256-cbc', $encryption_key, 0, $iv);
-        return base64_encode($encrypted . '::' . $iv);
+        $iv = openssl_random_pseudo_bytes(openssl_cipher_iv_length('AES-256-CBC'));
+        $encrypted = openssl_encrypt($encrypt, 'AES-256-CBC', $key, 0, $iv);
+        return base64_encode($encrypted . "::" . $iv);
     }
 
-    public static  function my_decrypt($data, $key)
+    public static  function my_decrypt($encrypted, $key)
     {
-        try {
-            $encryption_key = base64_decode($key);
-            $array = explode(
-                '::',
-                base64_decode($data),
-                2
-            );
-            if (isset($array[1])) {
-                // return $array[1];
-                list($encrypted_data, $iv) = $array;
+        $explote = explode(
+            '::',
+            base64_decode($encrypted),
+            2
+        );
 
-                return openssl_decrypt($encrypted_data, 'aes-256-cbc', $encryption_key, 0, $iv);
-            } else {
-                throw new Exception("Token invalido");
-            }
-        } catch (Exception $ex) {
+        if (count($explote) <= 0) {
             return "error";
         }
+
+        if (!isset($explote[0])) {
+            return "error";
+        }
+
+        if (!isset($explote[1])) {
+            return "error";
+        }
+
+        list($encrypt, $iv) = $explote;
+        return openssl_decrypt($encrypt, 'AES-256-CBC', $key, 0, $iv);
     }
 }

@@ -208,6 +208,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
     } else if ($_POST["type"] == "validateCert") {
         $headers = getallheaders();
         list($bearer, $token) = explode(" ", $headers['Authorization']);
+
         $json = Tools::my_decrypt($token, 'bRuD5WYw5wd0rdHR9yLlM6wt2vteuiniQBqE70nAuhU=CIPJUNIN');
 
         if ($json == "error") {
@@ -219,13 +220,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
         } else {
 
             $object = json_decode($json);
-
-            // print json_encode(array(
-            //     "estado" => 2,
-            //     "message" => $object
-            // ));
-            // exit();
-            // $object->tipo;
 
             $tipo = "Certificado De Habilidad";
 
