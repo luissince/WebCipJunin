@@ -219,6 +219,12 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
         } else {
 
             $object = json_decode($json);
+
+            // print json_encode(array(
+            //     "estado" => 2,
+            //     "message" => $object
+            // ));
+            // exit();
             // $object->tipo;
 
             $tipo = "Certificado De Habilidad";
