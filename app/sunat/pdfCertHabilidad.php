@@ -1,14 +1,17 @@
 <?php
+
+use SysSoftIntegra\Src\Tools;
+
 date_default_timezone_set('America/Lima');
 
 if (!isset($_GET["idIngreso"])) {
     echo '<script>location.href = "404.php";</script>';
 } else {
 
-    define('_MPDF_PATH', '/lib');
     require('./lib/mpdf/vendor/autoload.php');
-    include_once('../model/IngresosAdo.php');
-    require_once("./lib/phpqrcode/qrlib.php");
+    include('./../model/IngresosAdo.php');
+    require("./lib/phpqrcode/qrlib.php");
+    require('./../src/autoload.php');
 
     $CertificadoHabilidad = IngresosAdo::ObtenerDatosPdfCertHabilidad($_GET["idIngreso"]);
     if (!is_array($CertificadoHabilidad)) {
@@ -44,7 +47,14 @@ if (!isset($_GET["idIngreso"])) {
         $MesRegistro = IngresosAdo::getMothName($Mes);
         $AnioRegistro = substr($Datos['frAnio'], 2, 2);
 
-        $qrCode = QrCode::png("https://www.intranet.cip-junin.org.pe/view/validatecert.php", 'codbarcera.png', 'L', 4, 2);
+        $json = json_encode(array(
+            "tipo" => "a",
+            "idIngreso" => $_GET["idIngreso"]
+        ));
+
+        $token = Tools::my_encrypt($json, "bRuD5WYw5wd0rdHR9yLlM6wt2vteuiniQBqE70nAuhU=CIPJUNIN");
+
+        $qrCode = QrCode::png("https://www.intranet.cip-junin.org.pe/view/validatecert.php?token=" . $token . "", 'codbarcera.png', 'L', 4, 2);
 
         $html = '<html>
             <head>
@@ -162,12 +172,12 @@ if (!isset($_GET["idIngreso"])) {
                     <div style="width:50; float:left; padding-left: 27px;" class="background-div">' . $AnioRegistro . '</div>
                 </div>
                 <div>
-                    <!--<span>
+                    <span>
                         <img width="100" height="100" style="margin-left:150px;margin-top:35px;" src="codbarcera.png" />
-                    </span>-->
-                    <!--<span>
+                    </span>
+                    <span>
                         <img width="196" height="90" style="margin-left:240px;margin-top:35px;background-color:transparent;" src="firmadecano.png" />
-                    </span>-->           
+                    </span>           
                 </div>
                 <!--################################################## Fin del Pie del Documento ###############################################################-->
             </body>

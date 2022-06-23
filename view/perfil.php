@@ -196,7 +196,7 @@ if (!isset($_SESSION['IdUsuario'])) {
                                     tools.ModalAlertWarning("Perfil", result.message);
                                 }
                             },
-                            error: function(error) {                              
+                            error: function(error) {
                                 tools.ModalAlertError("Perfil", "Se produjo un error: " + error.responseText);
                             }
                         });

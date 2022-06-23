@@ -104,7 +104,7 @@ if (!isset($_GET["idIngreso"])) {
                 <div class="header-two">
                     <div style="width:100%; padding-top:1px;background-color:transparent;">
                         <div style="width: 350px; float:left; padding-left:120px;background-color:transparent;">' . $Modalidad . '</div>                     
-                        <div style="width: 200px; float:left; padding-left:110px;background-color:transparent;">' . IngresosAdo::limitar_cadena($Proyecto, 25, "") . '</div>
+                        <div style="width: 200px; float:left; padding-left:110px;background-color:transparent;">' . $Proyecto . '</div>
                     </div>
                     <div style="width:100%; padding-top:15px;">
                         <div style="width: 350px; float:left; padding-left:120px;">' . $Propietario . '</div>

@@ -114,7 +114,7 @@ if (!isset($_GET["idIngreso"])) {
                         EL INGENIERO SE ENCUENTRA COLEGIADO Y HÁBIL, para el siguiente detalle:
                     </div>
                     <div style="width:100%; padding-left: 42px; padding-top: 8px;">
-                        Modalidad:<strong>' . $tresEspacios . $Modalidad . '</strong>' . $veinteEspacios . $cincoEspacios . 'Proyecto:<strong>' . $tresEspacios . IngresosAdo::limitar_cadena($Proyecto, 25, "") . '</strong>
+                        Modalidad:<strong>' . $tresEspacios . $Modalidad . '</strong>' . $veinteEspacios . $cincoEspacios . 'Proyecto:<strong>' . $tresEspacios . $Proyecto . '</strong>
                     </div>
                     <div style="width:100%; padding-left: 42px; padding-top: 8px;">
                         Propietario:<strong>' . $tresEspacios . $Propietario . '</strong>' . $veinteEspacios . $cincoEspacios . 'Monto del contrato: <strong>' . $tresEspacios . $Monto . '</strong>

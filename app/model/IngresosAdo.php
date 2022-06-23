@@ -2443,6 +2443,65 @@ class IngresosAdo
             return $ex->getMessage();
         }
     }
+
+    public static function validateCert($idIngreso)
+    {
+        try {
+            $cmdCertificado = Database::getInstance()->getDb()->prepare("SELECT 
+            p.idDNI,
+            p.CIP,
+            p.NumDoc, 
+            p.Nombres,
+            p.Apellidos,
+            e.Especialidad, 
+            ch.Numero, 
+            ch.Asunto, ch.Entidad, ch.Lugar, 
+            convert(VARCHAR, CAST(c.FechaColegiado AS DATE),103) AS FechaIncorporacion,
+			DATEPART(DAY, (convert(VARCHAR, CAST(c.FechaColegiado AS DATE),103))) AS FIDia, 
+			DATEPART(MONTH, (convert(VARCHAR, CAST(c.FechaColegiado AS DATE),103))) AS FIMes, 
+            DATEPART(YEAR, (convert(VARCHAR, CAST(c.FechaColegiado AS DATE),103))) AS FIAnio, 
+            convert(VARCHAR, CAST(ch.Fecha AS DATE),103) AS FechaRegistro,
+            DATEPART(DAY, (convert(VARCHAR, CAST(ch.Fecha AS DATE),103))) AS FRDia, 
+            DATEPART(MONTH, (convert(VARCHAR, CAST(ch.Fecha AS DATE),103))) AS FRMes, 
+            DATEPART(YEAR, (convert(VARCHAR, CAST(ch.Fecha AS DATE),103))) AS FRAnio, 
+            convert(VARCHAR, CAST(ch.HastaFecha AS DATE),103) AS HastaFecha, 
+            CASE WHEN DATEDIFF(DAY,ch.HastaFecha,GETDATE()) > 0 THEN 0
+			ELSE 1 END AS Vencimiento,
+            DATEPART(DAY, ch.HastaFecha) AS FVDia,
+            DATEPART(MONTH, ch.HastaFecha) AS FVMes, 
+            DATEPART(YEAR, ch.HastaFecha) AS FVAnio,
+            ch.idIngreso,
+			ch.Anulado
+            FROM CERTHabilidad AS ch
+            INNER JOIN Ingreso AS i ON i.idIngreso = ch.idIngreso
+            INNER JOIN Persona AS p On p.idDNI = i.idDNI
+            INNER JOIN Colegiatura AS c ON p.idDNI = c.idDNI AND  c.idColegiado = ch.idColegiatura
+            INNER JOIN Especialidad AS e ON e.idEspecialidad = c.idEspecialidad
+            WHERE ch.idIngreso = ?");
+            $cmdCertificado->bindParam(1, $idIngreso, PDO::PARAM_STR);
+            $cmdCertificado->execute();
+            $certificado = $cmdCertificado->fetchObject();
+
+            $cmdImage = Database::getInstance()->getDb()->prepare("SELECT TOP 1 
+            idDNI,Foto
+            FROM PersonaImagen WHERE idDNI = ?");
+            $cmdImage->bindParam(1, $certificado->idDNI, PDO::PARAM_STR);
+            $cmdImage->execute();
+            $image = null;
+
+            if ($row = $cmdImage->fetch()) {
+                $image = (object)array($row['idDNI'], base64_encode($row['Foto']));
+            }
+
+            $array = array();
+
+            array_push($array, $certificado, $image);
+            return $array;
+        } catch (Exception $ex) {
+            return $ex->getMessage();
+        }
+    }
+
     public static function getIdIngresoDocumentos()
     {
         try {

@@ -3,7 +3,11 @@ header("Access-Control-Allow-Origin: *");
 header("Access-Control-Allow-Headers: Origin, X-Requested-With, Content-Type, Accept");
 header('Access-Control-Allow-Methods: GET, POST, PUT, DELETE');
 header('Content-Type: application/json; charset=UTF-8');
-require '../model/IngresosAdo.php';
+
+use SysSoftIntegra\Src\Tools;
+
+require('../model/IngresosAdo.php');
+require('../src/autoload.php');
 
 if ($_SERVER['REQUEST_METHOD'] == 'GET') {
 
@@ -200,6 +204,49 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
                 "estado" => 0,
                 "message" => $result
             ));
+        }
+    } else if ($_POST["type"] == "validateCert") {
+        $headers = getallheaders();
+        list($bearer, $token) = explode(" ", $headers['Authorization']);
+        $json = Tools::my_decrypt($token, 'bRuD5WYw5wd0rdHR9yLlM6wt2vteuiniQBqE70nAuhU=CIPJUNIN');
+
+        if ($json == "error") {
+            print json_encode(array(
+                "estado" => 2,
+                "message" => "Token invalido"
+            ));
+            exit();
+        } else {
+
+            $object = json_decode($json);
+            // $object->tipo;
+
+            $tipo = "Certificado De Habilidad";
+
+            if ($object->tipo == "a") {
+                $tipo  = "Certificado De Habilidad";
+            } else if ($object->tipo == "b") {
+                $tipo  = "Certificado De Habilidad para Firma de Contrato de Obra <br> Pública o Residencia";
+            } else {
+                $tipo  = "Certificado De Habilidad por Proyecto";
+            }
+
+            $result = IngresosAdo::validateCert($object->idIngreso);
+            if (is_array($result)) {
+                print json_encode(array(
+                    "estado" => 1,
+                    "data" => $result[0],
+                    "image" => $result[1],
+                    "tipo" =>  $tipo
+                ));
+                exit();
+            } else {
+                print json_encode(array(
+                    "estado" => 2,
+                    "message" => $result
+                ));
+                exit();
+            }
         }
     }
 }
