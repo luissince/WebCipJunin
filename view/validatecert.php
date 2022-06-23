@@ -204,7 +204,6 @@
                     $("#divOverlayModal").removeClass("d-none");
                 },
                 success: function(result) {
-                    console.log(result);
                     if (result.estado == "1") {
                         if (result.image == null) {
                             lblImagen.attr("src", "images/ayuda.png");
