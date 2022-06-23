@@ -94,7 +94,14 @@
                                             </div>
                                         </div>
                                         <div class="form-group">
-                                            <label for="txtClave" class="col-sm-2 control-label">Vigencia:</label>
+                                            <label for="txtClave" class="col-sm-2 control-label">Fch. Registro:</label>
+
+                                            <div class="col-sm-10">
+                                                <label class="control-label" id="lblRegistro">-</label>
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <label for="txtClave" class="col-sm-2 control-label">Fch. Vigencia:</label>
 
                                             <div class="col-sm-10">
                                                 <label class="control-label" id="lblVigencia">-</label>
@@ -193,7 +200,7 @@
                 $("#divIcon").append('<i class="fa fa-times"></i>');
                 return;
             }
-            console.log("asd")
+
             $.ajax({
                 url: "../app/controller/IngresoController.php",
                 method: "POST",
@@ -205,7 +212,7 @@
                     $("#divOverlayModal").removeClass("d-none");
                 },
                 success: function(result) {
-                    console.log(result);
+                    // console.log(result);
                     if (result.estado == "1") {
                         if (result.image == null) {
                             lblImagen.attr("src", "images/noimage.jpg");
@@ -222,6 +229,7 @@
                         $("#lblAsunto").html(result.data.Asunto);
                         $("#lblEntidad").html(result.data.Entidad);
                         $("#lblLugar").html(result.data.Lugar);
+                        $("#lblRegistro").html(result.data.FechaRegistro);
                         $("#lblVigencia").html(result.data.HastaFecha);
 
                         $("#lblCertificado").html(result.tipo);
