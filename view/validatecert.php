@@ -182,7 +182,7 @@
         });
 
         function loadInitCertificado() {
-
+            console.log(token)
             if (token == "") {
                 $("#lblCertificado").html("Certificado no Existente");
 
