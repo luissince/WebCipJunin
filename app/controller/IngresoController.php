@@ -238,7 +238,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
                     "data" => $result[0],
                     "image" => $result[1],
                     "tipo" =>  $tipo,
-                    "token" => $object
+                    "token" =>  $json
                 ));
                 exit();
             } else {
