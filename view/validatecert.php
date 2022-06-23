@@ -193,6 +193,7 @@
                 $("#divIcon").append('<i class="fa fa-times"></i>');
                 return;
             }
+            console.log("asd")
             $.ajax({
                 url: "../app/controller/IngresoController.php",
                 method: "POST",
@@ -250,6 +251,8 @@
                     $("#divOverlayModal").addClass("d-none");
                 },
                 error: function(error) {
+                    console.log(error)
+                    $("#divOverlayModal").addClass("d-none");
                     $("#lblCertificado").html("Certificado no Existente");
 
                     $("#divBox").removeClass("bg-purple").addClass("bg-times");
