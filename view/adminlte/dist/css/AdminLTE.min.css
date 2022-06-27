@@ -5323,7 +5323,7 @@ table.text-center th {
 .alert-error,
 .label-danger,
 .modal-danger .modal-body {
-  background-color: #dc143c !important;
+  background-color: #b72928 !important;
 }
 
 .bg-yellow,
@@ -5404,7 +5404,7 @@ table.text-center th {
 .bg-red-active,
 .modal-danger .modal-header,
 .modal-danger .modal-footer {
-  background-color: #d33724 !important;
+  background-color: #b72928 !important;
 }
 
 .bg-yellow-active,

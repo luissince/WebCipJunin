@@ -1,6 +1,5 @@
 <?php
 
-define('_MPDF_PATH', '/lib');
 require('./lib/mpdf/vendor/autoload.php');
 require './lib/phpqrcode/vendor/autoload.php';
 

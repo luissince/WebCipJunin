@@ -1,8 +1,7 @@
 <?php
 
-define('_MPDF_PATH', '/lib');
+
 require_once('lib/mpdf/vendor/autoload.php');
-require_once("lib/phpqrcode/qrlib.php");
 include_once('../model/PersonaAdo.php');
 include_once('../model/CapituloAdo.php');
 

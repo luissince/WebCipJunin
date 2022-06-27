@@ -30,6 +30,10 @@
   color: #17a2b8 !important;
 }
 
+.text-white {
+  color: #ffffff !important;
+}
+
 .pointer-events {
   pointer-events: none;
 }

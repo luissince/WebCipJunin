@@ -709,10 +709,6 @@ class IngresosAdo
                     $cmdValidate = Database::getInstance()->getDb()->prepare("SELECT * FROM Ingreso WHERE idIngreso = ? 
                     AND
                     (
-                        Fecha = dateadd(day,-2,cast(GETDATE() AS DATE))
-                        OR
-                        Fecha = dateadd(day,-1,cast(GETDATE() AS DATE))
-                        OR
                         Fecha = cast(GETDATE() AS DATE)
                     )");
                     $cmdValidate->bindParam(1, $idIngreso, PDO::PARAM_STR);

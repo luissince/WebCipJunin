@@ -6,9 +6,7 @@ if (!isset($_GET["idDni"]) || $_GET["idDni"] == "") {
     return;
 }
 
-define('_MPDF_PATH', '/lib');
 require_once('lib/mpdf/vendor/autoload.php');
-require_once("lib/phpqrcode/qrlib.php");
 include_once('../model/PersonaAdo.php');
 
 $rutaImage = __DIR__ . "/../../view/images/logologin.png";

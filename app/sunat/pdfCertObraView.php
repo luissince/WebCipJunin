@@ -5,7 +5,7 @@ if (!isset($_GET["idIngreso"])) {
     echo '<script>location.href = "404.php";</script>';
 } else {
 
-    define('_MPDF_PATH', '/lib');
+
     require('./lib/mpdf/vendor/autoload.php');
     include_once('../model/IngresosAdo.php');
 

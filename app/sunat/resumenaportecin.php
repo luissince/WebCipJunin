@@ -1,12 +1,10 @@
 <?php
-
-define('_MPDF_PATH', '/lib');
-require_once('lib/mpdf/vendor/autoload.php');
-require_once("lib/phpqrcode/qrlib.php");
-include_once('../model/IngresosAdo.php');
 ini_set('max_execution_time', '300');
 ini_set("pcre.backtrack_limit", "10000000");
 ini_set('memory_limit', '-1');
+
+require_once('lib/mpdf/vendor/autoload.php');
+include_once('../model/IngresosAdo.php');
 
 $rutaImage = __DIR__ . "/../../view/images/logologin.png";
 $title = "RESUMEN DE APORTACIONES AL CIP NACIONAL";
