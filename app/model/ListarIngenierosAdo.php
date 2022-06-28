@@ -16,7 +16,7 @@ class ListarIngenierosAdo
                 p.Apellidos, 
                 p.Nombres, 
                 CASE p.Sexo WHEN 'M' THEN 'MASCULINO'
-				ELSE 'FEMENIMO' END AS Genero,
+				ELSE 'FEMENINO' END AS Genero,
                 CASE 
                 WHEN p.Condicion = 'T' THEN 'TRANSEUNTE' 
                 WHEN p.Condicion = 'O' THEN 'ORDINARIO'  
@@ -41,7 +41,7 @@ class ListarIngenierosAdo
                 p.CIP, p.Apellidos, 
                 p.Nombres, 
                 CASE p.Sexo WHEN 'M' THEN 'MASCULINO'
-				ELSE 'FEMENIMO' END AS Genero,
+				ELSE 'FEMENINO' END AS Genero,
                 CASE 
                 WHEN p.Condicion = 'T' THEN 'TRANSEUNTE'  
                 WHEN p.Condicion = 'O' THEN 'ORDINARIO'  
@@ -74,7 +74,7 @@ class ListarIngenierosAdo
                 p.Apellidos, 
                 p.Nombres, 
                 CASE p.Sexo WHEN 'M' THEN 'MASCULINO'
-				ELSE 'FEMENIMO' END AS Genero,         
+				ELSE 'FEMENINO' END AS Genero,         
                 CASE 
                 WHEN p.Condicion = 'T' THEN 'TRANSEUNTE'  
                 WHEN p.Condicion = 'O' THEN 'ORDINARIO'  
@@ -102,7 +102,7 @@ class ListarIngenierosAdo
                 p.Apellidos, 
                 p.Nombres,        
                 CASE p.Sexo WHEN 'M' THEN 'MASCULINO'
-				ELSE 'FEMENIMO' END AS Genero,    
+				ELSE 'FEMENINO' END AS Genero,    
                 CASE 
                 WHEN p.Condicion = 'T' THEN 'TRANSEUNTE'  
                 WHEN p.Condicion = 'O' THEN 'ORDINARIO'  
@@ -128,7 +128,7 @@ class ListarIngenierosAdo
                 p.Apellidos, 
                 p.Nombres, 
                 CASE p.Sexo WHEN 'M' THEN 'MASCULINO'
-				ELSE 'FEMENIMO' END AS Genero,
+				ELSE 'FEMENINO' END AS Genero,
                 CASE 
                 WHEN p.Condicion = 'T' THEN 'TRANSEUNTE' 
                 WHEN p.Condicion = 'O' THEN 'ORDINARIO'  
