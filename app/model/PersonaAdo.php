@@ -739,6 +739,10 @@ class PersonaAdo
                     return "cip";
                 } else {
 
+                    $codigoPersona = Database::getInstance()->getDb()->prepare("SELECT dbo.Fc_Persona_Codigo_Alfanumerico();");
+                    $codigoPersona->execute();
+                    $idGeneradoCli = $codigoPersona->fetchColumn();
+
                     $comandoPersona = Database::getInstance()->getDb()->prepare("INSERT INTO Persona (
                         idDNI,
                         NumDoc,
@@ -756,7 +760,7 @@ class PersonaAdo
                         HoraMo)
                         VALUES (?,?,?,UPPER(?),UPPER(?),?,?,?,?,?,?,?,GETDATE(),GETDATE())");
 
-                    $comandoPersona->bindParam(1, $persona['dni'], PDO::PARAM_STR);
+                    $comandoPersona->bindParam(1, $idGeneradoCli, PDO::PARAM_STR);
                     $comandoPersona->bindParam(2, $persona['num_duc'], PDO::PARAM_STR);
                     $comandoPersona->bindParam(3, $persona['idUsuario'], PDO::PARAM_STR);
                     $comandoPersona->bindParam(4, $persona['nombres'], PDO::PARAM_STR);

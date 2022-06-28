@@ -642,7 +642,7 @@ if (!isset($_SESSION['IdUsuario'])) {
                                 method: "POST",
                                 data: {
                                     "type": "create",
-                                    "dni": "T" + idDni,
+                                    "dni": idDni,
                                     "num_duc": idDni,
                                     "nombres": nombres.toUpperCase(),
                                     "apellidos": apellidos.toUpperCase(),
