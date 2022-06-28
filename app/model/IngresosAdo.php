@@ -706,72 +706,72 @@ class IngresosAdo
                     return "tarjeta";
                 } else {
 
-                    // $cmdValidate = Database::getInstance()->getDb()->prepare("SELECT * FROM Ingreso WHERE idIngreso = ? 
-                    // AND
-                    // (
-                    //     Fecha = dateadd(day,-2,cast(GETDATE() AS DATE))
-                    //     OR
-                    //     Fecha = dateadd(day,-1,cast(GETDATE() AS DATE))
-                    //     OR
-                    //     Fecha = cast(GETDATE() AS DATE)
-                    // )");
-                    // $cmdValidate->bindParam(1, $idIngreso, PDO::PARAM_STR);
-                    // $cmdValidate->execute();
-                    // if ($cmdValidate->fetch()) {
-                    $cmdIngreso = Database::getInstance()->getDb()->prepare("UPDATE Ingreso SET Estado = 'A' WHERE idIngreso = ?");
-                    $cmdIngreso->bindParam(1, $idIngreso, PDO::PARAM_INT);
-                    $cmdIngreso->execute();
+                    $cmdValidate = Database::getInstance()->getDb()->prepare("SELECT * FROM Ingreso WHERE idIngreso = ? 
+                    AND
+                    (
+                        Fecha = dateadd(day,-2,cast(GETDATE() AS DATE))
+                        OR
+                        Fecha = dateadd(day,-1,cast(GETDATE() AS DATE))
+                        OR
+                        Fecha = cast(GETDATE() AS DATE)
+                    )");
+                    $cmdValidate->bindParam(1, $idIngreso, PDO::PARAM_STR);
+                    $cmdValidate->execute();
+                    if ($cmdValidate->fetch()) {
+                        $cmdIngreso = Database::getInstance()->getDb()->prepare("UPDATE Ingreso SET Estado = 'A' WHERE idIngreso = ?");
+                        $cmdIngreso->bindParam(1, $idIngreso, PDO::PARAM_INT);
+                        $cmdIngreso->execute();
 
-                    $countResolucion15 = 0;
+                        $countResolucion15 = 0;
 
-                    $cmdDetalle = Database::getInstance()->getDb()->prepare("SELECT 
+                        $cmdDetalle = Database::getInstance()->getDb()->prepare("SELECT 
                         c.Categoria 
                         FROM Detalle AS d INNER JOIN Concepto AS c ON c.idConcepto = d.idConcepto
                         WHERE d.idIngreso = ? ");
-                    $cmdDetalle->bindParam(1, $idIngreso, PDO::PARAM_INT);
-                    $cmdDetalle->execute();
-                    while ($rowd = $cmdDetalle->fetch()) {
-                        if ($rowd["Categoria"] == 12) {
-                            $countResolucion15++;
+                        $cmdDetalle->bindParam(1, $idIngreso, PDO::PARAM_INT);
+                        $cmdDetalle->execute();
+                        while ($rowd = $cmdDetalle->fetch()) {
+                            if ($rowd["Categoria"] == 12) {
+                                $countResolucion15++;
+                            }
                         }
+
+                        if ($countResolucion15 > 0) {
+                            $cmdResolucion15 = Database::getInstance()->getDb()->prepare("UPDATE Colegiatura SET Resolucion15 = 0, MesAumento = 0 WHERE idDNI = ?");
+                            $cmdResolucion15->bindParam(1, $row["idDNI"], PDO::PARAM_STR);
+                            $cmdResolucion15->execute();
+                        }
+
+                        $cmdAnular = Database::getInstance()->getDb()->prepare("INSERT INTO Anulado(Tipo,idDocumento,idUsuario,Motivo,Fecha,Hora)VALUES('R',?,?,?,?,?)");
+                        $cmdAnular->bindParam(1, $idIngreso, PDO::PARAM_INT);
+                        $cmdAnular->bindParam(2, $idUsuario, PDO::PARAM_INT);
+                        $cmdAnular->bindParam(3, $motivo, PDO::PARAM_INT);
+                        $cmdAnular->bindParam(4, $fecha, PDO::PARAM_INT);
+                        $cmdAnular->bindParam(5, $hora, PDO::PARAM_INT);
+                        $cmdAnular->execute();
+
+                        $cmdCuotas = Database::getInstance()->getDb()->prepare("DELETE FROM Cuota WHERE idIngreso = ?");
+                        $cmdCuotas->bindParam(1, $idIngreso, PDO::PARAM_INT);
+                        $cmdCuotas->execute();
+
+                        $cmdHabilidad = Database::getInstance()->getDb()->prepare("UPDATE CERTHabilidad SET Anulado = 1 WHERE idIngreso = ?");
+                        $cmdHabilidad->bindParam(1, $idIngreso, PDO::PARAM_INT);
+                        $cmdHabilidad->execute();
+
+                        $cmdObra = Database::getInstance()->getDb()->prepare("UPDATE CERTResidencia SET Anulado = 1 WHERE idIngreso = ?");
+                        $cmdObra->bindParam(1, $idIngreso, PDO::PARAM_INT);
+                        $cmdObra->execute();
+
+                        $cmdProyecto = Database::getInstance()->getDb()->prepare("UPDATE CERTProyecto SET Anulado = 1 WHERE idIngreso = ?");
+                        $cmdProyecto->bindParam(1, $idIngreso, PDO::PARAM_INT);
+                        $cmdProyecto->execute();
+
+                        Database::getInstance()->getDb()->commit();
+                        return "deleted";
+                    } else {
+                        Database::getInstance()->getDb()->rollBack();
+                        return "fecha";
                     }
-
-                    if ($countResolucion15 > 0) {
-                        $cmdResolucion15 = Database::getInstance()->getDb()->prepare("UPDATE Colegiatura SET Resolucion15 = 0, MesAumento = 0 WHERE idDNI = ?");
-                        $cmdResolucion15->bindParam(1, $row["idDNI"], PDO::PARAM_STR);
-                        $cmdResolucion15->execute();
-                    }
-
-                    $cmdAnular = Database::getInstance()->getDb()->prepare("INSERT INTO Anulado(Tipo,idDocumento,idUsuario,Motivo,Fecha,Hora)VALUES('R',?,?,?,?,?)");
-                    $cmdAnular->bindParam(1, $idIngreso, PDO::PARAM_INT);
-                    $cmdAnular->bindParam(2, $idUsuario, PDO::PARAM_INT);
-                    $cmdAnular->bindParam(3, $motivo, PDO::PARAM_INT);
-                    $cmdAnular->bindParam(4, $fecha, PDO::PARAM_INT);
-                    $cmdAnular->bindParam(5, $hora, PDO::PARAM_INT);
-                    $cmdAnular->execute();
-
-                    $cmdCuotas = Database::getInstance()->getDb()->prepare("DELETE FROM Cuota WHERE idIngreso = ?");
-                    $cmdCuotas->bindParam(1, $idIngreso, PDO::PARAM_INT);
-                    $cmdCuotas->execute();
-
-                    $cmdHabilidad = Database::getInstance()->getDb()->prepare("UPDATE CERTHabilidad SET Anulado = 1 WHERE idIngreso = ?");
-                    $cmdHabilidad->bindParam(1, $idIngreso, PDO::PARAM_INT);
-                    $cmdHabilidad->execute();
-
-                    $cmdObra = Database::getInstance()->getDb()->prepare("UPDATE CERTResidencia SET Anulado = 1 WHERE idIngreso = ?");
-                    $cmdObra->bindParam(1, $idIngreso, PDO::PARAM_INT);
-                    $cmdObra->execute();
-
-                    $cmdProyecto = Database::getInstance()->getDb()->prepare("UPDATE CERTProyecto SET Anulado = 1 WHERE idIngreso = ?");
-                    $cmdProyecto->bindParam(1, $idIngreso, PDO::PARAM_INT);
-                    $cmdProyecto->execute();
-
-                    Database::getInstance()->getDb()->commit();
-                    return "deleted";
-                    // } else {
-                    //     Database::getInstance()->getDb()->rollBack();
-                    //     return "fecha";
-                    // }
                 }
             } else {
                 Database::getInstance()->getDb()->rollBack();

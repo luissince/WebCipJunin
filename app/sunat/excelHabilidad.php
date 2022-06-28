@@ -42,7 +42,7 @@ if (!is_array($data)) {
 
     $documento->getActiveSheet()->setTitle("Colegiados");
 
-    $documento->getActiveSheet()->getStyle('A1:K1')->applyFromArray(array(
+    $documento->getActiveSheet()->getStyle('A1:N1')->applyFromArray(array(
         'borders' => array(
             'outline' => array(
                 'borderStyle' => Border::BORDER_THIN,
@@ -61,10 +61,10 @@ if (!is_array($data)) {
             'horizontal' => Alignment::HORIZONTAL_CENTER
         )
     ));
-    $documento->setActiveSheetIndex(0)->mergeCells('A1:K1');
+    $documento->setActiveSheetIndex(0)->mergeCells('A1:N1');
     $documento->setActiveSheetIndex(0)->setCellValue("A1", $subtitulo);
 
-    $documento->getActiveSheet()->getStyle('A2:K2')->applyFromArray(array(
+    $documento->getActiveSheet()->getStyle('A2:N2')->applyFromArray(array(
         'borders' => array(
             'outline' => array(
                 'borderStyle' => Border::BORDER_THIN,
@@ -89,18 +89,21 @@ if (!is_array($data)) {
         ->setCellValue("B2", "N° CIP")
         ->setCellValue("C2", "N° DOCUMENTO")
         ->setCellValue("D2", "COLEGIADO")
-        ->setCellValue("E2", "CONDICION")
-        ->setCellValue("F2", "CAPITULO")
-        ->setCellValue("G2", "ESPECIALIDAD")
-        ->setCellValue("H2", "FECHA COLEGIADO")
-        ->setCellValue("I2", "FECHA ULT. CUOTA")
-        ->setCellValue("J2", "HABILIDAD")
-        ->setCellValue("K2", "HABILITADO HASTA");
+        ->setCellValue("E2", "GENERO")
+        ->setCellValue("F2", "CONDICION")
+        ->setCellValue("G2", "CAPITULO")
+        ->setCellValue("H2", "ESPECIALIDAD")
+        ->setCellValue("I2", "FECHA COLEGIADO")
+        ->setCellValue("J2", "FECHA ULT. CUOTA")
+        ->setCellValue("K2", "HABILIDAD")
+        ->setCellValue("L2", "HABILITADO HASTA")
+        ->setCellValue("M2", "EMAIL")
+        ->setCellValue("N2", "CELULAR");
 
     $cel = 3;
     // if ($data['Habilidad'] == "") {
     foreach ($data as $key => $value) {
-        $documento->getActiveSheet()->getStyle('A' . $cel . ':K' . $cel)->applyFromArray(array(
+        $documento->getActiveSheet()->getStyle('A' . $cel . ':N' . $cel)->applyFromArray(array(
             'fill' => array(
                 'type' => Fill::FILL_SOLID,
                 'color' => array('rgb' => 'E5E4E2')
@@ -113,7 +116,7 @@ if (!is_array($data)) {
             )
         ));
 
-        $documento->getActiveSheet()->getStyle('H' . $cel . ':I' . $cel . '', 'K' . $cel)->applyFromArray(array(
+        $documento->getActiveSheet()->getStyle('I' . $cel . ':J' . $cel . '', 'K' . $cel, 'L' . $cel)->applyFromArray(array(
             'font'  => array(
                 'bold'  =>  false,
                 'color' => array('rgb' => '000000')
@@ -124,7 +127,7 @@ if (!is_array($data)) {
         ));
 
         if (strtolower($value['Habilidad']) == "habilitado") {
-            $documento->getActiveSheet()->getStyle('j' . $cel)->applyFromArray(array(
+            $documento->getActiveSheet()->getStyle('k' . $cel)->applyFromArray(array(
                 'font'  => array(
                     'bold'  =>  false,
                     'color' => array('rgb' => '1C64C0')
@@ -134,7 +137,7 @@ if (!is_array($data)) {
                 )
             ));
         } else {
-            $documento->getActiveSheet()->getStyle('j' . $cel)->applyFromArray(array(
+            $documento->getActiveSheet()->getStyle('l' . $cel)->applyFromArray(array(
                 'font'  => array(
                     'bold'  =>  false,
                     'color' => array('rgb' => 'EE2C2C')
@@ -150,13 +153,16 @@ if (!is_array($data)) {
             ->setCellValue("B" . $cel, strval($value["Cip"]))
             ->setCellValue("C" . $cel, strval($value["Dni"]))
             ->setCellValue("D" . $cel, strval($value["Apellidos"] . ", " . $value["Nombres"]))
-            ->setCellValue("E" . $cel, strval($value["Condicion"]))
-            ->setCellValue("F" . $cel, strval($value["Capitulo"]))
-            ->setCellValue("G" . $cel, strval($value["Especialidad"]))
-            ->setCellValue("H" . $cel, strval($value["FechaColegiado"]))
-            ->setCellValue("I" . $cel, strval($value["FechaUltimaCuota"]))
-            ->setCellValue("J" . $cel, strval($value["Habilidad"]))
-            ->setCellValue("K" . $cel, strval($value["HabilitadoHasta"]));
+            ->setCellValue("E" . $cel, strval($value["Genero"]))
+            ->setCellValue("F" . $cel, strval($value["Condicion"]))
+            ->setCellValue("G" . $cel, strval($value["Capitulo"]))
+            ->setCellValue("H" . $cel, strval($value["Especialidad"]))
+            ->setCellValue("I" . $cel, strval($value["FechaColegiado"]))
+            ->setCellValue("J" . $cel, strval($value["FechaUltimaCuota"]))
+            ->setCellValue("K" . $cel, strval($value["Habilidad"]))
+            ->setCellValue("L" . $cel, strval($value["HabilitadoHasta"]))
+            ->setCellValue("M" . $cel, strval($value["Email"]))
+            ->setCellValue("N" . $cel, strval($value["Celular"]));
         $cel++;
     }
     // }
@@ -166,13 +172,16 @@ if (!is_array($data)) {
     $documento->getActiveSheet()->getColumnDimension('B')->setWidth(10);
     $documento->getActiveSheet()->getColumnDimension('C')->setWidth(15);
     $documento->getActiveSheet()->getColumnDimension('D')->setWidth(60);
-    $documento->getActiveSheet()->getColumnDimension('E')->setWidth(17);
-    $documento->getActiveSheet()->getColumnDimension('F')->setWidth(20);
-    $documento->getActiveSheet()->getColumnDimension('G')->setWidth(35);
-    $documento->getActiveSheet()->getColumnDimension('H')->setWidth(20);
+    $documento->getActiveSheet()->getColumnDimension('E')->setWidth(15);
+    $documento->getActiveSheet()->getColumnDimension('F')->setWidth(17);
+    $documento->getActiveSheet()->getColumnDimension('G')->setWidth(20);
+    $documento->getActiveSheet()->getColumnDimension('H')->setWidth(35);
     $documento->getActiveSheet()->getColumnDimension('I')->setWidth(20);
-    $documento->getActiveSheet()->getColumnDimension('J')->setWidth(17);
-    $documento->getActiveSheet()->getColumnDimension('K')->setWidth(20);
+    $documento->getActiveSheet()->getColumnDimension('J')->setWidth(20);
+    $documento->getActiveSheet()->getColumnDimension('K')->setWidth(17);
+    $documento->getActiveSheet()->getColumnDimension('L')->setWidth(20);
+    $documento->getActiveSheet()->getColumnDimension('M')->setWidth(30);
+    $documento->getActiveSheet()->getColumnDimension('N')->setWidth(20);
 
 
     // Redirect output to a client’s web browser (Xlsx)

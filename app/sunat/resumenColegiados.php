@@ -154,6 +154,7 @@ mpdf-->
             <th width="8%" >DNI</th>        
             <th width="8%" >N° Cip</th>
             <th width="20%" >INGENIERO</th>
+            <th width="10%" >GENERO</th>
             <th width="10%" >CONDICION</th>
             <th width="10%" >FECHA COLEGIADO</th>
             <th width="10%" >CAPITULO</th>
@@ -171,6 +172,7 @@ mpdf-->
             <th width="8%" >DNI</th>        
             <th width="8%" >N° Cip</th>
             <th width="20%" >INGENIERO</th>
+            <th width="10%" >GENERO</th>
             <th width="10%" >CONDICION</th>
             <th width="10%" >CAPITULO</th>
             <th width="10%" >ESPECIALIDAD</th>
@@ -189,6 +191,7 @@ mpdf-->
             <th width="8%" >DNI</th>        
             <th width="8%" >N° Cip</th>
             <th width="20%" >INGENIERO</th>
+            <th width="10%" >GENERO</th>
             <th width="10%" >CONDICION</th>
             <th width="10%" >FECHA COLEGIADO</th>
             <th width="10%" >FECHA REGISTRO</th>
@@ -207,6 +210,7 @@ mpdf-->
                 <th width="8%" >DNI</th>        
                 <th width="8%" >N° Cip</th>
                 <th width="20%" >INGENIERO</th>
+                <th width="10%" >GENERO</th>
                 <th width="10%" >CONDICION</th> 
                 <th width="10%" >CAPITULO</th>
                 <th width="10%" >ESPECIALIDAD</th>
@@ -230,10 +234,11 @@ mpdf-->
                 <td align="center">' .  $count . '</td>
                 <td>' . $value["idDNI"] . '</td>
                 <td>' . $value["CIP"] . '</td>       
-                <td>' . $value["Apellidos"] . ', ' . $value["Nombres"] . '</td>  
+                <td>' . $value["Apellidos"] . ', ' . $value["Nombres"] . '</td> 
+                <td>' . $value["Genero"] . '</td> 
                 <td align="center">' . $value["Condicion"] . '</td>
                 <td align="center">' . $value["FechaColegiado"] . '</td>
-                <td ' . $value["Capitulo"] . '</td>
+                <td>' . $value["Capitulo"] . '</td>
                 <td>' . $value["Especialidad"] . '</td>
             </tr>';
         }
@@ -247,6 +252,7 @@ mpdf-->
                 <td>' . $value["idDNI"] . '</td>
                 <td>' . $value["CIP"] . '</td>       
                 <td>' . $value["Apellidos"] . ', ' . $value["Nombres"] . '</td>  
+                <td>' . $value["Genero"] . '</td> 
                 <td align="center">' . $value["Condicion"] . '</td>
                 <td>' . $value["Capitulo"] . '</td>
                 <td>' . $value["Especialidad"] . '</td>
@@ -262,14 +268,15 @@ mpdf-->
             $html .= '
             <tr>            
                 <td align="center">' .  $count . '</td>
-                <td >' . $value["idDNI"] . '</td>
-                <td >' . $value["CIP"] . '</td>       
-                <td >' . $value["Apellidos"] . ', ' . $value["Nombres"] . '</td>
+                <td>' . $value["idDNI"] . '</td>
+                <td>' . $value["CIP"] . '</td>       
+                <td>' . $value["Apellidos"] . ', ' . $value["Nombres"] . '</td>
+                <td>' . $value["Genero"] . '</td> 
                 <td align="center">' . $value["Condicion"] . '</td>
                 <td align="center">' . $value["FechaColegiado"] . '</td>
                 <td align="center">' . $value["FechaRegistro"] . '</td>
-                <td >' . $value["Capitulo"] . '</td>
-                <td >' . $value["Especialidad"] . '</td>
+                <td>' . $value["Capitulo"] . '</td>
+                <td>' . $value["Especialidad"] . '</td>
             </tr>';
         }
     } else {
@@ -279,14 +286,15 @@ mpdf-->
             $html .= '
             <tr>            
                 <td align="center">' .  $count . '</td>
-                <td  align="left">' . $value["idDNI"] . '</td>
-                <td  align="left">' . $value["CIP"] . '</td>       
-                <td  align="left">' . $value["Apellidos"] . ', ' . $value["Nombres"] . '</td>
-                <td  align="center">' . $value["Condicion"] . '</td> 
-                <td  align="left">' . $value["Capitulo"] . '</td>
-                <td  align="left">' . $value["Especialidad"] . '</td>
-                <td  align="center">' . $value["FechaColegiado"] . '</td>
-                <td  align="center">' . $value["Cumple"] . '</td>
+                <td align="left">' . $value["idDNI"] . '</td>
+                <td align="left">' . $value["CIP"] . '</td>       
+                <td align="left">' . $value["Apellidos"] . ', ' . $value["Nombres"] . '</td>
+                <td align="left">' . $value["Genero"] . '</td> 
+                <td align="center">' . $value["Condicion"] . '</td> 
+                <td align="left">' . $value["Capitulo"] . '</td>
+                <td align="left">' . $value["Especialidad"] . '</td>
+                <td align="center">' . $value["FechaColegiado"] . '</td>
+                <td align="center">' . $value["Cumple"] . '</td>
             </tr>';
         }
     }

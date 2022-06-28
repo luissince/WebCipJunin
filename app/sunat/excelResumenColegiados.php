@@ -75,7 +75,7 @@ if (!is_array($listarColegiados)) {
     $documento->getActiveSheet()->setTitle("Colegiados");
 
     if ($data['opcion'] == 4) {
-        $documento->getActiveSheet()->getStyle('A1:K1')->applyFromArray(array(
+        $documento->getActiveSheet()->getStyle('A1:L1')->applyFromArray(array(
             'borders' => array(
                 'outline' => array(
                     'borderStyle' => Border::BORDER_THIN,
@@ -95,10 +95,10 @@ if (!is_array($listarColegiados)) {
             )
         ));
 
-        $documento->setActiveSheetIndex(0)->mergeCells('A1:K1');
+        $documento->setActiveSheetIndex(0)->mergeCells('A1:L1');
         $documento->setActiveSheetIndex(0)->setCellValue("A1",  $subtitle);
 
-        $documento->getActiveSheet()->getStyle('A2:K2')->applyFromArray(array(
+        $documento->getActiveSheet()->getStyle('A2L2')->applyFromArray(array(
             'borders' => array(
                 'outline' => array(
                     'borderStyle' => Border::BORDER_THIN,
@@ -118,7 +118,7 @@ if (!is_array($listarColegiados)) {
             )
         ));
     } else {
-        $documento->getActiveSheet()->getStyle('A1:I1')->applyFromArray(array(
+        $documento->getActiveSheet()->getStyle('A1:J1')->applyFromArray(array(
             'borders' => array(
                 'outline' => array(
                     'borderStyle' => Border::BORDER_THIN,
@@ -138,10 +138,10 @@ if (!is_array($listarColegiados)) {
             )
         ));
 
-        $documento->setActiveSheetIndex(0)->mergeCells('A1:I1');
+        $documento->setActiveSheetIndex(0)->mergeCells('A1:J1');
         $documento->setActiveSheetIndex(0)->setCellValue("A1",  $subtitle);
 
-        $documento->getActiveSheet()->getStyle('A2:I2')->applyFromArray(array(
+        $documento->getActiveSheet()->getStyle('A2:J2')->applyFromArray(array(
             'borders' => array(
                 'outline' => array(
                     'borderStyle' => Border::BORDER_THIN,
@@ -169,33 +169,36 @@ if (!is_array($listarColegiados)) {
             ->setCellValue("C2", "N° CIP")
             ->setCellValue("D2", "APELLIDOS")
             ->setCellValue("E2", "NOMBRES")
-            ->setCellValue("F2", "CONDICION")
-            ->setCellValue("G2", "FECHA COLEGIADO")
-            ->setCellValue("H2", "CAPITULO")
-            ->setCellValue("I2", "ESPECIALIDAD");
+            ->setCellValue("F2", "GENERO")
+            ->setCellValue("G2", "CONDICION")
+            ->setCellValue("H2", "FECHA COLEGIADO")
+            ->setCellValue("I2", "CAPITULO")
+            ->setCellValue("J2", "ESPECIALIDAD");
     } else if ($data['opcion'] == 4) {
         $documento->setActiveSheetIndex(0)
             ->setCellValue("A2", "N°")
             ->setCellValue("B2", "DNI")
             ->setCellValue("C2", "N° CIP")
             ->setCellValue("D2", "INGENIERO")
-            ->setCellValue("E2", "CONDICION")
-            ->setCellValue("F2", "CAPITULO")
-            ->setCellValue("G2", "ESPECIALIDAD")
-            ->setCellValue("H2", "FECHA COLEGIADO")
-            ->setCellValue("I2", "MESES DE DEUDA")
-            ->setCellValue("J2", "FECHA A VITALICIO");
+            ->setCellValue("E2", "GENERO")
+            ->setCellValue("F2", "CONDICION")
+            ->setCellValue("G2", "CAPITULO")
+            ->setCellValue("H2", "ESPECIALIDAD")
+            ->setCellValue("I2", "FECHA COLEGIADO")
+            ->setCellValue("J2", "MESES DE DEUDA")
+            ->setCellValue("K2", "FECHA A VITALICIO");
     } else if ($data['opcion'] == 5) {
         $documento->setActiveSheetIndex(0)
             ->setCellValue("A2", "N°")
             ->setCellValue("B2", "DNI")
             ->setCellValue("C2", "N° CIP")
             ->setCellValue("D2", "INGENIERO")
-            ->setCellValue("E2", "CONDICION")
-            ->setCellValue("F2", "FECHA COLEGIADO")
-            ->setCellValue("G2", "FECHA REGISTRO")
-            ->setCellValue("H2", "CAPITULO")
-            ->setCellValue("I2", "ESPECIALIDAD");
+            ->setCellValue("E2", "GENERO")
+            ->setCellValue("F2", "CONDICION")
+            ->setCellValue("G2", "FECHA COLEGIADO")
+            ->setCellValue("H2", "FECHA REGISTRO")
+            ->setCellValue("I2", "CAPITULO")
+            ->setCellValue("J2", "ESPECIALIDAD");
     } else {
         $documento->setActiveSheetIndex(0)
             ->setCellValue("A2", "N°")
@@ -203,10 +206,11 @@ if (!is_array($listarColegiados)) {
             ->setCellValue("C2", "N° CIP")
             ->setCellValue("D2", "APELLIDOS")
             ->setCellValue("E2", "NOMBRES")
-            ->setCellValue("F2", "CONDICION")
-            ->setCellValue("G2", "CAPITULO")
-            ->setCellValue("H2", "FECHA COLEGIADO")
-            ->setCellValue("I2", "FECHA QUE CUMPLE SUS" . $condicion);
+            ->setCellValue("F2", "GENERO")
+            ->setCellValue("G2", "CONDICION")
+            ->setCellValue("H2", "CAPITULO")
+            ->setCellValue("I2", "FECHA COLEGIADO")
+            ->setCellValue("J2", "FECHA QUE CUMPLE SUS" . $condicion);
     }
 
     $count = 0;
@@ -227,7 +231,7 @@ if (!is_array($listarColegiados)) {
                 )
             ));
 
-            $documento->getActiveSheet()->getStyle('F' . $cel . ':G' . $cel . '')->applyFromArray(array(
+            $documento->getActiveSheet()->getStyle('G' . $cel . ':H' . $cel . '')->applyFromArray(array(
                 'font'  => array(
                     'bold'  =>  false,
                     'color' => array('rgb' => '000000')
@@ -244,10 +248,11 @@ if (!is_array($listarColegiados)) {
                 ->setCellValue("C" . $cel, strval($value["CIP"]))
                 ->setCellValue("D" . $cel, strval($value["Apellidos"]))
                 ->setCellValue("E" . $cel, strval($value["Nombres"]))
-                ->setCellValue("F" . $cel, strval($value["Condicion"]))
-                ->setCellValue("G" . $cel, strval($value["FechaColegiado"]))
-                ->setCellValue("H" . $cel, strval($value["Capitulo"]))
-                ->setCellValue("I" . $cel, strval($value["Especialidad"]));
+                ->setCellValue("F" . $cel, strval($value["Genero"]))
+                ->setCellValue("G" . $cel, strval($value["Condicion"]))
+                ->setCellValue("H" . $cel, strval($value["FechaColegiado"]))
+                ->setCellValue("I" . $cel, strval($value["Capitulo"]))
+                ->setCellValue("J" . $cel, strval($value["Especialidad"]));
             $cel++;
         }
     } else if ($data['opcion'] == 4) {
@@ -291,18 +296,19 @@ if (!is_array($listarColegiados)) {
                 ->setCellValue("B" . $cel, strval($value["idDNI"]))
                 ->setCellValue("C" . $cel, strval($value["CIP"]))
                 ->setCellValue("D" . $cel, strval($value["Apellidos"] . ', ' . $value["Nombres"]))
-                ->setCellValue("E" . $cel, strval($value["Condicion"]))
-                ->setCellValue("F" . $cel, strval($value["Capitulo"]))
-                ->setCellValue("G" . $cel, strval($value["Especialidad"]))
-                ->setCellValue("H" . $cel, strval($value["FechaColegiado"]))
-                ->setCellValue("I" . $cel, strval($value["MesAumento"]) . " Meses")
-                ->setCellValue("J" . $cel, strval($value["Cumple"]));
+                ->setCellValue("E" . $cel, strval($value["Genero"]))
+                ->setCellValue("F" . $cel, strval($value["Condicion"]))
+                ->setCellValue("G" . $cel, strval($value["Capitulo"]))
+                ->setCellValue("H" . $cel, strval($value["Especialidad"]))
+                ->setCellValue("I" . $cel, strval($value["FechaColegiado"]))
+                ->setCellValue("J" . $cel, strval($value["MesAumento"]) . " Meses")
+                ->setCellValue("K" . $cel, strval($value["Cumple"]));
             $cel++;
         }
     } else if ($data['opcion'] == 5) {
         foreach ($listarColegiados as $key => $value) {
             $count++;
-            $documento->getActiveSheet()->getStyle('A' . $cel . ':I' . $cel . '')->applyFromArray(array(
+            $documento->getActiveSheet()->getStyle('A' . $cel . ':J' . $cel . '')->applyFromArray(array(
                 'fill' => array(
                     'type' => Fill::FILL_SOLID,
                     'color' => array('rgb' => 'E5E4E2')
@@ -315,7 +321,7 @@ if (!is_array($listarColegiados)) {
                 )
             ));
 
-            $documento->getActiveSheet()->getStyle('E' . $cel . ':G' . $cel . '')->applyFromArray(array(
+            $documento->getActiveSheet()->getStyle('F' . $cel . ':H' . $cel . '')->applyFromArray(array(
                 'font'  => array(
                     'bold'  =>  false,
                     'color' => array('rgb' => '000000')
@@ -332,16 +338,17 @@ if (!is_array($listarColegiados)) {
                 ->setCellValue("C" . $cel, strval($value["CIP"]))
                 ->setCellValue("D" . $cel, strval($value["Apellidos"] . ', ' . $value["Nombres"]))
                 ->setCellValue("E" . $cel, strval($value["Condicion"]))
-                ->setCellValue("F" . $cel, strval($value["FechaColegiado"]))
-                ->setCellValue("G" . $cel, strval($value["FechaRegistro"]))
-                ->setCellValue("H" . $cel, strval($value["Capitulo"]))
-                ->setCellValue("I" . $cel, strval($value["Especialidad"]));
+                ->setCellValue("F" . $cel, strval($value["Genero"]))
+                ->setCellValue("G" . $cel, strval($value["FechaColegiado"]))
+                ->setCellValue("H" . $cel, strval($value["FechaRegistro"]))
+                ->setCellValue("I" . $cel, strval($value["Capitulo"]))
+                ->setCellValue("J" . $cel, strval($value["Especialidad"]));
             $cel++;
         }
     } else {
         foreach ($listarColegiados as $key => $value) {
             $count++;
-            $documento->getActiveSheet()->getStyle('A' . $cel . ':I' . $cel . '')->applyFromArray(array(
+            $documento->getActiveSheet()->getStyle('A' . $cel . ':J' . $cel . '')->applyFromArray(array(
                 'fill' => array(
                     'type' => Fill::FILL_SOLID,
                     'color' => array('rgb' => 'E5E4E2')
@@ -354,7 +361,7 @@ if (!is_array($listarColegiados)) {
                 )
             ));
 
-            $documento->getActiveSheet()->getStyle('F' . $cel . ':G' . $cel . '')->applyFromArray(array(
+            $documento->getActiveSheet()->getStyle('G' . $cel . ':H' . $cel . '')->applyFromArray(array(
                 'font'  => array(
                     'bold'  =>  false,
                     'color' => array('rgb' => '000000')
@@ -371,10 +378,11 @@ if (!is_array($listarColegiados)) {
                 ->setCellValue("C" . $cel, strval($value["CIP"]))
                 ->setCellValue("D" . $cel, strval($value["Apellidos"]))
                 ->setCellValue("E" . $cel, strval($value["Nombres"]))
-                ->setCellValue("F" . $cel, strval($value["Condicion"]))
-                ->setCellValue("G" . $cel, strval($value["Capitulo"]))
-                ->setCellValue("H" . $cel, strval($value["FechaColegiado"]))
-                ->setCellValue("I" . $cel, strval($value["Cumple"]));
+                ->setCellValue("F" . $cel, strval($value["Genero"]))
+                ->setCellValue("G" . $cel, strval($value["Condicion"]))
+                ->setCellValue("H" . $cel, strval($value["Capitulo"]))
+                ->setCellValue("I" . $cel, strval($value["FechaColegiado"]))
+                ->setCellValue("J" . $cel, strval($value["Cumple"]));
             $cel++;
         }
     }
@@ -392,6 +400,7 @@ if (!is_array($listarColegiados)) {
         $documento->getActiveSheet()->getColumnDimension('H')->setWidth(20);
         $documento->getActiveSheet()->getColumnDimension('I')->setWidth(20);
         $documento->getActiveSheet()->getColumnDimension('J')->setWidth(20);
+        $documento->getActiveSheet()->getColumnDimension('K')->setWidth(20);
     } else {
         $documento->getActiveSheet()->getColumnDimension('A')->setWidth(7);
         $documento->getActiveSheet()->getColumnDimension('B')->setWidth(15);
@@ -401,7 +410,8 @@ if (!is_array($listarColegiados)) {
         $documento->getActiveSheet()->getColumnDimension('F')->setWidth(17);
         $documento->getActiveSheet()->getColumnDimension('G')->setWidth(20);
         $documento->getActiveSheet()->getColumnDimension('H')->setWidth(20);
-        $documento->getActiveSheet()->getColumnDimension('I')->setWidth(35);
+        $documento->getActiveSheet()->getColumnDimension('I')->setWidth(20);
+        $documento->getActiveSheet()->getColumnDimension('J')->setWidth(35);
     }
 
     // Redirect output to a client’s web browser (Xlsx)

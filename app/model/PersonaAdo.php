@@ -2114,6 +2114,10 @@ class PersonaAdo
                 p.NumDoc as Dni, 
                 p.Apellidos ,
                 p.Nombres, 
+                CASE p.Sexo WHEN 'M' THEN 'MASCULINO'
+				ELSE 'FEMENIMO' END AS Genero,
+				ISNULL(t.Telefono,'') AS Celular,
+				ISNULL(w.Direccion,'') AS Email,
                 p.Condicion as CodigoCondicion,
                 CASE p.Condicion
                 WHEN 'T' THEN 'Transeunte'
@@ -2133,6 +2137,8 @@ class PersonaAdo
                 CAST(DATEADD(MONTH,CASE p.Condicion WHEN 'O' THEN 3 WHEN 'V' THEN 9 ELSE 0 END,ISNULL(ul.FechaUltimaCuota,c.FechaColegiado)) AS DATE) AS HabilitadoHasta           
                 FROM Ingreso AS i 
                 INNER JOIN Persona AS p ON i.idDNI = p.idDNI
+                LEFT JOIN Telefono AS t ON t.idDNI = p.idDNI
+				LEFT JOIN Web AS w ON w.idDNI = p.idDNI
                 INNER JOIN Colegiatura AS c ON c.idDNI = p.idDNI AND c.Principal = 1
                 INNER JOIN Especialidad AS e on e.idEspecialidad = c.idEspecialidad
                 INNER JOIN Capitulo as ca on ca.idCapitulo = e.idCapitulo
@@ -2160,6 +2166,10 @@ class PersonaAdo
                 p.NumDoc as Dni, 
                 p.Apellidos ,
                 p.Nombres, 
+                CASE p.Sexo WHEN 'M' THEN 'MASCULINO'
+				ELSE 'FEMENIMO' END AS Genero,
+				ISNULL(t.Telefono,'') AS Celular,
+				ISNULL(w.Direccion,'') AS Email,
                 p.Condicion as CodigoCondicion,
                 CASE p.Condicion
                 WHEN 'T' THEN 'Transeunte'
@@ -2178,6 +2188,8 @@ class PersonaAdo
                 ELSE 'No Habilitado' END AS Habilidad,
                 CAST(DATEADD(MONTH,CASE p.Condicion WHEN 'O' THEN 3 WHEN 'V' THEN 9 ELSE 0 END,ISNULL(ul.FechaUltimaCuota,c.FechaColegiado)) AS DATE) AS HabilitadoHasta           
                 FROM Persona AS p
+                LEFT JOIN Telefono AS t ON t.idDNI = p.idDNI
+				LEFT JOIN Web AS w ON w.idDNI = p.idDNI
                 INNER JOIN Colegiatura AS c ON c.idDNI = p.idDNI AND c.Principal = 1
                 INNER JOIN Especialidad AS e on e.idEspecialidad = c.idEspecialidad
                 INNER JOIN Capitulo as ca on ca.idCapitulo = e.idCapitulo
@@ -2231,6 +2243,9 @@ class PersonaAdo
                     'Dni' => $row['Dni'],
                     'Apellidos' => $row['Apellidos'],
                     'Nombres' => $row['Nombres'],
+                    'Genero' => $row['Genero'],
+                    'Celular' => $row['Celular'],
+                    'Email' => $row['Email'],
                     'Condicion' => $row['Condicion'],
                     'CodigoCondicion' => $row['CodigoCondicion'],
                     'Capitulo' => $row["Capitulo"],

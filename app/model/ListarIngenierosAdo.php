@@ -15,6 +15,8 @@ class ListarIngenierosAdo
                 p.CIP, 
                 p.Apellidos, 
                 p.Nombres, 
+                CASE p.Sexo WHEN 'M' THEN 'MASCULINO'
+				ELSE 'FEMENIMO' END AS Genero,
                 CASE 
                 WHEN p.Condicion = 'T' THEN 'TRANSEUNTE' 
                 WHEN p.Condicion = 'O' THEN 'ORDINARIO'  
@@ -25,8 +27,8 @@ class ListarIngenierosAdo
                 CONVERT(VARCHAR,CAST(c.FechaColegiado AS DATE), 103) AS FechaColegiado,
                 ca.Capitulo,
                 e.Especialidad  
-                from Persona AS p
-                INNER JOIN Colegiatura AS c ON c.Principal = 1 AND P.idDNI = C.idDNI
+                FROM Persona AS p
+                INNER JOIN Colegiatura AS c ON c.Principal = 1 AND p.idDNI = c.idDNI				
                 INNER JOIN Especialidad AS e ON e.idEspecialidad = c.idEspecialidad
                 INNER JOIN Capitulo AS ca ON ca.idCapitulo = e.idCapitulo
                 -- ORDER BY p.idDNI DESC
@@ -38,6 +40,8 @@ class ListarIngenierosAdo
                 p.NumDoc as idDNI, 
                 p.CIP, p.Apellidos, 
                 p.Nombres, 
+                CASE p.Sexo WHEN 'M' THEN 'MASCULINO'
+				ELSE 'FEMENIMO' END AS Genero,
                 CASE 
                 WHEN p.Condicion = 'T' THEN 'TRANSEUNTE'  
                 WHEN p.Condicion = 'O' THEN 'ORDINARIO'  
@@ -49,7 +53,7 @@ class ListarIngenierosAdo
                 ca.Capitulo,
                 e.Especialidad  
                 FROM Persona AS p
-                inner join Colegiatura as c on c.Principal = 1 AND P.idDNI = C.idDNI
+                inner join Colegiatura as c on c.Principal = 1 AND p.idDNI = c.idDNI
                 inner join Especialidad AS e on e.idEspecialidad = c.idEspecialidad
                 inner join Capitulo as ca on ca.idCapitulo = e.idCapitulo
                 WHERE p.Condicion = UPPER(?)");
@@ -68,7 +72,9 @@ class ListarIngenierosAdo
                 p.NumDoc as idDNI,
                 p.CIP,
                 p.Apellidos, 
-                p.Nombres,            
+                p.Nombres, 
+                CASE p.Sexo WHEN 'M' THEN 'MASCULINO'
+				ELSE 'FEMENIMO' END AS Genero,         
                 CASE 
                 WHEN p.Condicion = 'T' THEN 'TRANSEUNTE'  
                 WHEN p.Condicion = 'O' THEN 'ORDINARIO'  
@@ -81,7 +87,7 @@ class ListarIngenierosAdo
                 ca.Capitulo,
                 e.Especialidad  
                 FROM Persona AS p
-                inner join Colegiatura as c on c.Principal = 1 AND P.idDNI = C.idDNI
+                inner join Colegiatura as c on c.Principal = 1 AND p.idDNI = c.idDNI
                 inner join Especialidad AS e on e.idEspecialidad = c.idEspecialidad
                 inner join Capitulo as ca on ca.idCapitulo = e.idCapitulo
                 WHERE year(convert(date,dateadd(month,c.MesAumento,dateadd(year,?,c.FechaColegiado)))) = ?
@@ -89,12 +95,14 @@ class ListarIngenierosAdo
                 $cmdSelect->bindParam(1,  $condicion, PDO::PARAM_INT);
                 $cmdSelect->bindParam(2,  $data['fiColegiado'], PDO::PARAM_STR);
                 $cmdSelect->execute();
-            } else  if($data['opcion'] == 4){
+            } else  if ($data['opcion'] == 4) {
                 $cmdSelect = Database::getInstance()->getDb()->prepare("SELECT 
                 p.NumDoc as idDNI,
                 p.CIP,
                 p.Apellidos, 
-                p.Nombres,            
+                p.Nombres,        
+                CASE p.Sexo WHEN 'M' THEN 'MASCULINO'
+				ELSE 'FEMENIMO' END AS Genero,    
                 CASE 
                 WHEN p.Condicion = 'T' THEN 'TRANSEUNTE'  
                 WHEN p.Condicion = 'O' THEN 'ORDINARIO'  
@@ -108,17 +116,19 @@ class ListarIngenierosAdo
                 e.Especialidad,
                 c.MesAumento
                 FROM Persona AS p
-                inner join Colegiatura as c on c.Principal = 1 AND P.idDNI = C.idDNI
+                inner join Colegiatura as c on c.Principal = 1 AND p.idDNI = c.idDNI
                 inner join Especialidad AS e on e.idEspecialidad = c.idEspecialidad
                 inner join Capitulo as ca on ca.idCapitulo = e.idCapitulo
                  where Resolucion15 <> 0 and Principal = 1");
                 $cmdSelect->execute();
-            } else if($data['opcion'] == 5){
+            } else if ($data['opcion'] == 5) {
                 $cmdSelect = Database::getInstance()->getDb()->prepare("SELECT 
                 p.NumDoc as idDNI, 
                 p.CIP, 
                 p.Apellidos, 
                 p.Nombres, 
+                CASE p.Sexo WHEN 'M' THEN 'MASCULINO'
+				ELSE 'FEMENIMO' END AS Genero,
                 CASE 
                 WHEN p.Condicion = 'T' THEN 'TRANSEUNTE' 
                 WHEN p.Condicion = 'O' THEN 'ORDINARIO'  
@@ -131,7 +141,7 @@ class ListarIngenierosAdo
                 ca.Capitulo,
                 e.Especialidad  
                 from Persona AS p
-                INNER JOIN Colegiatura AS c ON c.Principal = 1 AND P.idDNI = C.idDNI
+                INNER JOIN Colegiatura AS c ON c.Principal = 1 AND p.idDNI = c.idDNI
                 INNER JOIN Especialidad AS e ON e.idEspecialidad = c.idEspecialidad
                 INNER JOIN Capitulo AS ca ON ca.idCapitulo = e.idCapitulo
 				where FechaReg between ? and ? ");
