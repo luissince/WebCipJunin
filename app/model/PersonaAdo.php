@@ -2171,7 +2171,7 @@ class PersonaAdo
                 p.Apellidos ,
                 p.Nombres, 
                 CASE p.Sexo WHEN 'M' THEN 'MASCULINO'
-				ELSE 'FEMENIMO' END AS Genero,
+				ELSE 'FEMENINO' END AS Genero,
 				ISNULL(t.Telefono,'') AS Celular,
 				ISNULL(w.Direccion,'') AS Email,
                 p.Condicion as CodigoCondicion,
