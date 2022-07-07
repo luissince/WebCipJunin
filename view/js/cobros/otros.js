@@ -84,12 +84,14 @@ function Otros() {
                             "cantidad": parseFloat($('#txtCantidadOtrosConceptos').val()),
                             "concepto": $('#cbOtrosConcepto option:selected').html(),
                             "precio": parseFloat($("#txtMontoOtrosConceptos").val()),
-                            "monto": parseFloat($("#txtCantidadOtrosConceptos").val()) * parseFloat($("#txtMontoOtrosConceptos").val())
+                            "monto": parseFloat($("#txtCantidadOtrosConceptos").val()) * parseFloat($("#txtMontoOtrosConceptos").val()),
+                            "descripcion": $("#txtDescripcionOtros").val()
                         });
                         addIngresos();
                         $('#mdOtros').modal('hide');
                         $("#txtCantidadOtrosConceptos").val("1");
                         $("#txtMontoOtrosConceptos").val("");
+                        $("#txtDescripcionOtros").val("");
                     } else {
                         tools.AlertWarning("Ingresos Diversos", "Ya existe un concepto con los mismo datos.");
                         $("#cbOtrosConcepto").focus().select();
