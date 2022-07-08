@@ -6,7 +6,7 @@ header('Content-Type: application/json; charset=UTF-8');
 
 define('_MPDF_PATH', '/lib');
 require('./lib/mpdf/vendor/autoload.php');
-require_once("./lib/phpqrcode/qrlib.php");
+require './lib/phpqrcode/vendor/autoload.php';
 include_once('../model/IngresosAdo.php');
 require __DIR__ . './../src/autoload.php';
 
@@ -16,6 +16,7 @@ use PHPMailer\PHPMailer\PHPMailer;
 use PHPMailer\PHPMailer\SMTP;
 use PHPMailer\PHPMailer\Exception;
 use SysSoftIntegra\Src\NumberLleters;
+use chillerlan\QRCode\QRCode;
 
 //Load Composer's autoloader
 require './lib/phpmail/vendor/autoload.php';
@@ -67,7 +68,7 @@ try {
                 . '|' . $ingreso->NumeroDocumento
                 . '|';
 
-            $qrCode = QrCode::png($textoCodBar, 'codbar.png', 'L', 4, 2);
+            // $qrCode = QrCode::png($textoCodBar, 'codbar.png', 'L', 4, 2);
 
             $html = '<html>
             <head>
@@ -344,7 +345,7 @@ try {
                     <div style="border-left: 6px solid #b72928; font-size:11pt; text-align: center; padding-top: 3mm; ">
                         <p style="text-align:center; margin_bottom:5px;">Representación Impresa de la Factura Electrónica Autorizado para ser Emisor electrónico mediante la Resolución de Intendencia N° 0340050004781/SUNAT/ Para consultar el comprobante ingrese a: https://sunat.god.pe</p>
                         <div style="margin-bottom:0px;" width="100%">
-                            <img style="width:100px; height:100px;" src="codbar.png" />
+                            <img style="width:100px; height:100px;" src="' . (new QRCode)->render($textoCodBar) . ' />
                             <div>Hashcode: ' . $ingreso->CodigoHash . '</div>
                         </div>
                     </div>
@@ -390,7 +391,7 @@ try {
                             $mail = new PHPMailer(true);
 
                             $fromname = "Tesorería Colegio de Ingenieros del Perú - CD Junín";
-                            $fromEmail = "tesoreria@cip-junin.org.pe";
+                            $fromEmail = "alexander_dx_10@hotmail.com";
 
 
 
@@ -401,7 +402,7 @@ try {
                             $mail->Host       = 'smtp.live.com';                     //Set the SMTP server to send through
                             $mail->SMTPAuth   = true; //"login";                    //Enable SMTP authentication
                             $mail->Username   = $fromEmail;                     //SMTP username
-                            $mail->Password   = 'ingenieros_2021';                               //SMTP password
+                            $mail->Password   = 'alexander123';                               //SMTP password
                             $mail->SMTPSecure = "TLS";            //Enable implicit TLS encryption
                             $mail->Port       = 587;                                 //TCP port to connect to; use 587 if you have set `SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS`
 
