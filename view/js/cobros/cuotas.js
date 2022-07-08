@@ -519,6 +519,7 @@ function Cuotas() {
                         concepto: c.Concepto,
                         precio: parseFloat(c.Precio),
                         monto: parseFloat(c.Precio),
+                        descripcion: ''
                     });
                 } else {
                     for (let i = 0; i < arrayIngresos.length; i++) {
@@ -530,6 +531,7 @@ function Cuotas() {
                             newConcepto.monto =
                                 parseFloat(newConcepto.precio) *
                                 parseFloat(newConcepto.cantidad);
+                            newConcepto.descripcion = ''
                             arrayIngresos[i] = newConcepto;
                             break;
                         }

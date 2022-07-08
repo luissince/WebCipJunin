@@ -149,6 +149,7 @@ function Colegiatura() {
                     concepto: value.Concepto,
                     precio: parseFloat(value.Precio),
                     monto: parseFloat(value.Precio),
+                    descripcion: ''
                 });
             } else {
                 for (let i = 0; i < arrayIngresos.length; i++) {

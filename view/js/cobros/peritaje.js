@@ -149,7 +149,8 @@ function Peritaje() {
                     "cantidad": peritaje.cantidad,
                     "concepto": peritaje.concepto,
                     "precio": peritaje.precio,
-                    "monto": peritaje.precio * peritaje.cantidad
+                    "monto": peritaje.precio * peritaje.cantidad,
+                    "descripcion": ''
                 });
                 addIngresos()
                 $('#mdPeritaje').modal('hide')

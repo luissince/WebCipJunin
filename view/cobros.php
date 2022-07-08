@@ -1105,7 +1105,8 @@ if (!isset($_SESSION['IdUsuario'])) {
                                 "cantidad": value.cantidad,
                                 "concepto": value.categoria == 1 ? "Cuotas Ordinarias(Del " + cuotasFechas + ")" : value.categoria == 2 ? "Cuotas de Administia(Del " + cuotasFechas + ")" : value.categoria == 3 ? "Cuotas de Vitalicio(Del " + cuotasFechas + ")" : value.categoria == 12 ? "Cuota Ordinarias - Resolución 15 (Del " + cuotasFechas + ")" : value.categoria == 4 ? "Colegiatura Ordinaria" : value.categoria == 9 ? "Colegiatura Otras Modalidades" : value.categoria == 10 ? "Colegiatura por Tesis Local" : value.categoria == 11 ? "Colegiatura por Tesis Externa" : value.concepto,
                                 "precio": parseFloat(value.precio),
-                                "monto": parseFloat(value.monto)
+                                "monto": parseFloat(value.monto),
+                                "descripcion": value.descripcion
                                 // "monto": parseFloat(value.precio) * parseFloat(value.cantidad)
                             });
                         } else {
@@ -1142,7 +1143,8 @@ if (!isset($_SESSION['IdUsuario'])) {
                         $("#tbIngresos").append('<tr>' +
                             '<td>' + count + '</td>' +
                             '<td>' + value.cantidad + '</td>' +
-                            '<td>' + value.concepto + '</td>' +
+                            `<td> ${value.concepto} <br/> <small class="text-primary">${value.descripcion}</small></td>` +
+                            //'<td>' + value.concepto + '<br/>' +'<span class="text-primary">' + value.descripcion +'</span>' + '</td>' +
                             // '<td>' + tools.formatMoney(value.precio) + '</td>' +
                             '<td>' + tools.formatMoney(value.monto) + '</td>' +
                             '<td><button class="btn btn-warning" onClick="removeIngresos(\'' + value.idConcepto + '\',\'' + value.categoria + '\')"><i class="fa fa-trash"></i></button></td>' +

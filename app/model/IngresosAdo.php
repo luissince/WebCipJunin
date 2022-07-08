@@ -671,12 +671,14 @@ class IngresosAdo
                     idIngreso,
                     idConcepto,
                     Cantidad,
-                     Monto
-                    )VALUES(?,?,?,?)");
+                    Monto,
+                    Descripcion
+                    )VALUES(?,?,?,?,?)");
                 $cmdDetalle->bindParam(1, $idIngreso, PDO::PARAM_INT);
                 $cmdDetalle->bindParam(2, $value['idConcepto'], PDO::PARAM_INT);
                 $cmdDetalle->bindParam(3, $value['cantidad'], PDO::PARAM_INT);
                 $cmdDetalle->bindParam(4, $value['monto'], PDO::PARAM_INT);
+                $cmdDetalle->bindParam(5, $value['descripcion'], PDO::PARAM_STR);
                 $cmdDetalle->execute();
             }
             Database::getInstance()->getDb()->commit();
@@ -853,6 +855,7 @@ class IngresosAdo
             (d.Monto/d.Cantidad) AS Precio,
             d.Cantidad,
             d.Monto AS Total,
+            d.Descripcion,
             i.Nombre,
             i.Valor,
             i.Codigo
@@ -879,6 +882,7 @@ class IngresosAdo
                     "Nombre" => $row["Nombre"],
                     "Valor" => $row["Valor"],
                     "Codigo" => $row["Codigo"],
+                    "Descripcion" => $row["Descripcion"]
                 ));
                 $cantidad = $row["Cantidad"];
                 $valorImpuesto = $row['Valor'];

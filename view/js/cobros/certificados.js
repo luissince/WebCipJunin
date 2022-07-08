@@ -489,7 +489,8 @@ function Certificado() {
                         "cantidad": certificadoHabilidad.cantidad,
                         "concepto": certificadoHabilidad.concepto,
                         "precio": certificadoHabilidad.precio,
-                        "monto": certificadoHabilidad.precio * certificadoHabilidad.cantidad
+                        "monto": certificadoHabilidad.precio * certificadoHabilidad.cantidad,
+                        "descripcion": ''
                     });
                     addIngresos();
                     $('#mdCertHabilidad').modal('hide')
@@ -547,7 +548,8 @@ function Certificado() {
                     "cantidad": certificadoResidenciaObra.cantidad,
                     "concepto": certificadoResidenciaObra.concepto,
                     "precio": certificadoResidenciaObra.precio,
-                    "monto": certificadoResidenciaObra.precio * certificadoResidenciaObra.cantidad
+                    "monto": certificadoResidenciaObra.precio * certificadoResidenciaObra.cantidad,
+                    "descripcion": ''
                 });
                 addIngresos();
                 $('#mdCertResidenciaObra').modal('hide');
@@ -607,7 +609,8 @@ function Certificado() {
                     "cantidad": certificadoProyecto.cantidad,
                     "concepto": certificadoProyecto.concepto,
                     "precio": certificadoProyecto.precio,
-                    "monto": certificadoProyecto.precio * certificadoProyecto.cantidad
+                    "monto": certificadoProyecto.precio * certificadoProyecto.cantidad,
+                    "descripcion": ''
                 });
                 addIngresos();
                 $('#mdCertProyecto').modal('hide');

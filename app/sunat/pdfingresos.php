@@ -259,6 +259,7 @@ if (!isset($_GET["idIngreso"])) {
                                 $cantidad = $value['Cantidad'];
                                 $impuesto = $value['Valor'];
                                 $precioVenta = $value['Precio'];
+                                $descripcion = '';
 
                                 $precioBruto = $precioVenta / (($impuesto / 100.00) + 1);
                                 $impuestoGenerado = $precioBruto * ($impuesto / 100.00);
@@ -266,10 +267,12 @@ if (!isset($_GET["idIngreso"])) {
                                 $importeBrutoTotal = $precioBruto * $cantidad;
                                 $importeNeto = $precioBruto + $impuestoGenerado;
                                 $importeNetoTotal = $importeBrutoTotal + $impuestoTotal;
+                                $descripcion = $value['Descripcion'] == '' ? '': '('. $value['Descripcion'].')';
+
                                 $html .= '
                                 <tr>
                                     <td align="center" class="td-white">' . $value['Id'] . '</td>
-                                    <td align="center" class="td-dark">' . $value['Concepto'] . '</td>
+                                    <td align="center" class="td-dark">' . $value['Concepto'] . '<br/><small>'.$descripcion. '</small>' . '</td>
                                     <td align="right" class="td-dark">' . round($cantidad, 2, PHP_ROUND_HALF_UP) . '</td>
                                     <td align="right" class="td-dark">' . number_format(round($importeNeto, 2, PHP_ROUND_HALF_UP), 2, '.', '') . '</td>                                   
                                     <td align="right" class="td-white">' . number_format(round($importeNetoTotal, 2, PHP_ROUND_HALF_UP), 2, '.', '') . '</td>

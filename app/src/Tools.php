@@ -8,6 +8,11 @@ use Exception;
 class Tools
 {
 
+    public static function formatNumber($numeracion, $length = 6)
+    {
+        return strlen($numeracion) > $length ? $numeracion : substr(str_repeat(0, $length) . $numeracion, -$length);
+    }
+
     public static function my_encrypt($encrypt, $key)
     {
         $iv = openssl_random_pseudo_bytes(openssl_cipher_iv_length('AES-256-CBC'));

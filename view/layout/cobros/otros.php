@@ -31,11 +31,20 @@
                         </div>
                         <div class="col-md-6">
                             <div class="form-group">
-                                <label for="txtIngeniero">Monto</label>
+                                <label for="txtMontoOtrosConceptos">Monto</label>
                                 <input type="number" class="form-control" id="txtMontoOtrosConceptos" placeholder="0.00" required="">
                             </div>
                         </div>
                     </div>
+                    <div class="row">
+                        <div class="col-md-12">
+                            <div class="form-group">
+                                <label for="txtDescripcionOtros">Descripción</label>
+                                <input type="text" class="form-control" id="txtDescripcionOtros" placeholder="Ingrese una descripción" >
+                            </div>
+                        </div>
+                    </div>
+
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-danger" id="btnAceptarOtros">
