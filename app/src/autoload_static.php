@@ -4,23 +4,33 @@ class Autoload_Static
 {
     public static function files()
     {
+
         return array(
-            'SysSoftIntegra\\Model\\VentasADO' => __DIR__  . '/../model/VentasADO.php',
-            'SysSoftIntegra\\Model\\DetalleADO' => __DIR__  . '/../model/DetalleADO.php',
-            'SysSoftIntegra\\Model\\SuministrosADO' => __DIR__  . '/../model/SuministrosADO.php',
-            'SysSoftIntegra\\Model\\AlmacenADO' => __DIR__  . '/../model/AlmacenADO.php',
-            'SysSoftIntegra\\Model\\EmpresaADO' => __DIR__  . '/../model/EmpresaADO.php',
-            'SysSoftIntegra\\Model\\EmpleadoADO' => __DIR__  . '/../model/EmpleadoADO.php',
-            'SysSoftIntegra\\Model\\MovimientoADO' => __DIR__  . '/../model/MovimientoADO.php',
-            'SysSoftIntegra\\Model\\MonedaADO' => __DIR__  . '/../model/MonedaADO.php',
-            'SysSoftIntegra\\Model\\TipoDocumentoADO' => __DIR__  . '/../model/TipoDocumentoADO.php',
-            'SysSoftIntegra\\Model\\ComprobanteADO' => __DIR__  . '/../model/ComprobanteADO.php',
+            
+            'SysSoftIntegra\\Model\\BancoAdo' => __DIR__  . '/../model/BancoAdo.php',
+            'SysSoftIntegra\\Model\\CapituloAdo' => __DIR__  . '/../model/CapituloAdo.php',
+            'SysSoftIntegra\\Model\\ComprobanteAdo' => __DIR__  . '/../model/ComprobanteAdo.php',
+            'SysSoftIntegra\\Model\\ConceptoAdo' => __DIR__  . '/../model/ConceptoAdo.php',
+            'SysSoftIntegra\\Model\\ConfigEmpresaAdo' => __DIR__  . '/../model/ConfigEmpresaAdo.php',
+            'SysSoftIntegra\\Model\\CuotaAdo' => __DIR__  . '/../model/CuotaAdo.php',
+            'SysSoftIntegra\\Model\\EmpresaAdo' => __DIR__  . '/../model/EmpresaAdo.php',
+            'SysSoftIntegra\\Model\\ImpuestoAdo' => __DIR__  . '/../model/ImpuestoAdo.php',
+            'SysSoftIntegra\\Model\\IngresosAdo' => __DIR__  . '/../model/IngresosAdo.php',
+            'SysSoftIntegra\\Model\\ListarIngenierosAdo' => __DIR__  . '/../model/ListarIngenierosAdo.php',
+            'SysSoftIntegra\\Model\\NotaCreditoAdo' => __DIR__  . '/../model/NotaCreditoAdo.php',
+            'SysSoftIntegra\\Model\\PersonaAdo' => __DIR__  . '/../model/PersonaAdo.php',
+            'SysSoftIntegra\\Model\\RolAdo' => __DIR__  . '/../model/RolAdo.php',
+            'SysSoftIntegra\\Model\\UniversidadAdo' => __DIR__  . '/../model/UniversidadAdo.php',
+            'SysSoftIntegra\\Model\\UsuarioAdo' => __DIR__  . '/../model/UsuarioAdo.php',
+
             'SysSoftIntegra\\Src\\Sunat' => __DIR__  . '/Sunat.php',
             'SysSoftIntegra\\Src\\SoapResult' => __DIR__  . '/SoapResult.php',
             'SysSoftIntegra\\Src\\SoapBuilder' => __DIR__  . '/SoapBuilder.php',
             'SysSoftIntegra\\Src\\NumberLleters' => __DIR__  . '/NumberLleters.php',
             'SysSoftIntegra\\Src\\GenerateXml' => __DIR__  . '/GenerateXml.php',
+            'SysSoftIntegra\\Pdf\\PdfIngreso' => __DIR__  . '/../pdf/PdfIngreso.php',
             'SysSoftIntegra\\Src\\Tools' => __DIR__  . '/Tools.php',
+            'SysSoftIntegra\\DataBase\\Database' => __DIR__  . '/../database/DataBaseConexion.php',
             'Phpspreadsheet\\Vendor\\Autload' => __DIR__ . '/../sunat/lib/phpspreadsheet/vendor/autoload.php',
             'RobRichards\\XMLSecLibs\\XMLSecurityDSig' => __DIR__ . '/../sunat/lib/robrichards/src/XMLSecurityDSig.php',
             'RobRichards\\XMLSecLibs\\XMLSecurityKey' => __DIR__ . '/../sunat/lib/robrichards/src/XMLSecurityKey.php'

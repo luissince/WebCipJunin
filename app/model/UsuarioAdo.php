@@ -1,6 +1,9 @@
 <?php
+namespace SysSoftIntegra\Model;
 
-require_once __DIR__ . './../database/DataBaseConexion.php';
+use PDO;
+use SysSoftIntegra\DataBase\Database;
+use Exception;
 
 class UsuarioAdo
 {

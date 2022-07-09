@@ -4,7 +4,10 @@ header("Access-Control-Allow-Headers: Origin, X-Requested-With, Content-Type, Ac
 header('Access-Control-Allow-Methods: GET, POST, PUT, DELETE');
 header('Content-Type: application/json; charset=UTF-8');
 
-require '../database/DataBaseConexion.php';
+use SysSoftIntegra\DataBase\Database;
+
+require __DIR__ . './../src/autoload.php';
+
 date_default_timezone_set('America/Lima');
 
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {

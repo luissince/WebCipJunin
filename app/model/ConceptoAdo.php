@@ -1,6 +1,11 @@
 <?php
 
-require_once '../database/DataBaseConexion.php';
+namespace SysSoftIntegra\Model;
+
+use PDO;
+use SysSoftIntegra\DataBase\Database;
+use Exception;
+use DateTime;
 date_default_timezone_set('America/Lima');
 
 class ConceptoAdo

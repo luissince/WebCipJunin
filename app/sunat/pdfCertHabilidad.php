@@ -1,11 +1,11 @@
 <?php
-require('./lib/mpdf/vendor/autoload.php');
-include('./../model/IngresosAdo.php');
-require './lib/phpqrcode/vendor/autoload.php';
-require('./../src/autoload.php');
 
 use SysSoftIntegra\Src\Tools;
 use chillerlan\QRCode\QRCode;
+
+use SysSoftIntegra\Model\IngresosAdo;
+
+require __DIR__ . './../src/autoload.php';
 
 date_default_timezone_set('America/Lima');
 

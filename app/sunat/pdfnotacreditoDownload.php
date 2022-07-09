@@ -1,13 +1,10 @@
 <?php
-
-require('./lib/mpdf/vendor/autoload.php');
-require './lib/phpqrcode/vendor/autoload.php';
-
-include_once('../model/NotaCreditoAdo.php');
-require __DIR__ . './../src/autoload.php';
-
 use SysSoftIntegra\Src\NumberLleters;
 use chillerlan\QRCode\QRCode;
+
+use SysSoftIntegra\Model\NotaCreditoAdo;
+
+require __DIR__ . './../src/autoload.php';
 
 if (!isset($_GET["idNotaCredito"])) {
     echo '<script>location.href = "404.php";</script>';

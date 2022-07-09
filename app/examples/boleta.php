@@ -10,8 +10,8 @@ header('Content-Type: application/json; charset=UTF-8');
 use SysSoftIntegra\Src\SoapResult;
 use SysSoftIntegra\Src\Sunat;
 use SysSoftIntegra\Src\NumberLleters;
+use SysSoftIntegra\Model\IngresosAdo;
 
-require __DIR__ . './../model/IngresosAdo.php';
 require __DIR__ . './../src/autoload.php';
 
 $idIngreso = $_GET['idIngreso'];

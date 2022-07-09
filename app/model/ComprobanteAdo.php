@@ -1,6 +1,10 @@
 <?php
 
-require_once '../database/DataBaseConexion.php';
+namespace SysSoftIntegra\Model;
+
+use PDO;
+use SysSoftIntegra\DataBase\Database;
+use Exception;
 
 class ComprobanteAdo
 {

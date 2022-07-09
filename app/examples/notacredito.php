@@ -10,8 +10,8 @@ header('Content-Type: application/json; charset=UTF-8');
 use SysSoftIntegra\Src\SoapResult;
 use SysSoftIntegra\Src\Sunat;
 use SysSoftIntegra\Src\NumberLleters;
+use SysSoftIntegra\Model\NotaCreditoAdo;
 
-require __DIR__ . './../model/NotaCreditoAdo.php';
 require __DIR__ . './../src/autoload.php';
 
 $idNotaCredito = $_GET['idNotaCredito'];

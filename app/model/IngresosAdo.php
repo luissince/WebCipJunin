@@ -1,6 +1,12 @@
 <?php
 
-require_once __DIR__ . './../database/DataBaseConexion.php';
+namespace SysSoftIntegra\Model;
+
+use PDO;
+use SysSoftIntegra\DataBase\Database;
+use PDOException;
+use Exception;
+use DateTime;
 
 class IngresosAdo
 {
@@ -835,7 +841,8 @@ class IngresosAdo
             p.Nombres,
 			ISNULL(es.Especialidad, 'SIN ESPECIALIDAD') AS Especialidad,
 			ISNULL(ca.Capitulo, 'SIN CAPITULO') AS Capitulo,
-            ISNULL(i.Correlativo,0) as Correlativo
+            ISNULL(i.Correlativo,0) as Correlativo,
+            ISNULL(i.Xmlgenerado, '') as Xmlgenerado
             FROM Ingreso AS i 
             LEFT JOIN Persona AS p ON p.idDNI = i.idDNI
 			LEFT JOIN Colegiatura AS c ON c.idDNI = p.idDNI AND c.Principal = 1

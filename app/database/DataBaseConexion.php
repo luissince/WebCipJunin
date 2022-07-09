@@ -1,4 +1,8 @@
 <?php
+namespace SysSoftIntegra\DataBase; 
+
+use PDOException;
+use PDO;
 
 /**
  * Clase que envuelve una instancia de la clase PDO

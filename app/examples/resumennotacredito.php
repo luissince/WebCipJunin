@@ -11,6 +11,7 @@ date_default_timezone_set('America/Lima');
 use SysSoftIntegra\Src\SoapResult;
 use SysSoftIntegra\Src\Sunat;
 use SysSoftIntegra\Src\NumberLleters;
+use SysSoftIntegra\Model\NotaCreditoAdo;
 
 require __DIR__ . './../model/NotaCreditoAdo.php';
 require __DIR__ . './../src/autoload.php';

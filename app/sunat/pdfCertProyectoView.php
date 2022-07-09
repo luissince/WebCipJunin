@@ -1,12 +1,13 @@
 <?php
+use SysSoftIntegra\Model\IngresosAdo;
+
+require __DIR__ . './../src/autoload.php';
+
 setlocale(LC_TIME, 'Spanish_Peru');
 
 if (!isset($_GET["idIngreso"])) {
     echo '<script>location.href = "404.php";</script>';
 } else {
-
-    require('./lib/mpdf/vendor/autoload.php');
-    include_once('../model/IngresosAdo.php');
 
     $CertificadoProyecto = IngresosAdo::ObtenerDatosPdfCertProyecto($_GET["idIngreso"]);
     if (!is_array($CertificadoProyecto)) {

@@ -1,9 +1,8 @@
 <?php
+use SysSoftIntegra\Model\CapituloAdo;
+use SysSoftIntegra\Model\PersonaAdo;
 
-
-require_once('lib/mpdf/vendor/autoload.php');
-include_once('../model/PersonaAdo.php');
-include_once('../model/CapituloAdo.php');
+require __DIR__ . './../src/autoload.php';
 
 $rutaImage = __DIR__ . "/../../view/images/logologin.png";
 $title = "RESUMEN GLOBAL";

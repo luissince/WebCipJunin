@@ -5,8 +5,10 @@ header('Access-Control-Allow-Methods: GET, POST, PUT, DELETE');
 header('Content-Type: application/json; charset=UTF-8');
 
 use SysSoftIntegra\Src\Tools;
+use SysSoftIntegra\Model\IngresosAdo;
 
-require('../model/IngresosAdo.php');
+require __DIR__ . './../src/autoload.php';
+
 require('../src/autoload.php');
 
 if ($_SERVER['REQUEST_METHOD'] == 'GET') {

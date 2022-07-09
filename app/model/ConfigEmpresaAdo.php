@@ -1,6 +1,10 @@
 <?php
 
-require_once __DIR__ . './../database/DataBaseConexion.php';
+namespace SysSoftIntegra\Model;
+
+use PDO;
+use SysSoftIntegra\DataBase\Database;
+use Exception;
 
 class configEmpresaAdo
 {

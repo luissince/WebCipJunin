@@ -4,14 +4,15 @@ ini_set('max_execution_time', '300');
 ini_set("pcre.backtrack_limit", "10000000");
 ini_set('memory_limit', '-1');
 
-require __DIR__ . "/lib/phpspreadsheet/vendor/autoload.php";
-include_once('../model/IngresosAdo.php');
-
 use PhpOffice\PhpSpreadsheet\IOFactory;
 use PhpOffice\PhpSpreadsheet\Spreadsheet;
 use PhpOffice\PhpSpreadsheet\Style\Fill;
 use PhpOffice\PhpSpreadsheet\Style\Alignment;
 use PhpOffice\PhpSpreadsheet\Style\Border;
+
+use SysSoftIntegra\Model\IngresosAdo;
+
+require __DIR__ . './../src/autoload.php';
 
 $fechaIngreso = "RESUMEN DE APORTACIONES AL CIP NACIONAL DE LA FECHA: " . date("d-m-Y", strtotime($_GET["fechaInicial"])) . " al " . date("d-m-Y", strtotime($_GET["fechaFinal"]));
 

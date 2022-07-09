@@ -1,13 +1,12 @@
 <?php
+use SysSoftIntegra\Model\PersonaAdo;
 
+require __DIR__ . './../src/autoload.php';
 
 if (!isset($_GET["idDni"]) || $_GET["idDni"] == "") {
     echo "El parametro no contiene el valor esperado.";
     return;
 }
-
-require_once('lib/mpdf/vendor/autoload.php');
-include_once('../model/PersonaAdo.php');
 
 $rutaImage = __DIR__ . "/../../view/images/logologin.png";
 

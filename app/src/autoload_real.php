@@ -18,6 +18,12 @@ class ComposerAutoloader
             if (file_exists($relative_class)) {
                 require_once $relative_class;
             }
+
+            require_once __DIR__ . './../sunat/lib/phpspreadsheet/vendor/autoload.php';
+            require_once __DIR__ . './../sunat/lib/mpdf/vendor/autoload.php';
+            require_once __DIR__ . './../sunat/lib/phpqrcode/vendor/autoload.php';
+            require_once __DIR__ .'./../sunat/lib/phpmail/vendor/autoload.php';
+
         });
     }
 }

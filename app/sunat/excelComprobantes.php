@@ -3,14 +3,15 @@
 set_time_limit(300); //evita el error 20 segundos de peticion
 session_start();
 
-require __DIR__ . "/lib/phpspreadsheet/vendor/autoload.php";
-include_once('../model/IngresosAdo.php');
-
 use PhpOffice\PhpSpreadsheet\IOFactory;
 use PhpOffice\PhpSpreadsheet\Spreadsheet;
 use PhpOffice\PhpSpreadsheet\Style\Fill;
 use PhpOffice\PhpSpreadsheet\Style\Alignment;
 use PhpOffice\PhpSpreadsheet\Style\Border;
+
+use SysSoftIntegra\Model\IngresosAdo;
+
+require __DIR__ . './../src/autoload.php';
 
 if ($_GET["cbTipoDocumento"] == 'null') {
     $ventas = IngresosAdo::ReporteGeneralIngresosPorFechas($_GET["txtFechaInicial"], $_GET["txtFechaFinal"], $_GET["cbTipoPago"], $_GET["usuario"]);

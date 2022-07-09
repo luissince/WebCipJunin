@@ -1,18 +1,17 @@
 <?php
 
-require './lib/phpqrcode/vendor/autoload.php';
-require('./../src/autoload.php');
 use SysSoftIntegra\Src\Tools;
 use chillerlan\QRCode\QRCode;
+
+use SysSoftIntegra\Model\IngresosAdo;
+
+require __DIR__ . './../src/autoload.php';
 
 setlocale(LC_TIME, 'Spanish_Peru');
 
 if (!isset($_GET["idIngreso"])) {
     echo '<script>location.href = "404.php";</script>';
 } else {
-
-    require('./lib/mpdf/vendor/autoload.php');
-    include_once('../model/IngresosAdo.php');
 
     $CertificadoHabilidad = IngresosAdo::ObtenerDatosPdfCertHabilidad($_GET["idIngreso"]);
     if (!is_array($CertificadoHabilidad)) {
@@ -246,12 +245,12 @@ if (!isset($_GET["idIngreso"])) {
                                 <img width="90" height="90" style="margin-left:15px; margin-top:0px;" src="' . (new QRCode)->render($codbar) . '" />
                             </div>
                             <div style="float:left; width:35%; text-align:center; padding-left:0px; margin-top:10px; font-size:9px;">
-                                <img width="166" height="60" style="margin-left:20px; background-color:transparent; opacity: 0.1; margin-bottom:-10px;" src="firmavacia.png" />
+                                <img width="166" height="60" style="margin-left:10px; background-color:transparent; margin-bottom:-8px;" src="firmanacional.png" />
                                 _____________________________________________<br><br>
                                 Ing. Maria del Carmen Ponce Mejia<br> Decana Nacional <br> Colegio de Ingenieros del Perú
                             </div>
                             <div style="float:left; width:35%; text-align:center; padding-left:0px; font-size:9px;">
-                                <img width="166" height="60" style="margin-left:20px; background-color:transparent; margin-bottom:-10px;" src="firmadecano.png" />
+                                <img width="166" height="60" style="margin-left:10px; background-color:transparent; margin-bottom:-8px;" src="firmadecano.png" />
                             _____________________________________________<br><br>
                                 Consejo Departamental <br> del Colegio de Ingenieros del Perú
                             </div>

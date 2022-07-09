@@ -6,7 +6,9 @@ header('Access-Control-Allow-Methods: GET, POST, PUT, DELETE');
 header('Content-Type: application/json; charset=UTF-8');
 date_default_timezone_set('America/Lima');
 
-require '../../database/DataBaseConexion.php';
+use SysSoftIntegra\DataBase\Database;
+
+require __DIR__ . './../../src/autoload.php';
 
 // $body = json_decode(file_get_contents("php://input"), true);
 // $postdata = http_build_query(
