@@ -540,7 +540,7 @@ if (!isset($_SESSION['IdUsuario'])) {
                         beforeSend: function() {
                             tbTable.empty();
                             tbTable.append(
-                                '<tr class="text-center"><td colspan="11"><img src="./images/spiner.gif"/><p>cargando información.</p></td></tr>'
+                                '<tr class="text-center"><td colspan="12"><img src="./images/spiner.gif"/><p>cargando información.</p></td></tr>'
                             );
                             state = true;
                             totalPaginacion = 0;

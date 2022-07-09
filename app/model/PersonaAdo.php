@@ -3,9 +3,11 @@
 namespace SysSoftIntegra\Model;
 
 use PDO;
-use SysSoftIntegra\DataBase\Database;
+use PDOException;
 use Exception;
 use DateTime;
+use SysSoftIntegra\DataBase\Database;
+use SysSoftIntegra\Src\Response;
 
 class PersonaAdo
 {
@@ -2478,6 +2480,427 @@ class PersonaAdo
         } catch (Exception $ex) {
             Database::getInstance()->getDb()->rollBack();
             return $ex->getMessage();
+        }
+    }
+
+
+    /**
+     * funcion para iniciar sesión desde la api
+     */
+    public static function getUsurioLogin($usuario, $clave)
+    {
+        try {
+            $cmdValidate = Database::getInstance()->getDb()->prepare("SELECT  
+            p.idDNI,
+            p.NumDoc,
+            p.Nombres,
+            p.Apellidos,
+            p.CIP,
+            p.Clave
+            FROM Persona AS p
+            WHERE p.CIP = ?");
+            $cmdValidate->bindParam(1, $usuario, PDO::PARAM_STR);
+            // $cmdValidate->bindParam(2, $clave, PDO::PARAM_STR);
+            $cmdValidate->execute();
+            $resultUsuario = $cmdValidate->fetchObject();
+            if ($resultUsuario) {
+                // return array("state" => 1, "persona" => $resultUsuario);
+                if (password_verify($clave, $resultUsuario->Clave)) {
+                    return array("state" => 1, "persona" => $resultUsuario);
+                } else {
+                    return array(
+                        'state' => '0',
+                        'message' => 'Usuario o contraseña incorrectas.',
+                    );
+                }
+            } else {
+                return array("state" => 2, "message" => "El usuario o contraseña son incorrectas.");
+            }
+        } catch (Exception $ex) {
+            return array("state" => 0, "message" => "Error de conexión del servidor, intente nuevamente en un par de minutos.");
+        }
+    }
+
+    /**
+     * funcion para el inicio desde la api
+     */
+    public static function getPersonaPerfil($idDni)
+    {
+        try {
+            $cmdValidate = Database::getInstance()->getDb()->prepare("SELECT 
+            p.idDNI,
+            p.NumDoc,
+            p.Nombres,
+            p.Apellidos,
+            p.CIP,
+            p.Sexo,
+            CONVERT(VARCHAR,CAST(ISNULL(p.FechaNac,GETDATE()) AS DATE),103) AS FechaNac,
+            CASE p.Condicion WHEN 'V' THEN 'VITALICIO' WHEN 'R' THEN 'RETIRADO' WHEN 'F' THEN 'FALLECIDO' WHEN 'T' THEN 'TRANSEUNTE' ELSE 'ORDINARIO' END AS Condicion
+            FROM Persona AS p
+            WHERE p.idDNI = ? ");
+            $cmdValidate->bindParam(1, $idDni, PDO::PARAM_STR);
+            $cmdValidate->execute();
+            $resultPerfil = $cmdValidate->fetch(PDO::FETCH_ASSOC);
+
+            $cmdImage = Database::getInstance()->getDb()->prepare("SELECT TOP 1 
+                Foto
+                FROM PersonaImagen WHERE idDNI = ?");
+            $cmdImage->bindParam(1, $idDni, PDO::PARAM_STR);
+            $cmdImage->execute();
+            $image = "";
+            if ($row = $cmdImage->fetch()) {
+                $image = base64_encode($row['Foto']);
+            }
+
+            $cmdColegiatura = Database::getInstance()->getDb()->prepare("SELECT 
+            c.idColegiado,
+            s.idConsejo, 
+            s.Consejo, 
+            ca.idCapitulo,
+            ISNULL(ca.Capitulo,'CAPITULO NO REGISTRADO') AS Capitulo,
+            e.idEspecialidad,
+            UPPER(ISNULL(e.Especialidad,'ESPECIALIDAD NO REGISTRADA')) AS Especialidad,
+            convert(VARCHAR,cast(c.FechaColegiado AS DATE),103) AS FechaColegiado, 
+            c.idUnivesidadEgreso AS idUnivEgreso,
+            ISNULL(ue.Universidad,'UNIVERSIDAD NO REGISTRADA') AS UnivesidadEgreso,
+            convert(VARCHAR,cast(c.FechaEgreso AS DATE),103) AS FechaEgreso, 
+            u.idUniversidad,
+            ISNULL(u.Universidad,'UNIVERSIDAD NO REGISTRADA') AS Universidad, 
+            Convert(VARCHAR,cast(c.FechaTitulacion AS DATE),103) AS FechaTitulacion, 
+            c.Resolucion,
+            c.Principal 
+            FROM Colegiatura  AS c
+            LEFT JOIN Sede AS s ON s.idConsejo = c.idSede
+            LEFT JOIN Especialidad AS e ON e.idEspecialidad = c.idEspecialidad
+            LEFT JOIN Capitulo AS ca ON ca.idCapitulo = e.idCapitulo
+			LEFT JOIN Universidad as ue ON ue.idUniversidad = c.idUnivesidadEgreso 
+            LEFT JOIN Universidad AS u ON u.idUniversidad = c.idUniversidad where idDNI = ?");
+            $cmdColegiatura->bindParam(1, $idDni, PDO::PARAM_STR);
+            $cmdColegiatura->execute();
+            $resultColegiatura = $cmdColegiatura->fetchAll(PDO::FETCH_OBJ);
+
+            $cmdDomicilio = Database::getInstance()->getDb()->prepare("SELECT 
+            d.idDireccion,
+            t.idTipo, 
+            ISNULL (t.Descripcion, 'TIPO NO REGISTRADO') AS Tipo,
+            UPPER(d.Direccion) AS Direccion, 
+            u.IdUbigeo, 
+            CONCAT((ISNULL (u.Departamento,'DEPARTAMENTO NO REGISTRADA')),' - ',(ISNULL (u.Provincia,'DEPARTAMENTO NO REGISTRADA')),' - ',(ISNULL (u.Distrito,'DEPARTAMENTO NO REGISTRADA')  )) AS Ubigeo 
+            FROM Direccion AS d
+            LEFT JOIN Tipos AS t ON t.idTipo = d.Tipo 
+            LEFT JOIN Ubigeo AS u ON u.idUbigeo = d.Ubigeo
+            WHERE d.idDNI = ?");
+            $cmdDomicilio->bindParam(1, $idDni, PDO::PARAM_STR);
+            $cmdDomicilio->execute();
+            $resultDomicilio = $cmdDomicilio->fetchAll(PDO::FETCH_OBJ);
+
+            $cmdTelefono = Database::getInstance()->getDb()->prepare("SELECT 
+            a.idTelefono, 
+            t.idTipo, 
+            ISNULL (t.Descripcion, 'TIPO NO REGISTRADO') AS Tipo, 
+            a.Telefono 
+            FROM Telefono AS a 
+            LEFT JOIN Tipos AS t ON t.idTipo = a.Tipo WHERE a.idDNI = ?");
+            $cmdTelefono->bindParam(1, $idDni, PDO::PARAM_STR);
+            $cmdTelefono->execute();
+            $resultTelefono = $cmdTelefono->fetchAll(PDO::FETCH_OBJ);
+
+
+            $cmdConyuge = Database::getInstance()->getDb()->prepare('SELECT 
+            IdConyugue, 
+            UPPER(FullName) AS NombreCompleto, 
+            NumHijos 
+            FROM Conyuge WHERE idDNI = ?');
+            $cmdConyuge->bindParam(1, $idDni, PDO::PARAM_STR);
+            $cmdConyuge->execute();
+            $resultConyuge = $cmdConyuge->fetchAll(PDO::FETCH_OBJ);
+
+            $cmdExperiencia = Database::getInstance()->getDb()->prepare("SELECT 
+            idExperiencia, 
+            UPPER(Entidad) AS Entidad, 
+            UPPER(ExpericienciaEn) AS  Experiencia,  
+            CONVERT(VARCHAR,cast(FechaInicio AS DATE),103) AS FechaInicio, 
+            CONVERT(VARCHAR,cast(FechaFin AS DATE),103) AS FechaFin
+             FROM Experiencia WHERE idPersona = ?");
+            $cmdExperiencia->bindParam(1, $idDni, PDO::PARAM_STR);
+            $cmdExperiencia->execute();
+            $resultExperiencia = $cmdExperiencia->fetchAll(PDO::FETCH_OBJ);
+
+            $cmdgradosyestudios = Database::getInstance()->getDb()->prepare("SELECT 
+            g.idEstudio, 
+            t.idTipo, 
+            UPPER(t.Descripcion) AS Grado, 
+            UPPER(Materia) AS Materia, 
+            u.idUniversidad, 
+            ISNULL(u.Universidad, 'UNIVERSIDAD NO REGISTRADA') AS Universidad, 
+            CONVERT(VARCHAR, cast(g.FechaGrado AS DATE), 103) AS Fecha 
+            FROM Grados AS g 
+            LEFT JOIN Universidad AS u ON u.idUniversidad = g.idUniversidad
+            LEFT JOIN Tipos AS t ON t.idTipo = g.Grado AND t.Categoria = 'D'
+            WHERE g.idDNI = ?");
+            $cmdgradosyestudios->bindParam(1, $idDni, PDO::PARAM_STR);
+            $cmdgradosyestudios->execute();
+            $resultGradosyEstudios = $cmdgradosyestudios->fetchAll(PDO::FETCH_OBJ);
+
+            $cmdcorreoyweb = Database::getInstance()->getDb()->prepare("SELECT 
+            w.idWeb, 
+            t.idTipo, 
+            ISNULL(t.Descripcion, 'TIPO NO REGISTRADO') AS Tipo, 
+            UPPER(w.Direccion) AS Direccion 
+            FROM Web AS w 
+            INNER JOIN Tipos AS t ON t.idTipo = w.Tipo WHERE idDNI = ?");
+            $cmdcorreoyweb->bindParam(1, $idDni, PDO::PARAM_STR);
+            $cmdcorreoyweb->execute();
+            $resultCorreoWeb = $cmdcorreoyweb->fetchAll(PDO::FETCH_OBJ);
+
+            return array(
+                "state" => 1,
+                "persona" => $resultPerfil,
+                "image" => $image,
+                "colegiatura" => $resultColegiatura,
+                "domicilio" => $resultDomicilio,
+                "telefono" => $resultTelefono,
+                "conyuge" => $resultConyuge,
+                "experiencia" => $resultExperiencia,
+                "gradosestudios" => $resultGradosyEstudios,
+                "correoweb" => $resultCorreoWeb,
+            );
+        } catch (Exception $ex) {
+            return array("state" => 0, "message" => "Error de conexión del servidor, intente nuevamente en un par de minutos.");
+        }
+    }
+
+    
+    /**
+     * funcion para el registrar su cuenta
+     */
+    public static function valid($request)
+    {
+        $user = Database::getInstance()->getDb()->prepare('SELECT * FROM Persona WHERE NumDoc = ? AND CIP = ?');
+        $user->execute(array(
+            $request->dni,
+            $request->cip,
+        ));
+        $resultUser = $user->fetchObject();
+
+        if ($resultUser) {
+            if ($resultUser->Clave !== null) {
+                return array(
+                    'state' => 2,
+                    'message' => "Usted ya tiene una cuenta registrar, restablezca su cuenta para obtener una nueva."
+                );
+            } else {
+                return array(
+                    'state' => 1,
+                    'user' => $resultUser,
+                );
+            }
+        } else {
+            return array(
+                'state' => 0,
+                'message' => "Datos no encontrados.",
+            );
+        }
+    }
+
+    /**
+     * funcion para el registrar su cuenta
+     */
+    public static function save($request)
+    {
+        try {
+            $user = Database::getInstance()->getDb()->prepare('SELECT * FROM Persona WHERE idDNI = ?');
+            $user->execute(array(
+                $request->idDNI
+            ));
+
+            if ($user->fetchObject()) {
+                Database::getInstance()->getDb()->beginTransaction();
+
+                $persona = Database::getInstance()->getDb()->prepare('UPDATE Persona SET Clave = ? WHERE idDNI = ?');
+                $persona->execute(array(
+                    password_hash($request->password, PASSWORD_DEFAULT),
+                    $request->idDNI
+                ));
+
+                $web = Database::getInstance()->getDb()->prepare('DELETE FROM Web where idDNI = ?');
+                $web->execute(array($request->idDNI));
+
+                $insert = Database::getInstance()->getDb()->prepare('INSERT INTO Web(idDNI,Tipo,Direccion) VALUES(?,16,?)');
+                $insert->execute(array(
+                    $request->idDNI,
+                    $request->email
+                ));
+
+                Database::getInstance()->getDb()->commit();
+                return array(
+                    'state' => 1,
+                    'message' => "Se guardo correctamente su contraseña, ahora puede ingresar al sistema usando su n° cip y su clave.",
+                );
+            } else {
+                return array(
+                    'state' => 2,
+                    'message' => "Se pudo validar los datos, intente nuevamente en un parte de minutos.",
+                );
+            }
+        } catch (PDOException $e) {
+            Database::getInstance()->getDb()->rollBack();
+            return array(
+                'state' => 0,
+                'message' => "Error de conexión, intente nuevamente en un parte de minutos.",
+            );
+        }
+    }
+
+    /**
+     * funcion para el obtener información de la persona
+     */
+    public static function getPersonaInformacion($idDni, $mes, $yearCurrentView, $monthCurrentView)
+    {
+        try {
+            $cmdValidate = Database::getInstance()->getDb()->prepare("SELECT 
+            p.idDNI,
+            p.Nombres,
+            p.Apellidos,
+            p.CIP ,
+            e.Especialidad,
+            ca.Capitulo,
+            CASE p.Condicion WHEN 'V' THEN 'VITALICIO' WHEN 'R' THEN 'RETIRADO' WHEN 'F' THEN 'FALLECIDO' WHEN 'T' THEN 'TRANSEUNTE' ELSE 'ORDINARIO' END AS Condicion,
+            CAST(ISNULL(uc.FechaUltimaCuota,c.FechaColegiado) AS DATE) AS FechaUltimaCuota,
+            CAST(DATEADD(MONTH,CASE p.Condicion WHEN 'O' THEN 3 WHEN 'V' THEN 9 ELSE 0 END,ISNULL(uc.FechaUltimaCuota,c.FechaColegiado)) AS DATE) AS HabilitadoHasta,
+            CASE
+            WHEN CAST (DATEDIFF(M,DATEADD(MONTH,CASE p.Condicion WHEN 'O' THEN 3 WHEN 'V' THEN 9 ELSE 0 END,ISNULL(uc.FechaUltimaCuota, c.FechaColegiado)) , GETDATE()) AS INT) <=0 THEN 1
+            ELSE 0 END AS Habilidad,
+            DATEDIFF(YEAR,GETDATE(),DATEADD(MONTH,c.MesAumento,DATEADD(YEAR,30,c.FechaColegiado))) CumplirTreinta
+            FROM Persona AS p
+            INNER JOIN Colegiatura AS c ON c.idDNI = p.idDNI AND c.Principal = 1
+            INNER JOIN Especialidad AS e ON e.idEspecialidad = c.idEspecialidad
+            INNER JOIN Capitulo as ca ON ca.idCapitulo = e.idCapitulo
+            LEFT OUTER JOIN ULTIMACuota AS uc ON uc.idDNI = p.idDNI
+            WHERE p.idDNI = ?");
+            $cmdValidate->bindParam(1, $idDni, PDO::PARAM_STR);
+            $cmdValidate->execute();
+            $resultInformacion = $cmdValidate->fetch(PDO::FETCH_ASSOC);
+
+            $web = Database::getInstance()->getDb()->prepare("SELECT TOP 1 w.Direccion 
+            FROM Persona AS p
+            INNER JOIN Web AS w
+            ON p.idDNI = w.idDNI
+            WHERE p.idDNI = ?");
+            $web->bindParam(1, $idDni, PDO::PARAM_STR);
+            $web->execute();
+
+            $email = "";
+            if ($row = $web->fetchObject()) {
+                $email = $row->Direccion;
+            }
+
+            $cmdCuota = Database::getInstance()->getDb()->prepare("SELECT 
+            cast(ISNULL(ul.FechaUltimaCuota, c.FechaColegiado) AS DATE) AS UltimoPago     
+            FROM Persona AS p 
+            INNER JOIN Colegiatura AS c ON p.idDNI = c.idDNI AND c.Principal = 1
+            LEFT OUTER JOIN ULTIMACuota AS ul ON p.idDNI = ul.idDNI
+            WHERE p.idDNI = ?");
+            $cmdCuota->bindParam(1, $idDni, PDO::PARAM_STR);
+            $cmdCuota->execute();
+
+            if ($resultInformacion["Condicion"] == "ORDINARIO") {
+                $condicion =  1;
+            } else if ($resultInformacion["Condicion"] == "VITALICIO") {
+                $condicion =  3;
+            } else {
+                $condicion =  0;
+            }
+
+            $montodeuda = 0;
+
+            if ($row = $cmdCuota->fetch()) {
+
+                $date = new DateTime($row["UltimoPago"]);
+                $date->setDate($date->format("Y"), $date->format("m"), 1);
+
+                $fechaactual = new DateTime('now');
+                if ($fechaactual < $date) {
+                    $fechaactual = new DateTime($row["UltimoPago"]);
+                    if ($yearCurrentView == "" && $monthCurrentView == "") {
+                        $fechaactual->setDate($fechaactual->format("Y"), $fechaactual->format("m"), 1);
+                    } else {
+                        $fechaactual->setDate($yearCurrentView, $monthCurrentView, 1);
+                    }
+                    $fechaactual->modify('+ ' . $mes  . ' month');
+                } else {
+                    if ($yearCurrentView == "" && $monthCurrentView == "") {
+                        $fechaactual->setDate($fechaactual->format("Y"), $fechaactual->format("m"), 1);
+                    } else {
+                        $fechaactual->setDate($yearCurrentView, $monthCurrentView, 1);
+                    }
+                    $fechaactual->modify('+ ' . $mes  . ' month');
+                }
+
+
+                $cmdAltaColegiado = Database::getInstance()->getDb()->prepare("SELECT * FROM Persona AS  p
+                INNER JOIN Ingreso AS i ON i.idDNI = p.idDNI
+                INNER JOIN Cuota as c on c.idIngreso = i.idIngreso
+                WHERE i.idDNI = ? ");
+                $cmdAltaColegiado->bindParam(1, $idDni, PDO::PARAM_INT);
+                $cmdAltaColegiado->execute();
+                if ($cmdAltaColegiado->fetch()) {
+                    if ($fechaactual >= $date) {
+                        $inicio = $date->modify('+ 1 month');
+                        if ($inicio <= $fechaactual) {
+                            while ($inicio <= $fechaactual) {
+                                $inicioFormat = $inicio->format('Y') . '-' . $inicio->format('m') . '-' . $inicio->format('d');
+
+                                $cmdConceptos = Database::getInstance()->getDb()->prepare("SELECT 
+                                co.idConcepto,
+                                co.Concepto,
+                                co.Categoria,
+                                co.Precio       
+                                FROM Concepto as co
+                                WHERE Categoria = ? and ? between Inicio and Fin");
+                                $cmdConceptos->bindParam(1, $condicion, PDO::PARAM_INT);
+                                $cmdConceptos->bindParam(2, $inicioFormat, PDO::PARAM_STR);
+                                $cmdConceptos->execute();
+
+                                while ($rowc = $cmdConceptos->fetch()) {
+                                    $montodeuda += floatval($rowc["Precio"]);
+                                }
+                                $inicio->modify('+ 1 month');
+                            }
+                        }
+                    }
+                } else {
+                    if ($fechaactual >= $date) {
+                        $inicio = $date;
+                        if ($inicio <= $fechaactual) {
+
+                            while ($inicio <= $fechaactual) {
+                                $inicioFormat = $inicio->format('Y') . '-' . $inicio->format('m') . '-' . $inicio->format('d');
+
+                                $cmdConceptos = Database::getInstance()->getDb()->prepare("SELECT 
+                                co.idConcepto,
+                                co.Concepto,
+                                co.Categoria,
+                                co.Precio       
+                                FROM Concepto as co
+                                WHERE Categoria = ? and ? between Inicio and Fin");
+                                $cmdConceptos->bindParam(1, $condicion, PDO::PARAM_INT);
+                                $cmdConceptos->bindParam(2, $inicioFormat, PDO::PARAM_STR);
+                                $cmdConceptos->execute();
+
+                                while ($rowc = $cmdConceptos->fetch()) {
+                                    $montodeuda += floatval($rowc["Precio"]);
+                                }
+                                $inicio->modify('+ 1 month');
+                            }
+                        }
+                    }
+                }
+            }
+
+            return array("state" => 1, "persona" => $resultInformacion, "email" => $email, "deuda" => $montodeuda);
+        } catch (Exception $ex) {
+            return array("state" => 0, "message" => "Error de conexión del servidor, intente nuevamente en un par de minutos.");
         }
     }
 }

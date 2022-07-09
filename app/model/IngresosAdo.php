@@ -2531,4 +2531,431 @@ class IngresosAdo
             return $ex->getMessage();
         }
     }
+
+    /**
+     * funcion para buscar el ingreso
+     */
+    public static function getIngresosById($idDni)
+    {
+        try {
+            $cmdValidate = Database::getInstance()->getDb()->prepare("SELECT 
+            i.idIngreso,
+            convert(VARCHAR, CAST(i.Fecha AS DATE),103) AS Fecha,
+            i.Hora,
+            tc.Nombre as Comprobante,
+            i.Serie, 
+            i.NumRecibo,
+            i.Estado,
+            p.CIP,
+            case when not e.IdEmpresa is null then 'RUC' else 'DNI' end as NombreDocumento,
+            isnull(e.NumeroRuc,p.idDNI) as NumeroDocumento,
+            isnull(e.Nombre,concat(p.Apellidos,' ', p.Nombres)) as Persona,
+            sum(d.Monto) AS Total
+            FROM Ingreso AS i 
+            INNER JOIN TipoComprobante AS tc ON tc.IdTipoComprobante = i.TipoComprobante
+            INNER JOIN Persona AS p ON i.idDNI = p.idDNI
+            LEFT JOIN EmpresaPersona AS e ON e.IdEmpresa = i.idEmpresaPersona
+            INNER JOIN Detalle AS d ON d.idIngreso = i.idIngreso
+            WHERE
+            p.idDNI = ?
+            GROUP BY 
+            i.idIngreso,
+            i.Fecha,
+            i.Hora,
+            i.Serie,
+            i.NumRecibo,
+            i.Estado,
+            p.CIP,
+            p.idDNI,
+            p.Apellidos,
+            p.Nombres,
+            e.NumeroRuc,
+            e.Nombre,
+            e.IdEmpresa,
+            tc.Nombre
+            ORDER BY i.Fecha DESC,i.Hora DESC");
+            $cmdValidate->bindParam(1, $idDni, PDO::PARAM_STR);
+            $cmdValidate->execute();
+            $resultData = $cmdValidate->fetchAll(PDO::FETCH_ASSOC);
+
+            return array("state" => 1, "data" => $resultData);
+        } catch (Exception $ex) {
+            return array("state" => 0, "message" => "Error de conexión del servidor, intente nuevamente en un par de minutos.");
+        }
+    }
+
+    /** 
+     *  
+     */
+    public static function getCertProyectoById($idDni)
+    {
+        try {
+            $cmdValidate = Database::getInstance()->getDb()->prepare("SELECT 
+            p.NumDoc, 
+            p.Nombres,
+            p.Apellidos, 
+            e.Especialidad, 
+            cp.Numero, 
+            cp.Modalidad, 
+            cp.Propietario, 
+            cp.Proyecto, 
+            cp.Monto, 
+            CONCAT(U.Departamento,'-',U.Provincia,'-', u.Distrito) AS Ubigeo, 
+            ISNULL(cp.Adicional1,'N/D') AS Adicional1, 
+            ISNULL(cp.Adicional2,'N/D') AS Adicional2, 
+            convert(VARCHAR, CAST(cp.Fecha AS DATE),103) AS Fecha, 
+            convert(VARCHAR, CAST(cp.HastaFecha AS DATE),103) AS HastaFecha,
+            cp.idIngreso, 
+            cp.Anulado AS Estado  
+            FROM CERTProyecto AS cp
+            INNER JOIN Ingreso AS i ON i.idIngreso = cp.idIngreso
+            INNER JOIN Persona AS p On p.idDNI = i.idDNI
+            INNER JOIN Colegiatura AS c ON p.idDNI = c.idDNI AND  c.idColegiado = cp.idColegiatura
+            INNER JOIN Especialidad AS e ON e.idEspecialidad = c.idEspecialidad
+            INNER JOIN Ubigeo AS u ON u.IdUbigeo = cp.idUbigeo
+            WHERE p.idDNI = ?
+            ORDER BY i.Fecha DESC,i.Hora DESC");
+            $cmdValidate->bindParam(1, $idDni, PDO::PARAM_STR);
+            $cmdValidate->execute();
+            $resultData = $cmdValidate->fetchAll(PDO::FETCH_ASSOC);
+
+            return array("state" => 1, "data" => $resultData);
+        } catch (Exception $ex) {
+            return array("state" => 0, "message" => "Error de conexión del servidor, intente nuevamente en un par de minutos.");
+        }
+    }
+
+    /**
+     * 
+     */
+    public static function getCertObraById($idDni)
+    {
+        try {
+            $cmdValidate = Database::getInstance()->getDb()->prepare("SELECT 
+            i.idIngreso,
+            p.NumDoc, 
+            p.Nombres,
+            p.Apellidos, 
+            e.Especialidad, 
+            cr.Numero, 
+            cr.Modalidad, 
+            cr.Propietario, 
+            cr.Proyecto, 
+            cr.Monto, 
+            CONCAT(u.Departamento,'-',u.Provincia,'-', u.Distrito) AS Ubigeo, 
+            convert(VARCHAR, CAST(cr.Fecha AS DATE),103) AS Fecha, 
+            convert(VARCHAR, CAST(cr.HastaFecha AS DATE),103) AS HastaFecha, 
+            cr.idIngreso, 
+            cr.Anulado AS Estado
+            FROM CERTResidencia AS cr
+            INNER JOIN Ingreso AS i ON i.idIngreso = cr.idIngreso
+            INNER JOIN Persona AS p On p.idDNI = i.idDNI
+            INNER JOIN Colegiatura AS c ON p.idDNI = c.idDNI AND  c.idColegiado = cr.idColegiatura
+            INNER JOIN Especialidad AS e ON e.idEspecialidad = c.idEspecialidad
+            INNER JOIN Ubigeo AS u ON u.IdUbigeo = cr.idUbigeo
+            WHERE p.idDNI = ?
+            ORDER BY i.Fecha DESC,i.Hora DESC");
+            $cmdValidate->bindParam(1, $idDni, PDO::PARAM_STR);
+            $cmdValidate->execute();
+            $resultData = $cmdValidate->fetchAll(PDO::FETCH_ASSOC);
+
+            return array("state" => 1, "data" => $resultData);
+        } catch (Exception $ex) {
+            return array("state" => 0, "message" => "Error de conexión del servidor, intente nuevamente en un par de minutos.");
+        }
+    }
+
+    /**
+     * 
+     */
+    public static function certicado($request)
+    {
+        try {
+            $user = Database::getInstance()->getDb()->prepare('SELECT * FROM Persona WHERE idDNI = ?');
+            $user->execute(array($request->idDNI));
+
+            $resultIngeniero = $user->fetchObject();
+            if ($resultIngeniero) {
+                if ($resultIngeniero->Condicion == "T") {
+                    $cmdConcepto = Database::getInstance()->getDb()->prepare("SELECT idConcepto,Categoria,Concepto,Precio FROM Concepto WHERE Categoria = 5 AND Estado = 1 AND Asignado = 1");
+                    $cmdConcepto->execute();
+                    $resultConcepto = $cmdConcepto->fetchObject();
+                    if (!$resultConcepto) {
+                        throw new Exception('No se encontro ningún concepto para obtener.');
+                    }
+                } else {
+                    $cmdConcepto = Database::getInstance()->getDb()->prepare("SELECT idConcepto,Categoria,Concepto,Precio FROM Concepto WHERE Categoria = 5 AND Estado = 1 AND Asignado = 0");
+                    $cmdConcepto->execute();
+                    $resultConcepto = $cmdConcepto->fetchObject();
+                    if (!$resultConcepto) {
+                        throw new Exception('No se encontro ningún concepto para obtener.');
+                    }
+                }
+
+                $cmdEspecialidad = Database::getInstance()->getDb()->prepare("SELECT c.idColegiado, c.idEspecialidad, e.Especialidad FROM Colegiatura AS c 
+                INNER JOIN Especialidad AS e ON e.idEspecialidad = c.idEspecialidad where c.idDNI = ?");
+                $cmdEspecialidad->execute(array($request->idDNI));
+                $resultEspecialidad = $cmdEspecialidad->fetchAll(PDO::FETCH_OBJ);
+
+                $arrayEspecialidades = array();
+                foreach ($resultEspecialidad as $row) {
+                    array_push($arrayEspecialidades, array(
+                        "idColegiado" => $row->idColegiado,
+                        "idEspecialidad" => $row->idEspecialidad,
+                        "Especialidad" => $row->Especialidad
+                    ));
+                }
+
+                if (empty($arrayEspecialidades)) {
+                    throw new Exception('Error en cargar en las espcialidad(es).');
+                }
+
+                return array(
+                    "state" => 1,
+                    "data" => $resultConcepto,
+                    "especialidades" => $arrayEspecialidades,
+                    "tipoColegiado" => $resultIngeniero->Condicion
+                );
+            } else {
+                return array(
+                    'state' => 2,
+                    'message' => "Se pudo validar los datos, intente nuevamente en un parte de minutos.",
+                );
+            }
+        } catch (PDOException $e) {
+            Database::getInstance()->getDb()->rollBack();
+            return array(
+                'state' => 0,
+                'message' => "Error de conexión, intente nuevamente en un parte de minutos.",
+            );
+        }
+    }
+
+    /**
+     * 
+     */
+    public static function getCertHabilidadById($idDni)
+    {
+        try {
+            $cmdValidate = Database::getInstance()->getDb()->prepare("SELECT 
+            i.idIngreso,
+            p.NumDoc, 
+            p.Nombres,
+            p.Apellidos,
+			p.CIP,
+            e.Especialidad, 
+            ch.Numero, 
+            ch.Asunto, 
+            ch.Entidad, 
+            ch.Lugar, 
+            convert(VARCHAR, CAST(ch.Fecha AS DATE),103) AS Fecha, 
+            convert(VARCHAR, CAST(ch.HastaFecha AS DATE),103) AS HastaFecha, 
+            ch.idIngreso,ch.Anulado AS Estado 
+            FROM CERTHabilidad AS ch
+            INNER JOIN Ingreso AS i ON i.idIngreso = ch.idIngreso
+            INNER JOIN Persona AS p On p.idDNI = i.idDNI
+            INNER JOIN Colegiatura AS c ON p.idDNI = c.idDNI AND  c.idColegiado = ch.idColegiatura
+            INNER JOIN Especialidad AS e ON e.idEspecialidad = c.idEspecialidad
+            WHERE p.idDNI = ?
+            ORDER BY i.Fecha DESC,i.Hora DESC");
+            $cmdValidate->bindParam(1, $idDni, PDO::PARAM_STR);
+            $cmdValidate->execute();
+            $resultData = $cmdValidate->fetchAll(PDO::FETCH_ASSOC);
+
+            return array("state" => 1, "data" => $resultData);
+        } catch (Exception $ex) {
+            return array("state" => 0, "message" => "Error de conexión del servidor, intente nuevamente en un par de minutos.");
+        }
+    }
+
+    /**
+     * 
+     */
+    public static function payment($request)
+    {
+        try {
+            Database::getInstance()->getDb()->beginTransaction();
+
+            $codigoSerieNumeracion = Database::getInstance()->getDb()->prepare("SELECT dbo.Fc_Serie_Numero(?)");
+            $codigoSerieNumeracion->bindParam(1, $request->idTipoDocumento, PDO::PARAM_STR);
+            $codigoSerieNumeracion->execute();
+            $serie_numeracion = explode("-", $codigoSerieNumeracion->fetchColumn());
+
+            $idEmpresa = null;
+
+            if ($request->empresa != null) {
+                $empresa = Database::getInstance()->getDb()->prepare("SELECT * FROM EmpresaPersona WHERE NumeroRuc = ?");
+                $empresa->execute(array($request->empresa["numero"]));
+                $resultEmpresa = $empresa->fetchObject();
+
+                if ($resultEmpresa) {
+                    $idEmpresa = $resultEmpresa->IdEmpresa;
+                } else {
+                    $empresa = Database::getInstance()->getDb()->prepare("INSERT INTO EmpresaPersona(NumeroRuc,Nombre,Direccion,Telefono,PaginaWeb,Email)VALUES(?,?,?,'','','')");
+                    $empresa->execute(array(
+                        $request->empresa["numero"],
+                        $request->empresa["cliente"],
+                        is_null($request->empresa["direccion"]) ? "" : $request->empresa["direccion"],
+                    ));
+
+                    $idEmpresa = Database::getInstance()->getDb()->lastInsertId();
+                }
+            }
+
+            $cmdIngreso = Database::getInstance()->getDb()->prepare("INSERT INTO Ingreso(
+            idDni,
+            idEmpresaPersona,
+            TipoComprobante,
+            Serie,
+            NumRecibo,
+            Fecha,
+            Hora,
+            idUsuario,
+            Estado,
+            Deposito,
+            Observacion,
+            Tipo,
+            idBanco,
+            NumOperacion
+            )VALUES(?,?,?,?,?,GETDATE(),GETDATE(),?,?,0,?,?,?,?)");
+            $cmdIngreso->execute(array(
+                $request->idPersona,
+                $idEmpresa,
+                $request->idTipoDocumento,
+                $serie_numeracion[0],
+                $serie_numeracion[1],
+                $request->idUsuario,
+                $request->estado,
+                is_null($request->descripcion) ? "" : is_null($request->descripcion),
+                $request->tipo,
+                $request->idBanco,
+                is_null($request->numOperacion) ? "" : $request->numOperacion
+            ));
+
+            $idIngreso = Database::getInstance()->getDb()->lastInsertId();
+
+            if ($request->estadoCuotas == true) {
+                $cmdCuota = Database::getInstance()->getDb()->prepare("INSERT INTO Cuota(idIngreso,FechaIni,FechaFin) VALUES(?,?,?)");
+                $cmdCuota->execute(array(
+                    $idIngreso,
+                    $request->cuotasInicio,
+                    $request->cuotasFin
+                ));
+            }
+
+            if ($request->estadoCertificadoHabilidad == true) {
+                if ($request->estadoCuotas == true) {
+                    $resultPago = $request->cuotasFin;
+                } else {
+                    $cmdUltimoPago = Database::getInstance()->getDb()->prepare("SELECT 
+                    CAST(ISNULL(ul.FechaUltimaCuota, c.FechaColegiado) AS DATE) AS UltimoPago     
+                    FROM Persona AS p INNER JOIN Colegiatura AS c
+                    ON p.idDNI = c.idDNI AND c.Principal = 1
+                    LEFT OUTER JOIN ULTIMACuota AS ul
+                    ON p.idDNI = ul.idDNI
+                    WHERE p.idDNI = ?");
+                    $cmdUltimoPago->execute(array($request->idPersona));
+                    $resultUltimoPago = $cmdUltimoPago->fetchObject();
+
+                    if (!$resultUltimoPago) {
+                        throw new Exception("Erro en obtener la fecha del ultimo pago.");
+                    }
+                    $resultPago = $resultUltimoPago->UltimoPago;
+                }
+
+                $cmdIngeniero = Database::getInstance()->getDb()->prepare("SELECT Condicion FROM Persona WHERE idDNI = ?");
+                $cmdIngeniero->execute(array($request->idPersona));
+                $resultIngeniero = $cmdIngeniero->fetchObject();
+
+                $date = new DateTime($resultPago);
+                if ($resultIngeniero->Condicion == "V") {
+                    $date->modify('+9 month');
+                    $date->modify('last day of this month');
+                } else if ($resultIngeniero->Condicion == "T") {
+                    $fechanow = new DateTime('now');
+                    $date =  $fechanow;
+                    $date->modify('+3 month');
+                    $date->modify('last day of this month');
+                } else {
+                    $date->modify('+3 month');
+                    $date->modify('last day of this month');
+                }
+                $ultimoPago = $date->format('Y-m-d');
+
+                $cmdCorrelativo = Database::getInstance()->getDb()->prepare("SELECT * FROM CorrelativoCERT WHERE TipoCert = 1");
+                $cmdCorrelativo->execute();
+                if (!$cmdCorrelativo->fetch()) {
+                    $resultCorrelativo = 1;
+                } else {
+                    $cmdCorrelativo = Database::getInstance()->getDb()->prepare("SELECT MAX(Numero)+1  FROM CorrelativoCERT WHERE TipoCert = 1");
+                    $cmdCorrelativo->execute();
+                    $resultCorrelativo = $cmdCorrelativo->fetchColumn();
+                }
+
+                $cmdCertHabilidad = Database::getInstance()->getDb()->prepare("INSERT INTO CERTHabilidad(idIUsuario,idColegiatura,Numero,Asunto,Entidad,Lugar,Fecha,HastaFecha,Anulado,idIngreso) VALUES(?,?,?,?,?,?,GETDATE(),?,?,?)");
+                $cmdCertHabilidad->execute(array(
+                    $request->idUsuario,
+                    $request->objectCertificadoHabilidad["idEspecialidad"],
+                    $resultCorrelativo,
+                    $request->objectCertificadoHabilidad["asunto"],
+                    $request->objectCertificadoHabilidad["entidad"],
+                    $request->objectCertificadoHabilidad["lugar"],
+                    $ultimoPago,
+                    $request->objectCertificadoHabilidad["anulado"],
+                    $idIngreso
+                ));
+
+                $cmdCorrelativo = Database::getInstance()->getDb()->prepare("INSERT INTO CorrelativoCERT(TipoCert,Numero) VALUES(1,?)");
+                $cmdCorrelativo->execute(array($resultCorrelativo));
+            }
+
+            foreach ($request->ingresos as $value) {
+                $cmdDetalle = Database::getInstance()->getDb()->prepare("INSERT INTO Detalle(
+                idIngreso,
+                idConcepto,
+                Cantidad,
+                Monto,
+                Descripcion
+                )VALUES(?,?,?,?,'')");
+                $cmdDetalle->execute(array(
+                    $idIngreso,
+                    $value['idConcepto'],
+                    $value['cantidad'],
+                    $value['monto'],
+                ));
+            }
+
+            Database::getInstance()->getDb()->commit();
+            return [
+                "state" => 1,
+                "message" => "Se registro correctamente el pago."
+            ];
+        } catch (PDOException $ex) {
+            Database::getInstance()->getDb()->rollBack();
+            return [
+                'state' => 0,
+                'message' => $ex->getMessage(),
+            ];
+        } catch (Exception $ex) {
+            Database::getInstance()->getDb()->rollBack();
+            return [
+                'state' => 0,
+                'message' => $ex->getMessage(),
+            ];
+        }
+    }
+
+    public static function conect()
+    {
+        try {
+            $result = Database::getInstance()->getDb()->prepare("SELECT * FROM Persona WHERE CIP = '1559'");
+            $result->execute();
+
+            return $result->fetchAll();
+        } catch (PDOException $ex) {
+            return $ex->getMessage();
+        } catch (Exception $ex) {
+            return $ex->getMessage();
+        }
+    }
 }

@@ -106,7 +106,10 @@ try {
                                     <table style="background:#ECECEC; padding-top:25px;padding-bottom:25px;border-radius:20px;">
                                         <tr style="width:100%;">
                                             <td style="width:20%;"></td>
-                                            <td style="width:60%; font-size:18px; font-weight:bold;text-align: center;"><img src="cid:logoCip"><h2> COLEGIO DE INGENIEROS DEL PERÚ</h2></td>
+                                            <td style="width:60%; font-size:18px; font-weight:bold;text-align: center;">
+                                                <img width ="100" src="cid:logoCip">
+                                                <h2> COLEGIO DE INGENIEROS DEL PERÚ</h2>
+                                            </td>
                                             <td style="width:20%;"></td>
                                         </tr>
                                         <tr style="width:100%;">
@@ -134,8 +137,6 @@ try {
                                 </body>
                             </html>';
 
-            // $mail->Body    = 'Saludos Ingeniero(a): ' . $ingreso->Apellidos . ' ' . $ingreso->Nombres . '</b> 
-            //                     Se le adjunta el comprobante emitido hacia su persona </b> Saludos Coordiales';
             $mail->AltBody = 'Ingeniero(a): ' . $ingreso->Apellidos . ' ' . $ingreso->Nombres . ' Reciba nuestro más cordial saludo, se le escribe para informarle que el 
                             comprobante emitido hacia su persona fue realizado con éxito. Adjuntamos dicho comprobante.';
 
@@ -145,13 +146,8 @@ try {
             if($contenidoXml != ""){
                 $mail->addAttachment($fileName . " CIP-JUNIN.xml"); 
             }
-            //Add attachments
-            // $mail->addAttachment('./images/accept.svg');         //Add attachments
-            // $mail->addAttachment('./images/ayuda.png', 'imagen');    //Optional name
-
             $mail->send();
 
-            // echo 'Message has been sent';
             print json_encode(array(
                 "estado" => 1,
                 "message" => 'Su mensaje ha sido enviado con exito'
@@ -159,7 +155,6 @@ try {
         }
     }
 } catch (Exception $ex) {
-    //     // echo "Message could not be sent. Mailer Error: {$mail->ErrorInfo}";
     print json_encode(array(
         "estado" => 0,
         "message" => "El mensaje no pudo ser enviado. Mailer Error",

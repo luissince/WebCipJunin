@@ -30,6 +30,7 @@ class Autoload_Static
             'SysSoftIntegra\\Src\\GenerateXml' => __DIR__  . '/GenerateXml.php',
             'SysSoftIntegra\\Pdf\\PdfIngreso' => __DIR__  . '/../pdf/PdfIngreso.php',
             'SysSoftIntegra\\Src\\Tools' => __DIR__  . '/Tools.php',
+            'SysSoftIntegra\\Src\\Response' => __DIR__  . '/Response.php',
             'SysSoftIntegra\\DataBase\\Database' => __DIR__  . '/../database/DataBaseConexion.php',
             'Phpspreadsheet\\Vendor\\Autload' => __DIR__ . '/../sunat/lib/phpspreadsheet/vendor/autoload.php',
             'RobRichards\\XMLSecLibs\\XMLSecurityDSig' => __DIR__ . '/../sunat/lib/robrichards/src/XMLSecurityDSig.php',

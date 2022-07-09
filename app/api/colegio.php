@@ -4,43 +4,15 @@ header("Access-Control-Allow-Headers: Origin, X-Requested-With, Content-Type, Ac
 header('Access-Control-Allow-Methods: GET, POST, PUT, DELETE');
 header('Content-Type: application/json; charset=UTF-8');
 
-use SysSoftIntegra\DataBase\Database;
+use SysSoftIntegra\Model\EmpresaAdo;
 
 require __DIR__ . './../src/autoload.php';
 
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $body = json_decode(file_get_contents("php://input"), true);
-    echo json_encode(Colegio::getEmpresa());
+    echo json_encode(EmpresaAdo::getEmpresa());
     exit;
 }
-
-class Colegio
-{
-
-    public static function getEmpresa()
-    {
-        try {
-            $cmdEmpresa = Database::getInstance()->getDb()->prepare("SELECT 
-            TOP 1 
-            NumeroDocumento,
-            NombreComercial,
-            RazonSocial,
-            Domicilio,
-            Telefono,
-            Celular,
-            Horario,
-            PaginaWeb,
-            Email
-            FROM Empresa");
-            $cmdEmpresa->execute();
-            $resultEmpresa = $cmdEmpresa->fetchObject();
-            return array("state" => 1, "empresa" => $resultEmpresa);
-        } catch (Exception $ex) {
-            return array("state" => 0, "message" => "Error de conexión del servidor, intente nuevamente en un par de minutos.");
-        }
-    }
-}
-
 
 
 // $body = json_decode(file_get_contents("php://input"), true);
