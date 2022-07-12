@@ -2670,6 +2670,26 @@ class PersonaAdo
         }
     }
 
+    /**
+     * 
+     */
+
+     public static function actPersonaById($idDni){
+        try{
+            Database::getInstance()->getDb()->beginTransaction();
+
+            $update = Database::getInstance()->getDb()->prepare("UPDATE ");
+            $update->execute(array(
+
+            ));
+        
+            Database::getInstance()->getDb()->commit();
+        }catch(PDOException $ex){
+            Database::getInstance()->getDb()->rollBack();
+            return array("state" => 0, "message" => "Error de conexión del servidor, intente nuevamente en un par de minutos.");
+        }
+     }
+
     
     /**
      * funcion para el registrar su cuenta
