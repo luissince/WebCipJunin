@@ -44,24 +44,24 @@ try {
             $ruc = $empresa->NumeroDocumento;
 
             $textoCodBar =
-            '|' . $ruc
-            . '|' . $ingreso->TipoComprobante
-            . '|' . $ingreso->Serie
-            . '|' . $ingreso->Numeracion
-            . '|' . number_format(round($totales['totalimpuesto'], 2, PHP_ROUND_HALF_UP), 2, '.', '')
-            . '|' . number_format(round($totales['totalconimpuesto'], 2, PHP_ROUND_HALF_UP), 2, '.', '')
-            . '|' . $ingreso->FechaEmision
-            . '|' . $ingreso->TipoDocumento
-            . '|' . $ingreso->NumeroDocumento
-            . '|';
-        
-            $fileName = $ingreso->Comprobante . " " . $ingreso->Serie . '-' . $ingreso->Numeracion ;
+                '|' . $ruc
+                . '|' . $ingreso->TipoComprobante
+                . '|' . $ingreso->Serie
+                . '|' . $ingreso->Numeracion
+                . '|' . number_format(round($totales['totalimpuesto'], 2, PHP_ROUND_HALF_UP), 2, '.', '')
+                . '|' . number_format(round($totales['totalconimpuesto'], 2, PHP_ROUND_HALF_UP), 2, '.', '')
+                . '|' . $ingreso->FechaEmision
+                . '|' . $ingreso->TipoDocumento
+                . '|' . $ingreso->NumeroDocumento
+                . '|';
+
+            $fileName = $ingreso->Comprobante . " " . $ingreso->Serie . '-' . $ingreso->Numeracion;
 
             $contenidoXml = $ingreso->Xmlgenerado;
 
-            if($contenidoXml != ""){
-                $documentXml = fopen($fileName.' CIP-JUNIN.xml','a');
-                fwrite($documentXml, $contenidoXml); 
+            if ($contenidoXml != "") {
+                $documentXml = fopen($fileName . ' CIP-JUNIN.xml', 'a');
+                fwrite($documentXml, $contenidoXml);
                 fclose($documentXml);
             }
 
@@ -141,10 +141,10 @@ try {
                             comprobante emitido hacia su persona fue realizado con éxito. Adjuntamos dicho comprobante.';
 
             //Attachments
-            $mail->addAttachment($fileName . " CIP-JUNIN.pdf"); 
+            $mail->addAttachment($fileName . " CIP-JUNIN.pdf");
 
-            if($contenidoXml != ""){
-                $mail->addAttachment($fileName . " CIP-JUNIN.xml"); 
+            if ($contenidoXml != "") {
+                $mail->addAttachment($fileName . " CIP-JUNIN.xml");
             }
             $mail->send();
 
@@ -162,7 +162,11 @@ try {
     ));
 } finally {
     if (!is_null($fileName)) {
-        unlink($fileName . " CIP-JUNIN.pdf");
-        unlink($fileName . " CIP-JUNIN.xml");
+        if (is_file($fileName . " CIP-JUNIN.pdf") && file_exists($fileName . " CIP-JUNIN.pdf")) {
+            unlink($fileName . " CIP-JUNIN.pdf");
+        }
+        if (is_file($fileName . " CIP-JUNIN.xml") && file_exists($fileName . " CIP-JUNIN.xml")) {
+            unlink($fileName . " CIP-JUNIN.xml");
+        }
     }
 }

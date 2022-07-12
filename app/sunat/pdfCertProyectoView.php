@@ -1,4 +1,8 @@
 <?php
+
+use SysSoftIntegra\Src\Tools;
+use chillerlan\QRCode\QRCode;
+
 use SysSoftIntegra\Model\IngresosAdo;
 
 require __DIR__ . './../src/autoload.php';
@@ -57,6 +61,10 @@ if (!isset($_GET["idIngreso"])) {
         $cincoEspacios = '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;';
         $tresEspacios = '&nbsp;&nbsp;&nbsp;';
 
+        $token = Tools::my_encrypt($json, "bRuD5WYw5wd0rdHR9yLlM6wt2vteuiniQBqE70nAuhU=CIPJUNIN");
+        $codbar = "https://www.intranet.cip-junin.org.pe/view/validatecert.php?token=" . $token;
+
+        $newNumCetificado = Tools::formatNumber($numCertificado);
 
         $html = '<html>
             <head>
@@ -100,7 +108,7 @@ if (!isset($_GET["idIngreso"])) {
                             </div>
                         </div>
                         <div style="width:20%; height:7.5%; float:left">
-                            <img src="codigoBarras.png" alt="" width="114px"; height="59px" style="padding-top:30px; padding-left:20px;">
+                            <img src="../../view/barcode/barcode.php?text=N+C-'.$newNumCetificado.'&size=50&print=true" alt="" width="114px"; height="59px" style="padding-top:30px; padding-left:33px;">
                         </div>
                     </div>
                     <div style="width:100%; padding-left: 42px;" face:"georgia";>
@@ -162,7 +170,7 @@ if (!isset($_GET["idIngreso"])) {
                             </div>
                         </div>
                         <div style="width:18%; height:7.5%; float:left">
-                            <img src="codigoBarras.png" alt="" width="110px"; height="55px" style="padding-top:5px;">
+                            <img src="../../view/barcode/barcode.php?text=N+C-'.$newNumCetificado.'&size=50&print=true" alt="" width="114px"; height="59px" style="padding-top:30px;">
                         </div>
                     </div>
                     <div style="width:100%; padding-left: 135px; padding-top:10px;">
@@ -202,7 +210,7 @@ if (!isset($_GET["idIngreso"])) {
                         Ubicación:
                     </div>
                     <div style="width:100%; padding-left: 135px; padding-top:10px;">
-                        Departamento:  <strong>' . $tresEspacios . $Departamento . '</strong>Provincia:  <strong>' . $tresEspacios . $Provincia . '</strong>
+                        Departamento:  <strong>' . $tresEspacios . $Departamento . ' </strong>Provincia:  <strong>' . $tresEspacios . $Provincia . '</strong>
                     </div>
                     <div style="width:100%; padding-left: 135px; padding-top:10px;">
                         Distrito:  <strong>' . $tresEspacios . $Distrito . '</strong>
@@ -237,15 +245,20 @@ if (!isset($_GET["idIngreso"])) {
                         <div style="float:left; width:50%; height:40px;  padding-top:55px; font-size:11pt; font-weight:bold;">
                             <strong>' . $LugarRegistro . $cincoEspacios . $DiaRegistro . $tresEspacios . '</strong>, de<strong>' . $tresEspacios . $MesRegistro . $tresEspacios . '</strong> del 20<strong>' . $AnioRegistro . '</strong>
                         </div>
-                        <div style="float:right; width:70%; height:40px;  padding-top:0px; font-size:15pt; font-weight:bold;">
+                        <div style="float:right; width:70%; height:20px;  padding-top:0px; font-size:15pt; font-weight:bold;">
                             VÁLIDO SOLO ORIGINAL
                         </div>
-                        <div style="float:left; width:100%; height:40px;  padding-top:25px; font-size:9pt; font-weight:bold; padding-bottom:0px!important">
-                            <div style="float:left; width:40%; text-align:center; padding-left:70px; font-size:9px;">
-                                _____________________________________________<br><br>
-                                Ing. Carlos Fernando Herrera Descalzi<br> Decano Nacional <br> del Colegio de Ingenieros del Perú
+                        <div style="width:100%; height:auto;  padding-top:0px; font-size:9pt; font-weight:bold; padding-bottom:0px!important">
+                            <div style="float:left; width:16%;">
+                                <img width="90" height="90" style="margin-left:15px; margin-top:0px;" src="' . (new QRCode)->render($codbar) . '" />
                             </div>
-                            <div style="float:left; width:35%; text-align:center; padding-left:10px;font-size:9px; ">
+                            <div style="float:left; width:35%; text-align:center; padding-left:0px; margin-top:10px; font-size:9px;">
+                                <img width="166" height="60" style="margin-left:10px; background-color:transparent; margin-bottom:-8px;" src="firmanacional.png" />
+                                _____________________________________________<br><br>
+                                Ing. Maria del Carmen Ponce Mejia<br> Decana Nacional <br> Colegio de Ingenieros del Perú
+                            </div>
+                            <div style="float:left; width:35%; text-align:center; padding-left:0px; font-size:9px;">
+                                <img width="166" height="60" style="margin-left:10px; background-color:transparent; margin-bottom:-8px;" src="firmadecano.png" />
                             _____________________________________________<br><br>
                                 Consejo Departamental <br> del Colegio de Ingenieros del Perú
                             </div>

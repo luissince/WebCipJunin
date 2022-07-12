@@ -1,4 +1,8 @@
 <?php
+
+use SysSoftIntegra\Src\Tools;
+use chillerlan\QRCode\QRCode;
+
 use SysSoftIntegra\Model\IngresosAdo;
 
 require __DIR__ . './../src/autoload.php';
@@ -47,6 +51,9 @@ if (!isset($_GET["idIngreso"])) {
         $Mes = $Datos['frMes'];
         $MesRegistro = IngresosAdo::getMothName($Mes);
         $AnioRegistro = substr($Datos['frAnio'], 2, 2);
+
+        $token = Tools::my_encrypt($json, "bRuD5WYw5wd0rdHR9yLlM6wt2vteuiniQBqE70nAuhU=CIPJUNIN");
+        $codbar = "https://www.intranet.cip-junin.org.pe/view/validatecert.php?token=" . $token;
 
         $html = '<html>
             <head>
@@ -166,6 +173,14 @@ if (!isset($_GET["idIngreso"])) {
                     </div>
 
                 </div>
+                <!--<div>
+                    <span>
+                        <img width="100" height="100" style="margin-left:160px;margin-top:35px;" src="' . (new QRCode)->render($codbar) . '" />
+                    </span>
+                    <span>
+                        <img width="196" height="90" style="margin-left:230px;margin-top:35px;background-color:transparent;" src="firmadecano.png" />
+                    </span>           
+                </div>-->
                 <!--################################################## Fin del Pie del Documento ###############################################################-->
             </body>
         </html>';
