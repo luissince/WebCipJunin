@@ -2674,23 +2674,127 @@ class PersonaAdo
      * 
      */
 
-     public static function actPersonaById($idDni){
-        try{
+    public static function getByIdPersonaToUpdate($idDni)
+    {
+        try {
+
+            $user = Database::getInstance()->getDb()->prepare('SELECT idDNI, NumDoc, Nombres, Apellidos, Sexo, cast(FechaNac as date) as FechaNacimiento FROM Persona WHERE idDNI = ?');
+            $user->execute(array(
+                $idDni
+            ));
+            $resultUser = $user->fetchObject();
+
+            if ($resultUser) {
+
+                $web = Database::getInstance()->getDb()->prepare("SELECT TOP 1 w.Direccion 
+                FROM Persona AS p
+                INNER JOIN Web AS w
+                ON p.idDNI = w.idDNI
+                WHERE p.idDNI = ?");
+                $web->execute(array(
+                    $idDni
+                ));
+                $objectWeb = $web->fetchObject();
+
+             
+                $email = $objectWeb == null ? "": $objectWeb->Direccion;
+
+                $direccion = Database::getInstance()->getDb()->prepare("SELECT TOP 1 d.Direccion FROM Persona AS p
+                INNER JOIN Direccion AS d
+                ON p.idDNI = d.idDNI
+                WHERE p.idDNI = ?");
+                $direccion->execute(array(
+                    $idDni
+                ));
+
+                $objectDireccion = $direccion->fetchObject();
+
+                $ubicacion = $objectDireccion == null ? "" : $objectDireccion->Direccion;
+
+                $telefono = Database::getInstance()->getDb()->prepare("SELECT TOP 1 t.Telefono FROM Persona AS p
+                INNER JOIN Telefono AS t
+                ON p.idDNI = t.idDNI
+                WHERE p.idDNI = ?");
+                $telefono->execute(array(
+                    $idDni
+                ));
+
+                $objectTelefono = $telefono->fetchObject();
+
+                $phone = $objectTelefono == null ? "" : $objectTelefono->Telefono;
+
+                return array(
+                    'state' => 1,
+                    'user' => $resultUser,
+                    'email'=> $email,
+                    'ubicacion' => $ubicacion,
+                    'phone' => $phone
+                );
+
+            } else {
+                return array(
+                    'state' => 0,
+                    'message' => "Datos no encontrados.",
+                );
+            }
+        } catch (PDOException $ex) {
+            return array("state" => 0, "message" => "Error de conexión del servidor, intente nuevamente en un par de minutos. ".$ex);
+        }
+    }
+
+    public static function actPersonaById($request)
+    {
+        try {
             Database::getInstance()->getDb()->beginTransaction();
 
-            $update = Database::getInstance()->getDb()->prepare("UPDATE ");
-            $update->execute(array(
+            $deleteTelefono = Database::getInstance()->getDb()->prepare("DELETE FROM Telefono WHERE idDNI = ?");
+            $deleteTelefono->execute(array($request->idDni));
 
+            $insTelefono = Database::getInstance()->getDb()->prepare("INSERT INTO Telefono(idDNI,Tipo,Telefono) VALUES(?,7,?)");
+            $insTelefono->execute(array(
+                $request->idDni,
+                $request->phone
             ));
-        
+
+            $deleteDireccion = Database::getInstance()->getDb()->prepare("DELETE FROM Direccion WHERE idDNI = ?");
+            $deleteDireccion->execute(array($request->idDni));
+
+            $insDireccion = Database::getInstance()->getDb()->prepare("INSERT INTO Direccion(idDNI,Tipo,Ubigeo,Direccion)VALUES(?,1,1224,?)");
+            $insDireccion->execute(array(
+                $request->idDni,
+                $request->address
+            ));
+
+            $deleteWeb = Database::getInstance()->getDb()->prepare("DELETE FROM Web WHERE idDNI = ?");
+            $deleteWeb->execute(array($request->idDni));
+
+            $insWeb = Database::getInstance()->getDb()->prepare("INSERT INTO Web(idDNI,Tipo,Direccion)values(?,16,?)");
+            $insWeb->execute(array(
+                $request->idDni,
+                $request->email
+            ));
+
+            $update = Database::getInstance()->getDb()->prepare("UPDATE Persona SET Nombres=?, Apellidos=?, NumDoc=?, Sexo=?, FechaNac=? WHERE idDNI=?");
+            $update->execute(array(
+                $request->Nombres,
+                $request->Apellidos,
+                $request->NumDoc,
+                $request->Sexo,
+                $request->FechaNacimiento,
+                $request->idDni
+            ));
+
             Database::getInstance()->getDb()->commit();
-        }catch(PDOException $ex){
+
+            return 'update';
+
+        } catch (PDOException $ex) {
             Database::getInstance()->getDb()->rollBack();
             return array("state" => 0, "message" => "Error de conexión del servidor, intente nuevamente en un par de minutos.");
         }
-     }
+    }
 
-    
+
     /**
      * funcion para el registrar su cuenta
      */
