@@ -10,30 +10,6 @@ use SysSoftIntegra\Model\IngresosAdo;
 
 require __DIR__ . './../../src/autoload.php';
 
-// $body = json_decode(file_get_contents("php://input"), true);
-// $postdata = http_build_query(
-//     array(               
-//         'card_number' => "4111111111111111",
-//         'cvv' => "123",
-//         'expiration_month' => "09",
-//         'expiration_year' => "2025",
-//         'email' => "richard@piedpiper.com"
-//     )
-// );
-// $opts = array(
-//     'http' =>
-//     array(
-//         'method'  => 'POST',
-//         'header'  => ['Content-Type: application/json','Authorization: Bearer pk_test_69979cc0fa24d426'],
-//         'content' => $postdata
-//     )
-// );
-
-// $context  = stream_context_create($opts);
-// $data = file_get_contents('https://secure.culqi.com/v2/tokens', false, $context);
-// $manage = json_decode($data);
-// print json_encode($manage);
-
 try {
     $body = json_decode(file_get_contents("php://input"), true);
 
