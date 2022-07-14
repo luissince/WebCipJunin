@@ -19,10 +19,10 @@ class EmpleoAdo
             $array = array();
             $arrayEmpleo = array();
             $comandoEmpleo = Database::getInstance()->getDb()->prepare("SELECT 
-            idEmpleado, Titulo, Descripcion, Empresa, Celular, Telefono, Correo, Direccion, Fecha, Hora, Estado, Tipo 
+            idEmpleo, Titulo, Descripcion, Empresa, Celular, Telefono, Correo, Direccion, Fecha, Hora, Estado, Tipo 
             FROM Empleo
             where Titulo like concat('%', ?,'%') or Descripcion like concat('%', ?,'%')
-            order by Fecha desc AND Hora desc
+            order by Fecha desc, Hora desc
             offset ? rows fetch next ? rows only");
             $comandoEmpleo->bindParam(1, $text, PDO::PARAM_STR);
             $comandoEmpleo->bindParam(2, $text, PDO::PARAM_STR);
