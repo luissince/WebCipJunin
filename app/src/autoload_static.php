@@ -22,6 +22,7 @@ class Autoload_Static
             'SysSoftIntegra\\Model\\RolAdo' => __DIR__  . '/../model/RolAdo.php',
             'SysSoftIntegra\\Model\\UniversidadAdo' => __DIR__  . '/../model/UniversidadAdo.php',
             'SysSoftIntegra\\Model\\UsuarioAdo' => __DIR__  . '/../model/UsuarioAdo.php',
+            'SysSoftIntegra\\Model\\EmpleoAdo' => __DIR__  . '/../model/EmpleoAdo.php',
 
             'SysSoftIntegra\\Src\\Sunat' => __DIR__  . '/Sunat.php',
             'SysSoftIntegra\\Src\\SoapResult' => __DIR__  . '/SoapResult.php',
