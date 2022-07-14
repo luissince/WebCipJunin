@@ -11,6 +11,6 @@ require __DIR__ . './../src/autoload.php';
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $body = json_decode(file_get_contents("php://input"), true);
     $request = (object)$body;
-    echo json_encode(PersonaAdo::actPersonaById($request));
+    echo json_encode(PersonaAdo::valCodPerfil($request));
     exit; 
 }

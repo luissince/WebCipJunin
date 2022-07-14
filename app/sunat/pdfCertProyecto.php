@@ -1,5 +1,6 @@
 <?php
 use SysSoftIntegra\Model\IngresosAdo;
+use SysSoftIntegra\Src\Tools;
 
 require __DIR__ . './../src/autoload.php';
 
@@ -49,6 +50,16 @@ if (!isset($_GET["idIngreso"])) {
         $Mes = $Datos['frMes'];
         $MesRegistro = IngresosAdo::getMothName($Mes);
         $AnioRegistro = substr($Datos['frAnio'], 2, 2);
+
+        if (!empty($_SERVER['HTTPS']) && ('on' == $_SERVER['HTTPS'])) {
+            $uri = 'https://';
+        } else {
+            $uri = 'http://';
+        }
+        $uri .= $_SERVER['HTTP_HOST'];
+
+        $token = Tools::my_encrypt($json, "bRuD5WYw5wd0rdHR9yLlM6wt2vteuiniQBqE70nAuhU=CIPJUNIN");
+        $codbar = $uri . "/view/validatecert.php?token=" . $token;
 
         $html = '<html>
             <head>

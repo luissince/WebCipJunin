@@ -1,6 +1,4 @@
-<?php
- require_once __DIR__ . './../sunat/lib/phpdotenv/vendor/autoload.php';
- 
+<?php 
 use Dotenv\Dotenv;
 
 $dotenv = Dotenv::createImmutable(__DIR__.'./../../');

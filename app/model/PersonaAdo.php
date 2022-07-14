@@ -6,6 +6,7 @@ use PDO;
 use PDOException;
 use Exception;
 use DateTime;
+use PHPMailer\PHPMailer\PHPMailer;
 use SysSoftIntegra\DataBase\Database;
 use SysSoftIntegra\Src\Response;
 
@@ -2678,14 +2679,21 @@ class PersonaAdo
     {
         try {
 
-            $user = Database::getInstance()->getDb()->prepare('SELECT idDNI, NumDoc, Nombres, Apellidos, Sexo, cast(FechaNac as date) as FechaNacimiento FROM Persona WHERE idDNI = ?');
+            $user = Database::getInstance()->getDb()->prepare('SELECT 
+            idDNI, 
+            NumDoc, 
+            Nombres, 
+            Apellidos, 
+            Sexo, 
+            cast(FechaNac as date) as FechaNacimiento 
+            FROM Persona 
+            WHERE idDNI = ?');
             $user->execute(array(
                 $idDni
             ));
             $resultUser = $user->fetchObject();
 
             if ($resultUser) {
-
                 $web = Database::getInstance()->getDb()->prepare("SELECT TOP 1 w.Direccion 
                 FROM Persona AS p
                 INNER JOIN Web AS w
@@ -2695,9 +2703,7 @@ class PersonaAdo
                     $idDni
                 ));
                 $objectWeb = $web->fetchObject();
-
-             
-                $email = $objectWeb == null ? "": $objectWeb->Direccion;
+                $email = $objectWeb == null ? "" : $objectWeb->Direccion;
 
                 $direccion = Database::getInstance()->getDb()->prepare("SELECT TOP 1 d.Direccion FROM Persona AS p
                 INNER JOIN Direccion AS d
@@ -2706,9 +2712,7 @@ class PersonaAdo
                 $direccion->execute(array(
                     $idDni
                 ));
-
                 $objectDireccion = $direccion->fetchObject();
-
                 $ubicacion = $objectDireccion == null ? "" : $objectDireccion->Direccion;
 
                 $telefono = Database::getInstance()->getDb()->prepare("SELECT TOP 1 t.Telefono FROM Persona AS p
@@ -2718,27 +2722,22 @@ class PersonaAdo
                 $telefono->execute(array(
                     $idDni
                 ));
-
                 $objectTelefono = $telefono->fetchObject();
-
                 $phone = $objectTelefono == null ? "" : $objectTelefono->Telefono;
 
-                return array(
-                    'state' => 1,
+                return Response::sendSuccess([
                     'user' => $resultUser,
-                    'email'=> $email,
+                    'email' => $email,
                     'ubicacion' => $ubicacion,
                     'phone' => $phone
-                );
-
+                ]);
             } else {
-                return array(
-                    'state' => 0,
-                    'message' => "Datos no encontrados.",
-                );
+                return Response::sendClient("Datos no encontrados.");
             }
         } catch (PDOException $ex) {
-            return array("state" => 0, "message" => "Error de conexión del servidor, intente nuevamente en un par de minutos. ".$ex);
+            return Response::sendError("Error de conexión del servidor, intente nuevamente en un par de minutos.");
+        } catch (Exception $ex) {
+            return Response::sendError("Error de conexión del servidor, intente nuevamente en un par de minutos.");
         }
     }
 
@@ -2786,11 +2785,13 @@ class PersonaAdo
 
             Database::getInstance()->getDb()->commit();
 
-            return 'update';
-
+            return Response::sendSave('Datos actualizados correctamente.');
         } catch (PDOException $ex) {
             Database::getInstance()->getDb()->rollBack();
-            return array("state" => 0, "message" => "Error de conexión del servidor, intente nuevamente en un par de minutos.");
+            return Response::sendError("Error de conexión del servidor, intente nuevamente en un par de minutos.");
+        } catch (Exception $ex) {
+            Database::getInstance()->getDb()->rollBack();
+            return Response::sendError("Error de conexión del servidor, intente nuevamente en un par de minutos.");
         }
     }
 
@@ -3025,6 +3026,164 @@ class PersonaAdo
             return array("state" => 1, "persona" => $resultInformacion, "email" => $email, "deuda" => $montodeuda);
         } catch (Exception $ex) {
             return array("state" => 0, "message" => "Error de conexión del servidor, intente nuevamente en un par de minutos.");
+        }
+    }
+
+    /**
+     * 
+     */
+    public static function valCipPerfil($request)
+    {
+        try {
+            Database::getInstance()->getDb()->beginTransaction();
+            $user = Database::getInstance()->getDb()->prepare("SELECT * FROM Persona WHERE CIP = ?");
+            $user->bindParam(1, $request->cip, PDO::PARAM_STR);
+            $user->execute();
+
+            $object = $user->fetchObject();
+            if ($object) {
+                if ($object->Clave == null || $object->Clave === "") {
+                    Database::getInstance()->getDb()->rollBack();
+                    return Response::sendClient("Usted tiene que crear una cuenta para continuar por favor.");
+                } else {
+                    $random = rand(1000, 9999);
+                    $time = 10;
+
+                    $token = Database::getInstance()->getDb()->prepare("INSERT INTO Token(Codigo,Fecha,Hora,Tiempo)VALUES(?,CAST(GETDATE() AS DATE),CAST(GETDATE() AS TIME),?)");
+                    $token->bindParam(1, $random, PDO::PARAM_STR);
+                    $token->bindParam(2, $time, PDO::PARAM_INT);
+                    $token->execute();
+
+                    $email = Database::getInstance()->getDb()->prepare("SELECT TOP 1 Direccion FROM Web WHERE idDNI = ?");
+                    $email->bindParam(1, $object->idDNI, PDO::PARAM_STR);
+                    $email->execute();
+                    $resultEmail = $email->fetchObject();
+
+                    if ($resultEmail) {
+                        $mail = new PHPMailer(true);
+                        $fromname = "Tesorería Colegio de Ingenieros del Perú - CD Junín";
+                        $fromEmail = "tesoreria@cip-junin.org.pe";
+
+                        $mail->isSMTP();
+                        $mail->CharSet = 'UTF-8';
+                        $mail->SMTPDebug = 0;
+                        $mail->Host       = 'smtp-mail.outlook.com.';
+                        $mail->SMTPAuth   = true;
+                        $mail->Username   = $fromEmail;
+                        $mail->Password   = 'Soporte2022';
+                        $mail->SMTPSecure = "TLS";
+                        $mail->Port       = 587;
+                        $mail->setFrom($fromEmail, $fromname);
+                        $mail->addAddress($resultEmail->Direccion);
+                        $mail->AddEmbeddedImage("../../view/images/logologin.png", 'logoCip');
+
+                        $mail->isHTML(true);
+                        $mail->Subject = 'Código de Verificación Colegio de Ingenieros del Perú - CD Junín';
+                        $mail->Body = '<html>
+                                            <head>
+                                                <meta charset="utf-8">
+                                            </head>
+                                            <body>
+                                                <table style="background:#ECECEC; padding-top:25px;padding-bottom:25px;border-radius:20px;">
+                                                    <tr style="width:100%;">
+                                                        <td style="width:20%;"></td>
+                                                        <td style="width:60%; font-size:18px; font-weight:bold;text-align: center;">
+                                                            <img src="cid:logoCip" style="width:80px;" />
+                                                            <h2> COLEGIO DE INGENIEROS DEL PERÚ - CD Junín</h2>
+                                                        </td>
+                                                        <td style="width:20%;"></td>
+                                                    </tr>
+                                                    <tr style="width:100%;">
+                                                        <td style="width:20%;"></td>
+                                                        <td style="width:60%; font-size:18px; ">Código de verificación</td>
+                                                        <td style="width:20%;"></td>
+                                                    </tr>
+                                                    <tr style="width:100%; padding-top: 20px;">
+                                                        <td style="width:20%;"></td>
+                                                        <td style="width:60%; font-size:22px;text-align: center; font-weight: bold;">' . $random . '</td>
+                                                        <td style="width:20%;"></td>
+                                                    </tr>
+                                                </table>
+                                            </body>
+                                        </html>';
+                        $mail->send();
+                    } else {
+                        Database::getInstance()->getDb()->rollBack();
+                        return Response::sendClient("No tiene registrado un correo electrónico, comuníquese con el área de sistema del CIP-JUNIN.");
+                    }
+
+                    Database::getInstance()->getDb()->commit();
+                    $idToken = Database::getInstance()->getDb()->lastInsertId();
+
+                    return Response::sendSave([
+                        'message' => "Se generó el código de verificación.",
+                        'user' => $object,
+                        'token' => $idToken
+                    ]);
+                }
+            } else {
+                Database::getInstance()->getDb()->rollBack();
+                return Response::sendClient("Detectamos que usted no se encuentra registrado.");
+            }
+        } catch (PDOException $ex) {
+            Database::getInstance()->getDb()->rollBack();
+            return Response::sendError("Se produjo un error interterno, intente nuevamente en un par de minutos.");
+        } catch (Exception $ex) {
+            Database::getInstance()->getDb()->rollBack();
+            return Response::sendError("Se produjo un error interterno, intente nuevamente en un par de minutos.");
+        }
+    }
+    /**
+     * 
+     */
+    public static function valCodPerfil($request)
+    {
+        try {
+            $user = Database::getInstance()->getDb()->prepare("SELECT * FROM 
+            Token 
+            WHERE 
+            Codigo = ? 
+            AND Fecha = CAST(GETDATE() AS DATE) 
+            AND DATEADD(MINUTE, 10, Hora) >= CAST(GETDATE() AS TIME) 
+            AND IdToken = ?");
+            $user->bindParam(1, $request->code, PDO::PARAM_STR);
+            $user->bindParam(2, $request->idToken, PDO::PARAM_STR);
+            $user->execute();
+
+            $objectUser = $user->fetchObject();
+            if ($objectUser) {
+                return Response::sendSuccess("El código se valido correctamente.");
+            } else {
+                return Response::sendClient("El código no existe o ha expirado.");
+            }
+        } catch (PDOException $ex) {
+            return Response::sendError("Se produjo un error interterno, intente nuevamente en un par de minutos.");
+        } catch (Exception $ex) {
+            return Response::sendError("Se produjo un error interterno, intente nuevamente en un par de minutos.");
+        }
+    }
+    /**
+     * 
+     */
+    public static function valSavePerfil($request)
+    {
+        try {
+            Database::getInstance()->getDb()->beginTransaction();
+
+            $update = Database::getInstance()->getDb()->prepare("UPDATE Persona SET Clave = ? WHERE idDNI = ?");
+            $update->execute(array(
+                password_hash($request->password, PASSWORD_DEFAULT),
+                $request->idDNI
+            ));
+
+            Database::getInstance()->getDb()->commit();
+            return Response::sendSave("Se guardo correctamente su contraseña, ahora puede ingresar al sistema usando su n° cip y su clave.");
+        } catch (PDOException $ex) {
+            Database::getInstance()->getDb()->rollBack();
+            return Response::sendError("Se produjo un error interterno, intente nuevamente en un par de minutos.");
+        } catch (Exception $ex) {
+            Database::getInstance()->getDb()->rollBack();
+            return Response::sendError("Se produjo un error interterno, intente nuevamente en un par de minutos.");
         }
     }
 }

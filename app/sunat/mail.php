@@ -5,7 +5,6 @@ header('Access-Control-Allow-Methods: GET, POST, PUT, DELETE');
 header('Content-Type: application/json; charset=UTF-8');
 
 use PHPMailer\PHPMailer\PHPMailer;
-use PHPMailer\PHPMailer\SMTP;
 use PHPMailer\PHPMailer\Exception;
 use SysSoftIntegra\Pdf\PdfIngreso;
 use SysSoftIntegra\Model\IngresosAdo;

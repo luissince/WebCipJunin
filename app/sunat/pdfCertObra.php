@@ -52,8 +52,15 @@ if (!isset($_GET["idIngreso"])) {
         $MesRegistro = IngresosAdo::getMothName($Mes);
         $AnioRegistro = substr($Datos['frAnio'], 2, 2);
 
+        if (!empty($_SERVER['HTTPS']) && ('on' == $_SERVER['HTTPS'])) {
+            $uri = 'https://';
+        } else {
+            $uri = 'http://';
+        }
+        $uri .= $_SERVER['HTTP_HOST'];
+
         $token = Tools::my_encrypt($json, "bRuD5WYw5wd0rdHR9yLlM6wt2vteuiniQBqE70nAuhU=CIPJUNIN");
-        $codbar = "https://www.intranet.cip-junin.org.pe/view/validatecert.php?token=" . $token;
+        $codbar = $uri . "/view/validatecert.php?token=" . $token;
 
         $html = '<html>
             <head>

@@ -343,7 +343,7 @@ if (!isset($_SESSION['IdUsuario'])) {
                     tools.ModalDialog("Mi Empresa", "¿Está seguro de continuar?", function(value) {
                         if (value == true) {
                             $.ajax({
-                                url: "../app/controller/configEmpresaController.php",
+                                url: "../app/controller/ConfigEmpresaController.php",
                                 method: "POST",
                                 data: formData,
                                 contentType: false,
