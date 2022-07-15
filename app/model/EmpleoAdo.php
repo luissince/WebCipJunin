@@ -19,7 +19,7 @@ class EmpleoAdo
             $array = array();
             $arrayEmpleo = array();
             $comandoEmpleo = Database::getInstance()->getDb()->prepare("SELECT 
-            idEmpleo, Titulo, Descripcion, Empresa, Celular, Telefono, Correo, Direccion, Fecha, Hora, Estado, Tipo 
+            idEmpleo, Titulo, Descripcion, Empresa, Celular, Telefono, Correo, Direccion, convert(VARCHAR, CAST(Fecha AS DATE),103) AS Fecha, Hora, Estado, Tipo 
             FROM Empleo
             where Titulo like concat('%', ?,'%') or Descripcion like concat('%', ?,'%')
             order by Fecha desc, Hora desc
@@ -34,7 +34,7 @@ class EmpleoAdo
                 $count++;
                 array_push($arrayEmpleo, array(
                     "Id" => $count + $posicionPagina,
-                    "idEmpleado" => $row["idEmpleado"],
+                    "idEmpleo" => $row["idEmpleo"],
                     "Titulo" => $row["Titulo"],
                     "Descripcion" => $row["Descripcion"],
                     "Empresa" => $row["Empresa"],
@@ -50,7 +50,7 @@ class EmpleoAdo
             }
 
             $comandoTotal = Database::getInstance()->getDb()->prepare("SELECT COUNT(*) FROM Empleo 
-            where Titulo like concat('%',?,'%') or Hora like concat('%',?,'%')");
+            where Titulo like concat('%',?,'%') or Descripcion like concat('%',?,'%')");
             $comandoTotal->bindParam(1, $text, PDO::PARAM_STR);
             $comandoTotal->bindParam(2, $text, PDO::PARAM_STR);
             $comandoTotal->execute();
@@ -121,7 +121,7 @@ class EmpleoAdo
             Estado = ?,
             Tipo = ?,
             idUsuario = ?
-            WHERE idUniversidad = ?");
+            WHERE idEmpleo = ?");
     
             $comandoUpdate->bindParam(1, $empleo["Titulo"], PDO::PARAM_STR);
             $comandoUpdate->bindParam(2, $empleo["Descripcion"], PDO::PARAM_STR);
@@ -133,6 +133,7 @@ class EmpleoAdo
             $comandoUpdate->bindParam(8, $empleo["Estado"], PDO::PARAM_INT);
             $comandoUpdate->bindParam(9, $empleo["Tipo"], PDO::PARAM_INT);
             $comandoUpdate->bindParam(10, $empleo["idUsuario"], PDO::PARAM_INT);
+            $comandoUpdate->bindParam(11, $empleo["idEmpleo"], PDO::PARAM_INT);
 
             $comandoUpdate->execute();
             Database::getInstance()->getDb()->commit();

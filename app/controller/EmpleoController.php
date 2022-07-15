@@ -26,13 +26,26 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
                 "message" => $empleo
             ));
         }
+    } else if($_GET["type"] === "id"){
+        $result = EmpleoAdo::idEmpleado($_GET['idEmpleo']);
+        if(is_object($result)){
+            echo json_encode(array(
+                "estado" => 1,
+                "object" => $result,
+            ));
+        }else{
+            echo json_encode(array(
+                "estado" => 2,
+                "message" => $result,
+            ));
+        }
     }
 } else if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     if ($_POST["type"] === "insert") {
         
         $empleo["Titulo"] = strtoupper($_POST["Titulo"]);
         $empleo["Descripcion"] = strtoupper($_POST["Descripcion"]);
-        $empleo["Empresa"] = strtoupper($_POST["Descripcion"]);
+        $empleo["Empresa"] = strtoupper($_POST["Empresa"]);
         $empleo["Celular"] = $_POST["Celular"];
         $empleo["Telefono"] = $_POST["Telefono"];
         $empleo["Correo"] = $_POST["Correo"];
@@ -58,7 +71,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
 
         $empleo["Titulo"] = strtoupper($_POST["Titulo"]);
         $empleo["Descripcion"] = strtoupper($_POST["Descripcion"]);
-        $empleo["Empresa"] = strtoupper($_POST["Descripcion"]);
+        $empleo["Empresa"] = strtoupper($_POST["Empresa"]);
         $empleo["Celular"] = $_POST["Celular"];
         $empleo["Telefono"] = $_POST["Telefono"];
         $empleo["Correo"] = $_POST["Correo"];
@@ -66,6 +79,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
         $empleo["Estado"] = $_POST["Estado"];
         $empleo["Tipo"] = $_POST["Tipo"];
         $empleo["idUsuario"] = $_POST["idUsuario"];
+        $empleo["idEmpleo"] = $_POST["idEmpleo"];
 
         $result = EmpleoAdo::updateEmpleo($empleo);
 

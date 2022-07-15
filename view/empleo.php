@@ -23,92 +23,93 @@ if (!isset($_SESSION['IdUsuario'])) {
                 <!-- start menu -->
                 <?php include('./layout/menu.php') ?>
                 <!-- end menu -->
+
                 <!-- modal añadir  -->
                 <div class="row">
-                    <div class="modal fade" id="mdAddEmpleo">
+                    <div class="modal fade" id="mdEmpleo" data-keyboard="false" data-backdrop="static">
                         <div class="modal-dialog modal-xs" style="width: 500px;">
                             <div class="modal-content">
                                 <div class="modal-header">
-                                    <button type="button" class="close" id="btnCloseAddEmpleo">
+                                    <button type="button" class="close" id="btnCloseModal">
                                         <i class="fa fa-close"></i>
                                     </button>
-                                    <h4 class="modal-title">
+                                    <h4 class="modal-title" id="titleModal">
                                         <i class="fa fa-address-card">
-                                        </i> Registrar Oferta Laboral
+                                        </i> Nueva Oferta Laboral
                                     </h4>
                                 </div>
                                 <div class="modal-body">
                                     <div class="row">
                                         <div class="col-md-12">
                                             <div class="form-group">
-                                                <label for="txtTitulo" class="col-sm-4 control-label">Titulo</label>
+                                                <label for="txtTitulo" class="col-sm-4 control-label">Titulo <i class="fa fa-fw fa-asterisk text-danger"></i></label>
                                                 <div class="col-sm-8">
                                                     <input id="txtTitulo" type="text" class="form-control" placeholder="Ingrese el titulo" required="">
                                                 </div>
                                             </div>
                                         </div>
                                     </div>
-                                    <div class="row" style="padding-top: 0em;">
+                                    <div class="row" style="padding-top: 0.5em;">
                                         <div class="col-md-12">
                                             <div class="form-group">
-                                                <label for="txtDescripcion" class="col-sm-4 control-label">Descripción</label>
+                                                <label for="txtDescripcion" class="col-sm-4 control-label">Descripción <i class="fa fa-fw fa-asterisk text-danger"></i></label>
                                                 <div class="col-sm-8">
                                                     <textarea id="txtDescripcion" type="text" class="form-control" placeholder="Ingrese la descripción" required=""></textarea>
                                                 </div>
                                             </div>
                                         </div>
                                     </div>
-                                    <div class="row" style="padding-top: 0em;">
+                                    <div class="row" style="padding-top: 0.5em;">
                                         <div class="col-md-12">
                                             <div class="form-group">
-                                                <label for="txtEmpresa" class="col-sm-4 control-label">Empresa</label>
+                                                <label for="txtEmpresa" class="col-sm-4 control-label">Empresa <i class="fa fa-fw fa-asterisk text-danger"></i></label>
                                                 <div class="col-sm-8">
                                                     <input id="txtEmpresa" type="text" class="form-control" placeholder="Ingrese el nombre de la empresa" required="">
                                                 </div>
                                             </div>
                                         </div>
                                     </div>
-                                    <div class="row" style="padding-top: 0em;">
+                                    <div class="row" style="padding-top: 0.5em;">
                                         <div class="col-md-12">
                                             <div class="form-group">
-                                                <label for="txtCelular" class="col-sm-4 control-label">Celular</label>
+                                                <label for="txtCelular" class="col-sm-4 control-label">Celular <i class="fa fa-fw fa-asterisk text-danger"></i></label>
                                                 <div class="col-sm-8">
-                                                    <input id="txtCelular" type="text" class="form-control" placeholder="Ingrese el número de celular" required="">
+                                                    <input id="txtCelular" type="number" class="form-control" placeholder="Ingrese el número de celular" required="">
                                                 </div>
                                             </div>
                                         </div>
                                     </div>
-                                    <div class="row" style="padding-top: 0em;">
+                                    <div class="row" style="padding-top: 0.5em;">
                                         <div class="col-md-12">
                                             <div class="form-group">
                                                 <label for="txtTelefono" class="col-sm-4 control-label">Telefono</label>
                                                 <div class="col-sm-8">
-                                                    <input id="txtTelefono" type="text" class="form-control" placeholder="Ingrese el número de telefono" required="">
+                                                    <input id="txtTelefono" type="number" class="form-control" placeholder="Ingrese el número de telefono">
                                                 </div>
                                             </div>
                                         </div>
                                     </div>
-                                    <div class="row" style="padding-top: 0em;">
+                                    <div class="row" style="padding-top: 0.5em;">
                                         <div class="col-md-12">
                                             <div class="form-group">
                                                 <label for="txtCorreo" class="col-sm-4 control-label">Correo</label>
                                                 <div class="col-sm-8">
-                                                    <input id="txtCorreo" type="email" class="form-control" placeholder="Ingrese el correo" required="">
+                                                    <input id="txtCorreo" type="email" class="form-control" placeholder="Ingrese el correo">
                                                 </div>
                                             </div>
                                         </div>
                                     </div>
-                                    <div class="row" style="padding-top: 0em;">
+                                    <div class="row" style="padding-top: 0.5em;">
                                         <div class="col-md-12">
                                             <div class="form-group">
                                                 <label for="txtDireccion" class="col-sm-4 control-label">Dirección</label>
                                                 <div class="col-sm-8">
-                                                    <input id="txtDireccion" type="email" class="form-control" placeholder="Ingrese la dirección" required="">
+                                                    <input id="txtDireccion" type="text" class="form-control" placeholder="Ingrese la dirección">
                                                 </div>
                                             </div>
                                         </div>
                                     </div>
-                                    <div class="row" style="padding-top: 0em;">
+                                    <div class="row" style="padding-top: 0.5em;">
                                         <div class="col-md-12">
                                             <div class="form-group">
                                                 <label for="txtDireccion" class="col-sm-4 control-label">Estado</label>
@@ -124,93 +125,43 @@ if (!isset($_SESSION['IdUsuario'])) {
                                     </div>
                                 </div>
                                 <div class="modal-footer">
-                                    <button type="button" class="btn btn-warning" id="btnAceptarEmpleo">
+                                    <button type="button" class="btn btn-warning" id="btnAceptar">
                                         <i class="fa fa-check"></i> Aceptar</button>
-                                    <button type="button" class="btn btn-primary" data-dismiss="modal" id="cancel-nuevo">
+                                    <button type="button" class="btn btn-primary" id="cancel-modal">
                                         <i class="fa fa-remove"></i> Cancelar</button>
                                 </div>
-                                </form>
                             </div>
                         </div>
                     </div>
                 </div>
                 <!-- end modal añadir -->
 
-                <!-- modal editar Universidad  -->
+                <!-- modal eliminar  -->
                 <div class="row">
-                    <div class="modal fade" id="editAddUniversidad">
+                    <div class="modal fade" id="mdDeleteEmpleo">
                         <div class="modal-dialog modal-xs" style="width: 500px;">
                             <div class="modal-content">
                                 <div class="modal-header">
-                                    <button type="button" class="close" id="btnCLoseEditUniversidad">
+                                    <button type="button" class="close" onclick="closeModalDelete()">
                                         <i class="fa fa-close"></i>
                                     </button>
                                     <h4 class="modal-title">
-                                        <i class="fa fa-university">
-                                        </i> Editar Universidad
+                                        <i class="fa fa-address-card">
+                                        </i> Eliminar oferta laboral
                                     </h4>
                                 </div>
                                 <div class="modal-body">
                                     <div class="row">
                                         <div class="col-md-12">
                                             <div class="form-group">
-                                                <label for="Universidad" class="col-sm-3 control-label">Universidad</label>
-                                                <div class="col-sm-9">
-                                                    <input id="txtUniversidad1" type="text" class="form-control" placeholder="Nombre Universidad" required="">
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="row" style="padding-top: 0.5em;">
-                                        <div class="col-md-12">
-                                            <div class="form-group">
-                                                <label for="Universidad" class="col-sm-3 control-label">Siglas</label>
-                                                <div class="col-sm-9">
-                                                    <input id="txtSiglas1" type="text" class="form-control" placeholder="Escriba las siglas" required="">
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="modal-footer">
-                                    <button type="button" class="btn btn-warning" id="btnAceptarUpdateUniversidad">
-                                        <i class="fa fa-check"></i> Aceptar</button>
-                                    <button type="button" class="btn btn-primary" data-dismiss="modal" id="cancel-nuevo">
-                                        <i class="fa fa-remove"></i> Cancelar</button>
-                                </div>
-                                </form>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <!-- end modal editar universidad -->
-
-                <!-- modal eliminar Universidad  -->
-                <div class="row">
-                    <div class="modal fade" id="deleteUniversidad">
-                        <div class="modal-dialog modal-xs" style="width: 500px;">
-                            <div class="modal-content">
-                                <div class="modal-header">
-                                    <button type="button" class="close" data-dismiss="modal">
-                                        <i class="fa fa-close"></i>
-                                    </button>
-                                    <h4 class="modal-title">
-                                        <i class="fa fa-university">
-                                        </i> Eliminar Universidad
-                                    </h4>
-                                </div>
-                                <div class="modal-body">
-                                    <div class="row">
-                                        <div class="col-md-12">
-                                            <div class="form-group">
-                                                <label for="Universidad" class="col-sm-12 control-label">¿Estas seguro que deseas elimininar esta universidad?</label>
+                                                <label class="col-sm-12 control-label">¿Estas seguro que deseas elimininar esta oferta laboral?</label>
                                             </div>
                                         </div>
                                     </div>
                                     <div class="modal-footer">
-                                        <button type="button" class="btn btn-warning" id="btnDeleteUniversidad">
+                                        <button type="button" class="btn btn-warning" id="btnDeleteEmpleo">
                                             <i class="fa fa-check"></i> Aceptar</button>
-                                        <button type="button" class="btn btn-primary" data-dismiss="modal" id="cancel-nuevo">
+                                        <button type="button" class="btn btn-primary" onclick="closeModalDelete()">
                                             <i class="fa fa-remove"></i> Cancelar</button>
                                     </div>
                                     </form>
@@ -219,7 +170,7 @@ if (!isset($_SESSION['IdUsuario'])) {
                         </div>
                     </div>
                 </div>
-                <!-- end modal eliminar universidad -->
+                <!-- end modal eliminar  -->
                 <!-- Content Wrapper. Contains page content -->
                 <div class="content-wrapper" style="background-color: #FFFFFF;">
                     <!-- Main content -->
@@ -230,6 +181,7 @@ if (!isset($_SESSION['IdUsuario'])) {
                     <section class="content">
 
                         <div class="row">
+
                             <?php
                             if ($_SESSION["Permisos"][9]["crear"] == 1) {
                                 echo '<div class="col-lg-2 col-md-3 col-sm-12 col-xs-12">
@@ -275,7 +227,7 @@ if (!isset($_SESSION['IdUsuario'])) {
                                             <th width="15%">Fecha/Hora</th>
                                             <th width="10%">Celular</th>
                                             <th width="20%">Empresa</th>
-                                            <th width="10%">Correo</th>
+                                            <th width="10%">Estado</th>
                                             <th width="5%" class="text-center">Editar</th>
                                             <th width="5%" class="text-center">Eliminar</th>
                                         </thead>
@@ -328,6 +280,10 @@ if (!isset($_SESSION['IdUsuario'])) {
                 let filasPorPagina = 10;
                 let tbTable = $("#tbTable");
 
+                let idUsuario = <?= $_SESSION['IdUsuario'] ?>;
+
+                let idEmpleo = '';
+
                 let editView = "<?= $_SESSION["Permisos"][9]["actualizar"]; ?>";
                 let deleteView = "<?= $_SESSION["Permisos"][9]["eliminar"]; ?>";
 
@@ -366,47 +322,92 @@ if (!isset($_SESSION['IdUsuario'])) {
                     });
 
                     $("#btnNuevo").click(function() {
-                        $("#mdAddEmpleo").modal("show");
+                        openModalEmpleo('');
                     })
 
-                    $("#btnAceptarEmpleo").click(function() {
-                        console.log('')
+                    $("#btnCloseModal").click(function() {
+                        $("#mdEmpleo").modal("hide");
+                        clearModal();
+                    });
 
-                        return;
+                    $("#cancel-modal").click(function() {
+                        $("#mdEmpleo").modal("hide");
+                        clearModal();
+                    });
 
+                    $("#btnAceptar").click(function() {
                         onSaveEmpleo(
-                            $("#txtTitulo").val(), 
-                            $("#txtDescripcion").val(), 
-                            $("#txtEmpresa").val(), 
-                            $("#txtCelular").val(), 
-                            $("#txtTelefono").val(), 
-                            $("#txtCorreo").val(), 
+                            $("#txtTitulo").val(),
+                            $("#txtDescripcion").val(),
+                            $("#txtEmpresa").val(),
+                            $("#txtCelular").val(),
+                            $("#txtTelefono").val(),
+                            $("#txtCorreo").val(),
                             $("#txtDireccion").val());
                     });
 
-                    $("#cbTramite").on("change", function() {
-                        $("#Codigo").prop("disabled", this.checked);
-                    });
 
-
-                    $("#cancel-nuevo").click(function() {
-                        $("#confirmar").modal("hide");
-                        $("#txtUniversidad").val('');
-                        $("#txtSiglas").val('');
-                    });
-
-                    $("#btnCloseAddEmpleo").click(function() {
-                        $("#mdAddEmpleo").modal("hide");
-                        $("#txtUniversidad").val('');
-                        $("#txtSiglas").val('');
-                    });
-
-                    $("#btnCLoseEditUniversidad").click(function() {
-                        $("#editAddUniversidad").modal("hide");
-                        $("#txtUniversidad1").val('');
-                        $("#txtSiglas1").val('');
-                    });
                 });
+
+                function closeModalDelete(){
+                    $("#mdDeleteEmpleo ").modal("hide");
+                }
+
+                function updateEmpleoData(id) {
+                    $.ajax({
+                        url: "../app/controller/EmpleoController.php",
+                        method: "GET",
+                        data: {
+                            "type": "id",
+                            "idEmpleo": id
+                        },
+                        beforeSend: function() {
+                            idEmpleo = 0;
+                        },
+                        success: function(result) {
+
+                            if (result.estado == 1) {
+                                idEmpleo = id;
+                                $("#txtTitulo").val(result.object.Titulo);
+                                $("#txtDescripcion").val(result.object.Descripcion);
+                                $("#txtEmpresa").val(result.object.Empresa);
+                                $("#txtCelular").val(result.object.Celular);
+                                $("#txtTelefono").val(result.object.Telefono);
+                                $("#txtCorreo").val(result.object.Correo);
+                                $("#txtDireccion").val(result.object.Direccion);
+
+                                document.getElementById("cbEstado").checked =  result.object.Estado == 1  ? true: false;
+
+                                tools.AlertInfo("Empleo", "Se cargo correctamente los datos.");
+                            } else {
+                                tools.AlertWarning("Empleo", result.message);
+                            }
+                        },
+                        error: function() {
+                            tools.AlertError("Empleo", error.responseText);
+                        }
+                    });
+                }
+
+                function openModalEmpleo(idEmpleo) {
+
+                    $("#titleModal").html('')
+
+                    if (idEmpleo === '') {
+
+                        $("#titleModal").html('<i class="fa fa-address-card"></i> Nueva Oferta Laboral')
+
+                        $("#mdEmpleo").modal("show");
+                    } else {
+
+                        $("#titleModal").html('<i class="fa fa-address-card"></i> Editar Oferta Laboral')
+
+                        $("#mdEmpleo").modal("show");
+
+                        updateEmpleoData(idEmpleo);
+
+                    }
+                }
 
                 function onEventPaginacion() {
                     switch (opcion) {
@@ -446,6 +447,7 @@ if (!isset($_SESSION['IdUsuario'])) {
                             totalPaginacion = 0;
                         },
                         success: function(result) {
+
                             if (result.estado === 1) {
                                 tbTable.empty();
                                 if (result.empleos.length == 0) {
@@ -459,17 +461,19 @@ if (!isset($_SESSION['IdUsuario'])) {
                                 for (let empleo of result.empleos) {
 
                                     let btnUpdate = editView == 0 ? '<i class="fa fa-minus" style="font-size:20px;"></i>' :
-                                        `<button class="btn btn-warning btn-xs" onclick="updateEmpleo(${empleo})"><i class="fa fa-edit" style="font-size:25px;"></i></button>`;
+                                        `<button class="btn btn-warning btn-xs" onclick="openModalEmpleo(${empleo.idEmpleo} )"><i class="fa fa-edit" style="font-size:25px;"></i></button>`;
                                     let btnDelete = deleteView == 0 ? '<i class="fa fa-minus" style="font-size:20px;"></i>' :
                                         `<button class="btn btn-danger btn-xs" onclick="deleteEmpleo(${empleo.idEmpleo})"><i class="fa fa-trash" style="font-size:25px;"></i></button>`
+
+                                    let estado = empleo.Estado == 1 ? '<span class="badge btn-info">ACTIVO</span>': '<span class="badge btn-danger">INACTIVO</span>'
 
                                     tbTable.append('<tr>' +
                                         '<td class="text-center text-primary">' + empleo.Id + '</td>' +
                                         '<td>' + empleo.Titulo + '</td>' +
-                                        '<td>' + empleo.Fecha + '/' + empleo.hora + '</td>' +
+                                        '<td>' + empleo.Fecha + '<br/>' + tools.getTimeForma(empleo.Hora, true) + '</td>' +
                                         '<td>' + empleo.Celular + '</td>' +
                                         '<td>' + empleo.Empresa + '</td>' +
-                                        '<td>' + empleo.Correo + '</td>' +
+                                        '<td>' + estado + '</td>' +
                                         '<td class="text-center">' + btnUpdate + '' + '</td>' +
                                         '<td class="text-center">' + btnDelete + '</td>' +
                                         '</tr>');
@@ -490,6 +494,7 @@ if (!isset($_SESSION['IdUsuario'])) {
                             }
                         },
                         error: function(error) {
+                            console.log(error.responseText)
                             tbTable.empty();
                             tbTable.append(
                                 '<tr class="text-center"><td colspan="8"><p>Se produjo un error, intente nuevamente.</p></td></tr>'
@@ -515,130 +520,140 @@ if (!isset($_SESSION['IdUsuario'])) {
                         tools.AlertWarning('Empleo', "Ingrese el número de celular");
                         $("#txtCelular").focus();
                     } else {
+                        if (idEmpleo === '') {
+
+                            $.ajax({
+                                url: "../app/controller/EmpleoController.php",
+                                method: "POST",
+                                data: {
+                                    "type": "insert",
+                                    "Titulo": titulo.trim(),
+                                    "Descripcion": descripcion.trim(),
+                                    "Empresa": empresa.trim(),
+                                    "Celular": celular.trim(),
+
+                                    "Telefono": telefono.trim(),
+                                    "Correo": correo.trim(),
+                                    "Direccion": direccion.trim(),
+                                    "Estado": $('#cbEstado').is(':checked'),
+                                    "Tipo": 1,
+                                    "idUsuario": idUsuario
+
+                                },
+                                beforeSend: function() {
+                                    tools.AlertInfo("Empleo", "Procesando información.");
+                                },
+                                success: function(result) {
+                                    if (result.estado == 1) {
+                                        $("#mdEmpleo").modal("hide");
+                                        tools.AlertSuccess("Empleo", "Se registro correctamente.");
+                                        clearModal();
+                                    } else if (result.estado == 3) {
+                                        tools.AlertWarning("Empleo", result.message);
+                                    } else {
+                                        tools.AlertWarning("Empleo", result.message);
+                                    }
+                                },
+                                error: function(error) {
+                                    tools.AlertError("Empleo", "Error fatal: Comuniquese con el administrador del sistema" + error.message);
+                                }
+                            });
+                        } else {
+                            
+                            $.ajax({
+                                url: "../app/controller/EmpleoController.php",
+                                method: "POST",
+                                data: {
+                                    "type": "update",
+                                    "Titulo": titulo.trim(),
+                                    "Descripcion": descripcion.trim(),
+                                    "Empresa": empresa.trim(),
+                                    "Celular": celular.trim(),
+
+                                    "Telefono": telefono.trim(),
+                                    "Correo": correo.trim(),
+                                    "Direccion": direccion.trim(),
+                                    "Estado": $('#cbEstado').is(':checked'),
+                                    "Tipo": 1,
+                                    "idUsuario": idUsuario,
+                                    "idEmpleo": idEmpleo
+
+                                },
+                                beforeSend: function() {
+                                    tools.AlertInfo("Empleo", "Procesando información.");
+                                },
+                                success: function(result) {
+                                    if (result.estado == 1) {
+                                        $("#mdEmpleo").modal("hide");
+                                        tools.AlertSuccess("Empleo", "Se actualizó correctamente.");
+                                        clearModal();
+                                    } else if (result.estado == 3) {
+                                        tools.AlertWarning("Empleo", result.message);
+                                    } else {
+                                        tools.AlertWarning("Empleo", result.message);
+                                    }
+                                },
+                                error: function(error) {
+                                    tools.AlertError("Empleo", "Error fatal: Comuniquese con el administrador del sistema" + error.message);
+                                }
+                            });
+                        }   
+
+                    }
+
+                    // await loadInitEmpleos();
+
+                }
+
+                function deleteEmpleo(id) {
+                    $("#mdDeleteEmpleo ").modal("show");
+
+                    let idEmpleo = id;
+
+                    $("#btnDeleteEmpleo").unbind();
+
+                    $("#btnDeleteEmpleo").bind("click", function() {
+
                         $.ajax({
                             url: "../app/controller/EmpleoController.php",
                             method: "POST",
                             data: {
-                                "type": "insert",
-                                "Titulo": titulo,
-                                "Descripcion": descripcion,
-                                "Empresa": empresa,
-                                "Celular": celular,
-
-                                "Telefono": telefono,
-                                "Correo": correo,
-                                "Direccion": direccion,
-                                "Estado": $("#cbEstado").val(),
-                                "Tipo": 1
-                                
+                                "type": "delete",
+                                "idEmpleo": idEmpleo,
                             },
                             beforeSend: function() {
-                                tools.AlertInfo("Empleo", "Procesando información.");
+                                $("#mdDeleteEmpleo").modal("hide");
+                                tools.ModalAlertInfo("Empleo", "Procesando petición..");
                             },
                             success: function(result) {
                                 if (result.estado == 1) {
-                                    tools.AlertSuccess("Empleo", "Se registro correctamente.");
-                                    $("#mdAddEmpleo").modal("hide");
-                                    clearModal();
-                                } else if (result.estado == 3) {
-                                    tools.AlertWarning("Empleo", result.message);
-                                } else {
-                                    tools.AlertWarning("Empleo", result.message);
-                                }
-                            },
-                            error: function(error) {
-                                tools.AlertError("Universidad", "Error fatal: Comuniquese con el administrador del sistema");
-                            }
-                        });
-                    }
-                }
-
-                function updateEmpleo(idU, nombre, abreviatura) {
-                    let idUniversidad = idU;
-                    let universidad = nombre;
-                    let siglas = abreviatura;
-                    $("#editAddUniversidad").modal("show");
-                    $("#txtUniversidad1").val(universidad);
-                    $("#txtSiglas1").val(siglas);
-
-                    $("#btnAceptarUpdateUniversidad").unbind();
-
-                    $("#btnAceptarUpdateUniversidad").bind("click", function() {
-                        if ($("#txtUniversidad1").val() == '') {
-                            tools.AlertWarning('Universidad', "Ingrese una universidad");
-                            $("#txtUniversidad1").focus();
-                        } else if ($("#txtSiglas1").val() == '') {
-                            tools.AlertWarning('Universidad', "Ingrese las siglas");
-                            $("#txtSiglas1").focus();
-                        } else {
-                            $.ajax({
-                                url: "../app/controller/UniversidadController.php",
-                                method: "POST",
-                                data: {
-                                    "type": "updateUniversidad",
-                                    "iduniversidad": idUniversidad,
-                                    "universidad": $("#txtUniversidad1").val(),
-                                    "siglas": $("#txtSiglas1").val(),
-                                },
-                                beforeSend: function() {
-                                    tools.AlertInfo("Universidad", "Procesando información.");
-                                },
-                                success: function(result) {
-                                    if (result.estado == 1) {
-                                        tools.AlertSuccess("Universidad", "Se actualizo correctamente.");
-                                        $("#editAddUniversidad").modal("hide");
-                                    } else if (result.estado == 3) {
-                                        tools.AlertWarning("Universidad", result.message);
-                                        // } else if (result.estado == 4) {
-                                        //     tools.AlertWarning("Universidad", result.message);
-                                    } else {
-                                        tools.AlertWarning("Universidad", result.message);
-                                    }
-                                },
-                                error: function(error) {
-                                    tools.AlertError("Universidad", "Error fatal: Comuniquese con el administrador del sistema");
-                                }
-                            });
-                        }
-                    })
-                }
-
-                function deleteUniversidad(idU) {
-                    $("#deleteUniversidad").modal("show");
-
-                    let idUniversidad = idU;
-
-                    $("#btnDeleteUniversidad").unbind();
-
-                    $("#btnDeleteUniversidad").bind("click", function() {
-                        $.ajax({
-                            url: "../app/controller/UniversidadController.php",
-                            method: "POST",
-                            data: {
-                                "type": "deleteUniversidad",
-                                "iduniversidad": idUniversidad,
-                            },
-                            beforeSend: function() {
-                                $("#deleteUniversidad").modal("hide");
-                                tools.ModalAlertInfo("Universidad", "Procesando petición..");
-                            },
-                            success: function(result) {
-                                if (result.estado == 1) {
-                                    tools.ModalAlertSuccess("Universidad", result.message);
+                                    tools.ModalAlertSuccess("Empleo", result.message);
                                     loadInitEmpleos()
                                 } else if (result.estado == 2) {
-                                    tools.ModalAlertWarning("Universidad", result.message);
+                                    tools.ModalAlertWarning("Empleo", result.message);
                                 } else if (result.estado == 3) {
-                                    tools.ModalAlertWarning("Universidad", result.message);
+                                    tools.ModalAlertWarning("Empleo", result.message);
                                 } else {
-                                    tools.ModalAlertWarning("Universidad", result.message);
+                                    tools.ModalAlertWarning("Empleo", result.message);
                                 }
                             },
                             error: function(error) {
-                                tools.ModalAlertError("Universidad", error.responseText);
+                                tools.ModalAlertError("Empleo", error.responseText);
                             }
                         });
                     })
+                }
+
+                function clearModal() {
+                    $("#txtTitulo").val('');
+                    $("#txtDescripcion").val('');
+                    $("#txtEmpresa").val('');
+                    $("#txtCelular").val('');
+                    $("#txtTelefono").val('');
+                    $("#txtCorreo").val('');
+                    $("#txtDireccion").val('');
+                    document.getElementById("cbEstado").checked = true;
+                    idEmpleo = '';
                 }
             </script>
         </body>
