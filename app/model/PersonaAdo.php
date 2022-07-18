@@ -3061,8 +3061,8 @@ class PersonaAdo
 
                     if ($resultEmail) {
                         $mail = new PHPMailer(true);
-                        $fromname = "Tesorería Colegio de Ingenieros del Perú - CD Junín";
-                        $fromEmail = "tesoreria@cip-junin.org.pe";
+                        $fromname = "Informática Colegio de Ingenieros del Perú - CD Junín";
+                        $fromEmail = "cipjunin@cip-junin.org.pe";
 
                         $mail->isSMTP();
                         $mail->CharSet = 'UTF-8';
