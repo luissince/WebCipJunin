@@ -2486,7 +2486,7 @@ class PersonaAdo
 
 
     /**
-     * funcion para iniciar sesión desde la api
+     * funcion para iniciar sesión desde la api v1
      */
     public static function getUsurioLogin($usuario, $clave)
     {
@@ -2519,6 +2519,60 @@ class PersonaAdo
             }
         } catch (Exception $ex) {
             return array("state" => 0, "message" => "Error de conexión del servidor, intente nuevamente en un par de minutos.");
+        }
+    }
+
+    /**
+     * funcion para iniciar sesión desde la api v2
+     */
+    public static function getUsurioLoginV2($request)
+    {
+        try {
+            Database::getInstance()->getDb()->beginTransaction();
+
+            $cmdValidate = Database::getInstance()->getDb()->prepare("SELECT  
+            p.idDNI,
+            p.NumDoc,
+            p.Nombres,
+            p.Apellidos,
+            p.CIP,
+            p.Clave
+            FROM Persona AS p
+            WHERE p.CIP = ?");
+            $cmdValidate->bindParam(1, $request->usuario, PDO::PARAM_STR);
+            $cmdValidate->execute();
+            $resultUsuario = $cmdValidate->fetchObject();
+            if ($resultUsuario) {
+                if (password_verify($request->clave, $resultUsuario->Clave)) {
+                    $cmdDelete = Database::getInstance()->getDb()->prepare("DELETE FROM Notificacion WHERE idDNI = ?");
+                    $cmdDelete->execute(array(
+                        $resultUsuario->idDNI
+                    ));
+
+                    $cmdNotificacion = Database::getInstance()->getDb()->prepare("INSERT INTO Notificacion(
+                        Valor,
+                        Fecha,
+                        Hora,
+                        idDNI
+                    ) VALUES(?,GETDATE(),GETDATE(),?)");
+                    $cmdNotificacion->execute(array(
+                        $request->token,
+                        $resultUsuario->idDNI
+                    ));
+
+                    Database::getInstance()->getDb()->commit();
+                    return Response::sendSave($resultUsuario);
+                } else {
+                    Database::getInstance()->getDb()->rollback();
+                    return Response::sendClient('Usuario o contraseña incorrectas.');
+                }
+            } else {
+                Database::getInstance()->getDb()->rollback();
+                return Response::sendClient('Usuario o contraseña incorrectas.');
+            }
+        } catch (Exception $ex) {
+            Database::getInstance()->getDb()->rollback();
+            return Response::sendError("Error de conexión del servidor, intente nuevamente en un par de minutos.");
         }
     }
 
@@ -3259,7 +3313,7 @@ class PersonaAdo
                 WHERE idDNI = ?");
                 $cmdCorreo->bindParam(1, $object->idDNI, PDO::PARAM_STR);
                 $cmdCorreo->execute();
-                $correos =  $cmdCorreo ->fetchAll(PDO::FETCH_OBJ);
+                $correos =  $cmdCorreo->fetchAll(PDO::FETCH_OBJ);
 
                 $cmdTelefono = Database::getInstance()->getDb()->prepare("SELECT
                 ISNULL (t.Descripcion, 'TIPO NO REGISTRADO') AS Tipo, 
