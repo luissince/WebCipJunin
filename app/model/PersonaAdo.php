@@ -2486,7 +2486,7 @@ class PersonaAdo
 
 
     /**
-     * funcion para iniciar sesión desde la api
+     * funcion para iniciar sesión desde la api v1
      */
     public static function getUsurioLogin($usuario, $clave)
     {
@@ -2519,6 +2519,60 @@ class PersonaAdo
             }
         } catch (Exception $ex) {
             return array("state" => 0, "message" => "Error de conexión del servidor, intente nuevamente en un par de minutos.");
+        }
+    }
+
+    /**
+     * funcion para iniciar sesión desde la api v2
+     */
+    public static function getUsurioLoginV2($request)
+    {
+        try {
+            Database::getInstance()->getDb()->beginTransaction();
+
+            $cmdValidate = Database::getInstance()->getDb()->prepare("SELECT  
+            p.idDNI,
+            p.NumDoc,
+            p.Nombres,
+            p.Apellidos,
+            p.CIP,
+            p.Clave
+            FROM Persona AS p
+            WHERE p.CIP = ?");
+            $cmdValidate->bindParam(1, $request->usuario, PDO::PARAM_STR);
+            $cmdValidate->execute();
+            $resultUsuario = $cmdValidate->fetchObject();
+            if ($resultUsuario) {
+                if (password_verify($request->clave, $resultUsuario->Clave)) {
+                    $cmdDelete = Database::getInstance()->getDb()->prepare("DELETE FROM Notificacion WHERE idDNI = ?");
+                    $cmdDelete->execute(array(
+                        $resultUsuario->idDNI
+                    ));
+
+                    $cmdNotificacion = Database::getInstance()->getDb()->prepare("INSERT INTO Notificacion(
+                        Valor,
+                        Fecha,
+                        Hora,
+                        idDNI
+                    ) VALUES(?,GETDATE(),GETDATE(),?)");
+                    $cmdNotificacion->execute(array(
+                        $request->token,
+                        $resultUsuario->idDNI
+                    ));
+
+                    Database::getInstance()->getDb()->commit();
+                    return Response::sendSave($resultUsuario);
+                } else {
+                    Database::getInstance()->getDb()->rollback();
+                    return Response::sendClient('Usuario o contraseña incorrectas.');
+                }
+            } else {
+                Database::getInstance()->getDb()->rollback();
+                return Response::sendClient('Usuario o contraseña incorrectas.');
+            }
+        } catch (Exception $ex) {
+            Database::getInstance()->getDb()->rollback();
+            return Response::sendError("Error de conexión del servidor, intente nuevamente en un par de minutos.");
         }
     }
 
@@ -3061,8 +3115,8 @@ class PersonaAdo
 
                     if ($resultEmail) {
                         $mail = new PHPMailer(true);
-                        $fromname = "Tesorería Colegio de Ingenieros del Perú - CD Junín";
-                        $fromEmail = "tesoreria@cip-junin.org.pe";
+                        $fromname = "Informática Colegio de Ingenieros del Perú - CD Junín";
+                        $fromEmail = "cipjunin@cip-junin.org.pe";
 
                         $mail->isSMTP();
                         $mail->CharSet = 'UTF-8';
@@ -3183,6 +3237,107 @@ class PersonaAdo
             return Response::sendError("Se produjo un error interterno, intente nuevamente en un par de minutos.");
         } catch (Exception $ex) {
             Database::getInstance()->getDb()->rollBack();
+            return Response::sendError("Se produjo un error interterno, intente nuevamente en un par de minutos.");
+        }
+    }
+
+    /**
+     * 
+     */
+    public static function valHabPerfil($request)
+    {
+        try {
+
+            $cmdPersona = Database::getInstance()->getDb()->prepare("SELECT 
+            p.idDNI, 
+            p.NumDoc,
+            p.Nombres, 
+            p.Apellidos, 
+            p.CIP, 
+            CASE p.Condicion
+            WHEN 'T' THEN 'Transeunte'
+            WHEN 'F' THEN 'Fallecido'
+            WHEN 'R' THEN 'Retirado'
+            WHEN 'V' THEN 'Vitalicio'
+            ELSE 'Ordinario' END AS Condicion, 
+            CONVERT(VARCHAR,CAST(c.FechaColegiado AS DATE), 103) AS FechaColegiado,
+            CASE
+            WHEN CAST (DATEDIFF(M,DATEADD(MONTH,CASE p.Condicion WHEN 'O' THEN 3 WHEN 'V' THEN 9 ELSE 0 END,ISNULL(ul.FechaUltimaCuota, c.FechaColegiado)) , GETDATE()) AS INT) <=0 THEN 'Habilitado'
+            ELSE 'No Habilitado' END AS Habilidad
+            FROM Persona AS p
+            INNER JOIN Colegiatura AS c ON c.idDNI = p.idDNI AND c.Principal = 1
+            LEFT OUTER JOIN ULTIMACuota AS ul ON ul.idDNI = p.idDNI
+            WHERE 
+            p.CIP = ?
+            OR
+            p.NumDoc = ?
+            OR
+            CONCAT(p.Apellidos,' ',p.Nombres) = ?");
+            $cmdPersona->bindParam(1, $request->search, PDO::PARAM_STR);
+            $cmdPersona->bindParam(2, $request->search, PDO::PARAM_STR);
+            $cmdPersona->bindParam(3, $request->search, PDO::PARAM_STR);
+            $cmdPersona->execute();
+            $object = $cmdPersona->fetchObject();
+            if ($object) {
+                $cmdImage = Database::getInstance()->getDb()->prepare("SELECT TOP 1 
+                idDNI,Foto
+                FROM PersonaImagen WHERE idDNI = ?");
+                $cmdImage->bindParam(1, $object->idDNI, PDO::PARAM_STR);
+                $cmdImage->execute();
+                $image = null;
+
+                if ($row = $cmdImage->fetch()) {
+                    $image = (object)array($row['idDNI'], base64_encode($row['Foto']));
+                }
+
+                $cmdColegiatura = Database::getInstance()->getDb()->prepare("SELECT 
+                ISNULL(ca.Capitulo,'CAPITULO NO REGISTRADO') AS Capitulo, 
+                UPPER(ISNULL(e.Especialidad,'ESPECIALIDAD NO REGISTRADA')) AS Especialidad,
+                convert(VARCHAR,cast(c.FechaColegiado AS DATE),103) AS FechaColegiado, 
+                c.Principal 
+                FROM Colegiatura  AS c
+                LEFT JOIN Especialidad AS e ON e.idEspecialidad = c.idEspecialidad
+                LEFT JOIN Capitulo AS ca ON ca.idCapitulo = e.idCapitulo
+                WHERE idDNI = ?
+                ORDER BY c.FechaColegiado ASC");
+                $cmdColegiatura->bindParam(1, $object->idDNI, PDO::PARAM_STR);
+                $cmdColegiatura->execute();
+
+                $colegiaturas = $cmdColegiatura->fetchAll(PDO::FETCH_OBJ);
+
+                $cmdCorreo = Database::getInstance()->getDb()->prepare("SELECT
+                ISNULL(t.Descripcion, 'TIPO NO REGISTRADO') AS Tipo, 
+                UPPER(w.Direccion) AS Direccion 
+                FROM Web AS w 
+                INNER JOIN Tipos AS t ON t.idTipo = w.Tipo 
+                WHERE idDNI = ?");
+                $cmdCorreo->bindParam(1, $object->idDNI, PDO::PARAM_STR);
+                $cmdCorreo->execute();
+                $correos =  $cmdCorreo->fetchAll(PDO::FETCH_OBJ);
+
+                $cmdTelefono = Database::getInstance()->getDb()->prepare("SELECT
+                ISNULL (t.Descripcion, 'TIPO NO REGISTRADO') AS Tipo, 
+                a.Telefono 
+                FROM Telefono AS a 
+                LEFT JOIN Tipos AS t ON t.idTipo = a.Tipo 
+                WHERE a.idDNI = ?");
+                $cmdTelefono->bindParam(1, $object->idDNI, PDO::PARAM_STR);
+                $cmdTelefono->execute();
+                $telefonos = $cmdTelefono->fetchAll(PDO::FETCH_OBJ);
+
+                return Response::sendSuccess(array(
+                    "persona" => $object,
+                    "image" => $image,
+                    "colegiaturas" => $colegiaturas,
+                    "correos" => $correos,
+                    "telefonos" => $telefonos
+                ));
+            } else {
+                return Response::sendClient("Datos no encontrados.");
+            }
+        } catch (PDOException $ex) {
+            return Response::sendError("Se produjo un error interterno, intente nuevamente en un par de minutos.");
+        } catch (Exception $ex) {
             return Response::sendError("Se produjo un error interterno, intente nuevamente en un par de minutos.");
         }
     }

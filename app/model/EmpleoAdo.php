@@ -4,6 +4,7 @@ namespace SysSoftIntegra\Model;
 
 use PDO;
 use SysSoftIntegra\DataBase\Database;
+use SysSoftIntegra\Src\Response;
 use Exception;
 
 class EmpleoAdo
@@ -16,7 +17,7 @@ class EmpleoAdo
     public static function getAllEmpleos($text, $posicionPagina, $filasPorPagina)
     {
         try {
-            $array = array();
+
             $arrayEmpleo = array();
             $comandoEmpleo = Database::getInstance()->getDb()->prepare("SELECT 
             idEmpleo, Titulo, Descripcion, Empresa, Celular, Telefono, Correo, Direccion, convert(VARCHAR, CAST(Fecha AS DATE),103) AS Fecha, Hora, Estado, Tipo 
@@ -56,11 +57,12 @@ class EmpleoAdo
             $comandoTotal->execute();
             $resultTotal =  $comandoTotal->fetchColumn();
 
-            array_push($array, $arrayEmpleo, $resultTotal);
-
-            return $array;
+            return Response::sendSuccess([
+                "empleos" => $arrayEmpleo,
+                "total" => $resultTotal
+            ]);
         } catch (Exception $ex) {
-            return $ex->getMessage();
+            return Response::sendError($ex->getMessage());
         }
     }
 
@@ -85,25 +87,24 @@ class EmpleoAdo
 
             $comandoInsert->execute();
             Database::getInstance()->getDb()->commit();
-            return "insertado";
+            return Response::sendSave("Se insertaron correctamente los datos.");
         } catch (Exception $ex) {
             Database::getInstance()->getDb()->rollback();
-            return $ex->getMessage();
+            return Response::sendError($ex->getMessage());
         }
     }
 
-    public static function idEmpleado($idEmpleo){
+    public static function idEmpleado($idEmpleo)
+    {
         try {
             $cmdEmpleo = Database::getInstance()->getDb()->prepare("SELECT * from Empleo WHERE idEmpleo = ?");
             $cmdEmpleo->bindParam(1, $idEmpleo, PDO::PARAM_INT);
             $cmdEmpleo->execute();
             $resultEmpleo = $cmdEmpleo->fetchObject();
-            return $resultEmpleo;
-
+            return Response::sendSuccess(["object" => $resultEmpleo]);
         } catch (Exception $ex) {
-            return $ex->getMessage();
+            return Response::sendError($ex->getMessage());
         }
-
     }
 
     public static function updateEmpleo($empleo)
@@ -122,7 +123,7 @@ class EmpleoAdo
             Tipo = ?,
             idUsuario = ?
             WHERE idEmpleo = ?");
-    
+
             $comandoUpdate->bindParam(1, $empleo["Titulo"], PDO::PARAM_STR);
             $comandoUpdate->bindParam(2, $empleo["Descripcion"], PDO::PARAM_STR);
             $comandoUpdate->bindParam(3, $empleo["Empresa"], PDO::PARAM_INT);
@@ -137,11 +138,10 @@ class EmpleoAdo
 
             $comandoUpdate->execute();
             Database::getInstance()->getDb()->commit();
-            return "actualizado";
-
+            return Response::sendSave("Se actualizaron correctamente los datos");
         } catch (Exception $ex) {
             Database::getInstance()->getDb()->rollback();
-            return $ex->getMessage();
+            return Response::sendError($ex->getMessage());
         }
     }
 
@@ -155,18 +155,18 @@ class EmpleoAdo
 
             if ($cmdValidate->fetch()) {
                 Database::getInstance()->getDb()->rollback();
-                return "activo";
+                return Response::sendClient("No se pudo eliminar la oferta laboral por que tiene estado activo.");
             } else {
 
                 $cmdDelete = Database::getInstance()->getDb()->prepare("DELETE FROM Empleo WHERE idEmpleo = ?");
                 $cmdDelete->bindParam(1, $empleo["idEmpleo"], PDO::PARAM_INT);
                 $cmdDelete->execute();
                 Database::getInstance()->getDb()->commit();
-                return "eliminado";
+                return Response::sendSave("Se eliminó correctamente la oferta laboral.");
             }
         } catch (Exception $ex) {
             Database::getInstance()->getDb()->rollback();
-            return $ex->getMessage();
+            return Response::sendError($ex->getMessage());
         }
     }
 }

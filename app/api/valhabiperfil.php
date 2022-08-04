@@ -9,11 +9,8 @@ use SysSoftIntegra\Model\PersonaAdo;
 require __DIR__ . './../src/autoload.php';
 
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-
     $body = json_decode(file_get_contents("php://input"), true);
-    $usuario = $body["usuario"];
-    $clave = $body["clave"];
-
-    echo json_encode(PersonaAdo::getUsurioLogin($usuario, $clave));
-    exit;
+    $request = (object)$body;
+    echo json_encode(PersonaAdo::valHabPerfil($request));
+    exit; 
 }

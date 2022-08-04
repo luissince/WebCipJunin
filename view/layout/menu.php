@@ -163,6 +163,8 @@
                     if ($_SESSION["Permisos"][25]["ver"] == 1) {
                         $menuConfiguracion .= '<li id="tab-configEmpresa"><a href="configEmpresa.php"><i class="fa fa-circle-o"></i>Empresa</a></li>';
                     }
+                    $menuConfiguracion .= '<li id="tab-empleo"><a href="empleo.php"><i class="fa fa-circle-o"></i>Empleo</a></li>';
+                    $menuConfiguracion .= '<li id="tab-mensaje"><a href="mensaje.php"><i class="fa fa-circle-o"></i>Mensajes (App)</a></li>';
                     $menuConfiguracion .= '</ul></li>';
                     print $menuConfiguracion;
                 }
@@ -180,7 +182,7 @@
           "capitulos", "universidad", "conceptos", "ingenieros", "habilidadIngeniero", "empresas",
           "cobros", "comprobantes", "reportes",
           "notaCredito", "nuevaNotaCredito", "consultaComprobante", "comprobantesElectronicos",
-          "configuracion", "bancos", "configEmpresa"
+          "configuracion", "bancos", "configEmpresa", "empleo", "mensaje"
       ];
 
       tabs.forEach(e => {
@@ -223,7 +225,7 @@
               } else if (id == "tab-comprobantesElectronicos") {
                   document.getElementById("tab-comprobantesElectronicos").setAttribute("class", "nav-link active");
               }
-          } else if (id == "tab-configuracion" || id == "tab-configEmpresa" || id == "tab-bancos") {
+          } else if (id == "tab-configuracion" || id == "tab-configEmpresa" || id == "tab-bancos"|| id == "tab-empleo"|| id == "tab-mensaje") {
               document.getElementById("tab-menu-configuracion").setAttribute("class", "nav-item active");
               if (id == "tab-configuracion") {
                   document.getElementById("tab-configuracion").setAttribute("class", "nav-link active");
@@ -231,6 +233,10 @@
                   document.getElementById("tab-configEmpresa").setAttribute("class", "nav-link active");
               } else if (id == "tab-bancos") {
                   document.getElementById("tab-bancos").setAttribute("class", "nav-link active");
+              }else if (id == "tab-empleo") {
+                  document.getElementById("tab-empleo").setAttribute("class", "nav-link active");
+              }else if (id == "tab-mensaje") {
+                  document.getElementById("tab-mensaje").setAttribute("class", "nav-link active");
               }
           } else {
               document.getElementById(id).setAttribute("class", "nav-item active");

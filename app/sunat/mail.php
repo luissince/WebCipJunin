@@ -71,8 +71,8 @@ try {
             //Create an instance; passing `true` enables exceptions
             $mail = new PHPMailer(true);
 
-            $fromname = "Tesorería Colegio de Ingenieros del Perú - CD Junín";
-            $fromEmail = "tesoreria@cip-junin.org.pe";
+            $fromname = "Informatica Colegio de Ingenieros del Perú - CD Junín";
+            $fromEmail = "cipjunin@cip-junin.org.pe";
 
             // Server settings
             $mail->isSMTP();                                        //Send using SMTP
