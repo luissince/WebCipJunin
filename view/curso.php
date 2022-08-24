@@ -207,7 +207,7 @@ if (!isset($_SESSION['IdUsuario'])) {
                                         <i class="fa fa-close"></i>
                                     </button>
                                     <h4 class="modal-title">
-                                        <i class="fa fa-address-card">
+                                        <i class="fa fa-book">
                                         </i> Eliminar curso
                                     </h4>
                                 </div>
@@ -288,8 +288,8 @@ if (!isset($_SESSION['IdUsuario'])) {
                                             <th width="20%">Organizador</th>
                                             <th width="10%">Capitulo</th>
                                             <th width="15%">Fecha/Hora</th>
-                                            <th width="10%">Celular</th>
                                             <th width="10%">Estado</th>
+                                            <th width="10%" class="text-center">Inscripción</th>
                                             <th width="5%" class="text-center">Editar</th>
                                             <th width="5%" class="text-center">Eliminar</th>
                                         </thead>
@@ -391,7 +391,7 @@ if (!isset($_SESSION['IdUsuario'])) {
                     });
 
                     $("#btnNuevo").click(function() {
-                        openModal('');
+                        modalCurso('');
                     })
 
                     $("#btnSearch").click(function() {
@@ -479,9 +479,11 @@ if (!isset($_SESSION['IdUsuario'])) {
                                     for (let curso of result.cursos) {
 
                                         let btnUpdate = editView == 0 ? '<i class="fa fa-minus" style="font-size:20px;"></i>' :
-                                            `<button class="btn btn-warning btn-xs" onclick="openModal(${curso.idCurso} )"><i class="fa fa-edit" style="font-size:25px;"></i></button>`;
+                                            `<button class="btn btn-warning btn-xs" title="Editar" onclick="modalCurso(${curso.idCurso} )"><i class="fa fa-edit" style="font-size:25px;"></i></button>`;
                                         let btnDelete = deleteView == 0 ? '<i class="fa fa-minus" style="font-size:20px;"></i>' :
-                                            `<button class="btn btn-danger btn-xs" onclick="modalDelete(${curso.idCurso})"><i class="fa fa-trash" style="font-size:25px;"></i></button>`
+                                            `<button class="btn btn-danger btn-xs" title="Eliminar" onclick="modalDelete(${curso.idCurso})"><i class="fa fa-trash" style="font-size:25px;"></i></button>`
+                                        let btnInscripcion = '<button class="btn btn-success btn-xs" title="Inscribir" onclick="linkInscripcion(\'' + curso.idCurso + '\',\'' +
+                                        curso.Nombre + '\',\'' + curso.Capitulo + '\',\'' + curso.PrecioCurso+ '\',\'' + curso.PrecioCertificado + '\',\'' + curso.FechaInicio + '\',\'' + curso.HoraInicio + '\')"><i class="fa fa-id-card" style="font-size:25px;"></i></button>'
 
                                         let estado = curso.Estado == 1 ? '<span class="badge btn-info">ACTIVO</span>' : '<span class="badge btn-danger">INACTIVO</span>'
 
@@ -491,8 +493,8 @@ if (!isset($_SESSION['IdUsuario'])) {
                                             '<td>' + curso.Organizador + '</td>' +
                                             '<td class="text-danger">' + curso.Capitulo + '</td>' +
                                             '<td>' + curso.FechaInicio + '<br/>' + tools.getTimeForma(curso.HoraInicio, true) + '</td>' +
-                                            '<td>' + curso.Celular + '</td>' +
                                             '<td>' + estado + '</td>' +
+                                            '<td class="text-center">' + btnInscripcion + '</td>' +
                                             '<td class="text-center">' + btnUpdate + '' + '</td>' +
                                             '<td class="text-center">' + btnDelete + '</td>' +
                                             '</tr>');
@@ -538,7 +540,7 @@ if (!isset($_SESSION['IdUsuario'])) {
                     }
                 }
 
-                function openModal(idCurso) {
+                function modalCurso(idCurso) {
 
                     $("#titleModal").html('')
 
@@ -869,6 +871,10 @@ if (!isset($_SESSION['IdUsuario'])) {
                             tools.AlertError("Error", error.responseText);
                         }
                     });
+                }
+
+                this.linkInscripcion = (idCurso, nombre, capitulo, precioCurso, precioCertificado, fechaInicio, horaInicio  ) =>{
+                    location.href = `./inscripcion.php?idCurso=${idCurso}&Nombre=${nombre}&Capitulo=${capitulo}&PrecioCurso=${precioCurso}&PrecioCertificado=${precioCertificado}&FechaInicio=${fechaInicio}&HoraInicio=${horaInicio}`;
                 }
             </script>
         </body>
