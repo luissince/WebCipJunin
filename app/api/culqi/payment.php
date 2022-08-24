@@ -35,14 +35,14 @@ try {
     curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
 
     //producción
-    $headers = array(
-        'Content-Type: application/json',
-        'Authorization: Bearer pk_live_1a97fceff3c6af2b'
-    );
     // $headers = array(
     //     'Content-Type: application/json',
-    //     'Authorization: Bearer pk_test_26dcfdea67bea7fa'
+    //     'Authorization: Bearer pk_live_1a97fceff3c6af2b'
     // );
+    $headers = array(
+        'Content-Type: application/json',
+        'Authorization: Bearer pk_test_26dcfdea67bea7fa'
+    );
     curl_setopt($curl, CURLOPT_HTTPHEADER, $headers);
     curl_setopt($curl, CURLOPT_CUSTOMREQUEST, "POST");
     curl_setopt($curl, CURLOPT_POSTFIELDS, $data_string);
@@ -76,14 +76,14 @@ try {
         curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
 
         //producción
-        $headers = array(
-            'Content-Type: application/json',
-            'Authorization: Bearer sk_live_a5979cee8160335b'
-        );
         // $headers = array(
         //     'Content-Type: application/json',
-        //     'Authorization: Bearer sk_test_77dae825c0fe1175'
+        //     'Authorization: Bearer sk_live_a5979cee8160335b'
         // );
+        $headers = array(
+            'Content-Type: application/json',
+            'Authorization: Bearer sk_test_77dae825c0fe1175'
+        );
         curl_setopt($curl, CURLOPT_HTTPHEADER, $headers);
         curl_setopt($curl, CURLOPT_CUSTOMREQUEST, "POST");
         curl_setopt($curl, CURLOPT_POSTFIELDS, $data_string);
