@@ -2561,18 +2561,18 @@ class PersonaAdo
                     ));
 
                     Database::getInstance()->getDb()->commit();
-                    return Response::sendSave($resultUsuario);
+                    Response::sendSave($resultUsuario);
                 } else {
                     Database::getInstance()->getDb()->rollback();
-                    return Response::sendClient('Usuario o contraseña incorrectas.');
+                    Response::sendClient('Usuario o contraseña incorrectas.');
                 }
             } else {
                 Database::getInstance()->getDb()->rollback();
-                return Response::sendClient('Usuario o contraseña incorrectas.');
+                Response::sendClient('Usuario o contraseña incorrectas.');
             }
         } catch (Exception $ex) {
             Database::getInstance()->getDb()->rollback();
-            return Response::sendError("Error de conexión del servidor, intente nuevamente en un par de minutos.");
+            Response::sendError("Error de conexión del servidor, intente nuevamente en un par de minutos.");
         }
     }
 
@@ -2779,19 +2779,19 @@ class PersonaAdo
                 $objectTelefono = $telefono->fetchObject();
                 $phone = $objectTelefono == null ? "" : $objectTelefono->Telefono;
 
-                return Response::sendSuccess([
+                Response::sendSuccess([
                     'user' => $resultUser,
                     'email' => $email,
                     'ubicacion' => $ubicacion,
                     'phone' => $phone
                 ]);
             } else {
-                return Response::sendClient("Datos no encontrados.");
+                Response::sendClient("Datos no encontrados.");
             }
         } catch (PDOException $ex) {
-            return Response::sendError("Error de conexión del servidor, intente nuevamente en un par de minutos.");
+            Response::sendError("Error de conexión del servidor, intente nuevamente en un par de minutos.");
         } catch (Exception $ex) {
-            return Response::sendError("Error de conexión del servidor, intente nuevamente en un par de minutos.");
+            Response::sendError("Error de conexión del servidor, intente nuevamente en un par de minutos.");
         }
     }
 
@@ -2839,13 +2839,13 @@ class PersonaAdo
 
             Database::getInstance()->getDb()->commit();
 
-            return Response::sendSave('Datos actualizados correctamente.');
+            Response::sendSave('Datos actualizados correctamente.');
         } catch (PDOException $ex) {
             Database::getInstance()->getDb()->rollBack();
-            return Response::sendError("Error de conexión del servidor, intente nuevamente en un par de minutos.");
+            Response::sendError("Error de conexión del servidor, intente nuevamente en un par de minutos.");
         } catch (Exception $ex) {
             Database::getInstance()->getDb()->rollBack();
-            return Response::sendError("Error de conexión del servidor, intente nuevamente en un par de minutos.");
+            Response::sendError("Error de conexión del servidor, intente nuevamente en un par de minutos.");
         }
     }
 
@@ -3098,7 +3098,7 @@ class PersonaAdo
             if ($object) {
                 if ($object->Clave == null || $object->Clave === "") {
                     Database::getInstance()->getDb()->rollBack();
-                    return Response::sendClient("Usted tiene que crear una cuenta para continuar por favor.");
+                    Response::sendClient("Usted tiene que crear una cuenta para continuar por favor.");
                 } else {
                     $random = rand(1000, 9999);
                     $time = 10;
@@ -3163,13 +3163,13 @@ class PersonaAdo
                         $mail->send();
                     } else {
                         Database::getInstance()->getDb()->rollBack();
-                        return Response::sendClient("No tiene registrado un correo electrónico, comuníquese con el área de sistema del CIP-JUNIN.");
+                        Response::sendClient("No tiene registrado un correo electrónico, comuníquese con el área de sistema del CIP-JUNIN.");
                     }
 
                     Database::getInstance()->getDb()->commit();
                     $idToken = Database::getInstance()->getDb()->lastInsertId();
 
-                    return Response::sendSave([
+                    Response::sendSave([
                         'message' => "Se generó el código de verificación.",
                         'user' => $object,
                         'token' => $idToken
@@ -3177,14 +3177,14 @@ class PersonaAdo
                 }
             } else {
                 Database::getInstance()->getDb()->rollBack();
-                return Response::sendClient("Detectamos que usted no se encuentra registrado.");
+                Response::sendClient("Detectamos que usted no se encuentra registrado.");
             }
         } catch (PDOException $ex) {
             Database::getInstance()->getDb()->rollBack();
-            return Response::sendError("Se produjo un error interterno, intente nuevamente en un par de minutos.");
+            Response::sendError("Se produjo un error interterno, intente nuevamente en un par de minutos.");
         } catch (Exception $ex) {
             Database::getInstance()->getDb()->rollBack();
-            return Response::sendError("Se produjo un error interterno, intente nuevamente en un par de minutos.");
+            Response::sendError("Se produjo un error interterno, intente nuevamente en un par de minutos.");
         }
     }
     /**
@@ -3206,14 +3206,14 @@ class PersonaAdo
 
             $objectUser = $user->fetchObject();
             if ($objectUser) {
-                return Response::sendSuccess("El código se valido correctamente.");
+                Response::sendSuccess("El código se valido correctamente.");
             } else {
-                return Response::sendClient("El código no existe o ha expirado.");
+                Response::sendClient("El código no existe o ha expirado.");
             }
         } catch (PDOException $ex) {
-            return Response::sendError("Se produjo un error interterno, intente nuevamente en un par de minutos.");
+            Response::sendError("Se produjo un error interterno, intente nuevamente en un par de minutos.");
         } catch (Exception $ex) {
-            return Response::sendError("Se produjo un error interterno, intente nuevamente en un par de minutos.");
+            Response::sendError("Se produjo un error interterno, intente nuevamente en un par de minutos.");
         }
     }
     /**
@@ -3231,13 +3231,13 @@ class PersonaAdo
             ));
 
             Database::getInstance()->getDb()->commit();
-            return Response::sendSave("Se guardo correctamente su contraseña, ahora puede ingresar al sistema usando su n° cip y su clave.");
+            Response::sendSave("Se guardo correctamente su contraseña, ahora puede ingresar al sistema usando su n° cip y su clave.");
         } catch (PDOException $ex) {
             Database::getInstance()->getDb()->rollBack();
-            return Response::sendError("Se produjo un error interterno, intente nuevamente en un par de minutos.");
+            Response::sendError("Se produjo un error interterno, intente nuevamente en un par de minutos.");
         } catch (Exception $ex) {
             Database::getInstance()->getDb()->rollBack();
-            return Response::sendError("Se produjo un error interterno, intente nuevamente en un par de minutos.");
+            Response::sendError("Se produjo un error interterno, intente nuevamente en un par de minutos.");
         }
     }
 
@@ -3325,7 +3325,7 @@ class PersonaAdo
                 $cmdTelefono->execute();
                 $telefonos = $cmdTelefono->fetchAll(PDO::FETCH_OBJ);
 
-                return Response::sendSuccess(array(
+                Response::sendSuccess(array(
                     "persona" => $object,
                     "image" => $image,
                     "colegiaturas" => $colegiaturas,
@@ -3333,12 +3333,12 @@ class PersonaAdo
                     "telefonos" => $telefonos
                 ));
             } else {
-                return Response::sendClient("Datos no encontrados.");
+                Response::sendClient("Datos no encontrados.");
             }
         } catch (PDOException $ex) {
-            return Response::sendError("Se produjo un error interterno, intente nuevamente en un par de minutos.");
+            Response::sendError("Se produjo un error interterno, intente nuevamente en un par de minutos.");
         } catch (Exception $ex) {
-            return Response::sendError("Se produjo un error interterno, intente nuevamente en un par de minutos.");
+            Response::sendError("Se produjo un error interterno, intente nuevamente en un par de minutos.");
         }
     }
 }

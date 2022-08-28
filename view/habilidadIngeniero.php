@@ -422,59 +422,44 @@ if (!isset($_SESSION['IdUsuario'])) {
                     });
                 }
 
-                function loadCapitulos() {
-                    $.ajax({
-                        url: "../app/controller/CapituloController.php",
-                        method: "GET",
-                        data: {
-                            "type": "allCapitulos"
-                        },
-                        beforeSend: function() {
-                            $("#cbCapitulo").empty();
-                        },
-                        success: function(result) {
-                            if (result.estado == 1) {
-                                $("#cbCapitulo").append('<option value="0">- Seleccione -</option>');
-                                for (let value of result.capitulos) {
-                                    $("#cbCapitulo").append('<option value="' + value.idCapitulo + '">' + value.Capitulo + '</option>');
-                                }
-                                $('#cbCapitulo').select2();
-                            } else {
-                                $("#cbCapitulo").append('<option value="">- Seleccione -</option>');
+                async function loadCapitulos() {
+                    try {
+                        $("#cbCapitulo").empty();
+
+                        const result = await axios.get("../app/web/CapituloWeb.php", {
+                            params: {
+                                "type": "allCapitulos"
                             }
-                        },
-                        error: function(error) {
-                            $("#cbCapitulo").append('<option value="">- Seleccione -</option>');
+                        });
+
+                        $("#cbCapitulo").append('<option value="0">- Seleccione -</option>');
+                        for (let value of result.data) {
+                            $("#cbCapitulo").append('<option value="' + value.idCapitulo + '">' + value.Capitulo + '</option>');
                         }
-                    });
+                    } catch (error) {
+                        $("#cbCapitulo").append('<option value="">- Seleccione -</option>');
+                    }
                 }
 
-                function loadEspecialidades(idCapitulo) {
-                    $.ajax({
-                        url: "../app/controller/CapituloController.php",
-                        method: "GET",
-                        data: {
-                            "type": "allEspecialidades",
-                            "idCapitulo": idCapitulo
-                        },
-                        beforeSend: function() {
-                            $("#cbEspecialidad").empty();
-                        },
-                        success: function(result) {
-                            if (result.estado == 1) {
-                                $("#cbEspecialidad").append('<option value="">- Seleccione -</option>');
-                                for (let value of result.especialidades) {
-                                    $("#cbEspecialidad").append('<option value="' + value.idEspecialidad + '">' + value.Especialidad + '</option>');
-                                }
-                                $('#cbEspecialidad').select2();
-                            } else {
-                                $("#cbEspecialidad").append('<option value="">- Seleccione -</option>');
+                async function loadEspecialidades(idCapitulo) {
+                    try {
+                        $("#cbEspecialidad").empty();
+
+                        const result = await axios.get("../app/web/CapituloWeb.php", {
+                            params: {
+                                "type": "allEspecialidades",
+                                "idCapitulo": idCapitulo
                             }
-                        },
-                        error: function(error) {
-                            $("#cbEspecialidad").append('<option value="">- Seleccione -</option>');
+                        });
+
+                        $("#cbEspecialidad").append('<option value="">- Seleccione -</option>');
+                        for (let value of result.data) {
+                            $("#cbEspecialidad").append('<option value="' + value.idEspecialidad + '">' + value.Especialidad + '</option>');
                         }
-                    });
+                        $('#cbEspecialidad').select2();
+                    } catch (error) {
+                        $("#cbEspecialidad").append('<option value="">- Seleccione -</option>');
+                    }
                 }
 
                 function openExcelHabilidad(opcion, buscar, habilitado, capitulo, especialidad, fecha = '', fechaFin = '') {

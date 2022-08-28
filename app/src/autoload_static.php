@@ -6,6 +6,9 @@ class Autoload_Static
     {
 
         return array(
+
+            'SysSoftIntegra\\Controller\\CursoController' => __DIR__  . '/../controller/CursoController.php',
+            'SysSoftIntegra\\Controller\\CapituloController' => __DIR__  . '/../controller/CapituloController.php',
             
             'SysSoftIntegra\\Model\\BancoAdo' => __DIR__  . '/../model/BancoAdo.php',
             'SysSoftIntegra\\Model\\CapituloAdo' => __DIR__  . '/../model/CapituloAdo.php',
@@ -33,6 +36,7 @@ class Autoload_Static
             'SysSoftIntegra\\Pdf\\PdfIngreso' => __DIR__  . '/../pdf/PdfIngreso.php',
             'SysSoftIntegra\\Src\\Tools' => __DIR__  . '/Tools.php',
             'SysSoftIntegra\\Src\\Response' => __DIR__  . '/Response.php',
+            'SysSoftIntegra\\Src\\Route' => __DIR__  . '/Route.php',
             'SysSoftIntegra\\DataBase\\Database' => __DIR__  . '/../database/DataBaseConexion.php',
             'Phpspreadsheet\\Vendor\\Autload' => __DIR__ . '/../sunat/lib/phpspreadsheet/vendor/autoload.php',
             'RobRichards\\XMLSecLibs\\XMLSecurityDSig' => __DIR__ . '/../sunat/lib/robrichards/src/XMLSecurityDSig.php',

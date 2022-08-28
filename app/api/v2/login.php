@@ -13,6 +13,5 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $body = json_decode(file_get_contents("php://input"), true);
     $request = (object)$body;
 
-    echo json_encode(PersonaAdo::getUsurioLoginV2($request));
-    exit;
+    PersonaAdo::getUsurioLoginV2($request);
 }

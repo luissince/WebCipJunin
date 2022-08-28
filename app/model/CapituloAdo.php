@@ -5,6 +5,7 @@ namespace SysSoftIntegra\Model;
 use PDO;
 use SysSoftIntegra\DataBase\Database;
 use Exception;
+use SysSoftIntegra\Src\Response;
 
 class CapituloAdo
 {
@@ -16,7 +17,6 @@ class CapituloAdo
     public static function getAllEspecialidades($nombres, $posicionPagina, $filasPorPagina)
     {
         try {
-            $array = array();
             $arrayEspecialidades = array();
             $comandoEspecialidades = Database::getInstance()->getDb()->prepare("SELECT c.Capitulo, c.idCapitulo, ISNULL (e.Especialidad,'No tiene asignado ninguna especialidad') AS Especialidad, isnull(e.idEspecialidad,-1) AS idEspecialidad
             FROM Especialidad AS e RIGHT JOIN Capitulo AS c ON c.idCapitulo = e.idCapitulo
@@ -49,10 +49,12 @@ class CapituloAdo
             $comandoTotal->execute();
             $resultTotal =  $comandoTotal->fetchColumn();
 
-            array_push($array, $arrayEspecialidades, $resultTotal);
-            return $array;
+            Response::sendSuccess([
+                "especialidades" => $arrayEspecialidades,
+                "total" => $resultTotal
+            ]);
         } catch (Exception $ex) {
-            return $ex->getMessage();
+            Response::sendError($ex->getMessage());
         }
     }
 
@@ -60,12 +62,11 @@ class CapituloAdo
     {
         try {
             $comandoCapitulo = Database::getInstance()->getDb()->prepare("SELECT DISTINCT idCapitulo, Capitulo FROM Capitulo");
-
             $comandoCapitulo->execute();
             $resultado = $comandoCapitulo->fetchAll();
-            return $resultado;
+            return Response::sendSuccess($resultado);
         } catch (Exception $ex) {
-            return $ex->getMessage();
+            return Response::sendError($ex->getMessage());
         }
     }
 
@@ -88,9 +89,9 @@ class CapituloAdo
             $comandoEspecialidad->bindParam(1, $idCapitulo, PDO::PARAM_INT);
             $comandoEspecialidad->execute();
             $resultado = $comandoEspecialidad->fetchAll();
-            return $resultado;
+            Response::sendSuccess($resultado);
         } catch (Exception $ex) {
-            return $ex->getMessage();
+            Response::sendError($ex->getMessage());
         }
     }
 
@@ -121,17 +122,17 @@ class CapituloAdo
             $comandSelect->execute();
             if ($comandSelect->fetch()) {
                 Database::getInstance()->getDb()->rollback();
-                return "duplicado";
+                Response::sendClient("El capítulo " . $capitulos["capitulo"] . " ya se encuentra registrado.");
             } else {
                 $comandoInsert = Database::getInstance()->getDb()->prepare("INSERT INTO Capitulo (Capitulo) VALUES (UPPER(?))");
                 $comandoInsert->bindParam(1, $capitulos["capitulo"], PDO::PARAM_STR);
                 $comandoInsert->execute();
                 Database::getInstance()->getDb()->commit();
-                return "insertado";
+                Response::sendSave("Se registró correctamente el capítulo.");
             }
         } catch (Exception $ex) {
             Database::getInstance()->getDb()->rollback();
-            return $ex->getMessage();
+            Response::sendError($ex->getMessage());
         }
     }
 
@@ -144,7 +145,7 @@ class CapituloAdo
             $comandoSelect->execute();
             if ($comandoSelect->fetch()) {
                 Database::getInstance()->getDb()->rollback();
-                return "duplicado";
+                Response::sendClient("La especialidad " . $especialidad["especialidad"] . " ya se encuentra registrado.");
             } else {
                 $comandoInsert = Database::getInstance()->getDb()->prepare("INSERT INTO Especialidad (idCapitulo, Especialidad) VALUES (?,?)");
                 $comandoInsert->bindParam(1, $especialidad["capitulo"], PDO::PARAM_INT);
@@ -152,11 +153,11 @@ class CapituloAdo
 
                 $comandoInsert->execute();
                 Database::getInstance()->getDb()->commit();
-                return "Insertado";
+                Response::sendSave("Se registró correctamente la especialidad.");
             }
         } catch (Exception $ex) {
             Database::getInstance()->getDb()->rollback();
-            return $ex->getMessage();
+            Response::sendError($ex->getMessage());
         }
     }
 
@@ -170,18 +171,18 @@ class CapituloAdo
             $comandSelect->execute();
             if ($comandSelect->fetch()) {
                 Database::getInstance()->getDb()->rollback();
-                return "duplicado";
+                Response::sendClient("El capitulo " . $capitulo["Capitulo"] . " ya se encuentra registrado.");
             } else {
                 $comandoInsert = Database::getInstance()->getDb()->prepare("UPDATE Capitulo SET Capitulo = UPPER(?) WHERE idCapitulo = ?");
                 $comandoInsert->bindParam(1, $capitulo["Capitulo"], PDO::PARAM_STR);
                 $comandoInsert->bindParam(2, $capitulo["idCapitulo"], PDO::PARAM_INT);
                 $comandoInsert->execute();
                 Database::getInstance()->getDb()->commit();
-                return "actualizado";
+                Response::sendSave("Se actualizaron correctamente el capítulo.");
             }
         } catch (Exception $ex) {
             Database::getInstance()->getDb()->rollback();
-            return $ex->getMessage();
+            Response::sendError($ex->getMessage());
         }
     }
 
@@ -195,7 +196,7 @@ class CapituloAdo
             $comandSelect->execute();
             if ($comandSelect->fetch()) {
                 Database::getInstance()->getDb()->rollback();
-                return "duplicado";
+                Response::sendClient("La especialidad " . $especialidad["Especialidad"] . " ya se encuentra registrado.");
             } else {
                 $comandoInsert = Database::getInstance()->getDb()->prepare("UPDATE Especialidad SET idCapitulo = ?, Especialidad = ? WHERE idEspecialidad = ?");
                 $comandoInsert->bindParam(1, $especialidad["idCapitulo"], PDO::PARAM_INT);
@@ -203,11 +204,11 @@ class CapituloAdo
                 $comandoInsert->bindParam(3, $especialidad["idEspecialidad"], PDO::PARAM_INT);
                 $comandoInsert->execute();
                 Database::getInstance()->getDb()->commit();
-                return "actualizado";
+                Response::sendSave("Se actualizaron correctamente la especialidad.");
             }
         } catch (Exception $ex) {
             Database::getInstance()->getDb()->rollback();
-            return $ex->getMessage();
+            Response::sendError($ex->getMessage());
         }
     }
 
@@ -221,17 +222,17 @@ class CapituloAdo
             $cmdValidate->execute();
             if ($cmdValidate->fetch()) {
                 Database::getInstance()->getDb()->rollback();
-                return "especialidad";
+                Response::sendClient("No se puede elimar el capítulo porque tiene ligado especialidades.");
             } else {
                 $cmdCapitulo = Database::getInstance()->getDb()->prepare("DELETE FROM Capitulo WHERE idCapitulo = ?");
                 $cmdCapitulo->bindParam(1, $idCapitulo, PDO::PARAM_STR);
                 $cmdCapitulo->execute();
                 Database::getInstance()->getDb()->commit();
-                return "eliminado";
+                Response::sendSave("Se eliminó correctamente el capítulo.");
             }
         } catch (Exception $ex) {
             Database::getInstance()->getDb()->rollback();
-            return $ex->getMessage();
+            Response::sendError($ex->getMessage());
         }
     }
 
@@ -244,17 +245,17 @@ class CapituloAdo
             $cmdValidate->execute();
             if ($cmdValidate->fetch()) {
                 Database::getInstance()->getDb()->rollback();
-                return "colegiatura";
+                Response::sendClient("No se puede elimar la especialidad porque esta ligada a una colegiatura.");
             } else {
                 $comandSelect = Database::getInstance()->getDb()->prepare("DELETE FROM Especialidad WHERE idEspecialidad = ?");
                 $comandSelect->bindParam(1, $idEspecialidad, PDO::PARAM_STR);
                 $comandSelect->execute();
                 Database::getInstance()->getDb()->commit();
-                return "eliminado";
+                Response::sendSave("Se eliminó correctamente la especialidad.");
             }
         } catch (Exception $ex) {
             Database::getInstance()->getDb()->rollback();
-            return $ex->getMessage();
+            Response::sendError($ex->getMessage());
         }
     }
 }

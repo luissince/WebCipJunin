@@ -34,8 +34,8 @@
 <!-- Bootstrap 3.3.7 -->
 <script src="adminlte/bower_components/bootstrap/dist/js/bootstrap.js"></script>
 <!-- Select 2 -->
-<script src="adminlte/bower_components/select2/dist/js/select2.min.js"></script>
-<script src="adminlte/bower_components/select2/dist/js/select2.full.min.js"></script>
+<script src="adminlte/bower_components/select2/dist/js/select2.js"></script>
+<script src="adminlte/bower_components/select2/dist/js/select2.full.js"></script>
 <!-- Slimscroll -->
 <script src="adminlte/bower_components/jquery-slimscroll/jquery.slimscroll.min.js"></script>
 <!-- FastClick -->
@@ -48,3 +48,4 @@
 <script src="adminlte/dist/js/demo.js"></script>
 <script src="js/sweetalert.min.js"></script>
 <script src="js/toastr.min.js"></script>
+<script src="js/axios.js"></script>

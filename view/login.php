@@ -135,66 +135,70 @@ if (isset($_SESSION['IdUsuario'])) {
                 if (isLogin) {
                     return;
                 }
+                
                 if ($("#txtUsuario").val() == '') {
                     tools.AlertWarning('Mensaje', "Ingrese un usuario por favor");
                     $("#txtUsuario").focus();
-                } else if ($("#txtClave").val() == '') {
+                    return;
+                }
+
+                if ($("#txtClave").val() == '') {
                     tools.AlertWarning('Mensaje', "Ingrese una contraseña por favor");
                     $("#txtClave").focus();
-                } else {
+                    return;
+                }
 
-                    $.ajax({
-                        url: "../app/controller/UsuarioController.php",
-                        method: "GET",
-                        data: {
-                            "type": "login",
-                            "usuario": $("#txtUsuario").val(),
-                            "clave": $("#txtClave").val()
-                        },
-                        beforeSend: function() {
-                            isLogin = true;
-                            tools.ModalAlertInfo("Login", "Procesando petición..");
-                        },
-                        success: function(result) {
-                            if (result.estado === 1) {
-                                let dato = result.datos;
-                                tools.ModalAlertSuccess("Login", "Los datos son correctos su sesión va iniciar en 2 segundos.");
+                $.ajax({
+                    url: "../app/controller/UsuarioController.php",
+                    method: "GET",
+                    data: {
+                        "type": "login",
+                        "usuario": $("#txtUsuario").val(),
+                        "clave": $("#txtClave").val()
+                    },
+                    beforeSend: function() {
+                        isLogin = true;
+                        tools.ModalAlertInfo("Login", "Procesando petición..");
+                    },
+                    success: function(result) {
+                        if (result.estado === 1) {
+                            let dato = result.datos;
+                            tools.ModalAlertSuccess("Login", "Los datos son correctos su sesión va iniciar en 2 segundos.");
 
-                                tools.AlertSuccess('Login', 'Bienvenido al Sistema ' + dato.Apellidos + ' ' + dato.Nombres)
-                                setTimeout(function() {
-                                    location.href = "../view/index.php";
-                                }, 1000);
-                            } else if (result.estado === 2) {
-                                $("#txtUsuario").focus();
-                                tools.ModalAlertWarning("Login", result.message);
-                                isLogin = false;
-                            } else if (result.estado === 3) {
-                                $("#txtClave").val('')
-                                $("#txtClave").focus();
-                                tools.ModalAlertWarning("Login", result.message);
-                                isLogin = false;
-                            } else if (result.estado === 4) {
-                                $("#txtUsuario").val('')
-                                $("#txtUsuario").focus();
-                                tools.ModalAlertWarning("Login", result.message);
-                                isLogin = false;
-                            } else {
-                                $("#txtUsuario").val('')
-                                $("#txtClave").val('')
-                                $("#txtUsuario").focus();
-                                tools.ModalAlertWarning("Login", result.message);
-                                isLogin = false;
-                            }
-                        },
-                        error: function(error) {
+                            tools.AlertSuccess('Login', 'Bienvenido al Sistema ' + dato.Apellidos + ' ' + dato.Nombres)
+                            setTimeout(function() {
+                                location.href = "../view/index.php";
+                            }, 1000);
+                        } else if (result.estado === 2) {
+                            $("#txtUsuario").focus();
+                            tools.ModalAlertWarning("Login", result.message);
+                            isLogin = false;
+                        } else if (result.estado === 3) {
+                            $("#txtClave").val('')
+                            $("#txtClave").focus();
+                            tools.ModalAlertWarning("Login", result.message);
+                            isLogin = false;
+                        } else if (result.estado === 4) {
+                            $("#txtUsuario").val('')
+                            $("#txtUsuario").focus();
+                            tools.ModalAlertWarning("Login", result.message);
+                            isLogin = false;
+                        } else {
                             $("#txtUsuario").val('')
                             $("#txtClave").val('')
                             $("#txtUsuario").focus();
-                            tools.ModalAlertError("Login", error.responseText);
+                            tools.ModalAlertWarning("Login", result.message);
                             isLogin = false;
                         }
-                    });
-                }
+                    },
+                    error: function(error) {
+                        $("#txtUsuario").val('')
+                        $("#txtClave").val('')
+                        $("#txtUsuario").focus();
+                        tools.ModalAlertError("Login", error.responseText);
+                        isLogin = false;
+                    }
+                });
             }
         </script>
     </body>

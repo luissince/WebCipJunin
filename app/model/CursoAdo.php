@@ -4,6 +4,7 @@ namespace SysSoftIntegra\Model;
 
 use PDO;
 use SysSoftIntegra\DataBase\Database;
+use SysSoftIntegra\Src\Response;
 use Exception;
 
 class CursoAdo
@@ -16,8 +17,8 @@ class CursoAdo
     public static function getAll($text, $posicionPagina, $filasPorPagina)
     {
         try {
-            $array = array();
             $arrayCurso = array();
+
             $comando = Database::getInstance()->getDb()->prepare("SELECT 
             c.idCurso, 
             c.Nombre, 
@@ -69,18 +70,20 @@ class CursoAdo
                 ));
             }
 
-            $comandoTotal = Database::getInstance()->getDb()->prepare("SELECT COUNT(*) FROM Curso AS c INNER JOIN Capitulo AS cap ON c.idCapitulo = cap.idCapitulo
-            where c.Nombre like concat('%',?,'%') or cap.Capitulo like concat('%',?,'%')");
+            $comandoTotal = Database::getInstance()->getDb()->prepare("SELECT COUNT(*) 
+            FROM Curso AS c INNER JOIN Capitulo AS cap ON c.idCapitulo = cap.idCapitulo
+            WHERE c.Nombre like concat('%',?,'%') or cap.Capitulo like concat('%',?,'%')");
             $comandoTotal->bindParam(1, $text, PDO::PARAM_STR);
             $comandoTotal->bindParam(2, $text, PDO::PARAM_STR);
             $comandoTotal->execute();
             $resultTotal =  $comandoTotal->fetchColumn();
 
-            array_push($array, $arrayCurso, $resultTotal);
-
-            return $array;
+            Response::sendSuccess([
+                "cursos" => $arrayCurso,
+                "total" => $resultTotal
+            ]);
         } catch (Exception $ex) {
-            return $ex->getMessage();
+            Response::sendError($ex->getMessage());
         }
     }
 
@@ -89,8 +92,22 @@ class CursoAdo
         try {
             Database::getInstance()->getDb()->beginTransaction();
 
-            $comandoInsert = Database::getInstance()->getDb()->prepare("INSERT INTO Curso 
-            (Nombre, Instructor, Organizador, idCapitulo, Modalidad, Direccion, FechaInicio, HoraInicio, PrecioCurso, PrecioCertificado, Celular, Correo, Descripcion, Estado, idUsuario) 
+            $comandoInsert = Database::getInstance()->getDb()->prepare("INSERT INTO Curso(
+            Nombre,
+            Instructor, 
+            Organizador,
+            idCapitulo,
+            Modalidad,
+            Direccion,
+            FechaInicio, 
+            HoraInicio,
+            PrecioCurso,
+            PrecioCertificado,
+            Celular, 
+            Correo,
+            Descripcion,
+            Estado,
+             idUsuario) 
             VALUES (UPPER(?), UPPER(?), UPPER(?), ?,?, UPPER(?), ?,?,?,?,?,?,UPPER(?),?,?)");
             $comandoInsert->bindParam(1, $curso["Nombre"], PDO::PARAM_STR);
             $comandoInsert->bindParam(2, $curso["Instructor"], PDO::PARAM_STR);
@@ -112,41 +129,43 @@ class CursoAdo
 
             $comandoInsert->execute();
             Database::getInstance()->getDb()->commit();
-            return "insertado";
+            Response::sendSave("Curso registrado correctamente.");
         } catch (Exception $ex) {
             Database::getInstance()->getDb()->rollback();
-            return $ex->getMessage();
+            Response::sendError($ex->getMessage());
         }
     }
 
-    public static function id($id){
+    public static function id($id)
+    {
         try {
             $cmd = Database::getInstance()->getDb()->prepare("SELECT 
-            idCurso,
-            Nombre, 
-            Instructor, 
-            Organizador, 
-            idCapitulo, 
-            Modalidad, 
-            Direccion, 
-            CAST(FechaInicio AS DATE) AS FechaInicio,
-            CONVERT(VARCHAR, HoraInicio, 24) AS HoraInicio,
-            PrecioCurso, 
-            PrecioCertificado, 
-            Celular, 
-            Correo, 
-            Descripcion, 
-            Estado
-            from Curso WHERE idCurso = ?");
+            c.idCurso,
+            c.Nombre, 
+            c.Instructor, 
+            c.Organizador, 
+            c.idCapitulo, 
+            ca.Capitulo,
+            c.Modalidad, 
+            c.Direccion, 
+            CAST(c.FechaInicio AS DATE) AS FechaInicio,
+            CONVERT(VARCHAR, c.HoraInicio, 24) AS HoraInicio,
+            c.PrecioCurso, 
+            c.PrecioCertificado, 
+            c.Celular, 
+            c.Correo, 
+            c.Descripcion, 
+            c.Estado
+            FROM Curso AS c INNER JOIN Capitulo AS ca ON ca.idCapitulo = c.idCapitulo
+            
+            WHERE c.idCurso = ?");
             $cmd->bindParam(1, $id, PDO::PARAM_INT);
             $cmd->execute();
             $result = $cmd->fetchObject();
-            return $result;
-
+            Response::sendSuccess($result);
         } catch (Exception $ex) {
-            return $ex->getMessage();
+            Response::sendError($ex->getMessage());
         }
-
     }
 
     public static function update($curso)
@@ -192,11 +211,10 @@ class CursoAdo
 
             $comandoUpdate->execute();
             Database::getInstance()->getDb()->commit();
-            return "actualizado";
-
+            Response::sendSave("Curso actualizado correctamente.");
         } catch (Exception $ex) {
             Database::getInstance()->getDb()->rollback();
-            return $ex->getMessage();
+            Response::sendError($ex->getMessage());
         }
     }
 
@@ -210,18 +228,18 @@ class CursoAdo
 
             if ($cmdValidate->fetch()) {
                 Database::getInstance()->getDb()->rollback();
-                return "activo";
+                Response::sendClient("No se pudo eliminar el curso por que tiene estado activo.");
             } else {
 
                 $cmdDelete = Database::getInstance()->getDb()->prepare("DELETE FROM Curso WHERE idCurso = ?");
                 $cmdDelete->bindParam(1, $curso["idCurso"], PDO::PARAM_INT);
                 $cmdDelete->execute();
                 Database::getInstance()->getDb()->commit();
-                return "eliminado";
+                Response::sendSave("Curso eliminado correctamente.");
             }
         } catch (Exception $ex) {
             Database::getInstance()->getDb()->rollback();
-            return $ex->getMessage();
+            Response::sendError($ex->getMessage());
         }
     }
 }

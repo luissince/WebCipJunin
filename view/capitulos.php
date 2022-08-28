@@ -203,11 +203,11 @@ if (!isset($_SESSION['IdUsuario'])) {
                                     <table class="table table-striped" style="border-width: 1px;border-style: dashed;border-color: #E31E25;">
                                         <thead style="background-color: #FDB2B1;color: #B72928;">
                                             <th width="5%" class="text-center">#</th>
-                                            <th width="40%">Capitulo</th>
+                                            <th width="20%">Capitulo</th>
                                             <th width="40%">Especialidad</th>
-                                            <th width="5%" class="text-center">Editar</th>
-                                            <th width="5%" class="text-center">Elim. Capit.</th>
-                                            <th width="5%" class="text-center">Elim. Espec.</th>
+                                            <th width="10%" class="text-center">Editar</th>
+                                            <th width="10%" class="text-center">Elim. Capit.</th>
+                                            <th width="10%" class="text-center">Elim. Espec.</th>
                                         </thead>
                                         <tbody id="tbTable">
 
@@ -375,165 +375,144 @@ if (!isset($_SESSION['IdUsuario'])) {
                     }
                 }
 
-                function loadTableCapitulos(nombres) {
-                    $.ajax({
-                        url: "../app/controller/CapituloController.php",
-                        method: "GET",
-                        data: {
-                            "type": "alldata",
-                            "nombres": nombres,
-                            "posicionPagina": ((paginacion - 1) * filasPorPagina),
-                            "filasPorPagina": filasPorPagina
-                        },
-                        beforeSend: function() {
-                            tbTable.empty();
-                            tbTable.append(
-                                '<tr class="text-center"><td colspan="6"><img src="./images/spiner.gif"/><p>Cargando información.</p></td></tr>'
-                            );
-                            state = true;
-                            totalPaginacion = 0;
-                        },
-                        success: function(result) {
-                            if (result.estado === 1) {
-                                tbTable.empty();
-                                if (result.especialidades.length == 0) {
-                                    tbTable.append(
-                                        '<tr class="text-center"><td colspan="6"><p>No hay información para mostrar.</p></td></tr>'
-                                    );
-                                    $("#lblPaginaActual").html(paginacion);
-                                    $("#lblPaginaSiguiente").html(totalPaginacion);
-                                    state = false;
-                                } else {
-                                    for (let especialidad of result.especialidades) {
+                async function loadTableCapitulos(nombres) {
+                    try {
+                        tbTable.empty();
+                        tbTable.append(
+                            '<tr class="text-center"><td colspan="6"><img src="./images/spiner.gif"/><p>Cargando información.</p></td></tr>'
+                        );
+                        state = true;
+                        totalPaginacion = 0;
 
-                                        let btnUpdate = editView == 0 ? '<i class="fa fa-minus" style="font-size:20px;"></i>' :
-                                            '<button class="btn btn-warning btn-xs" onclick="updateCapituloModal(\'' +
-                                            especialidad.idCapitulo + '\',\'' + especialidad.Capitulo + '\',\'' + especialidad.idEspecialidad + '\',\'' + especialidad.Especialidad + '\')">' +
-                                            '<i class="fa fa-edit" style="font-size:25px;"></i>' +
-                                            '</button>';
-
-                                        let btnDeleteCapitulo = deleteView == 0 ? '<i class="fa fa-minus" style="font-size:20px;"></i>' :
-                                            '<button class="btn btn-danger btn-xs" onclick="deleteCapitulo(\'' + especialidad.idCapitulo + '\')">' +
-                                            '<i class="fa fa-trash" style="font-size:25px;"></i> ' +
-                                            '</button>';
-
-                                        let btnDeleteEspecialidad = deleteView == 0 ? '<i class="fa fa-minus" style="font-size:20px;"></i>' :
-                                            '<button class="btn btn-danger btn-xs" onclick="deleteEspecialidad(\'' + especialidad.idEspecialidad + '\')">' +
-                                            '<i class="fa fa-trash" style="font-size:25px;"></i> ' +
-                                            '</button>';
-
-                                        tbTable.append('<tr>' +
-                                            '<td class="text-center text-primary">' + especialidad.Id + '</td>' +
-                                            '<td>' + especialidad.Capitulo + '</td>' +
-                                            '<td>' + especialidad.Especialidad + '</td>' +
-                                            '<td class="text-center">' + btnUpdate + '</td>' +
-                                            '<td class="text-center">' + btnDeleteCapitulo + '</td>' +
-                                            '<td class="text-center">' + btnDeleteEspecialidad + '</td>' +
-                                            '</tr>');
-                                    }
-                                    totalPaginacion = parseInt(Math.ceil((parseFloat(result.total) / parseInt(
-                                        filasPorPagina))));
-                                    $("#lblPaginaActual").html(paginacion);
-                                    $("#lblPaginaSiguiente").html(totalPaginacion);
-                                    state = false;
-                                }
-                            } else {
-                                tbTable.empty();
-                                tbTable.append(
-                                    '<tr class="text-center"><td colspan="6"><p>' + result.message + '</p></td></tr>'
-                                );
-                                $("#lblPaginaActual").html(0);
-                                $("#lblPaginaSiguiente").html(0);
-                                state = false;
-                            }
-                        },
-                        error: function(error) {
-                            tbTable.empty();
-                            tbTable.append(
-                                '<tr class="text-center"><td colspan="6"><p>' + error.responseText + '</p></td></tr>'
-                            );
-                            $("#lblPaginaActual").html(0);
-                            $("#lblPaginaSiguiente").html(0);
-                            state = false;
-                        }
-                    });
-                }
-
-                function crudCapitulo() {
-                    if ($("#txtCapitulo").val() == '') {
-                        tools.AlertWarning("Advertencia", "Digite un capitulo.");
-                        $("#txtCapitulo").focus();
-                    } else {
-                        $.ajax({
-                            url: "../app/controller/CapituloController.php",
-                            method: "POST",
-                            data: {
-                                "type": "insertCapitulo",
-                                "capitulo": jQuery.trim($("#txtCapitulo").val()),
-                            },
-                            beforeSend: function() {
-                                tools.ModalAlertInfo("Capítulo", "Procesando petición..")
-                                $("#confirmar").modal("hide");
-                            },
-                            success: function(result) {
-                                if (result.estado == 1) {
-                                    tools.ModalAlertSuccess("Capítulo", result.message)
-                                    loadInitCapitulos();
-                                    clearModal();
-                                } else if (result.estado == 3) {
-                                    tools.ModalAlertWarning("Capítulo", result.message)
-                                } else {
-                                    tools.ModalAlertWarning("Capítulo", result.message)
-                                }
-                            },
-                            error: function(error) {
-                                tools.ModalAlertError("Capítulo", "Se produjo un error: " + error.responseText)
+                        const result = await axios.get("../app/web/CapituloWeb.php", {
+                            params: {
+                                "type": "alldata",
+                                "nombres": nombres,
+                                "posicionPagina": ((paginacion - 1) * filasPorPagina),
+                                "filasPorPagina": filasPorPagina
                             }
                         });
+
+                        tbTable.empty();
+                        if (result.data.especialidades.length == 0) {
+                            tbTable.append(
+                                '<tr class="text-center"><td colspan="6"><p>No hay información para mostrar.</p></td></tr>'
+                            );
+                            $("#lblPaginaActual").html(paginacion);
+                            $("#lblPaginaSiguiente").html(totalPaginacion);
+                            state = false;
+                        } else {
+                            for (let especialidad of result.data.especialidades) {
+
+                                let btnUpdate = editView == 0 ? '<i class="fa fa-minus" style="font-size:20px;"></i>' :
+                                    '<button class="btn btn-warning btn-xs" onclick="updateCapituloModal(\'' +
+                                    especialidad.idCapitulo + '\',\'' + especialidad.Capitulo + '\',\'' + especialidad.idEspecialidad + '\',\'' + especialidad.Especialidad + '\')">' +
+                                    '<i class="fa fa-edit" style="font-size:25px;"></i>' +
+                                    '</button>';
+
+                                let btnDeleteCapitulo = deleteView == 0 ? '<i class="fa fa-minus" style="font-size:20px;"></i>' :
+                                    '<button class="btn btn-danger btn-xs" onclick="deleteCapitulo(\'' + especialidad.idCapitulo + '\')">' +
+                                    '<i class="fa fa-trash" style="font-size:25px;"></i> ' +
+                                    '</button>';
+
+                                let btnDeleteEspecialidad = deleteView == 0 ? '<i class="fa fa-minus" style="font-size:20px;"></i>' :
+                                    '<button class="btn btn-danger btn-xs" onclick="deleteEspecialidad(\'' + especialidad.idEspecialidad + '\')">' +
+                                    '<i class="fa fa-trash" style="font-size:25px;"></i> ' +
+                                    '</button>';
+
+                                tbTable.append('<tr>' +
+                                    '<td class="text-center text-primary">' + especialidad.Id + '</td>' +
+                                    '<td>' + especialidad.Capitulo + '</td>' +
+                                    '<td>' + especialidad.Especialidad + '</td>' +
+                                    '<td class="text-center">' + btnUpdate + '</td>' +
+                                    '<td class="text-center">' + btnDeleteCapitulo + '</td>' +
+                                    '<td class="text-center">' + btnDeleteEspecialidad + '</td>' +
+                                    '</tr>');
+                            }
+                            totalPaginacion = parseInt(Math.ceil((parseFloat(result.data.total) / parseInt(
+                                filasPorPagina))));
+                            $("#lblPaginaActual").html(paginacion);
+                            $("#lblPaginaSiguiente").html(totalPaginacion);
+                            state = false;
+                        }
+                    } catch (error) {
+                        tbTable.empty();
+                        tbTable.append(
+                            '<tr class="text-center"><td colspan="6"><p> Se produjo un error, intente nuevamente.</p></td></tr>'
+                        );
+                        $("#lblPaginaActual").html(0);
+                        $("#lblPaginaSiguiente").html(0);
+                        state = false;
                     }
                 }
 
-                function crudEspecialidad() {
+                async function crudCapitulo() {
+                    if ($("#txtCapitulo").val() == '') {
+                        tools.AlertWarning("Advertencia", "Digite un capitulo.");
+                        $("#txtCapitulo").focus();
+                        return;
+                    }
+
+                    try {
+                        tools.ModalAlertInfo("Capítulo", "Procesando petición..")
+                        $("#confirmar").modal("hide");
+
+                        const result = await axios.post("../app/web/CapituloWeb.php", {
+                            "type": "insertCapitulo",
+                            "capitulo": jQuery.trim($("#txtCapitulo").val()),
+                        });
+
+                        tools.ModalAlertSuccess("Capítulo", result.data, () => {
+                            loadInitCapitulos();
+                            clearModal();
+                        });
+                    } catch (error) {
+                        if (error.response) {
+                            tools.ModalAlertWarning("Capítulo", error.response.data)
+                        } else {
+                            tools.ModalAlertError("Capítulo", "Se produjo un error, intente nuevamente.")
+                        }
+
+                    }
+                }
+
+                async function crudEspecialidad() {
                     if ($("#cbxCapitulo").val() == '') {
                         tools.AlertWarning("Advertencia", "Seleccione un capitulos.");
                         $("#cbxCapitulo").focus();
-                    } else if ($("#txtEspecialidad").val() == '') {
+                        return;
+                    }
+
+                    if ($("#txtEspecialidad").val() == '') {
                         tools.AlertWarning("Advertencia", "Digite una especialidad valida.");
                         $("#txtEspecialidad").focus();
-                    } else {
-                        $.ajax({
-                            url: "../app/controller/CapituloController.php",
-                            method: "POST",
-                            data: {
-                                "type": "insertEspecialidad",
-                                "capitulo": $("#cbxCapitulo").val().trim(),
-                                "especialidad": $("#txtEspecialidad").val().trim(),
-                            },
-                            beforeSend: function() {
-                                tools.ModalAlertInfo("Especialidad", "Procesando petición..")
-                                $("#confirmar").modal("hide");
-                            },
-                            success: function(result) {
-                                if (result.estado == 1) {
-                                    tools.ModalAlertSuccess("Especialidad", result.message)
-                                    loadInitCapitulos();
-                                    clearModal();
-                                } else if (result.estado == 3) {
-                                    tools.ModalAlertWarning("Especialidad", result.message)
+                        return;
+                    }
+                    try {
+                        tools.ModalAlertInfo("Especialidad", "Procesando petición..")
+                        $("#confirmar").modal("hide");
 
-                                } else {
-                                    tools.ModalAlertWarning("Especialidad", result.message)
-                                }
-                            },
-                            error: function(error) {
-                                tools.ModalAlertError("Especialidad", "Se produjo un error: " + error.responseText)
-                            }
+                        const result = await axios.post("../app/web/CapituloWeb.php", {
+                            "type": "insertEspecialidad",
+                            "capitulo": $("#cbxCapitulo").val().trim(),
+                            "especialidad": $("#txtEspecialidad").val().trim(),
                         });
+
+                        tools.ModalAlertSuccess("Especialidad", result.data, () => {
+                            loadInitCapitulos();
+                            clearModal();
+                        })
+
+                    } catch (error) {
+                        if (error.response) {
+                            tools.ModalAlertWarning("Especialidad", error.response.data)
+                        } else {
+                            tools.ModalAlertError("Especialidad", "Se produjo un error, intente nuevamente.")
+                        }
                     }
                 }
 
                 function updateCapituloModal(idC, capitulo, idE, especialidad) {
-
                     let idCapitulo = idC;
                     let Capitulo = capitulo;
                     let idEspecialidad = idE;
@@ -579,39 +558,35 @@ if (!isset($_SESSION['IdUsuario'])) {
                     });
                 }
 
-                function updateCapituloOEspecialidad(idCapitulo, idEspecialidad) {
+                async function updateCapituloOEspecialidad(idCapitulo, idEspecialidad) {
 
                     if ($("#btnRadio01").is(':checked')) {
                         if ($("#txtCapitulo1").val() == "") {
                             tools.AlertWarning("Advertencia", "Ingrese un capitulo.");
                             $("#txtCapitulo1").focus();
                         } else {
-                            $.ajax({
-                                url: "../app/controller/CapituloController.php",
-                                method: "POST",
-                                data: {
+                            try {
+                                tools.ModalAlertInfo("Capítulo", "Procesando petición..");
+                                $("#editar").modal("hide");
+
+                                const result = await axios.post("../app/web/CapituloWeb.php", {
                                     "type": "updateCapitulo",
                                     "idcapitulo": idCapitulo,
                                     "capitulo": $("#txtCapitulo1").val().trim(),
-                                },
-                                beforeSend: function() {
-                                    tools.ModalAlertInfo("Capítulo", "Procesando petición..")
-                                    $("#editar").modal("hide");
-                                },
-                                success: function(result) {
-                                    if (result.estado == 1) {
-                                        tools.ModalAlertSuccess("Capítulo", result.message)
-                                        onEventPaginacion();
-                                    } else if (result.estado == 3) {
-                                        tools.ModalAlertWarning("Capítulo", result.message)
-                                    } else {
-                                        tools.ModalAlertWarning("Capítulo", result.message)
-                                    }
-                                },
-                                error: function(error) {
-                                    tools.ModalAlertError("Capítulo", "Se produjo un error: " + error.responseText)
+                                });
+
+                                tools.ModalAlertSuccess("Capítulo", result.data, () => {
+                                    onEventPaginacion();
+                                    clearModal();
+                                })
+
+                            } catch (error) {
+                                if (error.response) {
+                                    tools.ModalAlertWarning("Capítulo", error.response.data)
+                                } else {
+                                    tools.ModalAlertError("Capítulo", "Se produjo un error, intente nuevamente.")
                                 }
-                            });
+                            }
                         }
                     } else {
                         if ($("#cbxCapitulo1").val() == '') {
@@ -621,87 +596,116 @@ if (!isset($_SESSION['IdUsuario'])) {
                             tools.AlertWarning("Advertencia", "Digite una especialidad valida.");
                             $("#txtEspecialidad1").focus();
                         } else {
-                            $.ajax({
-                                url: "../app/controller/CapituloController.php",
-                                method: "POST",
-                                data: {
+                            try {
+                                tools.ModalAlertInfo("Especialidad", "Procesando petición..");
+                                $("#editar").modal("hide");
+
+                                const result = await axios.post("../app/web/CapituloWeb.php", {
                                     "type": "updateEspecialidad",
                                     "idCapitulo": $("#cbxCapitulo1").val(),
                                     "idEspecialidad": idEspecialidad,
                                     "especialidad": $("#txtEspecialidad1").val().trim(),
-                                },
-                                beforeSend: function() {
-                                    tools.ModalAlertInfo("Especialidad", "Procesando petición..");
-                                    $("#editar").modal("hide");
-                                },
-                                success: function(result) {
-                                    if (result.estado == 1) {
-                                        tools.ModalAlertSuccess("Especialidad", result.message);
-                                        clearModal();
-                                        onEventPaginacion();
-                                    } else if (result.estado == 3) {
-                                        tools.ModalAlertWarning("Especialidad", result.message);
-                                    } else {
-                                        tools.ModalAlertWarning("Especialidad", result.message);
-                                    }
-                                },
-                                error: function(error) {
-                                    tools.ModalAlertError("Especialidad", "Se produjo un error: " + error.responseText)
+                                });
+
+                                tools.ModalAlertSuccess("Especialidad", result.data, () => {
+                                    clearModal();
+                                    onEventPaginacion();
+                                });
+                            } catch (error) {
+                                if (error.response) {
+                                    tools.ModalAlertWarning("Especialidad", error.response.data)
+                                } else {
+                                    tools.ModalAlertError("Especialidad", "Se produjo un error, intente nuevamente.")
                                 }
-                            });
+                            }
                         }
                     }
                 }
 
-                function loadCapitulos() {
-                    $.ajax({
-                        url: "../app/controller/CapituloController.php",
-                        method: "GET",
-                        data: {
-                            "type": "allCapitulos"
-                        },
-                        beforeSend: function() {
-                            cbxCapitulos.empty();
-                        },
-                        success: function(result) {
-                            if (result.estado === 1) {
-                                cbxCapitulos.append('<option value="">- Seleccione un capítulo- </option>')
-                                for (let capitulo of result.capitulos) {
-                                    cbxCapitulos.append('<option value=' + capitulo.idCapitulo + '> ' + capitulo.Capitulo + '</option>')
-                                }
-                            } else {
+                async function loadCapitulos() {
+                    try {
+                        cbxCapitulos.empty();
 
+                        const result = await axios.get("../app/web/CapituloWeb.php", {
+                            params: {
+                                "type": "allCapitulos"
                             }
-                        },
-                        error: function(error) {
+                        });
 
+                        cbxCapitulos.append('<option value="">- Seleccione un capítulo- </option>')
+                        for (let capitulo of result.data) {
+                            cbxCapitulos.append('<option value=' + capitulo.idCapitulo + '> ' + capitulo.Capitulo + '</option>')
+                        }
+                    } catch (error) {}
+                }
+
+                async function loadUpdateCapitulos(idCapitulo) {
+                    try {
+                        cbxCapitulos1.empty();
+
+                        const result = await axios.get("../app/web/CapituloWeb.php", {
+                            params: {
+                                "type": "allCapitulos"
+                            }
+                        });
+
+                        cbxCapitulos1.append('<option value="">- Seleccione un capítulo- </option>')
+                        for (let capitulo of result.data) {
+                            cbxCapitulos1.append('<option value=' + capitulo.idCapitulo + '> ' + capitulo.Capitulo + '</option>')
+                        }
+                        cbxCapitulos1.val(idCapitulo);
+                    } catch (error) {
+
+                    }
+                }
+
+                function deleteCapitulo(idCapitulo) {
+                    tools.ModalDialog("Capítulo", "¿Está seguro de eliminar ?", async function(value) {
+                        if (value == true) {
+                            try {
+                                tools.ModalAlertInfo("Capítulo", "Procesando petición..");
+
+                                const result = await axios.post("../app/web/CapituloWeb.php", {
+                                    "type": "deleteCapitulo",
+                                    "idCapitulo": idCapitulo
+                                });
+
+                                tools.ModalAlertSuccess("Capítulo", result.data, () => {
+                                    loadInitCapitulos();
+                                });
+                            } catch (error) {
+                                if (error.response) {
+                                    tools.ModalAlertWarning("Capítulo", error.response.data)
+                                } else {
+                                    tools.ModalAlertError("Capítulo", "Se produjo un error, intente nuevamente.")
+                                }
+                            }
                         }
                     });
                 }
 
-                function loadUpdateCapitulos(idCapitulo) {
-                    $.ajax({
-                        url: "../app/controller/CapituloController.php",
-                        method: "GET",
-                        data: {
-                            "type": "allCapitulos"
-                        },
-                        beforeSend: function() {
-                            cbxCapitulos1.empty();
-                        },
-                        success: function(result) {
-                            if (result.estado === 1) {
-                                cbxCapitulos1.append('<option value="">- Seleccione un capítulo- </option>')
-                                for (let capitulo of result.capitulos) {
-                                    cbxCapitulos1.append('<option value=' + capitulo.idCapitulo + '> ' + capitulo.Capitulo + '</option>')
+                function deleteEspecialidad(idEspecialidad) {
+                    tools.ModalDialog("Especialidad", "¿Está seguro de eliminar ?", async function(value) {
+                        if (value == true) {
+                            try {
+                                tools.ModalAlertInfo("Especialidad", "Procesando petición..");
+
+                                const result = await axios.post("../app/web/CapituloWeb.php", {
+                                    "type": "deleteEspecialidad",
+                                    "idEspecialidad": idEspecialidad
+                                });
+
+                                tools.ModalAlertSuccess("Especialidad", result.data, () => {
+                                    loadInitCapitulos();
+                                });
+
+                            } catch (error) {
+                                if (error.response) {
+                                    tools.ModalAlertWarning("Especialidad", error.response.data)
+                                } else {
+                                    tools.ModalAlertError("Especialidad", "Se produjo un error, intente nuevamente.")
                                 }
-                                cbxCapitulos1.val(idCapitulo);
-                            } else {
-
                             }
-                        },
-                        error: function(error) {
-
                         }
                     });
                 }
@@ -713,68 +717,6 @@ if (!isset($_SESSION['IdUsuario'])) {
                     $("#cbxCapitulo").attr('disabled', true);
                     $("#cbxCapitulo").val($("#cbxCapitulo option:first").val());
                     $("#txtEspecialidad").val('');
-                }
-
-                function deleteCapitulo(idCapitulo) {
-                    tools.ModalDialog("Capítulo", "¿Está seguro de eliminar ?", function(value) {
-                        if (value == true) {
-                            $.ajax({
-                                url: "../app/controller/CapituloController.php",
-                                method: "POST",
-                                data: {
-                                    "type": "deleteCapitulo",
-                                    "idCapitulo": idCapitulo
-                                },
-                                beforeSend: function() {
-                                    tools.ModalAlertInfo("Capítulo", "Procesando petición..");
-                                },
-                                success: function(result) {
-                                    if (result.estado === 1) {
-                                        tools.ModalAlertSuccess("Capítulo", result.message);
-                                        loadInitCapitulos();
-                                    } else if (result.estado === 2) {
-                                        tools.ModalAlertWarning("Capítulo", result.message);
-                                    } else {
-                                        tools.ModalAlertWarning("Capítulo", result.message);
-                                    }
-                                },
-                                error: function(error) {
-                                    tools.ModalAlertError("Capítulo", "Se produjo un error: " + error.responseText)
-                                }
-                            });
-                        }
-                    });
-                }
-
-                function deleteEspecialidad(idEspecialidad) {
-                    tools.ModalDialog("Especialidad", "¿Está seguro de eliminar ?", function(value) {
-                        if (value == true) {
-                            $.ajax({
-                                url: "../app/controller/CapituloController.php",
-                                method: "POST",
-                                data: {
-                                    "type": "deleteEspecialidad",
-                                    "idEspecialidad": idEspecialidad
-                                },
-                                beforeSend: function() {
-                                    tools.ModalAlertInfo("Especialidad", "Procesando petición..");
-                                },
-                                success: function(result) {
-                                    if (result.estado === 1) {
-                                        tools.ModalAlertSuccess("Especialidad", result.message);
-                                        loadInitCapitulos();
-                                    } else if (result.estado === 2) {
-                                        tools.ModalAlertWarning("Especialidad", result.message);
-                                    } else {
-                                        tools.ModalAlertWarning("Especialidad", result.message);
-                                    }
-                                },
-                                error: function(error) {
-                                    tools.ModalAlertError("Especialidad", "Se produjo un error: " + error.responseText)
-                                }
-                            });
-                        }
-                    });
                 }
             </script>
         </body>

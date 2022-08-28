@@ -10,8 +10,7 @@ require __DIR__ . './../src/autoload.php';
 
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $body = json_decode(file_get_contents("php://input"), true);
-    
-    $idDni =$body["idDni"];
-    echo json_encode(PersonaAdo::getByIdPersonaToUpdate($idDni));
-    exit;    
+
+    $idDni = $body["idDni"];
+    PersonaAdo::getByIdPersonaToUpdate($idDni);
 }

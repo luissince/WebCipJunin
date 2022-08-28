@@ -28,7 +28,7 @@ if (!isset($_SESSION['IdUsuario'])) {
                     <div class="modal fade" id="NuevaEmpresaPersona">
                         <div class="modal-dialog">
                             <div class="modal-content">
-                                <div class="box box-default">
+                                <div class="box box-default not-border">
                                     <div class="box-body">
                                         <div class="modal-header">
                                             <button type="button" class="close" id="btnCloseEmpresa">

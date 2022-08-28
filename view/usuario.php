@@ -38,7 +38,7 @@ if (!isset($_SESSION['IdUsuario'])) {
                                 <div class="modal-body">
                                     <div class="row">
                                         <div class="col-md-12">
-                                            <label for="txtAddNombres" class="control-label">Nombres</label>
+                                            <label for="txtAddNombres" class="control-label">Nombres <i class="fa fa-fw fa-asterisk text-danger"></i></label>
                                             <div class="form-group">
                                                 <input id="txtAddNombres" type="text" class="form-control" placeholder="Ingrese su(s) nombre(s)" required="">
                                             </div>
@@ -46,7 +46,7 @@ if (!isset($_SESSION['IdUsuario'])) {
                                     </div>
                                     <div class="row">
                                         <div class="col-md-12">
-                                            <label for="txtAddApellidos" class="control-label">Apellidos</label>
+                                            <label for="txtAddApellidos" class="control-label">Apellidos <i class="fa fa-fw fa-asterisk text-danger"></i></label>
                                             <div class="form-group">
                                                 <input id="txtAddApellidos" type="text" class="form-control" placeholder="Ingrese sus apellidos" required="">
                                             </div>
@@ -55,7 +55,7 @@ if (!isset($_SESSION['IdUsuario'])) {
 
                                     <div class="row">
                                         <div class="col-md-12">
-                                            <label for="txtAddUsuario" class="control-label">Usuario</label>
+                                            <label for="txtAddUsuario" class="control-label">Usuario <i class="fa fa-fw fa-asterisk text-danger"></i></label>
                                             <div class="form-group">
                                                 <input id="txtAddUsuario" type="text" class="form-control" placeholder="Ingrese su usuario" required="">
                                             </div>
@@ -63,7 +63,7 @@ if (!isset($_SESSION['IdUsuario'])) {
                                     </div>
                                     <div class="row">
                                         <div class="col-md-12">
-                                            <label for="txtClave" class="control-label">Contraseña</label>
+                                            <label for="txtClave" class="control-label">Contraseña <i class="fa fa-fw fa-asterisk text-danger"></i></label>
                                             <div class="form-group">
                                                 <div class="input-group">
                                                     <input id="txtClave" type="password" class="form-control" placeholder="Ingrese una contraseña" required="">
@@ -77,7 +77,7 @@ if (!isset($_SESSION['IdUsuario'])) {
                                     <div class="row">
                                         <div class="col-md-6">
                                             <div class="form-group">
-                                                <label for="estado">Estado: </label>
+                                                <label for="estado">Estado </label>
                                                 <select id="estado" class="form-control">
                                                     <option value="1">Activo</option>
                                                     <option value="0">Inactivo</option>
@@ -86,7 +86,7 @@ if (!isset($_SESSION['IdUsuario'])) {
                                         </div>
                                         <div class="col-md-6">
                                             <div class="form-group">
-                                                <label for="rol">Rol: </label>
+                                                <label for="rol">Rol <i class="fa fa-fw fa-asterisk text-danger"></i></label>
                                                 <select id="rol" class="form-control">
                                                     <option value="">- Seleccione -</option>
                                                 </select>

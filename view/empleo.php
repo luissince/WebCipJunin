@@ -27,7 +27,7 @@ if (!isset($_SESSION['IdUsuario'])) {
                 <!-- modal añadir  -->
                 <div class="row">
                     <div class="modal fade" id="mdEmpleo" data-keyboard="false" data-backdrop="static">
-                        <div class="modal-dialog modal-xs" style="width: 500px;">
+                        <div class="modal-dialog modal-xs">
                             <div class="modal-content">
                                 <div class="modal-header">
                                     <button type="button" class="close" id="btnCloseModal">
@@ -139,7 +139,7 @@ if (!isset($_SESSION['IdUsuario'])) {
                 <!-- modal eliminar  -->
                 <div class="row">
                     <div class="modal fade" id="mdDeleteEmpleo">
-                        <div class="modal-dialog modal-xs" style="width: 500px;">
+                        <div class="modal-dialog modal-xs">
                             <div class="modal-content">
                                 <div class="modal-header">
                                     <button type="button" class="close" onclick="closeModalDelete()">
