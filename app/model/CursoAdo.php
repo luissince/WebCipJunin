@@ -22,6 +22,8 @@ class CursoAdo
             $comando = Database::getInstance()->getDb()->prepare("SELECT 
             c.idCurso, 
             c.Nombre, 
+            c.Serie,
+            c.Correlativo,
             c.Instructor, 
             c.Organizador, 
             c.idCapitulo, 
@@ -37,13 +39,20 @@ class CursoAdo
             c.Descripcion, 
             c.Estado
             FROM Curso AS c INNER JOIN Capitulo AS cap ON c.idCapitulo = cap.idCapitulo
-            where c.Nombre like concat('%', ?,'%') or cap.Capitulo like concat('%', ?,'%')
-            order by c.FechaInicio desc
-            offset ? rows fetch next ? rows only");
+            WHERE 
+            c.Nombre LIKE concat('%', ?,'%') 
+            OR 
+            cap.Capitulo LIKE concat('%', ?,'%')
+            OR
+            c.Serie LIKE concat('%', ?,'%') 
+
+            ORDER BY c.Fecha DESC, c.Hora DESC
+            OFFSET ? ROWS FETCH NEXT ? ROWS ONLY");
             $comando->bindParam(1, $text, PDO::PARAM_STR);
             $comando->bindParam(2, $text, PDO::PARAM_STR);
-            $comando->bindParam(3, $posicionPagina, PDO::PARAM_INT);
-            $comando->bindParam(4, $filasPorPagina, PDO::PARAM_INT);
+            $comando->bindParam(3, $text, PDO::PARAM_STR);
+            $comando->bindParam(4, $posicionPagina, PDO::PARAM_INT);
+            $comando->bindParam(5, $filasPorPagina, PDO::PARAM_INT);
             $comando->execute();
             $count = 0;
             while ($row = $comando->fetch()) {
@@ -52,6 +61,8 @@ class CursoAdo
                     "Id" => $count + $posicionPagina,
                     "idCurso" => $row["idCurso"],
                     "Nombre" => $row["Nombre"],
+                    "Serie" => $row["Serie"],
+                    "Correlativo" => $row["Correlativo"],
                     "Instructor" => $row["Instructor"],
                     "Organizador" => $row["Organizador"],
                     "idCapitulo" => $row["idCapitulo"],
@@ -72,9 +83,15 @@ class CursoAdo
 
             $comandoTotal = Database::getInstance()->getDb()->prepare("SELECT COUNT(*) 
             FROM Curso AS c INNER JOIN Capitulo AS cap ON c.idCapitulo = cap.idCapitulo
-            WHERE c.Nombre like concat('%',?,'%') or cap.Capitulo like concat('%',?,'%')");
+            WHERE 
+            c.Nombre LIKE concat('%', ?,'%') 
+            OR 
+            cap.Capitulo LIKE concat('%', ?,'%')
+            OR
+            c.Serie LIKE concat('%', ?,'%') ");
             $comandoTotal->bindParam(1, $text, PDO::PARAM_STR);
             $comandoTotal->bindParam(2, $text, PDO::PARAM_STR);
+            $comandoTotal->bindParam(3, $text, PDO::PARAM_STR);
             $comandoTotal->execute();
             $resultTotal =  $comandoTotal->fetchColumn();
 
@@ -94,6 +111,8 @@ class CursoAdo
 
             $comandoInsert = Database::getInstance()->getDb()->prepare("INSERT INTO Curso(
             Nombre,
+            Serie,
+            Correlativo,
             Instructor, 
             Organizador,
             idCapitulo,
@@ -107,25 +126,29 @@ class CursoAdo
             Correo,
             Descripcion,
             Estado,
-             idUsuario) 
-            VALUES (UPPER(?), UPPER(?), UPPER(?), ?,?, UPPER(?), ?,?,?,?,?,?,UPPER(?),?,?)");
+            Fecha,
+            Hora,
+            idUsuario) 
+            VALUES (UPPER(?), ?, ?,UPPER(?), UPPER(?), ?,?, UPPER(?), ?,?,?,?,?,?,UPPER(?),?,GETDATE(),GETDATE(),?)");
             $comandoInsert->bindParam(1, $curso["Nombre"], PDO::PARAM_STR);
-            $comandoInsert->bindParam(2, $curso["Instructor"], PDO::PARAM_STR);
-            $comandoInsert->bindParam(3, $curso["Organizador"], PDO::PARAM_STR);
-            $comandoInsert->bindParam(4, $curso["idCapitulo"], PDO::PARAM_INT);
-            $comandoInsert->bindParam(5, $curso["Modalidad"], PDO::PARAM_INT);
-            $comandoInsert->bindParam(6, $curso["Direccion"], PDO::PARAM_STR);
+            $comandoInsert->bindParam(2, $curso["Serie"], PDO::PARAM_STR);
+            $comandoInsert->bindParam(3, $curso["Correlativo"], PDO::PARAM_STR);
+            $comandoInsert->bindParam(4, $curso["Instructor"], PDO::PARAM_STR);
+            $comandoInsert->bindParam(5, $curso["Organizador"], PDO::PARAM_STR);
+            $comandoInsert->bindParam(6, $curso["idCapitulo"], PDO::PARAM_INT);
+            $comandoInsert->bindParam(7, $curso["Modalidad"], PDO::PARAM_INT);
+            $comandoInsert->bindParam(8, $curso["Direccion"], PDO::PARAM_STR);
 
-            $comandoInsert->bindParam(7, $curso["FechaInicio"], PDO::PARAM_STR);
-            $comandoInsert->bindParam(8, $curso["HoraInicio"], PDO::PARAM_STR);
+            $comandoInsert->bindParam(9, $curso["FechaInicio"], PDO::PARAM_STR);
+            $comandoInsert->bindParam(10, $curso["HoraInicio"], PDO::PARAM_STR);
 
-            $comandoInsert->bindParam(9, $curso["PrecioCurso"], PDO::PARAM_STR);
-            $comandoInsert->bindParam(10, $curso["PrecioCertificado"], PDO::PARAM_STR);
-            $comandoInsert->bindParam(11, $curso["Celular"], PDO::PARAM_STR);
-            $comandoInsert->bindParam(12, $curso["Correo"], PDO::PARAM_STR);
-            $comandoInsert->bindParam(13, $curso["Descripcion"], PDO::PARAM_STR);
-            $comandoInsert->bindParam(14, $curso["Estado"], PDO::PARAM_BOOL);
-            $comandoInsert->bindParam(15, $curso["idUsuario"], PDO::PARAM_INT);
+            $comandoInsert->bindParam(11, $curso["PrecioCurso"], PDO::PARAM_STR);
+            $comandoInsert->bindParam(12, $curso["PrecioCertificado"], PDO::PARAM_STR);
+            $comandoInsert->bindParam(13, $curso["Celular"], PDO::PARAM_STR);
+            $comandoInsert->bindParam(14, $curso["Correo"], PDO::PARAM_STR);
+            $comandoInsert->bindParam(15, $curso["Descripcion"], PDO::PARAM_STR);
+            $comandoInsert->bindParam(16, $curso["Estado"], PDO::PARAM_BOOL);
+            $comandoInsert->bindParam(17, $curso["idUsuario"], PDO::PARAM_INT);
 
             $comandoInsert->execute();
             Database::getInstance()->getDb()->commit();
@@ -142,6 +165,8 @@ class CursoAdo
             $cmd = Database::getInstance()->getDb()->prepare("SELECT 
             c.idCurso,
             c.Nombre, 
+            c.Serie,
+            c.Correlativo,
             c.Instructor, 
             c.Organizador, 
             c.idCapitulo, 
@@ -174,6 +199,8 @@ class CursoAdo
             Database::getInstance()->getDb()->beginTransaction();
             $comandoUpdate = Database::getInstance()->getDb()->prepare("UPDATE Curso SET 
             Nombre = UPPER(?), 
+            Serie = ?, 
+            Correlativo = ?, 
             Instructor = UPPER(?), 
             Organizador = UPPER(?), 
             idCapitulo = ?, 
@@ -191,23 +218,25 @@ class CursoAdo
             WHERE idCurso = ?");
 
             $comandoUpdate->bindParam(1, $curso["Nombre"], PDO::PARAM_STR);
-            $comandoUpdate->bindParam(2, $curso["Instructor"], PDO::PARAM_STR);
-            $comandoUpdate->bindParam(3, $curso["Organizador"], PDO::PARAM_STR);
-            $comandoUpdate->bindParam(4, $curso["idCapitulo"], PDO::PARAM_INT);
-            $comandoUpdate->bindParam(5, $curso["Modalidad"], PDO::PARAM_INT);
-            $comandoUpdate->bindParam(6, $curso["Direccion"], PDO::PARAM_STR);
+            $comandoUpdate->bindParam(2, $curso["Serie"], PDO::PARAM_STR);
+            $comandoUpdate->bindParam(3, $curso["Correlativo"], PDO::PARAM_STR);
+            $comandoUpdate->bindParam(4, $curso["Instructor"], PDO::PARAM_STR);
+            $comandoUpdate->bindParam(5, $curso["Organizador"], PDO::PARAM_STR);
+            $comandoUpdate->bindParam(6, $curso["idCapitulo"], PDO::PARAM_INT);
+            $comandoUpdate->bindParam(7, $curso["Modalidad"], PDO::PARAM_INT);
+            $comandoUpdate->bindParam(8, $curso["Direccion"], PDO::PARAM_STR);
 
-            $comandoUpdate->bindParam(7, $curso["FechaInicio"], PDO::PARAM_STR);
-            $comandoUpdate->bindParam(8, $curso["HoraInicio"], PDO::PARAM_STR);
+            $comandoUpdate->bindParam(9, $curso["FechaInicio"], PDO::PARAM_STR);
+            $comandoUpdate->bindParam(10, $curso["HoraInicio"], PDO::PARAM_STR);
 
-            $comandoUpdate->bindParam(9, $curso["PrecioCurso"], PDO::PARAM_STR);
-            $comandoUpdate->bindParam(10, $curso["PrecioCertificado"], PDO::PARAM_STR);
-            $comandoUpdate->bindParam(11, $curso["Celular"], PDO::PARAM_STR);
-            $comandoUpdate->bindParam(12, $curso["Correo"], PDO::PARAM_STR);
-            $comandoUpdate->bindParam(13, $curso["Descripcion"], PDO::PARAM_STR);
-            $comandoUpdate->bindParam(14, $curso["Estado"], PDO::PARAM_BOOL);
-            $comandoUpdate->bindParam(15, $curso["idUsuario"], PDO::PARAM_INT);
-            $comandoUpdate->bindParam(16, $curso["idCurso"], PDO::PARAM_INT);
+            $comandoUpdate->bindParam(11, $curso["PrecioCurso"], PDO::PARAM_STR);
+            $comandoUpdate->bindParam(12, $curso["PrecioCertificado"], PDO::PARAM_STR);
+            $comandoUpdate->bindParam(13, $curso["Celular"], PDO::PARAM_STR);
+            $comandoUpdate->bindParam(14, $curso["Correo"], PDO::PARAM_STR);
+            $comandoUpdate->bindParam(15, $curso["Descripcion"], PDO::PARAM_STR);
+            $comandoUpdate->bindParam(16, $curso["Estado"], PDO::PARAM_BOOL);
+            $comandoUpdate->bindParam(17, $curso["idUsuario"], PDO::PARAM_INT);
+            $comandoUpdate->bindParam(18, $curso["idCurso"], PDO::PARAM_INT);
 
             $comandoUpdate->execute();
             Database::getInstance()->getDb()->commit();
@@ -230,12 +259,19 @@ class CursoAdo
                 Database::getInstance()->getDb()->rollback();
                 Response::sendClient("No se pudo eliminar el curso por que tiene estado activo.");
             } else {
-
-                $cmdDelete = Database::getInstance()->getDb()->prepare("DELETE FROM Curso WHERE idCurso = ?");
-                $cmdDelete->bindParam(1, $curso["idCurso"], PDO::PARAM_INT);
-                $cmdDelete->execute();
-                Database::getInstance()->getDb()->commit();
-                Response::sendSave("Curso eliminado correctamente.");
+                $cmdValidate = Database::getInstance()->getDb()->prepare("SELECT idCurso FROM Inscripcion WHERE idCurso = ?");
+                $cmdValidate->bindParam(1, $curso["idCurso"], PDO::PARAM_INT);
+                $cmdValidate->execute();
+                if ($cmdValidate->fetch()) {
+                    Database::getInstance()->getDb()->rollback();
+                    Response::sendClient("No se pudo eliminar el curso ya que tiene ligado inscripciones.");
+                } else {
+                    $cmdDelete = Database::getInstance()->getDb()->prepare("DELETE FROM Curso WHERE idCurso = ?");
+                    $cmdDelete->bindParam(1, $curso["idCurso"], PDO::PARAM_INT);
+                    $cmdDelete->execute();
+                    Database::getInstance()->getDb()->commit();
+                    Response::sendSave("Curso eliminado correctamente.");
+                }
             }
         } catch (Exception $ex) {
             Database::getInstance()->getDb()->rollback();

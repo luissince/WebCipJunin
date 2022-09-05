@@ -22,7 +22,8 @@ class ComposerAutoloader
             require_once __DIR__ . './../sunat/lib/mpdf/vendor/autoload.php';
             require_once __DIR__ . './../sunat/lib/phpqrcode/vendor/autoload.php';
             require_once __DIR__ . './../sunat/lib/phpmail/vendor/autoload.php';   
-            require_once __DIR__ . './../sunat/lib/phpdotenv/vendor/autoload.php';        
+            require_once __DIR__ . './../sunat/lib/phpdotenv/vendor/autoload.php'; 
+            require_once __DIR__ . './../sunat/lib/dompdf/vendor/autoload.php';        
         });
     }
 }

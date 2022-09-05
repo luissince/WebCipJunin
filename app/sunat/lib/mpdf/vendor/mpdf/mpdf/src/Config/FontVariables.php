@@ -93,6 +93,14 @@ class FontVariables
 			 */
 
 			'fontdata' => [
+				"anton" => [
+					'R' => "Anton-Regular.ttf",
+					'useOTL' => 0xFF,
+				],
+				"bebasneue" => [
+					'R' => "BebasNeue-Regular.ttf",
+					'useOTL' => 0xFF,
+				],
 				"dejavusanscondensed" => [
 					'R' => "DejaVuSansCondensed.ttf",
 					'B' => "DejaVuSansCondensed-Bold.ttf",
@@ -149,6 +157,20 @@ class FontVariables
 					'B' => "FreeMonoBold.ttf",
 					'I' => "FreeMonoOblique.ttf",
 					'BI' => "FreeMonoBoldOblique.ttf",
+				],
+				"fjallaone" => [
+					'R' => "FjallaOne-Regular.ttf",
+				],
+				"hammersmithone" => [
+					'R' => "HammersmithOne-Regular.ttf",
+				],
+				"inter" => [
+					'R' => "Inter-Regular.ttf",
+					'B' => "Inter-Bold.ttf",
+				],
+				"anektelugu" => [
+					'R' => "AnekTelugu-Regular.ttf",
+					'B' => "AnekTelugu-Bold.ttf",
 				],
 				/* OCR-B font for Barcodes */
 				"ocrb" => [
@@ -286,6 +308,12 @@ class FontVariables
 				"unbatang" => [/* Korean */
 					'R' => "UnBatang_0613.ttf",
 				],
+				/* QwitcherGrypen-Bold fonts */
+				"qwitcher" => [
+					'R' => "QwitcherGrypen-Regular.ttf",
+					'B' => "QwitcherGrypen-Bold.ttf",
+				],
+				
 			],
 
 			// Add fonts to this array if they contain characters in the SIP or SMP Unicode planes

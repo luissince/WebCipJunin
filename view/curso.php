@@ -51,6 +51,22 @@ if (!isset($_SESSION['IdUsuario'])) {
                                 <div class="row">
                                     <div class="col-md-6">
                                         <div class="form-group">
+                                            <label class="control-label">Serie o Código<i class="fa fa-fw fa-asterisk text-danger"></i></label>
+                                            <input id="txtSerie" type="text" class="form-control" placeholder="Ingrese la serie o código del curso." required="">
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            <label class="control-label">Correlativo<i class="fa fa-fw fa-asterisk text-danger"></i></label>
+                                            <input id="txtCorrelativo" type="text" class="form-control" placeholder="Ingrese la numeración del curso." required="">
+                                            <h6 class="text-left text-warning text-small"> <i class="fa fa-fw fa-warning"></i>El correlativo puede ser cambiado mientras no se generen inscripciones.</h6>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <div class="form-group">
                                             <label class="control-label">Instructor<i class="fa fa-fw fa-asterisk text-danger"></i></label>
                                             <input id="txtInstructor" type="text" class="form-control" placeholder="Ingrese los apellidos y nombre del instructor" required="">
                                         </div>
@@ -78,6 +94,15 @@ if (!isset($_SESSION['IdUsuario'])) {
                                                 <option value="1">Presencial</option>
                                                 <option value="2">Virtual</option>
                                             </select>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <div class="form-group">
+                                            <label>Dirección</label>
+                                            <input type="text" class="form-control" id="txtDireccion" placeholder="Ingrese la dirección" />
                                         </div>
                                     </div>
                                 </div>
@@ -161,52 +186,19 @@ if (!isset($_SESSION['IdUsuario'])) {
             </div>
             <!-- end modal añadir -->
 
-            <!-- modal eliminar  -->
-            <div class="row">
-                <div class="modal fade" id="mdDelete">
-                    <div class="modal-dialog modal-xs">
-                        <div class="modal-content">
-                            <div class="modal-header">
-                                <button type="button" class="close" onclick="closeModalDelete()">
-                                    <i class="fa fa-close"></i>
-                                </button>
-                                <h4 class="modal-title">
-                                    <i class="fa fa-book">
-                                    </i> Eliminar curso
-                                </h4>
-                            </div>
-                            <div class="modal-body">
-                                <div class="row">
-                                    <div class="col-md-12">
-                                        <div class="form-group">
-                                            <label class="col-sm-12 control-label">¿Esta seguro(a) que desea elimininar este curso?</label>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="modal-footer">
-                                    <button type="button" class="btn btn-warning" id="btnDeleteCurso">
-                                        <i class="fa fa-check"></i> Aceptar</button>
-                                    <button type="button" class="btn btn-primary" onclick="closeModalDelete()">
-                                        <i class="fa fa-remove"></i> Cancelar</button>
-                                </div>
-                                </form>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <!-- end modal eliminar  -->
             <!-- Content Wrapper. Contains page content -->
-            <div class="content-wrapper" style="background-color: #FFFFFF;">
+            <div class="content-wrapper">
                 <!-- Main content -->
                 <section class="content-header">
                     <h3 class="no-margin"> Cursos <small> Lista </small> </h3>
+                    <ol class="breadcrumb">
+                        <li><a href="index.php"><i class="fa fa-home"></i> Inicio</a></li>
+                        <li class="active">Curso</li>
+                    </ol>
                 </section>
 
-                <section class="content">
-
+                <section class="invoice">
                     <div class="row">
-
                         <div class="col-lg-2 col-md-3 col-sm-12 col-xs-12">
                             <label>Nuevo curso.</label>
                             <div class="form-group">
@@ -246,6 +238,7 @@ if (!isset($_SESSION['IdUsuario'])) {
                                     <thead style="background-color: #FDB2B1;color: #B72928;">
                                         <th width="5%" class="text-center">#</th>
                                         <th width="20%">Curso</th>
+                                        <th width="10%">Serie/Correlativo</th>
                                         <th width="20%">Organizador</th>
                                         <th width="10%">Capitulo</th>
                                         <th width="15%">Fecha/Hora</th>
@@ -353,11 +346,11 @@ if (!isset($_SESSION['IdUsuario'])) {
                     modalCurso('');
                 });
 
-                $("#mdCurso").on('shown.bs.modal', function() {
+                $("#mdCurso").on('show.bs.modal', function() {
                     $("#txtCurso").focus();
                 });
 
-                $("#mdCurso").on('hide.bs.modal',function(){
+                $("#mdCurso").on('hidden.bs.modal', function() {
                     clearModal();
                 });
 
@@ -372,31 +365,15 @@ if (!isset($_SESSION['IdUsuario'])) {
                     }
                 });
 
-                // $("#btnCloseModal").click(function() {
-                //     $("#mdCurso").modal("hide");
-                //     clearModal();
-                // });
-
-                // $("#cancel-modal").click(function() {
-                //     $("#mdCurso").modal("hide");
-                //     clearModal();
-                // });
-
                 $("#btnAceptar").click(function() {
                     onSave();
                 });
 
-                $("#cbxTipo").change(function() {
-                    if ($("#cbxTipo").val() === '1') {
-                        $("#box-direccion").html(`
-                            <label class="col-sm-4 control-label">Dirección <i class="fa fa-fw fa-asterisk text-danger"></i></label>
-                            <div class="col-sm-8">
-                                <input id="txtDireccion" type="text" class="form-control" placeholder="Ingrese la dirección" required="">
-                            </div
-                        `);
-
-                    } else {
-                        $("#box-direccion").html('');
+                $("#txtCorrelativo").keypress(function(event) {
+                    var key = window.Event ? event.which : event.keyCode;
+                    var c = String.fromCharCode(key);
+                    if ((c < '0' || c > '9') && (c != '\b')) {
+                        event.preventDefault();
                     }
                 });
 
@@ -483,17 +460,18 @@ if (!isset($_SESSION['IdUsuario'])) {
 
                             let estado = curso.Estado == 1 ? '<span class="badge btn-info">ACTIVO</span>' : '<span class="badge btn-danger">INACTIVO</span>'
 
-                            tbTable.append('<tr>' +
-                                '<td class="text-center text-primary">' + curso.Id + '</td>' +
-                                '<td>' + curso.Nombre + '</td>' +
-                                '<td>' + curso.Organizador + '</td>' +
-                                '<td class="text-danger">' + curso.Capitulo + '</td>' +
-                                '<td>' + curso.FechaInicio + '<br/>' + tools.getTimeForma(curso.HoraInicio, true) + '</td>' +
-                                '<td>' + estado + '</td>' +
-                                '<td class="text-center">' + btnInscripcion + '</td>' +
-                                '<td class="text-center">' + btnUpdate + '' + '</td>' +
-                                '<td class="text-center">' + btnDelete + '</td>' +
-                                '</tr>');
+                            tbTable.append(`<tr>
+                                <td class="text-center text-primary"> ${curso.Id} </td>
+                                <td> ${curso.Nombre} </td>
+                                <td> ${curso.Serie+ "-"+curso.Correlativo} </td>
+                                <td> ${curso.Organizador} </td>
+                                <td class="text-danger"> ${curso.Capitulo} </td>
+                                <td> ${curso.FechaInicio} <br/> ${tools.getTimeForma(curso.HoraInicio, true)} </td>
+                                <td> ${estado} </td>
+                                <td class="text-center"> ${btnInscripcion} </td>
+                                <td class="text-center"> ${btnUpdate} </td>
+                                <td class="text-center"> ${btnDelete} </td>
+                                </tr`);
                         }
                         totalPaginacion = parseInt(Math.ceil((parseFloat(result.data.total) / parseInt(
                             filasPorPagina))));
@@ -527,27 +505,17 @@ if (!isset($_SESSION['IdUsuario'])) {
                 $("#titleModal").html('');
                 if (idCurso === '') {
                     loadCapitulos();
-                    $("#titleModal").html('<i class="fa fa-book"></i> Nuevo Curso')
-                    $("#box-direccion").html(`
-                            <label class="col-sm-4 control-label">Dirección <i class="fa fa-fw fa-asterisk text-danger"></i></label>
-                            <div class="col-sm-8">
-                                <input id="txtDireccion" type="text" class="form-control" placeholder="Ingrese la dirección" required="">
-                            </div>
-                        `);
+                    $("#titleModal").html('<i class="fa fa-book"></i> Nuevo Curso');
                     $("#txtFechaInicio").val(tools.getCurrentDate());
                     $("#txtHoraInicio").val(tools.getCurrentTime());
 
                 } else {
-                    $("#titleModal").html('<i class="fa fa-book"></i> Editar Curso')
+                    $("#titleModal").html('<i class="fa fa-book"></i> Editar Curso');
                     updateData(idCurso);
                 }
 
                 $("#mdCurso").modal("show");
 
-            }
-
-            function closeModalDelete() {
-                $("#mdDelete").modal("hide");
             }
 
             async function updateData(id) {
@@ -576,22 +544,13 @@ if (!isset($_SESSION['IdUsuario'])) {
 
                     idCurso = id;
                     $("#txtCurso").val(result.Nombre);
+                    $("#txtSerie").val(result.Serie);
+                    $("#txtCorrelativo").val(result.Correlativo);
                     $("#txtInstructor").val(result.Instructor);
                     $("#txtOrganizador").val(result.Organizador);
                     $("#cbxCapitulo").val(result.idCapitulo);
                     $("#cbxTipo").val(result.Modalidad);
-
-                    if ($("#cbxTipo").val() === '1') {
-                        $("#box-direccion").html(`
-                            <label class="col-sm-4 control-label">Dirección <i class="fa fa-fw fa-asterisk text-danger"></i></label>
-                            <div class="col-sm-8">
-                                <input id="txtDireccion" type="text" class="form-control" placeholder="Ingrese la dirección" required="">
-                            </div>
-                        `);
-                        $("#txtDireccion").val(result.Direccion);
-                    } else {
-                        $("#box-direccion").html('');
-                    }
+                    $("#txtDireccion").val(result.Direccion);
 
                     $("#txtFechaInicio").val(result.FechaInicio);
                     $("#txtHoraInicio").val(result.HoraInicio);
@@ -615,6 +574,18 @@ if (!isset($_SESSION['IdUsuario'])) {
                     return;
                 }
 
+                if ($("#txtSerie").val() === '') {
+                    tools.AlertWarning('Curso', "Ingrese la seríe o código del curso.");
+                    $("#txtSerie").focus();
+                    return;
+                }
+
+                if ($("#txtCorrelativo").val() === '') {
+                    tools.AlertWarning('Curso', "Ingrese la numeración del curso.");
+                    $("#txtCorrelativo").focus();
+                    return;
+                }
+
                 if ($("#txtInstructor").val() === '') {
                     tools.AlertWarning('Curso', "Ingrese los apellidos y nombre del instructor.");
                     $("#txtInstructor").focus();
@@ -630,12 +601,6 @@ if (!isset($_SESSION['IdUsuario'])) {
                 if ($("#cbxCapitulo").val() === '') {
                     tools.AlertWarning('Curso', "Seleccione el capítulo.");
                     $("#cbxCapitulo").focus();
-                    return;
-                }
-
-                if ($("#box-direccion").html() !== '' && $("#txtDireccion").val() === '') {
-                    tools.AlertWarning('Curso', "Ingrese la dirección.");
-                    $("#txtDireccion").focus();
                     return;
                 }
 
@@ -674,6 +639,8 @@ if (!isset($_SESSION['IdUsuario'])) {
                             "type": "insert",
 
                             "Nombre": $("#txtCurso").val().trim(),
+                            "Serie": $("#txtSerie").val().trim(),
+                            "Correlativo": $("#txtCorrelativo").val().trim(),
                             "Instructor": $("#txtInstructor").val().trim(),
                             "Organizador": $("#txtOrganizador").val().trim(),
                             "idCapitulo": $("#cbxCapitulo").val(),
@@ -703,20 +670,22 @@ if (!isset($_SESSION['IdUsuario'])) {
                         const result = await axios.post("../app/web/CursoWeb.php", {
                             "type": "update",
 
-                            "Nombre": $("#txtCurso").val().trim(),
-                            "Instructor": $("#txtInstructor").val().trim(),
-                            "Organizador": $("#txtOrganizador").val().trim(),
+                            "Nombre": $("#txtCurso").val(),
+                            "Serie": $("#txtSerie").val().trim(),
+                            "Correlativo": $("#txtCorrelativo").val().trim(),
+                            "Instructor": $("#txtInstructor").val(),
+                            "Organizador": $("#txtOrganizador").val(),
                             "idCapitulo": $("#cbxCapitulo").val(),
-                            "Modalidad": $("#cbxTipo").val().trim(),
-                            "Direccion": $("#cbxTipo").val() === '1' ? $("#txtDireccion").val().trim() : '',
+                            "Modalidad": $("#cbxTipo").val(),
+                            "Direccion": $("#cbxTipo").val() === '1' ? $("#txtDireccion").val() : '',
 
                             "FechaInicio": $("#txtFechaInicio").val(),
                             "HoraInicio": $("#txtHoraInicio").val(),
-                            "PrecioCurso": $("#txtPrecio").val().trim(),
-                            "PrecioCertificado": $("#txtPrecioCertificado").val().trim() === '' ? 0 : $("#txtPrecioCertificado").val().trim(),
-                            "Celular": $("#txtCelular").val().trim(),
-                            "Correo": $("#txtCorreo").val().trim(),
-                            "Descripcion": $("#txtDescripcion").val().trim(),
+                            "PrecioCurso": $("#txtPrecio").val(),
+                            "PrecioCertificado": $("#txtPrecioCertificado").val() === '' ? 0 : $("#txtPrecioCertificado").val(),
+                            "Celular": $("#txtCelular").val(),
+                            "Correo": $("#txtCorreo").val(),
+                            "Descripcion": $("#txtDescripcion").val(),
                             "Estado": $('#cbEstado').is(':checked'),
                             "idUsuario": idUsuario,
 
@@ -729,34 +698,37 @@ if (!isset($_SESSION['IdUsuario'])) {
                         });
                     }
                 } catch (error) {
-                    tools.AlertError("Curso", "Se genero un error interno, comuníquese con el administrador del sistema.");
+                    if (error.response) {
+                        tools.ModalAlertWarning("Curso", error.response.data);
+                    } else {
+                        tools.ModalAlertError("Curso", "Se genero un error interno, comuníquese con el administrador del sistema.");
+                    }
                 }
             }
 
             function modalDelete(id) {
-                $("#mdDelete").modal("show");
-                $("#btnDeleteCurso").unbind();
-                $("#btnDeleteCurso").bind("click", async function() {
-                    try {
-                        $("#mdDelete").modal("hide");
-                        tools.ModalAlertInfo("Curso", "Procesando petición..");
+                tools.ModalDialog("Curso", "¿Está seguro de eliminar el curso?", async function(value) {
+                    if (value) {
+                        try {
+                            tools.ModalAlertInfo("Curso", "Procesando petición..");
 
-                        const result = await axios.post("../app/web/CursoWeb.php", {
-                            "type": "delete",
-                            "idCurso": id,
-                        });
+                            const result = await axios.post("../app/web/CursoWeb.php", {
+                                "type": "delete",
+                                "idCurso": id,
+                            });
 
-                        tools.ModalAlertSuccess("Curso", result.data, () => {
-                            loadInit();
-                        });
-                    } catch (error) {
-                        if (error.response) {
-                            tools.ModalAlertWarning("Curso", error.response.data);
-                        } else {
-                            tools.ModalAlertError("Curso", "Se genero un error interno, comuníquese con el administrador del sistema.");
+                            tools.ModalAlertSuccess("Curso", result.data, () => {
+                                loadInit();
+                            });
+                        } catch (error) {
+                            if (error.response) {
+                                tools.ModalAlertWarning("Curso", error.response.data);
+                            } else {
+                                tools.ModalAlertError("Curso", "Se genero un error interno, comuníquese con el administrador del sistema.");
+                            }
                         }
                     }
-                })
+                });
             }
 
             async function loadCapitulos() {
@@ -778,6 +750,8 @@ if (!isset($_SESSION['IdUsuario'])) {
 
             function clearModal() {
                 $("#txtCurso").val('');
+                $("#txtSerie").val('');
+                $("#txtCorrelativo").val('');
                 $("#txtInstructor").val('');
                 $("#txtOrganizador").val('');
                 $("#cbxCapitulo").val('');
@@ -795,7 +769,6 @@ if (!isset($_SESSION['IdUsuario'])) {
                 $("#cbEstado").attr("checked", true);
                 idCurso = '';
 
-                $("#box-direccion").html('');
                 $("#cbxCapitulo").empty();
             }
 

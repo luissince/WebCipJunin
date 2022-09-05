@@ -21,52 +21,16 @@ class CursoController
 
     public static function insert($body)
     {
-        $curso["Nombre"] = $body["Nombre"];
-        $curso["Instructor"] = $body["Instructor"];
-        $curso["Organizador"] = $body["Organizador"];
-        $curso["idCapitulo"] = $body["idCapitulo"];
-        $curso["Modalidad"] = $body["Modalidad"];
-        $curso["Direccion"] = $body["Direccion"];
-
-        $curso["FechaInicio"] = $body["FechaInicio"];
-        $curso["HoraInicio"] = $body["HoraInicio"];
-        $curso["PrecioCurso"] = $body["PrecioCurso"];
-        $curso["PrecioCertificado"] = $body["PrecioCertificado"];
-        $curso["Celular"] = $body["Celular"];
-        $curso["Correo"] = $body["Correo"];
-        $curso["Descripcion"] = $body["Descripcion"];
-        $curso["Estado"] = $body["Estado"];
-        $curso["idUsuario"] = $body["idUsuario"];
-
-        CursoAdo::insert($curso);
+        CursoAdo::insert($body);
     }
 
     public static function update($body)
     {
-        $curso["Nombre"] = $body["Nombre"];
-        $curso["Instructor"] = $body["Instructor"];
-        $curso["Organizador"] = $body["Organizador"];
-        $curso["idCapitulo"] = $body["idCapitulo"];
-        $curso["Modalidad"] = $body["Modalidad"];
-        $curso["Direccion"] = $body["Direccion"];
-
-        $curso["FechaInicio"] = $body["FechaInicio"];
-        $curso["HoraInicio"] = $body["HoraInicio"];
-        $curso["PrecioCurso"] = $body["PrecioCurso"];
-        $curso["PrecioCertificado"] = $body["PrecioCertificado"];
-        $curso["Celular"] = $body["Celular"];
-        $curso["Correo"] = $body["Correo"];
-        $curso["Descripcion"] = $body["Descripcion"];
-        $curso["Estado"] = $body["Estado"];
-        $curso["idUsuario"] = $body["idUsuario"];
-        $curso["idCurso"] = $body["idCurso"];
-
-        CursoAdo::update($curso);
+        CursoAdo::update($body);
     }
 
     public static function delete($body)
     {
-        $curso["idCurso"] = $body["idCurso"];
         CursoAdo::delete($body);
     }
 }

@@ -9,6 +9,7 @@ class Autoload_Static
 
             'SysSoftIntegra\\Controller\\CursoController' => __DIR__  . '/../controller/CursoController.php',
             'SysSoftIntegra\\Controller\\CapituloController' => __DIR__  . '/../controller/CapituloController.php',
+            'SysSoftIntegra\\Controller\\InscripcionController' => __DIR__  . '/../controller/InscripcionController.php',
             
             'SysSoftIntegra\\Model\\BancoAdo' => __DIR__  . '/../model/BancoAdo.php',
             'SysSoftIntegra\\Model\\CapituloAdo' => __DIR__  . '/../model/CapituloAdo.php',
@@ -27,6 +28,7 @@ class Autoload_Static
             'SysSoftIntegra\\Model\\UsuarioAdo' => __DIR__  . '/../model/UsuarioAdo.php',
             'SysSoftIntegra\\Model\\EmpleoAdo' => __DIR__  . '/../model/EmpleoAdo.php',
             'SysSoftIntegra\\Model\\CursoAdo' => __DIR__  . '/../model/CursoAdo.php',
+            'SysSoftIntegra\\Model\\InscripcionAdo' => __DIR__  . '/../model/InscripcionAdo.php',
 
             'SysSoftIntegra\\Src\\Sunat' => __DIR__  . '/Sunat.php',
             'SysSoftIntegra\\Src\\SoapResult' => __DIR__  . '/SoapResult.php',
@@ -37,6 +39,8 @@ class Autoload_Static
             'SysSoftIntegra\\Src\\Tools' => __DIR__  . '/Tools.php',
             'SysSoftIntegra\\Src\\Response' => __DIR__  . '/Response.php',
             'SysSoftIntegra\\Src\\Route' => __DIR__  . '/Route.php',
+            'SysSoftIntegra\\Src\\QRImageWithLogo' => __DIR__  . '/QRImageWithLogo.php',
+
             'SysSoftIntegra\\DataBase\\Database' => __DIR__  . '/../database/DataBaseConexion.php',
             'Phpspreadsheet\\Vendor\\Autload' => __DIR__ . '/../sunat/lib/phpspreadsheet/vendor/autoload.php',
             'RobRichards\\XMLSecLibs\\XMLSecurityDSig' => __DIR__ . '/../sunat/lib/robrichards/src/XMLSecurityDSig.php',

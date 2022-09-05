@@ -52,8 +52,10 @@ if (!isset($_SESSION['IdUsuario'])) {
                                 <div class="row">
                                     <div class="col-md-12">
                                         <div class="form-group">
-                                            <label class="control-label">Monto <i class="fa fa-fw fa-asterisk text-danger"></i></label>
-                                            <input id="txtCurso" type="text" class="form-control" placeholder="Ingrese el nombre del curso" required="">
+                                            <label class="control-label">Pagos <i class="fa fa-fw fa-asterisk text-danger"></i></label>
+                                            <select class="form-control">
+                                                <option value="">- seleccione - </option>
+                                            </select>
                                         </div>
                                     </div>
                                 </div>
@@ -78,6 +80,7 @@ if (!isset($_SESSION['IdUsuario'])) {
                     <h3 class="no-margin"> Inscripción <small>LISTA</small> </h3>
                     <ol class="breadcrumb">
                         <li><a href="index.php"><i class="fa fa-home"></i> Inicio</a></li>
+                        <li><a href="curso.php"><i></i> Curso</a></li>
                         <li class="active">Inscripción</li>
                     </ol>
                 </section>
@@ -97,6 +100,15 @@ if (!isset($_SESSION['IdUsuario'])) {
 
                             <div class="row">
                                 <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
+                                    <label>Organizador: <strong class="text-primary" id="lblOrganizador"></strong></label>
+                                </div>
+                                <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
+                                    <label>Modalidad: <strong class="text-primary" id="lblModalidad"></strong></label>
+                                </div>
+                            </div>
+
+                            <div class="row">
+                                <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
                                     <label>Precio Curso: <strong class="text-primary" id="lblPrecioCurso"></strong></label>
                                 </div>
                                 <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
@@ -110,6 +122,21 @@ if (!isset($_SESSION['IdUsuario'])) {
                                 </div>
                                 <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
                                     <label>Hora Inicio: <strong class="text-primary" id="lblHoraInicio"></strong></label>
+                                </div>
+                            </div>
+                            
+                            <div class="row">
+                                <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
+                                    <label>Celular: <strong class="text-primary" id="lblCelular"></strong></label>
+                                </div>
+                                <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
+                                    <label>Email: <strong class="text-primary" id="lblEmail"></strong></label>
+                                </div>
+                            </div>
+
+                            <div class="row">
+                                <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                                    <label>Descripción: <strong class="text-primary" id="lblDescripcion"></strong></label>
                                 </div>
                             </div>
 
@@ -153,13 +180,12 @@ if (!isset($_SESSION['IdUsuario'])) {
                                         <table class="table table-striped" style="border-width: 1px;border-style: dashed;border-color: #E31E25;">
                                             <thead style="background-color: #FDB2B1;color: #B72928;">
                                                 <th width="5%" class="text-center">#</th>
-                                                <th width="20%">Curso</th>
-                                                <th width="20%">Organizador</th>
-                                                <th width="10%">Capitulo</th>
+                                                <th width="10%">Serie/Correlativo</th>
+                                                <th width="20%">Ingeniero</th>
+                                                <th width="10%">Capitulo/Especialidad</th>
                                                 <th width="15%">Fecha/Hora</th>
                                                 <th width="10%">Estado</th>
-                                                <th width="10%" class="text-center">Inscripción</th>
-                                                <th width="5%" class="text-center">Editar</th>
+                                                <th width="5%" class="text-center">Certificado</th>
                                                 <th width="5%" class="text-center">Eliminar</th>
                                             </thead>
                                             <tbody id="tbTable">
@@ -232,6 +258,14 @@ if (!isset($_SESSION['IdUsuario'])) {
                     }
                 });
 
+                $("#mdInscripcion").on('show.bs.modal', function() {
+                    $('#cbIngeniero').focus();
+                });
+
+                $("#mdInscripcion").on('hidden.bs.modal', function() {
+                    $('#cbIngeniero').select2("val", "0");
+                });
+
                 $("#btnAceptar").click(function(event) {
                     onEventGuardar();
                 });
@@ -266,10 +300,59 @@ if (!isset($_SESSION['IdUsuario'])) {
                     }
                 });
 
+                loadData();
+
                 loadInit();
+
+                $("#btnIzquierda").click(function() {
+                    if (!state) {
+                        if (paginacion > 1) {
+                            paginacion--;
+                            onEventPaginacion();
+                        }
+                    }
+                });
+
+                $("#btnDerecha").click(function() {
+                    if (!state) {
+                        if (paginacion < totalPaginacion) {
+                            paginacion++;
+                            onEventPaginacion();
+                        }
+                    }
+                });
+
+                $("#btnActualizar").click(function() {
+                    loadInit()
+                });
+
+                $("#buscar").on("keyup", function(event) {
+                    if (event.keyCode === 13) {
+                        if ($("#buscar").val().trim() === '') {
+                            tools.AlertWarning("Curso", "El campo de busqueda esta vacio.");
+                            $("#buscar").focus();
+                        } else {
+                            paginacion = 1;
+                            loadTable($("#buscar").val().trim());
+                            opcion = 1;
+                        }
+                    }
+                });
+
+                $("#btnSearch").click(function() {
+                    if ($("#buscar").val().trim() === '') {
+                        tools.AlertWarning("Curso", "El campo de busqueda esta vacio.");
+                        $("#buscar").focus();
+                    } else {
+                        paginacion = 1;
+                        loadTable($("#buscar").val().trim());
+                        opcion = 1;
+                    }
+                });
+
             });
 
-            async function loadInit() {
+            async function loadData() {
                 try {
                     const result = await axios.get("../app/web/CursoWeb.php", {
                         params: {
@@ -277,13 +360,18 @@ if (!isset($_SESSION['IdUsuario'])) {
                             "idCurso": idCurso
                         }
                     });
-
+                
                     $("#lblCurso").html(result.data.Descripcion);
                     $("#lblCapitulo").html(result.data.Capitulo);
+                    $("#lblOrganizador").html(result.data.Organizador);
+                    $("#lblModalidad").html(result.data.Estado === "1" ? "PRESENCIAL" : "VIRTUAL");
                     $("#lblPrecioCurso").html("S/ " + result.data.PrecioCurso);
                     $("#lblPrecioCertificado").html("S/ " + result.data.PrecioCertificado);
                     $("#lblFechaInicio").html(tools.getDateForma(result.data.FechaInicio));
                     $("#lblHoraInicio").html(tools.getTimeForma(result.data.HoraInicio));
+                    $("#lblCelular").html(result.data.Celular);
+                    $("#lblEmail").html(result.data.Correo);
+                    $("#lblDescripcion").html(result.data.Descripcion);
 
                     $("#divLoad").removeClass("overlay");
                     $("#divLoad").html("");
@@ -292,8 +380,136 @@ if (!isset($_SESSION['IdUsuario'])) {
                 }
             }
 
-            async function onEventGuardar(){
-                console.log($("#cbIngeniero").val())
+            function loadInit() {
+                if (!state) {
+                    paginacion = 1;
+                    loadTable("");
+                    opcion = 0;
+                }
+            }
+
+            async function loadTable(text) {
+                try {
+                    tbTable.empty();
+                    tbTable.append(
+                        '<tr class="text-center"><td colspan="9"><img src="./images/spiner.gif"/><p>Cargando información.</p></td></tr>'
+                    );
+                    state = true;
+                    totalPaginacion = 0;
+
+                    const result = await axios.get("../app/web/InscripcionWeb.php", {
+                        params: {
+                            "type": "alldata",
+                            "text": text,
+                            "idCurso": idCurso,
+                            "posicionPagina": ((paginacion - 1) * filasPorPagina),
+                            "filasPorPagina": filasPorPagina
+                        }
+                    });
+
+                    tbTable.empty();
+                    if (result.data.inscripcion.length == 0) {
+                        tbTable.append(
+                            '<tr class="text-center"><td colspan="9"><p>No hay datos para mostrar</p></td></tr>'
+                        );
+                        $("#lblPaginaActual").html(paginacion);
+                        $("#lblPaginaSiguiente").html(totalPaginacion);
+                        state = false;
+                    } else {
+                        for (let inscripcion of result.data.inscripcion) {
+                            let estado = inscripcion.Estado == 1 ? '<span class="badge btn-success">INSCRITO</span>' : '<span class="badge btn-danger">ANULADO</span>'
+
+                            tbTable.append(`<tr>
+                                <td class="text-center text-primary"> ${inscripcion.Id} </td>
+                                <td>  ${inscripcion.Serie+"-"+ inscripcion.Correlativo} </td>
+                                <td>  ${inscripcion.Nombres+", "+ inscripcion.Apellidos} </td>
+                                <td>  ${inscripcion.Capitulo}  <br/>  ${inscripcion.Especialidad} </td>
+                                <td>  ${tools.getDateForma(inscripcion.Fecha)} <br/>  ${tools.getTimeForma(inscripcion.Hora, true)} </td>
+                                <td>  ${estado} </td>
+                                <td class="text-center">
+                                    <button class="btn btn-info btn-xs" title="Eliminar" onclick="onEventCertificado('${inscripcion.idCurso}','${inscripcion.idParticipante}')">
+                                        <i class="fa fa-wpforms" style="font-size:25px;"></i>
+                                    </button>
+                                </td>
+                                <td class="text-center">
+                                    <button class="btn btn-danger btn-xs" title="Eliminar" onclick="onEventDelete('${inscripcion.idCurso}','${inscripcion.idParticipante}')">
+                                        <i class="fa fa-trash" style="font-size:25px;"></i>
+                                    </button>
+                                </td>
+                                </tr>`);
+                        }
+                        totalPaginacion = parseInt(Math.ceil((parseFloat(result.data.total) / parseInt(
+                            filasPorPagina))));
+                        $("#lblPaginaActual").html(paginacion);
+                        $("#lblPaginaSiguiente").html(totalPaginacion);
+                        state = false;
+                    }
+                } catch (error) {
+                    tbTable.empty();
+                    tbTable.append(
+                        '<tr class="text-center"><td colspan="9"><p>Se produjo un error, intente nuevamente.</p></td></tr>'
+                    );
+                    $("#lblPaginaActual").html(0);
+                    $("#lblPaginaSiguiente").html(0);
+                    state = false;
+                }
+            }
+
+            function onEventPaginacion() {
+                switch (opcion) {
+                    case 0:
+                        loadTable("");
+                        break;
+                    case 1:
+                        loadTable($("#buscar").val());
+                        break;
+                }
+            }
+
+            async function onEventGuardar() {
+                if ($("#cbIngeniero").val() == null) {
+                    tools.AlertWarning("Inscripción", "Seleccione un ingeniero.");
+                    $('#cbIngeniero').select2('focus');
+                    return;
+                }
+
+                tools.ModalDialog("Inscripción", "¿Está seguro de continuar?", async function() {
+                    try {
+                        $("#mdInscripcion").modal("hide");
+                        tools.ModalAlertInfo("Inscripción", "Procesando petición..");
+
+                        const result = await axios.post("../app/web/InscripcionWeb.php", {
+                            "type": "insert",
+                            "idParticipante": $("#cbIngeniero").val(),
+                            "idCurso": idCurso,
+                            "idUsuario": idUsuario
+                        });
+
+                        tools.ModalAlertSuccess("Inscripción", result.data, () => {
+
+                        });
+                    } catch (error) {
+                        if (error.response) {
+                            tools.ModalAlertWarning("Inscripción", error.response.data);
+                        } else {
+                            tools.ModalAlertError("Inscripción", "Se genero un error interno, comuníquese con el administrador del sistema.");
+                        }
+                    }
+                });
+            }
+
+            async function onEventCertificado(idCurso, idParticipante){
+                window.open("../app/sunat/pdfCertCurso.php?idCurso0"+idCurso, "_blank");
+            }
+
+            async function onEventDelete(idCurso, idParticipante) {
+                tools.ModalDialog("Inscripción", "¿Está seguro de eliminar?", async function() {
+                    try {
+
+                    } catch (error) {
+
+                    }
+                });
             }
         </script>
     </body>
