@@ -167,23 +167,30 @@ class ListarIngenierosAdo
     public static function IngenierosNombres($search)
     {
         try {
-            $cmdSelect = Database::getInstance()->getDb()->prepare("SELECT idDNI, CONCAT(Apellidos,', ',Nombres) AS Ingeniero 
+            $cmdSelect = Database::getInstance()->getDb()->prepare("SELECT 
+            idDNI, 
+            CONCAT(Apellidos,', ',Nombres) AS Ingeniero 
             FROM Persona 
             WHERE 
-            ? = ''
+            ? <> '' AND CIP LIKE ?  
             OR
-            CIP LIKE ? 
+            ? <> '' AND idDNI LIKE ?
             OR
-            idDNI LIKE ?
+            ? <> '' AND Apellidos LIKE ?
             OR
-            Apellidos LIKE ?
-            OR
-            Nombres LIKE ?");
+            ? <> '' AND Nombres LIKE ?");
             $cmdSelect->bindParam(1, $search, PDO::PARAM_STR);
             $cmdSelect->bindParam(2, $search, PDO::PARAM_STR);
+
             $cmdSelect->bindParam(3, $search, PDO::PARAM_STR);
             $cmdSelect->bindParam(4, $search, PDO::PARAM_STR);
+
             $cmdSelect->bindParam(5, $search, PDO::PARAM_STR);
+            $cmdSelect->bindParam(6, $search, PDO::PARAM_STR);
+
+            $cmdSelect->bindParam(7, $search, PDO::PARAM_STR);
+            $cmdSelect->bindParam(8, $search, PDO::PARAM_STR);
+
             $cmdSelect->execute();
 
             $arrayIngenieros = array();

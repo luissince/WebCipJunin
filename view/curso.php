@@ -34,7 +34,7 @@ if (!isset($_SESSION['IdUsuario'])) {
                                 </button>
                                 <h4 class="modal-title" id="titleModal">
                                     <i class="fa fa-book">
-                                    </i> Nuevo Curso
+                                    </i> Nuevo Curso 
                                 </h4>
                             </div>
                             <div class="modal-body">
@@ -197,87 +197,90 @@ if (!isset($_SESSION['IdUsuario'])) {
                     </ol>
                 </section>
 
-                <section class="invoice">
-                    <div class="row">
-                        <div class="col-lg-2 col-md-3 col-sm-12 col-xs-12">
-                            <label>Nuevo curso.</label>
-                            <div class="form-group">
-                                <button type="button" class="btn btn-success" id="btnNuevo">
-                                    <i class="fa fa-plus"></i> Agregar curso
-                                </button>
+                <section class="content">
+                    <div class="invoice">
+                        <div class="row">
+                            <div class="col-lg-2 col-md-3 col-sm-12 col-xs-12">
+                                <label>Nuevo curso.</label>
+                                <div class="form-group">
+                                    <button type="button" class="btn btn-success" id="btnNuevo">
+                                        <i class="fa fa-plus"></i> Agregar curso
+                                    </button>
+                                </div>
                             </div>
-                        </div>
 
-                        <div class="col-lg-2 col-md-3 col-sm-12 col-xs-12">
-                            <label>Opción.</label>
-                            <div class="form-group">
-                                <button class="btn btn-default" id="btnActualizar">
-                                    <i class="fa fa-refresh"></i> Recargar
-                                </button>
+                            <div class="col-lg-2 col-md-3 col-sm-12 col-xs-12">
+                                <label>Opción.</label>
+                                <div class="form-group">
+                                    <button class="btn btn-default" id="btnActualizar">
+                                        <i class="fa fa-refresh"></i> Recargar
+                                    </button>
+                                </div>
                             </div>
-                        </div>
 
-                        <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
-                            <label>Filtrar por curso o capitulo.</label>
-                            <div class="form-group">
-                                <div class="input-group">
-                                    <input type="search" id="buscar" class="form-control" placeholder="Escribe y presiona enter para filtrar" aria-describedby="search" value="">
-                                    <div class="input-group-btn">
-                                        <button type="button" class="btn btn-primary" id="btnSearch">Buscar</button>
+                            <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
+                                <label>Filtrar por curso o capitulo.</label>
+                                <div class="form-group">
+                                    <div class="input-group">
+                                        <input type="search" id="buscar" class="form-control" placeholder="Escribe y presiona enter para filtrar" aria-describedby="search" value="">
+                                        <div class="input-group-btn">
+                                            <button type="button" class="btn btn-primary" id="btnSearch">Buscar</button>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
-                        </div>
-
-                    </div>
-
-                    <div class="row">
-                        <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-                            <div class="table-responsive">
-                                <table class="table table-striped" style="border-width: 1px;border-style: dashed;border-color: #E31E25;">
-                                    <thead style="background-color: #FDB2B1;color: #B72928;">
-                                        <th width="5%" class="text-center">#</th>
-                                        <th width="20%">Curso</th>
-                                        <th width="10%">Serie/Correlativo</th>
-                                        <th width="20%">Organizador</th>
-                                        <th width="10%">Capitulo</th>
-                                        <th width="15%">Fecha/Hora</th>
-                                        <th width="10%">Estado</th>
-                                        <th width="10%" class="text-center">Inscripción</th>
-                                        <th width="5%" class="text-center">Editar</th>
-                                        <th width="5%" class="text-center">Eliminar</th>
-                                    </thead>
-                                    <tbody id="tbTable">
-
-                                    </tbody>
-                                </table>
-                            </div>
-                            <div class="col-md-12" style="text-align:center;">
-                                <ul class="pagination">
-                                    <li>
-                                        <button class="btn btn-primary" id="btnIzquierda">
-                                            <i class="fa fa-toggle-left"></i>
-                                        </button>
-                                    </li>
-                                    <li>
-                                        <span id="lblPaginaActual" class="font-weight-bold">0</span>
-                                    </li>
-                                    <li><span>a</span></li>
-                                    <li>
-                                        <span id="lblPaginaSiguiente" class="font-weight-bold">0</span>
-                                    </li>
-                                    <li>
-                                        <button class="btn btn-primary" id="btnDerecha">
-                                            <i class="fa fa-toggle-right"></i>
-                                        </button>
-                                    </li>
-                                </ul>
-                            </div>
 
                         </div>
 
+                        <div class="row">
+                            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                                <div class="table-responsive">
+                                    <table class="table table-striped" style="border-width: 1px;border-style: dashed;border-color: #E31E25;">
+                                        <thead style="background-color: #FDB2B1;color: #B72928;">
+                                            <th width="5%" class="text-center">#</th>
+                                            <th width="20%">Curso</th>
+                                            <th width="10%">Serie/Correlativo</th>
+                                            <th width="20%">Organizador</th>
+                                            <th width="10%">Capitulo</th>
+                                            <th width="15%">Fecha/Hora</th>
+                                            <th width="10%">Estado</th>
+                                            <th width="10%" class="text-center">Inscripción</th>
+                                            <th width="5%" class="text-center">Editar</th>
+                                            <th width="5%" class="text-center">Eliminar</th>
+                                        </thead>
+                                        <tbody id="tbTable">
+
+                                        </tbody>
+                                    </table>
+                                </div>
+                                <div class="col-md-12" style="text-align:center;">
+                                    <ul class="pagination">
+                                        <li>
+                                            <button class="btn btn-primary" id="btnIzquierda">
+                                                <i class="fa fa-toggle-left"></i>
+                                            </button>
+                                        </li>
+                                        <li>
+                                            <span id="lblPaginaActual" class="font-weight-bold">0</span>
+                                        </li>
+                                        <li><span>a</span></li>
+                                        <li>
+                                            <span id="lblPaginaSiguiente" class="font-weight-bold">0</span>
+                                        </li>
+                                        <li>
+                                            <button class="btn btn-primary" id="btnDerecha">
+                                                <i class="fa fa-toggle-right"></i>
+                                            </button>
+                                        </li>
+                                    </ul>
+                                </div>
+
+                            </div>
+
+                        </div>
                     </div>
                 </section>
+
                 <!-- /.content -->
             </div>
             <!-- /.content-wrapper -->
@@ -299,9 +302,6 @@ if (!isset($_SESSION['IdUsuario'])) {
             let idUsuario = <?= $_SESSION['IdUsuario'] ?>;
 
             let idCurso = '';
-
-            let editView = "<?= $_SESSION["Permisos"][9]["actualizar"]; ?>";
-            let deleteView = "<?= $_SESSION["Permisos"][9]["eliminar"]; ?>";
 
             $(document).ready(function() {
 
@@ -346,7 +346,7 @@ if (!isset($_SESSION['IdUsuario'])) {
                     modalCurso('');
                 });
 
-                $("#mdCurso").on('show.bs.modal', function() {
+                $("#mdCurso").on('shown.bs.modal', function() {
                     $("#txtCurso").focus();
                 });
 
@@ -425,9 +425,7 @@ if (!isset($_SESSION['IdUsuario'])) {
             async function loadTable(text) {
                 try {
                     tbTable.empty();
-                    tbTable.append(
-                        '<tr class="text-center"><td colspan="9"><img src="./images/spiner.gif"/><p>Cargando información.</p></td></tr>'
-                    );
+                    tbTable.append('<tr class="text-center"><td colspan="10"><img src="./images/spiner.gif"/><p>Cargando información.</p></td></tr>');
                     state = true;
                     totalPaginacion = 0;
 
@@ -443,7 +441,7 @@ if (!isset($_SESSION['IdUsuario'])) {
                     tbTable.empty();
                     if (result.data.cursos.length == 0) {
                         tbTable.append(
-                            '<tr class="text-center"><td colspan="9"><p>No hay datos para mostrar</p></td></tr>'
+                            '<tr class="text-center"><td colspan="10"><p>No hay datos para mostrar</p></td></tr>'
                         );
                         $("#lblPaginaActual").html(paginacion);
                         $("#lblPaginaSiguiente").html(totalPaginacion);
@@ -451,9 +449,9 @@ if (!isset($_SESSION['IdUsuario'])) {
                     } else {
                         for (let curso of result.data.cursos) {
 
-                            let btnUpdate = editView == 0 ? '<i class="fa fa-minus" style="font-size:20px;"></i>' :
+                            let btnUpdate =
                                 `<button class="btn btn-warning btn-xs" title="Editar" onclick="modalCurso(${curso.idCurso} )"><i class="fa fa-edit" style="font-size:25px;"></i></button>`;
-                            let btnDelete = deleteView == 0 ? '<i class="fa fa-minus" style="font-size:20px;"></i>' :
+                            let btnDelete =
                                 `<button class="btn btn-danger btn-xs" title="Eliminar" onclick="modalDelete(${curso.idCurso})"><i class="fa fa-trash" style="font-size:25px;"></i></button>`
                             let btnInscripcion = '<button class="btn btn-success btn-xs" title="Inscribir" onclick="linkInscripcion(\'' + curso.idCurso + '\',\'' +
                                 curso.Nombre + '\',\'' + curso.Capitulo + '\',\'' + curso.PrecioCurso + '\',\'' + curso.PrecioCertificado + '\',\'' + curso.FechaInicio + '\',\'' + curso.HoraInicio + '\')"><i class="fa fa-id-card" style="font-size:25px;"></i></button>'
@@ -482,7 +480,7 @@ if (!isset($_SESSION['IdUsuario'])) {
                 } catch (error) {
                     tbTable.empty();
                     tbTable.append(
-                        '<tr class="text-center"><td colspan="9"><p>Se produjo un error, intente nuevamente.</p></td></tr>'
+                        '<tr class="text-center"><td colspan="10"><p>Se produjo un error, intente nuevamente.</p></td></tr>'
                     );
                     $("#lblPaginaActual").html(0);
                     $("#lblPaginaSiguiente").html(0);

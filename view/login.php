@@ -131,11 +131,11 @@ if (isset($_SESSION['IdUsuario'])) {
 
             })
 
-            function login() {
+            async function login() {
                 if (isLogin) {
                     return;
                 }
-                
+
                 if ($("#txtUsuario").val() == '') {
                     tools.AlertWarning('Mensaje', "Ingrese un usuario por favor");
                     $("#txtUsuario").focus();
@@ -148,57 +148,37 @@ if (isset($_SESSION['IdUsuario'])) {
                     return;
                 }
 
-                $.ajax({
-                    url: "../app/controller/UsuarioController.php",
-                    method: "GET",
-                    data: {
-                        "type": "login",
-                        "usuario": $("#txtUsuario").val(),
-                        "clave": $("#txtClave").val()
-                    },
-                    beforeSend: function() {
-                        isLogin = true;
-                        tools.ModalAlertInfo("Login", "Procesando petición..");
-                    },
-                    success: function(result) {
-                        if (result.estado === 1) {
-                            let dato = result.datos;
-                            tools.ModalAlertSuccess("Login", "Los datos son correctos su sesión va iniciar en 2 segundos.");
+                try {
+                    isLogin = true;
+                    tools.ModalAlertInfo("Login", "Procesando petición..");
 
-                            tools.AlertSuccess('Login', 'Bienvenido al Sistema ' + dato.Apellidos + ' ' + dato.Nombres)
-                            setTimeout(function() {
-                                location.href = "../view/index.php";
-                            }, 1000);
-                        } else if (result.estado === 2) {
-                            $("#txtUsuario").focus();
-                            tools.ModalAlertWarning("Login", result.message);
-                            isLogin = false;
-                        } else if (result.estado === 3) {
-                            $("#txtClave").val('')
-                            $("#txtClave").focus();
-                            tools.ModalAlertWarning("Login", result.message);
-                            isLogin = false;
-                        } else if (result.estado === 4) {
-                            $("#txtUsuario").val('')
-                            $("#txtUsuario").focus();
-                            tools.ModalAlertWarning("Login", result.message);
-                            isLogin = false;
-                        } else {
-                            $("#txtUsuario").val('')
-                            $("#txtClave").val('')
-                            $("#txtUsuario").focus();
-                            tools.ModalAlertWarning("Login", result.message);
-                            isLogin = false;
+                    let result = await axios.get("../app/web/UsuarioWeb.php", {
+                        params: {
+                            "type": "login",
+                            "usuario": $("#txtUsuario").val(),
+                            "clave": $("#txtClave").val()
                         }
-                    },
-                    error: function(error) {
-                        $("#txtUsuario").val('')
-                        $("#txtClave").val('')
-                        $("#txtUsuario").focus();
-                        tools.ModalAlertError("Login", error.responseText);
-                        isLogin = false;
+                    });
+
+                    let dato = result.data;
+                    tools.ModalAlertSuccess("Login", "Los datos son correctos su sesión va iniciar en 2 segundos.");
+
+                    tools.AlertSuccess('Login', 'Bienvenido al Sistema ' + dato.Apellidos + ' ' + dato.Nombres)
+                    setTimeout(function() {
+                        location.href = "../view/index.php";
+                    }, 1000);
+                } catch (error) {
+                    $("#txtUsuario").val('')
+                    $("#txtClave").val('')
+                    $("#txtUsuario").focus();
+                    if(error.response){
+                        tools.ModalAlertWarning("Login", error.response.data);
+                    }else{
+                        tools.ModalAlertError("Login", "Se produjo un error interno, intente nuevamente.");
                     }
-                });
+                   
+                    isLogin = false;
+                }
             }
         </script>
     </body>

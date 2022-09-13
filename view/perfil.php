@@ -146,60 +146,52 @@ if (!isset($_SESSION['IdUsuario'])) {
                 });
             });
 
-            function loadInitPerfil() {
-                $.ajax({
-                    url: "../app/controller/UsuarioController.php",
-                    method: "GET",
-                    data: {
+            async function loadInitPerfil() {
+                try {
+                    $("#divOverlayModal").removeClass("d-none");
+
+                    let result = await axios.get("../app/web/UsuarioWeb.php", {
+                       params:{
                         "type": "usuario",
                         "idUsuario": idUsuario
-                    },
-                    beforeSend: function() {
-                        $("#divOverlayModal").removeClass("d-none");
-                    },
-                    success: function(result) {
-                        if (result.estado == 1) {
-                            $("#divOverlayModal").addClass("d-none");
-                            $("#lblDatos").html(result.object.Nombres + ", " + result.object.Apellidos);
-                            $("#lblRol").html(result.object.RolNombre);
-                            $("#txtUsuario").val(result.object.Usuario)
-                            $("#txtClave").val(result.object.Clave)
-                        } else {
-                            $("#lblOverlayModal").html(result.message);
-                        }
-                    },
-                    error: function(error) {
-                        $("#lblOverlayModal").html(error.responseText);
+                       }
+                    });
+                  
+                    $("#divOverlayModal").addClass("d-none");
+                    $("#lblDatos").html(result.data.Nombres + ", " + result.data.Apellidos);
+                    $("#lblRol").html(result.data.RolNombre);
+                    $("#txtUsuario").val(result.data.Usuario)
+                    $("#txtClave").val(result.data.Clave)
+                } catch (error) {
+                    if (error.response) {
+                        $("#lblOverlayModal").html(error.response.data);
+                    } else {
+                        $("#lblOverlayModal").html("Se produjo un error interno, intente nuevamente.");
                     }
-                });
+                }
             }
 
             function updatePerfil() {
-                tools.ModalDialog("Perfil", "¿Está seguro de continuar?", function(value) {
+                tools.ModalDialog("Perfil", "¿Está seguro de continuar?", async function(value) {
                     if (value == true) {
-                        $.ajax({
-                            url: "../app/controller/UsuarioController.php",
-                            method: "POST",
-                            data: {
+                        try {
+                            tools.ModalAlertInfo("Perfil", "Procesando petición..");
+
+                            let result =await axios.post("../app/web/UsuarioWeb.php", {
                                 "type": "updatePerfil",
                                 "idUsuario": idUsuario,
                                 "usuario": $("#txtUsuario").val().trim(),
                                 "clave": $("#txtClave").val().trim()
-                            },
-                            beforeSend: function() {
-                                tools.ModalAlertInfo("Perfil", "Procesando petición..");
-                            },
-                            success: function(result) {
-                                if (result.estado == 1) {
-                                    tools.ModalAlertSuccess("Perfil", result.message);
-                                } else {
-                                    tools.ModalAlertWarning("Perfil", result.message);
-                                }
-                            },
-                            error: function(error) {
-                                tools.ModalAlertError("Perfil", "Se produjo un error: " + error.responseText);
+                            });
+
+                            tools.ModalAlertSuccess("Perfil", result.data);
+                        } catch (error) {
+                            if (error.response) {
+                                tools.ModalAlertWarning("Perfil", error.response.data);
+                            } else {
+                                tools.ModalAlertError("Perfil", "Se produjo un error interno, intente nuevamente.");
                             }
-                        });
+                        }
                     }
                 });
             }

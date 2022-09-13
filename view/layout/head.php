@@ -46,6 +46,9 @@
 <script src="adminlte/bower_components/chart.js/Chart.js"></script>
 <!-- AdminLTE for demo purposes -->
 <script src="adminlte/dist/js/demo.js"></script>
+<!-- sweetalert -->
 <script src="js/sweetalert.min.js"></script>
+<!-- toastr -->
 <script src="js/toastr.min.js"></script>
+<!-- Acios -->
 <script src="js/axios.js"></script>

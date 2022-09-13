@@ -85,142 +85,144 @@ if (!isset($_SESSION['IdUsuario'])) {
                     </ol>
                 </section>
 
-                <section class="invoice">
-                    <div class="box box-default not-border not-box-shadow">
-                        <div class="box-body">
+                <section class="content">
+                    <div class="invoice">
+                        <div class="box box-default not-border not-box-shadow">
+                            <div class="box-body">
 
-                            <div class="row">
-                                <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
-                                    <label>Curso: <strong class="text-primary" id="lblCurso"></strong></label>
-                                </div>
-                                <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
-                                    <label>Capitulo: <strong class="text-primary" id="lblCapitulo"></strong></label>
-                                </div>
-                            </div>
-
-                            <div class="row">
-                                <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
-                                    <label>Organizador: <strong class="text-primary" id="lblOrganizador"></strong></label>
-                                </div>
-                                <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
-                                    <label>Modalidad: <strong class="text-primary" id="lblModalidad"></strong></label>
-                                </div>
-                            </div>
-
-                            <div class="row">
-                                <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
-                                    <label>Precio Curso: <strong class="text-primary" id="lblPrecioCurso"></strong></label>
-                                </div>
-                                <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
-                                    <label>Precio Certificado: <strong class="text-primary" id="lblPrecioCertificado"></strong></label>
-                                </div>
-                            </div>
-
-                            <div class="row">
-                                <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
-                                    <label>Fecha Inicio: <strong class="text-primary" id="lblFechaInicio"></strong></label>
-                                </div>
-                                <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
-                                    <label>Hora Inicio: <strong class="text-primary" id="lblHoraInicio"></strong></label>
-                                </div>
-                            </div>
-                            
-                            <div class="row">
-                                <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
-                                    <label>Celular: <strong class="text-primary" id="lblCelular"></strong></label>
-                                </div>
-                                <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
-                                    <label>Email: <strong class="text-primary" id="lblEmail"></strong></label>
-                                </div>
-                            </div>
-
-                            <div class="row">
-                                <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-                                    <label>Descripción: <strong class="text-primary" id="lblDescripcion"></strong></label>
-                                </div>
-                            </div>
-
-                            <br />
-
-                            <div class="row">
-                                <div class="col-lg-2 col-md-3 col-sm-12 col-xs-12">
-                                    <label>Nueva incripción.</label>
-                                    <div class="form-group">
-                                        <button type="button" class="btn btn-success" id="btnNuevo">
-                                            <i class="fa fa-plus"></i> Agregar incripción
-                                        </button>
+                                <div class="row">
+                                    <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
+                                        <label>Curso: <strong class="text-primary" id="lblCurso"></strong></label>
+                                    </div>
+                                    <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
+                                        <label>Capitulo: <strong class="text-primary" id="lblCapitulo"></strong></label>
                                     </div>
                                 </div>
 
-                                <div class="col-lg-2 col-md-3 col-sm-12 col-xs-12">
-                                    <label>Opción.</label>
-                                    <div class="form-group">
-                                        <button class="btn btn-default" id="btnActualizar">
-                                            <i class="fa fa-refresh"></i> Recargar
-                                        </button>
+                                <div class="row">
+                                    <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
+                                        <label>Organizador: <strong class="text-primary" id="lblOrganizador"></strong></label>
+                                    </div>
+                                    <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
+                                        <label>Modalidad: <strong class="text-primary" id="lblModalidad"></strong></label>
                                     </div>
                                 </div>
 
-                                <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
-                                    <label>Filtrar por dni o apellidos.</label>
-                                    <div class="form-group">
-                                        <div class="input-group">
-                                            <input type="search" id="buscar" class="form-control" placeholder="Escribe y presiona enter para filtrar" aria-describedby="search" value="">
-                                            <div class="input-group-btn">
-                                                <button type="button" class="btn btn-primary" id="btnSearch">Buscar</button>
+                                <div class="row">
+                                    <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
+                                        <label>Precio Curso: <strong class="text-primary" id="lblPrecioCurso"></strong></label>
+                                    </div>
+                                    <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
+                                        <label>Precio Certificado: <strong class="text-primary" id="lblPrecioCertificado"></strong></label>
+                                    </div>
+                                </div>
+
+                                <div class="row">
+                                    <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
+                                        <label>Fecha Inicio: <strong class="text-primary" id="lblFechaInicio"></strong></label>
+                                    </div>
+                                    <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
+                                        <label>Hora Inicio: <strong class="text-primary" id="lblHoraInicio"></strong></label>
+                                    </div>
+                                </div>
+
+                                <div class="row">
+                                    <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
+                                        <label>Celular: <strong class="text-primary" id="lblCelular"></strong></label>
+                                    </div>
+                                    <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
+                                        <label>Email: <strong class="text-primary" id="lblEmail"></strong></label>
+                                    </div>
+                                </div>
+
+                                <div class="row">
+                                    <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                                        <label>Descripción: <strong class="text-primary" id="lblDescripcion"></strong></label>
+                                    </div>
+                                </div>
+
+                                <br />
+
+                                <div class="row">
+                                    <div class="col-lg-2 col-md-3 col-sm-12 col-xs-12">
+                                        <label>Nueva incripción.</label>
+                                        <div class="form-group">
+                                            <button type="button" class="btn btn-success" id="btnNuevo">
+                                                <i class="fa fa-plus"></i> Agregar incripción
+                                            </button>
+                                        </div>
+                                    </div>
+
+                                    <div class="col-lg-2 col-md-3 col-sm-12 col-xs-12">
+                                        <label>Opción.</label>
+                                        <div class="form-group">
+                                            <button class="btn btn-default" id="btnActualizar">
+                                                <i class="fa fa-refresh"></i> Recargar
+                                            </button>
+                                        </div>
+                                    </div>
+
+                                    <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
+                                        <label>Filtrar por dni o apellidos.</label>
+                                        <div class="form-group">
+                                            <div class="input-group">
+                                                <input type="search" id="buscar" class="form-control" placeholder="Escribe y presiona enter para filtrar" aria-describedby="search" value="">
+                                                <div class="input-group-btn">
+                                                    <button type="button" class="btn btn-primary" id="btnSearch">Buscar</button>
+                                                </div>
                                             </div>
                                         </div>
                                     </div>
                                 </div>
-                            </div>
 
-                            <div class="row">
-                                <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-                                    <div class="table-responsive">
-                                        <table class="table table-striped" style="border-width: 1px;border-style: dashed;border-color: #E31E25;">
-                                            <thead style="background-color: #FDB2B1;color: #B72928;">
-                                                <th width="5%" class="text-center">#</th>
-                                                <th width="10%">Serie/Correlativo</th>
-                                                <th width="20%">Ingeniero</th>
-                                                <th width="10%">Capitulo/Especialidad</th>
-                                                <th width="15%">Fecha/Hora</th>
-                                                <th width="10%">Estado</th>
-                                                <th width="5%" class="text-center">Certificado</th>
-                                                <th width="5%" class="text-center">Eliminar</th>
-                                            </thead>
-                                            <tbody id="tbTable">
+                                <div class="row">
+                                    <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                                        <div class="table-responsive">
+                                            <table class="table table-striped" style="border-width: 1px;border-style: dashed;border-color: #E31E25;">
+                                                <thead style="background-color: #FDB2B1;color: #B72928;">
+                                                    <th width="5%" class="text-center">#</th>
+                                                    <th width="10%">Serie/Correlativo</th>
+                                                    <th width="20%">Ingeniero</th>
+                                                    <th width="10%">Capitulo/Especialidad</th>
+                                                    <th width="15%">Fecha/Hora</th>
+                                                    <th width="10%">Estado</th>
+                                                    <th width="5%" class="text-center">Certificado</th>
+                                                    <th width="5%" class="text-center">Eliminar</th>
+                                                </thead>
+                                                <tbody id="tbTable">
 
-                                            </tbody>
-                                        </table>
-                                    </div>
-                                    <div class="col-md-12" style="text-align:center;">
-                                        <ul class="pagination">
-                                            <li>
-                                                <button class="btn btn-primary" id="btnIzquierda">
-                                                    <i class="fa fa-toggle-left"></i>
-                                                </button>
-                                            </li>
-                                            <li>
-                                                <span id="lblPaginaActual" class="font-weight-bold">0</span>
-                                            </li>
-                                            <li><span>a</span></li>
-                                            <li>
-                                                <span id="lblPaginaSiguiente" class="font-weight-bold">0</span>
-                                            </li>
-                                            <li>
-                                                <button class="btn btn-primary" id="btnDerecha">
-                                                    <i class="fa fa-toggle-right"></i>
-                                                </button>
-                                            </li>
-                                        </ul>
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                        <div class="col-md-12" style="text-align:center;">
+                                            <ul class="pagination">
+                                                <li>
+                                                    <button class="btn btn-primary" id="btnIzquierda">
+                                                        <i class="fa fa-toggle-left"></i>
+                                                    </button>
+                                                </li>
+                                                <li>
+                                                    <span id="lblPaginaActual" class="font-weight-bold">0</span>
+                                                </li>
+                                                <li><span>a</span></li>
+                                                <li>
+                                                    <span id="lblPaginaSiguiente" class="font-weight-bold">0</span>
+                                                </li>
+                                                <li>
+                                                    <button class="btn btn-primary" id="btnDerecha">
+                                                        <i class="fa fa-toggle-right"></i>
+                                                    </button>
+                                                </li>
+                                            </ul>
+                                        </div>
+
                                     </div>
 
                                 </div>
-
                             </div>
-                        </div>
-                        <div id="divLoad" class="overlay">
-                            <i class="fa fa-refresh fa-spin"></i>
+                            <div id="divLoad" class="overlay">
+                                <i class="fa fa-refresh fa-spin"></i>
+                            </div>
                         </div>
                     </div>
                 </section>
@@ -360,7 +362,7 @@ if (!isset($_SESSION['IdUsuario'])) {
                             "idCurso": idCurso
                         }
                     });
-                
+
                     $("#lblCurso").html(result.data.Descripcion);
                     $("#lblCapitulo").html(result.data.Capitulo);
                     $("#lblOrganizador").html(result.data.Organizador);
@@ -498,8 +500,8 @@ if (!isset($_SESSION['IdUsuario'])) {
                 });
             }
 
-            async function onEventCertificado(idCurso, idParticipante){
-                window.open("../app/sunat/pdfCertCurso.php?idCurso0"+idCurso, "_blank");
+            async function onEventCertificado(idCurso, idParticipante) {
+                window.open("../app/sunat/pdfCertCurso.php?idCurso0" + idCurso, "_blank");
             }
 
             async function onEventDelete(idCurso, idParticipante) {

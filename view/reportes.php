@@ -593,58 +593,51 @@ if (!isset($_SESSION['IdUsuario'])) {
                         $("#cbTipodeDocumento").removeAttr('disabled')
                     });
 
-                    $("#btnBuscarComprobante").click(function() {
-                        $.ajax({
-                            url: "../app/controller/UsuarioController.php",
-                            method: "GET",
-                            data: {
-                                "type": "listUsuario",
-                                "fInicio": $("#fi_comprobantes").val(),
-                                "fFinal": $("#ff_comprobantes").val()
-                            },
-                            beforeSend: function() {
-                                $("#cbUsuario").empty();
-                                $("#cbUsuario").append('<option value="">Buscando...</option>');
-                            },
-                            success: function(result) {
-                                $("#cbUsuario").empty();
-                                $("#cbUsuario").append('<option value="">- Usuarios -</option>');
-                                for (let value of result) {
-                                    $("#cbUsuario").append('<option value="' + value.idUsuario + '">' + value.Usuario + '</option>');
-                                }
-                            },
-                            error: function(error) {
-                                $("#cbUsuario").empty();
-                                $("#cbUsuario").append('<option value="">- Usuarios -</option>');
+                    $("#btnBuscarComprobante").click(async function() {
+                        try {
+                            $("#cbUsuario").empty();
+                            $("#cbUsuario").append('<option value="">Buscando...</option>');
 
-                            }
-                        });
-                    });
-
-                    $("#btnBuscarComprobante").keypress(function(event) {
-                        if (event.keyCode == 13) {
-                            $.ajax({
-                                url: "../app/controller/UsuarioController.php",
-                                method: "GET",
-                                data: {
+                            let result = await axios.get("../app/web/UsuarioWeb.php", {
+                                params: {
                                     "type": "listUsuario",
                                     "fInicio": $("#fi_comprobantes").val(),
                                     "fFinal": $("#ff_comprobantes").val()
-                                },
-                                beforeSend: function() {
-                                    $("#cbUsuario").empty();
-                                },
-                                success: function(result) {
-                                    $("#cbUsuario").append('<option value="">- Usuarios -</option>');
-                                    for (let value of result) {
-                                        $("#cbUsuario").append('<option value="' + value.idUsuario + '">' + value.Apellidos + ', ' + value.Nombres + '</option>');
-                                    }
-                                },
-                                error: function(error) {
-                                    $("#cbUsuario").append('<option value="">- Usuarios -</option>');
-
                                 }
                             });
+
+                            $("#cbUsuario").empty();
+                            $("#cbUsuario").append('<option value="">- Usuarios -</option>');
+                            for (let value of result.data) {
+                                $("#cbUsuario").append('<option value="' + value.idUsuario + '">' + value.Usuario + '</option>');
+                            }
+                        } catch (error) {
+                            $("#cbUsuario").empty();
+                            $("#cbUsuario").append('<option value="">- Usuarios -</option>');
+                        }
+                    });
+
+                    $("#btnBuscarComprobante").keypress(async function(event) {
+                        if (event.keyCode == 13) {
+                            try {
+                                $("#cbUsuario").empty();
+
+                                let result = await axios.get("../app/web/UsuarioWeb.php", {
+                                    params: {
+                                        "type": "listUsuario",
+                                        "fInicio": $("#fi_comprobantes").val(),
+                                        "fFinal": $("#ff_comprobantes").val()
+                                    }
+                                });
+
+                                $("#cbUsuario").append('<option value="">- Usuarios -</option>');
+                                for (let value of result.data) {
+                                    $("#cbUsuario").append('<option value="' + value.idUsuario + '">' + value.Apellidos + ', ' + value.Nombres + '</option>');
+                                }
+                            } catch (error) {
+                                $("#cbUsuario").append('<option value="">- Usuarios -</option>');
+
+                            }
                             event.preventDefault();
                         }
                     });

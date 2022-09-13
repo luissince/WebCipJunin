@@ -166,6 +166,8 @@
                     $menuConfiguracion .= '<li id="tab-empleo"><a href="empleo.php"><i class="fa fa-circle-o"></i>Empleo</a></li>';
                     $menuConfiguracion .= '<li id="tab-mensaje"><a href="mensaje.php"><i class="fa fa-circle-o"></i>Mensajes (App)</a></li>';
                     $menuConfiguracion .= '<li id="tab-curso"><a href="curso.php"><i class="fa fa-circle-o"></i>Cursos</a></li>';
+                    $menuConfiguracion .= '<li id="tab-directivo"><a href="directivo.php"><i class="fa fa-circle-o"></i>Directorio Institucional</a></li>';
+                    $menuConfiguracion .= '<li id="tab-presidentes"><a href="presidentes.php"><i class="fa fa-circle-o"></i>Presidentes de Capítulo</a></li>';
                     $menuConfiguracion .= '</ul></li>';
                     print $menuConfiguracion;
                 }

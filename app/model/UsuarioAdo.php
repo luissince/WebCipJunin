@@ -1,8 +1,10 @@
 <?php
+
 namespace SysSoftIntegra\Model;
 
 use PDO;
 use SysSoftIntegra\DataBase\Database;
+use SysSoftIntegra\Src\Response;
 use Exception;
 
 class UsuarioAdo
@@ -54,9 +56,9 @@ class UsuarioAdo
 
             array_push($array, $arrayUsuarios, $resultTotal);
 
-            return $array;
+            Response::sendSuccess(["usuarios" => $arrayUsuarios, "total" => $resultTotal,]);
         } catch (Exception $ex) {
-            return $ex->getMessage();
+            Response::sendError($ex->getMessage());
         }
     }
 
@@ -76,7 +78,7 @@ class UsuarioAdo
                 $comandSelect->execute();
                 if ($comandSelect->fetch()) {
                     Database::getInstance()->getDb()->rollback();
-                    return "duplicado";
+                    Response::sendClient("El usuario " . $usuario["nombres"] . " " . $usuario["apellidos"] . " ya se encuentra registrado.");
                 } else {
                     $comandoInsert = Database::getInstance()->getDb()->prepare("UPDATE Usuario SET Nombres = UPPER(?), Apellidos = UPPER(?), Usuario = UPPER(?), Clave = ?,Rol = ?,Estado = ? WHERE idUsuario = ?");
                     $comandoInsert->bindParam(1, $usuario["nombres"], PDO::PARAM_STR);
@@ -88,17 +90,16 @@ class UsuarioAdo
                     $comandoInsert->bindParam(7, $usuario["idusuario"], PDO::PARAM_INT);
                     $comandoInsert->execute();
                     Database::getInstance()->getDb()->commit();
-                    return "actualizado";
+                    Response::sendSave("Se actualizaron correctamente los datos.");
                 }
             } else {
-
                 $comandSelect = Database::getInstance()->getDb()->prepare("SELECT * FROM Usuario WHERE UPPER(Nombres) = UPPER(?) AND UPPER(Apellidos) = UPPER(?)");
                 $comandSelect->bindParam(1, $usuario["nombres"], PDO::PARAM_STR);
                 $comandSelect->bindParam(2, $usuario["apellidos"], PDO::PARAM_STR);
                 $comandSelect->execute();
                 if ($comandSelect->fetch()) {
                     Database::getInstance()->getDb()->rollback();
-                    return "duplicado";
+                    Response::sendClient("El usuario " . $usuario["nombres"] . " " . $usuario["apellidos"] . " ya se encuentra registrado.");
                 } else {
                     $comandoInsert = Database::getInstance()->getDb()->prepare("INSERT INTO Usuario (Nombres, Apellidos, Usuario,Clave,Rol,Estado,Sistema) VALUES (UPPER(?), UPPER(?), UPPER(?), ?, ?, ?, 0)");
                     $comandoInsert->bindParam(1, $usuario["nombres"], PDO::PARAM_STR);
@@ -109,12 +110,12 @@ class UsuarioAdo
                     $comandoInsert->bindParam(6, $usuario["estado"], PDO::PARAM_INT);
                     $comandoInsert->execute();
                     Database::getInstance()->getDb()->commit();
-                    return "insertado";
+                    Response::sendSave("Se registraron correctamente los datos.");
                 }
             }
         } catch (Exception $ex) {
             Database::getInstance()->getDb()->rollback();
-            return $ex->getMessage();
+            Response::sendError($ex->getMessage());
         }
     }
 
@@ -123,38 +124,38 @@ class UsuarioAdo
         try {
             Database::getInstance()->getDb()->beginTransaction();
             $comandSelect = Database::getInstance()->getDb()->prepare("SELECT * FROM Usuario WHERE idUsuario = ? and Sistema = 1");
-            $comandSelect->bindParam(1, $usuario["idusuario"], PDO::PARAM_STR);
+            $comandSelect->bindParam(1, $usuario["idUsuario"], PDO::PARAM_STR);
             $comandSelect->execute();
             if ($comandSelect->fetch()) {
                 Database::getInstance()->getDb()->rollback();
-                return "sistema";
+                Response::sendClient("El usuario es propio del sistema; no se puede eliminar.");
             } else {
                 $comandSelect = Database::getInstance()->getDb()->prepare("SELECT * FROM Usuario WHERE idUsuario = ? and Estado = 1");
-                $comandSelect->bindParam(1, $usuario["idusuario"], PDO::PARAM_STR);
+                $comandSelect->bindParam(1, $usuario["idUsuario"], PDO::PARAM_STR);
                 $comandSelect->execute();
                 if ($comandSelect->fetch()) {
                     Database::getInstance()->getDb()->rollback();
-                    return "activo";
+                    Response::sendClient("No se puede eliminar porque se encuentra activo.");
                 } else {
 
                     $comandSelect = Database::getInstance()->getDb()->prepare("SELECT * FROM Ingreso WHERE idUsuario = ? ");
-                    $comandSelect->bindParam(1, $usuario["idusuario"], PDO::PARAM_STR);
+                    $comandSelect->bindParam(1, $usuario["idUsuario"], PDO::PARAM_STR);
                     $comandSelect->execute();
                     if ($comandSelect->fetch()) {
                         Database::getInstance()->getDb()->rollback();
-                        return "ingreso";
+                        Response::sendClient("No se puede eliminar el usuario porque ligado ingresos.");
                     } else {
                         $comandoInsert = Database::getInstance()->getDb()->prepare("DELETE FROM Usuario WHERE idUsuario = ?");
-                        $comandoInsert->bindParam(1, $usuario["idusuario"], PDO::PARAM_STR);
+                        $comandoInsert->bindParam(1, $usuario["idUsuario"], PDO::PARAM_STR);
                         $comandoInsert->execute();
                         Database::getInstance()->getDb()->commit();
-                        return "eliminado";
+                        Response::sendSave("Se eliminó correctamente el usuario.");
                     }
                 }
             }
         } catch (Exception $ex) {
             Database::getInstance()->getDb()->rollback();
-            return $ex->getMessage();
+            Response::sendError($ex->getMessage());
         }
     }
 
@@ -168,10 +169,10 @@ class UsuarioAdo
             $comandoInsert->bindParam(3, $idUsuario, PDO::PARAM_INT);
             $comandoInsert->execute();
             Database::getInstance()->getDb()->commit();
-            return "update";
+            Response::sendSave("Se actualizó correctamente los cambios.");
         } catch (Exception $ex) {
             Database::getInstance()->getDb()->rollback();
-            return $ex->getMessage();
+            Response::sendError($ex->getMessage());
         }
     }
 
@@ -192,10 +193,9 @@ class UsuarioAdo
             WHERE u.idUsuario = ? ");
             $cmdLogin->bindParam(1, $idUsuario, PDO::PARAM_INT);
             $cmdLogin->execute();
-            $result = $cmdLogin->fetchObject();
-            return $result;
+            Response::sendSuccess($cmdLogin->fetchObject());
         } catch (Exception $ex) {
-            return $ex->getMessage();
+            Response::sendError($ex->getMessage());
         }
     }
 
@@ -211,22 +211,17 @@ class UsuarioAdo
             LEFT JOIN Usuario AS u ON u.idUsuario = i.idUsuario
             WHERE i.Fecha BETWEEN ? AND ?");
             $cmdUsuarios->execute(array($fechaInicio, $fechaFinal));
-            $protocol = (isset($_SERVER['SERVER_PROTOCOL']) ? $_SERVER['SERVER_PROTOCOL'] : 'HTTP/1.0');
-            header($protocol . ' ' . 200 . ' ' . "OK");
 
-            return $cmdUsuarios->fetchAll(PDO::FETCH_OBJ);
+            Response::sendSuccess($cmdUsuarios->fetchAll(PDO::FETCH_OBJ));
         } catch (Exception $ex) {
-            $protocol = (isset($_SERVER['SERVER_PROTOCOL']) ? $_SERVER['SERVER_PROTOCOL'] : 'HTTP/1.0');
-            header($protocol . ' ' . 500 . ' ' . "Internal Server Error");
-
-            return $ex->getMessage();
+            Response::sendError($ex->getMessage());
         }
     }
 
     public static function login($usuario, $clave)
     {
         try {
-            $array = array();
+
             $cmdValidateUsuario = Database::getInstance()->getDb()->prepare("SELECT * FROM Usuario WHERE Usuario = ? ");
             $cmdValidateUsuario->bindParam(1, $usuario, PDO::PARAM_STR);
             $cmdValidateUsuario->execute();
@@ -268,22 +263,28 @@ class UsuarioAdo
                             ));
                         }
 
-                        // $cmdReporte = Database::getInstance()->getDb()->prepare("INSERT INTO Reporte(idUsuario,Tipo,Descripcion,Fecha,Hora) VALUES(?,?,?,GETDATE(),GETDATE())");
-                        // $cmdReporte->execute(array());
+                        session_start();
+                        $_SESSION["IdUsuario"] = $usuario->idUsuario;
+                        $_SESSION["Nombres"] = $usuario->Nombres;
+                        $_SESSION["Apellidos"] = $usuario->Apellidos;
+                        $_SESSION["Usuario"] = $usuario->Usuario;
+                        $_SESSION["Nombre"] = $usuario->Nombre;
+                        $_SESSION["Estado"] = $usuario->Estado;
+                        $_SESSION["Sistema"] = $usuario->Sistema;
+                        $_SESSION["Permisos"] = $arrayPermisos;
 
-                        array_push($array, $usuario, $arrayPermisos);
-                        return $array;
+                        Response::sendSuccess($usuario);
                     } else {
-                        return "disable";
+                        Response::sendClient("El usuario esta inactivo.");
                     }
                 } else {
-                    return "nopassword";
+                    Response::sendClient("La contraseña es incorrecta.");
                 }
             } else {
-                return "nouser";
+                Response::sendClient("El usuario es incorrecto.");
             }
         } catch (Exception $ex) {
-            return $ex->getMessage();
+            Response::sendError($ex->getMessage());
         }
     }
 }

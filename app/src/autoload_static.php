@@ -10,6 +10,8 @@ class Autoload_Static
             'SysSoftIntegra\\Controller\\CursoController' => __DIR__  . '/../controller/CursoController.php',
             'SysSoftIntegra\\Controller\\CapituloController' => __DIR__  . '/../controller/CapituloController.php',
             'SysSoftIntegra\\Controller\\InscripcionController' => __DIR__  . '/../controller/InscripcionController.php',
+            'SysSoftIntegra\\Controller\\UsuarioController' => __DIR__  . '/../controller/UsuarioController.php',
+            'SysSoftIntegra\\Controller\\DirectivoController' => __DIR__  . '/../controller/DirectivoController.php',
             
             'SysSoftIntegra\\Model\\BancoAdo' => __DIR__  . '/../model/BancoAdo.php',
             'SysSoftIntegra\\Model\\CapituloAdo' => __DIR__  . '/../model/CapituloAdo.php',
@@ -29,6 +31,7 @@ class Autoload_Static
             'SysSoftIntegra\\Model\\EmpleoAdo' => __DIR__  . '/../model/EmpleoAdo.php',
             'SysSoftIntegra\\Model\\CursoAdo' => __DIR__  . '/../model/CursoAdo.php',
             'SysSoftIntegra\\Model\\InscripcionAdo' => __DIR__  . '/../model/InscripcionAdo.php',
+            'SysSoftIntegra\\Model\\DirectivoAdo' => __DIR__  . '/../model/DirectivoAdo.php',
 
             'SysSoftIntegra\\Src\\Sunat' => __DIR__  . '/Sunat.php',
             'SysSoftIntegra\\Src\\SoapResult' => __DIR__  . '/SoapResult.php',
