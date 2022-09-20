@@ -70,9 +70,11 @@ class CapituloAdo
             $comandoCapitulo = Database::getInstance()->getDb()->prepare("SELECT DISTINCT idCapitulo, Capitulo FROM Capitulo");
             $comandoCapitulo->execute();
             $resultado = $comandoCapitulo->fetchAll();
-            return Response::sendSuccess($resultado);
+            Response::sendSuccess($resultado);
         } catch (Exception $ex) {
-            return Response::sendError($ex->getMessage());
+            Response::sendError($ex->getMessage());
+        } catch (PDOException $ex) {
+            Response::sendError($ex->getMessage());
         }
     }
 
@@ -97,6 +99,8 @@ class CapituloAdo
             $resultado = $comandoEspecialidad->fetchAll();
             Response::sendSuccess($resultado);
         } catch (Exception $ex) {
+            Response::sendError($ex->getMessage());
+        } catch (PDOException $ex) {
             Response::sendError($ex->getMessage());
         }
     }
@@ -139,6 +143,9 @@ class CapituloAdo
         } catch (Exception $ex) {
             Database::getInstance()->getDb()->rollback();
             Response::sendError($ex->getMessage());
+        } catch (PDOException $ex) {
+            Database::getInstance()->getDb()->rollback();
+            Response::sendError($ex->getMessage());
         }
     }
 
@@ -164,6 +171,9 @@ class CapituloAdo
         } catch (Exception $ex) {
             Database::getInstance()->getDb()->rollback();
             Response::sendError($ex->getMessage());
+        } catch (PDOException $ex) {
+            Database::getInstance()->getDb()->rollback();
+            Response::sendError($ex->getMessage());
         }
     }
 
@@ -187,6 +197,9 @@ class CapituloAdo
                 Response::sendSave("Se actualizaron correctamente el capítulo.");
             }
         } catch (Exception $ex) {
+            Database::getInstance()->getDb()->rollback();
+            Response::sendError($ex->getMessage());
+        } catch (PDOException $ex) {
             Database::getInstance()->getDb()->rollback();
             Response::sendError($ex->getMessage());
         }
@@ -215,6 +228,9 @@ class CapituloAdo
         } catch (Exception $ex) {
             Database::getInstance()->getDb()->rollback();
             Response::sendError($ex->getMessage());
+        } catch (PDOException $ex) {
+            Database::getInstance()->getDb()->rollback();
+            Response::sendError($ex->getMessage());
         }
     }
 
@@ -239,6 +255,9 @@ class CapituloAdo
         } catch (Exception $ex) {
             Database::getInstance()->getDb()->rollback();
             Response::sendError($ex->getMessage());
+        } catch (PDOException $ex) {
+            Database::getInstance()->getDb()->rollback();
+            Response::sendError($ex->getMessage());
         }
     }
 
@@ -260,6 +279,9 @@ class CapituloAdo
                 Response::sendSave("Se eliminó correctamente la especialidad.");
             }
         } catch (Exception $ex) {
+            Database::getInstance()->getDb()->rollback();
+            Response::sendError($ex->getMessage());
+        } catch (PDOException $ex) {
             Database::getInstance()->getDb()->rollback();
             Response::sendError($ex->getMessage());
         }
