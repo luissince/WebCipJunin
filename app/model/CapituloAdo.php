@@ -5,6 +5,7 @@ namespace SysSoftIntegra\Model;
 use PDO;
 use SysSoftIntegra\DataBase\Database;
 use Exception;
+use PDOException;
 use SysSoftIntegra\Src\Response;
 
 class CapituloAdo
@@ -14,24 +15,26 @@ class CapituloAdo
     {
     }
 
-    public static function getAllEspecialidades($nombres, $posicionPagina, $filasPorPagina)
+    public static function list($nombres, $posicionPagina, $filasPorPagina)
     {
         try {
-            $arrayEspecialidades = array();
-            $comandoEspecialidades = Database::getInstance()->getDb()->prepare("SELECT c.Capitulo, c.idCapitulo, ISNULL (e.Especialidad,'No tiene asignado ninguna especialidad') AS Especialidad, isnull(e.idEspecialidad,-1) AS idEspecialidad
+            $array = array();
+            $comando = Database::getInstance()->getDb()->prepare("SELECT 
+            c.Capitulo, 
+            c.idCapitulo, ISNULL(e.Especialidad,'No tiene asignado ninguna especialidad') AS Especialidad, ISNULL(e.idEspecialidad,-1) AS idEspecialidad
             FROM Especialidad AS e RIGHT JOIN Capitulo AS c ON c.idCapitulo = e.idCapitulo
-            where c.Capitulo like concat('%', ?,'%') or e.Especialidad like concat('%', ?,'%')
-            order by Capitulo asc
-            offset ? rows fetch next ? rows only");
-            $comandoEspecialidades->bindParam(1, $nombres, PDO::PARAM_STR);
-            $comandoEspecialidades->bindParam(2, $nombres, PDO::PARAM_STR);
-            $comandoEspecialidades->bindParam(3, $posicionPagina, PDO::PARAM_INT);
-            $comandoEspecialidades->bindParam(4, $filasPorPagina, PDO::PARAM_INT);
-            $comandoEspecialidades->execute();
+            WHERE c.Capitulo LIKE CONCAT('%', ?,'%') OR e.Especialidad LIKE CONCAT('%', ?,'%')
+            ORDER BY Capitulo ASC
+            OFFSET ? ROWS FETCH NEXT ? ROWS ONLY");
+            $comando->bindParam(1, $nombres, PDO::PARAM_STR);
+            $comando->bindParam(2, $nombres, PDO::PARAM_STR);
+            $comando->bindParam(3, $posicionPagina, PDO::PARAM_INT);
+            $comando->bindParam(4, $filasPorPagina, PDO::PARAM_INT);
+            $comando->execute();
             $count = 0;
-            while ($row = $comandoEspecialidades->fetch()) {
+            while ($row = $comando->fetch()) {
                 $count++;
-                array_push($arrayEspecialidades, array(
+                array_push($array, array(
                     "Id" => $count + $posicionPagina,
                     "idCapitulo" => $row["idCapitulo"],
                     "idEspecialidad" => $row["idEspecialidad"],
@@ -41,19 +44,22 @@ class CapituloAdo
                 ));
             }
 
-            $comandoTotal = Database::getInstance()->getDb()->prepare("SELECT COUNT(*) FROM Especialidad AS e RIGHT JOIN Capitulo 
+            $comandoTotal = Database::getInstance()->getDb()->prepare("SELECT COUNT(*) 
+            FROM Especialidad AS e RIGHT JOIN Capitulo 
             AS c ON c.idCapitulo = e.idCapitulo 
-            where Capitulo like concat(?,'%') or Especialidad like concat(?,'%')");
+            WHERE Capitulo LIKE concat(?,'%') OR Especialidad LIKE concat(?,'%')");
             $comandoTotal->bindParam(1, $nombres, PDO::PARAM_STR);
             $comandoTotal->bindParam(2, $nombres, PDO::PARAM_STR);
             $comandoTotal->execute();
             $resultTotal =  $comandoTotal->fetchColumn();
 
             Response::sendSuccess([
-                "especialidades" => $arrayEspecialidades,
+                "especialidades" => $array,
                 "total" => $resultTotal
             ]);
         } catch (Exception $ex) {
+            Response::sendError($ex->getMessage());
+        } catch (PDOException $ex) {
             Response::sendError($ex->getMessage());
         }
     }

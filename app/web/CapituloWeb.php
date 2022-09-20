@@ -9,8 +9,8 @@ use SysSoftIntegra\Controller\CapituloController;
 
 require __DIR__ . './../src/autoload.php';
 
-Route::get('alldata', function ($body) {
-    CapituloController::alldata($body);
+Route::get('list', function ($body) {
+    CapituloController::list($body);
 });
 
 Route::get('allCapitulos', function ($body) {

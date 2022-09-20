@@ -7,12 +7,12 @@ use SysSoftIntegra\Model\CapituloAdo;
 class CapituloController
 {
 
-    public static function alldata($body)
+    public static function list($body)
     {
         $nombres = $body['nombres'];
         $posicionPagina = $body['posicionPagina'];
         $filasPorPagina = $body['filasPorPagina'];
-        CapituloAdo::getAllEspecialidades($nombres, intval($posicionPagina), intval($filasPorPagina));
+        CapituloAdo::list($nombres, intval($posicionPagina), intval($filasPorPagina));
     }
 
     public static function allCapitulos($body)

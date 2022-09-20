@@ -386,7 +386,7 @@ if (!isset($_SESSION['IdUsuario'])) {
 
                         const result = await axios.get("../app/web/CapituloWeb.php", {
                             params: {
-                                "type": "alldata",
+                                "type": "list",
                                 "nombres": nombres,
                                 "posicionPagina": ((paginacion - 1) * filasPorPagina),
                                 "filasPorPagina": filasPorPagina
