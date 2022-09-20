@@ -341,7 +341,7 @@ if (!isset($_SESSION['IdUsuario'])) {
                     console.log(error.response)
                     tbTable.empty();
                     tbTable.append(
-                        '<tr class="text-center"><td colspan="10"><p>Se produjo un error, intente nuevamente.</p></td></tr>'
+                        '<tr class="text-center"><td colspan="9"><p>Se produjo un error, intente nuevamente.</p></td></tr>'
                     );
                     $("#lblPaginaActual").html(0);
                     $("#lblPaginaSiguiente").html(0);
