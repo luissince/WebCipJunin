@@ -89,7 +89,6 @@ if (!isset($_SESSION['IdUsuario'])) {
             </div>
             <!-- end modal añadir -->
 
-
             <!-- Content Wrapper. Contains page content -->
             <div class="content-wrapper">
                 <!-- Main content -->

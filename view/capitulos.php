@@ -23,6 +23,7 @@ if (!isset($_SESSION['IdUsuario'])) {
                 <!-- start menu -->
                 <?php include('./layout/menu.php') ?>
                 <!-- end menu -->
+
                 <!-- modal nuevo capitulo o especialidad  -->
                 <div class="row">
                     <div class="modal fade" id="confirmar" data-backdrop="static">
@@ -88,6 +89,7 @@ if (!isset($_SESSION['IdUsuario'])) {
                     </div>
                 </div>
                 <!-- end modal nuevo capitulo o especialidad -->
+
                 <!-- modal editar capitulo o especialidad  -->
                 <div class="row">
                     <div class="modal fade" id="editar" data-backdrop="static">
@@ -153,93 +155,98 @@ if (!isset($_SESSION['IdUsuario'])) {
                     </div>
                 </div>
                 <!-- end modal editar capitulo o especialidad -->
+
                 <!-- Content Wrapper. Contains page content -->
-                <div class="content-wrapper" style="background-color: #FFFFFF;">
+                <div class="content-wrapper">
                     <!-- Main content -->
                     <section class="content-header">
                         <h3 class="no-margin"> Capitulos <small> Lista </small> </h3>
+                        <ol class="breadcrumb">
+                            <li><a href="index.php"><i class="fa fa-home"></i> Inicio</a></li>
+                            <li class="active">Capitulos</li>
+                        </ol>
                     </section>
 
                     <section class="content">
+                        <div class="invoice">
+                            <div class="row">
+                                <?php
+                                if ($_SESSION["Permisos"][8]["crear"]) {
+                                    echo '<div class="col-lg-2 col-md-3 col-sm-12 col-xs-12">
+                                            <label>Nuevo Cap./Espe.</label>
+                                            <div class="form-group">
+                                                <button type="button" class="btn btn-success" id="btnNuevo">
+                                                    <i class="fa fa-plus"></i> Agregar Cap./Espe.
+                                                </button>
+                                            </div>
+                                          </div>';
+                                } ?>
 
-                        <div class="row">
-                            <?php
-                            if ($_SESSION["Permisos"][8]["crear"]) {
-                                echo '<div class="col-lg-2 col-md-3 col-sm-12 col-xs-12">
-                                <label>Nuevo Cap./Espe.</label>
-                                <div class="form-group">
-                                    <button type="button" class="btn btn-success" id="btnNuevo">
-                                        <i class="fa fa-plus"></i> Agregar Cap./Espe.
-                                    </button>
+                                <div class="col-lg-2 col-md-3 col-sm-12 col-xs-12">
+                                    <label>Opción.</label>
+                                    <div class="form-group">
+                                        <button class="btn btn-default" id="btnactualizar">
+                                            <i class="fa fa-refresh"></i> Recargar
+                                        </button>
+                                    </div>
                                 </div>
-                            </div>';
-                            } ?>
 
-                            <div class="col-lg-2 col-md-3 col-sm-12 col-xs-12">
-                                <label>Opción.</label>
-                                <div class="form-group">
-                                    <button class="btn btn-default" id="btnactualizar">
-                                        <i class="fa fa-refresh"></i> Recargar
-                                    </button>
-                                </div>
-                            </div>
-
-                            <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
-                                <label>Filtrar por capítulo o especialidad.</label>
-                                <div class="form-group">
-                                    <div class="input-group">
-                                        <input type="search" id="buscar" class="form-control" placeholder="Buscar por Capitulo o Especialidad" aria-describedby="search" value="">
-                                        <div class="input-group-btn">
-                                            <button type="button" class="btn btn-primary" id="btnbuscar">Buscar</button>
+                                <div class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
+                                    <label>Filtrar por capítulo o especialidad.</label>
+                                    <div class="form-group">
+                                        <div class="input-group">
+                                            <input type="search" id="buscar" class="form-control" placeholder="Buscar por Capitulo o Especialidad" aria-describedby="search" value="">
+                                            <div class="input-group-btn">
+                                                <button type="button" class="btn btn-primary" id="btnbuscar">Buscar</button>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
                             </div>
-                        </div>
 
-                        <div class="row">
-                            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
-                                <div class="table-responsive">
-                                    <table class="table table-striped" style="border-width: 1px;border-style: dashed;border-color: #E31E25;">
-                                        <thead style="background-color: #FDB2B1;color: #B72928;">
-                                            <th width="5%" class="text-center">#</th>
-                                            <th width="20%">Capitulo</th>
-                                            <th width="40%">Especialidad</th>
-                                            <th width="10%" class="text-center">Editar</th>
-                                            <th width="10%" class="text-center">Elim. Capit.</th>
-                                            <th width="10%" class="text-center">Elim. Espec.</th>
-                                        </thead>
-                                        <tbody id="tbTable">
+                            <div class="row">
+                                <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+                                    <div class="table-responsive">
+                                        <table class="table table-striped" style="border-width: 1px;border-style: dashed;border-color: #E31E25;">
+                                            <thead style="background-color: #FDB2B1;color: #B72928;">
+                                                <th width="5%" class="text-center">#</th>
+                                                <th width="20%">Capitulo</th>
+                                                <th width="40%">Especialidad</th>
+                                                <th width="10%" class="text-center">Editar</th>
+                                                <th width="10%" class="text-center">Elim. Capit.</th>
+                                                <th width="10%" class="text-center">Elim. Espec.</th>
+                                            </thead>
+                                            <tbody id="tbTable">
 
-                                        </tbody>
+                                            </tbody>
 
-                                    </table>
+                                        </table>
+                                    </div>
+                                    <div class="col-md-12" style="text-align:center;">
+                                        <ul class="pagination">
+                                            <li>
+                                                <button class="btn btn-primary" id="btnIzquierda">
+                                                    <i class="fa fa-toggle-left"></i>
+                                                </button>
+                                            </li>
+                                            <li>
+                                                <span id="lblPaginaActual" class="font-weight-bold">0</span>
+                                            </li>
+                                            <li><span>a</span></li>
+                                            <li>
+                                                <span id="lblPaginaSiguiente" class="font-weight-bold">0</span>
+                                            </li>
+                                            <li>
+                                                <button class="btn btn-primary" id="btnDerecha">
+                                                    <i class="fa fa-toggle-right"></i>
+                                                </button>
+                                            </li>
+                                        </ul>
+                                    </div>
+
                                 </div>
-                                <div class="col-md-12" style="text-align:center;">
-                                    <ul class="pagination">
-                                        <li>
-                                            <button class="btn btn-primary" id="btnIzquierda">
-                                                <i class="fa fa-toggle-left"></i>
-                                            </button>
-                                        </li>
-                                        <li>
-                                            <span id="lblPaginaActual" class="font-weight-bold">0</span>
-                                        </li>
-                                        <li><span>a</span></li>
-                                        <li>
-                                            <span id="lblPaginaSiguiente" class="font-weight-bold">0</span>
-                                        </li>
-                                        <li>
-                                            <button class="btn btn-primary" id="btnDerecha">
-                                                <i class="fa fa-toggle-right"></i>
-                                            </button>
-                                        </li>
-                                    </ul>
-                                </div>
-
                             </div>
                         </div>
-
                     </section>
                     <!-- /.content -->
                 </div>
