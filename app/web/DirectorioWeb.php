@@ -26,6 +26,16 @@ Route::get("id", function($body){
     DirectivoController::id($body);
 });
 
+Route::get("delete", function($body){
+    DirectivoController::delete($body);
+});
+
 Route::post("insert", function($body){
     DirectivoController::insert($body);
 });
+
+Route::post("update", function($body){
+    // print json_encode($body);
+    DirectivoController::update($body);
+});
+

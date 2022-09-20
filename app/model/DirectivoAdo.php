@@ -162,10 +162,25 @@ class DirectivoAdo
         }
     }
 
-    public static function delete()
+    public static function delete($body)
     {
         try {
             Database::getInstance()->getDb()->beginTransaction();
+
+            $cmdValidate = Database::getInstance()->getDb()->prepare("SELECT * FROM Directivo WHERE IdDirectivo = ? AND Estado = 1");
+            $cmdValidate->bindParam(1, $body["IdDirectivo"], PDO::PARAM_INT);
+            $cmdValidate->execute();
+
+            if ($cmdValidate->fetch()) {
+                Database::getInstance()->getDb()->rollback();
+                Response::sendClient("No se pudo eliminar el directivo(a) por que tiene estado activo.");
+            } else {
+                $cmdDelete = Database::getInstance()->getDb()->prepare("DELETE FROM Directivo WHERE IdDirectivo = ?");
+                $cmdDelete->bindParam(1, $body["IdDirectivo"], PDO::PARAM_INT);
+                $cmdDelete->execute();
+                Database::getInstance()->getDb()->commit();
+                Response::sendSave("Se eliminó correctamente el directivo(a).");
+            }
         } catch (Exception $ex) {
             Database::getInstance()->getDb()->rollBack();
             Response::sendError($ex->getMessage());

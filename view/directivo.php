@@ -316,7 +316,7 @@ if (!isset($_SESSION['IdUsuario'])) {
                             let btnDelete =
                                 `<button class="btn btn-danger btn-xs" title="Eliminar" onclick="deleteModalDirectorio(${directivo.IdDirectivo})"><i class="fa fa-trash" style="font-size:25px;"></i></button>`
 
-                            let puesto = directivo.Puesto = 1 ? "Decano(a)" : "Vicedecano(a)";
+                            let puesto = directivo.Puesto == 1 ? "Decano(a)" : directivo.Puesto == 2 ? "Vicedecano(a)" : "Tesorero(a)";
                             let estado = directivo.Estado == 1 ? '<span class="badge btn-info">ACTIVO</span>' : '<span class="badge btn-danger">INACTIVO</span>'
 
                             tbTable.append(`<tr>
@@ -376,7 +376,6 @@ if (!isset($_SESSION['IdUsuario'])) {
                     clearModalDirectorio();
                 });
 
-
                 $("#btnAceptar").click(function() {
                     crudModalDirectorio();
                 });
@@ -430,7 +429,7 @@ if (!isset($_SESSION['IdUsuario'])) {
                     });
 
                     idDirectivo = id;
-                    console.log(result.data)
+                    // console.log(result.data)
                     let data = [{
                         id: result.data.IdDNI,
                         text: result.data.Apellidos + ", " + result.data.Nombres
@@ -440,6 +439,7 @@ if (!isset($_SESSION['IdUsuario'])) {
                     $("#cbIngeniero").select2({
                         placeholder: "Buscar Ingeniero",
                         width: '100%',
+                        // disabled: 'false',
                         data: data,
                         ajax: {
                             url: "../app/controller/ListarIngenierosController.php",
@@ -461,7 +461,7 @@ if (!isset($_SESSION['IdUsuario'])) {
                         }
                     });
 
-                    console.log($("#cbIngeniero"))
+                    // console.log($("#cbIngeniero"))
                     $("#txtFechaInicio").val(result.data.FechaInicio);
                     $("#txtFechaFinal").val(result.data.FechaFinal);
                     $("#cbPuesto").val(result.data.Puesto);
@@ -471,8 +471,28 @@ if (!isset($_SESSION['IdUsuario'])) {
                 }
             }
 
-            function deleteModalDirectorio($idDirectivo) {
+            async function deleteModalDirectorio(idDirectivo) {
+                try {
 
+                    const result = await axios.get("../app/web/DirectorioWeb.php", {
+                        params: {
+                            "type": "delete",
+                            "IdDirectivo": idDirectivo
+                        }
+                    });
+
+                    tools.ModalAlertSuccess("Directorio", result.data, () => {
+                        loadInit();
+                    });
+
+                } catch (error) {
+                    // console.log(error.response.data);
+                    if (error.response) {
+                        tools.ModalAlertWarning("Directorio", error.response.data);
+                    } else {
+                        tools.ModalAlertError("Directorio", "Se genero un error interno, comuníquese con el administrador del sistema.");
+                    }
+                }
             }
 
             function clearModalDirectorio() {
@@ -505,11 +525,15 @@ if (!isset($_SESSION['IdUsuario'])) {
                     return;
                 }
 
+                console.log(idDirectivo)
+
                 tools.ModalDialog("Directorio", "¿Está seguro de continuar?", async function(value) {
                     if (value) {
                         try {
                             $("#mdDirectorio").modal("hide");
                             tools.ModalAlertInfo("Directorio", "Procesando petición..");
+
+
 
                             if (idDirectivo === "") {
                                 let result = await axios.post("../app/web/DirectorioWeb.php", {
@@ -526,6 +550,7 @@ if (!isset($_SESSION['IdUsuario'])) {
                                     loadInit();
                                 });
                             } else {
+
                                 let result = await axios.post("../app/web/DirectorioWeb.php", {
                                     "type": "update",
                                     "IdDNI": $("#cbIngeniero").val(),
@@ -533,14 +558,18 @@ if (!isset($_SESSION['IdUsuario'])) {
                                     "FechaFinal": $("#txtFechaFinal").val(),
                                     "idUsuario": idUsuario,
                                     "Estado": 1,
-                                    "Puesto": $("#cbPuesto").val()
+                                    "Puesto": $("#cbPuesto").val(),
+                                    "IdDirectivo": idDirectivo
                                 });
+
+                                // console.log(result.data)
 
                                 tools.ModalAlertSuccess("Directorio", result.data, () => {
                                     onEventPaginacion();
                                 });
                             }
                         } catch (error) {
+                            // console.log(error)
                             if (error.response) {
                                 tools.ModalAlertWarning("Directorio", error.response.data);
                             } else {

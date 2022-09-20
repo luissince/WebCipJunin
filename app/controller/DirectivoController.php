@@ -17,5 +17,13 @@ class DirectivoController
     public static function insert($body){
         DirectivoAdo::insert($body);
     }
+
+    public static function update($body){
+        DirectivoAdo::update($body);
+    }
+
+    public static function delete($body){
+        DirectivoAdo::delete($body);
+    }
     
 }
