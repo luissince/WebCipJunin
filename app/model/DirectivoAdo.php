@@ -36,7 +36,7 @@ class DirectivoAdo
                     "FechaInicio" => $row->FechaInicio,
                     "FechaFinal" => $row->FechaFinal,
                     "Estado" => $row->Estado,
-                    "Puesto" => $row->Puesto,
+                    "Directivo" => $row->Directivo,
                 ));
             }
 
@@ -66,7 +66,7 @@ class DirectivoAdo
             p.Nombres,
             d.FechaInicio,
             d.FechaFinal,
-            d.Puesto
+            d.IdTablaTipoDirectivo
             FROM Directivo AS d  
             INNER JOIN Persona AS p ON d.IdDNI = p.idDNI
             WHERE d.IdDirectivo = ?");
@@ -102,7 +102,7 @@ class DirectivoAdo
                 FechaInicio,
                 FechaFinal,
                 Estado,
-                Puesto,
+                IdTablaTipoDirectivo,
                 idUsuario,
                 FechaRegistro,
                 HoraRegistro,
@@ -114,7 +114,7 @@ class DirectivoAdo
             $comandoInsert->bindParam(3, $body["FechaInicio"], PDO::PARAM_STR);
             $comandoInsert->bindParam(4, $body["FechaFinal"], PDO::PARAM_STR);
             $comandoInsert->bindParam(5, $body["Estado"], PDO::PARAM_STR);
-            $comandoInsert->bindParam(6, $body["Puesto"], PDO::PARAM_STR);
+            $comandoInsert->bindParam(6, $body["IdTablaTipoDirectivo"], PDO::PARAM_STR);
             $comandoInsert->bindParam(7, $body["idUsuario"], PDO::PARAM_STR);
             $comandoInsert->execute();
 
@@ -138,7 +138,7 @@ class DirectivoAdo
             FechaInicio = ?,
             FechaFinal = ?,
             Estado = ?,
-            Puesto = ?,
+            IdTablaTipoDirectivo = ?,
             idUsuario = ?,
             FechaUpdate = GETDATE(),
             HoraUpdate = GETDATE()
@@ -146,7 +146,7 @@ class DirectivoAdo
             $comando->bindParam(1, $body["FechaInicio"], PDO::PARAM_STR);
             $comando->bindParam(2, $body["FechaFinal"], PDO::PARAM_STR);
             $comando->bindParam(3, $body["Estado"], PDO::PARAM_STR);
-            $comando->bindParam(4, $body["Puesto"], PDO::PARAM_STR);
+            $comando->bindParam(4, $body["IdTablaTipoDirectivo"], PDO::PARAM_STR);
             $comando->bindParam(5, $body["idUsuario"], PDO::PARAM_STR);
             $comando->bindParam(6, $body["IdDirectivo"], PDO::PARAM_STR);
             $comando->execute();
@@ -186,6 +186,20 @@ class DirectivoAdo
             Response::sendError($ex->getMessage());
         } catch (PDOException $ex) {
             Database::getInstance()->getDb()->rollBack();
+            Response::sendError($ex->getMessage());
+        }
+    }
+
+    public static function listTbDirectorio()
+    {
+        try {
+            $comando = Database::getInstance()->getDb()->prepare("SELECT IdTablaTipoDirectivo,Nombre FROM TablaTipoDirectivo");
+            $comando->execute();
+            $result = $comando->fetchAll(PDO::FETCH_OBJ);
+            Response::sendSuccess($result);
+        } catch (Exception $ex) {
+            Response::sendError($ex->getMessage());
+        } catch (PDOException $ex) {
             Response::sendError($ex->getMessage());
         }
     }

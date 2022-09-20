@@ -35,7 +35,9 @@ Route::post("insert", function($body){
 });
 
 Route::post("update", function($body){
-    // print json_encode($body);
     DirectivoController::update($body);
 });
 
+Route::get("listTbDirectorio", function($body){
+    DirectivoController::listTbDirectorio($body);
+});

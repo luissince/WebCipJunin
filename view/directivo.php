@@ -66,11 +66,7 @@ if (!isset($_SESSION['IdUsuario'])) {
                                     <div class="col-md-12">
                                         <div class="form-group">
                                             <label class="control-label">Puesto <i class="fa fa-fw fa-asterisk text-danger"></i></label>
-                                            <select id="cbPuesto" class="form-control">
-                                                <option value="">- Seleccione -</option>
-                                                <option value="1">Decano(a)</option>
-                                                <option value="2">Vicedecano(a)</option>
-                                                <option value="3">Tesorero(a)</option>
+                                            <select id="cbTipoDirectivo" class="form-control">
                                             </select>
                                         </div>
                                     </div>
@@ -298,7 +294,7 @@ if (!isset($_SESSION['IdUsuario'])) {
                             "filasPorPagina": filasPorPagina
                         }
                     });
-                    console.log(result)
+
                     tbTable.empty();
                     if (result.data.directivos.length == 0) {
                         tbTable.append(
@@ -315,7 +311,6 @@ if (!isset($_SESSION['IdUsuario'])) {
                             let btnDelete =
                                 `<button class="btn btn-danger btn-xs" title="Eliminar" onclick="deleteModalDirectorio(${directivo.IdDirectivo})"><i class="fa fa-trash" style="font-size:25px;"></i></button>`
 
-                            let puesto = directivo.Puesto == 1 ? "Decano(a)" : directivo.Puesto == 2 ? "Vicedecano(a)" : "Tesorero(a)";
                             let estado = directivo.Estado == 1 ? '<span class="badge btn-info">ACTIVO</span>' : '<span class="badge btn-danger">INACTIVO</span>'
 
                             tbTable.append(`<tr>
@@ -324,7 +319,7 @@ if (!isset($_SESSION['IdUsuario'])) {
                                 <td> ${directivo.NumDoc+ "<br />"+directivo.Apellidos+", "+directivo.Nombres} </td>
                                 <td> ${tools.getDateForma(directivo.FechaInicio)} </td>
                                 <td> ${tools.getDateForma(directivo.FechaFinal)} </td>
-                                <td> ${puesto} </td>
+                                <td> ${directivo.Directivo } </td>
                                 <td> ${estado} </td>
                                 <td class="text-center"> ${btnUpdate} </td>
                                 <td class="text-center"> ${btnDelete} </td>
@@ -337,7 +332,6 @@ if (!isset($_SESSION['IdUsuario'])) {
                         state = false;
                     }
                 } catch (error) {
-                    console.log(error.response)
                     tbTable.empty();
                     tbTable.append(
                         '<tr class="text-center"><td colspan="9"><p>Se produjo un error, intente nuevamente.</p></td></tr>'
@@ -362,13 +356,13 @@ if (!isset($_SESSION['IdUsuario'])) {
             //==================TABLE FUNCIONES =========================
 
             //==================MODAL FUNCIONES =========================
-            function loadModalDirectorio() {
+            async function loadModalDirectorio() {
                 $("#btnNuevo").click(function() {
                     openAddModalDirectorio();
                 });
 
                 $("#mdDirectorio").on('shown.bs.modal', function() {
-                    $("#cbIngeniero").select2("open");
+                    if (idDirectivo == "") $("#cbIngeniero").select2("open");
                 });
 
                 $("#mdDirectorio").on('hidden.bs.modal', function() {
@@ -408,6 +402,20 @@ if (!isset($_SESSION['IdUsuario'])) {
                         cache: true
                     }
                 });
+
+                try {
+                    const result = await axios.get("../app/web/DirectorioWeb.php", {
+                        params: {
+                            type: "listTbDirectorio",
+                        }
+                    });
+                    $("#cbTipoDirectivo").append("<option value=''>- Seleccione -</option>");
+                    for (const value of result.data) {
+                        $("#cbTipoDirectivo").append("<option value=" + value.IdTablaTipoDirectivo + ">" + value.Nombre + "</option>");
+                    }
+                } catch (error) {
+                    $("#cbTipoDirectivo").append("<option value=''>- Seleccione -</option>");
+                }
             }
 
             function openAddModalDirectorio() {
@@ -459,11 +467,12 @@ if (!isset($_SESSION['IdUsuario'])) {
                             cache: true
                         }
                     });
+                    $("#cbIngeniero").select2("enable", false);
 
                     // console.log($("#cbIngeniero"))
                     $("#txtFechaInicio").val(result.data.FechaInicio);
                     $("#txtFechaFinal").val(result.data.FechaFinal);
-                    $("#cbPuesto").val(result.data.Puesto);
+                    $("#cbTipoDirectivo").val(result.data.IdTablaTipoDirectivo);
                     $("#titleModal").html('<i class="fa fa-plus"></i> Editar Persona </span>');
                 } catch (error) {
                     console.log(error);
@@ -471,40 +480,42 @@ if (!isset($_SESSION['IdUsuario'])) {
             }
 
             async function deleteModalDirectorio(idDirectivo) {
-                try {
+                tools.ModalDialog("Directorio", "¿Está seguro de continuar?", async function(value) {
+                    if (value) {
+                        try {
+                            const result = await axios.get("../app/web/DirectorioWeb.php", {
+                                params: {
+                                    "type": "delete",
+                                    "IdDirectivo": idDirectivo
+                                }
+                            });
 
-                    const result = await axios.get("../app/web/DirectorioWeb.php", {
-                        params: {
-                            "type": "delete",
-                            "IdDirectivo": idDirectivo
+                            tools.ModalAlertSuccess("Directorio", result.data, () => {
+                                loadInit();
+                            });
+                        } catch (error) {
+                            if (error.response) {
+                                tools.ModalAlertWarning("Directorio", error.response.data);
+                            } else {
+                                tools.ModalAlertError("Directorio", "Se genero un error interno, comuníquese con el administrador del sistema.");
+                            }
                         }
-                    });
-
-                    tools.ModalAlertSuccess("Directorio", result.data, () => {
-                        loadInit();
-                    });
-
-                } catch (error) {
-                    // console.log(error.response.data);
-                    if (error.response) {
-                        tools.ModalAlertWarning("Directorio", error.response.data);
-                    } else {
-                        tools.ModalAlertError("Directorio", "Se genero un error interno, comuníquese con el administrador del sistema.");
                     }
-                }
+                });
             }
 
             function clearModalDirectorio() {
                 $("#titleModal").html("");
                 $("#cbIngeniero").select2("val", "0");
+                $("#cbIngeniero").select2("enable");
                 $("#txtFechaInicio").val("");
                 $("#txtFechaFinal").val("");
-                $("#cbPuesto").val("");
+                $("#cbTipoDirectivo").val("");
                 idDirectivo = "";
             }
 
             async function crudModalDirectorio() {
-                if ($("#cbIngeniero").val() == "") {
+                if ($("#cbIngeniero").val() == null) {
                     $("#cbIngeniero").select2("open");
                     return;
                 }
@@ -519,12 +530,10 @@ if (!isset($_SESSION['IdUsuario'])) {
                     return;
                 }
 
-                if ($("#cbPuesto").val() == "") {
-                    $("#cbPuesto").focus();
+                if ($("#cbTipoDirectivo").val() == "") {
+                    $("#cbTipoDirectivo").focus();
                     return;
                 }
-
-                console.log(idDirectivo)
 
                 tools.ModalDialog("Directorio", "¿Está seguro de continuar?", async function(value) {
                     if (value) {
@@ -542,7 +551,7 @@ if (!isset($_SESSION['IdUsuario'])) {
                                     "FechaFinal": $("#txtFechaFinal").val(),
                                     "idUsuario": idUsuario,
                                     "Estado": 1,
-                                    "Puesto": $("#cbPuesto").val()
+                                    "IdTablaTipoDirectivo": $("#cbTipoDirectivo").val()
                                 });
 
                                 tools.ModalAlertSuccess("Directorio", result.data, () => {
@@ -557,18 +566,15 @@ if (!isset($_SESSION['IdUsuario'])) {
                                     "FechaFinal": $("#txtFechaFinal").val(),
                                     "idUsuario": idUsuario,
                                     "Estado": 1,
-                                    "Puesto": $("#cbPuesto").val(),
+                                    "IdTablaTipoDirectivo": $("#cbTipoDirectivo").val(),
                                     "IdDirectivo": idDirectivo
                                 });
-
-                                // console.log(result.data)
 
                                 tools.ModalAlertSuccess("Directorio", result.data, () => {
                                     onEventPaginacion();
                                 });
                             }
                         } catch (error) {
-                            // console.log(error)
                             if (error.response) {
                                 tools.ModalAlertWarning("Directorio", error.response.data);
                             } else {

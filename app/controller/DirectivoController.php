@@ -26,4 +26,8 @@ class DirectivoController
         DirectivoAdo::delete($body);
     }
     
+    public static function listTbDirectorio($body){
+        DirectivoAdo::listTbDirectorio($body);
+    }
+
 }

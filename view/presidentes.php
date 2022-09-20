@@ -25,7 +25,7 @@ if (!isset($_SESSION['IdUsuario'])) {
 
             <!-- modal añadir  -->
             <div class="row">
-                <div class="modal fade" id="mdDirectorio" data-keyboard="false" data-backdrop="static">
+                <div class="modal fade" id="mdPresidente" data-keyboard="false" data-backdrop="static">
                     <div class="modal-dialog modal-xs">
                         <div class="modal-content">
                             <div class="modal-header">
@@ -66,7 +66,7 @@ if (!isset($_SESSION['IdUsuario'])) {
                                     <div class="col-md-12">
                                         <div class="form-group">
                                             <label class="control-label">Seleccione el Capítulo <i class="fa fa-fw fa-asterisk text-danger"></i></label>
-                                            <select class="form-control select2" id="cbCapitulo" style="width: 100%;">
+                                            <select class="form-control" id="cbCapitulo" style="width: 100%;">
                                             </select>
                                         </div>
                                     </div>
@@ -199,6 +199,8 @@ if (!isset($_SESSION['IdUsuario'])) {
 
             let idUsuario = <?= $_SESSION['IdUsuario'] ?>;
 
+            let idPresidente = "";
+
             $(document).ready(function() {
                 loadInit();
                 loadComponents();
@@ -306,9 +308,9 @@ if (!isset($_SESSION['IdUsuario'])) {
                         for (let presidente of result.data.presidentes) {
 
                             let btnUpdate =
-                                `<button class="btn btn-warning btn-xs" title="Editar" onclick="openUpdateModalDirectorio(${presidente.IdDirectivo} )"><i class="fa fa-edit" style="font-size:25px;"></i></button>`;
+                                `<button class="btn btn-warning btn-xs" title="Editar" onclick="openUpdateModalPresidente(${presidente.IdPresidente} )"><i class="fa fa-edit" style="font-size:25px;"></i></button>`;
                             let btnDelete =
-                                `<button class="btn btn-danger btn-xs" title="Eliminar" onclick="deleteModalDirectorio(${presidente.IdDirectivo})"><i class="fa fa-trash" style="font-size:25px;"></i></button>`
+                                `<button class="btn btn-danger btn-xs" title="Eliminar" onclick="deleteModalPresidente(${presidente.IdPresidente})"><i class="fa fa-trash" style="font-size:25px;"></i></button>`
 
                             let estado = presidente.Estado == 1 ? '<span class="badge btn-info">ACTIVO</span>' : '<span class="badge btn-danger">INACTIVO</span>'
 
@@ -331,7 +333,6 @@ if (!isset($_SESSION['IdUsuario'])) {
                         state = false;
                     }
                 } catch (error) {
-                    console.log(error.response)
                     tbTable.empty();
                     tbTable.append(
                         '<tr class="text-center"><td colspan="9"><p>Se produjo un error, intente nuevamente.</p></td></tr>'
@@ -356,26 +357,26 @@ if (!isset($_SESSION['IdUsuario'])) {
             //==================TABLE FUNCIONES =========================
 
             //==================MODAL FUNCIONES =========================
-            function loadModalPresidente() {
+            async function loadModalPresidente() {
                 $("#btnNuevo").click(function() {
-                    openAddModalDirectorio();
+                    openAddModalPresidente();
                 });
 
-                $("#mdDirectorio").on('shown.bs.modal', function() {
-                    $("#cbIngeniero").select2("open");
+                $("#mdPresidente").on('shown.bs.modal', function() {
+                    if (idPresidente == "") $("#cbIngeniero").select2("open");
                 });
 
-                $("#mdDirectorio").on('hidden.bs.modal', function() {
-                    clearModalDirectorio();
+                $("#mdPresidente").on('hidden.bs.modal', function() {
+                    clearModalPresidente();
                 });
 
                 $("#btnAceptar").click(function() {
-                    crudModalDirectorio();
+                    crudModalPresidente();
                 });
 
                 $("#btnAceptar").keypress(function(event) {
                     if (event.keyCode === 13) {
-                        crudModalDirectorio();
+                        crudModalPresidente();
                         event.preventDefault();
                     }
                 });
@@ -403,49 +404,40 @@ if (!isset($_SESSION['IdUsuario'])) {
                     }
                 });
 
-                $("#cbCapitulo").select2({
-                    placeholder: "Buscar Capítulo",
-                    width: '100%',
-                    ajax: {
-                        url: "../app/controller/ListarIngenierosController.php",
-                        type: "GET",
-                        dataType: 'json',
-                        delay: 250,
-                        data: function(params) {
-                            return {
-                                type: "alldata",
-                                search: params.term
-                            };
-                        },
-                        processResults: function(response) {
-                            return {
-                                results: response
-                            };
-                        },
-                        cache: true
+                try {
+                    const result = await axios.get("../app/web/CapituloWeb.php", {
+                        params: {
+                            type: "allCapitulos",
+                        }
+                    });
+                    $("#cbCapitulo").append("<option value=''>- Seleccione -</option>");
+                    for (const value of result.data) {
+                        $("#cbCapitulo").append("<option value=" + value.idCapitulo + ">" + value.Capitulo + "</option>");
                     }
-                });
+                } catch (error) {
+                    $("#cbCapitulo").append("<option value=''>- Seleccione -</option>");
+                }
             }
 
-            function openAddModalDirectorio() {
+            function openAddModalPresidente() {
                 $("#titleModal").html('<i class="fa fa-plus"></i> Nueva Persona');
-                $("#mdDirectorio").modal("show");
+                $("#mdPresidente").modal("show");
             }
 
-            async function openUpdateModalDirectorio(id) {
+            async function openUpdateModalPresidente(id) {
                 try {
                     $("#titleModal").html('<i class="fa fa-plus"></i> Editar Persona <span><img src="./images/spiner.gif" width="25" height="25" style="margin-left: 10px;" /></span>');
-                    $("#mdDirectorio").modal("show");
+                    $("#mdPresidente").modal("show");
 
-                    let result = await axios.get("../app/web/DirectorioWeb.php", {
+                    let result = await axios.get("../app/web/PresidenteWeb.php", {
                         params: {
                             "type": "id",
-                            "IdDirectivo": id
+                            "IdPresidente": id
                         }
                     });
 
-                    idDirectivo = id;
-                    // console.log(result.data)
+                    idPresidente = id;
+                    console.log(result.data)
                     let data = [{
                         id: result.data.IdDNI,
                         text: result.data.Apellidos + ", " + result.data.Nombres
@@ -476,52 +468,52 @@ if (!isset($_SESSION['IdUsuario'])) {
                             cache: true
                         }
                     });
+                    $("#cbIngeniero").select2("enable", false);
 
-                    // console.log($("#cbIngeniero"))
                     $("#txtFechaInicio").val(result.data.FechaInicio);
                     $("#txtFechaFinal").val(result.data.FechaFinal);
-                    $("#cbPuesto").val(result.data.Puesto);
+                    $("#cbCapitulo").val(result.data.idCapitulo);
                     $("#titleModal").html('<i class="fa fa-plus"></i> Editar Persona </span>');
                 } catch (error) {
                     console.log(error);
                 }
             }
 
-            async function deleteModalDirectorio(idDirectivo) {
+            async function deleteModalPresidente(idPresidente) {
                 try {
 
-                    const result = await axios.get("../app/web/DirectorioWeb.php", {
+                    const result = await axios.get("../app/web/PresidenteWeb.php", {
                         params: {
                             "type": "delete",
-                            "IdDirectivo": idDirectivo
+                            "IdPresidente": idPresidente
                         }
                     });
 
-                    tools.ModalAlertSuccess("Directorio", result.data, () => {
+                    tools.ModalAlertSuccess("Presidente", result.data, () => {
                         loadInit();
                     });
 
                 } catch (error) {
-                    // console.log(error.response.data);
                     if (error.response) {
-                        tools.ModalAlertWarning("Directorio", error.response.data);
+                        tools.ModalAlertWarning("Presidente", error.response.data);
                     } else {
-                        tools.ModalAlertError("Directorio", "Se genero un error interno, comuníquese con el administrador del sistema.");
+                        tools.ModalAlertError("Presidente", "Se genero un error interno, comuníquese con el administrador del sistema.");
                     }
                 }
             }
 
-            function clearModalDirectorio() {
+            function clearModalPresidente() {
                 $("#titleModal").html("");
                 $("#cbIngeniero").select2("val", "0");
+                $("#cbIngeniero").select2("enable");
                 $("#txtFechaInicio").val("");
                 $("#txtFechaFinal").val("");
-                $("#cbPuesto").val("");
-                idDirectivo = "";
+                $("#cbCapitulo").val("");               
+                idPresidente = "";
             }
 
-            async function crudModalDirectorio() {
-                if ($("#cbIngeniero").val() == "") {
+            async function crudModalPresidente() {
+                if ($("#cbIngeniero").val() == null) {
                     $("#cbIngeniero").select2("open");
                     return;
                 }
@@ -536,60 +528,56 @@ if (!isset($_SESSION['IdUsuario'])) {
                     return;
                 }
 
-                if ($("#cbPuesto").val() == "") {
-                    $("#cbPuesto").focus();
+                if ($("#cbCapitulo").val() == "") {
+                    $("#cbCapitulo").focus();
                     return;
                 }
 
-                console.log(idDirectivo)
-
-                tools.ModalDialog("Directorio", "¿Está seguro de continuar?", async function(value) {
+                tools.ModalDialog("Presidente", "¿Está seguro de continuar?", async function(value) {
                     if (value) {
                         try {
-                            $("#mdDirectorio").modal("hide");
-                            tools.ModalAlertInfo("Directorio", "Procesando petición..");
+                            $("#mdPresidente").modal("hide");
+                            tools.ModalAlertInfo("Presidente", "Procesando petición..");
 
-
-
-                            if (idDirectivo === "") {
-                                let result = await axios.post("../app/web/DirectorioWeb.php", {
+                            if (idPresidente === "") {
+                                let result = await axios.post("../app/web/PresidenteWeb.php", {
                                     "type": "insert",
                                     "IdDNI": $("#cbIngeniero").val(),
                                     "FechaInicio": $("#txtFechaInicio").val(),
                                     "FechaFinal": $("#txtFechaFinal").val(),
                                     "idUsuario": idUsuario,
                                     "Estado": 1,
-                                    "Puesto": $("#cbPuesto").val()
+                                    "IdCapitulo": $("#cbCapitulo").val()
                                 });
 
-                                tools.ModalAlertSuccess("Directorio", result.data, () => {
+                                tools.ModalAlertSuccess("Presidente", result.data, () => {
                                     loadInit();
                                 });
                             } else {
 
-                                let result = await axios.post("../app/web/DirectorioWeb.php", {
+                                let result = await axios.post("../app/web/PresidenteWeb.php", {
                                     "type": "update",
                                     "IdDNI": $("#cbIngeniero").val(),
                                     "FechaInicio": $("#txtFechaInicio").val(),
                                     "FechaFinal": $("#txtFechaFinal").val(),
                                     "idUsuario": idUsuario,
                                     "Estado": 1,
-                                    "Puesto": $("#cbPuesto").val(),
-                                    "IdDirectivo": idDirectivo
+                                    "IdCapitulo": $("#cbCapitulo").val(),
+                                    "IdPresidente": idPresidente
                                 });
 
                                 // console.log(result.data)
 
-                                tools.ModalAlertSuccess("Directorio", result.data, () => {
+                                tools.ModalAlertSuccess("Presidente", result.data, () => {
                                     onEventPaginacion();
                                 });
                             }
                         } catch (error) {
                             // console.log(error)
                             if (error.response) {
-                                tools.ModalAlertWarning("Directorio", error.response.data);
+                                tools.ModalAlertWarning("Presidente", error.response.data);
                             } else {
-                                tools.ModalAlertError("Directorio", "Se genero un error interno, comuníquese con el administrador del sistema.");
+                                tools.ModalAlertError("Presidente", "Se genero un error interno, comuníquese con el administrador del sistema.");
                             }
                         }
                     }

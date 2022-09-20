@@ -69,7 +69,7 @@ class CapituloAdo
         try {
             $comandoCapitulo = Database::getInstance()->getDb()->prepare("SELECT DISTINCT idCapitulo, Capitulo FROM Capitulo");
             $comandoCapitulo->execute();
-            $resultado = $comandoCapitulo->fetchAll();
+            $resultado = $comandoCapitulo->fetchAll(PDO::FETCH_OBJ);
             Response::sendSuccess($resultado);
         } catch (Exception $ex) {
             Response::sendError($ex->getMessage());

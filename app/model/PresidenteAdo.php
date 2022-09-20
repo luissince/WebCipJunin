@@ -59,17 +59,18 @@ class PresidenteAdo
     public static function id($body)
     {
         try {
-            $comando = Database::getInstance()->getDb()->prepare("SELECT d.IdDirectivo,
-            d.IdDNI,
+            $comando = Database::getInstance()->getDb()->prepare("SELECT pr.IdPresidente,
+            pr.IdDNI,
             p.Apellidos,
             p.Nombres,
-            d.FechaInicio,
-            d.FechaFinal,
-            d.Puesto
-            FROM Directivo AS d  
-            INNER JOIN Persona AS p ON d.IdDNI = p.idDNI
-            WHERE d.IdDirectivo = ?");
-            $comando->bindParam(1, $body["IdDirectivo"], PDO::PARAM_INT);
+            pr.FechaInicio,
+            pr.FechaFinal,
+            pr.idCapitulo,
+            pr.Estado
+            FROM Presidente AS pr  
+            INNER JOIN Persona AS p ON pr.IdDNI = p.idDNI
+            WHERE pr.IdPresidente = ?");
+            $comando->bindParam(1, $body["IdPresidente"], PDO::PARAM_INT);
             $comando->execute();
             Response::sendSuccess($comando->fetchObject());
         } catch (Exception $ex) {
@@ -95,13 +96,13 @@ class PresidenteAdo
                 $idDirectivo = 1;
             }
 
-            $comandoInsert = Database::getInstance()->getDb()->prepare("INSERT INTO Directivo(
-                IdDirectivo,
+            $comandoInsert = Database::getInstance()->getDb()->prepare("INSERT INTO Presidente(
+                IdPresidente,
                 IdDNI,
                 FechaInicio,
                 FechaFinal,
+                idCapitulo,
                 Estado,
-                Puesto,
                 idUsuario,
                 FechaRegistro,
                 HoraRegistro,
@@ -112,8 +113,8 @@ class PresidenteAdo
             $comandoInsert->bindParam(2, $body["IdDNI"], PDO::PARAM_STR);
             $comandoInsert->bindParam(3, $body["FechaInicio"], PDO::PARAM_STR);
             $comandoInsert->bindParam(4, $body["FechaFinal"], PDO::PARAM_STR);
-            $comandoInsert->bindParam(5, $body["Estado"], PDO::PARAM_STR);
-            $comandoInsert->bindParam(6, $body["Puesto"], PDO::PARAM_STR);
+            $comandoInsert->bindParam(5, $body["IdCapitulo"], PDO::PARAM_STR);
+            $comandoInsert->bindParam(6, $body["Estado"], PDO::PARAM_STR);
             $comandoInsert->bindParam(7, $body["idUsuario"], PDO::PARAM_STR);
             $comandoInsert->execute();
 
@@ -166,19 +167,19 @@ class PresidenteAdo
         try {
             Database::getInstance()->getDb()->beginTransaction();
 
-            $cmdValidate = Database::getInstance()->getDb()->prepare("SELECT * FROM Directivo WHERE IdDirectivo = ? AND Estado = 1");
-            $cmdValidate->bindParam(1, $body["IdDirectivo"], PDO::PARAM_INT);
+            $cmdValidate = Database::getInstance()->getDb()->prepare("SELECT * FROM Presidente WHERE IdPresidente = ? AND Estado = 1");
+            $cmdValidate->bindParam(1, $body["IdPresidente"], PDO::PARAM_INT);
             $cmdValidate->execute();
 
             if ($cmdValidate->fetch()) {
                 Database::getInstance()->getDb()->rollback();
-                Response::sendClient("No se pudo eliminar el directivo(a) por que tiene estado activo.");
+                Response::sendClient("No se pudo eliminar el presidente por que tiene estado activo.");
             } else {
-                $cmdDelete = Database::getInstance()->getDb()->prepare("DELETE FROM Directivo WHERE IdDirectivo = ?");
-                $cmdDelete->bindParam(1, $body["IdDirectivo"], PDO::PARAM_INT);
+                $cmdDelete = Database::getInstance()->getDb()->prepare("DELETE FROM Presidente WHERE IdPresidente = ?");
+                $cmdDelete->bindParam(1, $body["IdPresidente"], PDO::PARAM_INT);
                 $cmdDelete->execute();
                 Database::getInstance()->getDb()->commit();
-                Response::sendSave("Se eliminó correctamente el directivo(a).");
+                Response::sendSave("Se eliminó correctamente el presidente.");
             }
         } catch (Exception $ex) {
             Database::getInstance()->getDb()->rollBack();
