@@ -139,6 +139,35 @@ function Tools() {
         }
     };
 
+    this.getExtension = function(filename){
+        return filename.split("?")[0].split("#")[0].split(".").pop();
+    }
+
+    this.readDataURL = function(files){
+        return new Promise((resolve, reject) => {
+            let file = files[0];
+            let blob = file.slice();
+            const reader = new FileReader();
+            reader.onload = () =>{
+                resolve(reader.result);
+            };
+            reader.onerror = reject;
+            reader.readAsDataURL(blob);
+        });
+    }
+
+    this.imageBase64 = async function(event){
+        let files = event.target.files;
+        if(files.length !== 0){
+            let read = await this.readDataURL(files);
+            let base64String = read.replace(/^data:.+;base64,/,'');
+            let extension = this.getExtension(files[0].name);
+            return {base64String, extension};
+        }else{
+            return false;
+        }
+    }
+
     this.ModalDialog = function (title, mensaje, callback) {
         swal({
             title: title,

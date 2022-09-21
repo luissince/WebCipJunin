@@ -66,7 +66,9 @@ class DirectivoAdo
             p.Nombres,
             d.FechaInicio,
             d.FechaFinal,
-            d.IdTablaTipoDirectivo
+            d.IdTablaTipoDirectivo,
+            d.Estado,
+            d.Firma
             FROM Directivo AS d  
             INNER JOIN Persona AS p ON d.IdDNI = p.idDNI
             WHERE d.IdDirectivo = ?");
@@ -102,6 +104,7 @@ class DirectivoAdo
                 FechaInicio,
                 FechaFinal,
                 Estado,
+                Firma,
                 IdTablaTipoDirectivo,
                 idUsuario,
                 FechaRegistro,
@@ -114,8 +117,10 @@ class DirectivoAdo
             $comandoInsert->bindParam(3, $body["FechaInicio"], PDO::PARAM_STR);
             $comandoInsert->bindParam(4, $body["FechaFinal"], PDO::PARAM_STR);
             $comandoInsert->bindParam(5, $body["Estado"], PDO::PARAM_STR);
-            $comandoInsert->bindParam(6, $body["IdTablaTipoDirectivo"], PDO::PARAM_STR);
-            $comandoInsert->bindParam(7, $body["idUsuario"], PDO::PARAM_STR);
+            $comandoInsert->bindParam(6, $body["Firma"], PDO::PARAM_STR);
+            // $comandoInsert->bindParam(7, $body["Ruta"], PDO::PARAM_STR);
+            $comandoInsert->bindParam(7, $body["IdTablaTipoDirectivo"], PDO::PARAM_STR);
+            $comandoInsert->bindParam(8, $body["idUsuario"], PDO::PARAM_STR);
             $comandoInsert->execute();
 
             Database::getInstance()->getDb()->commit();
@@ -138,6 +143,7 @@ class DirectivoAdo
             FechaInicio = ?,
             FechaFinal = ?,
             Estado = ?,
+            Firma = ?,
             IdTablaTipoDirectivo = ?,
             idUsuario = ?,
             FechaUpdate = GETDATE(),
@@ -146,9 +152,10 @@ class DirectivoAdo
             $comando->bindParam(1, $body["FechaInicio"], PDO::PARAM_STR);
             $comando->bindParam(2, $body["FechaFinal"], PDO::PARAM_STR);
             $comando->bindParam(3, $body["Estado"], PDO::PARAM_STR);
-            $comando->bindParam(4, $body["IdTablaTipoDirectivo"], PDO::PARAM_STR);
-            $comando->bindParam(5, $body["idUsuario"], PDO::PARAM_STR);
-            $comando->bindParam(6, $body["IdDirectivo"], PDO::PARAM_STR);
+            $comando->bindParam(4, $body["Firma"], PDO::PARAM_STR);
+            $comando->bindParam(5, $body["IdTablaTipoDirectivo"], PDO::PARAM_STR);
+            $comando->bindParam(6, $body["idUsuario"], PDO::PARAM_STR);
+            $comando->bindParam(7, $body["IdDirectivo"], PDO::PARAM_STR);
             $comando->execute();
 
             Database::getInstance()->getDb()->commit();

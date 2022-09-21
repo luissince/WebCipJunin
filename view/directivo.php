@@ -71,6 +71,51 @@ if (!isset($_SESSION['IdUsuario'])) {
                                         </div>
                                     </div>
                                 </div>
+
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            <div class="checkbox">
+                                                <label>
+                                                    <input type="checkbox" id="cbEstado"> Estado
+                                                </label>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            <div class="checkbox">
+                                                <label>
+                                                    <input type="checkbox" id="cbUsarFirma"> Usar Firma
+                                                </label>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <div class="form-group">
+                                            <img class="profile-user-img img-responsive" id="lblFirma" src="https://intranet.upla.edu.pe/Capa_Presentacion/Recursos/logoIntranet1.png" alt="User profile picture">
+                                        </div>
+                                    </div>
+                                </div>
+
+
+
+                                <div class="row">
+                                    <div class="col-md-6 text-center">
+                                        <div class="form-group">
+                                            <input type="file" id="fileFirma" accept="image/png, image/jpge, image/jpg" class="d-none" />
+                                            <label class="btn btn-default" for="fileFirma"><i class="fa fa-photo"></i> Subir Imagen </label>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6 text-center">
+                                        <div class="form-group">
+                                            <label class="btn btn-danger"><i class="fa fa-trash"></i> Quitar Imagen </label>
+                                        </div>
+                                    </div>
+                                </div>
                             </div>
 
                             <div class="modal-footer">
@@ -195,6 +240,7 @@ if (!isset($_SESSION['IdUsuario'])) {
             let paginacion = 0;
             let filasPorPagina = 10;
             let tbTable = $("#tbTable");
+            let lblFirma = $("#lblFirma");
 
             let idUsuario = <?= $_SESSION['IdUsuario'] ?>;
 
@@ -264,6 +310,15 @@ if (!isset($_SESSION['IdUsuario'])) {
                             opcion = 1;
                         }
                         event.preventDefault();
+                    }
+                });
+
+                $("#fileFirma").on("change", function(event) {
+                    if (event.target.files.length > 0) {
+                        lblFirma.attr("src", URL.createObjectURL(event.target.files[0]));
+                    } else {
+                        lblFirma.attr("src", "https://intranet.upla.edu.pe/Capa_Presentacion/Recursos/logoIntranet1.png");
+                        $("#fileFirma").val(null);
                     }
                 });
             }
@@ -469,10 +524,11 @@ if (!isset($_SESSION['IdUsuario'])) {
                     });
                     $("#cbIngeniero").select2("enable", false);
 
-                    // console.log($("#cbIngeniero"))
                     $("#txtFechaInicio").val(result.data.FechaInicio);
                     $("#txtFechaFinal").val(result.data.FechaFinal);
                     $("#cbTipoDirectivo").val(result.data.IdTablaTipoDirectivo);
+                    $("#cbEstado").prop("checked", result.data.Estado === "1" ? true : false);
+                    $("#cbUsarFirma").prop("checked", result.data.Firma === "1" ? true : false);
                     $("#titleModal").html('<i class="fa fa-plus"></i> Editar Persona </span>');
                 } catch (error) {
                     console.log(error);
@@ -511,6 +567,8 @@ if (!isset($_SESSION['IdUsuario'])) {
                 $("#txtFechaInicio").val("");
                 $("#txtFechaFinal").val("");
                 $("#cbTipoDirectivo").val("");
+                $("#cbEstado").prop("checked", false);
+                $("#cbUsarFirma").prop("checked", false);
                 idDirectivo = "";
             }
 
@@ -550,7 +608,8 @@ if (!isset($_SESSION['IdUsuario'])) {
                                     "FechaInicio": $("#txtFechaInicio").val(),
                                     "FechaFinal": $("#txtFechaFinal").val(),
                                     "idUsuario": idUsuario,
-                                    "Estado": 1,
+                                    "Estado": $("#cbEstado").is(":checked"),
+                                    "Firma": $("#cbUsarFirma").is(":checked"),
                                     "IdTablaTipoDirectivo": $("#cbTipoDirectivo").val()
                                 });
 
@@ -565,7 +624,8 @@ if (!isset($_SESSION['IdUsuario'])) {
                                     "FechaInicio": $("#txtFechaInicio").val(),
                                     "FechaFinal": $("#txtFechaFinal").val(),
                                     "idUsuario": idUsuario,
-                                    "Estado": 1,
+                                    "Estado": $("#cbEstado").is(":checked"),
+                                    "Firma": $("#cbUsarFirma").is(":checked"),
                                     "IdTablaTipoDirectivo": $("#cbTipoDirectivo").val(),
                                     "IdDirectivo": idDirectivo
                                 });

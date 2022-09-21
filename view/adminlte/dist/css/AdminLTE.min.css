@@ -1911,7 +1911,7 @@ a:focus {
 }
 
 .d-none {
-  display: none;
+  display: none !important;
 }
 
 .not-border{
