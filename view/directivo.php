@@ -592,14 +592,12 @@ if (!isset($_SESSION['IdUsuario'])) {
                     $("#cbTipoDirectivo").focus();
                     return;
                 }
-
+              
                 tools.ModalDialog("Directorio", "¿Está seguro de continuar?", async function(value) {
                     if (value) {
                         try {
                             $("#mdDirectorio").modal("hide");
                             tools.ModalAlertInfo("Directorio", "Procesando petición..");
-
-
 
                             if (idDirectivo === "") {
                                 let result = await axios.post("../app/web/DirectorioWeb.php", {
@@ -617,6 +615,8 @@ if (!isset($_SESSION['IdUsuario'])) {
                                     loadInit();
                                 });
                             } else {
+                                const image = await tools.imageBase64($("#fileFirma")[0].files);
+                                console.log(image)
 
                                 let result = await axios.post("../app/web/DirectorioWeb.php", {
                                     "type": "update",
@@ -627,6 +627,8 @@ if (!isset($_SESSION['IdUsuario'])) {
                                     "Estado": $("#cbEstado").is(":checked"),
                                     "Firma": $("#cbUsarFirma").is(":checked"),
                                     "IdTablaTipoDirectivo": $("#cbTipoDirectivo").val(),
+                                    "imagen":image.base64String,
+                                    "extension": image.extension,
                                     "IdDirectivo": idDirectivo
                                 });
 

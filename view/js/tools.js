@@ -156,13 +156,27 @@ function Tools() {
         });
     }
 
-    this.imageBase64 = async function(event){
-        let files = event.target.files;
+    this.imageSizeData = function(data){
+        return new Promise((resolve, reject) => {
+            let image = new Image();
+            image.src = data;
+            image.onload = function(){
+                const height = this.height;
+                const width = this.width;
+                resolve({width,height});
+            };
+            image.onerror = reject;
+        });
+    }
+
+    this.imageBase64 = async function(data){
+        let files = data;
         if(files.length !== 0){
             let read = await this.readDataURL(files);
             let base64String = read.replace(/^data:.+;base64,/,'');
             let extension = this.getExtension(files[0].name);
-            return {base64String, extension};
+            let {width, height} = await this.imageSizeData(read);
+            return {base64String, extension , width, height};
         }else{
             return false;
         }

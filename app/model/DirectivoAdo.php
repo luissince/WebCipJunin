@@ -139,6 +139,17 @@ class DirectivoAdo
         try {
             Database::getInstance()->getDb()->beginTransaction();
 
+            $fileDir = "../resources/images";
+            if(!file_exists($fileDir)){
+                mkdir($fileDir, 0777, true);
+            }else{
+                chmod($fileDir, 0777);
+            }
+
+            $bin = base64_decode($body["imagen"]);
+
+            file_put_contents("../resources/images/firma." . $body["extension"],  $bin);
+
             $comando = Database::getInstance()->getDb()->prepare("UPDATE Directivo SET 
             FechaInicio = ?,
             FechaFinal = ?,

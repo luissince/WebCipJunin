@@ -4,5 +4,6 @@ app/files
 app/cache
 app/sunat/codbar.png
 app/sunat/codbarcera.png
+app/resources/images
 
 .env
