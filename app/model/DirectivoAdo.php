@@ -7,7 +7,6 @@ use PDO;
 use SysSoftIntegra\DataBase\Database;
 use SysSoftIntegra\Src\Response;
 use Exception;
-use Mpdf\Tag\Dd;
 use PDOException;
 
 class DirectivoAdo
