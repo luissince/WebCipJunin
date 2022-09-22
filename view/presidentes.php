@@ -71,6 +71,40 @@ if (!isset($_SESSION['IdUsuario'])) {
                                         </div>
                                     </div>
                                 </div>
+
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            <div class="checkbox">
+                                                <label>
+                                                    <input type="checkbox" id="cbEstado"> Estado
+                                                </label>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <div class="form-group">
+                                            <img class="profile-user-img img-responsive" id="lblFirma" src="./images/noimage.jpg" alt="User profile picture">
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="row">
+                                    <div class="col-md-6 text-center">
+                                        <div class="form-group">
+                                            <input type="file" id="fileFirma" accept="image/png, image/jpge, image/jpg" class="d-none" />
+                                            <label class="btn btn-default" for="fileFirma"><i class="fa fa-photo"></i> Subir Imagen </label>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6 text-center">
+                                        <div class="form-group">
+                                            <label class="btn btn-danger"><i class="fa fa-trash"></i> Quitar Imagen </label>
+                                        </div>
+                                    </div>
+                                </div>
                             </div>
 
                             <div class="modal-footer">
@@ -196,10 +230,13 @@ if (!isset($_SESSION['IdUsuario'])) {
             let paginacion = 0;
             let filasPorPagina = 10;
             let tbTable = $("#tbTable");
+            let lblFirma = $("#lblFirma");
 
             let idUsuario = <?= $_SESSION['IdUsuario'] ?>;
 
             let idPresidente = "";
+            let rutaImagen = '';
+            let valImagen = 0;
 
             $(document).ready(function() {
                 loadInit();
@@ -265,6 +302,24 @@ if (!isset($_SESSION['IdUsuario'])) {
                             opcion = 1;
                         }
                         event.preventDefault();
+                    }
+                });
+
+                $("#fileFirma").on("change", function(event) {
+                    if (event.target.files.length > 0) {
+                        lblFirma.attr("src", URL.createObjectURL(event.target.files[0]));
+                        valImagen = 2;
+                    } else {
+                        valImagen = rutaImagen == "" ? 0 : 1;
+                        if (valImagen == 0) {
+                            lblFirma.attr("src", "./images/noimage.jpg");
+                            $("#fileFirma").val(null);
+                            valImagen = 0;
+                        } else {
+                            lblFirma.attr("src", rutaImagen);
+                            $("#fileFirma").val(null);
+                            valImagen = 1;
+                        }
                     }
                 });
             }
@@ -475,12 +530,13 @@ if (!isset($_SESSION['IdUsuario'])) {
                     $("#cbCapitulo").val(result.data.idCapitulo);
                     $("#titleModal").html('<i class="fa fa-plus"></i> Editar Persona </span>');
                 } catch (error) {
-                    console.log(error);
+                    $("#mdPresidente").modal("hide");
                 }
             }
 
             async function deleteModalPresidente(idPresidente) {
                 try {
+                    tools.ModalAlertInfo("Directorio", "Procesando petición...");
 
                     const result = await axios.get("../app/web/PresidenteWeb.php", {
                         params: {
@@ -492,7 +548,6 @@ if (!isset($_SESSION['IdUsuario'])) {
                     tools.ModalAlertSuccess("Presidente", result.data, () => {
                         loadInit();
                     });
-
                 } catch (error) {
                     if (error.response) {
                         tools.ModalAlertWarning("Presidente", error.response.data);
@@ -508,7 +563,12 @@ if (!isset($_SESSION['IdUsuario'])) {
                 $("#cbIngeniero").select2("enable");
                 $("#txtFechaInicio").val("");
                 $("#txtFechaFinal").val("");
-                $("#cbCapitulo").val("");               
+                $("#cbCapitulo").val("");
+                $("#cbEstado").prop("checked", false);
+                lblFirma.attr("src", "./images/noimage.jpg");
+                $("#fileFirma").val(null);
+                valImagen = 0;
+                rutaImagen = "";
                 idPresidente = "";
             }
 
@@ -540,20 +600,25 @@ if (!isset($_SESSION['IdUsuario'])) {
                             tools.ModalAlertInfo("Presidente", "Procesando petición..");
 
                             if (idPresidente === "") {
+                                const image = await tools.imageBase64($("#fileFirma")[0].files);
+
                                 let result = await axios.post("../app/web/PresidenteWeb.php", {
                                     "type": "insert",
                                     "IdDNI": $("#cbIngeniero").val(),
                                     "FechaInicio": $("#txtFechaInicio").val(),
                                     "FechaFinal": $("#txtFechaFinal").val(),
                                     "idUsuario": idUsuario,
-                                    "Estado": 1,
-                                    "IdCapitulo": $("#cbCapitulo").val()
+                                    "Estado": $("#cbEstado").is(":checked"),
+                                    "IdCapitulo": $("#cbCapitulo").val(),
+                                    "imagen": image == false ? "" : image.base64String,
+                                    "extension": image == false ? "" : image.extension,
                                 });
 
                                 tools.ModalAlertSuccess("Presidente", result.data, () => {
                                     loadInit();
                                 });
                             } else {
+                                const image = await tools.imageBase64($("#fileFirma")[0].files);
 
                                 let result = await axios.post("../app/web/PresidenteWeb.php", {
                                     "type": "update",
@@ -561,19 +626,19 @@ if (!isset($_SESSION['IdUsuario'])) {
                                     "FechaInicio": $("#txtFechaInicio").val(),
                                     "FechaFinal": $("#txtFechaFinal").val(),
                                     "idUsuario": idUsuario,
-                                    "Estado": 1,
+                                    "Estado": $("#cbEstado").is(":checked"),
                                     "IdCapitulo": $("#cbCapitulo").val(),
+                                    "valImagen": valImagen,
+                                    "imagen": image == false ? "" : image.base64String,
+                                    "extension": image == false ? "" : image.extension,
                                     "IdPresidente": idPresidente
                                 });
-
-                                // console.log(result.data)
 
                                 tools.ModalAlertSuccess("Presidente", result.data, () => {
                                     onEventPaginacion();
                                 });
                             }
                         } catch (error) {
-                            // console.log(error)
                             if (error.response) {
                                 tools.ModalAlertWarning("Presidente", error.response.data);
                             } else {

@@ -6,6 +6,7 @@ use PDO;
 use SysSoftIntegra\DataBase\Database;
 use SysSoftIntegra\Src\Response;
 use Exception;
+use DateTime;
 use PDOException;
 
 class PresidenteAdo
@@ -66,7 +67,8 @@ class PresidenteAdo
             pr.FechaInicio,
             pr.FechaFinal,
             pr.idCapitulo,
-            pr.Estado
+            pr.Estado,
+            pr.Ruta
             FROM Presidente AS pr  
             INNER JOIN Persona AS p ON pr.IdDNI = p.idDNI
             WHERE pr.IdPresidente = ?");
@@ -85,15 +87,33 @@ class PresidenteAdo
         try {
             Database::getInstance()->getDb()->beginTransaction();
 
-            $idDirectivo = 0;
-            $validate = Database::getInstance()->getDb()->prepare("SELECT IdDirectivo FROM Directivo");
+            $IdPresidente = 0;
+            $validate = Database::getInstance()->getDb()->prepare("SELECT IdPresidente FROM Presidente");
             $validate->execute();
-            $listDirectivo = $validate->fetchAll(PDO::FETCH_CLASS);
-            if ($listDirectivo) {
-                $currentValue = max($listDirectivo);
-                $idDirectivo = $currentValue->IdDirectivo + 1;
+            $listPresidente = $validate->fetchAll(PDO::FETCH_CLASS);
+            if ($listPresidente) {
+                $currentValue = max($listPresidente);
+                $IdPresidente = $currentValue->IdPresidente + 1;
             } else {
-                $idDirectivo = 1;
+                $IdPresidente = 1;
+            }
+
+            $fileName = "";
+
+            if ($body["imagen"] != "") {
+                $fileDir = "../resources/images";
+                if (!file_exists($fileDir)) {
+                    mkdir($fileDir, 0777, true);
+                } else {
+                    chmod($fileDir, 0777);
+                }
+
+                $bin = base64_decode($body["imagen"]);
+
+                $date = new DateTime("now");
+                $fileName = $date->format("Ymd") . $date->format("His") . "presidente." . $body["extension"];
+
+                file_put_contents($fileDir . "/" . $fileName,  $bin);
             }
 
             $comandoInsert = Database::getInstance()->getDb()->prepare("INSERT INTO Presidente(
@@ -103,19 +123,21 @@ class PresidenteAdo
                 FechaFinal,
                 idCapitulo,
                 Estado,
+                Ruta,
                 idUsuario,
                 FechaRegistro,
                 HoraRegistro,
                 FechaUpdate,
                 HoraUpdate 
-            ) VALUES(?,?,?,?,?,?,?,GETDATE(),GETDATE(),GETDATE(),GETDATE())");
-            $comandoInsert->bindParam(1, $idDirectivo, PDO::PARAM_STR);
+            ) VALUES(?,?,?,?,?,?,?,?,GETDATE(),GETDATE(),GETDATE(),GETDATE())");
+            $comandoInsert->bindParam(1, $IdPresidente, PDO::PARAM_STR);
             $comandoInsert->bindParam(2, $body["IdDNI"], PDO::PARAM_STR);
             $comandoInsert->bindParam(3, $body["FechaInicio"], PDO::PARAM_STR);
             $comandoInsert->bindParam(4, $body["FechaFinal"], PDO::PARAM_STR);
             $comandoInsert->bindParam(5, $body["IdCapitulo"], PDO::PARAM_STR);
             $comandoInsert->bindParam(6, $body["Estado"], PDO::PARAM_STR);
-            $comandoInsert->bindParam(7, $body["idUsuario"], PDO::PARAM_STR);
+            $comandoInsert->bindParam(7, $fileName, PDO::PARAM_STR);
+            $comandoInsert->bindParam(8, $body["idUsuario"], PDO::PARAM_STR);
             $comandoInsert->execute();
 
             Database::getInstance()->getDb()->commit();
@@ -133,26 +155,58 @@ class PresidenteAdo
     {
         try {
             Database::getInstance()->getDb()->beginTransaction();
+            $presidente = Database::getInstance()->getDb()->prepare("SELECT Ruta FROM Presidente WHERE IdPresidente = ?");
+            $presidente->bindParam(1, $body["IdPresidente"]);
+            $presidente->execute();
+            if ($row = $presidente->fetchObject()) {
+                $fileName = "";
 
-            $comando = Database::getInstance()->getDb()->prepare("UPDATE Directivo SET 
-            FechaInicio = ?,
-            FechaFinal = ?,
-            Estado = ?,
-            Puesto = ?,
-            idUsuario = ?,
-            FechaUpdate = GETDATE(),
-            HoraUpdate = GETDATE()
-            WHERE IdDirectivo = ?");
-            $comando->bindParam(1, $body["FechaInicio"], PDO::PARAM_STR);
-            $comando->bindParam(2, $body["FechaFinal"], PDO::PARAM_STR);
-            $comando->bindParam(3, $body["Estado"], PDO::PARAM_STR);
-            $comando->bindParam(4, $body["Puesto"], PDO::PARAM_STR);
-            $comando->bindParam(5, $body["idUsuario"], PDO::PARAM_STR);
-            $comando->bindParam(6, $body["IdDirectivo"], PDO::PARAM_STR);
-            $comando->execute();
+                if (intval($body["valImagen"]) == 0) {
+                    $fileName  = "";
+                } else if (intval($body["valImagen"]) == 1) {
+                    $fileName  = $row->Ruta;
+                } else {
+                    $fileDir = "../resources/images";
+                    if (!file_exists($fileDir)) {
+                        mkdir($fileDir, 0777, true);
+                    } else {
+                        chmod($fileDir, 0777);
+                    }
 
-            Database::getInstance()->getDb()->commit();
-            Response::sendSave("Los datos se actualizon correctamente.");
+                    $remove = $fileDir . '/' . $row->Ruta;
+                    if (is_file($remove) && file_exists($remove)) {
+                        unlink($remove);
+                    }
+
+                    $bin = base64_decode($body["imagen"]);
+
+                    $date = new DateTime("now");
+                    $fileName = $date->format("Ymd") . $date->format("His") . "directivo." . $body["extension"];
+
+                    file_put_contents($fileDir . "/" . $fileName,  $bin);
+                }
+
+                $comando = Database::getInstance()->getDb()->prepare("UPDATE Directivo SET 
+                idCapitulo = ?,
+                Estado = ?,
+                Ruta = ?,
+                idUsuario = ?,
+                FechaUpdate = GETDATE(),
+                HoraUpdate = GETDATE()
+                WHERE IdPresidente = ?");
+                $comando->bindParam(1, $body["IdCapitulo"], PDO::PARAM_STR);
+                $comando->bindParam(2, $body["Estado"], PDO::PARAM_STR);
+                $comando->bindParam(3, $fileName, PDO::PARAM_STR);
+                $comando->bindParam(4, $body["idUsuario"], PDO::PARAM_STR);
+                $comando->bindParam(5, $body["IdPresidente"], PDO::PARAM_STR);
+                $comando->execute();
+
+                Database::getInstance()->getDb()->commit();
+                Response::sendSave("Los datos se actualizon correctamente.");
+            } else {
+                Database::getInstance()->getDb()->rollBack();
+                Response::sendClient("El id del presidente fue alterado o no cargó bien los datos, intente nuevamente.");
+            }
         } catch (Exception $ex) {
             Database::getInstance()->getDb()->rollBack();
             Response::sendError($ex->getMessage());
@@ -175,11 +229,25 @@ class PresidenteAdo
                 Database::getInstance()->getDb()->rollback();
                 Response::sendClient("No se pudo eliminar el presidente por que tiene estado activo.");
             } else {
-                $cmdDelete = Database::getInstance()->getDb()->prepare("DELETE FROM Presidente WHERE IdPresidente = ?");
-                $cmdDelete->bindParam(1, $body["IdPresidente"], PDO::PARAM_INT);
-                $cmdDelete->execute();
-                Database::getInstance()->getDb()->commit();
-                Response::sendSave("Se eliminó correctamente el presidente.");
+                $cmdValidate = Database::getInstance()->getDb()->prepare("SELECT Ruta FROM Presidente WHERE IdPresidente = ?");
+                $cmdValidate->bindParam(1, $body["IdPresidente"], PDO::PARAM_INT);
+                $cmdValidate->execute();
+                if ($row = $cmdValidate->fetchObject()) {
+                    $fileDir = "../resources/images";
+                    $remove = $fileDir . '/' . $row->Ruta;
+                    if (is_file($remove) && file_exists($remove)) {
+                        unlink($remove);
+                    }
+
+                    $cmdDelete = Database::getInstance()->getDb()->prepare("DELETE FROM Presidente WHERE IdPresidente = ?");
+                    $cmdDelete->bindParam(1, $body["IdPresidente"], PDO::PARAM_INT);
+                    $cmdDelete->execute();
+                    Database::getInstance()->getDb()->commit();
+                    Response::sendSave("Se eliminó correctamente el presidente.");
+                } else {
+                    Database::getInstance()->getDb()->rollBack();
+                    Response::sendClient("El id del directivo fue alterado o no cargó bien los datos, intente nuevamente.");
+                }
             }
         } catch (Exception $ex) {
             Database::getInstance()->getDb()->rollBack();

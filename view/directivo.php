@@ -101,8 +101,6 @@ if (!isset($_SESSION['IdUsuario'])) {
                                     </div>
                                 </div>
 
-
-
                                 <div class="row">
                                     <div class="col-md-6 text-center">
                                         <div class="form-group">

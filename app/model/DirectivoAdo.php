@@ -112,7 +112,7 @@ class DirectivoAdo
                 $bin = base64_decode($body["imagen"]);
 
                 $date = new DateTime("now");
-                $fileName = $date->format("Ymd") . $date->format("His") . "firma." . $body["extension"];
+                $fileName = $date->format("Ymd") . $date->format("His") . "directivo." . $body["extension"];
 
                 file_put_contents($fileDir . "/" . $fileName,  $bin);
             }
@@ -185,7 +185,7 @@ class DirectivoAdo
                     $bin = base64_decode($body["imagen"]);
 
                     $date = new DateTime("now");
-                    $fileName = $date->format("Ymd") . $date->format("His") . "firma." . $body["extension"];
+                    $fileName = $date->format("Ymd") . $date->format("His") . "directivo." . $body["extension"];
 
                     file_put_contents($fileDir . "/" . $fileName,  $bin);
                 }
