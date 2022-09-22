@@ -96,7 +96,7 @@ if (!isset($_SESSION['IdUsuario'])) {
                                 <div class="row">
                                     <div class="col-md-12">
                                         <div class="form-group">
-                                            <img class="profile-user-img img-responsive" id="lblFirma" src="https://intranet.upla.edu.pe/Capa_Presentacion/Recursos/logoIntranet1.png" alt="User profile picture">
+                                            <img class="profile-user-img img-responsive" id="lblFirma" src="./images/noimage.jpg" alt="User profile picture">
                                         </div>
                                     </div>
                                 </div>
@@ -245,6 +245,8 @@ if (!isset($_SESSION['IdUsuario'])) {
             let idUsuario = <?= $_SESSION['IdUsuario'] ?>;
 
             let idDirectivo = '';
+            let rutaImagen = '';
+            let valImagen = 0;
 
             $(document).ready(function() {
                 loadInit();
@@ -316,9 +318,18 @@ if (!isset($_SESSION['IdUsuario'])) {
                 $("#fileFirma").on("change", function(event) {
                     if (event.target.files.length > 0) {
                         lblFirma.attr("src", URL.createObjectURL(event.target.files[0]));
+                        valImagen = 2;
                     } else {
-                        lblFirma.attr("src", "https://intranet.upla.edu.pe/Capa_Presentacion/Recursos/logoIntranet1.png");
-                        $("#fileFirma").val(null);
+                        valImagen = rutaImagen == "" ? 0 : 1;
+                        if (valImagen == 0) {
+                            lblFirma.attr("src", "./images/noimage.jpg");
+                            $("#fileFirma").val(null);
+                            valImagen = 0;
+                        } else {
+                            lblFirma.attr("src", rutaImagen);
+                            $("#fileFirma").val(null);
+                            valImagen = 1;
+                        }
                     }
                 });
             }
@@ -491,7 +502,6 @@ if (!isset($_SESSION['IdUsuario'])) {
                     });
 
                     idDirectivo = id;
-                    // console.log(result.data)
                     let data = [{
                         id: result.data.IdDNI,
                         text: result.data.Apellidos + ", " + result.data.Nombres
@@ -529,9 +539,16 @@ if (!isset($_SESSION['IdUsuario'])) {
                     $("#cbTipoDirectivo").val(result.data.IdTablaTipoDirectivo);
                     $("#cbEstado").prop("checked", result.data.Estado === "1" ? true : false);
                     $("#cbUsarFirma").prop("checked", result.data.Firma === "1" ? true : false);
+                    if (result.data.Ruta !== "") {
+                        lblFirma.attr("src", "./../app/resources/images/" + result.data.Ruta);
+                        valImagen = 1;
+                        rutaImagen = "./../app/resources/images/" + result.data.Ruta;
+                    } else {
+                        valImagen = 0;
+                    }
                     $("#titleModal").html('<i class="fa fa-plus"></i> Editar Persona </span>');
                 } catch (error) {
-                    console.log(error);
+                    $("#mdDirectorio").modal("hide");
                 }
             }
 
@@ -539,6 +556,8 @@ if (!isset($_SESSION['IdUsuario'])) {
                 tools.ModalDialog("Directorio", "¿Está seguro de continuar?", async function(value) {
                     if (value) {
                         try {
+                            tools.ModalAlertInfo("Directorio", "Procesando petición...");
+
                             const result = await axios.get("../app/web/DirectorioWeb.php", {
                                 params: {
                                     "type": "delete",
@@ -569,6 +588,10 @@ if (!isset($_SESSION['IdUsuario'])) {
                 $("#cbTipoDirectivo").val("");
                 $("#cbEstado").prop("checked", false);
                 $("#cbUsarFirma").prop("checked", false);
+                lblFirma.attr("src", "./images/noimage.jpg");
+                $("#fileFirma").val(null);
+                valImagen = 0;
+                rutaImagen = "";
                 idDirectivo = "";
             }
 
@@ -592,14 +615,16 @@ if (!isset($_SESSION['IdUsuario'])) {
                     $("#cbTipoDirectivo").focus();
                     return;
                 }
-              
+
                 tools.ModalDialog("Directorio", "¿Está seguro de continuar?", async function(value) {
                     if (value) {
                         try {
                             $("#mdDirectorio").modal("hide");
-                            tools.ModalAlertInfo("Directorio", "Procesando petición..");
+                            tools.ModalAlertInfo("Directorio", "Procesando petición...");
 
                             if (idDirectivo === "") {
+                                const image = await tools.imageBase64($("#fileFirma")[0].files);
+
                                 let result = await axios.post("../app/web/DirectorioWeb.php", {
                                     "type": "insert",
                                     "IdDNI": $("#cbIngeniero").val(),
@@ -608,7 +633,9 @@ if (!isset($_SESSION['IdUsuario'])) {
                                     "idUsuario": idUsuario,
                                     "Estado": $("#cbEstado").is(":checked"),
                                     "Firma": $("#cbUsarFirma").is(":checked"),
-                                    "IdTablaTipoDirectivo": $("#cbTipoDirectivo").val()
+                                    "IdTablaTipoDirectivo": $("#cbTipoDirectivo").val(),
+                                    "imagen": image == false ? "" : image.base64String,
+                                    "extension": image == false ? "" : image.extension,
                                 });
 
                                 tools.ModalAlertSuccess("Directorio", result.data, () => {
@@ -616,7 +643,6 @@ if (!isset($_SESSION['IdUsuario'])) {
                                 });
                             } else {
                                 const image = await tools.imageBase64($("#fileFirma")[0].files);
-                                console.log(image)
 
                                 let result = await axios.post("../app/web/DirectorioWeb.php", {
                                     "type": "update",
@@ -627,8 +653,9 @@ if (!isset($_SESSION['IdUsuario'])) {
                                     "Estado": $("#cbEstado").is(":checked"),
                                     "Firma": $("#cbUsarFirma").is(":checked"),
                                     "IdTablaTipoDirectivo": $("#cbTipoDirectivo").val(),
-                                    "imagen":image.base64String,
-                                    "extension": image.extension,
+                                    "valImagen": valImagen,
+                                    "imagen": image == false ? "" : image.base64String,
+                                    "extension": image == false ? "" : image.extension,
                                     "IdDirectivo": idDirectivo
                                 });
 

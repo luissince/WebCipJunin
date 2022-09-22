@@ -2,6 +2,7 @@
 
 namespace SysSoftIntegra\Model;
 
+use DateTime;
 use PDO;
 use SysSoftIntegra\DataBase\Database;
 use SysSoftIntegra\Src\Response;
@@ -68,7 +69,8 @@ class DirectivoAdo
             d.FechaFinal,
             d.IdTablaTipoDirectivo,
             d.Estado,
-            d.Firma
+            d.Firma,
+            d.Ruta
             FROM Directivo AS d  
             INNER JOIN Persona AS p ON d.IdDNI = p.idDNI
             WHERE d.IdDirectivo = ?");
@@ -98,6 +100,24 @@ class DirectivoAdo
                 $idDirectivo = 1;
             }
 
+            $fileName = "";
+
+            if ($body["imagen"] != "") {
+                $fileDir = "../resources/images";
+                if (!file_exists($fileDir)) {
+                    mkdir($fileDir, 0777, true);
+                } else {
+                    chmod($fileDir, 0777);
+                }
+
+                $bin = base64_decode($body["imagen"]);
+
+                $date = new DateTime("now");
+                $fileName = $date->format("Ymd") . $date->format("His") . "firma." . $body["extension"];
+
+                file_put_contents($fileDir . "/" . $fileName,  $bin);
+            }
+
             $comandoInsert = Database::getInstance()->getDb()->prepare("INSERT INTO Directivo(
                 IdDirectivo,
                 IdDNI,
@@ -106,21 +126,22 @@ class DirectivoAdo
                 Estado,
                 Firma,
                 IdTablaTipoDirectivo,
+                Ruta,
                 idUsuario,
                 FechaRegistro,
                 HoraRegistro,
                 FechaUpdate,
                 HoraUpdate 
-            ) VALUES(?,?,?,?,?,?,?,GETDATE(),GETDATE(),GETDATE(),GETDATE())");
+            ) VALUES(?,?,?,?,?,?,?,?,?,GETDATE(),GETDATE(),GETDATE(),GETDATE())");
             $comandoInsert->bindParam(1, $idDirectivo, PDO::PARAM_STR);
             $comandoInsert->bindParam(2, $body["IdDNI"], PDO::PARAM_STR);
             $comandoInsert->bindParam(3, $body["FechaInicio"], PDO::PARAM_STR);
             $comandoInsert->bindParam(4, $body["FechaFinal"], PDO::PARAM_STR);
             $comandoInsert->bindParam(5, $body["Estado"], PDO::PARAM_STR);
             $comandoInsert->bindParam(6, $body["Firma"], PDO::PARAM_STR);
-            // $comandoInsert->bindParam(7, $body["Ruta"], PDO::PARAM_STR);
             $comandoInsert->bindParam(7, $body["IdTablaTipoDirectivo"], PDO::PARAM_STR);
-            $comandoInsert->bindParam(8, $body["idUsuario"], PDO::PARAM_STR);
+            $comandoInsert->bindParam(8, $fileName, PDO::PARAM_STR);
+            $comandoInsert->bindParam(9, $body["idUsuario"], PDO::PARAM_STR);
             $comandoInsert->execute();
 
             Database::getInstance()->getDb()->commit();
@@ -139,38 +160,64 @@ class DirectivoAdo
         try {
             Database::getInstance()->getDb()->beginTransaction();
 
-            $fileDir = "../resources/images";
-            if(!file_exists($fileDir)){
-                mkdir($fileDir, 0777, true);
-            }else{
-                chmod($fileDir, 0777);
+            $directivo = Database::getInstance()->getDb()->prepare("SELECT Ruta FROM Directivo WHERE IdDirectivo = ?");
+            $directivo->bindParam(1, $body["IdDirectivo"]);
+            $directivo->execute();
+            if ($row = $directivo->fetchObject()) {
+                $fileName = "";
+
+                if (intval($body["valImagen"]) == 0) {
+                    $fileName  = "";
+                } else if (intval($body["valImagen"]) == 1) {
+                    $fileName  = $row->Ruta;
+                } else {
+                    $fileDir = "../resources/images";
+                    if (!file_exists($fileDir)) {
+                        mkdir($fileDir, 0777, true);
+                    } else {
+                        chmod($fileDir, 0777);
+                    }
+
+                    $remove = $fileDir . '/' . $row->Ruta;
+                    if (is_file($remove) && file_exists($remove)) {
+                        unlink($remove);
+                    }
+
+                    $bin = base64_decode($body["imagen"]);
+
+                    $date = new DateTime("now");
+                    $fileName = $date->format("Ymd") . $date->format("His") . "firma." . $body["extension"];
+
+                    file_put_contents($fileDir . "/" . $fileName,  $bin);
+                }
+
+                $comando = Database::getInstance()->getDb()->prepare("UPDATE Directivo SET 
+                FechaInicio = ?,
+                FechaFinal = ?,
+                Estado = ?,
+                Firma = ?,
+                IdTablaTipoDirectivo = ?,
+                Ruta = ?,
+                idUsuario = ?,
+                FechaUpdate = GETDATE(),
+                HoraUpdate = GETDATE()
+                WHERE IdDirectivo = ?");
+                $comando->bindParam(1, $body["FechaInicio"], PDO::PARAM_STR);
+                $comando->bindParam(2, $body["FechaFinal"], PDO::PARAM_STR);
+                $comando->bindParam(3, $body["Estado"], PDO::PARAM_STR);
+                $comando->bindParam(4, $body["Firma"], PDO::PARAM_STR);
+                $comando->bindParam(5, $body["IdTablaTipoDirectivo"], PDO::PARAM_STR);
+                $comando->bindParam(6, $fileName, PDO::PARAM_STR);
+                $comando->bindParam(7, $body["idUsuario"], PDO::PARAM_STR);
+                $comando->bindParam(8, $body["IdDirectivo"], PDO::PARAM_STR);
+                $comando->execute();
+
+                Database::getInstance()->getDb()->commit();
+                Response::sendSave("Los datos se actualizon correctamente.");
+            } else {
+                Database::getInstance()->getDb()->rollBack();
+                Response::sendClient("El id del directivo fue alterado o no cargó bien los datos, intente nuevamente.");
             }
-
-            $bin = base64_decode($body["imagen"]);
-
-            file_put_contents("../resources/images/firma." . $body["extension"],  $bin);
-
-            $comando = Database::getInstance()->getDb()->prepare("UPDATE Directivo SET 
-            FechaInicio = ?,
-            FechaFinal = ?,
-            Estado = ?,
-            Firma = ?,
-            IdTablaTipoDirectivo = ?,
-            idUsuario = ?,
-            FechaUpdate = GETDATE(),
-            HoraUpdate = GETDATE()
-            WHERE IdDirectivo = ?");
-            $comando->bindParam(1, $body["FechaInicio"], PDO::PARAM_STR);
-            $comando->bindParam(2, $body["FechaFinal"], PDO::PARAM_STR);
-            $comando->bindParam(3, $body["Estado"], PDO::PARAM_STR);
-            $comando->bindParam(4, $body["Firma"], PDO::PARAM_STR);
-            $comando->bindParam(5, $body["IdTablaTipoDirectivo"], PDO::PARAM_STR);
-            $comando->bindParam(6, $body["idUsuario"], PDO::PARAM_STR);
-            $comando->bindParam(7, $body["IdDirectivo"], PDO::PARAM_STR);
-            $comando->execute();
-
-            Database::getInstance()->getDb()->commit();
-            Response::sendSave("Los datos se actualizon correctamente.");
         } catch (Exception $ex) {
             Database::getInstance()->getDb()->rollBack();
             Response::sendError($ex->getMessage());
@@ -184,20 +231,32 @@ class DirectivoAdo
     {
         try {
             Database::getInstance()->getDb()->beginTransaction();
-
-            $cmdValidate = Database::getInstance()->getDb()->prepare("SELECT * FROM Directivo WHERE IdDirectivo = ? AND Estado = 1");
+            $cmdValidate = Database::getInstance()->getDb()->prepare("SELECT IdDirectivo FROM Directivo WHERE IdDirectivo = ? AND Estado = 1");
             $cmdValidate->bindParam(1, $body["IdDirectivo"], PDO::PARAM_INT);
             $cmdValidate->execute();
-
             if ($cmdValidate->fetch()) {
                 Database::getInstance()->getDb()->rollback();
                 Response::sendClient("No se pudo eliminar el directivo(a) por que tiene estado activo.");
             } else {
-                $cmdDelete = Database::getInstance()->getDb()->prepare("DELETE FROM Directivo WHERE IdDirectivo = ?");
-                $cmdDelete->bindParam(1, $body["IdDirectivo"], PDO::PARAM_INT);
-                $cmdDelete->execute();
-                Database::getInstance()->getDb()->commit();
-                Response::sendSave("Se eliminó correctamente el directivo(a).");
+                $cmdValidate = Database::getInstance()->getDb()->prepare("SELECT Ruta FROM Directivo WHERE IdDirectivo = ?");
+                $cmdValidate->bindParam(1, $body["IdDirectivo"], PDO::PARAM_INT);
+                $cmdValidate->execute();
+                if ($row = $cmdValidate->fetchObject()) {
+                    $fileDir = "../resources/images";
+                    $remove = $fileDir . '/' . $row->Ruta;
+                    if (is_file($remove) && file_exists($remove)) {
+                        unlink($remove);
+                    }
+
+                    $cmdDelete = Database::getInstance()->getDb()->prepare("DELETE FROM Directivo WHERE IdDirectivo = ?");
+                    $cmdDelete->bindParam(1, $body["IdDirectivo"], PDO::PARAM_INT);
+                    $cmdDelete->execute();
+                    Database::getInstance()->getDb()->commit();
+                    Response::sendSave("Se eliminó correctamente el directivo(a).");
+                } else {
+                    Database::getInstance()->getDb()->rollBack();
+                    Response::sendClient("El id del directivo fue alterado o no cargó bien los datos, intente nuevamente.");
+                }
             }
         } catch (Exception $ex) {
             Database::getInstance()->getDb()->rollBack();
