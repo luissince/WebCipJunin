@@ -1,4 +1,5 @@
 <?php
+
 namespace SysSoftIntegra\Src;
 
 class Tools
@@ -38,5 +39,23 @@ class Tools
 
         list($encrypt, $iv) = $explote;
         return openssl_decrypt($encrypt, 'AES-256-CBC', $key, 0, $iv);
+    }
+
+    public static function printErrorJson($data)
+    {
+        header('Content-Type: application/json; charset=UTF-8');
+        print json_encode($data);
+        exit();
+    }
+
+    /**
+     * @param int $month
+     *
+     * @return string
+     */
+    public static function MonthName(int $month)
+    {
+        $months =  ["Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio", "Julio", "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre", "Diciembre"];
+        return $months[$month - 1];
     }
 }

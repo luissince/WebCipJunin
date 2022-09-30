@@ -2,10 +2,17 @@
 
 use SysSoftIntegra\Src\QRImageWithLogo;
 use chillerlan\QRCode\{QRCode, QROptions};
+use SysSoftIntegra\Model\CursoAdo;
+use SysSoftIntegra\Src\Tools;
 use Mpdf\Mpdf;
 
 require __DIR__ . './../src/autoload.php';
 
+$result = CursoAdo::generarCertificado($_GET["idCurso"], $_GET["idParticipante"]);
+
+if (!is_array($result)) {
+    Tools::printErrorJson($result);
+}
 
 $data = 'https://www.youtube.com/watch?v=DLzxrzFCyOs&t=43s';
 
@@ -27,10 +34,13 @@ $options->imageTransparent = true;
 
 $qrOutputInterface = new QRImageWithLogo($options, (new QRCode($options))->getMatrix($data));
 
+$curso = $result[0];
+$decano =  $result[1];
+
 $html = '<html>
             <head>
                 <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
-                <title>Mi pdf</title>
+                <title>CERTIFICADO POR CURSO</title>
                 <style>
                     
                     *{
@@ -103,34 +113,40 @@ $html = '<html>
                         <h1 class="font-anton font-size-40 font-letter-spacing-4 margin-0">CERTIFICADO</h1>
                     </div>      
                     <div style="background-color: transparent; padding-left:160px; padding-top: 0px; padding-right:90px; ">
-                        <p class="font-size-13 margin-0" style=" text-align: justify;">El Decano del Consejo Departamental de Junín del Colegio de Ingenieros del Perú, otorga el presente certificado a:</p>
+                        <p class="font-size-13 margin-0" style=" text-align: justify;">' . $curso->Titulo . '</p>
                     </div>
                     <div style="background-color: transparent; text-align: center; padding-top: 10px; padding-bottom: 0px;">
-                        <h1 class="font-fjallaone font-size-33 font-letter-spacing-3 margin-0">FRANCISCO CYL GODIÑO POMA</h1>
+                        <h1 class="font-fjallaone font-size-33 font-letter-spacing-3 margin-0">' . $curso->Estudiante . '</h1>
                     </div>  
                     <div style="width: 100%; background-color: transparent;">
                         <div style="width: 27%; float: left; background-color: transparent; text-align: right;">
-                            <img width="160" height="160" src="' . $qrOutputInterface->dump(null, __DIR__.'/logoemail.png') . '" />
+                            <img width="160" height="160" src="' . $qrOutputInterface->dump(null, __DIR__ . '/logoemail.png') . '" />
                         </div>
 
                         <div style="width: 73%; float: left; background-color: transparent;">
-                            <p class="font-size-12" style="text-align: justify;  margin-right: 90px; margin-top: 10px;">En merito a su participación como <strong>ORGANIZADOR</strong> del evento por el día del campesino realizado por el Capitulo de Ingenieria Agrinómica del Colegio de Ingenieros del Perú - Consejo Departamental de Junín, realizado en la cuidad de Huancayo los días 24 de Junio del presente año, con una duración de 32 horas lectivas.</p>
+                            <p class="font-size-12" style="text-align: justify;  margin-right: 90px; margin-top: 10px;">' . $curso->Detalle . '</p>
                         </div>
                     </div>
                     <div style=" background-color: transparerent; padding-right:90px;">
-                        <p class="font-size-12 margin-0" style="text-align: right;">Huancayo, Julio de 2022</p>
+                        <p class="font-size-12 margin-0" style="text-align: right;">Huancayo, ' . Tools::MonthName(intval($curso->FechaMoth)) . ' de ' . $curso->FechaYear . '</p>
                     </div>
-                    <div style="width: 100%; margin-top: 70px;">
-                        <div style="width: 50%; float: left; text-align: center;">                            
-                            <span class="margin-0 border-top">ING. FRANCISCO CYL GODIÑO POMA</span>
+                    <div style="width: 100%; margin-top: 10px;">
+                        <div style="width: 50%; float: left; text-align: center;">         
+                            '.($decano->Ruta == "" ? "" : '<img width="196" height="90" style="background-color:transparent;" src="../resources/images/'.$decano->Ruta.'" /> ').'
+                               
+                            <br />               
+                            <span class="margin-0 border-top">ING. '.$decano->Decano.'</span>
                             <br/>
                             <p class="margin-0 font-size-6">DECANO DEPARTAMENTAL DEL CIP-CDJ</p>
                         </div>
 
                         <div style="width: 50%; float: left; text-align: center;">
-                            <span class="margin-0 border-top">ING. JOVINO ACOSTA MENDOZA</span>
+                            '.($curso->Ruta == "" ? "" : '<img width="196" height="90" style="background-color:transparent;" src="../resources/images/'.$curso->Ruta.'" /> ').'
+                            
+                            <br />  
+                            <span class="margin-0 border-top">ING. ' . $curso->Presidente . '</span>
                             <br/>
-                            <p class="margin-0 font-size-6">PRESIDENTE DE CAPÍTULO AGRONÓMICA</p>
+                            <p class="margin-0 font-size-6">PRESIDENTE DE CAPÍTULO '.$curso->Capitulo.'</p>
                         </div>
                     </div>
                 </div>                
@@ -138,7 +154,6 @@ $html = '<html>
         </html>';
 
 $mpdf = new Mpdf([
- 
     'margin_left' => 0,
     'margin_right' => 0,
     'margin_top' => 0,
@@ -149,9 +164,8 @@ $mpdf = new Mpdf([
     'format' => 'A4',
     'orientation' => 'L'
 ]);
-
 $mpdf->SetProtection(array('print'));
-$mpdf->SetTitle(" CIP-JUNIN");
+$mpdf->SetTitle("CERTIFICADO PARA " . $curso->Estudiante . "");
 $mpdf->SetAuthor("Cip Junin");
 // $mpdf->SetWatermarkText(("ANULADO"));   // anulada
 $mpdf->showWatermarkText = true;
@@ -161,4 +175,4 @@ $mpdf->SetDisplayMode('fullpage');
 $mpdf->WriteHTML($html);
 
 // Output a PDF file directly to the browser
-$mpdf->Output("CERT HABILIDAD-CIP-JUNIN.pdf", 'I');
+$mpdf->Output("CERTIFICADO PARA " . $curso->Estudiante . ".pdf", 'I');

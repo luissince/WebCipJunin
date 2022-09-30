@@ -485,7 +485,7 @@ if (!isset($_SESSION['IdUsuario'])) {
                         });
 
                         tools.ModalAlertSuccess("Inscripción", result.data, () => {
-
+                            loadInit();
                         });
                     } catch (error) {
                         if (error.response) {
@@ -498,7 +498,7 @@ if (!isset($_SESSION['IdUsuario'])) {
             }
 
             async function onEventCertificado(idCurso, idParticipante) {
-                window.open("../app/sunat/pdfCertCurso.php?idCurso=" + idCurso, "_blank");
+                window.open("../app/sunat/pdfCertCurso.php?idCurso=" + idCurso + "&idParticipante=" + idParticipante, "_blank");
             }
 
             async function onEventDelete(idCurso, idParticipante) {
@@ -507,7 +507,7 @@ if (!isset($_SESSION['IdUsuario'])) {
                         try {
                             tools.ModalAlertInfo("Inscripción", "Procesando petición...");
 
-                            const reulst = await axios.get("../app/web/InscripcionWeb.php", {
+                            const result = await axios.get("../app/web/InscripcionWeb.php", {
                                 params: {
                                     "type": "delete",
                                     "idCurso": idCurso,
@@ -519,6 +519,7 @@ if (!isset($_SESSION['IdUsuario'])) {
                                 loadInit();
                             });
                         } catch (error) {
+                            console.log(error)
                             if (error.response) {
                                 tools.ModalAlertWarning("Inscripción", error.response.data);
                             } else {

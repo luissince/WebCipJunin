@@ -22,11 +22,9 @@ Route::get("alldata", function ($body) {
     InscripcionController::getAll($body);
 });
 
-
 Route::post("insert", function ($body) {
     InscripcionController::insert($body);
 });
-
 
 Route::get("delete", function ($body) {
     InscripcionController::delete($body);

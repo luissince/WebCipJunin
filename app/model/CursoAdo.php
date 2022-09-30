@@ -169,7 +169,7 @@ class CursoAdo
         } catch (Exception $ex) {
             Database::getInstance()->getDb()->rollback();
             Response::sendError($ex->getMessage());
-        }catch (PDOException $ex) {
+        } catch (PDOException $ex) {
             Database::getInstance()->getDb()->rollback();
             Response::sendError($ex->getMessage());
         }
@@ -211,7 +211,7 @@ class CursoAdo
             Response::sendSuccess($result);
         } catch (Exception $ex) {
             Response::sendError($ex->getMessage());
-        }catch (PDOException $ex) {
+        } catch (PDOException $ex) {
             Response::sendError($ex->getMessage());
         }
     }
@@ -231,12 +231,17 @@ class CursoAdo
             Direccion = UPPER(?), 
             FechaInicio = ?, 
             HoraInicio = ?, 
+            FechaFin = ?, 
+            HoraFin = ?,
+            FechaEmision = ?,
             PrecioCurso = ?, 
             PrecioCertificado = ?, 
             Celular = ?, 
             Correo = ?, 
             Descripcion = UPPER(?), 
             Estado = ?, 
+            Titulo = ?,
+            Detalle = ?,
             idUsuario = ?,
             UFecha = GETDATE(), 
             UHora = GETDATE()
@@ -253,15 +258,20 @@ class CursoAdo
 
             $comandoUpdate->bindParam(9, $curso["FechaInicio"], PDO::PARAM_STR);
             $comandoUpdate->bindParam(10, $curso["HoraInicio"], PDO::PARAM_STR);
+            $comandoUpdate->bindParam(11, $curso["FechaFin"], PDO::PARAM_STR);
+            $comandoUpdate->bindParam(12, $curso["HoraFin"], PDO::PARAM_STR);
+            $comandoUpdate->bindParam(13, $curso["FechaEmision"], PDO::PARAM_STR);
 
-            $comandoUpdate->bindParam(11, $curso["PrecioCurso"], PDO::PARAM_STR);
-            $comandoUpdate->bindParam(12, $curso["PrecioCertificado"], PDO::PARAM_STR);
-            $comandoUpdate->bindParam(13, $curso["Celular"], PDO::PARAM_STR);
-            $comandoUpdate->bindParam(14, $curso["Correo"], PDO::PARAM_STR);
-            $comandoUpdate->bindParam(15, $curso["Descripcion"], PDO::PARAM_STR);
-            $comandoUpdate->bindParam(16, $curso["Estado"], PDO::PARAM_BOOL);
-            $comandoUpdate->bindParam(17, $curso["idUsuario"], PDO::PARAM_INT);
-            $comandoUpdate->bindParam(18, $curso["idCurso"], PDO::PARAM_INT);
+            $comandoUpdate->bindParam(14, $curso["PrecioCurso"], PDO::PARAM_STR);
+            $comandoUpdate->bindParam(15, $curso["PrecioCertificado"], PDO::PARAM_STR);
+            $comandoUpdate->bindParam(16, $curso["Celular"], PDO::PARAM_STR);
+            $comandoUpdate->bindParam(17, $curso["Correo"], PDO::PARAM_STR);
+            $comandoUpdate->bindParam(18, $curso["Descripcion"], PDO::PARAM_STR);
+            $comandoUpdate->bindParam(19, $curso["Estado"], PDO::PARAM_BOOL);
+            $comandoUpdate->bindParam(20, $curso["Titulo"], PDO::PARAM_BOOL);
+            $comandoUpdate->bindParam(21, $curso["Detalle"], PDO::PARAM_BOOL);
+            $comandoUpdate->bindParam(22, $curso["idUsuario"], PDO::PARAM_INT);
+            $comandoUpdate->bindParam(23, $curso["idCurso"], PDO::PARAM_INT);
 
             $comandoUpdate->execute();
             Database::getInstance()->getDb()->commit();
@@ -301,6 +311,56 @@ class CursoAdo
         } catch (Exception $ex) {
             Database::getInstance()->getDb()->rollback();
             Response::sendError($ex->getMessage());
+        }
+    }
+
+    /**
+     * @param string $idCurso
+     * @param string $idParticipante
+     *
+     * @return array|string
+     * @throws \Exception
+     */
+    public static function generarCertificado(string $idCurso, string $idParticipante)
+    {
+        try {
+            $cmdCurso = Database::getInstance()->getDb()->prepare("SELECT
+            c.idCurso,
+            c.Titulo,
+            c.Detalle,
+            CONCAT(es.Nombres,' ',es.Apellidos) AS Estudiante,
+            CONCAT(org.Nombres,' ',org.Apellidos) AS Presidente,
+            pe.Ruta,
+            ca.Capitulo,
+            YEAR(c.FechaEmision) AS FechaYear,
+            MONTH(c.FechaEmision) AS FechaMoth
+            FROM 
+            Curso AS c 
+            INNER JOIN Capitulo AS ca ON c.idCapitulo = ca.idCapitulo
+            INNER JOIN Presidente AS pe ON ca.idCapitulo = pe.idCapitulo
+            INNER JOIN Persona AS org ON org.IdDNI = pe.IdDNI
+            INNER JOIN Inscripcion AS ic ON ic.idCurso = c.idCurso
+            INNER JOIN Persona AS es ON es.IdDNI = ic.idParticipante
+            WHERE c.idCurso = ? AND ic.idParticipante = ?");
+            $cmdCurso->bindParam(1, $idCurso, PDO::PARAM_STR);
+            $cmdCurso->bindParam(2, $idParticipante, PDO::PARAM_STR);
+            $cmdCurso->execute();
+
+            $cmdDecano = Database::getInstance()->getDb()->prepare("SELECT 
+            d.IdDirectivo,
+            CONCAT(p.Nombres,' ',p.Apellidos) AS Decano,
+            d.Ruta
+            FROM Directivo AS d
+            INNER JOIN Persona AS p on p.idDNI = d.IdDNI
+            WHERE d.IdTablaTipoDirectivo = 1 AND d.Estado = 1");
+            $cmdDecano->execute();
+
+            return [
+                $cmdCurso->fetchObject(),
+                $cmdDecano->fetchObject()
+            ];
+        } catch (Exception $ex) {
+            return $ex->getMessage();
         }
     }
 }
