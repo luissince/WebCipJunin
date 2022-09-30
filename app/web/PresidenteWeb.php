@@ -35,7 +35,6 @@ Route::post("insert", function($body){
 });
 
 Route::post("update", function($body){
-    // print json_encode($body);
     PresidenteController::update($body);
 });
 

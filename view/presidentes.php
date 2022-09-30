@@ -528,6 +528,7 @@ if (!isset($_SESSION['IdUsuario'])) {
                     $("#txtFechaInicio").val(result.data.FechaInicio);
                     $("#txtFechaFinal").val(result.data.FechaFinal);
                     $("#cbCapitulo").val(result.data.idCapitulo);
+                    $("#cbEstado").prop("checked", result.data.Estado === "1" ? true : false);
                     $("#titleModal").html('<i class="fa fa-plus"></i> Editar Persona </span>');
                 } catch (error) {
                     $("#mdPresidente").modal("hide");

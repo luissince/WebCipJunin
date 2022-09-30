@@ -181,12 +181,14 @@ class PresidenteAdo
                     $bin = base64_decode($body["imagen"]);
 
                     $date = new DateTime("now");
-                    $fileName = $date->format("Ymd") . $date->format("His") . "directivo." . $body["extension"];
+                    $fileName = $date->format("Ymd") . $date->format("His") . "presidente." . $body["extension"];
 
                     file_put_contents($fileDir . "/" . $fileName,  $bin);
                 }
 
-                $comando = Database::getInstance()->getDb()->prepare("UPDATE Directivo SET 
+                $comando = Database::getInstance()->getDb()->prepare("UPDATE Presidente SET 
+                FechaInicio = ?,
+                FechaFinal = ?,
                 idCapitulo = ?,
                 Estado = ?,
                 Ruta = ?,
@@ -194,11 +196,13 @@ class PresidenteAdo
                 FechaUpdate = GETDATE(),
                 HoraUpdate = GETDATE()
                 WHERE IdPresidente = ?");
-                $comando->bindParam(1, $body["IdCapitulo"], PDO::PARAM_STR);
-                $comando->bindParam(2, $body["Estado"], PDO::PARAM_STR);
-                $comando->bindParam(3, $fileName, PDO::PARAM_STR);
-                $comando->bindParam(4, $body["idUsuario"], PDO::PARAM_STR);
-                $comando->bindParam(5, $body["IdPresidente"], PDO::PARAM_STR);
+                $comando->bindParam(1, $body["FechaInicio"], PDO::PARAM_STR);
+                $comando->bindParam(2, $body["FechaFinal"], PDO::PARAM_STR);
+                $comando->bindParam(3, $body["IdCapitulo"], PDO::PARAM_STR);
+                $comando->bindParam(4, $body["Estado"], PDO::PARAM_STR);
+                $comando->bindParam(5, $fileName, PDO::PARAM_STR);
+                $comando->bindParam(6, $body["idUsuario"], PDO::PARAM_STR);
+                $comando->bindParam(7, $body["IdPresidente"], PDO::PARAM_STR);
                 $comando->execute();
 
                 Database::getInstance()->getDb()->commit();
