@@ -6,4 +6,9 @@ app/sunat/codbar.png
 app/sunat/codbarcera.png
 app/resources/images
 
+app/resources/*.12
+app/resources/*.pfx
+app/resources/*.pem
+app/resources/*.pem
+
 .env
