@@ -34,7 +34,7 @@ if (!isset($_SESSION['IdUsuario'])) {
                                 </button>
                                 <h4 class="modal-title" id="titleModal">
                                     <i class="fa fa-book">
-                                    </i> Nuevo Curso 
+                                    </i> Nuevo Curso
                                 </h4>
                             </div>
                             <div class="modal-body">
@@ -83,14 +83,14 @@ if (!isset($_SESSION['IdUsuario'])) {
                                     <div class="col-md-6">
                                         <div class="form-group">
                                             <label class="control-label">Capitulo<i class="fa fa-fw fa-asterisk text-danger"></i></label>
-                                            <select id="cbxCapitulo" class="form-control">
+                                            <select id="cbCapitulo" class="form-control">
                                             </select>
                                         </div>
                                     </div>
                                     <div class="col-md-6">
                                         <div class="form-group">
                                             <label class="control-label">Modalidad</label>
-                                            <select id="cbxTipo" class="form-control">
+                                            <select id="cbTipo" class="form-control">
                                                 <option value="1">Presencial</option>
                                                 <option value="2">Virtual</option>
                                             </select>
@@ -125,7 +125,31 @@ if (!isset($_SESSION['IdUsuario'])) {
                                 <div class="row">
                                     <div class="col-md-6">
                                         <div class="form-group">
-                                            <label class="control-label">Precio curso <i class="fa fa-fw fa-asterisk text-danger"></i></label>
+                                            <label class="control-label">Fecha Final</label>
+                                            <input id="txtFechaFin" type="date" class="form-control" required="">
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            <label class="control-label">Hora Final</label>
+                                            <input id="txtHoraFin" type="time" class="form-control" step="1" required="">
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <div class="form-group">
+                                            <label class="control-label">Fecha Emisión</label>
+                                            <input id="txtFechaEmision" type="date" class="form-control" required="">
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            <label class="control-label">Precio curso</i></label>
                                             <input id="txtPrecio" type="text" class="form-control" placeholder="Ingrese el precio del curso" required="">
                                         </div>
                                     </div>
@@ -136,6 +160,7 @@ if (!isset($_SESSION['IdUsuario'])) {
                                         </div>
                                     </div>
                                 </div>
+
                                 <div class="row">
                                     <div class="col-md-6">
                                         <div class="form-group">
@@ -154,8 +179,26 @@ if (!isset($_SESSION['IdUsuario'])) {
                                 <div class="row">
                                     <div class="col-md-12">
                                         <div class="form-group">
-                                            <label class="control-label">Descripción <i class="fa fa-fw fa-asterisk text-danger"></i></label>
+                                            <label class="control-label">Descripción</label>
                                             <textarea id="txtDescripcion" class="form-control" placeholder="Ingrese alguna descripción" required=""></textarea>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <div class="form-group">
+                                            <label class="control-label">Título Reporte</label>
+                                            <input id="txtTitulo" type="text" class="form-control" placeholder="Ingrese el número de celular" required="">
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="row">
+                                    <div class="col-md-12">
+                                        <div class="form-group">
+                                            <label class="control-label">Detalle Reporte</label>
+                                            <textarea id="txtDetalle" class="form-control" placeholder="Ingrese alguna descripción" required=""></textarea>
                                         </div>
                                     </div>
                                 </div>
@@ -306,6 +349,13 @@ if (!isset($_SESSION['IdUsuario'])) {
             $(document).ready(function() {
 
                 loadInit();
+                loadComponents();
+                loadModalCurso();
+            });
+
+            //==================TABLE FUNCIONES =========================
+
+            function loadComponents() {
 
                 $("#btnIzquierda").click(function() {
                     if (!state) {
@@ -342,18 +392,6 @@ if (!isset($_SESSION['IdUsuario'])) {
                     }
                 });
 
-                $("#btnNuevo").click(function() {
-                    modalCurso('');
-                });
-
-                $("#mdCurso").on('shown.bs.modal', function() {
-                    $("#txtCurso").focus();
-                });
-
-                $("#mdCurso").on('hidden.bs.modal', function() {
-                    clearModal();
-                });
-
                 $("#btnSearch").click(function() {
                     if ($("#buscar").val().trim() === '') {
                         tools.AlertWarning("Curso", "El campo de busqueda esta vacio.");
@@ -364,55 +402,7 @@ if (!isset($_SESSION['IdUsuario'])) {
                         opcion = 1;
                     }
                 });
-
-                $("#btnAceptar").click(function() {
-                    onSave();
-                });
-
-                $("#txtCorrelativo").keypress(function(event) {
-                    var key = window.Event ? event.which : event.keyCode;
-                    var c = String.fromCharCode(key);
-                    if ((c < '0' || c > '9') && (c != '\b')) {
-                        event.preventDefault();
-                    }
-                });
-
-                $("#txtPrecio").keypress(function(event) {
-                    var key = window.Event ? event.which : event.keyCode;
-                    var c = String.fromCharCode(key);
-                    if ((c < '0' || c > '9') && (c != '\b') && (c != '.')) {
-                        event.preventDefault();
-                    }
-                    if (c == '.' && $("#txtPrecio").val().includes(".")) {
-                        event.preventDefault();
-                    }
-                });
-
-                $("#txtPrecioCertificado").keypress(function(event) {
-                    var key = window.Event ? event.which : event.keyCode;
-                    var c = String.fromCharCode(key);
-                    if ((c < '0' || c > '9') && (c != '\b') && (c != '.')) {
-                        event.preventDefault();
-                    }
-                    if (c == '.' && $("#txtPrecioCertificado").val().includes(".")) {
-                        event.preventDefault();
-                    }
-                });
-
-                $("#txtCelular").keypress(function(event) {
-                    var key = window.Event ? event.which : event.keyCode;
-                    var c = String.fromCharCode(key);
-                    if ((c < '0' || c > '9') && (c != '\b') && (c != '-') && (c != '+')) {
-                        event.preventDefault();
-                    }
-                    if (c == '-' && $("#txtCelular").val().includes("-")) {
-                        event.preventDefault();
-                    }
-                    if (c == '+' && $("#txtCelular").val().includes("+")) {
-                        event.preventDefault();
-                    }
-                });
-            });
+            }
 
             function loadInit() {
                 if (!state) {
@@ -450,9 +440,9 @@ if (!isset($_SESSION['IdUsuario'])) {
                         for (let curso of result.data.cursos) {
 
                             let btnUpdate =
-                                `<button class="btn btn-warning btn-xs" title="Editar" onclick="modalCurso(${curso.idCurso} )"><i class="fa fa-edit" style="font-size:25px;"></i></button>`;
+                                `<button class="btn btn-warning btn-xs" title="Editar" onclick="openUpdateModalCurso(${curso.idCurso} )"><i class="fa fa-edit" style="font-size:25px;"></i></button>`;
                             let btnDelete =
-                                `<button class="btn btn-danger btn-xs" title="Eliminar" onclick="modalDelete(${curso.idCurso})"><i class="fa fa-trash" style="font-size:25px;"></i></button>`
+                                `<button class="btn btn-danger btn-xs" title="Eliminar" onclick="delteModalCurso(${curso.idCurso})"><i class="fa fa-trash" style="font-size:25px;"></i></button>`
                             let btnInscripcion = '<button class="btn btn-success btn-xs" title="Inscribir" onclick="linkInscripcion(\'' + curso.idCurso + '\',\'' +
                                 curso.Nombre + '\',\'' + curso.Capitulo + '\',\'' + curso.PrecioCurso + '\',\'' + curso.PrecioCertificado + '\',\'' + curso.FechaInicio + '\',\'' + curso.HoraInicio + '\')"><i class="fa fa-id-card" style="font-size:25px;"></i></button>'
 
@@ -499,36 +489,124 @@ if (!isset($_SESSION['IdUsuario'])) {
                 }
             }
 
-            function modalCurso(idCurso) {
-                $("#titleModal").html('');
-                if (idCurso === '') {
-                    loadCapitulos();
-                    $("#titleModal").html('<i class="fa fa-book"></i> Nuevo Curso');
-                    $("#txtFechaInicio").val(tools.getCurrentDate());
-                    $("#txtHoraInicio").val(tools.getCurrentTime());
+            this.linkInscripcion = (idCurso) => {
+                location.href = `./inscripcion.php?idCurso=${idCurso}`;
+            }
+            //==================TABLE FUNCIONES =========================
 
-                } else {
-                    $("#titleModal").html('<i class="fa fa-book"></i> Editar Curso');
-                    updateData(idCurso);
-                }
+            //==================MODAL FUNCIONES =========================
 
-                $("#mdCurso").modal("show");
+            function loadModalCurso() {
+                $("#btnNuevo").click(function() {
+                    openAddModalCurso();
+                });
 
+                $("#mdCurso").on('shown.bs.modal', function() {
+                    $("#txtCurso").focus();
+                });
+
+                $("#mdCurso").on('hidden.bs.modal', function() {
+                    clearModalCurso();
+                });
+
+                $("#btnAceptar").click(function() {
+                    crudModalCurso();
+                });
+
+                $("#btnAceptar").keypress(function(event) {
+                    if (event.keyCode === 13) {
+                        crudModalCurso();
+                        event.preventDefault();
+                    }
+                });
+
+                $("#txtCorrelativo").keypress(function(event) {
+                    var key = window.Event ? event.which : event.keyCode;
+                    var c = String.fromCharCode(key);
+                    if ((c < '0' || c > '9') && (c != '\b')) {
+                        event.preventDefault();
+                    }
+                });
+
+                $("#txtPrecio").keypress(function(event) {
+                    var key = window.Event ? event.which : event.keyCode;
+                    var c = String.fromCharCode(key);
+                    if ((c < '0' || c > '9') && (c != '\b') && (c != '.')) {
+                        event.preventDefault();
+                    }
+                    if (c == '.' && $("#txtPrecio").val().includes(".")) {
+                        event.preventDefault();
+                    }
+                });
+
+                $("#txtPrecioCertificado").keypress(function(event) {
+                    var key = window.Event ? event.which : event.keyCode;
+                    var c = String.fromCharCode(key);
+                    if ((c < '0' || c > '9') && (c != '\b') && (c != '.')) {
+                        event.preventDefault();
+                    }
+                    if (c == '.' && $("#txtPrecioCertificado").val().includes(".")) {
+                        event.preventDefault();
+                    }
+                });
+
+                $("#txtCelular").keypress(function(event) {
+                    var key = window.Event ? event.which : event.keyCode;
+                    var c = String.fromCharCode(key);
+                    if ((c < '0' || c > '9') && (c != '\b') && (c != '-') && (c != '+')) {
+                        event.preventDefault();
+                    }
+                    if (c == '-' && $("#txtCelular").val().includes("-")) {
+                        event.preventDefault();
+                    }
+                    if (c == '+' && $("#txtCelular").val().includes("+")) {
+                        event.preventDefault();
+                    }
+                });
+
+                $("#txtFechaInicio").val(tools.getCurrentDate());
+                $("#txtHoraInicio").val(tools.getCurrentTime());
+                $("#txtFechaFin").val(tools.getCurrentDate());
+                $("#txtHoraFin").val(tools.getCurrentTime());
+                $("#txtFechaEmision").val(tools.getCurrentDate());
             }
 
-            async function updateData(id) {
-                try {
-                    idCurso = '';
+            //==================MODAL FUNCIONES =========================
 
+
+            async function openAddModalCurso(idCurso) {
+                $("#titleModal").html('<i class="fa fa-book"></i> Nuevo Curso');
+                $("#mdCurso").modal("show");
+
+                try {
                     const capitulos = await axios.get("../app/web/CapituloWeb.php", {
                         params: {
                             "type": "allCapitulos"
                         }
                     });
 
-                    $("#cbxCapitulo").append('<option value="">- Seleccione un capítulo- </option>')
+                    $("#cbCapitulo").append('<option value="">- Seleccione un capítulo -</option>')
                     for (let capitulo of capitulos.data) {
-                        $("#cbxCapitulo").append('<option value=' + capitulo.idCapitulo + '> ' + capitulo.Capitulo + '</option>')
+                        $("#cbCapitulo").append('<option value=' + capitulo.idCapitulo + '> ' + capitulo.Capitulo + '</option>')
+                    }
+                } catch (error) {
+                    tools.AlertError("Error", "Se genero un problema, comuníquese con el administrador del sistema.");
+                }
+            }
+
+            async function openUpdateModalCurso(id) {
+                $("#titleModal").html('<i class="fa fa-book"></i> Editar Curso');
+                $("#mdCurso").modal("show");
+                try {
+                    const capitulos = await axios.get("../app/web/CapituloWeb.php", {
+                        params: {
+                            "type": "allCapitulos"
+                        }
+                    });
+
+                    $("#cbCapitulo").append('<option value="">- Seleccione un capítulo -</option>')
+                    for (let capitulo of capitulos.data) {
+                        $("#cbCapitulo").append('<option value=' + capitulo.idCapitulo + '> ' + capitulo.Capitulo + '</option>')
                     }
 
                     const curso = await axios.get("../app/web/CursoWeb.php", {
@@ -546,18 +624,24 @@ if (!isset($_SESSION['IdUsuario'])) {
                     $("#txtCorrelativo").val(result.Correlativo);
                     $("#txtInstructor").val(result.Instructor);
                     $("#txtOrganizador").val(result.Organizador);
-                    $("#cbxCapitulo").val(result.idCapitulo);
-                    $("#cbxTipo").val(result.Modalidad);
+                    $("#cbCapitulo").val(result.idCapitulo);
+                    $("#cbTipo").val(result.Modalidad);
                     $("#txtDireccion").val(result.Direccion);
 
                     $("#txtFechaInicio").val(result.FechaInicio);
                     $("#txtHoraInicio").val(result.HoraInicio);
+                    $("#txtFechaFin").val(result.FechaFin);
+                    $("#txtHoraFin").val(result.HoraFin);
+                    $("#txtFechaEmision").val(result.FechaEmision);
+
                     $("#txtPrecio").val(result.PrecioCurso);
                     $("#txtPrecioCertificado").val(result.PrecioCertificado);
                     $("#txtCelular").val(result.Celular);
                     $("#txtCorreo").val(result.Correo);
                     $("#txtDescripcion").val(result.Descripcion);
                     $("#cbEstado").attr("checked", result.Estado == 1 ? true : false);
+                    $("#txtTitulo").val(result.Titulo);
+                    $("#txtDetalle").val(result.Detalle);
 
                     tools.AlertInfo("Curso", "Se cargo correctamente los datos.");
                 } catch (error) {
@@ -565,7 +649,7 @@ if (!isset($_SESSION['IdUsuario'])) {
                 }
             }
 
-            async function onSave() {
+            async function crudModalCurso() {
                 if ($("#txtCurso").val() === '') {
                     tools.AlertWarning('Curso', "Ingrese el nombre del curso.");
                     $("#txtCurso").focus();
@@ -596,15 +680,9 @@ if (!isset($_SESSION['IdUsuario'])) {
                     return;
                 }
 
-                if ($("#cbxCapitulo").val() === '') {
+                if ($("#cbCapitulo").val() === '') {
                     tools.AlertWarning('Curso', "Seleccione el capítulo.");
-                    $("#cbxCapitulo").focus();
-                    return;
-                }
-
-                if ($("#txtPrecio").val() === '') {
-                    tools.AlertWarning('Curso', "Ingrese el precio del curso.");
-                    $("#txtPrecio").focus();
+                    $("#cbCapitulo").focus();
                     return;
                 }
 
@@ -622,12 +700,6 @@ if (!isset($_SESSION['IdUsuario'])) {
                     }
                 }
 
-                if ($("#txtDescripcion").val() === '') {
-                    tools.AlertWarning('Curso', "Ingrese alguna descripción.");
-                    $("#txtDescripcion").focus();
-                    return;
-                }
-
                 try {
                     if (idCurso === '') {
                         $("#mdCurso").modal("hide");
@@ -641,24 +713,28 @@ if (!isset($_SESSION['IdUsuario'])) {
                             "Correlativo": $("#txtCorrelativo").val().trim(),
                             "Instructor": $("#txtInstructor").val().trim(),
                             "Organizador": $("#txtOrganizador").val().trim(),
-                            "idCapitulo": $("#cbxCapitulo").val(),
-                            "Modalidad": $("#cbxTipo").val().trim(),
-                            "Direccion": $("#cbxTipo").val() === '1' ? $("#txtDireccion").val().trim() : '',
+                            "idCapitulo": $("#cbCapitulo").val(),
+                            "Modalidad": $("#cbTipo").val().trim(),
+                            "Direccion": $("#cbTipo").val() === '1' ? $("#txtDireccion").val().trim() : '',
 
                             "FechaInicio": $("#txtFechaInicio").val(),
                             "HoraInicio": $("#txtHoraInicio").val(),
-                            "PrecioCurso": $("#txtPrecio").val().trim(),
+                            "FechaFin": $("#txtFechaFin").val(),
+                            "HoraFin": $("#txtHoraFin").val(),
+                            "FechaEmision": $("#txtFechaEmision").val(),
+                            "PrecioCurso": $("#txtPrecio").val().trim() === '' ? 0 : $("#txtPrecio").val().trim(),
                             "PrecioCertificado": $("#txtPrecioCertificado").val().trim() === '' ? 0 : $("#txtPrecioCertificado").val().trim(),
                             "Celular": $("#txtCelular").val().trim(),
                             "Correo": $("#txtCorreo").val().trim(),
                             "Descripcion": $("#txtDescripcion").val().trim(),
+                            "Titulo": $("#txtTitulo").val().trim(),
+                            "Detalle": $("#txtDetalle").val().trim(),
                             "Estado": $('#cbEstado').is(':checked'),
                             "idUsuario": idUsuario
                         });
 
                         tools.ModalAlertSuccess("Curso", result.data, () => {
                             loadInit();
-                            clearModal();
                         });
                     } else {
 
@@ -673,17 +749,22 @@ if (!isset($_SESSION['IdUsuario'])) {
                             "Correlativo": $("#txtCorrelativo").val().trim(),
                             "Instructor": $("#txtInstructor").val(),
                             "Organizador": $("#txtOrganizador").val(),
-                            "idCapitulo": $("#cbxCapitulo").val(),
-                            "Modalidad": $("#cbxTipo").val(),
-                            "Direccion": $("#cbxTipo").val() === '1' ? $("#txtDireccion").val() : '',
+                            "idCapitulo": $("#cbCapitulo").val(),
+                            "Modalidad": $("#cbTipo").val(),
+                            "Direccion": $("#cbTipo").val() === '1' ? $("#txtDireccion").val() : '',
 
                             "FechaInicio": $("#txtFechaInicio").val(),
                             "HoraInicio": $("#txtHoraInicio").val(),
-                            "PrecioCurso": $("#txtPrecio").val(),
+                            "FechaFin": $("#txtFechaFin").val(),
+                            "HoraFin": $("#txtHoraFin").val(),
+                            "FechaEmision": $("#txtFechaEmision").val(),
+                            "PrecioCurso": $("#txtPrecio").val() === '' ? 0 : $("#txtPrecio").val(),
                             "PrecioCertificado": $("#txtPrecioCertificado").val() === '' ? 0 : $("#txtPrecioCertificado").val(),
                             "Celular": $("#txtCelular").val(),
                             "Correo": $("#txtCorreo").val(),
                             "Descripcion": $("#txtDescripcion").val(),
+                            "Titulo": $("#txtTitulo").val().trim(),
+                            "Detalle": $("#txtDetalle").val().trim(),
                             "Estado": $('#cbEstado').is(':checked'),
                             "idUsuario": idUsuario,
 
@@ -692,7 +773,6 @@ if (!isset($_SESSION['IdUsuario'])) {
 
                         tools.ModalAlertSuccess("Curso", result.data, () => {
                             loadInit();
-                            clearModal();
                         });
                     }
                 } catch (error) {
@@ -704,7 +784,7 @@ if (!isset($_SESSION['IdUsuario'])) {
                 }
             }
 
-            function modalDelete(id) {
+            function delteModalCurso(id) {
                 tools.ModalDialog("Curso", "¿Está seguro de eliminar el curso?", async function(value) {
                     if (value) {
                         try {
@@ -729,49 +809,34 @@ if (!isset($_SESSION['IdUsuario'])) {
                 });
             }
 
-            async function loadCapitulos() {
-                try {
-                    const capitulos = await axios.get("../app/web/CapituloWeb.php", {
-                        params: {
-                            "type": "allCapitulos"
-                        }
-                    });
-
-                    $("#cbxCapitulo").append('<option value="">- Seleccione un capítulo- </option>')
-                    for (let capitulo of capitulos.data) {
-                        $("#cbxCapitulo").append('<option value=' + capitulo.idCapitulo + '> ' + capitulo.Capitulo + '</option>')
-                    }
-                } catch (error) {
-                    tools.AlertError("Error", "Se genero un problema, comuníquese con el administrador del sistema.");
-                }
-            }
-
-            function clearModal() {
+            function clearModalCurso() {
                 $("#txtCurso").val('');
                 $("#txtSerie").val('');
                 $("#txtCorrelativo").val('');
                 $("#txtInstructor").val('');
                 $("#txtOrganizador").val('');
-                $("#cbxCapitulo").val('');
-                $("#cbxTipo").val('1');
+                $("#cbCapitulo").val('');
+                $("#cbTipo").val('1');
 
                 $("#txtDireccion").val('');
 
                 $("#txtFechaInicio").val(tools.getCurrentDate());
                 $("#txtHoraInicio").val(tools.getCurrentTime());
+                $("#txtFechaFin").val(tools.getCurrentDate());
+                $("#txtHoraFin").val(tools.getCurrentTime());
+                $("#txtFechaEmision").val(tools.getCurrentDate());
+
                 $("#txtPrecio").val('');
                 $("#txtPrecioCertificado").val('');
                 $("#txtCelular").val('');
                 $("#txtCorreo").val('');
                 $("#txtDescripcion").val('');
+                $("#txtTitulo").val('');
+                $("#txtDetalle").val('');
                 $("#cbEstado").attr("checked", true);
                 idCurso = '';
 
-                $("#cbxCapitulo").empty();
-            }
-
-            this.linkInscripcion = (idCurso) => {
-                location.href = `./inscripcion.php?idCurso=${idCurso}`;
+                $("#cbCapitulo").empty();
             }
         </script>
     </body>

@@ -6,6 +6,7 @@ use PDO;
 use SysSoftIntegra\DataBase\Database;
 use SysSoftIntegra\Src\Response;
 use Exception;
+use PDOException;
 
 class CursoAdo
 {
@@ -120,16 +121,23 @@ class CursoAdo
             Direccion,
             FechaInicio, 
             HoraInicio,
+            FechaFin,
+            HoraFin,
+            FechaEmision,
             PrecioCurso,
             PrecioCertificado,
             Celular, 
             Correo,
             Descripcion,
             Estado,
+            Titulo,
+            Detalle,
             Fecha,
             Hora,
+            UFecha,
+            UHora,
             idUsuario) 
-            VALUES (UPPER(?), ?, ?,UPPER(?), UPPER(?), ?,?, UPPER(?), ?,?,?,?,?,?,UPPER(?),?,GETDATE(),GETDATE(),?)");
+            VALUES (UPPER(?),?,?,UPPER(?),UPPER(?),?,?, UPPER(?), ?,?,?,?,?, ?,?,?,?,UPPER(?),?,?,?,GETDATE(),GETDATE(),GETDATE(),GETDATE(),?)");
             $comandoInsert->bindParam(1, $curso["Nombre"], PDO::PARAM_STR);
             $comandoInsert->bindParam(2, $curso["Serie"], PDO::PARAM_STR);
             $comandoInsert->bindParam(3, $curso["Correlativo"], PDO::PARAM_STR);
@@ -141,19 +149,27 @@ class CursoAdo
 
             $comandoInsert->bindParam(9, $curso["FechaInicio"], PDO::PARAM_STR);
             $comandoInsert->bindParam(10, $curso["HoraInicio"], PDO::PARAM_STR);
+            $comandoInsert->bindParam(11, $curso["FechaFin"], PDO::PARAM_STR);
+            $comandoInsert->bindParam(12, $curso["HoraFin"], PDO::PARAM_STR);
+            $comandoInsert->bindParam(13, $curso["FechaEmision"], PDO::PARAM_STR);
 
-            $comandoInsert->bindParam(11, $curso["PrecioCurso"], PDO::PARAM_STR);
-            $comandoInsert->bindParam(12, $curso["PrecioCertificado"], PDO::PARAM_STR);
-            $comandoInsert->bindParam(13, $curso["Celular"], PDO::PARAM_STR);
-            $comandoInsert->bindParam(14, $curso["Correo"], PDO::PARAM_STR);
-            $comandoInsert->bindParam(15, $curso["Descripcion"], PDO::PARAM_STR);
-            $comandoInsert->bindParam(16, $curso["Estado"], PDO::PARAM_BOOL);
-            $comandoInsert->bindParam(17, $curso["idUsuario"], PDO::PARAM_INT);
+            $comandoInsert->bindParam(14, $curso["PrecioCurso"], PDO::PARAM_STR);
+            $comandoInsert->bindParam(15, $curso["PrecioCertificado"], PDO::PARAM_STR);
+            $comandoInsert->bindParam(16, $curso["Celular"], PDO::PARAM_STR);
+            $comandoInsert->bindParam(17, $curso["Correo"], PDO::PARAM_STR);
+            $comandoInsert->bindParam(18, $curso["Descripcion"], PDO::PARAM_STR);
+            $comandoInsert->bindParam(19, $curso["Estado"], PDO::PARAM_BOOL);
+            $comandoInsert->bindParam(20, $curso["Titulo"], PDO::PARAM_STR);
+            $comandoInsert->bindParam(21, $curso["Detalle"], PDO::PARAM_STR);
+            $comandoInsert->bindParam(22, $curso["idUsuario"], PDO::PARAM_INT);
 
             $comandoInsert->execute();
             Database::getInstance()->getDb()->commit();
             Response::sendSave("Curso registrado correctamente.");
         } catch (Exception $ex) {
+            Database::getInstance()->getDb()->rollback();
+            Response::sendError($ex->getMessage());
+        }catch (PDOException $ex) {
             Database::getInstance()->getDb()->rollback();
             Response::sendError($ex->getMessage());
         }
@@ -175,12 +191,17 @@ class CursoAdo
             c.Direccion, 
             CAST(c.FechaInicio AS DATE) AS FechaInicio,
             CONVERT(VARCHAR, c.HoraInicio, 24) AS HoraInicio,
+            CAST(FechaFin AS DATE) AS FechaFin,
+            CONVERT(VARCHAR,HoraFin, 24) AS HoraFin,
+            CAST(FechaEmision AS DATE) AS FechaEmision,
             c.PrecioCurso, 
             c.PrecioCertificado, 
             c.Celular, 
             c.Correo, 
             c.Descripcion, 
-            c.Estado
+            c.Estado,
+            c.Titulo,
+            c.Detalle
             FROM Curso AS c INNER JOIN Capitulo AS ca ON ca.idCapitulo = c.idCapitulo
             
             WHERE c.idCurso = ?");
@@ -189,6 +210,8 @@ class CursoAdo
             $result = $cmd->fetchObject();
             Response::sendSuccess($result);
         } catch (Exception $ex) {
+            Response::sendError($ex->getMessage());
+        }catch (PDOException $ex) {
             Response::sendError($ex->getMessage());
         }
     }
@@ -214,7 +237,9 @@ class CursoAdo
             Correo = ?, 
             Descripcion = UPPER(?), 
             Estado = ?, 
-            idUsuario = ?
+            idUsuario = ?,
+            UFecha = GETDATE(), 
+            UHora = GETDATE()
             WHERE idCurso = ?");
 
             $comandoUpdate->bindParam(1, $curso["Nombre"], PDO::PARAM_STR);
