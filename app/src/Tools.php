@@ -1,9 +1,5 @@
 <?php
-
-
 namespace SysSoftIntegra\Src;
-
-use Exception;
 
 class Tools
 {

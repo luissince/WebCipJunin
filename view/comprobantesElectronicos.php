@@ -65,7 +65,7 @@ if (!isset($_SESSION['IdUsuario'])) {
                 </div>
                 <!--end modal history enginner  -->
                 <!-- Content Wrapper. Contains page content -->
-                <div class="content-wrapper">
+                <div class="content-wrapper" style="background-color: #FFFFFF;">
                     <!-- Main content -->
                     <section class="content-header">
                         <h3 class="no-margin"> Comprobantes(Boletas, Facturas) <small> Lista </small> </h3>

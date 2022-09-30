@@ -350,7 +350,7 @@ if (!isset($_SESSION['IdUsuario'])) {
                             "filasPorPagina": filasPorPagina
                         }
                     });
-                    console.log(result)
+                   
                     tbTable.empty();
                     if (result.data.presidentes.length == 0) {
                         tbTable.append(
@@ -492,7 +492,7 @@ if (!isset($_SESSION['IdUsuario'])) {
                     });
 
                     idPresidente = id;
-                    console.log(result.data)
+                    
                     let data = [{
                         id: result.data.IdDNI,
                         text: result.data.Apellidos + ", " + result.data.Nombres
@@ -529,6 +529,13 @@ if (!isset($_SESSION['IdUsuario'])) {
                     $("#txtFechaFinal").val(result.data.FechaFinal);
                     $("#cbCapitulo").val(result.data.idCapitulo);
                     $("#cbEstado").prop("checked", result.data.Estado === "1" ? true : false);
+                    if (result.data.Ruta !== "") {
+                        lblFirma.attr("src", "./../app/resources/images/" + result.data.Ruta);
+                        valImagen = 1;
+                        rutaImagen = "./../app/resources/images/" + result.data.Ruta;
+                    } else {
+                        valImagen = 0;
+                    }
                     $("#titleModal").html('<i class="fa fa-plus"></i> Editar Persona </span>');
                 } catch (error) {
                     $("#mdPresidente").modal("hide");
