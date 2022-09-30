@@ -206,12 +206,21 @@ class InscripcionAdo
         }
     }
 
-    public static function inscripcionByReport($body)
+    public static function delete($body)
     {
         try {
-            $cmdInsert = Database::getInstance()->getDb()->prepare("");
+            Database::getInstance()->getDb()->beginTransaction();
+            
+            $cmdDelete = Database::getInstance()->getDb()->prepare("DELETE FROM Inscripcion WHERE idCurso = ? AND idParticipante = ?");
+            $cmdDelete->bindParam(1, $body["idCurso"], PDO::PARAM_STR);
+            $cmdDelete->bindParam(2, $body["idParticipante"], PDO::PARAM_STR);
+            $cmdDelete->execute();
+
+            Database::getInstance()->getDb()->commit();
+            Response::sendSave("Se eliminó correctamente los datos.");
         } catch (Exception $ex) {
-            return $ex->getMessage();
+            Database::getInstance()->getDb()->rollback();
+            Response::sendError($ex->getMessage());
         }
     }
 }

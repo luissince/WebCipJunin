@@ -26,4 +26,8 @@ class InscripcionController
     {
         InscripcionAdo::insert($body);
     }
+
+    public static function delete($body){
+        InscripcionAdo::delete($body);
+    }
 }

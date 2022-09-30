@@ -350,7 +350,7 @@ if (!isset($_SESSION['IdUsuario'])) {
                             "filasPorPagina": filasPorPagina
                         }
                     });
-                   
+
                     tbTable.empty();
                     if (result.data.presidentes.length == 0) {
                         tbTable.append(
@@ -492,7 +492,7 @@ if (!isset($_SESSION['IdUsuario'])) {
                     });
 
                     idPresidente = id;
-                    
+
                     let data = [{
                         id: result.data.IdDNI,
                         text: result.data.Apellidos + ", " + result.data.Nombres
@@ -543,26 +543,30 @@ if (!isset($_SESSION['IdUsuario'])) {
             }
 
             async function deleteModalPresidente(idPresidente) {
-                try {
-                    tools.ModalAlertInfo("Directorio", "Procesando petición...");
+                tools.ModalDialog("Inscripción", "¿Está seguro de eliminar?", async function(value) {
+                    if (value) {
+                        try {
+                            tools.ModalAlertInfo("Presidente", "Procesando petición...");
 
-                    const result = await axios.get("../app/web/PresidenteWeb.php", {
-                        params: {
-                            "type": "delete",
-                            "IdPresidente": idPresidente
+                            const result = await axios.get("../app/web/PresidenteWeb.php", {
+                                params: {
+                                    "type": "delete",
+                                    "IdPresidente": idPresidente
+                                }
+                            });
+
+                            tools.ModalAlertSuccess("Presidente", result.data, () => {
+                                loadInit();
+                            });
+                        } catch (error) {
+                            if (error.response) {
+                                tools.ModalAlertWarning("Presidente", error.response.data);
+                            } else {
+                                tools.ModalAlertError("Presidente", "Se genero un error interno, comuníquese con el administrador del sistema.");
+                            }
                         }
-                    });
-
-                    tools.ModalAlertSuccess("Presidente", result.data, () => {
-                        loadInit();
-                    });
-                } catch (error) {
-                    if (error.response) {
-                        tools.ModalAlertWarning("Presidente", error.response.data);
-                    } else {
-                        tools.ModalAlertError("Presidente", "Se genero un error interno, comuníquese con el administrador del sistema.");
                     }
-                }
+                });
             }
 
             function clearModalPresidente() {

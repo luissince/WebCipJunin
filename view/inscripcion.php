@@ -48,17 +48,6 @@ if (!isset($_SESSION['IdUsuario'])) {
                                         </div>
                                     </div>
                                 </div>
-
-                                <div class="row">
-                                    <div class="col-md-12">
-                                        <div class="form-group">
-                                            <label class="control-label">Pagos <i class="fa fa-fw fa-asterisk text-danger"></i></label>
-                                            <select class="form-control">
-                                                <option value="">- seleccione - </option>
-                                            </select>
-                                        </div>
-                                    </div>
-                                </div>
                             </div>
 
                             <div class="modal-footer">
@@ -248,64 +237,15 @@ if (!isset($_SESSION['IdUsuario'])) {
             let idCurso = <?= $_GET['idCurso'] ?>
 
             $(document).ready(function() {
-
-                $("#btnNuevo").click(function() {
-                    $("#mdInscripcion").modal('show');
-                });
-
-                $("#btnNuevo").keyup(function(event) {
-                    if (event.keyCode == 13) {
-                        $("#mdInscripcion").modal('show');
-                        event.preventDefault();
-                    }
-                });
-
-                $("#mdInscripcion").on('show.bs.modal', function() {
-                    $('#cbIngeniero').focus();
-                });
-
-                $("#mdInscripcion").on('hidden.bs.modal', function() {
-                    $('#cbIngeniero').select2("val", "0");
-                });
-
-                $("#btnAceptar").click(function(event) {
-                    onEventGuardar();
-                });
-
-                $("#btnAceptar").keyup(function(event) {
-                    if (event.keyCode == 13) {
-                        onEventGuardar();
-                        event.preventDefault();
-                    }
-                });
-
-                $('#cbIngeniero').select2({
-                    placeholder: "Buscar Ingeniero",
-                    width: '100%',
-                    ajax: {
-                        url: "../app/controller/ListarIngenierosController.php",
-                        type: "GET",
-                        dataType: 'json',
-                        delay: 250,
-                        data: function(params) {
-                            return {
-                                type: "alldata",
-                                search: params.term
-                            };
-                        },
-                        processResults: function(response) {
-                            return {
-                                results: response
-                            };
-                        },
-                        cache: true
-                    }
-                });
-
                 loadData();
-
                 loadInit();
+                loadComponents();
+                loadModalInscripcion();
+            });
 
+            //==================TABLE FUNCIONES =========================
+
+            function loadComponents() {
                 $("#btnIzquierda").click(function() {
                     if (!state) {
                         if (paginacion > 1) {
@@ -351,8 +291,7 @@ if (!isset($_SESSION['IdUsuario'])) {
                         opcion = 1;
                     }
                 });
-
-            });
+            }
 
             async function loadData() {
                 try {
@@ -363,7 +302,7 @@ if (!isset($_SESSION['IdUsuario'])) {
                         }
                     });
 
-                    $("#lblCurso").html(result.data.Descripcion);
+                    $("#lblCurso").html(result.data.Nombre);
                     $("#lblCapitulo").html(result.data.Capitulo);
                     $("#lblOrganizador").html(result.data.Organizador);
                     $("#lblModalidad").html(result.data.Estado === "1" ? "PRESENCIAL" : "VIRTUAL");
@@ -467,6 +406,64 @@ if (!isset($_SESSION['IdUsuario'])) {
                         break;
                 }
             }
+            //==================TABLE FUNCIONES =========================
+
+
+            //==================MODAL FUNCIONES =========================
+            function loadModalInscripcion() {
+                $("#btnNuevo").click(function() {
+                    $("#mdInscripcion").modal('show');
+                });
+
+                $("#btnNuevo").keyup(function(event) {
+                    if (event.keyCode == 13) {
+                        $("#mdInscripcion").modal('show');
+                        event.preventDefault();
+                    }
+                });
+
+                $("#mdInscripcion").on('shown.bs.modal', function() {
+                    $("#cbIngeniero").select2("open");
+                });
+
+                $("#mdInscripcion").on('hidden.bs.modal', function() {
+                    $("#cbIngeniero").select2("val", "0");
+                });
+
+                $("#btnAceptar").click(function(event) {
+                    onEventGuardar();
+                });
+
+                $("#btnAceptar").keyup(function(event) {
+                    if (event.keyCode == 13) {
+                        onEventGuardar();
+                        event.preventDefault();
+                    }
+                });
+
+                $('#cbIngeniero').select2({
+                    placeholder: "Buscar Ingeniero",
+                    width: '100%',
+                    ajax: {
+                        url: "../app/controller/ListarIngenierosController.php",
+                        type: "GET",
+                        dataType: 'json',
+                        delay: 250,
+                        data: function(params) {
+                            return {
+                                type: "alldata",
+                                search: params.term
+                            };
+                        },
+                        processResults: function(response) {
+                            return {
+                                results: response
+                            };
+                        },
+                        cache: true
+                    }
+                });
+            }
 
             async function onEventGuardar() {
                 if ($("#cbIngeniero").val() == null) {
@@ -501,18 +498,37 @@ if (!isset($_SESSION['IdUsuario'])) {
             }
 
             async function onEventCertificado(idCurso, idParticipante) {
-                window.open("../app/sunat/pdfCertCurso.php?idCurso0" + idCurso, "_blank");
+                window.open("../app/sunat/pdfCertCurso.php?idCurso=" + idCurso, "_blank");
             }
 
             async function onEventDelete(idCurso, idParticipante) {
-                tools.ModalDialog("Inscripción", "¿Está seguro de eliminar?", async function() {
-                    try {
+                tools.ModalDialog("Inscripción", "¿Está seguro de eliminar?", async function(value) {
+                    if (value) {
+                        try {
+                            tools.ModalAlertInfo("Inscripción", "Procesando petición...");
 
-                    } catch (error) {
+                            const reulst = await axios.get("../app/web/InscripcionWeb.php", {
+                                params: {
+                                    "type": "delete",
+                                    "idCurso": idCurso,
+                                    "idParticipante": idParticipante,
+                                }
+                            });
 
+                            tools.ModalAlertSuccess("Inscripción", result.data, () => {
+                                loadInit();
+                            });
+                        } catch (error) {
+                            if (error.response) {
+                                tools.ModalAlertWarning("Inscripción", error.response.data);
+                            } else {
+                                tools.ModalAlertError("Inscripción", "Se genero un error interno, comuníquese con el administrador del sistema.");
+                            }
+                        }
                     }
                 });
             }
+            //==================MODAL FUNCIONES =========================
         </script>
     </body>
 
