@@ -163,11 +163,26 @@
                     if ($_SESSION["Permisos"][25]["ver"] == 1) {
                         $menuConfiguracion .= '<li id="tab-configEmpresa"><a href="configEmpresa.php"><i class="fa fa-circle-o"></i>Empresa</a></li>';
                     }
-                    $menuConfiguracion .= '<li id="tab-empleo"><a href="empleo.php"><i class="fa fa-circle-o"></i>Empleo</a></li>';
-                    $menuConfiguracion .= '<li id="tab-mensaje"><a href="mensaje.php"><i class="fa fa-circle-o"></i>Mensajes (App)</a></li>';
-                    $menuConfiguracion .= '<li id="tab-curso"><a href="curso.php"><i class="fa fa-circle-o"></i>Cursos</a></li>';
-                    $menuConfiguracion .= '<li id="tab-directivo"><a href="directivo.php"><i class="fa fa-circle-o"></i>Directorio Institucional</a></li>';
-                    $menuConfiguracion .= '<li id="tab-presidentes"><a href="presidentes.php"><i class="fa fa-circle-o"></i>Presidentes de Capítulo</a></li>';
+
+                    if ($_SESSION["Permisos"][26]["ver"] == 1) {
+                        $menuConfiguracion .= '<li id="tab-empleo"><a href="empleo.php"><i class="fa fa-circle-o"></i>Empleo</a></li>';
+                    }
+                    if ($_SESSION["Permisos"][27]["ver"] == 1) {
+                        $menuConfiguracion .= '<li id="tab-mensaje"><a href="mensaje.php"><i class="fa fa-circle-o"></i>Mensajes (App)</a></li>';
+                    }
+
+                    if ($_SESSION["Permisos"][28]["ver"] == 1) {
+                        $menuConfiguracion .= '<li id="tab-curso"><a href="curso.php"><i class="fa fa-circle-o"></i>Cursos</a></li>';
+                    }
+
+                    if ($_SESSION["Permisos"][29]["ver"] == 1) {
+                        $menuConfiguracion .= '<li id="tab-directivo"><a href="directivo.php"><i class="fa fa-circle-o"></i>Directorio Institucional</a></li>';
+                    }
+
+                    if ($_SESSION["Permisos"][30]["ver"] == 1) {
+                        $menuConfiguracion .= '<li id="tab-presidentes"><a href="presidentes.php"><i class="fa fa-circle-o"></i>Presidentes de Capítulo</a></li>';
+                    }
+
                     $menuConfiguracion .= '</ul></li>';
                     print $menuConfiguracion;
                 }
@@ -185,7 +200,7 @@
           "capitulos", "universidad", "conceptos", "ingenieros", "habilidadIngeniero", "empresas",
           "cobros", "comprobantes", "reportes",
           "notaCredito", "nuevaNotaCredito", "consultaComprobante", "comprobantesElectronicos",
-          "configuracion", "bancos", "configEmpresa", "empleo", "mensaje", "curso"
+          "configuracion", "bancos", "configEmpresa", "empleo", "mensaje", "curso", "directivo", "presidentes"
       ];
 
       tabs.forEach(e => {
@@ -228,7 +243,7 @@
               } else if (id == "tab-comprobantesElectronicos") {
                   document.getElementById("tab-comprobantesElectronicos").setAttribute("class", "nav-link active");
               }
-          } else if (id == "tab-configuracion" || id == "tab-configEmpresa" || id == "tab-bancos"|| id == "tab-empleo"|| id == "tab-mensaje" || id == "curso") {
+          } else if (id == "tab-configuracion" || id == "tab-configEmpresa" || id == "tab-bancos" || id == "tab-empleo" || id == "tab-mensaje" || id == "curso" || id == "tab-directivo" || id == "tab-presidentes") {
               document.getElementById("tab-menu-configuracion").setAttribute("class", "nav-item active");
               if (id == "tab-configuracion") {
                   document.getElementById("tab-configuracion").setAttribute("class", "nav-link active");
@@ -236,12 +251,16 @@
                   document.getElementById("tab-configEmpresa").setAttribute("class", "nav-link active");
               } else if (id == "tab-bancos") {
                   document.getElementById("tab-bancos").setAttribute("class", "nav-link active");
-              }else if (id == "tab-empleo") {
+              } else if (id == "tab-empleo") {
                   document.getElementById("tab-empleo").setAttribute("class", "nav-link active");
-              }else if (id == "tab-mensaje") {
+              } else if (id == "tab-mensaje") {
                   document.getElementById("tab-mensaje").setAttribute("class", "nav-link active");
-              }else if (id == "tab-curso") {
+              } else if (id == "tab-curso") {
                   document.getElementById("tab-curso").setAttribute("class", "nav-link active");
+              }else if (id == "tab-directivo") {
+                  document.getElementById("tab-directivo").setAttribute("class", "nav-link active");
+              }else if (id == "tab-presidentes") {
+                  document.getElementById("tab-presidentes").setAttribute("class", "nav-link active");
               }
           } else {
               document.getElementById(id).setAttribute("class", "nav-item active");

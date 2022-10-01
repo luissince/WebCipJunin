@@ -2,7 +2,6 @@
 
 namespace SysSoftIntegra\Controller;
 
-use SysSoftIntegra\Src\Response;
 use SysSoftIntegra\Model\UsuarioAdo;
 
 

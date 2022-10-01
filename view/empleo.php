@@ -4,7 +4,7 @@ session_start();
 if (!isset($_SESSION['IdUsuario'])) {
     echo '<script>location.href = "./login.php";</script>';
 } else {
-    if ($_SESSION["Permisos"][9]["ver"] == 1) {
+    if ($_SESSION["Permisos"][26]["ver"] == 1) {
 ?>
         <!DOCTYPE html>
         <html lang="en">
