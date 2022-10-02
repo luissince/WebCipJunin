@@ -116,6 +116,12 @@ class PresidenteAdo
                 file_put_contents($fileDir . "/" . $fileName,  $bin);
             }
 
+            if (boolval($body["Estado"])) {
+                $comandoValidate = Database::getInstance()->getDb()->prepare("UPDATE Presidente SET Estado = 0 AND idCapitulo = ?");
+                $comandoValidate->bindParam(1, $body["IdCapitulo"], PDO::PARAM_STR);
+                $comandoValidate->execute();
+            }
+
             $comandoInsert = Database::getInstance()->getDb()->prepare("INSERT INTO Presidente(
                 IdPresidente,
                 IdDNI,

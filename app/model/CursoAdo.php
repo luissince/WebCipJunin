@@ -352,7 +352,7 @@ class CursoAdo
             d.Ruta
             FROM Directivo AS d
             INNER JOIN Persona AS p on p.idDNI = d.IdDNI
-            WHERE d.IdTablaTipoDirectivo = 1 AND d.Estado = 1");
+            WHERE d.IdTablaTipoDirectivo = 1 AND d.Estado = 1 AND d.Firma = 1");
             $cmdDecano->execute();
 
             return [

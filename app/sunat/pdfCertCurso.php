@@ -14,6 +14,14 @@ if (!is_array($result)) {
     Tools::printErrorJson($result);
 }
 
+if(!is_object($result[0])){
+    Tools::printErrorJson("No se pudo procesar la información del curos, comuníquese con el administrador");
+}
+
+if(!is_object($result[1])){
+    Tools::printErrorJson("No se pudo procesar la información del decano o encargado, comuníquese con el administrador");
+}
+
 $data = 'https://www.youtube.com/watch?v=DLzxrzFCyOs&t=43s';
 
 class LogoOptions extends QROptions

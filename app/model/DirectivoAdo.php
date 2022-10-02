@@ -36,6 +36,7 @@ class DirectivoAdo
                     "FechaInicio" => $row->FechaInicio,
                     "FechaFinal" => $row->FechaFinal,
                     "Estado" => $row->Estado,
+                    "Firma" => $row->Firma,
                     "Directivo" => $row->Directivo,
                 ));
             }
@@ -117,6 +118,11 @@ class DirectivoAdo
                 file_put_contents($fileDir . "/" . $fileName,  $bin);
             }
 
+            if($body["Firma"] === 1){
+                $comandoUpdate = Database::getInstance()->getDb()->prepare("UPDATE Directivo SET Firma = 0");
+                $comandoUpdate->execute();
+            }
+
             $comandoInsert = Database::getInstance()->getDb()->prepare("INSERT INTO Directivo(
                 IdDirectivo,
                 IdDNI,
@@ -188,6 +194,11 @@ class DirectivoAdo
                     $fileName = $date->format("Ymd") . $date->format("His") . "directivo." . $body["extension"];
 
                     file_put_contents($fileDir . "/" . $fileName,  $bin);
+                }
+
+                if(boolval($body["Firma"])){
+                    $comandoUpdate = Database::getInstance()->getDb()->prepare("UPDATE Directivo SET Firma = 0");
+                    $comandoUpdate->execute();
                 }
 
                 $comando = Database::getInstance()->getDb()->prepare("UPDATE Directivo SET 

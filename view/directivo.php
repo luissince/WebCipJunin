@@ -186,7 +186,8 @@ if (!isset($_SESSION['IdUsuario'])) {
                                                 <th width="10%">Fecha Inicio</th>
                                                 <th width="10%">Fecha Final</th>
                                                 <th width="15%">Puesto</th>
-                                                <th width="10%">Estado</th>
+                                                <th width="5%">Firma</th>
+                                                <th width="5%">Estado</th>
                                                 <th width="5%" class="text-center">Editar</th>
                                                 <th width="5%" class="text-center">Eliminar</th>
                                             </thead>
@@ -345,7 +346,7 @@ if (!isset($_SESSION['IdUsuario'])) {
                     try {
                         tbTable.empty();
                         tbTable.append(
-                            '<tr class="text-center"><td colspan="9"><img src="./images/spiner.gif"/><p>Cargando información.</p></td></tr>'
+                            '<tr class="text-center"><td colspan="10"><img src="./images/spiner.gif"/><p>Cargando información.</p></td></tr>'
                         );
                         state = true;
                         totalPaginacion = 0;
@@ -362,21 +363,21 @@ if (!isset($_SESSION['IdUsuario'])) {
 
                         tbTable.empty();
                         if (result.data.directivos.length == 0) {
-                            tbTable.append(
-                                '<tr class="text-center"><td colspan="9"><p>No hay datos para mostrar.</p></td></tr>'
-                            );
+                            tbTable.append( '<tr class="text-center"><td colspan="10"><p>No hay datos para mostrar.</p></td></tr>');
                             $("#lblPaginaActual").html(paginacion);
                             $("#lblPaginaSiguiente").html(totalPaginacion);
                             state = false;
                         } else {
                             for (let directivo of result.data.directivos) {
 
-                                let btnUpdate =
+                                const btnUpdate =
                                     `<button class="btn btn-warning btn-xs" title="Editar" onclick="openUpdateModalDirectorio(${directivo.IdDirectivo} )"><i class="fa fa-edit" style="font-size:25px;"></i></button>`;
-                                let btnDelete =
+                                const btnDelete =
                                     `<button class="btn btn-danger btn-xs" title="Eliminar" onclick="deleteModalDirectorio(${directivo.IdDirectivo})"><i class="fa fa-trash" style="font-size:25px;"></i></button>`
 
-                                let estado = directivo.Estado == 1 ? '<span class="badge btn-info">ACTIVO</span>' : '<span class="badge btn-danger">INACTIVO</span>'
+                                const firma = directivo.Firma == 1 ? '<span class="badge btn-info">USAR</span>' : '<span class="badge btn-danger">NO USAR</span>';
+
+                                const estado = directivo.Estado == 1 ? '<span class="badge btn-info">ACTIVO</span>' : '<span class="badge btn-danger">INACTIVO</span>'
 
                                 tbTable.append(`<tr>
                                 <td class="text-center text-primary"> ${directivo.Id} </td>
@@ -385,6 +386,7 @@ if (!isset($_SESSION['IdUsuario'])) {
                                 <td> ${tools.getDateForma(directivo.FechaInicio)} </td>
                                 <td> ${tools.getDateForma(directivo.FechaFinal)} </td>
                                 <td> ${directivo.Directivo } </td>
+                                <td> ${firma} </td>
                                 <td> ${estado} </td>
                                 <td class="text-center"> ${btnUpdate} </td>
                                 <td class="text-center"> ${btnDelete} </td>
