@@ -247,7 +247,7 @@ if (!isset($_SESSION['IdUsuario'])) {
                                 <div class="col-lg-2 col-md-3 col-sm-12 col-xs-12">
                                     <label>Nuevo curso.</label>
                                     <div class="form-group">
-                                        <button type="button" class="btn btn-success" id="btnNuevo" disabled>
+                                        <button type="button" class="btn btn-success" id="btnNuevo" <?php $_SESSION["Permisos"][12]["crear"] ? "disabled" : "" ?>>
                                             <i class="fa fa-plus"></i> Agregar curso
                                         </button>
                                     </div>
