@@ -341,7 +341,7 @@ class CursoAdo
             INNER JOIN Persona AS org ON org.IdDNI = pe.IdDNI
             INNER JOIN Inscripcion AS ic ON ic.idCurso = c.idCurso
             INNER JOIN Persona AS es ON es.IdDNI = ic.idParticipante
-            WHERE c.idCurso = ? AND ic.idParticipante = ?");
+            WHERE c.idCurso = ? AND ic.idParticipante = ? AND pe.Estado = 1");
             $cmdCurso->bindParam(1, $idCurso, PDO::PARAM_STR);
             $cmdCurso->bindParam(2, $idParticipante, PDO::PARAM_STR);
             $cmdCurso->execute();
