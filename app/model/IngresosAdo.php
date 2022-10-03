@@ -951,10 +951,16 @@ class IngresosAdo
         }
     }
 
-    public static function ObtenerDatosPdfCertHabilidad($idIngreso)
+    /**
+     * @param string $idIngreso
+     *
+     * @return array|string
+     * @throws \Exception
+     */
+    public static function ObtenerDatosPdfCertHabilidad(string $idIngreso)
     {
         try {
-            $arrayCertHabilidad = array();
+            $certHabilidad = null;
             $cmdCertHabilidad = Database::getInstance()->getDb()->prepare("SELECT 
             p.CIP,
             p.NumDoc, 
@@ -985,8 +991,8 @@ class IngresosAdo
             $cmdCertHabilidad->bindParam(1, $idIngreso, PDO::PARAM_INT);
             $cmdCertHabilidad->execute();
 
-            while ($row = $cmdCertHabilidad->fetch()) {
-                array_push($arrayCertHabilidad, array(
+            if ($row = $cmdCertHabilidad->fetch()) {
+                $certHabilidad = (object) array(
                     "idIngreso" => $row["idIngreso"],
                     "cip" => $row["CIP"],
                     "dni" => $row["NumDoc"],
@@ -1009,10 +1015,19 @@ class IngresosAdo
                     "fvDia" => $row["FVDia"],
                     "fvMes" => $row["FVMes"],
                     "fvAnio" => $row["FVAnio"],
-                ));
+                );
             }
 
-            return $arrayCertHabilidad;
+            $cmdDecano = Database::getInstance()->getDb()->prepare("SELECT 
+            d.IdDirectivo,
+            CONCAT(p.Nombres,' ',p.Apellidos) AS Decano,
+            d.Ruta
+            FROM Directivo AS d
+            INNER JOIN Persona AS p on p.idDNI = d.IdDNI
+            WHERE d.IdTablaTipoDirectivo = 1 AND d.Estado = 1 AND d.Firma = 1");
+            $cmdDecano->execute();
+
+            return [$certHabilidad, $cmdDecano->fetchObject()];
         } catch (Exception $ex) {
             return $ex->getMessage();
         }

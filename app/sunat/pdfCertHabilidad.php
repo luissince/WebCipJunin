@@ -2,7 +2,6 @@
 
 use SysSoftIntegra\Src\Tools;
 use chillerlan\QRCode\QRCode;
-
 use SysSoftIntegra\Model\IngresosAdo;
 
 require __DIR__ . './../src/autoload.php';
@@ -10,60 +9,72 @@ require __DIR__ . './../src/autoload.php';
 date_default_timezone_set('America/Lima');
 
 if (!isset($_GET["idIngreso"])) {
-    echo '<script>location.href = "404.php";</script>';
+    Tools::printErrorJson("Url no valida");
+}
+
+$CertificadoHabilidad = IngresosAdo::ObtenerDatosPdfCertHabilidad($_GET["idIngreso"]);
+
+if (!is_array($CertificadoHabilidad)) {
+    Tools::printErrorJson($CertificadoHabilidad);
+}
+
+if(!is_object($CertificadoHabilidad[0])){
+    Tools::printErrorJson("No se pudo procesar la información del certificado, comuníquese con el administrador");
+}
+
+if(!is_object($CertificadoHabilidad[1])){
+    Tools::printErrorJson("No se pudo procesar la información del decano o encargado, comuníquese con el administrador");
+}
+
+$Datos = $CertificadoHabilidad[0];
+
+$Nombreingeniero = $Datos->usuario;
+$Apellidosingeniero = $Datos->apellidos;
+$ConsejoDepartamental = 'JUNIN';
+$NumeroCIP = $Datos->cip;
+
+$FechaIncorporacion = $Datos->fechaIncorporacion;
+$DiaIncorporacion = $Datos->fiDia;
+$MesIncorporacion = $Datos->fiMes;
+$AnioIncorporacion = $Datos->fiAnio;
+
+$Especialidad = $Datos->especialidad;
+$Asunto = $Datos->asunto;
+$Entidad = $Datos->entidad;
+$Lugar = $Datos->lugar;
+
+$FechaVencimiento = $Datos->fechaVencimiento;
+$DiaVencimiento = $Datos->fvDia;
+$MesVencimiento = $Datos->fvMes;
+$AnioVencimiento = $Datos->fvAnio;
+
+$LugarRegistro = 'Huancayo'; //modificar****************************************************
+
+$FechaRegistro = $Datos->fechaRegistro;
+$DiaRegistro = $Datos->frDia;
+$Mes = $Datos->frMes;
+$numCertificado = $Datos->numCertificado;
+$MesRegistro = IngresosAdo::getMothName($Mes);
+$AnioRegistro = substr($Datos->frAnio, 2, 2);
+
+$decano =  $CertificadoHabilidad[1];
+
+$json = json_encode(array(
+    "tipo" => "a",
+    "idIngreso" => $_GET["idIngreso"]
+));
+
+if (!empty($_SERVER['HTTPS']) && ('on' == $_SERVER['HTTPS'])) {
+    $uri = 'https://';
 } else {
+    $uri = 'http://';
+}
+$uri .= $_SERVER['HTTP_HOST'];
 
+$token = Tools::my_encrypt($json, "bRuD5WYw5wd0rdHR9yLlM6wt2vteuiniQBqE70nAuhU=CIPJUNIN");
+$codbar = $uri . "/view/validatecert.php?token=" . $token;
 
-    $CertificadoHabilidad = IngresosAdo::ObtenerDatosPdfCertHabilidad($_GET["idIngreso"]);
-    if (!is_array($CertificadoHabilidad)) {
-        echo $CertificadoHabilidad;
-    } else {
-        $Datos = $CertificadoHabilidad[0];
-
-        $Nombreingeniero = $Datos['usuario'];
-        $Apellidosingeniero = $Datos['apellidos'];
-        $ConsejoDepartamental = 'JUNIN';
-        $NumeroCIP = $Datos['cip'];
-
-        $FechaIncorporacion = $Datos['fechaIncorporacion'];
-        $DiaIncorporacion = $Datos['fiDia'];
-        $MesIncorporacion = $Datos['fiMes'];
-        $AnioIncorporacion = $Datos['fiAnio'];
-
-        $Especialidad = $Datos['especialidad'];
-        $Asunto = $Datos['asunto'];
-        $Entidad = $Datos['entidad'];
-        $Lugar = $Datos['lugar'];
-
-        $FechaVencimiento = $Datos['fechaVencimiento'];
-        $DiaVencimiento = $Datos['fvDia'];
-        $MesVencimiento = $Datos['fvMes'];
-        $AnioVencimiento = $Datos['fvAnio'];
-
-        $LugarRegistro = 'Huancayo'; //modificar****************************************************
-
-        $FechaRegistro = $Datos['fechaRegistro'];
-        $DiaRegistro = $Datos['frDia'];
-        $Mes = $Datos['frMes'];
-        $MesRegistro = IngresosAdo::getMothName($Mes);
-        $AnioRegistro = substr($Datos['frAnio'], 2, 2);
-
-        $json = json_encode(array(
-            "tipo" => "a",
-            "idIngreso" => $_GET["idIngreso"]
-        ));
-
-        if (!empty($_SERVER['HTTPS']) && ('on' == $_SERVER['HTTPS'])) {
-            $uri = 'https://';
-        } else {
-            $uri = 'http://';
-        }
-        $uri .= $_SERVER['HTTP_HOST'];
-
-        $token = Tools::my_encrypt($json, "bRuD5WYw5wd0rdHR9yLlM6wt2vteuiniQBqE70nAuhU=CIPJUNIN");
-        $codbar = $uri . "/view/validatecert.php?token=" . $token;
-
-        $html = '<html>
+$html = '<html>
             <head>
                 <style>
                     body {
@@ -183,36 +194,34 @@ if (!isset($_GET["idIngreso"])) {
                         <img width="100" height="100" style="margin-left:160px;margin-top:35px;" src="' . (new QRCode)->render($codbar) . '" />
                     </span>
                     <span>
-                        <img width="196" height="90" style="margin-left:230px;margin-top:35px;background-color:transparent;" src="firmadecano.png" />
+                    '.($decano->Ruta == "" ? "" : '<img width="196" height="90" style="margin-left:230px;margin-top:35px;background-color:transparent;" src="../resources/images/'.$decano->Ruta.'" /> ').'
                     </span>           
                 </div>
                 <!--################################################## Fin del Pie del Documento ###############################################################-->
             </body>
         </html>';
 
-        $mpdf = new \Mpdf\Mpdf([
-            'margin_left' => 0,
-            'margin_right' => 0,
-            'margin_top' => 0,
-            'margin_bottom' => 0,
-            'margin_header' => 0,
-            'margin_footer' => 0,
-            'mode' => 'utf-8',
-            'format' => 'A4',
-            'orientation' => 'P'
-        ]);
+$mpdf = new \Mpdf\Mpdf([
+    'margin_left' => 0,
+    'margin_right' => 0,
+    'margin_top' => 0,
+    'margin_bottom' => 0,
+    'margin_header' => 0,
+    'margin_footer' => 0,
+    'mode' => 'utf-8',
+    'format' => 'A4',
+    'orientation' => 'P'
+]);
 
-        $mpdf->SetProtection(array('print'));
-        $mpdf->SetTitle(" CIP-JUNIN");
-        $mpdf->SetAuthor("Cip Junin");
-        // $mpdf->SetWatermarkText(("ANULADO"));   // anulada
-        $mpdf->showWatermarkText = true;
-        $mpdf->watermark_font = 'DejaVuSansCondensed';
-        $mpdf->watermarkTextAlpha =  0.5;
-        $mpdf->SetDisplayMode('fullpage');
-        $mpdf->WriteHTML($html);
+$mpdf->SetProtection(array('print'));
+$mpdf->SetTitle(" CIP-JUNIN");
+$mpdf->SetAuthor("Cip Junin");
+// $mpdf->SetWatermarkText(("ANULADO"));   // anulada
+$mpdf->showWatermarkText = true;
+$mpdf->watermark_font = 'DejaVuSansCondensed';
+$mpdf->watermarkTextAlpha =  0.5;
+$mpdf->SetDisplayMode('fullpage');
+$mpdf->WriteHTML($html);
 
-        // Output a PDF file directly to the browser
-        $mpdf->Output("CIP-JUNIN.pdf", 'I');
-    }
-}
+// Output a PDF file directly to the browser
+$mpdf->Output("CERT HABILIDAD-" . $numCertificado . "-CIP-JUNIN.pdf", 'I');

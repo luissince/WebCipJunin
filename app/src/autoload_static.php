@@ -45,6 +45,7 @@ class Autoload_Static
             'SysSoftIntegra\\Src\\Response' => __DIR__  . '/Response.php',
             'SysSoftIntegra\\Src\\Route' => __DIR__  . '/Route.php',
             'SysSoftIntegra\\Src\\QRImageWithLogo' => __DIR__  . '/QRImageWithLogo.php',
+            'SysSoftIntegra\\Src\\LogoOptions' => __DIR__  . '/LogoOptions.php',
 
             'SysSoftIntegra\\DataBase\\Database' => __DIR__  . '/../database/DataBaseConexion.php',
             'Phpspreadsheet\\Vendor\\Autload' => __DIR__ . '/../sunat/lib/phpspreadsheet/vendor/autoload.php',

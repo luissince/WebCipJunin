@@ -326,6 +326,7 @@ class CursoAdo
         try {
             $cmdCurso = Database::getInstance()->getDb()->prepare("SELECT
             c.idCurso,
+            c.Nombre,
             c.Titulo,
             c.Detalle,
             CONCAT(es.Nombres,' ',es.Apellidos) AS Estudiante,

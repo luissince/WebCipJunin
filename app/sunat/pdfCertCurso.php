@@ -1,8 +1,18 @@
 <?php
+/**
+ * Class pdfCertCurso
+ *
+ * @filesource   pdfCertCurso.php
+ * @created      3.10.2022
+ * @author       Luis Alexander <alexanderlara1996@gmail.com>
+ * @copyright    2022 Luis Alexander
+ * @license      MIT
+ */
 
 use SysSoftIntegra\Src\QRImageWithLogo;
 use chillerlan\QRCode\{QRCode, QROptions};
 use SysSoftIntegra\Model\CursoAdo;
+use SysSoftIntegra\Src\LogoOptions;
 use SysSoftIntegra\Src\Tools;
 use Mpdf\Mpdf;
 
@@ -15,35 +25,21 @@ if (!is_array($result)) {
 }
 
 if(!is_object($result[0])){
-    Tools::printErrorJson("No se pudo procesar la información del curos, comuníquese con el administrador");
+    Tools::printErrorJson("No se pudo procesar la información del curso, comuníquese con el administrador");
 }
 
 if(!is_object($result[1])){
     Tools::printErrorJson("No se pudo procesar la información del decano o encargado, comuníquese con el administrador");
 }
 
-$data = 'https://www.youtube.com/watch?v=DLzxrzFCyOs&t=43s';
-
-class LogoOptions extends QROptions
-{
-    protected int $logoSpaceWidth;
-    protected int $logoSpaceHeight;
-}
-
-$options = new LogoOptions;
-
-$options->version          = 7;
-$options->eccLevel         = QRCode::ECC_H;
-$options->imageBase64      = true;
-$options->logoSpaceWidth   = 13;
-$options->logoSpaceHeight  = 13;
-$options->scale            = 5;
-$options->imageTransparent = true;
-
-$qrOutputInterface = new QRImageWithLogo($options, (new QRCode($options))->getMatrix($data));
-
 $curso = $result[0];
 $decano =  $result[1];
+
+$data = $curso->Nombre;
+
+$options = new LogoOptions();
+
+$qrOutputInterface = new QRImageWithLogo($options, (new QRCode($options))->getMatrix($data));
 
 $html = '<html>
             <head>

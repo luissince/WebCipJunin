@@ -2,71 +2,88 @@
 
 use SysSoftIntegra\Src\Tools;
 use chillerlan\QRCode\QRCode;
-
 use SysSoftIntegra\Model\IngresosAdo;
 
 require __DIR__ . './../src/autoload.php';
 
-setlocale(LC_TIME, 'Spanish_Peru');
+// setlocale(LC_TIME, 'Spanish_Peru');
 
 if (!isset($_GET["idIngreso"])) {
-    echo '<script>location.href = "404.php";</script>';
-} else {
+    Tools::printErrorJson("Url no valida");
+}
 
-    $CertificadoHabilidad = IngresosAdo::ObtenerDatosPdfCertHabilidad($_GET["idIngreso"]);
-    if (!is_array($CertificadoHabilidad)) {
-        echo $CertificadoHabilidad;
-    } else {
-        $Datos = $CertificadoHabilidad[0];
+$CertificadoHabilidad = IngresosAdo::ObtenerDatosPdfCertHabilidad($_GET["idIngreso"]);
 
-        $Nombreingeniero = $Datos['usuario'];
-        $Apellidosingeniero = $Datos['apellidos'];
-        $ConsejoDepartamental = 'JUNIN';
-        $NumeroCIP = $Datos['cip'];
+if (!is_array($CertificadoHabilidad)) {
+    Tools::printErrorJson($CertificadoHabilidad);
+}
 
-        $FechaIncorporacion = $Datos['fechaIncorporacion'];
-        $DiaIncorporacion = $Datos['fiDia'];
-        $MesIncorporacion = $Datos['fiMes'];
-        $AnioIncorporacion = $Datos['fiAnio'];
+if(!is_object($CertificadoHabilidad[0])){
+    Tools::printErrorJson("No se pudo procesar la información del certificado, comuníquese con el administrador");
+}
 
-        $Especialidad = $Datos['especialidad'];
-        $Asunto = $Datos['asunto'];
-        $Entidad = $Datos['entidad'];
-        $Lugar = $Datos['lugar'];
+if(!is_object($CertificadoHabilidad[1])){
+    Tools::printErrorJson("No se pudo procesar la información del decano o encargado, comuníquese con el administrador");
+}
 
-        $FechaVencimiento = $Datos['fechaVencimiento'];
-        $DiaVencimiento = $Datos['fvDia'];
-        $MesVencimiento = $Datos['fvMes'];
-        $AnioVencimiento = $Datos['fvAnio'];
 
-        $LugarRegistro = 'Huancayo'; //modificar****************************************************
+$Datos = $CertificadoHabilidad[0];
 
-        $FechaRegistro = $Datos['fechaRegistro'];
-        $DiaRegistro = $Datos['frDia'];
-        $Mes = $Datos['frMes'];
-        $numCertificado = $Datos['numCertificado'];
-        $MesRegistro = IngresosAdo::getMothName($Mes);
-        $AnioRegistro = substr($Datos['frAnio'], 2, 2);
-        $sesentaEspacios = '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+$Nombreingeniero = $Datos->usuario;
+$Apellidosingeniero = $Datos->apellidos;
+$ConsejoDepartamental = 'JUNIN';
+$NumeroCIP = $Datos->cip;
+
+$FechaIncorporacion = $Datos->fechaIncorporacion;
+$DiaIncorporacion = $Datos->fiDia;
+$MesIncorporacion = $Datos->fiMes;
+$AnioIncorporacion = $Datos->fiAnio;
+
+$Especialidad = $Datos->especialidad;
+$Asunto = $Datos->asunto;
+$Entidad = $Datos->entidad;
+$Lugar = $Datos->lugar;
+
+$FechaVencimiento = $Datos->fechaVencimiento;
+$DiaVencimiento = $Datos->fvDia;
+$MesVencimiento = $Datos->fvMes;
+$AnioVencimiento = $Datos->fvAnio;
+
+$LugarRegistro = 'Huancayo'; //modificar****************************************************
+
+$FechaRegistro = $Datos->fechaRegistro;
+$DiaRegistro = $Datos->frDia;
+$Mes = $Datos->frMes;
+$numCertificado = $Datos->numCertificado;
+$MesRegistro = IngresosAdo::getMothName($Mes);
+$AnioRegistro = substr($Datos->frAnio, 2, 2);
+$sesentaEspacios = '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
                             &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                             &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;';
-        $veinteEspacios = '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;';
-        $cincoEspacios = '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;';
-        $tresEspacios = '&nbsp;&nbsp;&nbsp;';
+$veinteEspacios = '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;';
+$cincoEspacios = '&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;';
+$tresEspacios = '&nbsp;&nbsp;&nbsp;';
 
-        if (!empty($_SERVER['HTTPS']) && ('on' == $_SERVER['HTTPS'])) {
-            $uri = 'https://';
-        } else {
-            $uri = 'http://';
-        }
-        $uri .= $_SERVER['HTTP_HOST'];
+$decano =  $CertificadoHabilidad[1];
 
-        $token = Tools::my_encrypt($json, "bRuD5WYw5wd0rdHR9yLlM6wt2vteuiniQBqE70nAuhU=CIPJUNIN");
-        $codbar = $uri . "/view/validatecert.php?token=" . $token;
+$json = json_encode(array(
+    "tipo" => "a",
+    "idIngreso" => $_GET["idIngreso"]
+));
 
-        $newNumCetificado = Tools::formatNumber($numCertificado);
+if (!empty($_SERVER['HTTPS']) && ('on' == $_SERVER['HTTPS'])) {
+    $uri = 'https://';
+} else {
+    $uri = 'http://';
+}
+$uri .= $_SERVER['HTTP_HOST'];
 
-        $html = '<html>
+$token = Tools::my_encrypt($json, "bRuD5WYw5wd0rdHR9yLlM6wt2vteuiniQBqE70nAuhU=CIPJUNIN");
+$codbar = $uri . "/view/validatecert.php?token=" . $token;
+
+$newNumCetificado = Tools::formatNumber($numCertificado);
+
+$html = '<html>
             <head>
                 <style>
                     body {
@@ -108,7 +125,7 @@ if (!isset($_GET["idIngreso"])) {
                             </div>
                         </div>
                         <div style="width:20%; height:7.5%; float:left">
-                            <img src="../../view/barcode/barcode.php?text=N+A-'.$newNumCetificado.'&size=50&print=true" alt="" width="114px"; height="59px" style="padding-top:30px; padding-left:33px;">
+                            <img src="../../view/barcode/barcode.php?text=N+A-' . $newNumCetificado . '&size=50&print=true" alt="" width="114px"; height="59px" style="padding-top:30px; padding-left:33px;">
                         </div>
                     </div>
                     <div style="width:100%; padding-left: 42px;" face:"georgia";>
@@ -183,7 +200,7 @@ if (!isset($_GET["idIngreso"])) {
                             </div>
                         </div>
                         <div style="width:18%; height:7.5%; float:left">
-                            <img src="../../view/barcode/barcode.php?text=N+A-'.$newNumCetificado.'&size=50&print=true" alt="" width="114px"; height="59px" style="padding-top:30px;">
+                            <img src="../../view/barcode/barcode.php?text=N+A-' . $newNumCetificado . '&size=50&print=true" alt="" width="114px"; height="59px" style="padding-top:30px;">
                         </div>
                     </div>
                     <div style="width:100%; padding-left: 135px; padding-top:10px;">
@@ -268,29 +285,27 @@ if (!isset($_GET["idIngreso"])) {
             </body>
         </html>';
 
-        $mpdf = new \Mpdf\Mpdf([
-            'margin_left' => 0,
-            'margin_right' => 0,
-            'margin_top' => 0,
-            'margin_bottom' => 0,
-            'margin_header' => 0,
-            'margin_footer' => 0,
-            'mode' => 'utf-8',
-            'format' => 'A4',
-            'orientation' => 'P'
-        ]);
+$mpdf = new \Mpdf\Mpdf([
+    'margin_left' => 0,
+    'margin_right' => 0,
+    'margin_top' => 0,
+    'margin_bottom' => 0,
+    'margin_header' => 0,
+    'margin_footer' => 0,
+    'mode' => 'utf-8',
+    'format' => 'A4',
+    'orientation' => 'P'
+]);
 
-        $mpdf->SetProtection(array('print'));
-        $mpdf->SetTitle(" CIP-JUNIN");
-        $mpdf->SetAuthor("Cip Junin");
-        // $mpdf->SetWatermarkText(("ANULADO"));   // anulada
-        $mpdf->showWatermarkText = true;
-        $mpdf->watermark_font = 'DejaVuSansCondensed';
-        $mpdf->watermarkTextAlpha =  0.5;
-        $mpdf->SetDisplayMode('fullpage');
-        $mpdf->WriteHTML($html);
+$mpdf->SetProtection(array('print'));
+$mpdf->SetTitle(" CIP-JUNIN");
+$mpdf->SetAuthor("Cip Junin");
+// $mpdf->SetWatermarkText(("ANULADO"));   // anulada
+$mpdf->showWatermarkText = true;
+$mpdf->watermark_font = 'DejaVuSansCondensed';
+$mpdf->watermarkTextAlpha =  0.5;
+$mpdf->SetDisplayMode('fullpage');
+$mpdf->WriteHTML($html);
 
-        // Output a PDF file directly to the browser
-        $mpdf->Output("CERT HABILIDAD - " . $numCertificado . "-CIP-JUNIN.pdf", 'I');
-    }
-}
+// Output a PDF file directly to the browser
+$mpdf->Output("CERT HABILIDAD-" . $numCertificado . "-CIP-JUNIN.pdf", 'I');
