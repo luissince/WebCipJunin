@@ -117,7 +117,7 @@ class PresidenteAdo
             }
 
             if (boolval($body["Estado"])) {
-                $comandoValidate = Database::getInstance()->getDb()->prepare("UPDATE Presidente SET Estado = 0 AND idCapitulo = ?");
+                $comandoValidate = Database::getInstance()->getDb()->prepare("UPDATE Presidente SET Estado = 0 WHERE idCapitulo = ?");
                 $comandoValidate->bindParam(1, $body["IdCapitulo"], PDO::PARAM_STR);
                 $comandoValidate->execute();
             }
