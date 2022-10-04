@@ -116,12 +116,15 @@ $html = '<html>
                     <div style="background-color: transparent; text-align: center; padding-top: 170px; padding-bottom: 10px;">
                         <h1 class="font-anton font-size-40 font-letter-spacing-4 margin-0">CERTIFICADO</h1>
                     </div>      
+                    
                     <div style="background-color: transparent; padding-left:160px; padding-top: 0px; padding-right:90px; ">
                         <p class="font-size-13 margin-0" style=" text-align: justify;">' . $curso->Titulo . '</p>
                     </div>
+
                     <div style="background-color: transparent; text-align: center; padding-top: 10px; padding-bottom: 0px;">
                         <h1 class="font-fjallaone font-size-33 font-letter-spacing-3 margin-0">' . $curso->Estudiante . '</h1>
                     </div>  
+                    
                     <div style="width: 100%; background-color: transparent;">
                         <div style="width: 27%; float: left; background-color: transparent; text-align: right;">
                             <img width="160" height="160" src="' . $qrOutputInterface->dump(null, __DIR__ . '/logoemail.png') . '" />
@@ -131,9 +134,17 @@ $html = '<html>
                             <p class="font-size-12" style="text-align: justify;  margin-right: 90px; margin-top: 10px;">' . $curso->Detalle . '</p>
                         </div>
                     </div>
+
+                    <div style="width: 100%; background-color: transparent;">
+                        <div style="width: 40%; float: left; background-color: transparent; text-align: center;">
+                            <span>'.$curso->Serie.'-'.$curso->Correlativo.'</span>
+                        </div>
+                    </div>
+
                     <div style=" background-color: transparerent; padding-right:90px;">
                         <p class="font-size-12 margin-0" style="text-align: right;">Huancayo, ' . Tools::MonthName(intval($curso->FechaMoth)) . ' de ' . $curso->FechaYear . '</p>
                     </div>
+
                     <div style="width: 100%; margin-top: 10px;">
                         <div style="width: 50%; float: left; text-align: center;">         
                             '.($decano->Ruta == "" ? "" : '<img width="196" height="90" style="background-color:transparent;" src="../resources/images/'.$decano->Ruta.'" /> ').'

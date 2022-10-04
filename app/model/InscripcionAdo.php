@@ -39,8 +39,7 @@ class InscripcionAdo
             u.Nombres AS NomUsuario
             
             FROM Inscripcion AS i
-            INNER JOIN Persona AS p
-            ON p.idDNI = i.idParticipante
+            INNER JOIN Persona AS p ON p.idDNI = i.idParticipante
             LEFT JOIN Colegiatura AS c ON c.idDNI = p.idDNI AND c.Principal = 1
             LEFT JOIN Especialidad AS e ON e.idEspecialidad = c.idEspecialidad
             LEFT JOIN Capitulo AS ca ON ca.idCapitulo = e.idCapitulo
@@ -54,6 +53,9 @@ class InscripcionAdo
             e.Especialidad LIKE concat('%',?,'%') AND i.idCurso = ?
             OR
             ca.Capitulo LIKE concat('%',?,'%') AND i.idCurso = ?
+            OR
+            CONCAT(i.Serie,'-',i.Correlativo) LIKE concat(?,'%') AND i.idCurso = ?
+
             ORDER BY i.Fecha DESC, i.Hora DESC
             OFFSET ? ROWS FETCH NEXT ? ROWS ONLY");
             $comando->bindParam(1, $text, PDO::PARAM_STR);
@@ -68,8 +70,11 @@ class InscripcionAdo
             $comando->bindParam(7, $text, PDO::PARAM_STR);
             $comando->bindParam(8, $idCurso, PDO::PARAM_STR);
 
-            $comando->bindParam(9, $posicionPagina, PDO::PARAM_INT);
-            $comando->bindParam(10, $filasPorPagina, PDO::PARAM_INT);
+            $comando->bindParam(9, $text, PDO::PARAM_STR);
+            $comando->bindParam(10, $idCurso, PDO::PARAM_STR);
+
+            $comando->bindParam(11, $posicionPagina, PDO::PARAM_INT);
+            $comando->bindParam(12, $filasPorPagina, PDO::PARAM_INT);
             $comando->execute();
             $count = 0;
             while ($row = $comando->fetch()) {
@@ -113,7 +118,9 @@ class InscripcionAdo
             OR
             e.Especialidad LIKE concat('%', ?,'%') AND i.idCurso = ?
             OR
-            ca.Capitulo LIKE concat('%', ?,'%') AND i.idCurso = ?");
+            ca.Capitulo LIKE concat('%', ?,'%') AND i.idCurso = ?
+            OR
+            CONCAT(i.Serie,'-',i.Correlativo) LIKE concat(?,'%') AND i.idCurso = ?");
             $comandoTotal->bindParam(1, $text, PDO::PARAM_STR);
             $comandoTotal->bindParam(2, $idCurso, PDO::PARAM_STR);
 
@@ -125,6 +132,10 @@ class InscripcionAdo
 
             $comandoTotal->bindParam(7, $text, PDO::PARAM_STR);
             $comandoTotal->bindParam(8, $idCurso, PDO::PARAM_STR);
+            
+            $comandoTotal->bindParam(9, $text, PDO::PARAM_STR);
+            $comandoTotal->bindParam(10, $idCurso, PDO::PARAM_STR);
+            
             $comandoTotal->execute();
             $resultTotal =  $comandoTotal->fetchColumn();
 

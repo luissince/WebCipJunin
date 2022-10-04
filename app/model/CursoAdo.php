@@ -329,6 +329,8 @@ class CursoAdo
             c.Nombre,
             c.Titulo,
             c.Detalle,
+            ic.Serie,
+            ic.Correlativo,
             CONCAT(es.Nombres,' ',es.Apellidos) AS Estudiante,
             CONCAT(org.Nombres,' ',org.Apellidos) AS Presidente,
             pe.Ruta,

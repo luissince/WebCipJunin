@@ -180,7 +180,7 @@
         function loadInitCertificado() {
             // console.log(token)
             if (token == "") {
-                $("#lblCertificado").html("Certificado no Existente");
+                $("#lblCertificado").html("Certificado no Existente.");
 
                 $("#divBox").removeClass("bg-purple").addClass("bg-times");
                 $("#divIcon").empty();
@@ -189,7 +189,7 @@
             }
 
             if (token == undefined) {
-                $("#lblCertificado").html("Certificado no Existente");
+                $("#lblCertificado").html("Certificado no Existente.");
 
                 $("#divBox").removeClass("bg-purple").addClass("bg-times");
                 $("#divIcon").empty();

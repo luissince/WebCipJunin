@@ -172,13 +172,13 @@ class ListarIngenierosAdo
             CONCAT(Apellidos,', ',Nombres) AS Ingeniero 
             FROM Persona 
             WHERE 
-            ? <> '' AND CIP LIKE ?  
+            ? <> '' AND CIP = ?  
             OR
-            ? <> '' AND idDNI LIKE ?
+            ? <> '' AND idDNI = ?
             OR
-            ? <> '' AND Apellidos LIKE ?
+            ? <> '' AND Apellidos LIKE CONCAT(?,'%')
             OR
-            ? <> '' AND Nombres LIKE ?");
+            ? <> '' AND Nombres LIKE CONCAT(?,'%')");
             $cmdSelect->bindParam(1, $search, PDO::PARAM_STR);
             $cmdSelect->bindParam(2, $search, PDO::PARAM_STR);
 
