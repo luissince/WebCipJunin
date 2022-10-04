@@ -200,7 +200,7 @@
           "capitulos", "universidad", "conceptos", "ingenieros", "habilidadIngeniero", "empresas",
           "cobros", "comprobantes", "reportes",
           "notaCredito", "nuevaNotaCredito", "consultaComprobante", "comprobantesElectronicos",
-          "configuracion", "bancos", "configEmpresa", "empleo", "mensaje", "curso", "directivo", "presidentes"
+          "configuracion", "bancos", "configEmpresa", "empleo", "mensaje", "curso", "directivo", "presidentes", "inscripcion"
       ];
 
       tabs.forEach(e => {
@@ -243,7 +243,7 @@
               } else if (id == "tab-comprobantesElectronicos") {
                   document.getElementById("tab-comprobantesElectronicos").setAttribute("class", "nav-link active");
               }
-          } else if (id == "tab-configuracion" || id == "tab-configEmpresa" || id == "tab-bancos" || id == "tab-empleo" || id == "tab-mensaje" || id == "curso" || id == "tab-directivo" || id == "tab-presidentes") {
+          } else if (id == "tab-configuracion" || id == "tab-configEmpresa" || id == "tab-bancos" || id == "tab-empleo" || id == "tab-mensaje" || id == "curso" || id == "tab-directivo" || id == "tab-presidentes" || id == "tab-inscripcion") {
               document.getElementById("tab-menu-configuracion").setAttribute("class", "nav-item active");
               if (id == "tab-configuracion") {
                   document.getElementById("tab-configuracion").setAttribute("class", "nav-link active");
@@ -255,11 +255,11 @@
                   document.getElementById("tab-empleo").setAttribute("class", "nav-link active");
               } else if (id == "tab-mensaje") {
                   document.getElementById("tab-mensaje").setAttribute("class", "nav-link active");
-              } else if (id == "tab-curso") {
+              } else if (id == "tab-curso" || id == "tab-inscripcion") {
                   document.getElementById("tab-curso").setAttribute("class", "nav-link active");
-              }else if (id == "tab-directivo") {
+              } else if (id == "tab-directivo") {
                   document.getElementById("tab-directivo").setAttribute("class", "nav-link active");
-              }else if (id == "tab-presidentes") {
+              } else if (id == "tab-presidentes") {
                   document.getElementById("tab-presidentes").setAttribute("class", "nav-link active");
               }
           } else {

@@ -344,9 +344,9 @@ if (!isset($_SESSION['IdUsuario'])) {
                 let tbTable = $("#tbTable");
 
                 let idUsuario = <?= $_SESSION['IdUsuario'] ?>;
-                let editView = "<?= $_SESSION["Permisos"][26]["actualizar"]; ?>";
-                let deleteView = "<?= $_SESSION["Permisos"][26]["eliminar"]; ?>";
-
+                let editView = Boolean("<?= $_SESSION["Permisos"][26]["actualizar"]; ?>");
+                let deleteView = Boolean("<?= $_SESSION["Permisos"][26]["eliminar"]; ?>");
+  
                 let idCurso = '';
 
                 $(document).ready(function() {
@@ -443,9 +443,9 @@ if (!isset($_SESSION['IdUsuario'])) {
                             for (let curso of result.data.cursos) {
 
                                 let btnUpdate =
-                                    `<button class="btn btn-warning btn-xs" title="Editar" onclick="openUpdateModalCurso(${curso.idCurso} )"><i class="fa fa-edit" style="font-size:25px;"></i></button>`;
+                                    `<button class="btn btn-warning btn-xs" title="Editar" onclick="openUpdateModalCurso(${curso.idCurso})" ${!editView?"disabled":""}><i class="fa fa-edit" style="font-size:25px;"></i></button>`;
                                 let btnDelete =
-                                    `<button class="btn btn-danger btn-xs" title="Eliminar" onclick="delteModalCurso(${curso.idCurso})"><i class="fa fa-trash" style="font-size:25px;"></i></button>`
+                                    `<button class="btn btn-danger btn-xs" title="Eliminar" onclick="delteModalCurso(${curso.idCurso})" ${!deleteView?"disabled":""}><i class="fa fa-trash" style="font-size:25px;"></i></button>`
                                 let btnInscripcion = '<button class="btn btn-success btn-xs" title="Inscribir" onclick="linkInscripcion(\'' + curso.idCurso + '\',\'' +
                                     curso.Nombre + '\',\'' + curso.Capitulo + '\',\'' + curso.PrecioCurso + '\',\'' + curso.PrecioCertificado + '\',\'' + curso.FechaInicio + '\',\'' + curso.HoraInicio + '\')"><i class="fa fa-id-card" style="font-size:25px;"></i></button>'
 
