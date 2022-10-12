@@ -9,7 +9,7 @@ class LogoOptions extends QROptions
     protected int $logoSpaceWidth;
     protected int $logoSpaceHeight;
 
-    public function __construct(int $version = 7, int $eccLevel = QRCode::ECC_H, bool $imageBase64 = true, int $logoSpaceWidth = 13, int $logoSpaceHeight = 13, int $scale = 5, bool $imageTransparent = true)
+    public function __construct(int $version = QRCode::VERSION_AUTO, int $eccLevel = QRCode::ECC_H, bool $imageBase64 = true, int $logoSpaceWidth = 13, int $logoSpaceHeight = 13, int $scale = 5, bool $imageTransparent = true)
     {
         $this->version          = $version;
         $this->eccLevel         = $eccLevel;

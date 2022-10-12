@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Class pdfCertCurso
  *
@@ -20,26 +21,49 @@ require __DIR__ . './../src/autoload.php';
 
 $result = CursoAdo::generarCertificado($_GET["idCurso"], $_GET["idParticipante"]);
 
+// $decrypt = Tools::decrypt($cryt);
+
+// $token = Tools::createToken();
+
+// Tools::printErrorJson([
+    // $token,
+    // Tools::verifyToken("eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpYXQiOjE2NjUwNzQ4MDAsImV4cCI6MTY2NTA3NDgzMCwiZGF0YSI6eyJpZCI6ImFzZGEiLCJlbWFpbCI6ImFzZGFAZ21haWwuY29tIn19.gD29y-F_tCvbCOnoRUVf_S1ucYcCdlGFIgNlEnXS8d0"),
+// ]);
+// Tools::printErrorJson($cryt);
+// Tools::printErrorJson(json_decode($decrypt));
+
 if (!is_array($result)) {
     Tools::printErrorJson($result);
 }
 
-if(!is_object($result[0])){
+if (!is_object($result[0])) {
     Tools::printErrorJson("No se pudo procesar la información del curso, comuníquese con el administrador");
 }
 
-if(!is_object($result[1])){
+if (!is_object($result[1])) {
     Tools::printErrorJson("No se pudo procesar la información del decano o encargado, comuníquese con el administrador");
 }
 
 $curso = $result[0];
 $decano =  $result[1];
 
-$data = $curso->Nombre;
+$token = Tools::encrypt(json_encode(array(
+    "idCurso" => $_GET["idCurso"],
+    "idParticipante" => $_GET["idParticipante"],
+)));
+
+if (!empty($_SERVER['HTTPS']) && ('on' == $_SERVER['HTTPS'])) {
+    $uri = 'https://';
+} else {
+    $uri = 'http://';
+}
+$uri .= $_SERVER['HTTP_HOST'];
+
+$codbar = $uri . "/view/validatecurso.php?token=" . $token;
 
 $options = new LogoOptions();
 
-$qrOutputInterface = new QRImageWithLogo($options, (new QRCode($options))->getMatrix($data));
+$qrOutputInterface = new QRImageWithLogo($options, (new QRCode($options))->getMatrix($codbar));
 
 $html = '<html>
             <head>
@@ -137,7 +161,7 @@ $html = '<html>
 
                     <div style="width: 100%; background-color: transparent;">
                         <div style="width: 40%; float: left; background-color: transparent; text-align: center;">
-                            <span>'.$curso->Serie.'-'.$curso->Correlativo.'</span>
+                            <span>' . $curso->Serie . '-' . $curso->Correlativo . '</span>
                         </div>
                     </div>
 
@@ -147,21 +171,21 @@ $html = '<html>
 
                     <div style="width: 100%; margin-top: 10px;">
                         <div style="width: 50%; float: left; text-align: center;">         
-                            '.($decano->Ruta == "" ? "" : '<img width="196" height="90" style="background-color:transparent;" src="../resources/images/'.$decano->Ruta.'" /> ').'
+                            ' . ($decano->Ruta == "" ? "" : '<img width="196" height="90" style="background-color:transparent;" src="../resources/images/' . $decano->Ruta . '" /> ') . '
                                
                             <br />               
-                            <span class="margin-0 border-top">ING. '.$decano->Decano.'</span>
+                            <span class="margin-0 border-top">ING. ' . $decano->Decano . '</span>
                             <br/>
                             <p class="margin-0 font-size-6">DECANO DEPARTAMENTAL DEL CIP-CDJ</p>
                         </div>
 
                         <div style="width: 50%; float: left; text-align: center;">
-                            '.($curso->Ruta == "" ? "" : '<img width="196" height="90" style="background-color:transparent;" src="../resources/images/'.$curso->Ruta.'" /> ').'
+                            ' . ($curso->Ruta == "" ? "" : '<img width="196" height="90" style="background-color:transparent;" src="../resources/images/' . $curso->Ruta . '" /> ') . '
                             
                             <br />  
                             <span class="margin-0 border-top">ING. ' . $curso->Presidente . '</span>
                             <br/>
-                            <p class="margin-0 font-size-6">PRESIDENTE DE CAPÍTULO '.$curso->Capitulo.'</p>
+                            <p class="margin-0 font-size-6">PRESIDENTE DE CAPÍTULO ' . $curso->Capitulo . '</p>
                         </div>
                     </div>
                 </div>                

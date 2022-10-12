@@ -1,0 +1,5 @@
+{
+    "require": {
+        "brainfoolong/cryptojs-aes-php": "^2.1"
+    }
+}

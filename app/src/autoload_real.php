@@ -14,6 +14,7 @@ class ComposerAutoloader
                     break;
                 }
             }
+            
             if (file_exists($relative_class)) {
                 require_once $relative_class;
             }
@@ -23,7 +24,9 @@ class ComposerAutoloader
             require_once __DIR__ . './../sunat/lib/phpqrcode/vendor/autoload.php';
             require_once __DIR__ . './../sunat/lib/phpmail/vendor/autoload.php';   
             require_once __DIR__ . './../sunat/lib/phpdotenv/vendor/autoload.php'; 
-            require_once __DIR__ . './../sunat/lib/dompdf/vendor/autoload.php';        
+            require_once __DIR__ . './../sunat/lib/dompdf/vendor/autoload.php';
+            require_once __DIR__ . './../sunat/lib/cryptojsaes/vendor/autoload.php'; 
+            require_once __DIR__ . './../sunat/lib/jwt/vendor/autoload.php';        
         });
     }
 }
