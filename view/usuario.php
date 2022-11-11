@@ -112,7 +112,7 @@ if (!isset($_SESSION['IdUsuario'])) {
                 <div class="content-wrapper">
                     <!-- Main content -->
                     <section class="content-header">
-                        <h3 class="no-margin"> Usuarios <small> Lista </small> </h3>
+                        <h3 class="no-margin"> Usuarios <small> Lista 2 </small> </h3>
                         <ol class="breadcrumb">
                             <li><a href="index.php"><i class="fa fa-home"></i> Inicio</a></li>
                             <li class="active">usuario</li>
