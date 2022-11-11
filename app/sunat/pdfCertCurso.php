@@ -21,17 +21,6 @@ require __DIR__ . './../src/autoload.php';
 
 $result = CursoAdo::generarCertificado($_GET["idCurso"], $_GET["idParticipante"]);
 
-// $decrypt = Tools::decrypt($cryt);
-
-// $token = Tools::createToken();
-
-// Tools::printErrorJson([
-    // $token,
-    // Tools::verifyToken("eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpYXQiOjE2NjUwNzQ4MDAsImV4cCI6MTY2NTA3NDgzMCwiZGF0YSI6eyJpZCI6ImFzZGEiLCJlbWFpbCI6ImFzZGFAZ21haWwuY29tIn19.gD29y-F_tCvbCOnoRUVf_S1ucYcCdlGFIgNlEnXS8d0"),
-// ]);
-// Tools::printErrorJson($cryt);
-// Tools::printErrorJson(json_decode($decrypt));
-
 if (!is_array($result)) {
     Tools::printErrorJson($result);
 }
@@ -47,11 +36,6 @@ if (!is_object($result[1])) {
 $curso = $result[0];
 $decano =  $result[1];
 
-$token = Tools::encrypt(json_encode(array(
-    "idCurso" => $_GET["idCurso"],
-    "idParticipante" => $_GET["idParticipante"],
-)));
-
 if (!empty($_SERVER['HTTPS']) && ('on' == $_SERVER['HTTPS'])) {
     $uri = 'https://';
 } else {
@@ -59,7 +43,7 @@ if (!empty($_SERVER['HTTPS']) && ('on' == $_SERVER['HTTPS'])) {
 }
 $uri .= $_SERVER['HTTP_HOST'];
 
-$codbar = $uri . "/view/validatecurso.php?token=" . $token;
+$codbar = $uri . "/view/validatecurso.php?token=" . Tools::open_ssl_encrypt(array("idCurso" => $_GET["idCurso"], "idParticipante" => $_GET["idParticipante"]));
 
 $options = new LogoOptions();
 

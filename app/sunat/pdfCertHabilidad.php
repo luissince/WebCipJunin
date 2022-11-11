@@ -18,11 +18,11 @@ if (!is_array($CertificadoHabilidad)) {
     Tools::printErrorJson($CertificadoHabilidad);
 }
 
-if(!is_object($CertificadoHabilidad[0])){
+if (!is_object($CertificadoHabilidad[0])) {
     Tools::printErrorJson("No se pudo procesar la información del certificado, comuníquese con el administrador");
 }
 
-if(!is_object($CertificadoHabilidad[1])){
+if (!is_object($CertificadoHabilidad[1])) {
     Tools::printErrorJson("No se pudo procesar la información del decano o encargado, comuníquese con el administrador");
 }
 
@@ -59,11 +59,6 @@ $AnioRegistro = substr($Datos->frAnio, 2, 2);
 
 $decano =  $CertificadoHabilidad[1];
 
-$json = json_encode(array(
-    "tipo" => "a",
-    "idIngreso" => $_GET["idIngreso"]
-));
-
 if (!empty($_SERVER['HTTPS']) && ('on' == $_SERVER['HTTPS'])) {
     $uri = 'https://';
 } else {
@@ -71,8 +66,7 @@ if (!empty($_SERVER['HTTPS']) && ('on' == $_SERVER['HTTPS'])) {
 }
 $uri .= $_SERVER['HTTP_HOST'];
 
-$token = Tools::my_encrypt($json, "bRuD5WYw5wd0rdHR9yLlM6wt2vteuiniQBqE70nAuhU=CIPJUNIN");
-$codbar = $uri . "/view/validatecert.php?token=" . $token;
+$codbar = $uri . "/view/validatecert.php?token=" . Tools::open_ssl_encrypt(array("tipo" => "a", "idIngreso" => $_GET["idIngreso"]));
 
 $html = '<html>
             <head>
@@ -194,7 +188,7 @@ $html = '<html>
                         <img width="100" height="100" style="margin-left:160px;margin-top:35px;" src="' . (new QRCode)->render($codbar) . '" />
                     </span>
                     <span>
-                    '.($decano->Ruta == "" ? "" : '<img width="196" height="90" style="margin-left:230px;margin-top:35px;background-color:transparent;" src="../resources/images/'.$decano->Ruta.'" /> ').'
+                    ' . ($decano->Ruta == "" ? "" : '<img width="196" height="90" style="margin-left:230px;margin-top:35px;background-color:transparent;" src="../resources/images/' . $decano->Ruta . '" /> ') . '
                     </span>           
                 </div>
                 <!--################################################## Fin del Pie del Documento ###############################################################-->

@@ -16,11 +16,38 @@ $dotenv->load();
 class Tools
 {
 
+    /**
+     * 
+     */
     public static function formatNumber($numeracion, $length = 6)
     {
         return strlen($numeracion) > $length ? $numeracion : substr(str_repeat(0, $length) . $numeracion, -$length);
     }
 
+    /**
+     * @param mixed $encrypt valor a encriptar
+     * @return string
+     */
+    public static function open_ssl_encrypt($encrypt)
+    {
+        return rawurlencode(openssl_encrypt(json_encode($encrypt), "AES-256-ECB", $_ENV["CRYPTO_KEY"]));
+    }
+
+    /**
+     * @return object|string
+     */
+    public static function open_ssl_decrypt($encrypted)
+    {
+        $decrypted = openssl_decrypt(rawurldecode($encrypted), "AES-256-ECB", $_ENV["CRYPTO_KEY"]);
+        if (!$decrypted) {
+            return "error";
+        }
+        return json_decode($decrypted);
+    }
+
+    /**
+     * 
+     */
     public static function my_encrypt($encrypt, $key)
     {
         $iv = openssl_random_pseudo_bytes(openssl_cipher_iv_length('AES-256-CBC'));
@@ -28,6 +55,9 @@ class Tools
         return rawurlencode(str_replace(['+', '/', '='], ['-', '_', ''], base64_encode($encrypted . "::" . $iv)));
     }
 
+    /**
+     * 
+     */
     public static  function my_decrypt($encrypted, $key)
     {
         $explote = explode(
@@ -52,6 +82,9 @@ class Tools
         return openssl_decrypt($encrypt, 'AES-256-CBC', $key, 0, $iv);
     }
 
+    /**
+     * 
+     */
     public static function encrypt($originalValue)
     {
         $password = $_ENV["CRYPTO_KEY"];
@@ -59,6 +92,9 @@ class Tools
         return urlencode($encrypted);
     }
 
+    /**
+     * 
+     */
     public static function decrypt($encrypted)
     {
         $password = $_ENV["CRYPTO_KEY"];
@@ -89,7 +125,7 @@ class Tools
         return $jwt;
     }
 
-     /**
+    /**
      * @param string $jwt Token previamente generado
      * 
      * @return array|string Datos del token|expired|invalid|error
