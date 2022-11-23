@@ -228,7 +228,9 @@ if (!isset($_SESSION['IdUsuario'])) {
                                             <th width="5%" class="text-center">Eliminar</th>
                                         </thead>
                                         <tbody id="tbTable">
-
+                                            <tr>
+                                                <td class="text-center" colspan="8">No hay datos.</td>
+                                            </tr>
                                         </tbody>
                                     </table>
                                 </div>

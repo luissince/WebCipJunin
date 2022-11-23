@@ -211,7 +211,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
         $headers = getallheaders();
         list($bearer, $token) = explode(" ", $headers['Authorization']);
 
-        $json = Tools::my_decrypt($token, 'bRuD5WYw5wd0rdHR9yLlM6wt2vteuiniQBqE70nAuhU=CIPJUNIN');
+        $json = Tools::open_ssl_decrypt($token);
 
         if ($json == "error") {
             print json_encode(array(
@@ -220,8 +220,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
             ));
             exit();
         } else {
-
-            $object = json_decode($json);
+            $object = $json;
 
             $tipo = "Certificado De Habilidad";
 

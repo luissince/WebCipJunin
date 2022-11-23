@@ -210,7 +210,6 @@
                     $("#divOverlayModal").removeClass("d-none");
                 },
                 success: function(result) {
-                    // console.log(result);
                     if (result.estado == "1") {
                         if (result.image == null) {
                             lblImagen.attr("src", "images/noimage.jpg");
@@ -257,7 +256,7 @@
                     $("#divOverlayModal").addClass("d-none");
                 },
                 error: function(error) {
-                    // console.log(error)
+                    console.log(error)
                     $("#divOverlayModal").addClass("d-none");
                     $("#lblCertificado").html("Certificado no Existente");
 
