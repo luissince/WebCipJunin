@@ -56,58 +56,52 @@
                                 <div class="form-horizontal">
                                     <div class="form-group">
                                         <label for="txtUsuario" class="col-sm-2 control-label">N° Cert.:</label>
-
                                         <div class="col-sm-10">
-                                            <label class="control-label" id="lblNumero">-</label>
+                                            <label class="control-label" id="lblNumeroCertificado">-</label>
                                         </div>
                                     </div>
                                     <div class="form-group">
-                                        <label for="txtUsuario" class="col-sm-2 control-label">Especialidad:</label>
-
+                                        <label for="txtUsuario" class="col-sm-2 control-label">Curso:</label>
                                         <div class="col-sm-10">
-                                            <label class="control-label" id="lblEspecialidad">-</label>
+                                            <label class="control-label" id="lblCurso">-</label>
                                         </div>
                                     </div>
                                     <div class="form-group">
-                                        <label for="txtClave" class="col-sm-2 control-label">Asunto:</label>
-
+                                        <label for="txtUsuario" class="col-sm-2 control-label">Capitulo:</label>
                                         <div class="col-sm-10">
-                                            <label class="control-label" id="lblAsunto">-</label>
+                                            <label class="control-label" id="lblCapitulo">-</label>
                                         </div>
                                     </div>
                                     <div class="form-group">
-                                        <label for="txtClave" class="col-sm-2 control-label">Entidad:</label>
-
+                                        <label for="txtUsuario" class="col-sm-2 control-label">Organizador:</label>
                                         <div class="col-sm-10">
-                                            <label class="control-label" id="lblEntidad">-</label>
+                                            <label class="control-label" id="lblOrganizador">-</label>
                                         </div>
                                     </div>
                                     <div class="form-group">
-                                        <label for="txtClave" class="col-sm-2 control-label">Lugar:</label>
-
+                                        <label for="txtUsuario" class="col-sm-2 control-label">Modalidad:</label>
                                         <div class="col-sm-10">
-                                            <label class="control-label" id="lblLugar">-</label>
+                                            <label class="control-label" id="lblModalidad">-</label>
                                         </div>
                                     </div>
                                     <div class="form-group">
-                                        <label for="txtClave" class="col-sm-2 control-label">Fch. Registro:</label>
-
+                                        <label for="txtUsuario" class="col-sm-2 control-label">Fch. Registro:</label>
                                         <div class="col-sm-10">
                                             <label class="control-label" id="lblRegistro">-</label>
                                         </div>
                                     </div>
-                                    <div class="form-group">
+                                    <!-- <div class="form-group">
                                         <label for="txtClave" class="col-sm-2 control-label">Fch. Vigencia:</label>
 
                                         <div class="col-sm-10">
                                             <label class="control-label" id="lblVigencia">-</label>
                                         </div>
-                                    </div>
+                                    </div> -->
 
                                 </div>
                             </div>
 
-                            <div class="info-box bg-purple" id="divBox">
+                            <div class="info-box bg-purple" id="divBox" style="margin-bottom: 0em;">
                                 <span class="info-box-icon" id="divIcon"><i class="fa fa-refresh"></i></span>
                                 <div class="info-box-content">
                                     <span class="info-box-text" id="lblCertificado">-</span>
