@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="es">
 
 <head>
     <?php include('./layout/head.php'); ?>
@@ -40,9 +40,9 @@
 
                                 <h3 class="profile-username text-center" id="lblDatos">--</h3>
 
-                                <p class=" text-center text-white" id="lblCip">--</p>
+                                <!-- <p class=" text-center text-white" id="lblCip">--</p> -->
 
-                                <p class=" text-center text-white" id="lblNum">--</p>
+                                <!-- <p class=" text-center text-white" id="lblNum">--</p> -->
 
                             </div>
                             <!-- /.box-body -->
@@ -73,12 +73,6 @@
                                         </div>
                                     </div>
                                     <div class="form-group">
-                                        <label for="txtUsuario" class="col-sm-2 control-label">Organizador:</label>
-                                        <div class="col-sm-10">
-                                            <label class="control-label" id="lblOrganizador">-</label>
-                                        </div>
-                                    </div>
-                                    <div class="form-group">
                                         <label for="txtUsuario" class="col-sm-2 control-label">Modalidad:</label>
                                         <div class="col-sm-10">
                                             <label class="control-label" id="lblModalidad">-</label>
@@ -90,14 +84,6 @@
                                             <label class="control-label" id="lblRegistro">-</label>
                                         </div>
                                     </div>
-                                    <!-- <div class="form-group">
-                                        <label for="txtClave" class="col-sm-2 control-label">Fch. Vigencia:</label>
-
-                                        <div class="col-sm-10">
-                                            <label class="control-label" id="lblVigencia">-</label>
-                                        </div>
-                                    </div> -->
-
                                 </div>
                             </div>
 
@@ -171,7 +157,7 @@
             loadInitCertificado();
         });
 
-        function loadInitCertificado() {
+        async function loadInitCertificado() {
             // console.log(token)
             if (token == "") {
                 $("#lblCertificado").html("Certificado no Existente.");
@@ -191,75 +177,108 @@
                 return;
             }
 
-            $.ajax({
-                url: "../app/controller/IngresoController.php",
-                method: "POST",
-                headers: {
-                    'Authorization': `Bearer ${token}`,
-                },
-                data: {
+            try {
+                $("#divOverlayModal").removeClass("d-none");
+
+                const response = await axios.post("../app/web/CursoWeb.php", {
                     "type": "validateCert",
-                },
-                beforeSend: function(xhr) {
-                    $("#divOverlayModal").removeClass("d-none");
-                },
-                success: function(result) {
-                    console.log(result);
-                    if (result.estado == "1") {
-                        if (result.image == null) {
-                            lblImagen.attr("src", "images/noimage.jpg");
-                        } else {
-                            lblImagen.attr("src", "data:image/(png|jpg|jpge|gif);base64," + result.image[1]);
-                        }
-
-                        $("#lblDatos").html(result.data.Nombres + " " + result.data.Apellidos);
-                        $("#lblCip").html("Cip: " + result.data.CIP);
-                        $("#lblNum").html("Dni: " + result.data.NumDoc);
-
-                        $("#lblNumero").html(result.data.Numero);
-                        $("#lblEspecialidad").html(result.data.Especialidad);
-                        $("#lblAsunto").html(result.data.Asunto);
-                        $("#lblEntidad").html(result.data.Entidad);
-                        $("#lblLugar").html(result.data.Lugar);
-                        $("#lblRegistro").html(result.data.FechaRegistro);
-                        $("#lblVigencia").html(result.data.HastaFecha);
-
-                        $("#lblCertificado").html(result.tipo);
-                        if (result.data.Vencimiento == "0") {
-                            $("#divBox").removeClass("bg-purple").addClass("bg-yellow");
-                            $("#divIcon").empty();
-                            $("#divIcon").append('<i class="fa fa-warning"></i>');
-                        } else {
-                            if (result.data.Anulado == "0") {
-                                $("#divBox").removeClass("bg-purple").addClass("bg-green");
-                                $("#divIcon").empty();
-                                $("#divIcon").append('<i class="fa fa-check"></i>');
-
-                            } else {
-                                $("#divBox").removeClass("bg-purple").addClass("bg-red");
-                                $("#divIcon").empty();
-                                $("#divIcon").append('<i class="fa fa-ban"></i>');
-                            }
-                        }
-                    } else {
-                        $("#lblCertificado").html("Certificado no Existente");
-
-                        $("#divBox").removeClass("bg-purple").addClass("bg-times");
-                        $("#divIcon").empty();
-                        $("#divIcon").append('<i class="fa fa-times"></i>');
+                }, {
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${token}`
                     }
-                    $("#divOverlayModal").addClass("d-none");
-                },
-                error: function(error) {
-                    // console.log(error)
-                    $("#divOverlayModal").addClass("d-none");
-                    $("#lblCertificado").html("Certificado no Existente");
+                });
 
-                    $("#divBox").removeClass("bg-purple").addClass("bg-times");
-                    $("#divIcon").empty();
-                    $("#divIcon").append('<i class="fa fa-times"></i>');
+                const result = response.data;
+
+                if (result.image == null) {
+                    lblImagen.attr("src", "images/noimage.jpg");
+                } else {
+                    // lblImagen.attr("src", "data:image/(png|jpg|jpge|gif);base64," + result.image[1]);
                 }
-            });
+
+                $("#lblDatos").html(result.curso.Estudiante);
+
+                $("#lblNumeroCertificado").html(result.curso.Serie+"-"+result.curso.Correlativo);
+                $("#lblCurso").html(result.curso.Nombre);
+                $("#lblCapitulo").html(result.curso.Capitulo);
+
+                console.log(result)
+                $("#divOverlayModal").addClass("d-none");
+            } catch (error) {
+                $("#divOverlayModal").addClass("d-none");
+                console.log(error)
+            }
+
+            // $.ajax({
+            //     url: "../app/web/CursoWeb.php",
+            //     method: "POST",
+            //     headers: {
+            //         'Authorization': `Bearer ${token}`,
+            //     },
+            //     data: {
+            //         "type": "validateCert",
+            //     },
+            //     beforeSend: function(xhr) {
+            //         $("#divOverlayModal").removeClass("d-none");
+            //     },
+            //     success: function(result) {
+            //         console.log(result);
+            //         // if (result.estado == "1") {
+            //         //     if (result.image == null) {
+            //         //         lblImagen.attr("src", "images/noimage.jpg");
+            //         //     } else {
+            //         //         lblImagen.attr("src", "data:image/(png|jpg|jpge|gif);base64," + result.image[1]);
+            //         //     }
+
+            //         //     $("#lblDatos").html(result.data.Nombres + " " + result.data.Apellidos);
+            //         //     $("#lblCip").html("Cip: " + result.data.CIP);
+            //         //     $("#lblNum").html("Dni: " + result.data.NumDoc);
+
+            //         //     $("#lblNumero").html(result.data.Numero);
+            //         //     $("#lblEspecialidad").html(result.data.Especialidad);
+            //         //     $("#lblAsunto").html(result.data.Asunto);
+            //         //     $("#lblEntidad").html(result.data.Entidad);
+            //         //     $("#lblLugar").html(result.data.Lugar);
+            //         //     $("#lblRegistro").html(result.data.FechaRegistro);
+            //         //     $("#lblVigencia").html(result.data.HastaFecha);
+
+            //         //     $("#lblCertificado").html(result.tipo);
+            //         //     if (result.data.Vencimiento == "0") {
+            //         //         $("#divBox").removeClass("bg-purple").addClass("bg-yellow");
+            //         //         $("#divIcon").empty();
+            //         //         $("#divIcon").append('<i class="fa fa-warning"></i>');
+            //         //     } else {
+            //         //         if (result.data.Anulado == "0") {
+            //         //             $("#divBox").removeClass("bg-purple").addClass("bg-green");
+            //         //             $("#divIcon").empty();
+            //         //             $("#divIcon").append('<i class="fa fa-check"></i>');
+
+            //         //         } else {
+            //         //             $("#divBox").removeClass("bg-purple").addClass("bg-red");
+            //         //             $("#divIcon").empty();
+            //         //             $("#divIcon").append('<i class="fa fa-ban"></i>');
+            //         //         }
+            //         //     }
+            //         // } else {
+            //         //     $("#lblCertificado").html("Certificado no Existente");
+
+            //         //     $("#divBox").removeClass("bg-purple").addClass("bg-times");
+            //         //     $("#divIcon").empty();
+            //         //     $("#divIcon").append('<i class="fa fa-times"></i>');
+            //         // }
+            //         // $("#divOverlayModal").addClass("d-none");
+            //     },
+            //     error: function(error) {
+            //         console.log(error)
+            //         $("#divOverlayModal").addClass("d-none");
+            //         $("#lblCertificado").html("Certificado no Existente");
+
+            //         $("#divBox").removeClass("bg-purple").addClass("bg-times");
+            //         $("#divIcon").empty();
+            //         $("#divIcon").append('<i class="fa fa-times"></i>');
+            //     }
+            // });
         }
     </script>
 </body>

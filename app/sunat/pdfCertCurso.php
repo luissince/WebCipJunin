@@ -43,7 +43,7 @@ if (!empty($_SERVER['HTTPS']) && ('on' == $_SERVER['HTTPS'])) {
 }
 $uri .= $_SERVER['HTTP_HOST'];
 
-$codbar = $uri . "/view/validatecurso.php?token=" . Tools::open_ssl_encrypt(array("idCurso" => $_GET["idCurso"], "idParticipante" => $_GET["idParticipante"]));
+$codbar = $uri . "/view/validatecourse.php?token=" . Tools::open_ssl_encrypt(array("idCurso" => $_GET["idCurso"], "idParticipante" => $_GET["idParticipante"]));
 
 $options = new LogoOptions();
 

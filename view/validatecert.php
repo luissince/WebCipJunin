@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="es">
 
 <head>
     <?php include('./layout/head.php'); ?>
@@ -178,7 +178,6 @@
         });
 
         function loadInitCertificado() {
-            // console.log(token)
             if (token == "") {
                 $("#lblCertificado").html("Certificado no Existente.");
 

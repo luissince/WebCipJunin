@@ -220,26 +220,24 @@ if ($_SERVER['REQUEST_METHOD'] == 'GET') {
             ));
             exit();
         } else {
-            $object = $json;
 
             $tipo = "Certificado De Habilidad";
 
-            if ($object->tipo == "a") {
+            if ($json->tipo == "a") {
                 $tipo  = "Certificado De Habilidad";
-            } else if ($object->tipo == "b") {
+            } else if ($json->tipo == "b") {
                 $tipo  = "Certificado De Habilidad para Firma de Contrato de Obra <br> Pública o Residencia";
             } else {
                 $tipo  = "Certificado De Habilidad por Proyecto";
             }
 
-            $result = IngresosAdo::validateCert($object->idIngreso);
+            $result = IngresosAdo::validateCert($json->idIngreso);
             if (is_array($result)) {
                 print json_encode(array(
                     "estado" => 1,
                     "data" => $result[0],
                     "image" => $result[1],
-                    "tipo" =>  $tipo,
-                    "object" => $json
+                    "tipo" =>  $tipo
                 ));
                 exit();
             } else {

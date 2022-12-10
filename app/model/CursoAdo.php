@@ -321,6 +321,61 @@ class CursoAdo
      * @return array|string
      * @throws \Exception
      */
+    public static function validateCert($idCurso, $idParticipante)
+    {
+        try {
+            $cmdCurso = Database::getInstance()->getDb()->prepare("SELECT
+            c.idCurso,
+            c.Nombre,
+            c.Titulo,
+            c.Detalle,
+            ic.Serie,
+            ic.Correlativo,
+            CONCAT(es.Nombres,' ',es.Apellidos) AS Estudiante,
+            CONCAT(org.Nombres,' ',org.Apellidos) AS Presidente,
+            pe.Ruta,
+            ca.Capitulo,
+            YEAR(c.FechaEmision) AS FechaYear,
+            MONTH(c.FechaEmision) AS FechaMoth
+            FROM 
+            Curso AS c 
+            INNER JOIN Capitulo AS ca ON c.idCapitulo = ca.idCapitulo
+            INNER JOIN Presidente AS pe ON ca.idCapitulo = pe.idCapitulo
+            INNER JOIN Persona AS org ON org.IdDNI = pe.IdDNI
+            INNER JOIN Inscripcion AS ic ON ic.idCurso = c.idCurso
+            INNER JOIN Persona AS es ON es.IdDNI = ic.idParticipante
+            WHERE c.idCurso = ? AND ic.idParticipante = ? AND pe.Estado = 1");
+            $cmdCurso->bindParam(1, $idCurso, PDO::PARAM_STR);
+            $cmdCurso->bindParam(2, $idParticipante, PDO::PARAM_STR);
+            $cmdCurso->execute();
+
+            $cmdImage = Database::getInstance()->getDb()->prepare("SELECT TOP 1 
+            idDNI,Foto
+            FROM PersonaImagen WHERE idDNI = ?");
+            $cmdImage->bindParam(1, $idParticipante, PDO::PARAM_STR);
+            $cmdImage->execute();
+
+            $image = null;
+            if ($row = $cmdImage->fetch()) {
+                $image = (object)array($row['idDNI'], base64_encode($row['Foto']));
+            }
+
+            return [
+                $cmdCurso->fetchObject(),
+                $image
+            ];
+        } catch (Exception $ex) {
+            return $ex->getMessage();
+        }
+    }
+
+    /**
+     * @param string $idCurso
+     * @param string $idParticipante
+     *
+     * @return array|string
+     * @throws \Exception
+     */
     public static function generarCertificado(string $idCurso, string $idParticipante)
     {
         try {

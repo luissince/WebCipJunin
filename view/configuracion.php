@@ -7,7 +7,7 @@ if (!isset($_SESSION['IdUsuario'])) {
     if ($_SESSION["Permisos"][23]["ver"] == 1) {
 ?>
         <!DOCTYPE html>
-        <html lang="en">
+        <html lang="es">
 
         <head>
             <?php include('./layout/head.php'); ?>

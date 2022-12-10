@@ -37,3 +37,7 @@ Route::post("update", function ($body) {
 Route::post("delete", function ($body) {
     CursoController::delete($body);
 });
+
+Route::post("validateCert", function ($body) {
+    CursoController::validateCert($body);
+});
