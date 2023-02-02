@@ -105,24 +105,11 @@
                                 </div>
                                 <div class="box-body">
 
-
                                     <div class="form-group">
                                         <label>
                                             Certificado Válido <small class="label label-success"><i class="fa fa-check"></i></small>
                                         </label>
                                     </div>
-
-                                    <!-- <div class="form-group">
-                                        <label>
-                                            Certificado Vencido <small class="label label-warning"><i class="fa fa-warning"></i></small>
-                                        </label>
-                                    </div> -->
-
-                                    <!-- <div class="form-group">
-                                        <label>
-                                            Certificado Anulado <small class="label label-danger"><i class="fa fa-ban"></i></small>
-                                        </label>
-                                    </div> -->
 
                                     <div class="form-group">
                                         <label>
@@ -194,91 +181,31 @@
                 if (result.image == null) {
                     lblImagen.attr("src", "images/noimage.jpg");
                 } else {
-                    // lblImagen.attr("src", "data:image/(png|jpg|jpge|gif);base64," + result.image[1]);
+                    lblImagen.attr("src", "data:image/(png|jpg|jpge|gif);base64," + result.image[1]);
                 }
 
                 $("#lblDatos").html(result.curso.Estudiante);
 
-                $("#lblNumeroCertificado").html(result.curso.Serie+"-"+result.curso.Correlativo);
+                $("#lblNumeroCertificado").html(result.curso.Serie + "-" + result.curso.Correlativo);
                 $("#lblCurso").html(result.curso.Nombre);
                 $("#lblCapitulo").html(result.curso.Capitulo);
+                $("#lblModalidad").html(result.curso.Modalidad == "1" ? "PRESENCIAL" : "VIRTUAL");
+                $("#lblRegistro").html(result.curso.FechaMoth + "/" + result.curso.FechaYear);
 
-                console.log(result)
+                $("#lblCertificado").html("Certificado Válido.");
+                $("#divBox").removeClass("bg-purple").addClass("bg-green");
+                $("#divIcon").empty();
+                $("#divIcon").append('<i class="fa fa-check"></i>');
+              
                 $("#divOverlayModal").addClass("d-none");
             } catch (error) {
                 $("#divOverlayModal").addClass("d-none");
-                console.log(error)
+                $("#lblCertificado").html("Certificado no Existente");
+
+                $("#divBox").removeClass("bg-purple").addClass("bg-times");
+                $("#divIcon").empty();
+                $("#divIcon").append('<i class="fa fa-times"></i>');
             }
-
-            // $.ajax({
-            //     url: "../app/web/CursoWeb.php",
-            //     method: "POST",
-            //     headers: {
-            //         'Authorization': `Bearer ${token}`,
-            //     },
-            //     data: {
-            //         "type": "validateCert",
-            //     },
-            //     beforeSend: function(xhr) {
-            //         $("#divOverlayModal").removeClass("d-none");
-            //     },
-            //     success: function(result) {
-            //         console.log(result);
-            //         // if (result.estado == "1") {
-            //         //     if (result.image == null) {
-            //         //         lblImagen.attr("src", "images/noimage.jpg");
-            //         //     } else {
-            //         //         lblImagen.attr("src", "data:image/(png|jpg|jpge|gif);base64," + result.image[1]);
-            //         //     }
-
-            //         //     $("#lblDatos").html(result.data.Nombres + " " + result.data.Apellidos);
-            //         //     $("#lblCip").html("Cip: " + result.data.CIP);
-            //         //     $("#lblNum").html("Dni: " + result.data.NumDoc);
-
-            //         //     $("#lblNumero").html(result.data.Numero);
-            //         //     $("#lblEspecialidad").html(result.data.Especialidad);
-            //         //     $("#lblAsunto").html(result.data.Asunto);
-            //         //     $("#lblEntidad").html(result.data.Entidad);
-            //         //     $("#lblLugar").html(result.data.Lugar);
-            //         //     $("#lblRegistro").html(result.data.FechaRegistro);
-            //         //     $("#lblVigencia").html(result.data.HastaFecha);
-
-            //         //     $("#lblCertificado").html(result.tipo);
-            //         //     if (result.data.Vencimiento == "0") {
-            //         //         $("#divBox").removeClass("bg-purple").addClass("bg-yellow");
-            //         //         $("#divIcon").empty();
-            //         //         $("#divIcon").append('<i class="fa fa-warning"></i>');
-            //         //     } else {
-            //         //         if (result.data.Anulado == "0") {
-            //         //             $("#divBox").removeClass("bg-purple").addClass("bg-green");
-            //         //             $("#divIcon").empty();
-            //         //             $("#divIcon").append('<i class="fa fa-check"></i>');
-
-            //         //         } else {
-            //         //             $("#divBox").removeClass("bg-purple").addClass("bg-red");
-            //         //             $("#divIcon").empty();
-            //         //             $("#divIcon").append('<i class="fa fa-ban"></i>');
-            //         //         }
-            //         //     }
-            //         // } else {
-            //         //     $("#lblCertificado").html("Certificado no Existente");
-
-            //         //     $("#divBox").removeClass("bg-purple").addClass("bg-times");
-            //         //     $("#divIcon").empty();
-            //         //     $("#divIcon").append('<i class="fa fa-times"></i>');
-            //         // }
-            //         // $("#divOverlayModal").addClass("d-none");
-            //     },
-            //     error: function(error) {
-            //         console.log(error)
-            //         $("#divOverlayModal").addClass("d-none");
-            //         $("#lblCertificado").html("Certificado no Existente");
-
-            //         $("#divBox").removeClass("bg-purple").addClass("bg-times");
-            //         $("#divIcon").empty();
-            //         $("#divIcon").append('<i class="fa fa-times"></i>');
-            //     }
-            // });
         }
     </script>
 </body>

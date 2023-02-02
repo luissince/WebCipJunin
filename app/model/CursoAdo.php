@@ -321,8 +321,13 @@ class CursoAdo
      * @return array|string
      * @throws \Exception
      */
-    public static function validateCert($idCurso, $idParticipante)
+    public static function validateCert($json)
     {
+
+        if ($json == "error") {
+            Response::sendClient("Token invalido");
+        }
+
         try {
             $cmdCurso = Database::getInstance()->getDb()->prepare("SELECT
             c.idCurso,
@@ -331,6 +336,7 @@ class CursoAdo
             c.Detalle,
             ic.Serie,
             ic.Correlativo,
+            c.Modalidad,
             CONCAT(es.Nombres,' ',es.Apellidos) AS Estudiante,
             CONCAT(org.Nombres,' ',org.Apellidos) AS Presidente,
             pe.Ruta,
@@ -345,27 +351,32 @@ class CursoAdo
             INNER JOIN Inscripcion AS ic ON ic.idCurso = c.idCurso
             INNER JOIN Persona AS es ON es.IdDNI = ic.idParticipante
             WHERE c.idCurso = ? AND ic.idParticipante = ? AND pe.Estado = 1");
-            $cmdCurso->bindParam(1, $idCurso, PDO::PARAM_STR);
-            $cmdCurso->bindParam(2, $idParticipante, PDO::PARAM_STR);
+            $cmdCurso->bindParam(1, $json->idCurso, PDO::PARAM_STR);
+            $cmdCurso->bindParam(2,  $json->idParticipante, PDO::PARAM_STR);
             $cmdCurso->execute();
 
             $cmdImage = Database::getInstance()->getDb()->prepare("SELECT TOP 1 
             idDNI,Foto
             FROM PersonaImagen WHERE idDNI = ?");
-            $cmdImage->bindParam(1, $idParticipante, PDO::PARAM_STR);
+            $cmdImage->bindParam(1, $json->idParticipante, PDO::PARAM_STR);
             $cmdImage->execute();
+
+            $curso = $cmdCurso->fetchObject();
+            if (!$curso) {
+                Response::sendClient("No se encontro el curso.");
+            }
 
             $image = null;
             if ($row = $cmdImage->fetch()) {
                 $image = (object)array($row['idDNI'], base64_encode($row['Foto']));
             }
 
-            return [
-                $cmdCurso->fetchObject(),
-                $image
-            ];
+            Response::sendSuccess([
+                "curso" => $curso,
+                "image" =>  $image,
+            ]);
         } catch (Exception $ex) {
-            return $ex->getMessage();
+            Response::sendError($ex->getMessage());
         }
     }
 

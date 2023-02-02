@@ -42,28 +42,6 @@ class CursoController
 
         $json = Tools::open_ssl_decrypt($token);
 
-        if ($json == "error") {
-            print json_encode(array(
-                "estado" => 2,
-                "message" => "Token invalido"
-            ));
-            exit();
-        } else {
-            $result = CursoAdo::validateCert($json->idCurso, $json->idParticipante);
-            if (is_array($result)) {
-                print json_encode(array(
-                    "estado" => 1,
-                    "curso" => $result[0],
-                    "image" => $result[1],
-                ));
-                exit();
-            } else {
-                print json_encode(array(
-                    "estado" => 2,
-                    "message" => $result
-                ));
-                exit();
-            }
-        }
+        CursoAdo::validateCert($json);
     }
 }
