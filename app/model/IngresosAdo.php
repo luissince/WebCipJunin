@@ -1384,86 +1384,128 @@ class IngresosAdo
             $arrayIngresos = array();
             if ($data['Opcion'] == 0) {
                 $cmdConcepto = Database::getInstance()->getDb()->prepare("SELECT  Persona.CIP, 
-                MAX (CASE WHEN Concepto.Concepto = 'Cuotas al ISS CIP'
+                CASE WHEN Concepto.Concepto = 'Cuotas al ISS CIP'
                         THEN  Concepto.Concepto
                         ELSE 'Cuotas al ISS CIP'      
-                    END) AS Concepto1,
-                Max (CASE WHEN Concepto.Concepto = 'Cuotas Sociales CIP'
+                    END AS Concepto1,
+                CASE WHEN Concepto.Concepto = 'Cuotas Sociales CIP'
                         THEN  Concepto.Concepto	
                         ELSE 'Cuotas Sociales CIP'     
-                    END) AS Concepto2, 
+                    END AS Concepto2, 
                 Ingreso.idIngreso, 
-                Cuota.FechaIni,
-                Cuota.FechaFin,
+
+				 case 
+				when Concepto.Inicio >= Cuota.FechaIni then Concepto.Inicio 
+				else Cuota.FechaIni end as FechaIni,
+
+				case 
+				when Concepto.Fin <= Cuota.FechaFin then Concepto.Fin
+				else Cuota.FechaFin end as FechaFin,
+
                 Ingreso.Fecha,
-                Ingreso.idDNI,
+                Ingreso.idDNI, 
                 Persona.Condicion, 
                 Persona.Apellidos+' '+Persona.Nombres AS Ingeniero,
                 Especialidad.Especialidad,
                 Capitulo.Capitulo,
-                MAX(CASE WHEN Concepto.Concepto = 'Cuotas al ISS CIP'
-                        THEN  Detalle.Monto/Detalle.Cantidad 
-                        ELSE 0		    
-                    END) AS Monto1,	
-                MAX(CASE WHEN Concepto.Concepto = 'Cuotas Sociales CIP'
-                        THEN  Detalle.Monto/Detalle.Cantidad 
-                        ELSE 0		      
-                    END) AS Monto2
+
+				CASE WHEN Concepto.Concepto = 'Cuotas al ISS CIP' 
+				then sum(Detalle.Monto) / sum(Detalle.Cantidad)
+				else 0 end as Monto1,
+
+				CASE WHEN Concepto.Concepto = 'Cuotas Sociales CIP' 
+				then sum(Detalle.Monto) / sum(Detalle.Cantidad)
+				else 0 end as Monto2
+
                 FROM Ingreso
                 INNER JOIN Cuota ON Cuota.idIngreso=Ingreso.idIngreso
                 INNER JOIN Detalle ON Detalle.idIngreso=Ingreso.idIngreso
                 INNER JOIN Concepto ON Concepto.idConcepto=Detalle.idConcepto 	
                 INNER JOIN Persona ON Persona.idDNI=Ingreso.idDNI
                 INNER JOIN Colegiatura ON Colegiatura.idDNI=PERSONA.idDNI AND Colegiatura.Principal = 1
-                INNER JOIN Especialidad ON Especialidad.idEspecialidad = Colegiatura.idEspecialidad
+				INNER JOIN Especialidad ON Especialidad.idEspecialidad = Colegiatura.idEspecialidad
                 INNER JOIN Capitulo ON Capitulo.idCapitulo = Especialidad.idCapitulo
-                WHERE Ingreso.Fecha  BETWEEN ? AND ? AND Ingreso.Estado <> 'A'
+                WHERE Ingreso.Fecha BETWEEN ? AND ? AND  Ingreso.Estado <> 'A'
                 AND (Concepto.Concepto = 'Cuotas al ISS CIP' OR Concepto.Concepto =  'Cuotas Sociales CIP')
-                GROUP BY Persona.CIP, Concepto.Concepto, Ingreso.idIngreso, Ingreso.idDNI,Persona.Condicion, Persona.Apellidos+' '+Persona.Nombres,
-                Cuota.FechaIni,Cuota.FechaFin,Ingreso.Fecha,Especialidad.Especialidad,Capitulo.Capitulo
+                GROUP BY 
+				Persona.CIP,
+				Concepto.Concepto, 
+				Ingreso.idIngreso, 
+				Ingreso.idDNI,
+				Persona.Condicion, 
+				Persona.Apellidos+' '+Persona.Nombres,
+                Cuota.FechaIni,
+				Cuota.FechaFin,
+				Cuota.FechaIni,
+				Ingreso.Fecha,
+				Concepto.Inicio,
+				Concepto.Fin,
+				Especialidad.Especialidad,
+				Capitulo.Capitulo
                 ORDER BY Persona.Apellidos+' '+Persona.Nombres ASC");
                 $cmdConcepto->bindParam(1, $data['FechaInicial'], PDO::PARAM_STR);
                 $cmdConcepto->bindParam(2, $data['FechaFinal'], PDO::PARAM_STR);
                 $cmdConcepto->execute();
             } else {
                 $cmdConcepto = Database::getInstance()->getDb()->prepare("SELECT  Persona.CIP, 
-                MAX (CASE WHEN Concepto.Concepto = 'Cuotas al ISS CIP'
-                    THEN  Concepto.Concepto
-                    ELSE 'Cuotas al ISS CIP'      
-                END) AS Concepto1,
-                Max (CASE WHEN Concepto.Concepto = 'Cuotas Sociales CIP'
-                    THEN  Concepto.Concepto	
-                    ELSE 'Cuotas Sociales CIP'     
-                END) AS Concepto2, 
+                CASE WHEN Concepto.Concepto = 'Cuotas al ISS CIP'
+                        THEN  Concepto.Concepto
+                        ELSE 'Cuotas al ISS CIP'      
+                    END AS Concepto1,
+                CASE WHEN Concepto.Concepto = 'Cuotas Sociales CIP'
+                        THEN  Concepto.Concepto	
+                        ELSE 'Cuotas Sociales CIP'     
+                    END AS Concepto2, 
                 Ingreso.idIngreso, 
-                Cuota.FechaIni,
-                Cuota.FechaFin,
+
+				 case 
+				when Concepto.Inicio >= Cuota.FechaIni then Concepto.Inicio 
+				else Cuota.FechaIni end as FechaIni,
+
+				case 
+				when Concepto.Fin <= Cuota.FechaFin then Concepto.Fin
+				else Cuota.FechaFin end as FechaFin,
+
                 Ingreso.Fecha,
-                Ingreso.idDNI,
+                Ingreso.idDNI, 
                 Persona.Condicion, 
                 Persona.Apellidos+' '+Persona.Nombres AS Ingeniero,
                 Especialidad.Especialidad,
                 Capitulo.Capitulo,
-                MAX(CASE WHEN Concepto.Concepto = 'Cuotas al ISS CIP'
-                    THEN  Detalle.Monto/Detalle.Cantidad 
-                    ELSE 0		    
-                END) AS Monto1,	
-                MAX(CASE WHEN Concepto.Concepto = 'Cuotas Sociales CIP'
-                    THEN  Detalle.Monto/Detalle.Cantidad 
-                    ELSE 0		      
-                END) AS Monto2
+
+				CASE WHEN Concepto.Concepto = 'Cuotas al ISS CIP' 
+				then sum(Detalle.Monto) / sum(Detalle.Cantidad)
+				else 0 end as Monto1,
+
+				CASE WHEN Concepto.Concepto = 'Cuotas Sociales CIP' 
+				then sum(Detalle.Monto) / sum(Detalle.Cantidad)
+				else 0 end as Monto2
+
                 FROM Ingreso
                 INNER JOIN Cuota ON Cuota.idIngreso=Ingreso.idIngreso
                 INNER JOIN Detalle ON Detalle.idIngreso=Ingreso.idIngreso
                 INNER JOIN Concepto ON Concepto.idConcepto=Detalle.idConcepto 	
                 INNER JOIN Persona ON Persona.idDNI=Ingreso.idDNI
                 INNER JOIN Colegiatura ON Colegiatura.idDNI=PERSONA.idDNI AND Colegiatura.Principal = 1
-                INNER JOIN Especialidad ON Especialidad.idEspecialidad = Colegiatura.idEspecialidad
+				INNER JOIN Especialidad ON Especialidad.idEspecialidad = Colegiatura.idEspecialidad
                 INNER JOIN Capitulo ON Capitulo.idCapitulo = Especialidad.idCapitulo
-                WHERE Persona.NumDoc = ? AND Ingreso.Fecha  BETWEEN ? AND ? AND Ingreso.Estado<>'A'
+                WHERE Persona.NumDoc = ? AND Ingreso.Fecha BETWEEN ? AND ? AND  Ingreso.Estado <> 'A'
                 AND (Concepto.Concepto = 'Cuotas al ISS CIP' OR Concepto.Concepto =  'Cuotas Sociales CIP')
-                GROUP BY Persona.CIP, Concepto.Concepto, Ingreso.idIngreso, Ingreso.idDNI,Persona.Condicion, Persona.Apellidos+' '+Persona.Nombres,
-                Cuota.FechaIni,Cuota.FechaFin,Ingreso.Fecha,Especialidad.Especialidad,Capitulo.Capitulo
+                GROUP BY 
+				Persona.CIP,
+				Concepto.Concepto, 
+				Ingreso.idIngreso, 
+				Ingreso.idDNI,
+				Persona.Condicion, 
+				Persona.Apellidos+' '+Persona.Nombres,
+                Cuota.FechaIni,
+				Cuota.FechaFin,
+				Cuota.FechaIni,
+				Ingreso.Fecha,
+				Concepto.Inicio,
+				Concepto.Fin,
+				Especialidad.Especialidad,
+				Capitulo.Capitulo
                 ORDER BY Persona.Apellidos+' '+Persona.Nombres ASC");
                 $cmdConcepto->bindParam(1, $data['Colegiado'], PDO::PARAM_STR);
                 $cmdConcepto->bindParam(2, $data['FechaInicial'], PDO::PARAM_STR);
