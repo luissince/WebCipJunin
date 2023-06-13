@@ -1288,6 +1288,7 @@ class IngresosAdo
                 sum(d.Cantidad) AS 'Cantidad',
                 CASE c.Propiedad 
                 WHEN 16 then 0
+                
                 WHEN 48 then 0
                 ELSE sum(d.Monto) END AS 'CIPJunin',
                 CASE c.Propiedad 
@@ -1298,12 +1299,45 @@ class IngresosAdo
                 FROM Ingreso AS i 
                 INNER JOIN Detalle AS d ON i.idIngreso = d.idIngreso
                 INNER JOIN Concepto AS c ON d.idConcepto = c.idConcepto
-                LEFT JOIN NotaCredito AS nc ON nc.idIngreso = i.idIngreso AND nc.Estado = 'C'
-                WHERE i.Estado = 'C' AND nc.idNotaCredito IS NULL AND i.Fecha  >= ? AND i.Fecha  <= ? 
+                --LEFT JOIN NotaCredito AS nc ON nc.idIngreso = i.idIngreso AND nc.Estado = 'C'
+                WHERE 
+                i.Estado = 'C' AND 
+                --nc.idNotaCredito IS NULL AND 
+                i.Fecha  >= ? AND i.Fecha <= ? 
                 GROUP BY c.Codigo,c.Concepto,c.Propiedad,i.Tipo
+
+                UNION
+
+                SELECT  
+				c.Codigo,
+                c.Concepto,
+                -sum(d.Cantidad) AS 'Cantidad',
+                CASE c.Propiedad 
+                WHEN 16 then 0
+                WHEN 48 then 0
+                ELSE -sum(d.Monto) END AS 'CIPJunin',
+                CASE c.Propiedad 
+                WHEN 16 then -sum(d.Monto)
+                WHEN 48 then -sum(d.Monto)
+                ELSE 0 END AS 'CIPNacional',
+                i.Tipo
+				FROM Ingreso as i 
+				INNER JOIN Detalle AS d ON i.idIngreso = d.idIngreso
+				INNER JOIN Concepto AS c ON d.idConcepto = c.idConcepto
+				INNER JOIN NotaCredito as nc ON nc.idIngreso = i.idIngreso AND nc.Estado = 'C'
+				WHERE 
+				nc.Fecha >= ? AND nc.Fecha <= ? 		
+				GROUP BY 
+				c.Codigo,
+				c.Concepto,
+				c.Propiedad,
+				i.Tipo
+
                 ORDER BY c.Concepto ASC");
                 $cmdConcepto->bindParam(1, $fechaInicio, PDO::PARAM_STR);
                 $cmdConcepto->bindParam(2, $fechaFinal, PDO::PARAM_STR);
+                $cmdConcepto->bindParam(3, $fechaInicio, PDO::PARAM_STR);
+                $cmdConcepto->bindParam(4, $fechaFinal, PDO::PARAM_STR);
                 $cmdConcepto->execute();
                 $count = 0;
 
@@ -1335,26 +1369,54 @@ class IngresosAdo
                 array_push($array, $arrayIngresos, $resultRecibos);
             } else {
                 $cmdIngresosColegiado = Database::getInstance()->getDb()->prepare("SELECT 
-                isnull(p.idDNI,ep.IdEmpresa) as IdPersona,
-                isnull(p.CIP,'-') as Cip,
-                isnull(concat(p.Apellidos,', ',p.Nombres),ep.Nombre) as Persona,
-                sum(d.Monto) as Total 
-                from Ingreso as i 
-                left join Persona as p on p.idDNI = i.idDNI
-                left join EmpresaPersona as ep on ep.IdEmpresa = i.idEmpresaPersona
-                left join NotaCredito as nc on nc.idIngreso = i.idIngreso AND nc.Estado = 'C'
-                inner join Detalle as d on d.idIngreso = i.idIngreso
-                where i.Estado <> 'A' and i.Fecha between ? and ? and nc.idIngreso is null
-                group by
+                isnull(p.idDNI,ep.IdEmpresa) AS IdPersona,
+                isnull(p.CIP,'-') AS Cip,
+                isnull(concat(p.Apellidos,', ',p.Nombres),ep.Nombre) AS Persona,
+                sum(d.Monto) AS Total 
+                FROM Ingreso AS i 
+                LEFT JOIN Persona AS p on p.idDNI = i.idDNI
+                LEFT JOIN EmpresaPersona AS ep on ep.IdEmpresa = i.idEmpresaPersona
+                --left join NotaCredito as nc on nc.idIngreso = i.idIngreso AND nc.Estado = 'C'
+                INNER JOIN Detalle AS d on d.idIngreso = i.idIngreso
+                WHERE 
+                i.Estado = 'C' AND
+                --nc.idIngreso is null and
+                i.Fecha BETWEEN ? AND ?  
+                GROUP BY
                 p.idDNI,
                 ep.IdEmpresa,
                 p.CIP,
                 p.Apellidos,
                 p.Nombres,
                 ep.Nombre
-                ORDER BY Persona DESC");
+
+				UNION
+
+				SELECT 
+                isnull(p.idDNI,ep.IdEmpresa) AS IdPersona,
+                isnull(p.CIP,'-') AS Cip,
+                isnull(concat(p.Apellidos,', ',p.Nombres),ep.Nombre) AS Persona,
+                -sum(d.Monto) AS Total
+				FROM Ingreso AS i 
+				LEFT JOIN Persona AS p on p.idDNI = i.idDNI
+                LEFT JOIN EmpresaPersona AS ep on ep.IdEmpresa = i.idEmpresaPersona
+				INNER JOIN NotaCredito AS nc ON nc.idIngreso = i.idIngreso AND nc.Estado = 'C'
+				INNER JOIN Detalle AS d ON i.idIngreso = d.idIngreso
+				WHERE 
+				nc.Fecha BETWEEN ? AND ?		
+				group by
+                p.idDNI,
+                ep.IdEmpresa,
+                p.CIP,
+                p.Apellidos,
+                p.Nombres,
+                ep.Nombre
+
+				ORDER BY Persona DESC");
                 $cmdIngresosColegiado->bindParam(1, $fechaInicio, PDO::PARAM_STR);
                 $cmdIngresosColegiado->bindParam(2, $fechaFinal, PDO::PARAM_STR);
+                $cmdIngresosColegiado->bindParam(3, $fechaInicio, PDO::PARAM_STR);
+                $cmdIngresosColegiado->bindParam(4, $fechaFinal, PDO::PARAM_STR);
                 $cmdIngresosColegiado->execute();
 
                 $arrayDetalle = array();
